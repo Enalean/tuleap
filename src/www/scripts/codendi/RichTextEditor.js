@@ -140,13 +140,7 @@ codendi.RTE = Class.create({
             ...getUploadImageOptions(this.element)
         });
         this.rte = CKEDITOR.replace(this.element.id, replace_options);
-        initiateUploadImage(
-            this.rte,
-            replace_options,
-            this.element.form,
-            this.element.dataset.uploadFieldName,
-            parseInt(this.element.dataset.uploadMaxSize, 10)
-        );
+        initiateUploadImage(this.rte, replace_options, this.element);
 
         /*CKEDITOR filters HTML tags
               So, if your default text is like <blabla>, this will not be displayed.

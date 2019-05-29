@@ -238,7 +238,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file') .'</p>';
         $html .= '<div class="tracker_artifact_add_attachment">';
         $html .= '<p>';
-        $html .= '<input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" />';
+        $html .= '<input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" data-upload-is-enabled/>';
         $html .= '<label>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description');
         $html .= '</label>';
         $html .= ' <input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" />';
