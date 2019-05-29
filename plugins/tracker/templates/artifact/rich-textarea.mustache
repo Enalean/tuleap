@@ -10,8 +10,4 @@
             data-{{ name }}="{{ value }}"
         {{/ data_attributes }}
 >{{ value }}</textarea>
-{{# is_dragndrop_allowed }}
-    <p class="muted tracker-richtexteditor-help" id="{{ help_id }}">
-        {{# dgettext }}tuleap-tracker | You can drag 'n drop or paste image directly in the editor.{{/ dgettext }}
-    </p>
-{{/ is_dragndrop_allowed }}
+<div class="muted tracker-richtexteditor-help" id="{{ help_id }}"></div>

@@ -51,11 +51,17 @@ async function getGettextProvider(options) {
     return gettext_provider;
 }
 
-function initiateUploadImage(ckeditor_instance, options, form, field_name, max_size_upload) {
-    if (typeof options.uploadUrl === "undefined") {
+function initiateUploadImage(ckeditor_instance, options, element) {
+    if (!isUploadEnabled(element)) {
         ckeditor_instance.on("paste", disablePasteOfImages);
         return;
     }
+
+    const form = element.form;
+    const field_name = element.dataset.uploadFieldName;
+    const max_size_upload = parseInt(element.dataset.uploadMaxSize, 10);
+
+    informUsersThatTheyCanPasteImagesInEditor(element, options);
 
     let nb_being_uploaded = 0;
     const submit_buttons = form.querySelectorAll(".hidden-artifact-submit-button button");
@@ -219,17 +225,34 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
 }
 
 function getUploadImageOptions(element) {
-    const options = {};
-    const upload_url = element.dataset.uploadUrl;
-
-    if (!upload_url) {
-        return options;
+    if (!isUploadEnabled(element)) {
+        return {};
     }
 
     return {
         extraPlugins: "uploadimage",
-        uploadUrl: upload_url
+        uploadUrl: element.dataset.uploadUrl
     };
+}
+
+function isUploadEnabled(element) {
+    return document.body.querySelector("[data-upload-is-enabled]") && element.dataset.uploadUrl;
+}
+
+async function informUsersThatTheyCanPasteImagesInEditor(element, options) {
+    if (typeof element.dataset.helpId === "undefined") {
+        return;
+    }
+    const help_block = document.getElementById(element.dataset.helpId);
+    if (!help_block) {
+        return;
+    }
+
+    const p = document.createElement("p");
+    p.innerText = (await getGettextProvider(options)).gettext(
+        "You can drag 'n drop or paste image directly in the editor."
+    );
+    help_block.appendChild(p);
 }
 
 export { getUploadImageOptions, initiateUploadImage };

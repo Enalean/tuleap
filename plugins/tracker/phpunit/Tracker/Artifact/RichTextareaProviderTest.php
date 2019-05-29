@@ -127,6 +127,7 @@ class RichTextareaProviderTest extends TestCase
         required
             data-artifact-id="123"
 >input-value</textarea>
+<div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
 EOL
             ,
@@ -176,9 +177,7 @@ EOL
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
 >input-value</textarea>
-    <p class="muted tracker-richtexteditor-help" id="input-id-help">
-        You can drag 'n drop or paste image directly in the editor.
-    </p>
+<div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
 EOL
             ,
@@ -223,6 +222,7 @@ EOL
         name="input-name"
         \n            data-artifact-id="123"
 >input-value</textarea>
+<div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
 EOL
             ,
@@ -271,9 +271,7 @@ EOL
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
 >input-value</textarea>
-    <p class="muted tracker-richtexteditor-help" id="input-id-help">
-        You can drag 'n drop or paste image directly in the editor.
-    </p>
+<div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
 EOL
             ,
