@@ -347,11 +347,11 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                 .find(".tracker_hidden_edition_field")
                 .attr("data-field-id");
 
-            if (!codendi.tracker.rules_definitions || typeof field_id == "undefined") {
+            if (!tuleap.tracker.rules_definitions || typeof field_id == "undefined") {
                 return;
             }
 
-            $(codendi.tracker.rules_definitions).each(function() {
+            $(tuleap.tracker.rules_definitions).each(function() {
                 if (this.source_field == field_id) {
                     var target_field = getTargetField(this.target_field);
                     var target_field_id = $(target_field)

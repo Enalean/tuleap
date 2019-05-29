@@ -148,7 +148,7 @@ tuleap.textarea = tuleap.textarea || {};
                 .done(function(data) {
                     tuleap.modal.hideLoad();
                     self.showArtifactCreationForm(data, tracker_id, artifact_link_id, callback);
-                    codendi.tracker.runTrackerFieldDependencies();
+                    tuleap.tracker.runTrackerFieldDependencies();
 
                     $(".tuleap-modal-main-panel form textarea").each(function() {
                         var element = $(this).get(0); //transform to prototype
@@ -205,7 +205,7 @@ tuleap.textarea = tuleap.textarea || {};
                 .done(function(data) {
                     tuleap.modal.hideLoad();
                     self.showArtifactEditForm(data, artifact_id, update_callback);
-                    codendi.tracker.runTrackerFieldDependencies();
+                    tuleap.tracker.runTrackerFieldDependencies();
 
                     $(".tuleap-modal-main-panel form textarea").each(function() {
                         var element = $(this).get(0); //transform to prototype

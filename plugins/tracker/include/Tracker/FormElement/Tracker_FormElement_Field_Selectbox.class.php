@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     protected function displayArtifactJavascript($changeset_values) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
-        $html .= "codendi.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
+        $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
         $default_value = $this->getDefaultValue();
         $values = $this->getBind()->getAllValues();
 
@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     protected function displaySubmitJavascript() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
-        $html .= "codendi.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
+        $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
         $default_value = $this->getDefaultValue();
         $values = $this->getBind()->getAllValues();
         $html .= "\n\t.addOption('None'.escapeHTML(), '100', ". ($default_value==100?'true':'false') .")";
