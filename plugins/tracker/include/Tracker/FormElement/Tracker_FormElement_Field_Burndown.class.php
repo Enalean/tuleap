@@ -401,7 +401,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = [])
+    public function fetchSubmit(array $submitted_values)
     {
         return '';
     }
@@ -515,7 +515,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function getCriteriaDao() {
     }
 
-    protected function fetchSubmitValue() {
+    protected function fetchSubmitValue(array $submitted_values) {
     }
 
     protected function fetchSubmitValueMasschange() {

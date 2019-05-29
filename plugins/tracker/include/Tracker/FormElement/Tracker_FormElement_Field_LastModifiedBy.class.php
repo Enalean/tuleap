@@ -105,7 +105,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return null;
     }
 
-    public function fetchSubmit($submitted_values = array()) {
+    public function fetchSubmit(array $submitted_values) {
         return '';
     }
 
@@ -123,8 +123,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
             $submitted_by_value = $value->getFullRESTValue($this);
         }
 
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
-        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),

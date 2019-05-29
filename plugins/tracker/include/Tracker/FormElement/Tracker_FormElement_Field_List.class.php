@@ -492,7 +492,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array()) {
+    protected function fetchSubmitValue(array $submitted_values) {
         $selected_values = isset($submitted_values[$this->id]) ? $submitted_values[$this->id] : array();
         $default_values  = $this->getSubmitDefaultValues();
 

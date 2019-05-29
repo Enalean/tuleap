@@ -309,7 +309,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return true;
     }
 
-    public function fetchSubmit($submitted_values = array()) {
+    public function fetchSubmit(array $submitted_values) {
         // We do not display the field in the artifact submit form
         return '';
     }
@@ -377,8 +377,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
-        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),

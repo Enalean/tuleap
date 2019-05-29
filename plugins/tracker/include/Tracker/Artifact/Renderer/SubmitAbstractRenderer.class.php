@@ -43,8 +43,12 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
     protected function fetchFormElements(Codendi_Request $request) {
         $html = '';
         $html .= '<div class="tracker_artifact">';
-        foreach($this->tracker->getFormElements() as $form_element) {
-            $html .= $form_element->fetchSubmit($request->get('artifact'));
+        foreach ($this->tracker->getFormElements() as $form_element) {
+            $submitted_values = $request->get('artifact');
+            if (! $submitted_values) {
+                $submitted_values = [];
+            }
+            $html .= $form_element->fetchSubmit($submitted_values);
         }
         $html .= '</div>';
 

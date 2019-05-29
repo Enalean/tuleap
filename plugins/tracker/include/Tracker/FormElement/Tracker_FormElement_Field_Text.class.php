@@ -189,7 +189,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array())
+    protected function fetchSubmitValue(array $submitted_values)
     {
         $value  = $this->getValueFromSubmitOrDefault($submitted_values);
         $format = $this->getDefaultFormatForUser($this->getCurrentUser());

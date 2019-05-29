@@ -361,7 +361,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifact($artifact, $submitted_values, array('field-in-modal'));
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values) {
         return $this->fetchSubmit($submitted_values);
     }
 
@@ -466,7 +466,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array()) {
+    public function fetchSubmit(array $submitted_values) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanSubmit()) {
@@ -604,7 +604,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    protected abstract function fetchSubmitValue();
+    protected abstract function fetchSubmitValue(array $submitted_values);
 
     /**
      * Return a value from user submitted request (if any) or from default value (if any)

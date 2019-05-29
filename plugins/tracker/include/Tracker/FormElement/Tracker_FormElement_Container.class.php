@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\StructureElementRepresentation;
+
 /**
  * Base class for composite formElements.
  *
@@ -197,7 +199,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array())
+    public function fetchSubmit(array $submitted_values)
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
@@ -228,7 +230,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values);
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values) {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmitForOverlay', $submitted_values);
     }
 
@@ -469,8 +471,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         $content_structure = array();
 
         foreach($this->getFormElements() as $field) {
-            $classname_with_namespace         = 'Tuleap\Tracker\REST\StructureElementRepresentation';
-            $structure_element_representation = new $classname_with_namespace;
+            $structure_element_representation = new Tuleap\Tracker\REST\StructureElementRepresentation();
             $structure_element_representation->build($field);
 
             $content_structure[] = $structure_element_representation;

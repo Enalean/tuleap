@@ -596,7 +596,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array()) {
+    protected function fetchSubmitValue(array $submitted_values) {
         $errors = $this->has_errors ? array('has_error') : array();
 
         if (! $submitted_values) {

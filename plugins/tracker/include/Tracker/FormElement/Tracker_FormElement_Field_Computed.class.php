@@ -615,7 +615,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array())
+    public function fetchSubmit(array $submitted_values)
     {
         if (! $this->userCanSubmit()) {
             return '';

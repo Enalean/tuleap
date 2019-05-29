@@ -20,7 +20,7 @@
  */
 
 class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container {
-    
+
     /**
      * Fetch the element for the update artifact form
      *
@@ -31,12 +31,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchWithColumnGroup('fetchArtifact', array($artifact, $submitted_values));
     }
-    
+
     public function fetchArtifactInGroup(Tracker_Artifact $artifact, $submitted_values = array())
     {
         return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values);
     }
-    
+
     /**
      * Fetch the element for the update artifact form
      *
@@ -56,7 +56,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
-    
+
     public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
@@ -72,22 +72,22 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values);
     }
-    
+
     /**
      * Fetch the element for the submit new artifact form
      * @param array $submitted_values the values already submitted
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array()) {
+    public function fetchSubmit(array $submitted_values) {
         return $this->fetchWithColumnGroup('fetchSubmit', array($submitted_values));
     }
     public function fetchSubmitInGroup($submitted_values = array())
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
-    
-    
+
+
     /**
      * Fetch the element for the submit masschange form
      * @return <type>
@@ -100,7 +100,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', $submitted_values);
     }
-    
+
     /**
      * Fetch the admin preview form
      *
@@ -130,7 +130,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
-        
+
         $html .= '</span></label>';
         $html .= '</div>';
         $content = array();
@@ -142,7 +142,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $this->has_been_displayed = true;
         return $html;
     }
-    
+
     protected function fetchWithColumnGroup($method, $params = array()) {
         $html = '';
         //Fetch only if it has not been already done
@@ -160,12 +160,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             $html .= call_user_func_array(array($group, $method), array_merge(array($next), $params));
         }
         return $html;
-    }    
-    
+    }
+
     protected function fetchArtifactPrefix() {
         return $this->fetchColumnPrefix();
     }
-    
+
     protected function fetchArtifactSuffix() {
         return $this->fetchColumnSuffix();
     }
@@ -173,11 +173,11 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     protected function fetchMailArtifactPrefix($format) {
         return '';
     }
-    
+
     protected function fetchMailArtifactSuffix($format) {
         return '';
     }
-    
+
     /**
      * Close th table if needed
      */
@@ -185,7 +185,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html = '</div>';
         return $html;
     }
-    
+
     /**
      * Open the table if needed
      */
@@ -193,35 +193,35 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html = '<div '. $htmlparams .'>';
         return $html;
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/layout-2--plus.png');
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html

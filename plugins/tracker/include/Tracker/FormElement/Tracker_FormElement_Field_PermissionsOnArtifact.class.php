@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array())
+    protected function fetchSubmitValue(array $submitted_values)
     {
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $value = $this->getPermissionsOnArtifactUGroupRetriever()->initializeUGroupsIfNoUGroupsAreChoosen($value);
