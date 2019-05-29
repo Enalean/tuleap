@@ -237,7 +237,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      *
      * @return string html
      */
-    protected function fetchSubmitValue()
+    protected function fetchSubmitValue(array $submitted_values)
     {
     }
 
