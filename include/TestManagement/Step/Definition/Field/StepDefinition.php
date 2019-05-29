@@ -253,7 +253,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = [])
+    protected function fetchSubmitValue(array $submitted_values)
     {
         $submitted_values = $submitted_values ?: [];
 
