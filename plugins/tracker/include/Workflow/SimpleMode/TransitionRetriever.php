@@ -66,24 +66,6 @@ class TransitionRetriever
     }
 
     /**
-     * @throws NoSiblingTransitionException
-     */
-    public function getFirstSiblingTransition(Transition $transition): Transition
-    {
-        $rows = $this->transition_dao->searchSiblings(
-            $transition->workflow_id,
-            $transition->getIdTo(),
-            $transition->getId()
-        );
-        if ($rows === false) {
-            throw new NoSiblingTransitionException();
-        }
-
-        $row = $this->searchSiblingTransitionInRows($rows);
-        return $this->transition_factory->getInstanceFromRow($row);
-    }
-
-    /**
      * @throws NoTransitionForStateException
      */
     public function getFirstTransitionForCurrentState(Tracker_Artifact $artifact) : Transition

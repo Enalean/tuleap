@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,8 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
@@ -56,9 +58,9 @@ class TransitionPOSTHandlerTest extends TestCase
     /** @var Mockery\MockInterface */
     private $validator;
     /** @var Mockery\MockInterface */
-    private $transition_replicator;
+    private $state_factory;
     /** @var Mockery\MockInterface */
-    private $transition_retriever;
+    private $transition_creator;
 
     private const TRACKER_ID = 196;
     private const FROM_ID = 134;
@@ -73,9 +75,10 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->workflow_factory           = Mockery::mock(\WorkflowFactory::class);
         $this->transition_factory         = Mockery::mock(\TransitionFactory::class);
         $this->validator                  = Mockery::mock(TransitionValidator::class);
-        $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
-        $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
-        $this->handler               = new TransitionPOSTHandler(
+        $this->state_factory              = Mockery::mock(StateFactory::class);
+        $this->transition_creator         = Mockery::mock(TransitionCreator::class);
+
+        $this->handler = new TransitionPOSTHandler(
             $this->user_manager,
             $this->tracker_factory,
             $this->project_status_verificator,
@@ -84,8 +87,8 @@ class TransitionPOSTHandlerTest extends TestCase
             $this->transition_factory,
             $this->validator,
             new DBTransactionExecutorPassthrough(),
-            $this->transition_replicator,
-            $this->transition_retriever
+            $this->state_factory,
+            $this->transition_creator
         );
     }
 
@@ -128,7 +131,8 @@ class TransitionPOSTHandlerTest extends TestCase
             ->with($workflow, $validated_parameters)
             ->andReturn($new_transition);
 
-        $this->transition_replicator->shouldNotReceive('replicate');
+        $this->state_factory->shouldNotReceive('getStateFromValueId');
+        $this->transition_creator->shouldNotReceive('createTransitionInState');
 
         $result = $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
 
@@ -150,30 +154,34 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->tracker_factory->allows('getTrackerById')->andReturn($tracker);
         $this->project_status_verificator->allows('checkProjectStatusAllowsAllUsersToAccessIt');
         $this->permissions_checker->allows('checkCreate');
-        $this->validator->allows('validateForCreation');
+        $this->validator->allows('validateForCreation')->andReturn(
+            new TransitionCreationParameters(self::FROM_ID, self::TO_ID)
+        );
 
         $new_transition = Mockery::mock(\Transition::class)
             ->shouldReceive('getId')
             ->andReturn(965)
             ->getMock();
+
         $this->transition_factory
             ->shouldReceive('createAndSaveTransition')
             ->andReturn($new_transition);
-        $sibling_transition = Mockery::mock(\Transition::class);
-        $this->transition_retriever
-            ->shouldReceive('getFirstSiblingTransition')
-            ->with($new_transition)
-            ->andReturn($sibling_transition);
 
         $workflow = $this->buildSimpleWorkflow();
+
         $this->workflow_factory
             ->shouldReceive('getWorkflowByTrackerId')
             ->with(self::TRACKER_ID)
             ->andReturn($workflow);
 
-        $this->transition_replicator
-            ->shouldReceive('replicate')
-            ->with($sibling_transition, $new_transition);
+        $this->state_factory
+            ->shouldReceive('getStateFromValueId')
+            ->with($workflow, self::TO_ID)
+            ->once();
+
+        $this->transition_creator->shouldReceive('createTransitionInState')
+            ->once()
+            ->andReturn($new_transition);
 
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }
