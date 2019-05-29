@@ -695,7 +695,7 @@ admin_system_events	people_not_empty	People to be notified cannot be empty
 # Script: SF/www/admin/show_pending_documents.php
 #
 admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a>
-admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/codendi/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
+admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/tuleap/conf/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
 
 admin_show_pending_documents	note_intro	Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it becomes restorable.
 admin_show_pending_documents	note_intro_system	When a file is deleted by the user, it becomes restorable after SYSTEM_CHECK

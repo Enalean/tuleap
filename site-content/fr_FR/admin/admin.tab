@@ -687,7 +687,7 @@ admin_system_events	people_not_empty	La liste des personnes à alerter ne peut p
 # Script: SF/www/admin/show_pending_documents.php
 #
 admin_show_pending_documents	pending_doc	Les supprimés documents en suspens pour le projet <a href="/project/admin/?group_id=$1"> $2 </a>
-admin_show_pending_documents	delay_info	Comme défini dans la configuration <code>/etc/codendi/local.inc</code> par la variable <code>$sys_file_deletion_delay</code>, les éléments seront <strong>définitivement purgés</strong> du système de fichier après <strong>$1 jour.</strong>
+admin_show_pending_documents	delay_info	Comme défini dans la configuration <code>/etc/tuleap/conf/local.inc</code> par la variable <code>$sys_file_deletion_delay</code>, les éléments seront <strong>définitivement purgés</strong> du système de fichier après <strong>$1 jour.</strong>
 
 admin_show_pending_documents	note_intro	Info : il peut exister un délai (30 minutes maximum) entre le temps où un fichier a été supprimé et le temps où il peut devenir restaurable.
 admin_show_pending_documents	note_intro_system	Lorsqu'un fichier est supprimé par l'utilisateur, il devient restaurable après le SYSTEM_CHECK
