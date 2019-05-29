@@ -310,7 +310,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values) {
         $prefill_parent = '';
         $name           = 'artifact['. $this->id .']';
         $parent_tracker = $this->getTracker()->getParent();
@@ -1101,7 +1101,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array()) {
+    protected function fetchSubmitValue(array $submitted_values) {
         $html = '';
         $prefill_new_values = '';
         if (isset($submitted_values[$this->getId()]['new_values'])) {

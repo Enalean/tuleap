@@ -36,7 +36,10 @@ function removeUnusedUploadedFilesFromForm() {
     const used_urls = getUsedUploadedImagesURLsInAllCKEditorInstances(instances);
 
     for (const input of getPotentiallyUsedUploadedFiles(form, instances)) {
-        if (used_urls.find(used_url => used_url === input.dataset.url)) {
+        if (
+            typeof input.dataset.url === "undefined" ||
+            used_urls.find(used_url => used_url === input.dataset.url)
+        ) {
             continue;
         }
 

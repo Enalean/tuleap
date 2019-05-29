@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values=array()) {
+    protected function fetchSubmitValue(array $submitted_values) {
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();

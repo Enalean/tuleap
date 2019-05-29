@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $submitter_needed = true;
         $read_only        = false;
         $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values, $read_only);
-        $html .= $this->fetchSubmitValue();
+        $html .= $this->fetchSubmitValue($submitted_values);
         return $html;
     }
 
@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $this->fetchArtifactReadOnly($artifact);
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values) {
         return '';
     }
 
@@ -232,7 +232,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string html
      */
-    protected function fetchSubmitValue() {
+    protected function fetchSubmitValue(array $submitted_values) {
         $html = '';
         $html .= '<div class="add-attachement">';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file') .'</p>';
@@ -245,6 +245,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $html .= '</p>';
         $html .= '</div>';
         $html .= '</div>';
+        if (isset($submitted_values[$this->id])) {
+            foreach ($submitted_values[$this->id] as $submitted_value) {
+                if (isset($submitted_value['tus-uploaded-id'])) {
+                    $html .= '<input
+                        type="hidden"
+                        name="artifact['. (int) $this->id .'][][tus-uploaded-id]"
+                        value="'. (int) $submitted_value['tus-uploaded-id'] .'">';
+                }
+            }
+        }
         return $html;
     }
 

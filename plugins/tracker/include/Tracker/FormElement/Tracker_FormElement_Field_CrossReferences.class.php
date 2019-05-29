@@ -57,8 +57,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
-        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
@@ -174,7 +173,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '';
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
+    public function fetchSubmitForOverlay(array $submitted_values) {
         return '';
     }
 
@@ -200,7 +199,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-    protected function fetchSubmitValue() {
+    protected function fetchSubmitValue(array $submitted_values) {
         return '';
     }
 
@@ -510,7 +509,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-     public function fetchSubmit($submitted_values = [])
+     public function fetchSubmit(array $submitted_values)
      {
          return '';
      }

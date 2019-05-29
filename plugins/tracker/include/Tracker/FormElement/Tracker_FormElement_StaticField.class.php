@@ -119,8 +119,8 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
         return $this->fetchArtifact($artifact);
     }
 
-    public function fetchSubmitForOverlay($submitted_values) {
-        return $this->fetchSubmit();
+    public function fetchSubmitForOverlay(array $submitted_values) {
+        return $this->fetchSubmit($submitted_values);
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = []) {
+    public function fetchSubmit(array $submitted_values) {
         return $this->fetchReadOnly();
     }
 

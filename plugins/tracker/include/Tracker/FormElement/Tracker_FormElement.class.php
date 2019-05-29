@@ -623,9 +623,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchSubmit($submitted_values = array());
+    public abstract function fetchSubmit(array $submitted_values);
 
-    public abstract function fetchSubmitForOverlay($submitted_values);
+    public abstract function fetchSubmitForOverlay(array $submitted_values);
 
     /**
      * Fetch the element for the submit new artifact form
