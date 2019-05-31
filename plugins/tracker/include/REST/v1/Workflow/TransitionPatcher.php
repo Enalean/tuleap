@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
@@ -34,19 +36,29 @@ class TransitionPatcher
 {
     /** @var ConditionsUpdater */
     private $conditions_updater;
-    /** @var TransitionRetriever */
-    private $transition_retriever;
     /** @var DBTransactionExecutor */
     private $transaction_executor;
 
+    /**
+     * @var StateFactory
+     */
+    private $state_factory;
+
+    /**
+     * @var TransitionUpdater
+     */
+    private $transition_updater;
+
     public function __construct(
-        ConditionsUpdater $transition_updater,
-        TransitionRetriever $transition_retriever,
-        DBTransactionExecutor $transaction_executor
+        ConditionsUpdater $conditions_updater,
+        DBTransactionExecutor $transaction_executor,
+        StateFactory $state_factory,
+        TransitionUpdater $transition_updater
     ) {
-        $this->conditions_updater   = $transition_updater;
-        $this->transition_retriever = $transition_retriever;
+        $this->conditions_updater   = $conditions_updater;
         $this->transaction_executor = $transaction_executor;
+        $this->state_factory        = $state_factory;
+        $this->transition_updater   = $transition_updater;
     }
 
     /**
@@ -67,27 +79,22 @@ class TransitionPatcher
         $this->transaction_executor->execute(
             function () use ($transition, $authorized_user_group_ids, $transition_conditions) {
                 $workflow = $transition->getWorkflow();
-                $this->conditions_updater->update(
-                    $transition,
-                    $authorized_user_group_ids,
-                    $transition_conditions->not_empty_field_ids,
-                    $transition_conditions->is_comment_required
-                );
                 if ($workflow->isAdvanced()) {
-                    return;
-                }
-                try {
-                    $siblings_collection = $this->transition_retriever->getSiblingTransitions($transition);
-                    foreach ($siblings_collection->getTransitions() as $sibling) {
-                        $this->conditions_updater->update(
-                            $sibling,
-                            $authorized_user_group_ids,
-                            $transition_conditions->not_empty_field_ids,
-                            $transition_conditions->is_comment_required
-                        );
-                    }
-                } catch (NoSiblingTransitionException $e) {
-                    //Do nothing, there simply are no siblings to update
+                    $this->conditions_updater->update(
+                        $transition,
+                        $authorized_user_group_ids,
+                        $transition_conditions->not_empty_field_ids,
+                        $transition_conditions->is_comment_required
+                    );
+                } else {
+                    $state = $this->state_factory->getStateFromValueId($workflow, (int) $transition->getIdTo());
+                    $this->transition_updater->updateStatePreConditions(
+                        $state,
+                        $transition,
+                        $authorized_user_group_ids,
+                        $transition_conditions->not_empty_field_ids,
+                        $transition_conditions->is_comment_required
+                    );
                 }
             }
         );
