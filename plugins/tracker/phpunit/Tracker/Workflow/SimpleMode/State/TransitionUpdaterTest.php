@@ -26,11 +26,22 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Transition;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 
 class TransitionUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    private $condition_updater;
+    private $transition_extractor;
+    private $collection_updater;
+
+    /**
+     * @var TransitionUpdater
+     */
+    private $transition_updater;
 
     protected function setUp(): void
     {
@@ -38,10 +49,12 @@ class TransitionUpdaterTest extends TestCase
 
         $this->condition_updater    = Mockery::mock(ConditionsUpdater::class);
         $this->transition_extractor = new TransitionExtractor();
+        $this->collection_updater   = Mockery::mock(PostActionCollectionUpdater::class);
 
         $this->transition_updater = new TransitionUpdater(
             $this->condition_updater,
-            $this->transition_extractor
+            $this->transition_extractor,
+            $this->collection_updater
         );
     }
 
@@ -120,6 +133,43 @@ class TransitionUpdaterTest extends TestCase
             ['101_4'],
             [],
             false
+        );
+    }
+
+    public function testUpdatesThePostActionsForState()
+    {
+        $transition    = Mockery::mock(Transition::class);
+        $transition_02 = Mockery::mock(Transition::class);
+        $transition_03 = Mockery::mock(Transition::class);
+
+        $state = new State(1, [$transition, $transition_02, $transition_03]);
+
+        $post_actions = new PostActionCollection();
+
+        $this->collection_updater->shouldReceive('updateByTransition')
+            ->with(
+                $transition,
+                $post_actions
+            )
+            ->once();
+
+        $this->collection_updater->shouldReceive('updateByTransition')
+            ->with(
+                $transition_02,
+                $post_actions
+            )
+            ->once();
+
+        $this->collection_updater->shouldReceive('updateByTransition')
+            ->with(
+                $transition_03,
+                $post_actions
+            )
+            ->once();
+
+        $this->transition_updater->updateStateActions(
+            $state,
+            $post_actions
         );
     }
 }

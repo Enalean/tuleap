@@ -78,7 +78,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
@@ -235,10 +234,7 @@ class TransitionsResource extends AuthenticatedResource
             $this->getConditionsUpdater(),
             $this->getTransactionExecutor(),
             $this->getStateFactory(),
-            new TransitionUpdater(
-                $this->getConditionsUpdater(),
-                new TransitionExtractor()
-            )
+            $this->getTransitionUpdater()
         );
 
         try {
@@ -414,9 +410,10 @@ class TransitionsResource extends AuthenticatedResource
                 ProjectStatusVerificator::build(),
                 $this->getPostActionCollectionJsonParser(),
                 $this->getPostActionCollectionUpdater(),
-                $this->getTransitionRetriever(),
                 new TrackerChecker(\EventManager::instance()),
-                $this->getTransactionExecutor()
+                $this->getTransactionExecutor(),
+                $this->getStateFactory(),
+                $this->getTransitionUpdater()
             );
 
             $handler->handle($current_user, $transition, $post_actions_representation);
@@ -572,11 +569,6 @@ class TransitionsResource extends AuthenticatedResource
         return \Workflow_Transition_ConditionFactory::build();
     }
 
-    private function getTransitionRetriever(): TransitionRetriever
-    {
-        return new TransitionRetriever(new \Workflow_TransitionDao(), $this->getTransitionFactory());
-    }
-
     private function getTransitionReplicator(): TransitionReplicator
     {
         return TransitionReplicatorBuilder::build();
@@ -587,6 +579,15 @@ class TransitionsResource extends AuthenticatedResource
         return new StateFactory(
             $this->getTransitionFactory(),
             new SimpleWorkflowDao()
+        );
+    }
+
+    private function getTransitionUpdater() : TransitionUpdater
+    {
+        return new TransitionUpdater(
+            $this->getConditionsUpdater(),
+            new TransitionExtractor(),
+            $this->getPostActionCollectionUpdater()
         );
     }
 }
