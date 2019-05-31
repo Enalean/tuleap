@@ -34,7 +34,7 @@ use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 
 class TransitionPOSTHandlerTest extends TestCase

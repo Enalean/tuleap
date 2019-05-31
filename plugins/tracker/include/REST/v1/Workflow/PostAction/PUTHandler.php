@@ -33,7 +33,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeE
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
 class PUTHandler

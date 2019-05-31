@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Transition;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 final class HiddenFieldsetsDetectorTest extends TestCase
@@ -58,7 +58,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
 
     public function testIsFieldsetHiddenReturnsFalseWhenNoTransitionIsDefinedForCurrentState() : void
     {
-        $this->transition_retriever->shouldReceive('getFirstTransitionForCurrentState')
+        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andThrow(NoTransitionForStateException::class);
 
         $this->assertFalse(
@@ -75,7 +75,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         $fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
 
         $transition = Mockery::mock(\Transition::class);
-        $this->transition_retriever->shouldReceive('getFirstTransitionForCurrentState')
+        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andReturns($transition);
 
         $this->hidden_retriever
@@ -96,7 +96,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->transition_retriever->shouldReceive('getFirstTransitionForCurrentState')
+        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andReturns($transition);
 
         $this->hidden_retriever
@@ -124,7 +124,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         $hidden_fieldsets_post_action = Mockery::mock(HiddenFieldsets::class);
         $fieldset_hidden              = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
 
-        $this->transition_retriever->shouldReceive('getFirstTransitionForCurrentState')
+        $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andReturns($transition);
 
         $this->hidden_retriever

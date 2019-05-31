@@ -27,7 +27,10 @@ use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container
 {
@@ -77,8 +80,13 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return new HiddenFieldsetChecker(
             new HiddenFieldsetsDetector(
                 new TransitionRetriever(
-                    new Workflow_TransitionDao(),
-                    TransitionFactory::instance()
+                    new StateFactory(
+                        new TransitionFactory(
+                            Workflow_Transition_ConditionFactory::build()
+                        ),
+                        new SimpleWorkflowDao()
+                    ),
+                    new TransitionExtractor()
                 ),
                 new HiddenFieldsetsRetriever(
                     new HiddenFieldsetsDao(),

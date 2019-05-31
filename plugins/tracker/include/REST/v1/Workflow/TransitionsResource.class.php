@@ -586,7 +586,6 @@ class TransitionsResource extends AuthenticatedResource
     {
         return new TransitionUpdater(
             $this->getConditionsUpdater(),
-            new TransitionExtractor(),
             $this->getPostActionCollectionUpdater()
         );
     }

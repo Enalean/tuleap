@@ -22,19 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
-use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
 class TransitionUpdater
 {
-    /**
-     * @var TransitionExtractor
-     */
-    private $transition_extractor;
-
     /**
      * @var ConditionsUpdater
      */
@@ -47,10 +40,8 @@ class TransitionUpdater
 
     public function __construct(
         ConditionsUpdater $conditions_updater,
-        TransitionExtractor $transition_extractor,
         PostActionCollectionUpdater $action_collection_updater
     ) {
-        $this->transition_extractor      = $transition_extractor;
         $this->conditions_updater        = $conditions_updater;
         $this->action_collection_updater = $action_collection_updater;
     }
@@ -60,30 +51,17 @@ class TransitionUpdater
      */
     public function updateStatePreConditions(
         State $state,
-        Transition $transition,
         array $authorized_user_group_ids,
         array $not_empty_field_ids,
         bool $is_comment_required
     ) {
-        $this->conditions_updater->update(
-            $transition,
-            $authorized_user_group_ids,
-            $not_empty_field_ids,
-            $is_comment_required
-        );
-
-        try {
-            $siblings_transitions = $this->transition_extractor->extractSiblingTransitionsFromState($state, $transition);
-            foreach ($siblings_transitions as $sibling) {
-                $this->conditions_updater->update(
-                    $sibling,
-                    $authorized_user_group_ids,
-                    $not_empty_field_ids,
-                    $is_comment_required
-                );
-            }
-        } catch (NoSiblingTransitionException $exception) {
-            //Do nothing, there simply are no siblings to update
+        foreach ($state->getTransitions() as $transition) {
+            $this->conditions_updater->update(
+                $transition,
+                $authorized_user_group_ids,
+                $not_empty_field_ids,
+                $is_comment_required
+            );
         }
     }
 
