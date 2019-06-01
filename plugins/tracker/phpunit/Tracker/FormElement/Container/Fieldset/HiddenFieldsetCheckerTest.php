@@ -25,8 +25,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
+use Tracker_FormElement_Field;
 use Tuleap\ForgeConfigSandbox;
 use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 require_once __DIR__. '/../../../../bootstrap.php';
@@ -41,6 +43,7 @@ class HiddenFieldsetCheckerTest extends TestCase
     private $checker;
 
     private $detector;
+    private $fields_extractor;
     private $fieldset;
     private $artifact;
 
@@ -48,10 +51,12 @@ class HiddenFieldsetCheckerTest extends TestCase
     {
         parent::setUp();
 
-        $this->detector = Mockery::mock(HiddenFieldsetsDetector::class);
+        $this->detector         = Mockery::mock(HiddenFieldsetsDetector::class);
+        $this->fields_extractor = Mockery::mock(FieldsExtractor::class);
 
         $this->checker = new HiddenFieldsetChecker(
-            $this->detector
+            $this->detector,
+            $this->fields_extractor
         );
 
         $this->fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
@@ -74,8 +79,48 @@ class HiddenFieldsetCheckerTest extends TestCase
         $this->detector->shouldReceive('isFieldsetHidden')
             ->with($this->artifact, $this->fieldset)
             ->once()
-            ->andReturn(true);
+            ->andReturnTrue();
+
+        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $field->shouldReceive('isRequired')->andReturnFalse();
+
+        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
+            ->with($this->fieldset)
+            ->once()
+            ->andReturn([$field]);
 
         $this->assertTrue($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+    }
+
+    public function testFieldsetIsNotHiddenIfItContainsAMandatoryField()
+    {
+        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
+
+        $this->detector->shouldReceive('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)
+            ->once()
+            ->andReturnTrue();
+
+        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $field->shouldReceive('isRequired')->andReturnTrue();
+
+        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
+            ->with($this->fieldset)
+            ->once()
+            ->andReturn([$field]);
+
+        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+    }
+
+    public function testFieldsetIsNotHiddenIfNotConfiguredInState()
+    {
+        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
+
+        $this->detector->shouldReceive('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
 }

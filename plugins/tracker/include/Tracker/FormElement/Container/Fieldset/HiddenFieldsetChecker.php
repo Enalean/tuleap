@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 use ForgeConfig;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class HiddenFieldsetChecker
@@ -35,9 +36,17 @@ class HiddenFieldsetChecker
      */
     private $hidden_fieldsets_detector;
 
-    public function __construct(HiddenFieldsetsDetector $hidden_fieldsets_detector)
-    {
+    /**
+     * @var FieldsExtractor
+     */
+    private $fields_extractor;
+
+    public function __construct(
+        HiddenFieldsetsDetector $hidden_fieldsets_detector,
+        FieldsExtractor $fields_extractor
+    ) {
         $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
+        $this->fields_extractor          = $fields_extractor;
     }
 
     public function mustFieldsetBeHidden(
@@ -50,6 +59,13 @@ class HiddenFieldsetChecker
         }
 
         if ($this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)) {
+            $fields = $this->fields_extractor->extractFieldsInsideContainer($fieldset);
+            foreach ($fields as $field) {
+                if ($field->isRequired()) {
+                    return false;
+                }
+            }
+
             return true;
         }
 
