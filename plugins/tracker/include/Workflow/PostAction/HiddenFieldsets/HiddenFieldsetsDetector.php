@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class HiddenFieldsetsDetector
@@ -49,7 +49,7 @@ class HiddenFieldsetsDetector
     public function isFieldsetHidden(Tracker_Artifact $artifact, Tracker_FormElement_Container_Fieldset $fieldset): bool
     {
         try {
-            $current_state_transition     = $this->transition_retriever->getFirstTransitionForCurrentState($artifact);
+            $current_state_transition     = $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
             $hidden_fieldsets_post_action = $this->hidden_fieldsets_retriever->getHiddenFieldsets($current_state_transition);
         } catch (NoTransitionForStateException | NoHiddenFieldsetsPostActionException $e) {
             return false;

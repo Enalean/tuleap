@@ -35,7 +35,6 @@ class TransitionUpdaterTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     private $condition_updater;
-    private $transition_extractor;
     private $collection_updater;
 
     /**
@@ -47,13 +46,11 @@ class TransitionUpdaterTest extends TestCase
     {
         parent::setUp();
 
-        $this->condition_updater    = Mockery::mock(ConditionsUpdater::class);
-        $this->transition_extractor = new TransitionExtractor();
-        $this->collection_updater   = Mockery::mock(PostActionCollectionUpdater::class);
+        $this->condition_updater  = Mockery::mock(ConditionsUpdater::class);
+        $this->collection_updater = Mockery::mock(PostActionCollectionUpdater::class);
 
         $this->transition_updater = new TransitionUpdater(
             $this->condition_updater,
-            $this->transition_extractor,
             $this->collection_updater
         );
     }
@@ -103,7 +100,6 @@ class TransitionUpdaterTest extends TestCase
 
         $this->transition_updater->updateStatePreConditions(
             $state,
-            $transition,
             ['101_4'],
             [],
             false
@@ -129,7 +125,6 @@ class TransitionUpdaterTest extends TestCase
 
         $this->transition_updater->updateStatePreConditions(
             $state,
-            $transition,
             ['101_4'],
             [],
             false

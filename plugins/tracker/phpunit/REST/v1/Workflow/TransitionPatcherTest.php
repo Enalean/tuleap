@@ -109,13 +109,13 @@ class TransitionPatcherTest extends TestCase
         $state = Mockery::mock(State::class);
 
         $this->state_factory->shouldReceive('getStateFromValueId')
+            ->with(Mockery::any(), 999)
             ->once()
             ->andReturn($state);
 
         $this->transition_updater->shouldReceive('updateStatePreConditions')
             ->with(
                 $state,
-                $transition_from_simple_workflow,
                 Mockery::contains(3, 374),
                 $patch_representation->not_empty_field_ids,
                 $patch_representation->is_comment_required

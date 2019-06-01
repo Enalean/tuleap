@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\SimpleMode;
+namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
 use Tracker_Artifact;
 use Transition;
@@ -29,24 +29,27 @@ use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 class TransitionRetriever
 {
     /**
-     * @var \Workflow_TransitionDao
+     * @var StateFactory
      */
-    private $transition_dao;
-    /**
-     * @var \TransitionFactory
-     */
-    private $transition_factory;
+    private $state_factory;
 
-    public function __construct(\Workflow_TransitionDao $transition_dao, \TransitionFactory $transition_factory)
-    {
-        $this->transition_dao     = $transition_dao;
-        $this->transition_factory = $transition_factory;
+    /**
+     * @var TransitionExtractor
+     */
+    private $transition_extractor;
+
+    public function __construct(
+        StateFactory $state_factory,
+        TransitionExtractor $transition_extractor
+    ) {
+        $this->state_factory        = $state_factory;
+        $this->transition_extractor = $transition_extractor;
     }
 
     /**
      * @throws NoTransitionForStateException
      */
-    public function getFirstTransitionForCurrentState(Tracker_Artifact $artifact) : Transition
+    public function getReferenceTransitionForCurrentState(Tracker_Artifact $artifact) : Transition
     {
         $workflow = $artifact->getWorkflow();
 
@@ -68,32 +71,8 @@ class TransitionRetriever
 
         $current_status = (int) current($current_value->getValue());
 
-        return $this->getFirstTransitionForDestinationState($workflow, $current_status);
-    }
+        $state = $this->state_factory->getStateFromValueId($workflow, $current_status);
 
-    /**
-     * @throws NoTransitionForStateException
-     */
-    private function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
-    {
-        $row_first_non_new = $this->transition_dao->searchFirstTransitionNotFromNew(
-            (int) $workflow->getId(),
-            $to
-        );
-
-        if ($row_first_non_new !== false) {
-            return $this->transition_factory->getInstanceFromRow($row_first_non_new);
-        }
-
-        $row_only_new = $this->transition_dao->searchOnlyTransitionFromNew(
-            (int) $workflow->getId(),
-            $to
-        );
-
-        if ($row_only_new !== false) {
-            return $this->transition_factory->getInstanceFromRow($row_only_new);
-        }
-
-        throw new NoTransitionForStateException();
+        return $this->transition_extractor->extractReferenceTransitionFromState($state);
     }
 }

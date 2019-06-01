@@ -68,10 +68,10 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
 use Workflow_Dao;
-use Workflow_TransitionDao;
+use Workflow_Transition_ConditionFactory;
 use WorkflowFactory;
 
 /**
@@ -164,7 +164,15 @@ class TrackersResource extends AuthenticatedResource
             $this->formelement_factory,
             new PermissionsExporter(
                 new FrozenFieldDetector(
-                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
+                    new TransitionRetriever(
+                        new StateFactory(
+                            new TransitionFactory(
+                                Workflow_Transition_ConditionFactory::build()
+                            ),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
                     new FrozenFieldsRetriever(
                         new FrozenFieldsDao(),
                         $this->formelement_factory
@@ -639,7 +647,15 @@ class TrackersResource extends AuthenticatedResource
                 $this->formelement_factory,
                 new PermissionsExporter(
                     new FrozenFieldDetector(
-                        new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
+                        new TransitionRetriever(
+                            new StateFactory(
+                                new TransitionFactory(
+                                    Workflow_Transition_ConditionFactory::build()
+                                ),
+                                new SimpleWorkflowDao()
+                            ),
+                            new TransitionExtractor()
+                        ),
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao(),
                             $this->formelement_factory

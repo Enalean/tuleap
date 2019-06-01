@@ -48,6 +48,7 @@ use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use TrackerFactory;
+use TransitionFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -89,11 +90,15 @@ use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
+use Workflow_Transition_ConditionFactory;
 use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
@@ -199,7 +204,15 @@ class ArtifactsResource extends AuthenticatedResource {
             $this->formelement_factory,
             new PermissionsExporter(
                 new FrozenFieldDetector(
-                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
+                    new TransitionRetriever(
+                        new StateFactory(
+                            new TransitionFactory(
+                                Workflow_Transition_ConditionFactory::build()
+                            ),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
                     new FrozenFieldsRetriever(
                         new FrozenFieldsDao(),
                         $this->formelement_factory

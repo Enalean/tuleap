@@ -26,7 +26,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
@@ -90,7 +90,6 @@ class TransitionPatcher
                     $state = $this->state_factory->getStateFromValueId($workflow, (int) $transition->getIdTo());
                     $this->transition_updater->updateStatePreConditions(
                         $state,
-                        $transition,
                         $authorized_user_group_ids,
                         $transition_conditions->not_empty_field_ids,
                         $transition_conditions->is_comment_required
