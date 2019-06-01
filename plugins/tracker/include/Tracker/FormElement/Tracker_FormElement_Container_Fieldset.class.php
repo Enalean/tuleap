@@ -23,6 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
@@ -58,9 +59,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
         if (count($content)) {
             $extra_class = '';
-            if ($this->getHiddenFieldsetsDetector()->isFieldsetHidden($artifact, $this) &&
-                ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions'))
-            {
+            if ($this->getHiddenFieldsetChecker()->mustFieldsetBeHidden($this, $artifact)) {
                 $extra_class = 'tracker_artifact_fieldset_hidden';
             }
 
@@ -73,16 +72,18 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
-    private function getHiddenFieldsetsDetector() : HiddenFieldsetsDetector
+    private function getHiddenFieldsetChecker() : HiddenFieldsetChecker
     {
-        return new HiddenFieldsetsDetector(
-            new TransitionRetriever(
-                new Workflow_TransitionDao(),
-                TransitionFactory::instance()
-            ),
-            new HiddenFieldsetsRetriever(
-                new HiddenFieldsetsDao(),
-                Tracker_FormElementFactory::instance()
+        return new HiddenFieldsetChecker(
+            new HiddenFieldsetsDetector(
+                new TransitionRetriever(
+                    new Workflow_TransitionDao(),
+                    TransitionFactory::instance()
+                ),
+                new HiddenFieldsetsRetriever(
+                    new HiddenFieldsetsDao(),
+                    Tracker_FormElementFactory::instance()
+                )
             )
         );
     }
