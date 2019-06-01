@@ -27,17 +27,19 @@ use Tuleap\Tracker\REST\StructureElementRepresentation;
  * A composite is a component which contain other component.
  * See DesignPattern Composite for more details.
  */
-abstract class Tracker_FormElement_Container extends Tracker_FormElement {
+abstract class Tracker_FormElement_Container extends Tracker_FormElement
+{
     /**
      * The formElements of this container
      */
     public $formElements = null;
 
     /**
-     * @return array the used formElements contained in this container
+     * @return Tracker_FormElement[] the used formElements contained in this container
      */
-    public function getFormElements() {
-        if (!is_array($this->formElements)) {
+    public function getFormElements()
+    {
+        if (! is_array($this->formElements)) {
             $aff = Tracker_FormElementFactory::instance();
             $this->formElements = $aff->getUsedFormElementsByParentId($this->id);
         }

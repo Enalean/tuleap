@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
@@ -92,7 +93,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                     new HiddenFieldsetsDao(),
                     Tracker_FormElementFactory::instance()
                 )
-            )
+            ),
+            new FieldsExtractor()
         );
     }
 
