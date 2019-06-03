@@ -100,6 +100,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
      */
     function testGetChildListDuplicateName() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
+        $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
         $item1 = new MockDocman_Folder();
         $item1->setReturnValue('getTitle', 'SameName');
@@ -127,6 +128,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
      */
     function testGetChildListFilled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
+        $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
         $item1 = new MockDocman_Folder();
         $item1->setReturnValue('getTitle', 'SameName');
@@ -176,6 +178,7 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
      */
     function testGetChildrenFilled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
+        $webDAVDocmanFolder->setReturnValue('getProject', Mockery::spy(Project::class));
 
         $item1 = new MockDocman_Folder();
         $item1->setReturnValue('getTitle', 'SameName');

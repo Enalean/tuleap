@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once (dirname(__FILE__).'/../../../docman/include/Docman_ItemFactory.class.php');
-require_once (dirname(__FILE__).'/../../../docman/include/Docman_FileStorage.class.php');
-require_once (dirname(__FILE__).'/../../../docman/include/constants.php');
-require_once ('WebDAVDocmanDocument.class.php');
-require_once ('WebDAVDocmanFile.class.php');
-require_once (dirname(__FILE__).'/../WebDAV_Request.class.php');
-require_once ('WebDAV_DocmanController.class.php');
-
 /**
  * This class Represents Docman folders in WebDAV
  *
@@ -46,7 +38,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($user, $project, $item) {
+    function __construct($user, Project $project, $item) {
         $this->user = $user;
         $this->project = $project;
         $this->item = $item;

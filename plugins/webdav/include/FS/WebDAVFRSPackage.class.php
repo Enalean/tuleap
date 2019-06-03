@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('WebDAVFRSRelease.class.php');
-require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
-
 /**
  * This class is used to mount the releases of a given
  * package into the WebDAV virtual file system.

@@ -1661,7 +1661,7 @@
       <code>userCanWrite</code>
       <code>getUser</code>
     </UndefinedMethod>
-    <UndefinedPropertyFetch occurrences="101">
+    <UndefinedPropertyFetch occurrences="98">
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;request</code>
@@ -1684,7 +1684,9 @@
       <code>$this-&gt;_controler-&gt;request</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
+      <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;request</code>
+      <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
@@ -1754,11 +1756,6 @@
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;notificationsManager</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
       <code>$this-&gt;_controler-&gt;feedback</code>
@@ -4708,26 +4705,10 @@
       <code>$this-&gt;description</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/hudson/include/HudsonBuild.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$xmlstr</code>
-    </InvalidArgument>
-    <InvalidScalarArgument occurrences="1">
-      <code>CURLOPT_URL</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="plugins/hudson/include/HudsonJobBuilder.php">
     <ImplicitToStringCast occurrences="1">
       <code>$http_response-&gt;getBody()</code>
     </ImplicitToStringCast>
-  </file>
-  <file src="plugins/hudson/include/HudsonTestResult.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$xmlstr</code>
-    </InvalidArgument>
-    <InvalidScalarArgument occurrences="1">
-      <code>CURLOPT_URL</code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/hudson/include/HudsonWidget.class.php">
     <UndefinedThisPropertyFetch occurrences="1">
@@ -6748,15 +6729,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/ModeUpdater.php">
-    <InvalidArgument occurrences="1">
-      <code>$transitions_for_a_state</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="1">
-      <code>$all_ordered_transitions</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>array</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$workflow_id</code>
     </InvalidScalarArgument>
@@ -12151,18 +12123,6 @@
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Workflow/Workflow_TransitionDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="5">
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/tracker/include/trackerPlugin.class.php">
     <InvalidArgument occurrences="2">
       <code>$report</code>
@@ -12407,54 +12367,234 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/webdav/include/BrowserPlugin.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Browser_Plugin</code>
-    </UndefinedClass>
+    <AssignmentToVoid occurrences="1">
+      <code>$type</code>
+    </AssignmentToVoid>
+    <PossiblyNullArgument occurrences="1">
+      <code>$type</code>
+    </PossiblyNullArgument>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$docmanPermissionManager</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedInterfaceMethod occurrences="24">
+      <code>getChildren</code>
+      <code>getChildren</code>
+      <code>createFile</code>
+      <code>move</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>getUtils</code>
+      <code>getProject</code>
+      <code>getUtils</code>
+      <code>getUser</code>
+      <code>getItem</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>getUtils</code>
+      <code>getProject</code>
+      <code>getUtils</code>
+      <code>getUser</code>
+      <code>getItem</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>userCanWrite</code>
+      <code>getUtils</code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanDocument.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_File</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="2">
+      <code>date</code>
+      <code>string</code>
+    </ImplementedReturnTypeMismatch>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$params</code>
+      <code>$params</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="1">
+      <code>date</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanFile.class.php">
-    <MissingDependency occurrences="1">
-      <code>WebDAVDocmanDocument</code>
-    </MissingDependency>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$version</code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch occurrences="2">
+      <code>String</code>
+      <code>String</code>
+    </ImplementedReturnTypeMismatch>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$params</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedMethod occurrences="5">
+      <code>getCurrentVersion</code>
+      <code>getCurrentVersion</code>
+      <code>getCurrentVersion</code>
+      <code>getCurrentVersion</code>
+      <code>getCurrentVersion</code>
+    </UndefinedMethod>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVDocmanFolder.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$data</code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch occurrences="2">
+      <code>Docman_Item</code>
+      <code>date</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnStatement occurrences="1">
+      <code>new WebDAVDocmanDocument($this-&gt;user, $this-&gt;getProject(), $item)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>WebDAVDocmanEmpty</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Array</code>
+    </LessSpecificImplementedReturnType>
+    <PossiblyNullReference occurrences="1">
+      <code>getCurrentVersion</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedVariable occurrences="3">
+      <code>$params</code>
+      <code>$params</code>
+      <code>$params</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="3">
+      <code>date</code>
+      <code>WebDAVDocmanEmpty</code>
+      <code>Binary</code>
+    </UndefinedDocblockClass>
+    <UndefinedMethod occurrences="1">
+      <code>getCurrentVersion</code>
+    </UndefinedMethod>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRS.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>NULL</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;getProject()</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>FRSPackage</code>
+    </InvalidNullableReturnType>
+    <InvalidReturnType occurrences="1">
+      <code>NULL</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$utils-&gt;getPackageFactory()-&gt;getFRSPackageFromDb($utils-&gt;getPackageFactory()-&gt;getPackageIdByName($packageName, $this-&gt;getGroupId()), $this-&gt;getGroupId())</code>
+    </NullableReturnStatement>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$packageData</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="2">
+      <code>FRSProject</code>
+      <code>$this-&gt;getProject()</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRSFile.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_File</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="3">
+      <code>String</code>
+      <code>String</code>
+      <code>date</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;getLastModified()</code>
+    </InvalidArgument>
+    <InvalidMethodCall occurrences="1">
+      <code>getId</code>
+    </InvalidMethodCall>
+    <UndefinedDocblockClass occurrences="1">
+      <code>date</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRSPackage.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>NULL</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;getProject()</code>
+    </InvalidArgument>
+    <InvalidClass occurrences="1">
+      <code>FRSrelease</code>
+    </InvalidClass>
+    <InvalidReturnType occurrences="1">
+      <code>NULL</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Array</code>
+    </LessSpecificImplementedReturnType>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$releaseData</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="6">
+      <code>FRSProject</code>
+      <code>$this-&gt;getProject()</code>
+      <code>$this-&gt;getProject()</code>
+      <code>$this-&gt;getProject()</code>
+      <code>$this-&gt;getProject()</code>
+      <code>$this-&gt;getProject()</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVFRSRelease.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$data</code>
+    </ImplementedParamTypeMismatch>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>date</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArgument occurrences="1">
+      <code>$this-&gt;getUser()</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>FRSFile</code>
+    </InvalidNullableReturnType>
+    <InvalidReturnStatement occurrences="1">
+      <code>fopen($path, 'x')</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>bool</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Array</code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$frsff-&gt;getFRSFileFromDb($fileId, $this-&gt;getProject()-&gt;getGroupId())</code>
+    </NullableReturnStatement>
+    <UndefinedDocblockClass occurrences="6">
+      <code>date</code>
+      <code>Binary</code>
+      <code>Binary</code>
+      <code>File</code>
+      <code>File</code>
+      <code>Binary</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVProject.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>NULL</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnType occurrences="1">
+      <code>NULL</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
   </file>
   <file src="plugins/webdav/include/FS/WebDAVRoot.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Directory</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>NULL</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnType occurrences="1">
+      <code>NULL</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>Array</code>
+    </LessSpecificImplementedReturnType>
   </file>
   <file src="plugins/webdav/include/WebDAVAuthentication.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -12462,23 +12602,16 @@
     </InvalidNullableReturnType>
   </file>
   <file src="plugins/webdav/include/WebDAVTree.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_ObjectTree</code>
-    </UndefinedClass>
-  </file>
-  <file src="plugins/webdav/include/WebDAVUtils.class.php">
-    <MissingDependency occurrences="2">
-      <code>WebDAVExceptionServerError</code>
-      <code>WebDAVExceptionServerError</code>
-    </MissingDependency>
-  </file>
-  <file src="plugins/webdav/include/exception/WebDAVExceptionServerError.class.php">
-    <UndefinedClass occurrences="1">
-      <code>Sabre_DAV_Exception</code>
-    </UndefinedClass>
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>void</code>
+    </ImplementedReturnTypeMismatch>
+    <UndefinedDocblockClass occurrences="1">
+      <code>$destination-&gt;getProject()</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/webdav/include/webdavPlugin.class.php">
-    <InvalidMethodCall occurrences="4">
+    <InvalidMethodCall occurrences="5">
+      <code>getPropertyValueForName</code>
       <code>getPropertyValueForName</code>
       <code>getPropertyValueForName</code>
       <code>getPropertyValueForName</code>
@@ -12490,9 +12623,6 @@
     <InvalidReturnType occurrences="1">
       <code>String</code>
     </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Sabre_DAV_Server</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Authentication/SplitToken/SplitTokenVerificationStringHasher.php">
     <ImplicitToStringCast occurrences="1">
@@ -15857,13 +15987,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;user_manager-&gt;getUserById($news['submitted_by'])</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/common/layout/HomePage/StatisticsCollectionBuilder.php">
-    <InvalidArgument occurrences="3">
-      <code>0</code>
-      <code>0</code>
-      <code>[\Project::STATUS_ACTIVE]</code>
-    </InvalidArgument>
   </file>
   <file src="src/common/layout/Layout.class.php">
     <InvalidParamDefault occurrences="2">

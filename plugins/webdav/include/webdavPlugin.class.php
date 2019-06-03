@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class WebDAVPlugin extends Plugin {
@@ -47,11 +48,15 @@ class WebDAVPlugin extends Plugin {
     function getPluginInfo() {
 
         if (!$this->pluginInfo instanceof WebDAVPluginInfo) {
-            include_once('WebDAVPluginInfo.class.php');
             $this->pluginInfo = new WebDAVPluginInfo($this);
         }
         return $this->pluginInfo;
 
+    }
+
+    public function getDependencies()
+    {
+        return [ 'docman' ];
     }
 
     /**
@@ -89,18 +94,11 @@ class WebDAVPlugin extends Plugin {
         $auth = new WebDAVAuthentication();
         $user = $auth->authenticate();
 
-        // Include the SabreDAV library
-        $SabreDAVPath = $this->getPluginInfo()->getPropertyValueForName('sabredav_path');
-        require_once ($SabreDAVPath.'/lib/Sabre/autoload.php');
-        require_once ('exception/WebDAVExceptionServerError.class.php');
-
         // Creating the Root directory from WebDAV file system
         $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
-        require_once ('FS/WebDAVRoot.class.php');
         $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize);
 
         // The tree manages all the file objects
-        require_once ('WebDAVTree.class.php');
         $tree = new WebDAVTree($rootDirectory);
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
@@ -120,7 +118,6 @@ class WebDAVPlugin extends Plugin {
         $server->addPlugin($lockPlugin);
 
         // Creating the browser plugin
-        require_once ('BrowserPlugin.class.php');
         $plugin = new BrowserPlugin();
         $server->addPlugin($plugin);
 
@@ -128,7 +125,4 @@ class WebDAVPlugin extends Plugin {
         return $server;
 
     }
-
 }
-
-?>

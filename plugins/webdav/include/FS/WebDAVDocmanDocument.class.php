@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../WebDAV_Response.class.php';
-
 /**
  * This class Represents Docman documents in WebDAV
  *
@@ -41,7 +39,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      *
      * @return void
      */
-    function __construct($user, $project, $item) {
+    function __construct($user, Project $project, $item) {
         $this->user = $user;
         $this->project = $project;
         $docmanItemFactory = Docman_ItemFactory::instance($project->getId());
@@ -63,7 +61,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns the name of the file
      *
-     * @return String
+     * @return string
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
@@ -75,7 +73,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns mime-type of the file
      *
-     * @return String
+     * @return string
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
      */
@@ -118,7 +116,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns the the project that document belongs to
      *
-     * @return FRSProject
+     * @return Project
      */
     function getProject() {
         return $this->project;

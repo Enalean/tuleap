@@ -18,12 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('WebDAVFRSPackage.class.php');
-require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
-
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 
 /**
  * This class lists the packages of a given project

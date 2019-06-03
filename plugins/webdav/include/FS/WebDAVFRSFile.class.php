@@ -24,10 +24,6 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-require_once ('common/include/MIME.class.php');
-require_once ('www/project/admin/permissions.php');
-require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
-
 /**
  * This class is used to maniplulate files through WebDAV
  *
