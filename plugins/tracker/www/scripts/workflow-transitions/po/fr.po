@@ -134,8 +134,8 @@ msgstr "Champ"
 msgid "Field(s) that must not be empty"
 msgstr "Le(s) champs suivant(s) doivent obligatoirement avoir une valeur"
 
-msgid "Fields that will be set as read-only"
-msgstr "Champs qui seront passés en lecture seule"
+msgid "Fields that will be frozen"
+msgstr "Champs qui seront figés"
 
 msgid "Floats"
 msgstr "Flottants"
