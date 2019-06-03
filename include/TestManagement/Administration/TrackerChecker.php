@@ -25,6 +25,7 @@ namespace Tuleap\TestManagement\Administration;
 use Project;
 use TrackerFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
 class TrackerChecker
 {
@@ -43,10 +44,19 @@ class TrackerChecker
      */
     private $frozen_fields_dao;
 
-    public function __construct(TrackerFactory $tracker_factory, FrozenFieldsDao $frozen_fields_dao)
-    {
-        $this->tracker_factory   = $tracker_factory;
-        $this->frozen_fields_dao = $frozen_fields_dao;
+    /**
+     * @var HiddenFieldsetsDao
+     */
+    private $hidden_fieldsets_dao;
+
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        FrozenFieldsDao $frozen_fields_dao,
+        HiddenFieldsetsDao $hidden_fieldsets_dao
+    ) {
+        $this->tracker_factory      = $tracker_factory;
+        $this->frozen_fields_dao    = $frozen_fields_dao;
+        $this->hidden_fieldsets_dao = $hidden_fieldsets_dao;
     }
 
     /**
@@ -64,6 +74,7 @@ class TrackerChecker
     /**
      * @throws TrackerNotInProjectException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerHasAtLeastOneHiddenFieldsetsPostActionException
      */
     public function checkSubmittedTrackerCanBeUsed(Project $project, int $submitted_id) : void
     {
@@ -71,6 +82,10 @@ class TrackerChecker
 
         if ($this->frozen_fields_dao->isAFrozenFieldPostActionUsedInTracker($submitted_id)) {
             throw new TrackerHasAtLeastOneFrozenFieldsPostActionException();
+        }
+
+        if ($this->hidden_fieldsets_dao->isAHiddenFieldsetPostActionUsedInTracker($submitted_id)) {
+            throw new TrackerHasAtLeastOneHiddenFieldsetsPostActionException();
         }
     }
 

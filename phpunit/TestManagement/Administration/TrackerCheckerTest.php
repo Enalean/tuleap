@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
 class TrackerCheckerTest extends TestCase
 {
@@ -76,9 +77,14 @@ class TrackerCheckerTest extends TestCase
             $this->issue_tracker
         ]);
 
-        $this->frozen_field_dao = Mockery::mock(FrozenFieldsDao::class);
+        $this->frozen_field_dao    = Mockery::mock(FrozenFieldsDao::class);
+        $this->hidden_fieldset_dao = Mockery::mock(HiddenFieldsetsDao::class);
 
-        $this->tracker_checker = new TrackerChecker($tracker_factory, $this->frozen_field_dao);
+        $this->tracker_checker = new TrackerChecker(
+            $tracker_factory,
+            $this->frozen_field_dao,
+            $this->hidden_fieldset_dao
+        );
     }
 
     public function testItDoesNotThrowExceptionIfProvidedTrackerIdIsInProject()
@@ -95,6 +101,7 @@ class TrackerCheckerTest extends TestCase
         $submitted_id = 1;
 
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
+        $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(false);
 
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
 
@@ -121,6 +128,18 @@ class TrackerCheckerTest extends TestCase
         $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(true);
 
         $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItThrowsAnExceptionIfProvidedTrackerHasAHiddenFieldsetPostAction()
+    {
+        $submitted_id = 1;
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
+        $this->hidden_fieldset_dao->shouldReceive('isAHiddenFieldsetPostActionUsedInTracker')->with(1)->andReturn(true);
+
+        $this->expectException(TrackerHasAtLeastOneHiddenFieldsetsPostActionException::class);
 
         $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
     }

@@ -27,6 +27,7 @@ use Feedback;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
@@ -167,10 +168,31 @@ class AdminController extends TestManagementController
                 $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
             }
             return $submitted_id;
-        } catch (TrackerNotInProjectException | TrackerHasAtLeastOneFrozenFieldsPostActionException $exception) {
+        } catch (TrackerNotInProjectException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                sprintf(dgettext('tuleap-testmanagement', 'Invalid tracker id %1$s for this project'), $submitted_id)
+                sprintf(dgettext('tuleap-testmanagement', 'The tracker id %1$s is not part of this project'), $submitted_id)
+            );
+
+            return $original_id;
+        } catch (TrackerHasAtLeastOneFrozenFieldsPostActionException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s uses frozen fields workflow post action'),
+                    $submitted_id
+                )
+            );
+
+            return $original_id;
+
+        } catch (TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'The tracker id %1$s uses hidden fieldsets workflow post action'),
+                    $submitted_id
+                )
             );
 
             return $original_id;

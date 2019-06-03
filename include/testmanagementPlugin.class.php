@@ -55,6 +55,7 @@ use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
@@ -447,7 +448,11 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
 
     private function getTrackerChecker() : TrackerChecker
     {
-        return new TrackerChecker(TrackerFactory::instance(), new FrozenFieldsDao());
+        return new TrackerChecker(
+            TrackerFactory::instance(),
+            new FrozenFieldsDao(),
+            new HiddenFieldsetsDao()
+        );
     }
 
     /**

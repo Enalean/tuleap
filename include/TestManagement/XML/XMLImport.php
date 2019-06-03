@@ -25,6 +25,7 @@ use Exception;
 use Project;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Config;
 use XML_RNGValidator;
@@ -90,7 +91,11 @@ class XMLImport
                     $execution_tracker_id,
                     $issue_tracker_id
                 );
-            } catch (TrackerNotInProjectException | TrackerHasAtLeastOneFrozenFieldsPostActionException $exception) {
+            } catch (
+                TrackerNotInProjectException |
+                TrackerHasAtLeastOneFrozenFieldsPostActionException |
+                TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
+            ) {
                 throw new Exception("Trackers defined in the configuration files are not valid.");
             }
         }
