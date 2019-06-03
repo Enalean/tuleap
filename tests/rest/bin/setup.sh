@@ -42,6 +42,9 @@ setup_tuleap() {
 
 	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
 	install -m 04755 -o root -g root /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
+
+	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
+	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
 }
 
 setup_database() {

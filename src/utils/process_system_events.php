@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2013-2015. All rights reserved
+ * Copyright (c) Enalean SAS, 2013-present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,21 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 $request_queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
 
-$factory = new SystemEventProcessor_Factory(BackendLogger::getDefaultLogger(), SystemEventManager::instance(), EventManager::instance());
+// Rewrite as a process wrapper to ensure that process names are the same, so running
+// $> tuleap process-system-event
+// and
+// $> /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/process_system_events.php
+// will be shown as the same process. Otherwise names would be different and then would be run concurrently
+// Note this is kept for backward compatibility purpose (install, docker images) in 2019, at some point it
+// could probably be removed.
+$process = new \Symfony\Component\Process\Process(['/usr/bin/tuleap', \Tuleap\CLI\Command\ProcessSystemEventsCommand::NAME, $request_queue]);
+$process->run();
+if (! $process->isSuccessful()) {
+    fwrite(STDERR, sprintf("ERROR, command %s exited with %d. Stderr:\n%s\nStdout:\n%s\n", $process->getCommandLine(), (int) $process->getExitCode(), $process->getErrorOutput(), $process->getOutput()));
+}
 
-$processor = $factory->getProcessForQueue($request_queue);
-
-$mutex = new SystemEventProcessorMutex(new SystemEventProcessManager(), $processor);
-$mutex->execute();
+exit($process->getExitCode());

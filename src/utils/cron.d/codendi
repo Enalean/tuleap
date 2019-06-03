@@ -2,21 +2,21 @@
 # -- WARNING -- WARNING -- WARNING -- WARNING -- WARNING -- WARNING --
 # ------------------  EDIT THE CORRECT FILE  -------------------------
 #
-# This file is copied to /etc/cron.d/codendi from
-# /usr/share/codendi/src/utils/cron.d/codendi when the codendi service is started via its
-# init.d script and the file /etc/cron.d/codendi is removed when the
+# This file is copied to /etc/cron.d/tuleap from
+# /usr/share/tuleap/src/utils/cron.d/codendi when the tuleap service is started via its
+# init.d script and the file /etc/cron.d/tuleap is removed when the
 # service is stopped.  Therefore any edits made directly to
-# /etc/cron.d/codendi will be lost anytime the codendi service
+# /etc/cron.d/tuleap will be lost anytime the tuleap service
 # restarts.
 #
-# To make changes edit the master copy /usr/share/codendi/src/utils/cron.d/codendi and then
-# restart the service to pick up the changes (/sbin/service codendi restart).
+# To make changes edit the master copy /usr/share/tuleap/src/utils/cron.d/tuleap and then
+# restart the service to pick up the changes (/sbin/service tuleap restart).
 #
-# The reason this is done this way is because the codendi cron jobs
-# should only be invoked if the codendi service is enabled and not
+# The reason this is done this way is because the tuleap cron jobs
+# should only be invoked if the tuleap service is enabled and not
 # just as a consequence of installing the rpm as was the case
-# previously. The file /etc/cron.d/codendi cannot simply be linked to
-# the master copy in /usr/share/codendi/src/utils/cron.d/codendi because for security reasons cron
+# previously. The file /etc/cron.d/tuleap cannot simply be linked to
+# the master copy in /usr/share/tuleap/src/utils/cron.d/codendi because for security reasons cron
 # will not process crontab files that are links or writeable by
 # anybody else but root, thus the file must be copied into /etc/cron.d
 # with the right ownership and permissions.
@@ -26,17 +26,20 @@
 # Tasks expected to be launched at specific moment are started within a half four (1799 seconds) of the expected time
 #
 
+# The delay should be managed as an env variable so command line and process name will be the same if the command is
+# run with delay (cron) or without (CLI). This way the concurrent process check will work
+TLP_DELAY_CRON_CMD=1
+
 #
 # Tuleap root
 #
 
 # Once a minute, process Tuleap system events
-* * * * * root php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php default)
-* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
-* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php tv3_tv5_migration)
-* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php git)
-* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php grokmirror)
-* * * * * root php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php statistics)
+* * * * * root /usr/bin/tuleap process-system-event default
+* * * * * codendiadm /usr/bin/tuleap process-system-event tv3_tv5_migration
+* * * * * codendiadm /usr/bin/tuleap process-system-event git
+* * * * * codendiadm /usr/bin/tuleap process-system-event grokmirror
+* * * * * root /usr/bin/tuleap process-system-event statistics
 
 #
 # Regularly launch a system_check event (e.g. every half-hour)
