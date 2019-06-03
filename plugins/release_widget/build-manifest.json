@@ -1,0 +1,12 @@
+{
+    "name": "release_widget",
+    "gettext-vue": {
+        "release_widget": {
+            "scripts": "scripts/",
+            "po": "scripts/releasewidget/po"
+        }
+    },
+    "components": [
+        "scripts/"
+    ]
+}

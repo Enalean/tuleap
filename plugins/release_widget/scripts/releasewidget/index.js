@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,20 +15,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\ReleaseWidget\Plugin;
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 
-class PluginDescriptor extends \PluginDescriptor
-{
-    public function __construct()
-    {
-        parent::__construct(
-            dgettext('tuleap-release_widget', 'Release Widget'),
-            false,
-            dgettext('tuleap-release_widget', 'A widget for release monitoring.')
-        );
+import french_translations from "./po/fr.po";
+import App from "./src/components/App.vue";
 
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
+document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(GetTextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
+    Vue.config.language = document.body.dataset.userLocale;
+
+    const vue_mount_point = document.getElementById("release-widget");
+
+    if (!vue_mount_point) {
+        return;
     }
-}
+
+    const AppComponent = Vue.extend(App);
+
+    new AppComponent().$mount(vue_mount_point);
+});
