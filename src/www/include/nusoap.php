@@ -252,7 +252,7 @@ class nusoap_base {
 	*/
 	function debug($string){
 		if ($this->debugLevel > 0) {
-			$this->appendDebug($this->getmicrotime().' '.get_class($this).": $string\n");
+			$this->appendDebug($this->getmicrotime().' '.static::class.": $string\n");
 		}
 	}
 

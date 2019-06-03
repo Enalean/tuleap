@@ -57,6 +57,8 @@
     <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
     <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
     <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>

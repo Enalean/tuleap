@@ -409,8 +409,8 @@ class _WikiUser
         if (empty($this->_auth_methods)) 
             $this->_auth_methods = $GLOBALS['USER_AUTH_ORDER'];
         if (empty($this->_current_index)) {
-            if (strtolower(get_class($this)) != '_passuser') {
-            	$this->_current_method = substr(get_class($this),1,-8);
+            if (strtolower(static::class) != '_passuser') {
+                $this->_current_method = substr(static::class,1,-8);
                 $this->_current_index = $this->array_position($this->_current_method,
                                                               $this->_auth_methods);
             } else {
@@ -556,7 +556,7 @@ class _WikiUser
             else
                 return _("Invalid password or userid.");
         } elseif ($authlevel < $require_level) { // auth ok, but not enough 
-            if (!empty($this->_current_method) and strtolower(get_class($this)) == '_passuser') 
+            if (!empty($this->_current_method) and strtolower(static::class) == '_passuser')
             {
                 // upgrade class
                 $class = "_" . $this->_current_method . "PassUser";
@@ -573,7 +573,7 @@ class _WikiUser
         // Successful login.
         //$user = $GLOBALS['request']->_user;
         if (!empty($this->_current_method) and 
-            strtolower(get_class($this)) == '_passuser') 
+            strtolower(static::class) == '_passuser')
         {
             // upgrade class
             $class = "_" . $this->_current_method . "PassUser";
@@ -741,7 +741,7 @@ extends _AnonUser
             if ($this->hasHomePage())
                 $this->_HomePagehandle = $GLOBALS['request']->getPage($this->_userid);
         }
-        $this->_authmethod = substr(get_class($this),1,-8);
+        $this->_authmethod = substr(static::class,1,-8);
         if ($this->_authmethod == 'a') $this->_authmethod = 'admin';
 
         // Check the configured Prefs methods
@@ -773,7 +773,7 @@ extends _AnonUser
         }
         
         // Upgrade to the next parent _PassUser class. Avoid recursion.
-        if ( strtolower(get_class($this)) === '_passuser' ) {
+        if ( strtolower(static::class) === '_passuser' ) {
             //auth policy: Check the order of the configured auth methods
             // 1. first-only: Upgrade the class here in the constructor
             // 2. old:       ignore USER_AUTH_ORDER and try to use all available methods as 
@@ -1078,7 +1078,7 @@ extends _AnonUser
 
     function _tryNextPass($submitted_password) {
         if (DEBUG & _DEBUG_LOGIN) {
-            $class = strtolower(get_class($this));
+            $class = strtolower(static::class);
             if (substr($class,-10) == "dbpassuser") $class = "_dbpassuser";
             $GLOBALS['USER_AUTH_ERROR'][$class] = 'wrongpass';
         }
@@ -1100,7 +1100,7 @@ extends _AnonUser
 
     function _tryNextUser() {
         if (DEBUG & _DEBUG_LOGIN) {
-            $class = strtolower(get_class($this));
+            $class = strtolower(static::class);
             if (substr($class,-10) == "dbpassuser") $class = "_dbpassuser";
             $GLOBALS['USER_AUTH_ERROR'][$class] = 'nosuchuser';
         }

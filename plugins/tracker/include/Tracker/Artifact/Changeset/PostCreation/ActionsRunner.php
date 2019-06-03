@@ -71,7 +71,7 @@ class ActionsRunner
         ActionsRunnerDao $actions_runner_dao,
         PostCreationTask ...$post_creation_tasks
     ) {
-        $this->logger              = new WrapperLogger($logger, __CLASS__);
+        $this->logger              = new WrapperLogger($logger, self::class);
         $this->actions_runner_dao  = $actions_runner_dao;
         $this->post_creation_tasks = $post_creation_tasks;
     }

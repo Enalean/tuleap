@@ -50,6 +50,6 @@ class Git_Mirror_Mirror {
     }
 
     public function __toString() {
-        return __CLASS__ .' '. $this->id;
+        return self::class .' '. $this->id;
     }
 }

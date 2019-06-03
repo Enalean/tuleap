@@ -132,7 +132,7 @@ class PEAR
      */
     function __construct($error_class = null)
     {
-        $classname = get_class($this);
+        $classname = static::class;
         if ($this->_debug) {
             print "PEAR constructor called, class=$classname\n";
         }
@@ -167,7 +167,7 @@ class PEAR
      */
     function _PEAR() {
         if ($this->_debug) {
-            printf("PEAR destructor called, class=%s\n", get_class($this));
+            printf("PEAR destructor called, class=%s\n", static::class);
         }
     }
 
@@ -811,7 +811,7 @@ class PEAR_Error
      */
     function getType()
     {
-        return get_class($this);
+        return static::class;
     }
 
     // }}}
@@ -896,7 +896,7 @@ class PEAR_Error
             }
             return sprintf('[%s: message="%s" code=%d mode=callback '.
                            'callback=%s prefix="%s" info="%s"]',
-                           get_class($this), $this->message, $this->code,
+                           static::class, $this->message, $this->code,
                            $callback, $this->error_message_prefix,
                            $this->userinfo);
         }
@@ -914,7 +914,7 @@ class PEAR_Error
         }
         return sprintf('[%s: message="%s" code=%d mode=%s level=%s '.
                        'prefix="%s" info="%s"]',
-                       get_class($this), $this->message, $this->code,
+                       static::class, $this->message, $this->code,
                        implode("|", $modes), $levels[$this->level],
                        $this->error_message_prefix,
                        $this->userinfo);

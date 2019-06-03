@@ -1317,7 +1317,7 @@ class WikiDB_Page
      */
     function asString () {
         ob_start();
-        printf("[%s:%s\n", get_class($this), $this->getName());
+        printf("[%s:%s\n", static::class, $this->getName());
         print_r($this->getMetaData());
         echo "]\n";
         $strval = ob_get_contents();
@@ -1693,7 +1693,7 @@ class WikiDB_PageRevision
      */
     function asString () {
         ob_start();
-        printf("[%s:%d\n", get_class($this), $this->get('version'));
+        printf("[%s:%d\n", static::class, $this->get('version'));
         print_r($this->_data);
         echo $this->getPackedContent() . "\n]\n";
         $strval = ob_get_contents();

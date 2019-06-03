@@ -36,7 +36,7 @@ class Tracker_FormElement_Field_ComputedDaoCache {
      */
     public static function instance() {
         if (! self::$instance) {
-            $class = __CLASS__;
+            $class = self::class;
             self::$instance = new $class(new Tracker_FormElement_Field_ComputedDao());
         }
         return self::$instance;

@@ -19,9 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\UserRepresentation;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Import\Spotter;
+use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
@@ -670,12 +672,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function testImport() {
         if(parent::testImport()){
-            if (get_class($this) == 'Tracker_FormElement_Field_Text') {
+            if (static::class == 'Tracker_FormElement_Field_Text') {
                 if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;
                 }
-            } elseif (get_class($this) == 'Tracker_FormElement_Field_String') {
+            } elseif (static::class == 'Tracker_FormElement_Field_String') {
                 if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
                     var_dump($this, 'Properties must be "maxchars" and "size"');
                     return false;
@@ -812,12 +814,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
-        $class_user_representation   = '\\Tuleap\\Project\\REST\\UserRepresentation';
-        $user_representation         = new $class_user_representation;
+        $user_representation = new UserRepresentation();
         $user_representation->build($value);
 
-        $class_user_value_representation = '\\Tuleap\\Tracker\\REST\\FieldListBindUserValueRepresentation';
-        $representation                  = new $class_user_value_representation;
+        $representation = new FieldListBindUserValueRepresentation();
         $representation->build($value, $user_representation);
 
         return $representation;

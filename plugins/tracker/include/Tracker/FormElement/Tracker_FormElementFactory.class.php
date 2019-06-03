@@ -129,7 +129,7 @@ class Tracker_FormElementFactory {
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $FormElementFactory_class = __CLASS__;
+            $FormElementFactory_class = self::class;
             self::setInstance(new $FormElementFactory_class);
         }
         return self::$_instance;

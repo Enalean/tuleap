@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -38,13 +38,19 @@ class Controler {
   }
 
   function viewsManagement() {
-    $className = get_class($this).'Views';
+    $className = static::class.'Views';
+    if (! class_exists($className)) {
+        throw new LogicException(sprintf('View class %s does not exist, nothing can be displayed', $className));
+    }
     $wv = new $className($this, $this->gid, $this->view, $this->_viewParams);
     return $wv->display($this->view);
   }
 
   function actionsManagement() {
-    $className = get_class($this).'Actions';
+    $className = static::class.'Actions';
+    if (! class_exists($className)) {
+        throw new LogicException(sprintf('Action class %s does not exist, nothing can be processed', $className));
+    }
     $wa = new $className($this, $this->gid);
     $wa->process($this->action, $this->_actionParams);
   }

@@ -76,7 +76,7 @@ class WikiPlugin
      * @return string plugin name/target.
      */
     function getName() {
-        return preg_replace('/^.*_/', '',  get_class($this));
+        return preg_replace('/^.*_/', '',  static::class);
     }
 
     function getDescription() {

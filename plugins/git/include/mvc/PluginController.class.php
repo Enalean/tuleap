@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -25,7 +25,8 @@
  *
  */
 
-class PluginController {
+abstract class PluginController
+{
 
     /**
      * List of PluginViews method name to execute
@@ -188,10 +189,7 @@ class PluginController {
         }
     }
 
-    protected function instantiateView()  {
-        $className = get_class($this).'Views';
-        return new $className($this);
-    }
+    abstract protected function instantiateView();
 
     /**
      * This functions execute all methods added to the actions class array ($this->actions)
@@ -204,7 +202,7 @@ class PluginController {
             return false;
         }
         $results       = array();
-        $className     = get_class($this).'Actions';
+        $className     = static::class.'Actions';
         $wa            = $this->instantiateAction($className);
         foreach ($this->actions as $name=>$params) {
             $wa->process($name, $params);

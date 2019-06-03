@@ -60,8 +60,8 @@ class PHP_BigFile {
      * @return void
      */
     public static function register() {
-        if (!stream_wrapper_register(self::PROTOCOL, __CLASS__)) {
-            throw new RuntimeException('Unable to register '. __CLASS__ .' protocol');
+        if (!stream_wrapper_register(self::PROTOCOL, self::class)) {
+            throw new RuntimeException('Unable to register '. self::class .' protocol');
         }
     }
     

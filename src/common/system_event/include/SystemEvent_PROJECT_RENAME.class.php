@@ -140,7 +140,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
 
             // Add Hook for plugins
             $this->getEventManager()->processEvent(
-                __CLASS__,
+                self::class,
                 array('project'   => $project,
                       'new_name'  => $new_name)
             );
@@ -177,11 +177,10 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      * @param String  $field_name Event name
      * @param String  $old_value  Event value
      * @param int $group_id Project id of the vent
-     * 
-     * @return bool
+     *
      */
     protected function addProjectHistory($field_name, $old_value, $group_id) {
-        return group_add_history($field_name, $old_value, $group_id);
+        group_add_history($field_name, $old_value, $group_id);
     }
 }
 

@@ -78,7 +78,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     public function __toString() {
-        return __CLASS__ . '#' . $this->id;
+        return self::class . '#' . $this->id;
     }
 
     public function getId() {

@@ -64,7 +64,7 @@ class Git_Ci_Launcher {
                 try {
                     $this->jenkins_client->setToken($row['token'])->launchJobBuild($row['job_url']);
                 } catch(Exception $exception) {
-                    $this->logger->error(__CLASS__.'['.$repository->getId().'] '.$exception->getMessage());
+                    $this->logger->error(self::class.'['.$repository->getId().'] '.$exception->getMessage());
                 }
             }
         }

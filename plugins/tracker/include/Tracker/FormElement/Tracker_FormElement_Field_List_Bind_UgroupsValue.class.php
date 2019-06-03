@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     }
 
     public function __toString() {
-        return __CLASS__ .' #'. $this->getId();
+        return self::class .' #'. $this->getId();
     }
 
     /**

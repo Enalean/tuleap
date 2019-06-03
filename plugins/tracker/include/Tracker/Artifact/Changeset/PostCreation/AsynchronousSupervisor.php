@@ -42,7 +42,7 @@ class AsynchronousSupervisor
 
     public function __construct(Logger $logger, ActionsRunnerDao $dao)
     {
-        $this->logger = new WrapperLogger($logger, __CLASS__);
+        $this->logger = new WrapperLogger($logger, self::class);
         $this->dao    = $dao;
     }
 

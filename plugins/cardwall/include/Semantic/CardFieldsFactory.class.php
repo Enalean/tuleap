@@ -37,7 +37,7 @@ class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveS
      */
     public static function instance() {
         if (!isset(self::$instance)) {
-            $class_name = __CLASS__;
+            $class_name = self::class;
             self::$instance = new $class_name;
         }
         return self::$instance;
