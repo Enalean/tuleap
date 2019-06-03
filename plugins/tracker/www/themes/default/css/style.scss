@@ -3333,3 +3333,17 @@ td.tracker-unsubscriber-actions {
         display: block;
     }
 }
+
+.tracker-field-dependency-highlight {
+    animation: 1s linear 0s field-dependencies-highlight-anim;
+}
+
+@keyframes field-dependencies-highlight-anim {
+    0% {
+        background: #ffff99;
+    }
+
+    100% {
+        background: #ffffff;
+    }
+}

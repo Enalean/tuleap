@@ -552,7 +552,7 @@ class Tracker_RulesManager
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $trvv = new Tracker_Rule_List_View($rules[$key]);
-                $html .= 'codendi.tracker.rules_definitions.push(';
+                $html .= 'tuleap.tracker.rules_definitions.push(';
                 $html .= $trvv->fetchJavascript();
                 $html .= ");\n";
             }
