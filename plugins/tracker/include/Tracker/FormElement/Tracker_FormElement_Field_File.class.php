@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForRestCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTusUploadCreator;
@@ -156,7 +155,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $html             = '';
         $submitter_needed = true;
         $read_only        = false;
@@ -165,16 +168,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchArtifactReadOnly($artifact);
+        return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
     public function fetchSubmitForOverlay(array $submitted_values) {
         return '';
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
     {
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
@@ -224,7 +227,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
     /**
@@ -292,7 +299,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values, $read_only = true, $lytebox_id = null) {
+    public function fetchAllAttachment(
+        $artifact_id,
+        $values,
+        $submitter_needed,
+        array $submitted_values,
+        $read_only = true,
+        $lytebox_id = null
+    ) {
         $html = '';
         if ($lytebox_id === null) {
             $lytebox_id = $this->getId();
@@ -401,11 +415,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return 'data-rel="lytebox['. $lytebox_id .']"';
     }
 
-    private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, $submitted_values) {
+    private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, array $submitted_values)
+    {
         $html = '';
         $html .= '<label class="pc_checkbox tracker_artifact_attachment_delete">';
         $checked = '';
-        if (isset($submitted_values[0][$this->id]) && ! empty($submitted_values[0][$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[0][$this->id]['delete'])) {
+        if (isset($submitted_values[$this->id]) && ! empty($submitted_values[$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[$this->id]['delete'])) {
             $checked = 'checked="checked"';
         }
         $html .= '<input type="checkbox" name="artifact['. $this->id .'][delete][]" value="'. $fileinfo->getId() .'" title="delete" '. $checked .' />&nbsp;';

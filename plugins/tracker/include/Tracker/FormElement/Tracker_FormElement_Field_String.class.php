@@ -149,10 +149,14 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $html = '';
-        if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
-            $value = $submitted_values[0][$this->getId()];
+        if (isset($submitted_values[$this->getId()])) {
+            $value = $submitted_values[$this->getId()];
         } else {
             if($value != null) {
                 $value = $value->getText();

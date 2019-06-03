@@ -127,7 +127,11 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -178,8 +182,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -258,7 +262,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string html
      */
-    public function fetchSubmitMasschange($submitted_values=array()) {
+    public function fetchSubmitMasschange()
+    {
         return '';
     }
 

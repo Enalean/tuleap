@@ -34,6 +34,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/Enalean/Restler.git"
+    },
+    {
+      "type":"vcs",
+      "url":"https://github.com/Enalean/simpletest.git"
     }
   ],
   "require": {
@@ -84,7 +88,7 @@
     "php-http/mock-client": "^1.2",
     "phpcompatibility/php-compatibility": "^9.1",
     "phpunit/phpunit": "^8",
-    "simpletest/simpletest": "^1.1",
+    "simpletest/simpletest": "dev-nullable-types#cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
     "slevomat/coding-standard": "^5.0",
     "squizlabs/php_codesniffer": "^3.4",
     "vimeo/psalm": "^3.3"

@@ -20,10 +20,6 @@
  */
 
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
 
@@ -243,19 +239,24 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $content = '';
 
+        /** @var Tracker_Artifact_ChangesetValue_Text $value */
         if ($value) {
-            $format  = $value->getFormat();
+            $format = $value->getFormat();
         } else {
             $default_value = $this->getDefaultValue();
             $format = $default_value['format'];
         }
 
-        if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
-            $content = $submitted_values[0][$this->getId()]['content'];
-            $format  = $submitted_values[0][$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
+        if (isset($submitted_values[$this->getId()])) {
+            $content = $submitted_values[$this->getId()]['content'];
+            $format  = $submitted_values[$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         } elseif ($value != null) {
             $content = $value->getText();
         }
@@ -353,7 +354,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return '<div class="textarea-value">' . $text . '</div>';
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 

@@ -26,10 +26,6 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -177,7 +173,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $is_read_only = false;
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value, $submitted_values);
     }
@@ -222,31 +222,31 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $is_read_only = true;
-        return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
+        return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value, []);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition(
+                $artifact,
+                $value,
+                $submitted_values
+            );
     }
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
 
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
                 $this->fetchArtifactValueCommon($is_field_frozen, $artifact, $value, $submitted_values) .
             '</div>';
-    }
-
-    private function isValidSubmittedValues($submitted_values) {
-        return (
-            isset($submitted_values[0])
-            && is_array($submitted_values[0])
-            && isset($submitted_values[0][$this->getId()])
-        );
     }
 
     private function getArtifactValueHTML($artifact_id, $can_user_restrict_permissions_to_nobody, $is_read_only)
@@ -305,13 +305,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     protected function fetchArtifactValueCommon(
         $is_read_only,
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
-        if ($this->isValidSubmittedValues($submitted_values)) {
-            $is_checked = (is_array($value) === true
-                && $this->getPermissionsValidator()->isArtifactPermissionChecked($value)
-                || $artifact->useArtifactPermissions());
+        if (isset($submitted_values[$this->getId()]) && is_array($submitted_values[$this->getId()])) {
+            $is_checked = $this->getPermissionsValidator()->isArtifactPermissionChecked($submitted_values[$this->getId()]);
         } else {
             $is_checked = $artifact->useArtifactPermissions();
         }

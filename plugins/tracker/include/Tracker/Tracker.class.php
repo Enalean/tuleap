@@ -372,10 +372,10 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      *
      * @return string
      */
-    public function fetchFormElements($artifact, $submitted_values = array()) {
+    public function fetchFormElements($artifact, array $submitted_values) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
-            $html .= $formElement->fetchArtifact($artifact, $submitted_values);
+            $html .= $formElement->fetchArtifact($artifact, $submitted_values, []);
         }
         return $html;
     }
@@ -387,7 +387,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      *
      * @return string
      */
-    public function fetchFormElementsForCopy($artifact, $submitted_values = array()) {
+    public function fetchFormElementsForCopy($artifact, array $submitted_values) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifactCopyMode($artifact, $submitted_values);
@@ -403,7 +403,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      *
      * @return string
      */
-    public function fetchFormElementsNoColumns($artifact, $submitted_values = array()) {
+    public function fetchFormElementsNoColumns($artifact, array $submitted_values) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifactForOverlay($artifact, $submitted_values);
@@ -414,11 +414,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     /**
      * Fetch Tracker submit form in HTML without the container and column rendering
      *
-     * @param Tracker_Artifact | null  $artifact_to_link  The artifact wich will be linked to the new artifact
-     *
      * @return String
      */
-    public function fetchSubmitNoColumns($artifact_to_link, $submitted_values) {
+    public function fetchSubmitNoColumns(?Tracker_Artifact $artifact_to_link, array $submitted_values) {
         $html='';
 
         if ($artifact_to_link) {
@@ -439,7 +437,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      *
      * @return string
      */
-    public function fetchFormElementsReadOnly($artifact, $submitted_values = array()) {
+    public function fetchFormElementsReadOnly($artifact, array $submitted_values) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifactReadOnly($artifact, $submitted_values);
@@ -1993,7 +1991,7 @@ EOS;
         echo '<div class="tracker_confirm_delete">';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()));
         echo '<div class="tracker_confirm_delete_preview">';
-        echo $this->fetchFormElementsReadOnly($artifact);
+        echo $this->fetchFormElementsReadOnly($artifact, []);
         echo '</div>';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact">';
         echo $token->fetchHTMLInput();

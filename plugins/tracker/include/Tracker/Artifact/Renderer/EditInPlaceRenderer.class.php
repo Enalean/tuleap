@@ -48,11 +48,11 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $this->renderer->renderToPage('artifact-modal', $presenter);
     }
 
-    public function getSubmittedValues($request) {
-        $submitted_values = array(0 => null);
-
-        if (is_array($request->get('artifact'))) {
-            $submitted_values[0] = $request->get('artifact');
+    public function getSubmittedValues($request): array
+    {
+        $submitted_values = $request->get('artifact');
+        if (! $submitted_values || ! is_array($submitted_values)) {
+            return [];
         }
 
         return $submitted_values;

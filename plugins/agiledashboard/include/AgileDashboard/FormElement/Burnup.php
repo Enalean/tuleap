@@ -105,7 +105,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
     }
 
@@ -211,6 +211,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     public function fetchSubmitMasschange()
     {
+        return '';
     }
 
     protected function fetchSubmitValue(array $submitted_values)

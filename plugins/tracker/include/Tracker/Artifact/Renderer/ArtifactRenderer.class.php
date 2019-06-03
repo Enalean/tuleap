@@ -82,14 +82,11 @@ abstract class Tracker_Artifact_ArtifactRenderer {
     abstract protected function fetchFormContent(Codendi_Request $request, PFUser $current_user);
 
     /**
-     * Returns HTML code to display the artifact fields
-     *
-     * @param array $submitted_values array of submitted values
-     *
      * @return string The HTML code for artifact fields
      */
-    public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $artifact->getTracker()->fetchFormElements($artifact, array($submitted_values));
+    public function fetchFields(Tracker_Artifact $artifact, array $submitted_values)
+    {
+        return $artifact->getTracker()->fetchFormElements($artifact, $submitted_values);
     }
 
     public function fetchFieldsForCopy(Tracker_Artifact $artifact) {

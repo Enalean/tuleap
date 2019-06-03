@@ -223,12 +223,11 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $submitted_values = array()
     ) {
         $html = '';
-        if (! empty($submitted_values)
-            && is_array($submitted_values[0])
-            && isset($submitted_values[0][$this->getId()])
-            && $submitted_values[0][$this->getId()] !== false
+        if (is_array($submitted_values)
+            && isset($submitted_values[$this->getId()])
+            && $submitted_values[$this->getId()] !== false
         ) {
-            $value = $submitted_values[0][$this->getId()];
+            $value = $submitted_values[$this->getId()];
         } else {
             if ($value != null) {
                 $value = $value->getValue();
@@ -257,8 +256,8 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
             $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
@@ -365,7 +364,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $value;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
     }
 

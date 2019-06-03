@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -250,7 +250,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchArtifactAdditionnalInfo($value, $submitted_values = null) {
+    public function fetchArtifactAdditionnalInfo(?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
+    {
         return '';
     }
 
@@ -260,7 +261,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo($submitted_values) {
+    public function fetchSubmitAdditionnalInfo(array $submitted_values)
+    {
         return '';
     }
 
@@ -343,8 +345,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchArtifact(
         Tracker_Artifact $artifact,
-        $submitted_values = array(),
-        $additional_classes = array()
+        array $submitted_values,
+        array $additional_classes
     ) {
         $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
@@ -360,8 +362,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchArtifact($artifact, $submitted_values, array('field-in-modal'));
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
+    {
+        return $this->fetchArtifact($artifact, $submitted_values, ['field-in-modal']);
     }
 
     public function fetchSubmitForOverlay(array $submitted_values) {
@@ -375,7 +378,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values) {
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
             $value       = $last_changeset->getValue($this);
@@ -389,7 +392,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
@@ -556,13 +559,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
-     *
      * @return string
      */
-    protected abstract function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array());
+    protected abstract function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    );
 
     /**
      * Fetch the html code to display the field value in artifact in read only
@@ -577,20 +580,26 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Fetch the HMTL code to display the field in the web browser
      *
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue $value
-     *
      * @return string
      */
-    public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueForWebDisplay(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
             return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
         }
+
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-    protected function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -598,8 +607,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return "<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
     }
 
-    protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return '<div class="tracker_hidden_edition_field" data-field-id="'. $this->getId() .'">' . $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
+    protected function getHiddenArtifactValueForEdition(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        return '<div class="tracker_hidden_edition_field" data-field-id="' .
+            $this->getId() . '">' .
+            $this->fetchArtifactValue($artifact, $value, $submitted_values) .
+            '</div>';
     }
 
     /**
@@ -612,11 +628,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Return a value from user submitted request (if any) or from default value (if any)
      *
-     * @param mixed $submitted_values
-     *
      * @return mixed
      */
-    protected function getValueFromSubmitOrDefault($submitted_values) {
+    protected function getValueFromSubmitOrDefault(array $submitted_values) {
         $value = '';
         if (isset($submitted_values[$this->getId()])) {
             $value = $submitted_values[$this->getId()];

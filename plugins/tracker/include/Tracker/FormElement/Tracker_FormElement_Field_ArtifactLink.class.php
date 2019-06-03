@@ -292,7 +292,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $this->getFieldDataBuilder()->getDataLikeWebUI($new_values, $removed_values, $submitted_values);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
         $user_manager   = UserManager::instance();
         $user           = $user_manager->getCurrentUser();
@@ -930,18 +930,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array())
-    {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         $links_tab         = $this->fetchLinks($artifact, $this->getArtifactLinksToRenderFromChangesetValue($value), $submitted_values);
         $reverse_links_tab = $this->fetchReverseLinks($artifact);
 
         return $links_tab . $reverse_links_tab;
     }
 
-    private function fetchLinks(Tracker_Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render, $submitted_values = array())
-    {
-        if (! empty($submitted_values) && isset($submitted_values[0]) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
-            $submitted_value = $submitted_values[0][$this->getId()];
+    private function fetchLinks(
+        Tracker_Artifact $artifact,
+        ArtifactLinksToRender $artifact_links_to_render,
+        array $submitted_values
+    ) {
+        if (isset($submitted_values[$this->getId()])) {
+            $submitted_value = $submitted_values[$this->getId()];
         }
 
         $prefill_new_values = '';
@@ -984,7 +990,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function getArtifactLinksToRenderFromChangesetValue(?Tracker_Artifact_ChangesetValue $value = null)
+    private function getArtifactLinksToRenderFromChangesetValue(?Tracker_Artifact_ChangesetValue $value)
     {
         $artifact_links = [];
         if ($value !== null) {
@@ -1058,12 +1064,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $links_tab_read_only . $reverse_links_tab;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values) {
         return '';
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array())
-    {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValue($artifact, $value, $submitted_values) .
             "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
     }

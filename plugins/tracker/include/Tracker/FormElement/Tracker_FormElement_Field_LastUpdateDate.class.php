@@ -177,7 +177,11 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
 
@@ -309,15 +313,17 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return true;
     }
 
-    public function fetchSubmit(array $submitted_values) {
+    public function fetchSubmit(array $submitted_values)
+    {
         // We do not display the field in the artifact submit form
         return '';
     }
 
-    public function fetchSubmitMasschange($submitted_values = array()) {
-        // We do not display the field in the artifact submit form
+    public function fetchSubmitMasschange()
+    {
         return '';
     }
+
     /**
      * Display the html field in the admin ui
      *

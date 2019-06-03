@@ -105,7 +105,11 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchArtifact(Tracker_Artifact $artifact) {
+    public function fetchArtifact(
+        Tracker_Artifact $artifact,
+        array $submitted_values,
+        array $additional_classes
+    ) {
         return $this->fetchReadOnly();
     }
 
@@ -114,9 +118,9 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      * @param Tracker_Artifact $artifact
      * @return string html
      */
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchArtifact($artifact);
+        return $this->fetchArtifact($artifact, $submitted_values, []);
     }
 
     public function fetchSubmitForOverlay(array $submitted_values) {
@@ -130,7 +134,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
     {
         return $this->fetchReadOnly();
     }
@@ -200,7 +204,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }

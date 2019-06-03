@@ -441,8 +441,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * to enhance the user experience
      * @return string
      */
-    public function fetchArtifactAdditionnalInfo($value, $submitted_values = null) {
-        return ''; //$this->getBind()->fetchDecoratorsAsJavascript();
+    public function fetchArtifactAdditionnalInfo(?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
+    {
+        return '';
     }
 
      /**
@@ -451,7 +452,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo($submitted_values) {
+    public function fetchSubmitAdditionnalInfo(array $submitted_values)
+    {
         return '';
     }
 
@@ -529,11 +531,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $values = array();
-        if (! empty($submitted_values) && isset($submitted_values[0][$this->id])) {
-            $values = $submitted_values[0][$this->id];
-        }
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        $values = $submitted_values[$this->id] ?? [];
         $selected_values  = $value ? $value->getListValues() : array();
         return $this->_fetchField('tracker_field_'. $this->id,
                 'artifact['. $this->id .']',
@@ -607,7 +610,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -798,7 +805,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
     }
 
-    protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
+    /**
+     * @param string $id
+     * @param string $name
+     * @param array  $selected_values
+     * @param mixed  $submitted_values_for_this_list
+     *
+     * @return string
+     */
+    protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = array()) {
         $html     = '';
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -816,10 +831,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= $this->fetchFieldContainerStart($id, $name);
 
         $from = $this->getSelectedValue($selected_values);
-        if ($from == null && !isset($submitted_values)) {
+        if ($from == null && !isset($submitted_values_for_this_list)) {
             $none_is_selected = isset($selected_values[Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID]);
         } else {
-            $none_is_selected = ($submitted_values==Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+            $none_is_selected = ($submitted_values_for_this_list==Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
 
         if (!$this->fieldHasEnableWorkflow()) {
@@ -827,17 +842,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $html .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
 
-        if (($submitted_values) && !is_array($submitted_values)) {
-            $submitted_values_array[] = $submitted_values;
-            $submitted_values = $submitted_values_array;
+        if (($submitted_values_for_this_list) && !is_array($submitted_values_for_this_list)) {
+            $submitted_values_array[]       = $submitted_values_for_this_list;
+            $submitted_values_for_this_list = $submitted_values_array;
         }
 
         foreach($this->getBind()->getAllValues() as $id => $value) {
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
-                if (!empty($submitted_values)) {
-                    $is_selected = in_array($id, array_values($submitted_values));
+                if (!empty($submitted_values_for_this_list)) {
+                    $is_selected = in_array($id, array_values($submitted_values_for_this_list));
                 } else {
                     $is_selected = isset($selected_values[$id]);
                 }

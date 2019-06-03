@@ -210,7 +210,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      * Fetch the element for the submit masschange form
      * @return <type>
      */
-    public function fetchSubmitMasschange($submitted_values = array())
+    public function fetchSubmitMasschange()
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', []);
     }
@@ -222,14 +222,17 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      *
      * @return string html
      */
-    public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array())
-    {
-        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values);
+    public function fetchArtifact(
+        Tracker_Artifact $artifact,
+        array $submitted_values,
+        array $additional_classes
+    ) {
+        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, $additional_classes);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values, []);
     }
 
     public function fetchSubmitForOverlay(array $submitted_values) {
@@ -243,20 +246,20 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values, []);
     }
 
-    protected function fetchRecursiveArtifactForSubmit($method, $submitted_values)
+    protected function fetchRecursiveArtifactForSubmit($method, array $submitted_values)
     {
         $html = '';
         $content = $this->getContainerContent($method, [$submitted_values]);
@@ -271,10 +274,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return $html;
     }
 
-    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, $submitted_values)
+    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, array $submitted_values, array $additional_classes)
     {
         $html = '';
-        $content = $this->getContainerContent($method, [$artifact, $submitted_values]);
+        $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);
 
         if (count($content)) {
             $html .= $this->fetchArtifactPrefix();

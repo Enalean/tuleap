@@ -313,8 +313,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value).
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
@@ -322,8 +322,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
 
         $purifier       = Codendi_HTMLPurifier::instance();
@@ -366,8 +366,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         $displayed_value = null;
         $is_autocomputed = true;
@@ -376,8 +376,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $is_autocomputed = ! $value->isManualValue();
         }
 
-        if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
-            $displayed_value = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
+        if (isset($submitted_values[$this->getId()][self::FIELD_VALUE_MANUAL])) {
+            $displayed_value = $submitted_values[$this->getId()][self::FIELD_VALUE_MANUAL];
         }
 
         return $this->fetchComputedInputs($displayed_value, $is_autocomputed);
@@ -691,7 +691,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $html;
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
         $purifier       = Codendi_HTMLPurifier::instance();
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -717,8 +717,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                 $class              = '';
             }
 
-            if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
-                $computed_value     = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
+            if (isset($submitted_values[$this->getId()][self::FIELD_VALUE_MANUAL])) {
+                $computed_value     = $submitted_values[$this->getId()][self::FIELD_VALUE_MANUAL];
                 $autocomputed_label = '';
                 $class              = '';
             }

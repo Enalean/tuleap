@@ -56,10 +56,14 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
-    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, $submitted_values)
-    {
+    protected function fetchRecursiveArtifact(
+        $method,
+        Tracker_Artifact $artifact,
+        array $submitted_values,
+        array $additional_classes
+    ) {
         $html = '';
-        $content = $this->getContainerContent($method, [$artifact, $submitted_values]);
+        $content = $this->getContainerContent($method, [$artifact, $submitted_values, $additional_classes]);
 
         if (count($content)) {
             $extra_class = '';

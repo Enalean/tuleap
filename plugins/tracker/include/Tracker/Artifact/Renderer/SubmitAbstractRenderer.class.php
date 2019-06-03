@@ -45,7 +45,7 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
         $html .= '<div class="tracker_artifact">';
         foreach ($this->tracker->getFormElements() as $form_element) {
             $submitted_values = $request->get('artifact');
-            if (! $submitted_values) {
+            if (! $submitted_values || ! is_array($submitted_values)) {
                 $submitted_values = [];
             }
             $html .= $form_element->fetchSubmit($submitted_values);

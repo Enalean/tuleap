@@ -31,10 +31,10 @@ use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCommonDataBuilder;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForLegacy;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
@@ -105,8 +105,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
-    public function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
+    public function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
 
     /**
@@ -191,7 +195,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
@@ -411,7 +415,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
-    public function fetchSubmitMasschange() {
+    public function fetchSubmitMasschange()
+    {
+        return '';
     }
 
     /**
