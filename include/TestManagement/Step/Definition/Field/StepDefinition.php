@@ -193,8 +193,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
-        $submitted_values = $submitted_values[0] ?: [];
-        $steps            = $this->getStepsPresentersFromSubmittedValues($submitted_values);
+        $steps = $this->getStepsPresentersFromSubmittedValues($submitted_values);
         if (empty($steps)) {
             $steps = $this->getStepsPresentersFromChangesetValue($value);
         }
@@ -215,8 +214,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);

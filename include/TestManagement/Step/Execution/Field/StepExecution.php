@@ -185,8 +185,8 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         return '<div class="alert">'
             . dgettext(
