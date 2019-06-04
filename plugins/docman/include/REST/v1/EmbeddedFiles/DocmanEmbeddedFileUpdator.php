@@ -118,8 +118,10 @@ class DocmanEmbeddedFileUpdator
 
         $status_id = $this->getItemStatusId($representation);
 
-        $obsolescence_date_time_stamp = $this->getObsolescenceDateTimestamp($representation, $current_time);
-
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $representation->obsolescence_date,
+            $current_time
+        );
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp, $current_time) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
@@ -184,34 +186,5 @@ class DocmanEmbeddedFileUpdator
             $representation->status
         );
         return $status_id;
-    }
-
-    /**
-     * @param DocmanEmbeddedFilesPATCHRepresentation $representation
-     * @param \DateTimeImmutable                     $current_time
-     *
-     * @return int
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
-     */
-    private function getObsolescenceDateTimestamp(
-        DocmanEmbeddedFilesPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
-    ): int {
-        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
-            $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
-            $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $this->obsolescence_date_checker->checkDateValidity(
-            $current_time->getTimestamp(),
-            $obsolescence_date_time_stamp,
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        return $obsolescence_date_time_stamp;
     }
 }

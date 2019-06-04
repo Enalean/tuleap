@@ -41,10 +41,16 @@ class HardcodedMetadataObsolescenceDateRetriever
     /**
      * @return int
      * @throws InvalidDateTimeFormatException
+     * @throws ObsolescenceDateDisabledException
+     * @throws InvalidDateComparisonException
      */
-    public function getTimeStampOfDate(?string $date, int $item_type)
+    public function getTimeStampOfDate(?string $date, \DateTimeImmutable $current_time): int
     {
-        if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE || $item_type === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER || $date === null) {
+        $this->date_checker->checkObsolescenceDateUsageForDocument(
+            $date
+        );
+
+        if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE  || $date === null) {
             return (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE;
         }
 
@@ -52,6 +58,11 @@ class HardcodedMetadataObsolescenceDateRetriever
         if (!$formatted_date) {
             throw new InvalidDateTimeFormatException();
         }
+
+        $this->date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $formatted_date->getTimestamp()
+        );
 
         return $formatted_date->getTimestamp();
     }
