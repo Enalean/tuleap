@@ -513,6 +513,7 @@ for i in tools plugins site-content src VERSION LICENSE; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # No need of template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/release_widget
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker

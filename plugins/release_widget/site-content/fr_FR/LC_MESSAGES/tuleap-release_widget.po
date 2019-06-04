@@ -1,0 +1,8 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "A new widget for release monitoring."
+msgstr "Un nouveau widget pour le suivi de release."
+
+msgid "Release Widget"
+msgstr "Release Widget"
