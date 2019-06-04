@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 use Tuleap\REST\JsonCast;
 
-class Tracker_REST_FieldRepresentation {
+class Tracker_REST_FormElementRepresentation //phpcs:ignore
+{
 
     public const BIND_TYPE  = 'type';
     public const BIND_LIST  = 'list';
@@ -53,7 +54,7 @@ class Tracker_REST_FieldRepresentation {
     public $type;
 
     /**
-     * @var array {@type Tuleap\Tracker\REST\FieldValueRepresentation }
+     * @var array|null {@type Tuleap\Tracker\REST\FieldValueRepresentation }
      */
     public $values = array();
 
@@ -79,36 +80,42 @@ class Tracker_REST_FieldRepresentation {
      */
     public $permissions = array();
 
-    public function build(Tracker_FormElement $field, $type, array $permissions) {
-        $this->field_id = JsonCast::toInt($field->getId());
-        $this->name     = $field->getName();
-        $this->label    = $field->getLabel();
+    /**
+     * @var mixed
+     */
+    public $default_value;
 
-        if ($field instanceof Tracker_FormElement_Field) {
-            $this->required      = JsonCast::toBoolean($field->isRequired());
-            $this->collapsed     = false;
+    public function build(Tracker_FormElement $form_element, $type, array $permissions)
+    {
+        $this->field_id = JsonCast::toInt($form_element->getId());
+        $this->name     = $form_element->getName();
+        $this->label    = $form_element->getLabel();
 
+        if ($form_element instanceof Tracker_FormElement_Field) {
+            $this->required  = JsonCast::toBoolean($form_element->isRequired());
+            $this->collapsed = false;
         } else {
-            $this->required      = false;
-            $this->collapsed     = (bool) $field->isCollapsed();
+            /** @var Tracker_FormElement_Container $form_element */
+            $this->required  = false;
+            $this->collapsed = (bool) $form_element->isCollapsed();
         }
 
-        $this->default_value = $field->getDefaultRESTValue();
+        $this->default_value = $form_element->getDefaultRESTValue();
         $this->type   = $type;
 
         $this->values = null;
-        if ($field->getRESTAvailableValues()) {
-            $this->values = $field->getRESTAvailableValues();
+        if ($form_element->getRESTAvailableValues()) {
+            $this->values = $form_element->getRESTAvailableValues();
         }
 
-        $bindings = $field->getRESTBindingProperties();
+        $bindings = $form_element->getRESTBindingProperties();
         $this->bindings = array(
             self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY],
             self::BIND_LIST => array_map(
                 function ($binding) {
                     return array(
-                        Tracker_REST_FieldRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_ID],
-                        Tracker_REST_FieldRepresentation::BIND_LABEL=> $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_LABEL]
+                        Tracker_REST_FormElementRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_ID],
+                        Tracker_REST_FormElementRepresentation::BIND_LABEL=> $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_LABEL]
                     );
                 },
                 $bindings[Tracker_FormElement_Field_List_Bind::REST_LIST_KEY]
@@ -119,11 +126,11 @@ class Tracker_REST_FieldRepresentation {
             function ($permission) {
                 switch ($permission) {
                     case Tracker_FormElement::REST_PERMISSION_READ:
-                        return Tracker_REST_FieldRepresentation::PERM_READ;
+                        return Tracker_REST_FormElementRepresentation::PERM_READ;
                     case Tracker_FormElement::REST_PERMISSION_UPDATE:
-                        return Tracker_REST_FieldRepresentation::PERM_UPDATE;
+                        return Tracker_REST_FormElementRepresentation::PERM_UPDATE;
                     case Tracker_FormElement::REST_PERMISSION_SUBMIT:
-                        return Tracker_REST_FieldRepresentation::PERM_CREATE;
+                        return Tracker_REST_FormElementRepresentation::PERM_CREATE;
                 }
             },
             $permissions

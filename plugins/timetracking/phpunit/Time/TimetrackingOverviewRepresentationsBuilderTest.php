@@ -162,7 +162,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
         );
 
         $this->tracker_factory->shouldReceive('getTrackerById')->with(16)->andReturn($this->tracker);
-        $this->tracker_rest_builder->shouldReceive('getTrackerRepresentationWithoutWorkflowComputedPermissions')->with(
+        $this->tracker_rest_builder->shouldReceive('getTrackerRepresentationInTrackerContext')->with(
             $this->user,
             $this->tracker
         )->andReturn($tracker_representation);

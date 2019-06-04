@@ -83,6 +83,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\TrackerReference;
@@ -202,20 +203,23 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $this->tracker_rest_builder = new \Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
-            new PermissionsExporter(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            new TransitionFactory(
-                                Workflow_Transition_ConditionFactory::build()
+            new FormElementRepresentationsBuilder(
+                $this->formelement_factory,
+                new PermissionsExporter(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                new TransitionFactory(
+                                    Workflow_Transition_ConditionFactory::build()
+                                ),
+                                new SimpleWorkflowDao()
                             ),
-                            new SimpleWorkflowDao()
+                            new TransitionExtractor()
                         ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $this->formelement_factory
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            Tracker_FormElementFactory::instance()
+                        )
                     )
                 )
             )
@@ -369,9 +373,8 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendETagHeader($artifact);
 
         if ($tracker_structure_format === self::COMPLETE_TRACKER_STRUCTURE) {
-            $tracker_representation = $this->tracker_rest_builder->getTrackerRepresentationWithWorkflowComputedPermissions(
+            $tracker_representation = $this->tracker_rest_builder->getTrackerRepresentationInArtifactContext(
                 $user,
-                $artifact->getTracker(),
                 $artifact
             );
         } else {

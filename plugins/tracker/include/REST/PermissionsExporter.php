@@ -38,11 +38,11 @@ class PermissionsExporter
     /**
      * @var FrozenFieldDetector
      */
-    private $read_only_field_detector;
+    private $frozen_field_detector;
 
     public function __construct(FrozenFieldDetector $read_only_field_detector)
     {
-        $this->read_only_field_detector = $read_only_field_detector;
+        $this->frozen_field_detector = $read_only_field_detector;
     }
 
     public function exportUserPermissionsForFieldWithoutWorkflowComputedPermissions(
@@ -63,7 +63,7 @@ class PermissionsExporter
             return $permissions;
         }
 
-        if ($this->read_only_field_detector->isFieldFrozen($artifact, $field)) {
+        if ($this->frozen_field_detector->isFieldFrozen($artifact, $field)) {
             $permissions = $this->removeUpdatePermissionFromField($permissions);
         }
 

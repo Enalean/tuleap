@@ -30,6 +30,7 @@ use TrackerFactory;
 use TransitionFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -164,20 +165,23 @@ class ProjectTrackersResource
         $trackers                = array_slice($all_trackers, $offset, $limit);
         $builder                 = new Tracker_REST_TrackerRestBuilder(
             Tracker_FormElementFactory::instance(),
-            new PermissionsExporter(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            new TransitionFactory(
-                                Workflow_Transition_ConditionFactory::build()
+            new FormElementRepresentationsBuilder(
+                Tracker_FormElementFactory::instance(),
+                new PermissionsExporter(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                new TransitionFactory(
+                                    Workflow_Transition_ConditionFactory::build()
+                                ),
+                                new SimpleWorkflowDao()
                             ),
-                            new SimpleWorkflowDao()
+                            new TransitionExtractor()
                         ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        Tracker_FormElementFactory::instance()
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            Tracker_FormElementFactory::instance()
+                        )
                     )
                 )
             )
@@ -193,7 +197,7 @@ class ProjectTrackersResource
                 $tracker_minimal_representation->build($tracker);
                 $tracker_representations[] = $tracker_minimal_representation;
             } else {
-                $tracker_representations[] = $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
+                $tracker_representations[] = $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
             }
         }
 
