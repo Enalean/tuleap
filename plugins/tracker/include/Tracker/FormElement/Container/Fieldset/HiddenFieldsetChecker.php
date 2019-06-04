@@ -61,7 +61,7 @@ class HiddenFieldsetChecker
         if ($this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)) {
             $fields = $this->fields_extractor->extractFieldsInsideContainer($fieldset);
             foreach ($fields as $field) {
-                if ($field->isRequired()) {
+                if ($field->isRequired() || $field->isUsedInFieldDependency()) {
                     return false;
                 }
             }
