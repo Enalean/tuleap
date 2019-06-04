@@ -1585,6 +1585,10 @@ msgstr "Impossible de trouver comment éditer le widget requis."
 msgid "We cannot find any widgets."
 msgstr "Impossible de trouver des widgets."
 
+msgid "We will bother you later with the deprecation of IE < 11."
+msgstr ""
+"Nous vous importunerons plus tard à propos de la dépréciation de IE < 11."
+
 msgid "Webhooks"
 msgstr "Webhooks"
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class BrowserIEDeprecated extends Browser //phpcs:ignore
     public function getDeprecatedMessage()
     {
         if ($this->user->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)) {
-            return;
+            return '';
         }
 
         $warning_message = $GLOBALS['Language']->getText('include_browser', 'ie_deprecated');
@@ -43,7 +43,7 @@ class BrowserIEDeprecated extends Browser //phpcs:ignore
             return $warning_message;
         }
 
-        $url   = '/account/disable_ie7_warning.php';
+        $url   = '/account/disable_legacy_browser_warning';
         $csrf  = new CSRFSynchronizerToken($url);
         $form  = '<form action="'. $url .'" method="POST" style="margin: 0">';
         $form .= $csrf->fetchHTMLInput();

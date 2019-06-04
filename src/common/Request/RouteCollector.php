@@ -71,6 +71,7 @@ use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\ChangeAvatarController;
+use Tuleap\User\Account\DisableLegacyBrowsersWarningMessageController;
 use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
@@ -201,6 +202,11 @@ class RouteCollector
     public static function postLogoutAccount() : LogoutController
     {
         return new LogoutController(\UserManager::instance());
+    }
+
+    public function postDisableLegacyBrowsersWarningMessage() : DisableLegacyBrowsersWarningMessageController
+    {
+        return new DisableLegacyBrowsersWarningMessageController();
     }
 
     public static function getUsersName()
@@ -359,6 +365,7 @@ class RouteCollector
             $r->post('/access_key/revoke', [__CLASS__, 'postAccountAccessKeyRevoke']);
             $r->post('/avatar', [__CLASS__, 'postAccountAvatar']);
             $r->post('/logout', [__CLASS__, 'postLogoutAccount']);
+            $r->post('/disable_legacy_browser_warning', [__CLASS__, 'postDisableLegacyBrowsersWarningMessage']);
         });
 
 
