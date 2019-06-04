@@ -58,15 +58,21 @@ class DeleteFailedException extends Exception
     {
         return new self(
             "Can't delete wiki page",
-            $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed')
+            dgettext('plugin-docman', 'Error while trying to delete the wiki page from wiki service.')
         );
     }
 
     public static function fromItem(\Docman_Item $item): self
     {
         return new self(
-            "Missing permission for delete" . $item->getTitle(),
-            $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle())
+            "Missing permission to delete " . $item->getTitle(),
+            sprintf(
+                dgettext(
+                    'plugin-docman',
+                    'You do not have sufficient access rights to delete %s.'
+                ),
+                $item->getTitle()
+            )
         );
     }
 

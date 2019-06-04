@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\PHPWiki\WikiPage;
 
@@ -95,38 +96,17 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @return bool $deleted. True if there is no error.  False otherwise.
      * @throws DeleteFailedException
      */
-    public function visitWiki(Docman_Wiki $item, $params = array()) {
-        // delete the document.
-        $deleted = $this->visitDocument($item, $params);
+    public function visitWiki(Docman_Wiki $wiki, array $params = []) {
+        $should_propagate_deletion = $params['cascadeWikiPageDeletion'];
+        $user                      = $params['user'];
 
-        if($deleted) {
-            if(!$params['cascadeWikiPageDeletion']) {
-                // grant a wiki permission only to wiki admins on the corresponding wiki page.
-                $this->restrictAccess($item, $params);
-
-                $wiki_page = new WikiPage($item->getGroupId(), $item->getPageName());
-
-                if ($wiki_page->getId()) {
-                    $event_manager = EventManager::instance();
-                    $event_manager->processEvent(
-                        "wiki_page_updated",
-                        array(
-                            'group_id'   => $item->getGroupId(),
-                            'wiki_page'  => $item->getPageName(),
-                            'referenced' => false,
-                            'user'       => $params['user']
-                        )
-                    );
-                }
-
-            } else { // User have choosen to delete wiki page from wiki service too
-                $dIF = $this->_getItemFactory();
-                if (! $dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())) {
-                    throw DeleteFailedException::fromWiki();
-                }
-            }
-        }
-        return $deleted;
+        return (new DocmanWikiDeletor(
+            new \Tuleap\Docman\DocmanReferencedWikiPageRetriever(),
+            $this->getPermissionManager($wiki->getGroupId()),
+            $this->_getItemFactory(),
+            $this->_getItemDao(),
+            $this->_getEventManager()
+        ))->deleteWiki($wiki, $user, $should_propagate_deletion);
     }
     
     public function visitLink(Docman_Link $item, $params = array()) {
@@ -164,21 +144,6 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
-    }
-
-    public function restrictAccess($item, $params = array()) {
-        // Check whether there is other references to this wiki page.
-        $dao = $this->_getItemDao();
-        $referenced = $dao->isWikiPageReferenced($item->getPageName(), $item->getGroupId());
-        if(!$referenced) {
-            $dIF = $this->_getItemFactory();
-            $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($item->getPageName(), $item->getGroupId());
-            // Restrict access to wiki admins if the page already exists in wiki.
-            if($id_in_wiki !== null) {
-                permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
-                permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
-            }
-        }
     }
 
     /**

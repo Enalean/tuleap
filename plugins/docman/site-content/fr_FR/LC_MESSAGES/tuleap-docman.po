@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #, php-format
 msgid ""
@@ -73,6 +73,10 @@ msgstr "Administrateurs du gestionnaire de documents"
 
 msgid "Document settings"
 msgstr "Paramètres de documents"
+
+msgid "Error while trying to delete the wiki page from wiki service."
+msgstr ""
+"Erreur lors de la suppression de la page wiki à partir du service wiki."
 
 msgid "File upload limits"
 msgstr "Limites de téléversement"
@@ -197,6 +201,10 @@ msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d
 
 msgid "You are not allowed to write this item."
 msgstr "Vous n'êtes pas autorisé à modifier cet élément."
+
+#, php-format
+msgid "You do not have sufficient access rights to delete %s."
+msgstr "Vous n'avez pas les droits suffisants pour supprimer %s."
 
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"

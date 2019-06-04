@@ -841,7 +841,6 @@ plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
 plugin_docman	docman_wiki_delete_cascade	Propager la suppression au service wiki
 plugin_docman	docman_wiki_delete_wiki_page_success	Page wiki supprimé du service wiki avec succès.
-plugin_docman	docman_wiki_delete_wiki_page_failed	Erreur lors de la suppression de la page wiki à partir du service wiki.
 plugin_docman	docman_wiki_page_locked	Cette page wiki est réservée par $1. Vous ne pouvez pas la modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
 plugin_docman	docman_wiki_page_locked_elsewhere	Cette page wiki a été déjà vérouillée via "$1".
 
