@@ -28,13 +28,17 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
-    public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifact(
+        Tracker_Artifact $artifact,
+        array $submitted_values,
+        array $additional_classes
+    ) {
         return $this->fetchWithColumnGroup('fetchArtifact', array($artifact, $submitted_values));
     }
 
-    public function fetchArtifactInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactInGroup(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values, []);
     }
 
     /**
@@ -44,13 +48,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchWithColumnGroup('fetchArtifactReadOnly', array($artifact, $submitted_values));
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values)
+    {
+        return $this->fetchWithColumnGroup('fetchArtifactReadOnly', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values, []);
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
@@ -64,13 +69,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchWithColumnGroup('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    {
+        return $this->fetchWithColumnGroup('fetchArtifactCopyMode', [$artifact, $submitted_values]);
     }
 
-    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, array $submitted_values)
     {
-        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values);
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values, []);
     }
 
     /**
@@ -79,10 +85,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
-    public function fetchSubmit(array $submitted_values) {
-        return $this->fetchWithColumnGroup('fetchSubmit', array($submitted_values));
+    public function fetchSubmit(array $submitted_values)
+    {
+        return $this->fetchWithColumnGroup('fetchSubmit', [$submitted_values]);
     }
-    public function fetchSubmitInGroup($submitted_values = array())
+
+    public function fetchSubmitInGroup(array $submitted_values)
     {
         return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
@@ -90,15 +98,15 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
 
     /**
      * Fetch the element for the submit masschange form
-     * @return <type>
      */
-    public function fetchSubmitMasschange($submitted_values = array()) {
-        return $this->fetchWithColumnGroup('fetchSubmitMasschange', array($submitted_values));
+    public function fetchSubmitMasschange()
+    {
+        return $this->fetchWithColumnGroup('fetchSubmitMasschange', []);
     }
 
-    public function fetchSubmitMasschangeInGroup($submitted_values = array())
+    public function fetchSubmitMasschangeInGroup()
     {
-        return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', $submitted_values);
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', []);
     }
 
     /**

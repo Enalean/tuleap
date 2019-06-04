@@ -81,7 +81,11 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
 
-        $html_form = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
+        $submitted_values = $this->request->get('artifact');
+        if (! $submitted_values || ! is_array($submitted_values)) {
+            $submitted_values = [];
+        }
+        $html_form = $this->renderer->fetchFields($this->artifact, $submitted_values);
         $html_form .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         $html .= $this->renderer->fetchArtifactForm($html_form);

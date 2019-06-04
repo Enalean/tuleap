@@ -56,18 +56,20 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * to enhance the user experience
      * @return string
      */
-    public function fetchArtifactAdditionnalInfo($value, $submitted_values = array()) {
-        $html = parent::fetchArtifactAdditionnalInfo($value, $submitted_values);
+    public function fetchArtifactAdditionnalInfo(?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
+    {
+        /** @var Tracker_Artifact_ChangesetValue_List $value */
+        $html   = parent::fetchArtifactAdditionnalInfo($value, $submitted_values);
         $values = array();
-        if (isset($submitted_values[0][$this->id])) {
-            if (!is_array($submitted_values[0][$this->id])) {
-                $submitted_values_array[] = $submitted_values[0][$this->id];
+        if (isset($submitted_values[$this->id])) {
+            if (!is_array($submitted_values[$this->id])) {
+                $submitted_values_array[] = $submitted_values[$this->id];
                 $values = $submitted_values_array;
             }else {
-                $values = $submitted_values[0][$this->id];
+                $values = $submitted_values[$this->id];
             }
         } else {
-            if (!empty($value)) {
+            if ($value !== null) {
                 foreach ($value->getListValues() as $id => $v) {
                     $values[] = $id;
                 }
@@ -81,9 +83,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    private function isJavascriptIncludedInValue($submitted_values) {
-        return ! is_array($submitted_values)
-            || ! isset($submitted_values['render_with_javascript'])
+    private function isJavascriptIncludedInValue(array $submitted_values) {
+        return ! isset($submitted_values['render_with_javascript'])
             || $submitted_values['render_with_javascript'] === true;
     }
 
@@ -93,7 +94,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo($submitted_values) {
+    public function fetchSubmitAdditionnalInfo(array $submitted_values) {
         $html = parent::fetchSubmitAdditionnalInfo($submitted_values);
         if ($this->isJavascriptIncludedInValue($submitted_values)) {
             $html .= $this->displaySubmitJavascript();

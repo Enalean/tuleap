@@ -168,7 +168,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = [])
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
     {
         return '';
     }
@@ -307,8 +307,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string
      */
-    public function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
+    public function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
 
     /**
@@ -331,7 +335,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $html;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    {
         return '';
     }
 

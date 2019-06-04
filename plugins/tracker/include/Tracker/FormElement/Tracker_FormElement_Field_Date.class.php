@@ -596,12 +596,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return string html
      */
-    protected function fetchSubmitValue(array $submitted_values) {
-        $errors = $this->has_errors ? array('has_error') : array();
-
-        if (! $submitted_values) {
-            $submitted_values = array();
-        }
+    protected function fetchSubmitValue(array $submitted_values)
+    {
+        $errors = $this->has_errors ? ['has_error'] : [];
 
         return $this->getFormatter()->fetchSubmitValue($submitted_values, $errors);
     }
@@ -627,12 +624,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
     ) {
         $errors = $this->has_errors ? array('has_error') : array();
 
-        return $this->getFormatter()->fetchArtifactValue($artifact, $value, $submitted_values, $errors);
+        return $this->getFormatter()->fetchArtifactValue($value, $submitted_values, $errors);
     }
 
     /**
@@ -663,7 +660,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return parent::getNoValueLabel();
     }
 
-    public function getValueFromSubmitOrDefault($submitted_values) {
+    public function getValueFromSubmitOrDefault(array $submitted_values) {
         return parent::getValueFromSubmitOrDefault($submitted_values);
     }
 
@@ -679,7 +676,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -1010,7 +1011,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $artifacts;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values) {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 

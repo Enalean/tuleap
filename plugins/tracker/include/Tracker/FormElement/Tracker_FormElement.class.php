@@ -632,18 +632,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchSubmitMasschange(/*$submitted_values = array()*/);
+    public abstract function fetchSubmitMasschange();
 
     /**
      * Fetch the element for the update artifact form
      *
-     * @param Tracker_Artifact $artifact The artifact
-     *
      * @return string html
      */
-    public abstract function fetchArtifact(Tracker_Artifact $artifact);
+    public abstract function fetchArtifact(
+        Tracker_Artifact $artifact,
+        array $submitted_values,
+        array $additional_classes
+    );
 
-    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = []);
+    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch the element for the artifact in read only
@@ -652,13 +654,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = []);
+    public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * @param Tracker_Artifact $artifact
      * @return mixed
      */
-    public abstract function fetchArtifactCopyMode(Tracker_Artifact $artifact);
+    public abstract function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values);
 
     /**
      * Fetch mail rendering in a given format

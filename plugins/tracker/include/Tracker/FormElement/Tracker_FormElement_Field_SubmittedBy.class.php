@@ -167,8 +167,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return '';
     }
 
-    public function fetchSubmitMasschange($submitted_values = array()) {
-        // We do not display the field in the artifact submit form
+    public function fetchSubmitMasschange()
+    {
         return '';
     }
 
@@ -195,8 +195,12 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
     }
 
     /**
@@ -216,12 +220,16 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $html;
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, array $submitted_values)
+    {
         return '';
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = [])
-    {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 

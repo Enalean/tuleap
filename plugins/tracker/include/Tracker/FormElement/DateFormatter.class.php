@@ -37,15 +37,14 @@ class Tracker_FormElement_DateFormatter {
      * @return string
      */
     public function fetchArtifactValue(
-        Tracker_Artifact $artifact,
-        ?Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
         array $errors
     ) {
         $formatted_value = '';
 
-        if (isset($submitted_values[0]) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->field->getId()])) {
-            $formatted_value = $submitted_values[0][$this->field->getId()];
+        if (isset($submitted_values[$this->field->getId()])) {
+            $formatted_value = $submitted_values[$this->field->getId()];
         } else {
             if ($value != null) {
                 $timestamp       = $value->getTimestamp();

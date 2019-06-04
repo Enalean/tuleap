@@ -97,7 +97,11 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -143,8 +147,11 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return $output;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = [])
-    {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue $value,
+        array $submitted_values
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -237,9 +244,10 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string html
      */
-     public function fetchSubmitMasschange($submitted_values=array()) {
-         return '';
-     }
+    public function fetchSubmitMasschange()
+    {
+        return '';
+    }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitArtifactId($this);
