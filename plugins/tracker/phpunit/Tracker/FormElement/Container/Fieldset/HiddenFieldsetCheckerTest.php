@@ -83,6 +83,7 @@ class HiddenFieldsetCheckerTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field::class);
         $field->shouldReceive('isRequired')->andReturnFalse();
+        $field->shouldReceive('isUsedInFieldDependency')->andReturnFalse();
 
         $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
             ->with($this->fieldset)
@@ -103,6 +104,7 @@ class HiddenFieldsetCheckerTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field::class);
         $field->shouldReceive('isRequired')->andReturnTrue();
+        $field->shouldReceive('isUsedInFieldDependency')->andReturnFalse();
 
         $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
             ->with($this->fieldset)
@@ -120,6 +122,27 @@ class HiddenFieldsetCheckerTest extends TestCase
             ->with($this->artifact, $this->fieldset)
             ->once()
             ->andReturnFalse();
+
+        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
+    }
+
+    public function testFieldsetIsNotHiddenIfContainsFieldUsedInFieldDependency()
+    {
+        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
+
+        $this->detector->shouldReceive('isFieldsetHidden')
+            ->with($this->artifact, $this->fieldset)
+            ->once()
+            ->andReturnTrue();
+
+        $field = Mockery::mock(Tracker_FormElement_Field::class);
+        $field->shouldReceive('isUsedInFieldDependency')->andReturnTrue();
+        $field->shouldReceive('isRequired')->andReturnFalse();
+
+        $this->fields_extractor->shouldReceive('extractFieldsInsideContainer')
+            ->with($this->fieldset)
+            ->once()
+            ->andReturn([$field]);
 
         $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
     }
