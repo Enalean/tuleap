@@ -3650,7 +3650,8 @@ EOS;
                 $this->getFormElementFactory(),
                 $changeset_dao,
                 $this->getTrackerArtifactFactory(),
-                EventManager::instance()
+                EventManager::instance(),
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
             ),
             $this->getVisitRecorder()
         );
@@ -3671,7 +3672,8 @@ EOS;
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

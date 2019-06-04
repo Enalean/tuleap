@@ -41,15 +41,16 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory                 $formelement_factory,
-        Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        EventManager $event_manager,
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
     ) {
         $this->fields_validator    = $fields_validator;
         $this->formelement_factory = $formelement_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->event_manager       = $event_manager;
-        $this->field_initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
+        $this->field_initializator = $field_initializator;
     }
 
     /**

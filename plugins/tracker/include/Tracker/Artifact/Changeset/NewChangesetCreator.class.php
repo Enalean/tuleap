@@ -23,30 +23,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 /**
  * I create a new changeset (update of an artifact)
  */
-class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase {
-
-    public function __construct(
-        Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory $formelement_factory,
-        Tracker_Artifact_ChangesetDao $changeset_dao,
-        Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
-        Tracker_ArtifactFactory $artifact_factory,
-        EventManager $event_manager,
-        ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
-    ) {
-        parent::__construct(
-            $fields_validator,
-            $formelement_factory,
-            $changeset_dao,
-            $changeset_comment_dao,
-            $artifact_factory,
-            $event_manager,
-            $reference_manager,
-            $source_of_association_collection_builder
-        );
-    }
-
+class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase
+{
     /**
      * @see Tracker_Artifact_Changeset_NewChangesetCreatorBase::saveNewChangesetForField()
      */
