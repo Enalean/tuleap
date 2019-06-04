@@ -117,7 +117,7 @@ class TimetrackingOverviewRepresentationsBuilder
         foreach ($trackers_row as $tracker_row) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_row["tracker_id"]);
             if ($this->checkTrackerAndPermissions($tracker, $user)) {
-                $tracker_representations["trackers"][] = $this->tracker_rest_builder->getTrackerRepresentationWithoutWorkflowComputedPermissions(
+                $tracker_representations["trackers"][] = $this->tracker_rest_builder->getTrackerRepresentationInTrackerContext(
                     $user,
                     $tracker
                 );

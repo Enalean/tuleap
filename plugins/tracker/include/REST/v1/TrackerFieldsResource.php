@@ -27,7 +27,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
-use Tracker_REST_FieldRepresentation;
+use Tracker_REST_FormElementRepresentation;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
@@ -82,7 +82,7 @@ class TrackerFieldsResource extends AuthenticatedResource
      * @param int                             $id    Id of the field
      * @param TrackerFieldPatchRepresentation $patch New values for the field {@from body} {@type Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation}
      *
-     * @return Tracker_REST_FieldRepresentation
+     * @return Tracker_REST_FormElementRepresentation
      *
      * @access protected
      *
@@ -117,7 +117,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         $request['add'] = implode("\n", $patch->new_values);
         $field->getBind()->process($request, true);
 
-        $field_representation = new Tracker_REST_FieldRepresentation();
+        $field_representation = new Tracker_REST_FormElementRepresentation();
         $field_representation->build(
             $field,
             $form_element_factory->getType($field),

@@ -37,6 +37,7 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -84,20 +85,23 @@ class ProjectResource
             TrackerFactory::instance(),
             new Tracker_REST_TrackerRestBuilder(
                 Tracker_FormElementFactory::instance(),
-                new PermissionsExporter(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                new TransitionFactory(
-                                    Workflow_Transition_ConditionFactory::build()
+                new FormElementRepresentationsBuilder(
+                    Tracker_FormElementFactory::instance(),
+                    new PermissionsExporter(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    new TransitionFactory(
+                                        Workflow_Transition_ConditionFactory::build()
+                                    ),
+                                    new SimpleWorkflowDao()
                                 ),
-                                new SimpleWorkflowDao()
+                                new TransitionExtractor()
                             ),
-                            new TransitionExtractor()
-                        ),
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            Tracker_FormElementFactory::instance()
+                            new FrozenFieldsRetriever(
+                                new FrozenFieldsDao(),
+                                Tracker_FormElementFactory::instance()
+                            )
                         )
                     )
                 )

@@ -56,6 +56,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
@@ -162,20 +163,23 @@ class TrackersResource extends AuthenticatedResource
 
         $builder = new Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
-            new PermissionsExporter(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            new TransitionFactory(
-                                Workflow_Transition_ConditionFactory::build()
+            new FormElementRepresentationsBuilder(
+                $this->formelement_factory,
+                new PermissionsExporter(
+                    new FrozenFieldDetector(
+                        new TransitionRetriever(
+                            new StateFactory(
+                                new TransitionFactory(
+                                    Workflow_Transition_ConditionFactory::build()
+                                ),
+                                new SimpleWorkflowDao()
                             ),
-                            new SimpleWorkflowDao()
+                            new TransitionExtractor()
                         ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $this->formelement_factory
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao(),
+                            Tracker_FormElementFactory::instance()
+                        )
                     )
                 )
             )
@@ -190,7 +194,7 @@ class TrackersResource extends AuthenticatedResource
 
         $this->sendAllowHeaderForTracker();
 
-        return $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
+        return $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
     }
 
     /**
@@ -645,25 +649,28 @@ class TrackersResource extends AuthenticatedResource
 
             $builder = new Tracker_REST_TrackerRestBuilder(
                 $this->formelement_factory,
-                new PermissionsExporter(
-                    new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                new TransitionFactory(
-                                    Workflow_Transition_ConditionFactory::build()
+                new FormElementRepresentationsBuilder(
+                    $this->formelement_factory,
+                    new PermissionsExporter(
+                        new FrozenFieldDetector(
+                            new TransitionRetriever(
+                                new StateFactory(
+                                    new TransitionFactory(
+                                        Workflow_Transition_ConditionFactory::build()
+                                    ),
+                                    new SimpleWorkflowDao()
                                 ),
-                                new SimpleWorkflowDao()
+                                new TransitionExtractor()
                             ),
-                            new TransitionExtractor()
-                        ),
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            $this->formelement_factory
+                            new FrozenFieldsRetriever(
+                                new FrozenFieldsDao(),
+                                Tracker_FormElementFactory::instance()
+                            )
                         )
                     )
                 )
             );
-            return $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
+            return $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
         } catch (InvalidParameterTypeException $e) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         } catch (MissingMandatoryParameterException $e) {
