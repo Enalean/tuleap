@@ -36,7 +36,7 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -666,7 +666,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andThrow(
-            ItemStatusUsageMismatchException::class
+            HardCodedMetadataException::itemStatusNotAvailable()
         );
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->never();
@@ -684,7 +684,8 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitFolder')->never();
 
-        $this->expectException(ItemStatusUsageMismatchException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
 
         $item_creator->createFolder(
             $parent_item,

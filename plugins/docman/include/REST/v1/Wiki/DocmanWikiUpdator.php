@@ -94,12 +94,7 @@ class DocmanWikiUpdator
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
      */
     public function updateWiki(
         \Docman_Wiki $item,

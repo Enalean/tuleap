@@ -40,9 +40,7 @@ class HardcodedMetadataObsolescenceDateRetriever
 
     /**
      * @return int
-     * @throws InvalidDateTimeFormatException
-     * @throws ObsolescenceDateDisabledException
-     * @throws InvalidDateComparisonException
+     * @throws HardCodedMetadataException
      */
     public function getTimeStampOfDate(?string $date, \DateTimeImmutable $current_time): int
     {
@@ -56,7 +54,7 @@ class HardcodedMetadataObsolescenceDateRetriever
 
         $formatted_date = \DateTimeImmutable::createFromFormat('Y-m-d', $date);
         if (!$formatted_date) {
-            throw new InvalidDateTimeFormatException();
+            throw HardCodedMetadataException::invalidDateFormat();
         }
 
         $this->date_checker->checkDateValidity(

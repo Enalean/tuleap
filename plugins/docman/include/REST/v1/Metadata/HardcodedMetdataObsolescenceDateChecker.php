@@ -38,7 +38,7 @@ class HardcodedMetdataObsolescenceDateChecker
     }
 
     /**
-     * @throws InvalidDateComparisonException
+     * @throws HardCodedMetadataException
      */
     public function checkDateValidity(int $current_date, int $obsolescence_date): void
     {
@@ -47,12 +47,12 @@ class HardcodedMetdataObsolescenceDateChecker
         }
 
         if (($current_date > $obsolescence_date) && $this->isObsolescenceMetadataUsed()) {
-            throw new InvalidDateComparisonException();
+            throw HardCodedMetadataException::invalidDateComparison();
         }
     }
 
     /**
-     * @throws ObsolescenceDateDisabledException
+     * @throws HardCodedMetadataException
      */
     public function checkObsolescenceDateUsageForDocument(?string $date): void
     {
@@ -61,7 +61,7 @@ class HardcodedMetdataObsolescenceDateChecker
         }
 
         if (!$this->isObsolescenceMetadataUsed()) {
-            throw new ObsolescenceDateDisabledException();
+            throw HardCodedMetadataException::obsolescenceDateMetadataIsDisabled();
         }
     }
 

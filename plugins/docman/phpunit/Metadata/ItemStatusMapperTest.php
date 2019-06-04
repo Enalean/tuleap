@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,10 +24,8 @@ namespace Tuleap\Docman\Metadata;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException;
-use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException;
-use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException;
 
 final class ItemStatusMapperTest extends TestCase
 {
@@ -60,7 +58,8 @@ final class ItemStatusMapperTest extends TestCase
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
         $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
-        $this->expectException(StatusNotFoundBadStatusGivenException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status swang is invalid');
         $mapper->getItemStatusIdFromItemStatusString('swang');
     }
 
@@ -70,7 +69,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
 
-        $this->expectException(StatusNotFoundNullException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status null is invalid');
         $mapper->getItemStatusIdFromItemStatusString(null);
     }
 
@@ -80,7 +80,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('0');
 
-        $this->expectException(ItemStatusUsageMismatchException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusIdFromItemStatusString('rejected');
     }
 }

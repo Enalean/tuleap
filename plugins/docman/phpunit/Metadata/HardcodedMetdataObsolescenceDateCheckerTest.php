@@ -100,7 +100,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn((int)ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $this->expectException(ObsolescenceDateDisabledException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('obsolescence date is not enabled for project');
 
         $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
     }
@@ -131,7 +132,8 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn('1');
 
-        $this->expectException(InvalidDateComparisonException::class);
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage("obsolescence date before today");
         $checker->checkDateValidity(
             $current_date->getTimestamp(),
             $obsolescence_date->getTimestamp(),
