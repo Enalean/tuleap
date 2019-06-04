@@ -30,7 +30,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
@@ -73,14 +72,6 @@ class DocmanLinkUpdator
      */
     private $status_mapper;
     /**
-     * @var HardcodedMetadataUsageChecker
-     */
-    private $metadata_usage_checker;
-    /**
-     * @var HardcodedMetdataObsolescenceDateChecker
-     */
-    private $obsolescence_date_checker;
-    /**
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
@@ -95,8 +86,6 @@ class DocmanLinkUpdator
         \Docman_LinkVersionFactory $docman_link_version_factory,
         DBTransactionExecutor $transaction_executor,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataUsageChecker $metadata_usage_checker,
-        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
         $this->version_factory             = $version_factory;
@@ -108,8 +97,6 @@ class DocmanLinkUpdator
         $this->docman_link_version_factory = $docman_link_version_factory;
         $this->transaction_executor        = $transaction_executor;
         $this->status_mapper               = $status_mapper;
-        $this->metadata_usage_checker      = $metadata_usage_checker;
-        $this->obsolescence_date_checker   = $obsolescence_date_checker;
         $this->date_retriever              = $date_retriever;
     }
 
@@ -134,9 +121,6 @@ class DocmanLinkUpdator
 
         $this->links_validity_checker->checkLinkValidity($representation->link_properties->link_url);
 
-        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
-            $representation->status
-        );
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
             $representation->status
         );

@@ -39,7 +39,6 @@ use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
@@ -47,7 +46,6 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
-use Tuleap\Upload\UploadPathAllocator;
 use UserManager;
 
 class DocmanItemCreatorBuilder
@@ -70,7 +68,6 @@ class DocmanItemCreatorBuilder
             DBFactory::getMainTuleapDBConnection()
         );
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
             $docman_setting_bo
         );
@@ -107,9 +104,7 @@ class DocmanItemCreatorBuilder
                 $document_upload_path_allocator
             ),
             new DocmanLinksValidityChecker(),
-            new ItemStatusMapper(),
-            $hardcoded_metadata_status_checker,
-            $hardcoded_metadata_obsolescence_date_checker,
+            new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             )

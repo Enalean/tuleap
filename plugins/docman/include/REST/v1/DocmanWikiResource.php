@@ -33,7 +33,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
@@ -265,7 +264,6 @@ class DocmanWikiResource extends AuthenticatedResource
     {
 
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
             $docman_setting_bo
         );
@@ -276,8 +274,7 @@ class DocmanWikiResource extends AuthenticatedResource
             $this->event_manager,
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper(),
-            $hardcoded_metadata_status_checker,
+            new ItemStatusMapper($docman_setting_bo),
             $hardcoded_metadata_obsolescence_date_checker,
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
