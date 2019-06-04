@@ -75,7 +75,7 @@ class SystemEventProcessManagerTest extends TestCase
     {
         vfsStream::newFile('stuff.pid', 0000)->at($this->root);
 
-        $this->process->shouldReceive('getPidFile')->andReturns('/stuff.pid');
+        $this->process->shouldReceive('getPidFile')->andReturns($this->root->url() . '/stuff.pid');
 
         $this->expectException(\Exception::class);
 
