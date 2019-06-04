@@ -53,6 +53,20 @@ msgstr ""
 msgid "Approved"
 msgstr "Approuvé"
 
+#, php-format
+msgid "Can't delete folder %s because it is not empty."
+msgstr "Impossible de supprimer le dossier %s car il n'est pas vide."
+
+msgid ""
+"Cannot delete this item because it contains items you are not allowed to "
+"modify (no 'Write' access, you may even not be able to read them). Please "
+"contact your document manager administrator."
+msgstr ""
+"Impossible de supprimer cet élément car il contient des items que vous ne "
+"pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne "
+"puissiez pas non plus les lire). Merci de contacter votre administrateur de "
+"gestionnaire de documents."
+
 msgid "Commented"
 msgstr "Commenté"
 

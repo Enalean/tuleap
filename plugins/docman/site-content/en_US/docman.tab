@@ -434,13 +434,11 @@ plugin_docman	error_create_newversion	Error while creating new version.
 plugin_docman	error_create_news	Error while creating news. Check that you have right permissions.
 plugin_docman	error_create_news_details	Error while creating news. Check that details field is not empty.
 plugin_docman	error_create_news_summary	Error while creating news. Check that subject field is not empty.
-plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
 plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
 plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_invalid_md	Invalid property
 plugin_docman	error_item_not_deleted	Can't delete item.
-plugin_docman	error_item_not_deleted_no_w	Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator.
 plugin_docman	error_item_not_deleted_nonfile_version	Cannot delete a version on something that is not a file.
 plugin_docman	error_item_not_deleted_last_file_version	Cannot delete last version of a file. If you want to continue, please delete the document itself.
 plugin_docman	error_item_not_deleted_unknown_version	Cannot delete a version that doesn't exist.
@@ -456,7 +454,6 @@ plugin_docman	error_perms_admin	You do not have sufficient access rights to admi
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
 plugin_docman	error_perms_delete	You do not have sufficient access rights to delete this item.
-plugin_docman	error_perms_delete_item	You do not have sufficient access rights to delete $1.
 plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	You do not have sufficient access rights to move this item.
 plugin_docman	error_perms_perms	You do not have sufficient access rights to set permissions for this item.
