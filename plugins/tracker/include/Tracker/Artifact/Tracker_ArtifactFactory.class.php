@@ -388,7 +388,7 @@ class Tracker_ArtifactFactory {
      * @param string  $email             The email if the user is anonymous (null if anonymous)
      * @param bool $send_notification true if a notification must be sent, false otherwise
      *
-     * @return Tracker_Artifact or false if an error occured
+     * @return Tracker_Artifact|false false if an error occurred
      */
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
         $formelement_factory = Tracker_FormElementFactory::instance();

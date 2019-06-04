@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017-2019. All rights reserved
+ * Copyright (c) Enalean 2017-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -124,6 +124,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function fetchRawValueFromChangeset($changeset) {
         $value = '';
         if ($v = $changeset->getValue($this)) {
+            assert($v instanceof Tracker_Artifact_ChangesetValue_File);
             if (isset($v['value_id'])) {
                 $v = array($v);
             }

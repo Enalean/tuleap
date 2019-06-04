@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,7 +80,10 @@ class AgileDashboard_CardRepresentation {
             $this->allowed_column_ids = array();
         }
 
-        $this->values = $this->mapAndFilter($card->getCardPresenter()->getFields(), $this->getFieldsValuesFilter($user, $artifact->getLastChangeset()));
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset !== null) {
+            $this->values = $this->mapAndFilter($card->getCardPresenter()->getFields(), $this->getFieldsValuesFilter($user, $last_changeset));
+        }
     }
 
     private function getProjectReference(Project $project) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -92,10 +92,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Propagate process dispatch to sub-tracker elements
      *
      * @param Tracker_Dispatchable_Interface $object
-     * @param Codendi_Request                $request
      * @param PFUser                           $user
      */
-    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, PFUser $user) {
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, HTTPRequest $request, PFUser $user) {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
@@ -152,7 +151,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * Controler
      *
-     * @param Codendi_Request $request The request
+     * @param HTTPRequest       $request The request
      * @param PFUser            $user    The user that execute the request
      *
      * @return void

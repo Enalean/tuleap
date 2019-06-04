@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,7 @@ class Git_Mirror_MirrorDao extends \Tuleap\DB\DataAccessObject
             return false;
         }
 
-        return $this->getDB()->lastInsertId();
+        return (int) $this->getDB()->lastInsertId();
     }
 
     public function fetchAll()

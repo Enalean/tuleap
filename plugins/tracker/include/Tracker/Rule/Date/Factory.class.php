@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012. All rights reserved
+  * Copyright (c) Enalean, 2012-Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -179,14 +179,18 @@ class Tracker_Rule_Date_Factory {
         }
     }
     
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, array $xmlMapping, $tracker_id) {
         $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {
-            $child = $date_rules->addChild('rule');
-            $child->addChild('source_field')->addAttribute('REF', array_search($rule->getSourceFieldId(), $xmlMapping));
-            $child->addChild('target_field')->addAttribute('REF', array_search($rule->getTargetFieldId(), $xmlMapping));
-            $child->addChild('comparator')->addAttribute('type', $rule->getComparator());
+            $source_field_id = array_search($rule->getSourceFieldId(), $xmlMapping);
+            $target_field_id = array_search($rule->getTargetFieldId(), $xmlMapping);
+            if ($source_field_id !== false && $target_field_id !== false) {
+                $child = $date_rules->addChild('rule');
+                $child->addChild('source_field')->addAttribute('REF', $source_field_id);
+                $child->addChild('target_field')->addAttribute('REF', $target_field_id);
+                $child->addChild('comparator')->addAttribute('type', $rule->getComparator());
+            }
         }
     }
 

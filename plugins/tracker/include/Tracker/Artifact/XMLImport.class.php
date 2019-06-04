@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -352,7 +352,7 @@ class Tracker_Artifact_XMLImport {
     /**
      * @param Tracker $tracker
      * @param SimpleXMLElement $xml_artifact
-     * @return Tracker_Artifact
+     * @return Tracker_Artifact|null
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importNewBareArtifact(
@@ -365,6 +365,11 @@ class Tracker_Artifact_XMLImport {
             $tracker,
             $this->getSubmittedBy($first_changeset),
             $this->getSubmittedOn($first_changeset));
+
+        if ($artifact === false) {
+            return null;
+        }
+
         $this->logger->info("--> new artifact {$artifact->getId()}");
 
         if ($this->source_platform !== null) {
@@ -497,7 +502,7 @@ class Tracker_Artifact_XMLImport {
      * @param Tracker_Artifact $artifact
      * @param SimpleXMLElement $xml_changeset
      * @param Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
-     * @return null|Tracker_Artifact
+     * @return false|Tracker_Artifact
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importFirstChangeset(
@@ -508,7 +513,7 @@ class Tracker_Artifact_XMLImport {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
         $fields_data = $fields_data_builder->getFieldsData($xml_changeset, $submitted_by, $artifact);
         if (count($fields_data) === 0) {
-            return null;
+            return false;
         }
 
         return $this->artifact_creator->createFirstChangeset(
@@ -524,7 +529,7 @@ class Tracker_Artifact_XMLImport {
     /**
      * @param Tracker_Artifact $artifact
      * @param SimpleXMLElement $xml_changeset
-     * @return Tracker_Artifact
+     * @return Tracker_Artifact|false
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importFakeFirstChangeset(

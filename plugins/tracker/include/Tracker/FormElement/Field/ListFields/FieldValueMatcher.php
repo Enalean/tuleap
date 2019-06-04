@@ -46,7 +46,14 @@ class FieldValueMatcher
             return Tracker_FormElement_Field_List::NONE_VALUE;
         }
 
-        $source_value       = $source_field->getBind()->getValue($source_value_id);
+        $source_bind = $source_field->getBind();
+        if ($source_bind === null) {
+            return null;
+        }
+        $source_value = $source_bind->getValue($source_value_id);
+        if ($source_value === null || is_array($source_value)) {
+            return null;
+        }
         $source_value_label = $source_value->getLabel();
 
         foreach ($target_field->getBind()->getAllValues() as $target_value) {

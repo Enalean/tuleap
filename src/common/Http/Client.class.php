@@ -65,6 +65,7 @@ class Http_Client
      * this will return a boolean.
      * If no request has been made then this will return NULL.
      * If CURLOPT_RETURNTRANSFER is set to TRUE, then all values will be returned as an array.
+     * @psalm-suppress InvalidReturnType Psalm issue: Psalm's callmap is incorrect for curl_exec
      * @return bool | null | array
      */
     public function getLastResponse() {
@@ -165,6 +166,7 @@ class Http_Client
      * this will return a boolean.
      * If no request has been made then this will return NULL.
      * If CURLOPT_RETURNTRANSFER is set to TRUE, then all values will be returned as an array.
+     * @psalm-suppress InvalidReturnType Psalm issue: Psalm's callmap is incorrect for curl_exec
      * @return bool | null | array
      */
     private function execute() {

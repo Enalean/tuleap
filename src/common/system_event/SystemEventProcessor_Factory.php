@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2015-2016. All rights reserved.
+ * Copyright Enalean (c) 2015-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -46,6 +46,7 @@ class SystemEventProcessor_Factory
     public function getProcessForQueue($request_queue)
     {
         $owner         = SystemEvent::OWNER_APP;
+        /** @var SystemEventQueue[] $custom_queues */
         $custom_queues = array();
         $this->event_manager->processEvent(
             Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,

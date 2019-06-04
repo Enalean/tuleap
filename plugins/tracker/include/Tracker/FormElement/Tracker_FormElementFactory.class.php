@@ -1042,6 +1042,7 @@ class Tracker_FormElementFactory {
         User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
         $att = $xml->attributes();
+        assert($att !== null);
         $row = array(
             'formElement_type' => (string)$att['type'],
             'name'             => (string)$xml->name,

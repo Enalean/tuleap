@@ -162,7 +162,7 @@ class Cardwall_SingleCardBuilder
         );
     }
 
-    private function getColumnId(Tracker_Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_OnTop_Config_MappedFieldProvider $field_provider) {
+    private function getColumnId(Tracker_Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         foreach ($columns as $column) {
             if ($config->isInColumn($artifact, $field_provider, $column)) {
                 return $column->getId();

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\ItemVisitor;
+
 class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     var $pagename;
 
@@ -147,12 +149,13 @@ class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
     }
 }
 
-class Docman_View_GetSpecificFieldsVisitor {
+class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
+{
     
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder(Docman_Folder $item, $params = array()) {
         return array();
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki(Docman_Wiki $item, $params = array()) {
         $pagename = '';
         if(isset($params['force_item'])) {
             if(Docman_ItemFactory::getItemTypeForItem($params['force_item']) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
@@ -165,7 +168,7 @@ class Docman_View_GetSpecificFieldsVisitor {
         return array(new Docman_MetadataHtmlWiki($pagename));
     }
     
-    function visitLink(&$item, $params = array()) {
+    function visitLink(Docman_Link $item, $params = array()) {
         $link_url = '';
         if(isset($params['force_item'])) {
             if($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
@@ -178,11 +181,11 @@ class Docman_View_GetSpecificFieldsVisitor {
         return array(new Docman_MetadataHtmlLink($link_url));
     }
     
-    function visitFile(&$item, $params = array()) {
+    function visitFile(Docman_File $item, $params = array()) {
         return array(new Docman_MetadataHtmlFile($params['request']));
     }
     
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         $content = '';
         $version = $item->getCurrentVersion();
         if ($version) {
@@ -191,7 +194,11 @@ class Docman_View_GetSpecificFieldsVisitor {
         return array(new Docman_MetadataHtmlEmbeddedFile($content));
     }
     
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty(Docman_Empty $item, $params = array()) {
         return array(new Docman_MetadataHtmlEmpty());
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
     }
 }

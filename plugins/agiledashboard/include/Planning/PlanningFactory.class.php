@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -360,19 +360,17 @@ class PlanningFactory {
         }
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
         $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
-        $this->tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
-        usort($plannings, array($this, 'cmpPlanningTrackerIds'));
+        $tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
+        usort($plannings, static function (Planning $a, Planning $b) use ($tmp_tracker_ids_to_sort_plannings) : int {
+            return strcmp(
+                array_search($a->getPlanningTrackerId(), $tmp_tracker_ids_to_sort_plannings),
+                array_search($b->getPlanningTrackerId(), $tmp_tracker_ids_to_sort_plannings)
+            );
+        });
     }
 
     private function getPlanningTrackerId(Planning $planning) {
         return $planning->getPlanningTrackerId();
-    }
-
-    private function cmpPlanningTrackerIds($a, $b) {
-        return strcmp(
-            array_search($a->getPlanningTrackerId(), $this->tmp_tracker_ids_to_sort_plannings),
-            array_search($b->getPlanningTrackerId(), $this->tmp_tracker_ids_to_sort_plannings)
-        );
     }
 
     /**

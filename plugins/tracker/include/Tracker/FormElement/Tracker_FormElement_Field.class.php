@@ -1211,7 +1211,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param int                        $value_id    The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
-     * @return Tracker_Artifact_ChangesetValue or null if not found
+     * @return Tracker_Artifact_ChangesetValue|null null if not found
      */
     public abstract function getChangesetValue($changeset, $value_id, $has_changed);
 

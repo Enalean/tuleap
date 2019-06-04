@@ -1,7 +1,7 @@
 <?php
-/* 
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
@@ -105,7 +105,12 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         return $this->graph;
     }
     function sort($a, $b) {
-        return array_search($a, $this->keys) - array_search($b, $this->keys);
+        $search_a = array_search($a, $this->keys);
+        $search_b = array_search($b, $this->keys);
+        if ($search_a === false || $search_b === false) {
+            return 0;
+        }
+        return $search_a - $search_b;
     }
      
     

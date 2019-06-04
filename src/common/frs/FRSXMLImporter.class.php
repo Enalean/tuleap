@@ -245,6 +245,7 @@ class FRSXMLImporter {
     ) {
         $user  = $this->user_finder->getUser($xml_rel->user);
         $attrs = $xml_rel->attributes();
+        assert($attrs !== null);
         $id    = isset($attrs['id']) ? (string) $attrs['id'] : null;
 
         $release = new FRSRelease();

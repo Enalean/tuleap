@@ -106,7 +106,8 @@ class Docman_Widget_MyDocmanSearch extends Widget
      *
      * @param $docman_id int  Document Id
      * @param $user      User User Id
-     * @return group_id
+     * @return array|0
+     * @psalm-return array{group_id: int, title:string}|0
      **/
     function returnAllowedGroupId($docman_id, $user){
         $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE'.
@@ -116,7 +117,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
 
         if ($res_group && db_numrows($res_group)== 1){
             $row = db_fetch_array($res_group);
-            $res['group_id'] = $row['group_id'];
+            $res['group_id'] = (int) $row['group_id'];
             $res['title'] = $row['title'];
 
             $project = ProjectManager::instance()->getProject($res['group_id']);

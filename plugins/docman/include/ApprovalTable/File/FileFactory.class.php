@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -51,7 +51,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
             } else {
                 $this->itemVersion = $lastItemVersion;
             }
-        } else {
+        } else if ($item instanceof Docman_File || $item instanceof Docman_Link) {
             $this->itemVersion = $item->getCurrentVersion();
         }
     }
