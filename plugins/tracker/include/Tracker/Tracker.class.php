@@ -3246,6 +3246,7 @@ EOS;
                 }
                 $nb_lines++;
                 if ($mode == 'creation') {
+                    $fields_data = $this->getFormElementFactory()->getUsedFieldsWithDefaultValue($this, $fields_data, $current_user);
                     if ($artifact = $af->createArtifact($this, $fields_data, $current_user, null, $send_notifications)) {
                         $nb_artifact_creation++;
                     } else {
