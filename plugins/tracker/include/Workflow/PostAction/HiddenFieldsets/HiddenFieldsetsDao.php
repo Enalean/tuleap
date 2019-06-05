@@ -63,4 +63,37 @@ class HiddenFieldsetsDao extends DataAccessObject
 
         return $result !== false;
     }
+
+    public function createPostActionForTransitionId(int $transition_id, array $fieldset_ids) : void
+    {
+        $hidden_fieldsets_action_id = (int) $this->getDB()->insertReturnId(
+            "plugin_tracker_workflow_postactions_hidden_fieldsets",
+            ["transition_id" => $transition_id]
+        );
+
+        foreach ($fieldset_ids as $fieldset_id) {
+            $this->getDB()->insert(
+                "plugin_tracker_workflow_postactions_hidden_fieldsets_value",
+                [
+                    "postaction_id" => $hidden_fieldsets_action_id,
+                    "fieldset_id"   => $fieldset_id,
+                ]
+            );
+        }
+    }
+
+    public function deletePostActionsByTransitionId(int $transition_id) : void
+    {
+        $sql = "
+            DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value
+            FROM plugin_tracker_workflow_postactions_hidden_fieldsets
+            LEFT JOIN plugin_tracker_workflow_postactions_hidden_fieldsets_value
+                ON plugin_tracker_workflow_postactions_hidden_fieldsets_value.postaction_id = plugin_tracker_workflow_postactions_hidden_fieldsets.id
+            WHERE plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $transition_id
+        );
+    }
 }

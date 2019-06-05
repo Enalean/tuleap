@@ -33,6 +33,8 @@ use Transition_PostAction_FieldFactory;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -42,6 +44,9 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
@@ -67,41 +72,89 @@ class TransitionReplicatorBuilder
         $form_element_factory = Tracker_FormElementFactory::instance();
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-        $post_action_collection_updater = new PostActionCollectionUpdater(
-            new CIBuildValueUpdater(
-                new CIBuildValueRepository(
-                    new Transition_PostAction_CIBuildDao()
+        if (\ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            $post_action_collection_updater = new PostActionCollectionUpdater(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
+                        new Transition_PostAction_CIBuildDao()
+                    ),
+                    new CIBuildValueValidator($ids_validator)
                 ),
-                new CIBuildValueValidator($ids_validator)
-            ),
-            new SetDateValueUpdater(
-                new SetDateValueRepository(
-                    new Transition_PostAction_Field_DateDao(),
-                    $transaction_executor
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        new Transition_PostAction_Field_DateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
-                new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
-            ),
-            new SetIntValueUpdater(
-                new SetintValueRepository(
-                    new Transition_PostAction_Field_IntDao(),
-                    $transaction_executor
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        new Transition_PostAction_Field_IntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
-                new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
-            ),
-            new SetFloatValueUpdater(
-                new SetFloatValueRepository(
-                    new Transition_PostAction_Field_FloatDao(),
-                    $transaction_executor
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        new Transition_PostAction_Field_FloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
-                new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
-            ),
-            new FrozenFieldsValueUpdater(
-                new FrozenFieldsValueRepository(
-                    new FrozenFieldsDao()
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
+                        new FrozenFieldsDao()
+                    ),
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
                 ),
-                new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
-            )
-        );
+                new HiddenFieldsetsValueUpdater(
+                    new HiddenFieldsetsValueRepository(
+                        new HiddenFieldsetsDao()
+                    ),
+                    new HiddenFieldsetsValueValidator(
+                        $form_element_factory
+                    )
+                )
+            );
+        } else {
+            $post_action_collection_updater = new PostActionCollectionUpdater(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
+                        new Transition_PostAction_CIBuildDao()
+                    ),
+                    new CIBuildValueValidator($ids_validator)
+                ),
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        new Transition_PostAction_Field_DateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        new Transition_PostAction_Field_IntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        new Transition_PostAction_Field_FloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
+                        new FrozenFieldsDao()
+                    ),
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
+                )
+            );
+        }
+
+
 
         return new TransitionReplicator(
             Workflow_Transition_ConditionFactory::build(),
@@ -119,6 +172,10 @@ class TransitionReplicatorBuilder
                 ),
                 new FrozenFieldsRetriever(
                     new FrozenFieldsDao(),
+                    $form_element_factory
+                ),
+                new HiddenFieldsetsRetriever(
+                    new HiddenFieldsetsDao(),
                     $form_element_factory
                 )
             ),

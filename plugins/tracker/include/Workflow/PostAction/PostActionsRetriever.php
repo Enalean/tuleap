@@ -24,8 +24,10 @@ namespace Tuleap\Tracker\Workflow\PostAction;
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\NoFrozenFieldsPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\NoHiddenFieldsetsPostActionException;
 
 class PostActionsRetriever
 {
@@ -37,14 +39,21 @@ class PostActionsRetriever
     /** @var FrozenFieldsRetriever */
     private $frozen_fields_retriever;
 
+    /**
+     * @var HiddenFieldsetsRetriever
+     */
+    private $hidden_fieldsets_retriever;
+
     public function __construct(
         \Transition_PostAction_CIBuildFactory $cibuild_factory,
         \Transition_PostAction_FieldFactory $field_factory,
-        FrozenFieldsRetriever $frozen_fields_retriever
+        FrozenFieldsRetriever $frozen_fields_retriever,
+        HiddenFieldsetsRetriever $hidden_fieldsets_retriever
     ) {
-        $this->cibuild_factory         = $cibuild_factory;
-        $this->field_factory           = $field_factory;
-        $this->frozen_fields_retriever = $frozen_fields_retriever;
+        $this->cibuild_factory            = $cibuild_factory;
+        $this->field_factory              = $field_factory;
+        $this->frozen_fields_retriever    = $frozen_fields_retriever;
+        $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;
     }
 
     /**
@@ -82,8 +91,16 @@ class PostActionsRetriever
     /**
      * @throws NoFrozenFieldsPostActionException
      */
-    public function getFrozenFieldsValue(\Transition $transition): FrozenFields
+    public function getFrozenFields(\Transition $transition): FrozenFields
     {
         return $this->frozen_fields_retriever->getFrozenFields($transition);
+    }
+
+    /**
+     * @throws NoHiddenFieldsetsPostActionException
+     */
+    public function getHiddenFieldsets(\Transition $transition): HiddenFieldsets
+    {
+        return $this->hidden_fieldsets_retriever->getHiddenFieldsets($transition);
     }
 }

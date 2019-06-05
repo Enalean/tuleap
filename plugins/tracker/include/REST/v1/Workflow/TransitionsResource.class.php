@@ -50,12 +50,16 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
@@ -493,6 +497,52 @@ class TransitionsResource extends AuthenticatedResource
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $transaction_executor = $this->getTransactionExecutor();
+
+        if (\ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            return new PostActionCollectionUpdater(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
+                        $this->getCIBuildDao()
+                    ),
+                    new CIBuildValueValidator($ids_validator)
+                ),
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        $this->getFieldDateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        $this->getFieldIntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        $this->getFieldFloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
+                        $this->getFrozenFieldsDao()
+                    ),
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
+                ),
+                new HiddenFieldsetsValueUpdater(
+                    new HiddenFieldsetsValueRepository(
+                        new HiddenFieldsetsDao()
+                    ),
+                    new HiddenFieldsetsValueValidator(
+                        $form_element_factory
+                    )
+                )
+            );
+        }
 
         return new PostActionCollectionUpdater(
             new CIBuildValueUpdater(

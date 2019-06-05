@@ -75,8 +75,6 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      * @param Transition $transition The transition
      *
      * @return array of Transition_PostAction
-     *
-     * @throws NoHiddenFieldsetsPostActionException
      */
     public function loadPostActions(Transition $transition)
     {
@@ -90,7 +88,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
             $post_action_id = $row['postaction_id'];
         }
         if ($post_action_id === null) {
-            throw new NoHiddenFieldsetsPostActionException();
+            return [];
         }
 
         $fieldsets = [];

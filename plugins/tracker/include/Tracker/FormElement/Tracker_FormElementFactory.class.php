@@ -656,6 +656,14 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @param Tracker $tracker
+     * @return Tracker_FormElement_Container_Fieldset[]
+     */
+    public function getUsedFieldsets($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('fieldset'));
+    }
+
+    /**
      * @return Tracker_FormElement_Field[]
      */
     public function getUsedFieldsBindedToUserGroups($tracker) {
