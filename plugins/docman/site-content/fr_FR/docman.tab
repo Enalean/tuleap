@@ -434,13 +434,11 @@ plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle
 plugin_docman	error_create_news	Erreur lors de la création de la news. Vérifiez que vous avez les bonnes permissions.
 plugin_docman	error_create_news_details	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ détails.
 plugin_docman	error_create_news_summary	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ sujet.
-plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
 plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
-plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
 plugin_docman	error_item_not_deleted_nonfile_version	Impossible de supprimer une version d'un element qui n'est pas un fichier.
 plugin_docman	error_item_not_deleted_last_file_version	Impossible de supprimer la dernière version d'un fichier. Si vous souhaîtez continuer, veuillez supprimer le document lui même.
 plugin_docman	error_item_not_deleted_unknown_version	Impossible de supprimer une version qui n'existe pas.
@@ -456,7 +454,6 @@ plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour admin
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
 plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
 plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet élément.
-plugin_docman	error_perms_delete_item	Vous n'avez pas les droits suffisants pour supprimer $1.
 plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
 plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.

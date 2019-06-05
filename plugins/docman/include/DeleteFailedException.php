@@ -42,15 +42,24 @@ class DeleteFailedException extends Exception
     {
         return new self(
             "missing permission on a sub item",
-            $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w')
+            dgettext(
+                'plugin-docman',
+                "Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator."
+            )
         );
     }
 
     public static function fromFile(\Docman_File $item): self
     {
         return new self(
-            "Missing permission for delete" . $item->getTitle(),
-            $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle())
+            "Missing permission to delete " . $item->getTitle(),
+            sprintf(
+                dgettext(
+                    'plugin-docman',
+                    'You do not have sufficient access rights to delete %s.'
+                ),
+                $item->getTitle()
+            )
         );
     }
 
@@ -80,7 +89,13 @@ class DeleteFailedException extends Exception
     {
         return new self(
             "Folder is not empty: " . $item->getTitle(),
-            $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle())
+            sprintf(
+                dgettext(
+                    'plugin-docman',
+                    'Can\'t delete folder %s because it is not empty.'
+                ),
+                $item->getTitle()
+            )
         );
     }
 
