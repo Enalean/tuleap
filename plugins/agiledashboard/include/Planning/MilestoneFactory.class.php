@@ -385,7 +385,7 @@ class Planning_MilestoneFactory
     public function getPaginatedSubMilestones(
         PFUser $user,
         Planning_Milestone $milestone,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -413,7 +413,7 @@ class Planning_MilestoneFactory
     public function getPaginatedSiblingMilestones(
         PFUser $user,
         Planning_Milestone $milestone,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset
     ) {
@@ -450,7 +450,7 @@ class Planning_MilestoneFactory
     public function getPaginatedTopMilestones(
         PFUser $user,
         Project $project,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order

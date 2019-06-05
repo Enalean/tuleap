@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
-use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
-use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPane;
+use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 /**
  * I build panes for a Planning_Milestone
@@ -216,7 +216,7 @@ class Planning_MilestonePaneFactory
             $milestone,
             $user,
             self::PRELOAD_SUBMILESTONES_FIELDS,
-            new Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen(),
+            new Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen(),
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET,
             self::PRELOAD_PAGINATION_ORDER

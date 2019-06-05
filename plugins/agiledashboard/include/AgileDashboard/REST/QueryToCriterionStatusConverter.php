@@ -21,16 +21,18 @@
 namespace Tuleap\AgileDashboard\REST;
 
 use stdClass;
-use Tuleap\AgileDashboard\Milestone\Criterion\StatusAll;
-use Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen;
-use Tuleap\AgileDashboard\Milestone\Criterion\StatusClosed;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 
 /**
  * I convert a json query string to a ISearchOnStatus criterion.
  */
-class QueryToCriterionConverter {
+class QueryToCriterionStatusConverter
+{
 
-    public function convert($query) {
+    public function convert($query)
+    {
         if ($query === '') {
             return new StatusAll();
         }
@@ -38,7 +40,7 @@ class QueryToCriterionConverter {
         $query_object = json_decode(stripslashes($query));
 
         if (! is_object($query_object)) {
-            throw new MalformedQueryParameterException();
+            throw new MalformedQueryStatusParameterException();
         }
 
         if ($query_object == new stdClass) {
@@ -48,13 +50,13 @@ class QueryToCriterionConverter {
         if (isset($query_object->status)) {
             if ($query_object->status === 'open') {
                 return new StatusOpen();
-            } else if ($query_object->status === 'closed') {
+            } elseif ($query_object->status === 'closed') {
                 return new StatusClosed();
             } else {
-                throw new MalformedQueryParameterException();
+                throw new MalformedQueryStatusParameterException();
             }
         }
 
-        throw new MalformedQueryParameterException();
+        throw new MalformedQueryStatusParameterException();
     }
 }

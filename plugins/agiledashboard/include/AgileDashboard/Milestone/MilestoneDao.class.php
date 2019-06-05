@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 
 class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
     public function searchPaginatedSubMilestones(
         $milestone_artifact_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -143,7 +143,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
     }
 
     private function getPaginationAndStatusStatements(
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -173,7 +173,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
     public function searchPaginatedTopMilestones(
         $milestone_tracker_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -196,7 +196,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
     public function searchPaginatedTopMilestonesForMonoMilestoneConfiguration(
         $milestone_tracker_id,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -273,7 +273,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
         $limit     = null;
         $offset    = null;
         $order     = 'asc';
-        $criterion = new Tuleap\AgileDashboard\Milestone\Criterion\StatusAll();
+        $criterion = new Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll();
 
         return $this->searchPaginatedSubMilestones($milestone_artifact_id, $criterion, $limit, $offset, $order);
     }

@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
-use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
 
 /**
@@ -178,7 +178,7 @@ class Planning_VirtualTopMilestonePaneFactory
         return $this->milestone_representation_builder->getPaginatedTopMilestonesRepresentations(
             $project,
             $user,
-            new Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen(),
+            new Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen(),
             self::PRELOAD_PAGINATION_LIMIT,
             self::PRELOAD_PAGINATION_OFFSET,
             self::PRELOAD_PAGINATION_ORDER

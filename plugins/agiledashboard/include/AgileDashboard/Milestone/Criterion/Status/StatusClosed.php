@@ -18,15 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Milestone\Criterion;
+namespace Tuleap\AgileDashboard\Milestone\Criterion\Status;
 
-class StatusClosed implements ISearchOnStatus {
+class StatusClosed implements ISearchOnStatus
+{
 
-    public function shouldRetrieveOpenMilestones() {
+    public function shouldRetrieveOpenMilestones()
+    {
         return false;
     }
 
-    public function shouldRetrieveClosedMilestones() {
+    public function shouldRetrieveClosedMilestones()
+    {
         return true;
     }
 }

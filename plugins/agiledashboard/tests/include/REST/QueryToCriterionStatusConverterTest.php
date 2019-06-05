@@ -24,56 +24,65 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class QueryToCriterionConverterTest extends TuleapTestCase {
+class QueryToCriterionStatusConverterTest extends TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
-        $this->converter = new QueryToCriterionConverter();
+        $this->converter = new QueryToCriterionStatusConverter();
     }
 
-    public function itConvertsEmptyStringToStatusAll() {
+    public function itConvertsEmptyStringToStatusAll()
+    {
         $this->assertIsA(
             $this->converter->convert(''),
-            'Tuleap\AgileDashboard\Milestone\Criterion\StatusAll'
+            'Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll'
         );
     }
 
-    public function itConvertsEmptyObjectToStatusAll() {
+    public function itConvertsEmptyObjectToStatusAll()
+    {
         $this->assertIsA(
             $this->converter->convert('{}'),
-            'Tuleap\AgileDashboard\Milestone\Criterion\StatusAll'
+            'Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll'
         );
     }
 
-    public function itConvertsOpenToStatusOpen() {
+    public function itConvertsOpenToStatusOpen()
+    {
         $this->assertIsA(
             $this->converter->convert('{\"status\":\"open\"}'),
-            'Tuleap\AgileDashboard\Milestone\Criterion\StatusOpen'
+            'Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen'
         );
     }
 
-    public function itConvertsClosedToStatusClosed() {
+    public function itConvertsClosedToStatusClosed()
+    {
         $this->assertIsA(
             $this->converter->convert('{\"status\":\"closed\"}'),
-            'Tuleap\AgileDashboard\Milestone\Criterion\StatusClosed'
+            'Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusClosed'
         );
     }
 
-    public function itThrowsExceptionIfStatusKeyIsMalformed() {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryParameterException');
+    public function itThrowsExceptionIfStatusKeyIsMalformed()
+    {
+        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
 
         $this->converter->convert('{\"StaTuS\":\"closed\"}');
     }
 
-    public function itThrowsExceptionIfStatusValueIsMalformed() {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryParameterException');
+    public function itThrowsExceptionIfStatusValueIsMalformed()
+    {
+        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
 
         $this->converter->convert('{\"status\":\"ClOsEr\"}');
     }
 
-    public function itThrowsExceptionIfNotAnObject() {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryParameterException');
+    public function itThrowsExceptionIfNotAnObject()
+    {
+        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
 
         $this->converter->convert('open');
     }

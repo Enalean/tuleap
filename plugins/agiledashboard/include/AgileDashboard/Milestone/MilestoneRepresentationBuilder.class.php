@@ -97,7 +97,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         Planning_Milestone $milestone,
         PFUser $user,
         $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
@@ -120,7 +120,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         Planning_Milestone $milestone,
         PFUser $user,
         $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset
     ) {
@@ -146,7 +146,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         Project $project,
         PFUser $user,
         $representation_type,
-        Tuleap\AgileDashboard\Milestone\Criterion\ISearchOnStatus $criterion,
+        Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus $criterion,
         $limit,
         $offset,
         $order
