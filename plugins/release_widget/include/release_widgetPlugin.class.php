@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ReleaseWidget\Widget\ProjectReleaseWidget;
+use Tuleap\Widget\Event\GetProjectWidgetList;
+use Tuleap\Widget\Event\GetWidget;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class release_widgetPlugin extends Plugin // phpcs:ignore
@@ -33,6 +37,8 @@ class release_widgetPlugin extends Plugin // phpcs:ignore
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook(GetWidget::NAME);
+        $this->addHook(GetProjectWidgetList::NAME);
         return parent::getHooksAndCallbacks();
     }
 
@@ -46,5 +52,22 @@ class release_widgetPlugin extends Plugin // phpcs:ignore
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getProjectWidgetList(GetProjectWidgetList $event)
+    {
+        $event->addWidget(ProjectReleaseWidget::NAME);
+    }
+
+    /**
+     * Hook: event raised when widget are instanciated
+     *
+     * @param \Tuleap\Widget\Event\GetWidget $get_widget_event
+     */
+    public function widgetInstance(GetWidget $get_widget_event)
+    {
+        if ($get_widget_event->getName() === ProjectReleaseWidget::NAME) {
+            $get_widget_event->setWidget(new ProjectReleaseWidget());
+        }
     }
 }

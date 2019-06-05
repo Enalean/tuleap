@@ -1,4 +1,4 @@
 Release Widget plugin
 =====================
 
-A new widget for release monitoring.
+A widget for release monitoring.
