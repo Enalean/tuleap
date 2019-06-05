@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid ""
@@ -183,10 +183,6 @@ msgstr "Aller à la page wiki"
 msgid "Have a button to delete a document"
 msgstr "Avoir un bouton permettant de supprimer un document"
 
-msgid "Have the state of approval tables displayed in the tree view"
-msgstr ""
-"Visualiser le status des tables d'approbations dans la vue arborescente"
-
 msgid "History"
 msgstr "Historique"
 
@@ -326,9 +322,6 @@ msgstr "Rejeté"
 
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
-
-msgid "See if a document is locked"
-msgstr "Voir si un document est verrouillé"
 
 msgid ""
 "Set the read and write permissions of a document in the document creation "
