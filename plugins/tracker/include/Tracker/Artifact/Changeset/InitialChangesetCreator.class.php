@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 /**
  * I create an initial changeset
  */
@@ -32,7 +34,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         array $fields_data,
         PFUser $submitter,
         $changeset_id
-    ) {
+    ): void {
         $is_submission = true;
         $bypass_perms  = true;
         $workflow      = $artifact->getWorkflow();
@@ -53,7 +55,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         }
     }
 
-    private function pushDefaultValueInSubmittedValues(Tracker_FormElement_Field $field, array &$fields_data) {
+    private function pushDefaultValueInSubmittedValues(Tracker_FormElement_Field $field, array &$fields_data): void
+    {
         $fields_data[$field->getId()] = $field->getDefaultValue();
     }
 }

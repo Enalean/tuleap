@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 /**
@@ -56,20 +58,21 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      *
      * @return int The Id of the initial changeset, or null if fields were not valid
      */
-    public function create(Tracker_Artifact $artifact, array $fields_data, PFUser $submitter, $submitted_on) {
+    public function create(Tracker_Artifact $artifact, array $fields_data, PFUser $submitter, $submitted_on): ?int
+    {
         if (! $this->doesRequestAppearToBeValid($artifact, $fields_data, $submitter)) {
-            return;
+            return null;
         }
 
         $this->initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState($artifact);
 
         if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter)) {
-            return;
+            return null;
         }
 
         $changeset_id = $this->createChangesetId($artifact, $submitter, $submitted_on);
         if (! $changeset_id) {
-            return;
+            return null;
         }
 
         $this->storeFieldsValues($artifact, $fields_data, $submitter, $changeset_id);
@@ -88,28 +91,32 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         return $changeset_id;
     }
 
-    /**
-     * @return void
-     */
     protected abstract function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
         $changeset_id
-    );
+    ): void;
 
-    private function storeFieldsValues(Tracker_Artifact $artifact, array $fields_data, PFUser $submitter, $changeset_id) {
-        $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
-        foreach ($used_fields as $field) {
+    private function storeFieldsValues(
+        Tracker_Artifact $artifact,
+        array $fields_data,
+        PFUser $submitter,
+        $changeset_id
+    ): void {
+        foreach ($this->getFieldsToBeSavedInCorrectOrder($artifact) as $field) {
             $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id);
         }
     }
 
+    /**
+     * @return int|false
+     */
     private function createChangesetId(
         Tracker_Artifact $artifact,
         PFUser $submitter,
-        $submitted_on
+        int $submitted_on
     ) {
         $email = null;
         if ($submitter->isAnonymous()) {
@@ -123,7 +130,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter
-    ) {
+    ): bool {
         if ($submitter->isAnonymous() && ! trim($submitter->getEmail())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
             return false;
@@ -140,7 +147,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_Artifact $artifact,
         array &$fields_data,
         PFUser $submitter
-    ) {
+    ): bool {
         try {
             $workflow = $artifact->getWorkflow();
             $workflow->validate($fields_data, $artifact, "");
@@ -155,7 +162,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         }
     }
 
-    private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Tracker_Artifact $artifact) {
+    private function initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState(Tracker_Artifact $artifact): void {
         $artifact->setChangesets(array(new Tracker_Artifact_Changeset_Null()));
     }
 }

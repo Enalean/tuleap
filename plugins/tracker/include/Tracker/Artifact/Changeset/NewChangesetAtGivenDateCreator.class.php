@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+declare(strict_types=1);
 
 /**
  * I create a new changeset (update of an artifact) at a given date.
@@ -29,9 +29,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
  */
 class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase
 {
-    /**
-     * @see Tracker_Artifact_Changeset_NewChangesetCreatorBase::saveNewChangesetForField()
-     */
     protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
@@ -39,7 +36,7 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
         array $fields_data,
         PFUser $submitter,
         $changeset_id
-    ) {
+    ): bool {
         $is_submission = false;
         $bypass_perms  = true;
 
