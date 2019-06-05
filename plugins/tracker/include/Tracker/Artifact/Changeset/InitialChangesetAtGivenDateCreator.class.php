@@ -25,24 +25,8 @@
  * required fields or permissions as tracker structure has evolved between the
  * creation of the given artifact and now.
  */
-class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Tracker_Artifact_Changeset_InitialChangesetCreatorBase {
-
-    public function __construct(
-        Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator,
-        Tracker_FormElementFactory                            $formelement_factory,
-        Tracker_Artifact_ChangesetDao                         $changeset_dao,
-        Tracker_ArtifactFactory                               $artifact_factory,
-        EventManager                                          $event_manager
-    ) {
-        parent::__construct(
-            $fields_validator,
-            $formelement_factory,
-            $changeset_dao,
-            $artifact_factory,
-            $event_manager
-        );
-    }
-
+class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Tracker_Artifact_Changeset_InitialChangesetCreatorBase
+{
     /**
      * @see parent::saveNewChangesetForField()
      */

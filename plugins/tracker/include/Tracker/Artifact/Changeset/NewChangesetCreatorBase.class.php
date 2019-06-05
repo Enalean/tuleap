@@ -45,13 +45,15 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $artifact_factory,
-            $event_manager
+            $event_manager,
+            $field_initializator
         );
 
         $this->changeset_dao                            = $changeset_dao;

@@ -1972,7 +1972,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getArtifactFactory(),
             $this->getEventManager(),
             $this->getReferenceManager(),
-            $this->getSourceOfAssociationCollectionBuilder()
+            $this->getSourceOfAssociationCollectionBuilder(),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
         );
 
         return $creator;

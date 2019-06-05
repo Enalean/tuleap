@@ -53,7 +53,8 @@ class Tracker_Artifact_XMLImportBuilder {
                 $formelement_factory,
                 $changeset_dao,
                 $artifact_factory,
-                EventManager::instance()
+                EventManager::instance(),
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory)
             ),
             $visit_recorder
         );
@@ -74,7 +75,8 @@ class Tracker_Artifact_XMLImportBuilder {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory)
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

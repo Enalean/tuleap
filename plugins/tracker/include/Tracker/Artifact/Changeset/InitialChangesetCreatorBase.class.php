@@ -30,16 +30,18 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory                 $formelement_factory,
-        Tracker_Artifact_ChangesetDao              $changeset_dao,
-        Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager
+        Tracker_FormElementFactory $formelement_factory,
+        Tracker_Artifact_ChangesetDao $changeset_dao,
+        Tracker_ArtifactFactory $artifact_factory,
+        EventManager $event_manager,
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $artifact_factory,
-            $event_manager
+            $event_manager,
+            $field_initializator
         );
 
         $this->changeset_dao = $changeset_dao;

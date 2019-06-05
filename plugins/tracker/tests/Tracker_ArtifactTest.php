@@ -197,7 +197,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             $art_factory,
             \Mockery::spy(\EventManager::class),
             $reference_manager,
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class)
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory)
         );
 
         $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
@@ -774,7 +775,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $this->artifact_factory,
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(\ReferenceManager::class),
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class)
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory)
         );
     }
 

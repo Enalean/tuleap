@@ -170,7 +170,8 @@ class Tracker_Migration_MigrationManager {
                 $this->form_element_factory,
                 $changeset_dao,
                 $this->artifact_factory,
-                EventManager::instance()
+                EventManager::instance(),
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory)
             ),
             new VisitRecorder(new RecentlyVisitedDao())
         );
@@ -195,7 +196,8 @@ class Tracker_Migration_MigrationManager {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            )
+            ),
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory)
         );
     }
 
