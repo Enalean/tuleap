@@ -26,6 +26,7 @@ use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class PostActionsRepresentationBuilder implements Visitor
@@ -105,6 +106,19 @@ class PostActionsRepresentationBuilder implements Visitor
         $this->post_action_representations[] = FrozenFieldsRepresentation::build(
             $frozen_fields->getId(),
             $frozen_fields->getFieldIds()
+        );
+    }
+
+    public function visitHiddenFieldsets(HiddenFieldsets $hidden_fieldsets)
+    {
+        $fieldset_ids = [];
+        foreach ($hidden_fieldsets->getFieldsets() as $fieldset) {
+            $fieldset_ids[] = (int) $fieldset->getID();
+        }
+
+        $this->post_action_representations[] = HiddenFieldsetsRepresentation::build(
+            $hidden_fieldsets->getId(),
+            $fieldset_ids
         );
     }
 }
