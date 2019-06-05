@@ -216,6 +216,9 @@ msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d
 msgid "You are not allowed to write this item."
 msgstr "Vous n'êtes pas autorisé à modifier cet élément."
 
+msgid "You cannot delete the root folder."
+msgstr "Vous ne pouvez pas supprimer le dossier racine."
+
 #, php-format
 msgid "You do not have sufficient access rights to delete %s."
 msgstr "Vous n'avez pas les droits suffisants pour supprimer %s."

@@ -43,7 +43,8 @@ export {
     deleteFile,
     deleteLink,
     deleteEmbeddedFile,
-    deleteWiki
+    deleteWiki,
+    deleteFolder
 };
 
 async function getProject(project_id) {
@@ -282,4 +283,9 @@ function deleteWiki(item, { delete_associated_wiki_page = false }) {
     return del(
         `/api/docman_wikis/${escaped_item_id}?delete_associated_wiki_page=${escaped_option}`
     );
+}
+
+function deleteFolder(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_folders/${escaped_item_id}`);
 }

@@ -49,7 +49,6 @@
 import { mapGetters, mapState } from "vuex";
 import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
-import DropdownMenuCurrentFolder from "./ActionsDropDown/DropdownMenuCurrentFolder.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
 import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
@@ -58,7 +57,6 @@ import FolderHeaderAction from "./FolderHeaderAction.vue";
 export default {
     name: "FolderHeader",
     components: {
-        DropdownMenuCurrentFolder,
         FolderHeaderAction,
         NewFolderModal,
         SearchBox,

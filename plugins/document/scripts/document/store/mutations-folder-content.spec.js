@@ -779,6 +779,42 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" }
             ]);
         });
+
+        it("it should remove all its children (and subfolders' children) if the item is a folder and clear the folding maps", () => {
+            const folder_item = {
+                id: 46,
+                title: "trash folder",
+                parent_id: 0,
+                type: "folder"
+            };
+
+            const state = {
+                folder_content: [
+                    { id: 44, parent_id: 0, level: 2, type: "folder", title: "sibling folder" },
+                    { id: 45, parent_id: 44, level: 2, type: "wiki", title: "titi.txt" },
+                    folder_item,
+                    { id: 47, parent_id: 46, level: 3, type: "wiki", title: "tata.txt" },
+                    { id: 48, parent_id: 46, level: 3, type: "folder", title: "subfolder" },
+                    { id: 49, parent_id: 46, level: 3, type: "file", title: "tutu.txt" }
+                ],
+                folded_items_ids: [45, 47, 49],
+                folded_by_map: {
+                    "44": [45],
+                    "46": [47],
+                    "48": [49]
+                }
+            };
+
+            mutations.removeItemFromFolderContent(state, folder_item);
+
+            expect(state.folder_content).toEqual([
+                { id: 44, parent_id: 0, level: 2, type: "folder", title: "sibling folder" },
+                { id: 45, parent_id: 44, level: 2, type: "wiki", title: "titi.txt" }
+            ]);
+
+            expect(state.folded_items_ids).toEqual([45]);
+            expect(state.folded_by_map).toEqual({ "44": [45] });
+        });
     });
 
     describe("appendSubFolderContent", () => {

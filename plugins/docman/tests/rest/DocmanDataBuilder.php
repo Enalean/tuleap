@@ -637,6 +637,20 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $this->addReadPermissionOnItem($wiki_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
+        $folder_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old folder L",
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $folder_with_content_you_cannot_delete = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "folder with content you cannot delete",
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
         $dao = new \Docman_LockDao();
         $dao->addLock(
             $file_L_id,
@@ -658,6 +672,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $dao->addLock(
             $wiki_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
+        $dao->addLock(
+            $folder_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
         );
@@ -693,5 +713,21 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         );
 
         $this->addReadPermissionOnItem($another_wiki_id, self::REGULAR_USER_ID);
+
+        $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old folder",
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $wiki_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_with_content_you_cannot_delete,
+            "wiki",
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addReadPermissionOnItem($wiki_id, self::REGULAR_USER_ID);
     }
 }

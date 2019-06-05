@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue.js";
 import DropdownMenu from "./DropdownMenu.vue";
 
 describe("DropdownMenu", () => {
-    let dropdown_menu_factory;
+    let dropdown_menu_factory, getters;
     beforeEach(() => {
         const state = {
             max_files_dragndrop: 10,
@@ -32,7 +32,8 @@ describe("DropdownMenu", () => {
         };
 
         const store_options = {
-            state
+            state,
+            getters
         };
 
         const store = createStoreMock(store_options);
@@ -108,13 +109,28 @@ describe("DropdownMenu", () => {
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
     });
 
+    it(`Given user is docman writer and the current folder is not the root folder
+        When we display the menu
+        Then the delete button should be available`, () => {
+        const wrapper = dropdown_menu_factory({
+            hideDetailsEntry: false,
+            item: {
+                user_can_write: true,
+                parent_id: 1789
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-dropdown-delete]")).toBeTruthy();
+    });
+
     it(`Given user is docman writer
         When we display the menu
         Then the delete button should be available`, () => {
         const wrapper = dropdown_menu_factory({
             hideDetailsEntry: false,
             item: {
-                user_can_write: true
+                user_can_write: true,
+                parent_id: 127
             }
         });
 

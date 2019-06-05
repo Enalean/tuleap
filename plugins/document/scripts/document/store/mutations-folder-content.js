@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import { TYPE_FOLDER } from "../constants.js";
+import { getFolderSubtree } from "../helpers/retrieve-subtree-helper.js";
 
 export {
     saveFolderContent,
@@ -266,6 +267,20 @@ function removeItemFromFolderContent(state, item_to_remove) {
     const index = state.folder_content.findIndex(item => item.id === item_to_remove.id);
     if (index === -1) {
         return;
+    }
+
+    if (item_to_remove.type === TYPE_FOLDER) {
+        unfoldFolderContent(state, item_to_remove.id);
+
+        const children = getFolderSubtree(state.folder_content, item_to_remove.id);
+
+        children.forEach(child => {
+            if (child.type === TYPE_FOLDER) {
+                unfoldFolderContent(state, child.id);
+            }
+
+            removeItemFromFolderContent(state, child);
+        });
     }
 
     state.folder_content.splice(index, 1);

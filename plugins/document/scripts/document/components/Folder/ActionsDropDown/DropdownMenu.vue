@@ -74,14 +74,15 @@
                 Approval tables
             </span>
         </a>
-        <span class="tlp-dropdown-menu-separator" role="separator" v-if="item.user_can_write"></span>
-        <quick-look-delete-button
-            v-if="item.user_can_write"
-            v-bind:is-in-dropdown="true"
-            v-bind:item="item"
-            role="menuitem"
-            data-test="docman-dropdown-delete"
-        />
+        <template v-if="can_user_delete_item">
+            <span class="tlp-dropdown-menu-separator" role="separator"></span>
+            <quick-look-delete-button
+                v-bind:is-in-dropdown="true"
+                v-bind:item="item"
+                role="menuitem"
+                data-test="docman-dropdown-delete"
+            />
+        </template>
     </div>
 </template>
 <script>
@@ -112,6 +113,9 @@ export default {
         ...mapState(["project_id"]),
         is_item_type_empty() {
             return this.item.type === TYPE_EMPTY;
+        },
+        can_user_delete_item() {
+            return this.item.user_can_write && this.item.parent_id;
         }
     },
     methods: {

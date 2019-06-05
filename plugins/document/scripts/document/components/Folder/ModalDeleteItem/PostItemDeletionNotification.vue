@@ -24,7 +24,7 @@
          }"
          v-if="is_displayed"
     >
-        <translate>The document has been deleted successfully.</translate>
+        <translate>The item has been deleted successfully.</translate>
     </div>
 </template>
 
