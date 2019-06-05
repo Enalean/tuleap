@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Action_Triggers_TriggersPresenter {
+class Tracker_Workflow_Action_Triggers_TriggersPresenter
+{
+    /**
+     * @var int
+     */
+    public $tracker_id;
 
     private $form_action;
 
     /** @var CSRFSynchronizerToken */
     private $token;
 
-    public function __construct($form_action, CSRFSynchronizerToken $token) {
+    public function __construct(int $tracker_id, string $form_action, CSRFSynchronizerToken $token)
+    {
+        $this->tracker_id  = $tracker_id;
         $this->form_action = $form_action;
         $this->token       = $token;
     }
