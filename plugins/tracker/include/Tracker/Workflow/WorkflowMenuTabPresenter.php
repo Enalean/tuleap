@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2018. All Rights Reserved.
+* Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -17,6 +17,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
+
 namespace Tuleap\Tracker\Workflow;
 
 class WorkflowMenuTabPresenter
@@ -24,9 +25,15 @@ class WorkflowMenuTabPresenter
     public $tabs_menu;
     public $tracker_id;
 
+    /**
+     * @var int
+     */
+    public $can_use_hidden_fieldsets;
+
     public function __construct(array $tabs_menu, $tracker_id)
     {
-        $this->tabs_menu  = $tabs_menu;
-        $this->tracker_id = $tracker_id;
+        $this->tabs_menu                = $tabs_menu;
+        $this->tracker_id               = $tracker_id;
+        $this->can_use_hidden_fieldsets = (int) \ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions');
     }
 }

@@ -73,9 +73,17 @@
                 <p v-translate>Please confirm your action.</p>
                 <p v-translate
                    class="tlp-alert-danger"
-                   v-if="! is_workflow_advanced"
+                   v-if="! is_workflow_advanced && ! can_use_hidden_fieldsets"
+                   key="warning_switch"
                 >
                     If you have any post actions of type "Frozen Fields", they will be deleted.
+                </p>
+                <p v-translate
+                   class="tlp-alert-danger"
+                   v-if="! is_workflow_advanced && can_use_hidden_fieldsets"
+                   key="warning_switch_with_hidden"
+                >
+                    If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they will be deleted.
                 </p>
             </template>
             <template slot="switch-button-label">
@@ -99,7 +107,11 @@ export default {
         };
     },
     computed: {
-        ...mapState(["is_operation_running", "is_workflow_mode_change_running"]),
+        ...mapState([
+            "is_operation_running",
+            "is_workflow_mode_change_running",
+            "can_use_hidden_fieldsets"
+        ]),
         ...mapGetters(["is_workflow_advanced"]),
         advanced_configuration_tooltip() {
             return this.$gettext(

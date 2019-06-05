@@ -769,6 +769,7 @@ class TrackersResource extends AuthenticatedResource
             new Workflow_Dao(),
             $this->getTransitionReplicator(),
             new FrozenFieldsDao(),
+            new HiddenFieldsetsDao(),
             new StateFactory(
                 TransitionFactory::instance(),
                 new SimpleWorkflowDao()

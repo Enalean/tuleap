@@ -96,4 +96,23 @@ class HiddenFieldsetsDao extends DataAccessObject
             $transition_id
         );
     }
+
+    public function deleteAllPostActionsForWorkflow(int $workflow_id) : void
+    {
+        $sql = "
+            DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value
+            FROM tracker_workflow
+                INNER JOIN tracker_workflow_transition
+                    ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+                INNER JOIN plugin_tracker_workflow_postactions_hidden_fieldsets
+                    ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_hidden_fieldsets.transition_id)
+                LEFT JOIN plugin_tracker_workflow_postactions_hidden_fieldsets_value
+                    ON plugin_tracker_workflow_postactions_hidden_fieldsets_value.postaction_id = plugin_tracker_workflow_postactions_hidden_fieldsets.id
+            WHERE tracker_workflow.workflow_id = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $workflow_id
+        );
+    }
 }

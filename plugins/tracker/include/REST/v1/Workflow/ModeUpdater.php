@@ -25,6 +25,7 @@ use Tracker;
 use Transition;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\State;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -66,10 +67,16 @@ class ModeUpdater
      */
     private $transition_extractor;
 
+    /**
+     * @var HiddenFieldsetsDao
+     */
+    private $hidden_fieldsets_dao;
+
     public function __construct(
         Workflow_Dao $workflow_dao,
         TransitionReplicator $transition_replicator,
         FrozenFieldsDao $frozen_fields_dao,
+        HiddenFieldsetsDao $hidden_fieldsets_dao,
         StateFactory $state_factory,
         TransitionExtractor $transition_extractor
     ) {
@@ -78,18 +85,20 @@ class ModeUpdater
         $this->frozen_fields_dao     = $frozen_fields_dao;
         $this->state_factory         = $state_factory;
         $this->transition_extractor  = $transition_extractor;
+        $this->hidden_fieldsets_dao  = $hidden_fieldsets_dao;
     }
 
     public function switchWorkflowToAdvancedMode(Tracker $tracker) : void
     {
         $workflow    = $tracker->getWorkflow();
-        $workflow_id = $workflow->getId();
+        $workflow_id = (int) $workflow->getId();
 
         if ($workflow->isAdvanced()) {
             return;
         }
 
         $this->frozen_fields_dao->deleteAllPostActionsForWorkflow($workflow_id);
+        $this->hidden_fieldsets_dao->deleteAllPostActionsForWorkflow($workflow_id);
         $this->workflow_dao->switchWorkflowToAdvancedMode($workflow_id);
     }
 

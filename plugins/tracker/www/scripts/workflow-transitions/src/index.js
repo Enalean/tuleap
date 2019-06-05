@@ -48,8 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
+    const canUseHiddenFieldsets = vue_mount_point.dataset.canUseHiddenFieldsets === "1";
+    const store = new Vuex.Store(store_options);
+
+    if (canUseHiddenFieldsets === true) {
+        store.commit("hiddenFieldsetsCanBeUsed");
+    }
+
     new RootComponent({
-        store: new Vuex.Store(store_options),
-        propsData: { trackerId }
+        store,
+        propsData: { trackerId, canUseHiddenFieldsets }
     }).$mount(vue_mount_point);
 });
