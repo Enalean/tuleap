@@ -28,7 +28,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
@@ -59,10 +58,6 @@ class DocmanWikiUpdator
      */
     private $transaction_executor;
     /**
-     * @var HardcodedMetadataUsageChecker
-     */
-    private $metadata_usage_checker;
-    /**
      * @var HardcodedMetdataObsolescenceDateChecker
      */
     private $obsolescence_date_checker;
@@ -83,7 +78,6 @@ class DocmanWikiUpdator
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataUsageChecker $metadata_usage_checker,
         HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
@@ -93,7 +87,6 @@ class DocmanWikiUpdator
         $this->event_manager             = $event_manager;
         $this->updator                   = $updator;
         $this->transaction_executor      = $transaction_executor;
-        $this->metadata_usage_checker    = $metadata_usage_checker;
         $this->obsolescence_date_checker = $obsolescence_date_checker;
         $this->status_mapper             = $status_mapper;
         $this->date_retriever            = $date_retriever;
@@ -116,7 +109,9 @@ class DocmanWikiUpdator
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
-        $status_id = $this->getStatusId($representation);
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $representation->status
+        );
 
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
             $representation->obsolescence_date,
@@ -173,21 +168,5 @@ class DocmanWikiUpdator
                 );
             }
         );
-    }
-
-    /**
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
-     */
-    private function getStatusId(DocmanWikiPATCHRepresentation $representation): int
-    {
-        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
-            $representation->status
-        );
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
-            $representation->status
-        );
-        return $status_id;
     }
 }

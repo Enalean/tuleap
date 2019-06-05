@@ -25,7 +25,13 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 class ItemStatusMapper
 {
+
+    /**
+     * @var \Docman_SettingsBo
+     */
+    private $docman_settings_bo;
     public const ITEM_STATUS_NONE     = 'none';
+
     public const ITEM_STATUS_DRAFT    = 'draft';
     public const ITEM_STATUS_APPROVED = 'approved';
     public const ITEM_STATUS_REJECTED = 'rejected';
@@ -37,12 +43,23 @@ class ItemStatusMapper
         self::ITEM_STATUS_REJECTED => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
     ];
 
+    public function __construct(\Docman_SettingsBo $docman_settings_bo)
+    {
+        $this->docman_settings_bo  = $docman_settings_bo;
+    }
+
     /**
      * @throws StatusNotFoundBadStatusGivenException
      * @throws StatusNotFoundNullException
+     * @throws ItemStatusUsageMismatchException
      */
     public function getItemStatusIdFromItemStatusString(?string $status_string): int
     {
+        $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
+        if (!($metadata_usage === "1") && ($status_string !== ItemStatusMapper::ITEM_STATUS_NONE)) {
+            throw new ItemStatusUsageMismatchException();
+        }
+
         if ($status_string === null) {
             throw new StatusNotFoundNullException();
         }

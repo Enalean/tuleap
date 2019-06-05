@@ -28,7 +28,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
@@ -59,14 +58,6 @@ class DocmanEmbeddedFileUpdator
      */
     private $status_mapper;
     /**
-     * @var HardcodedMetadataUsageChecker
-     */
-    private $metadata_usage_checker;
-    /**
-     * @var HardcodedMetdataObsolescenceDateChecker
-     */
-    private $obsolescence_date_checker;
-    /**
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
@@ -83,8 +74,6 @@ class DocmanEmbeddedFileUpdator
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataUsageChecker $metadata_usage_checker,
-        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
         $this->file_storage              = $file_storage;
@@ -93,8 +82,6 @@ class DocmanEmbeddedFileUpdator
         $this->updator                   = $updator;
         $this->transaction_executor      = $transaction_executor;
         $this->status_mapper             = $status_mapper;
-        $this->metadata_usage_checker    = $metadata_usage_checker;
-        $this->obsolescence_date_checker = $obsolescence_date_checker;
         $this->date_retriever            = $date_retriever;
         $this->item_factory              = $item_factory;
     }
@@ -116,7 +103,9 @@ class DocmanEmbeddedFileUpdator
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
-        $status_id = $this->getItemStatusId($representation);
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $representation->status
+        );
 
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
             $representation->obsolescence_date,
@@ -167,24 +156,5 @@ class DocmanEmbeddedFileUpdator
                 );
             }
         );
-    }
-
-    /**
-     * @param DocmanEmbeddedFilesPATCHRepresentation $representation
-     *
-     * @return int
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
-     */
-    private function getItemStatusId(DocmanEmbeddedFilesPATCHRepresentation $representation): int
-    {
-        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
-            $representation->status
-        );
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
-            $representation->status
-        );
-        return $status_id;
     }
 }

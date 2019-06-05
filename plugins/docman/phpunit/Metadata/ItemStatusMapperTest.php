@@ -22,35 +22,65 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException;
 use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException;
-use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
 use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException;
 
 final class ItemStatusMapperTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
+
+    /**
+     * @var \Docman_SettingsBo|\Mockery\MockInterface
+     */
+    private $docman_setting_bo;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->docman_setting_bo = \Mockery::mock(\Docman_SettingsBo::class);
+    }
+
     public function testStatusIDCanBeFoundWhenAValidValueIsGiven(): void
     {
-        $mapper = new ItemStatusMapper();
+        $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->expectNotToPerformAssertions();
-        $mapper->getItemStatusIdFromItemStatusString('rejected');
+        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $status = $mapper->getItemStatusIdFromItemStatusString('rejected');
+
+        $this->assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
     }
 
     public function testTryingToFindIDForAnUnknownValueThrowsAnException() : void
     {
-        $mapper = new ItemStatusMapper();
+        $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
+        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
         $this->expectException(StatusNotFoundBadStatusGivenException::class);
         $mapper->getItemStatusIdFromItemStatusString('swang');
     }
 
     public function testTryingToFindIDForNullThrowsAnException(): void
     {
-        $mapper = new ItemStatusMapper();
+        $mapper = new ItemStatusMapper($this->docman_setting_bo);
+
+        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
 
         $this->expectException(StatusNotFoundNullException::class);
         $mapper->getItemStatusIdFromItemStatusString(null);
+    }
+
+    public function testStatusIDExistsButTheMetadataIsNotEnabledThrowsExpection(): void
+    {
+        $mapper = new ItemStatusMapper($this->docman_setting_bo);
+
+        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('0');
+
+        $this->expectException(ItemStatusUsageMismatchException::class);
+        $mapper->getItemStatusIdFromItemStatusString('rejected');
     }
 }

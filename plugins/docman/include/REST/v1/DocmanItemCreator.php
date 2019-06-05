@@ -34,7 +34,6 @@ use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
@@ -80,14 +79,6 @@ class DocmanItemCreator
      */
     private $status_mapper;
     /**
-     * @var HardcodedMetadataUsageChecker
-     */
-    private $metadata_usage_checker;
-    /**
-     * @var HardcodedMetdataObsolescenceDateChecker
-     */
-    private $obsolescence_date_checker;
-    /**
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
@@ -100,8 +91,6 @@ class DocmanItemCreator
         EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
         DocmanLinksValidityChecker $links_validity_checker,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataUsageChecker $metadata_usage_checker,
-        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
         $this->item_factory                      = $item_factory;
@@ -111,8 +100,6 @@ class DocmanItemCreator
         $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
         $this->links_validity_checker            = $links_validity_checker;
         $this->status_mapper                     = $status_mapper;
-        $this->metadata_usage_checker            = $metadata_usage_checker;
-        $this->obsolescence_date_checker         = $obsolescence_date_checker;
         $this->date_retriever                    = $date_retriever;
     }
 
@@ -164,7 +151,6 @@ class DocmanItemCreator
         $content
     ) {
 
-        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
         if ($item_type_id !== PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
@@ -229,7 +215,6 @@ class DocmanItemCreator
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
-        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(

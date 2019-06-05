@@ -42,7 +42,6 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\REST\AuthenticatedResource;
@@ -280,7 +279,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $lock_checker                                 = new LockChecker($lock_factory);
         $docman_item_factory                          = new \Docman_ItemFactory();
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
             $docman_setting_bo
         );
@@ -293,9 +291,7 @@ class DocmanLinksResource extends AuthenticatedResource
             new DocmanLinksValidityChecker(),
             new Docman_LinkVersionFactory(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper(),
-            $hardcoded_metadata_status_checker,
-            $hardcoded_metadata_obsolescence_date_checker,
+            new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             )

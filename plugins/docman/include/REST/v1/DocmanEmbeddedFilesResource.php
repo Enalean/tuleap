@@ -42,7 +42,7 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataItemStatusChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\REST\AuthenticatedResource;
@@ -287,7 +287,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     ): DocmanEmbeddedFileUpdator {
         $version_factory                              = new Docman_VersionFactory();
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
             $docman_setting_bo
         );
@@ -299,9 +298,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new LockChecker(new Docman_LockFactory()),
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper(),
-            $hardcoded_metadata_status_checker,
-            $hardcoded_metadata_obsolescence_date_checker,
+            new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             )
