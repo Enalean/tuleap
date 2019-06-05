@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_FormElementDateRepresentation extends Tracker_REST_FormElementRepresentation {
+class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_FormElementRepresentation {
 
     /**
      * @var bool

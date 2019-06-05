@@ -30,12 +30,17 @@ use TrackerFactory;
 use TransitionFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -163,26 +168,39 @@ class ProjectTrackersResource
             $user
         );
         $trackers                = array_slice($all_trackers, $offset, $limit);
-        $builder                 = new Tracker_REST_TrackerRestBuilder(
+
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                new TransitionFactory(
+                    Workflow_Transition_ConditionFactory::build()
+                ),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+
+        $builder = new Tracker_REST_TrackerRestBuilder(
             Tracker_FormElementFactory::instance(),
             new FormElementRepresentationsBuilder(
                 Tracker_FormElementFactory::instance(),
                 new PermissionsExporter(
                     new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                new TransitionFactory(
-                                    Workflow_Transition_ConditionFactory::build()
-                                ),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
+                        $transition_retriever,
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao(),
                             Tracker_FormElementFactory::instance()
                         )
                     )
+                ),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(
+                            new HiddenFieldsetsDao(),
+                            Tracker_FormElementFactory::instance()
+                        )
+                    ),
+                    new FieldsExtractor()
                 )
             )
         );

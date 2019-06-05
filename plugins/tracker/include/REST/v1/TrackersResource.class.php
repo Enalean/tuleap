@@ -47,6 +47,8 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
@@ -64,6 +66,9 @@ use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -161,29 +166,42 @@ class TrackersResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                new TransitionFactory(
+                    Workflow_Transition_ConditionFactory::build()
+                ),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+
         $builder = new Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
                 new PermissionsExporter(
                     new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                new TransitionFactory(
-                                    Workflow_Transition_ConditionFactory::build()
-                                ),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
+                        $transition_retriever,
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao(),
                             Tracker_FormElementFactory::instance()
                         )
                     )
+                ),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(
+                            new HiddenFieldsetsDao(),
+                            $this->formelement_factory
+                        )
+                    ),
+                    new FieldsExtractor()
                 )
             )
         );
+
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
 
@@ -647,29 +665,42 @@ class TrackersResource extends AuthenticatedResource
             $this->getWorkflowFactory()->clearTrackerWorkflowFromCache($tracker);
             $tracker->workflow = null;
 
+            $transition_retriever = new TransitionRetriever(
+                new StateFactory(
+                    new TransitionFactory(
+                        Workflow_Transition_ConditionFactory::build()
+                    ),
+                    new SimpleWorkflowDao()
+                ),
+                new TransitionExtractor()
+            );
+
             $builder = new Tracker_REST_TrackerRestBuilder(
                 $this->formelement_factory,
                 new FormElementRepresentationsBuilder(
                     $this->formelement_factory,
                     new PermissionsExporter(
                         new FrozenFieldDetector(
-                            new TransitionRetriever(
-                                new StateFactory(
-                                    new TransitionFactory(
-                                        Workflow_Transition_ConditionFactory::build()
-                                    ),
-                                    new SimpleWorkflowDao()
-                                ),
-                                new TransitionExtractor()
-                            ),
+                            $transition_retriever,
                             new FrozenFieldsRetriever(
                                 new FrozenFieldsDao(),
                                 Tracker_FormElementFactory::instance()
                             )
                         )
+                    ),
+                    new HiddenFieldsetChecker(
+                        new HiddenFieldsetsDetector(
+                            $transition_retriever,
+                            new HiddenFieldsetsRetriever(
+                                new HiddenFieldsetsDao(),
+                                $this->formelement_factory
+                            )
+                        ),
+                        new FieldsExtractor()
                     )
                 )
             );
+
             return $builder->getTrackerRepresentationInTrackerContext($user, $tracker);
         } catch (InvalidParameterTypeException $e) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));

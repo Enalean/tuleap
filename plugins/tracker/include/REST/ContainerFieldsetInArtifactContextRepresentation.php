@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_FormElement_FieldOpenListRepresentation extends  Tracker_REST_FormElementRepresentation
+namespace Tuleap\Tracker\REST;
+
+use Tracker_FormElement;
+use Tracker_FormElement_Container_Fieldset;
+use Tracker_REST_FormElementRepresentation;
+
+class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_FormElementRepresentation
 {
-
     /**
-     * @var string
+     * @var bool
      */
-    public $hint;
+    public $is_hidden = false;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions)
-    {
-        parent::build($form_element, $type, $permissions);
+    public function buildInArtifactContext(
+        Tracker_FormElement_Container_Fieldset $form_element,
+        string $type,
+        array $permissions,
+        bool $is_hidden
+    ) {
+        $this->build($form_element, $type, $permissions);
 
-        if ($form_element instanceof Tracker_FormElement_Field_OpenList) {
-            $this->hint = $form_element->getProperty('hint');
-        }
+        $this->is_hidden = $is_hidden;
     }
 }
