@@ -135,6 +135,6 @@ class HiddenFieldsets extends Transition_PostAction
 
     public function accept(Visitor $visitor)
     {
-        // TODO: Implement accept() method.
+        $visitor->visitHiddenFieldsets($this);
     }
 }

@@ -21,6 +21,8 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
@@ -44,6 +46,9 @@ class Transition_PostActionFactory //phpcs:ignoreFile
 
     /** @var FrozenFieldsFactory */
     private $frozen_fields_factory;
+
+    /** @var HiddenFieldsetsFactory */
+    private $hidden_fields_factory;
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -212,6 +217,17 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         return $this->frozen_fields_factory;
     }
 
+    private function getHiddenFieldsetsFactory(): HiddenFieldsetsFactory
+    {
+        if (! $this->hidden_fields_factory) {
+            $this->hidden_fields_factory = new HiddenFieldsetsFactory(
+                new HiddenFieldsetsDao(),
+                Tracker_FormElementFactory::instance()
+            );
+        }
+        return $this->hidden_fields_factory;
+    }
+
     /** @return Transition_PostActionSubFactories */
     private function getSubFactories()
     {
@@ -220,6 +236,10 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             $this->getCIBuildFactory(),
             $this->getFrozenFieldsFactory()
         ];
+
+        if (ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            $sub_factories[] = $this->getHiddenFieldsetsFactory();
+        }
 
         return new Transition_PostActionSubFactories($sub_factories);
     }
