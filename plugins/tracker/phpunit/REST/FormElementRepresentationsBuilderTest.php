@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 
 class FormElementRepresentationsBuilderTest extends TestCase
 {
@@ -73,12 +74,14 @@ class FormElementRepresentationsBuilderTest extends TestCase
             'bind_list' => []
         ]);
 
-        $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $permission_exporter  = Mockery::mock(PermissionsExporter::class);
+        $form_element_factory    = Mockery::mock(Tracker_FormElementFactory::class);
+        $permission_exporter     = Mockery::mock(PermissionsExporter::class);
+        $hidden_fieldset_checker = Mockery::mock(HiddenFieldsetChecker::class);
 
         $builder = new FormElementRepresentationsBuilder(
             $form_element_factory,
-            $permission_exporter
+            $permission_exporter,
+            $hidden_fieldset_checker
         );
 
         $form_element_factory->shouldReceive('getAllUsedFormElementOfAnyTypesForTracker')

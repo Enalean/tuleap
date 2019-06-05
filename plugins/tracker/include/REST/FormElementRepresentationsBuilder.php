@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,12 +24,14 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact;
 use Tracker_FormElement;
+use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElementFactory;
-use Tracker_REST_FieldOpenListRepresentation;
-use Tracker_REST_FormElementDateRepresentation;
+use Tracker_REST_FormElement_FieldOpenListRepresentation;
+use Tracker_REST_FormElement_FieldDateRepresentation;
 use Tracker_REST_FormElementRepresentation;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 
 class FormElementRepresentationsBuilder
 {
@@ -37,17 +39,25 @@ class FormElementRepresentationsBuilder
      * @var PermissionsExporter
      */
     private $permissions_exporter;
+
     /**
      * @var Tracker_FormElementFactory
      */
     private $form_element_factory;
 
+    /**
+     * @var HiddenFieldsetChecker
+     */
+    private $hidden_fieldset_checker;
+
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        PermissionsExporter $permissions_exporter
+        PermissionsExporter $permissions_exporter,
+        HiddenFieldsetChecker $hidden_fieldset_checker
     ) {
-        $this->permissions_exporter = $permissions_exporter;
-        $this->form_element_factory = $form_element_factory;
+        $this->permissions_exporter    = $permissions_exporter;
+        $this->form_element_factory    = $form_element_factory;
+        $this->hidden_fieldset_checker = $hidden_fieldset_checker;
     }
 
     /**
@@ -78,18 +88,39 @@ class FormElementRepresentationsBuilder
             }
 
             if ($form_element instanceof Tracker_FormElement_Field_Date) {
-                $form_element_representation = new Tracker_REST_FormElementDateRepresentation();
+                $form_element_representation = new Tracker_REST_FormElement_FieldDateRepresentation();
+
+                $form_element_representation->build(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                );
             } elseif ($form_element instanceof Tracker_FormElement_Field_OpenList) {
-                $form_element_representation = new Tracker_REST_FieldOpenListRepresentation();
+                $form_element_representation = new Tracker_REST_FormElement_FieldOpenListRepresentation();
+
+                $form_element_representation->build(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                );
+            } elseif ($artifact !== null && $form_element instanceof Tracker_FormElement_Container_Fieldset) {
+                $form_element_representation = new ContainerFieldsetInArtifactContextRepresentation();
+
+                $form_element_representation->buildInArtifactContext(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
+                );
             } else {
                 $form_element_representation = new Tracker_REST_FormElementRepresentation();
-            }
 
-            $form_element_representation->build(
-                $form_element,
-                $this->form_element_factory->getType($form_element),
-                $this->getPermissionsForFormElement($form_element, $artifact, $user)
-            );
+                $form_element_representation->build(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                );
+            }
 
             $representation_collection[] = $form_element_representation;
         }

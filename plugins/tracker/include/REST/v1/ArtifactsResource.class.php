@@ -77,6 +77,8 @@ use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
+use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -91,6 +93,9 @@ use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -201,26 +206,38 @@ class ArtifactsResource extends AuthenticatedResource {
             new FeedbackDao()
         );
 
+        $transition_retriever = new TransitionRetriever(
+            new StateFactory(
+                new TransitionFactory(
+                    Workflow_Transition_ConditionFactory::build()
+                ),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
+        );
+
         $this->tracker_rest_builder = new \Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
                 new PermissionsExporter(
                     new FrozenFieldDetector(
-                        new TransitionRetriever(
-                            new StateFactory(
-                                new TransitionFactory(
-                                    Workflow_Transition_ConditionFactory::build()
-                                ),
-                                new SimpleWorkflowDao()
-                            ),
-                            new TransitionExtractor()
-                        ),
+                        $transition_retriever,
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao(),
                             Tracker_FormElementFactory::instance()
                         )
                     )
+                ),
+                new HiddenFieldsetChecker(
+                    new HiddenFieldsetsDetector(
+                        $transition_retriever,
+                        new HiddenFieldsetsRetriever(
+                            new HiddenFieldsetsDao(),
+                            Tracker_FormElementFactory::instance()
+                        )
+                    ),
+                    new FieldsExtractor()
                 )
             )
         );
