@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -288,6 +288,14 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         }
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
            .' Expected format for field '.$this->id .' : {"field_id": 1548, "bind_value_ids": [457]}');
+    }
+
+    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
+    {
+        if ($csv_value !== '100' && $this->isNone($csv_value)) {
+            return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
+        }
+        return $this->getFieldData($csv_value);
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
