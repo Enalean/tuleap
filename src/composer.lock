@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e516c7e65768b21a6430e29f4532a4fa",
+    "content-hash": "e91a4e48b4d5c1fe11ca206035acc2ce",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -5367,12 +5367,12 @@
             "version": "dev-nullable-types",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nterray/simpletest.git",
+                "url": "https://github.com/Enalean/simpletest.git",
                 "reference": "cb841c0de8edf09ad1e0d3e3c738e5265897b26f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nterray/simpletest/zipball/cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
+                "url": "https://api.github.com/repos/Enalean/simpletest/zipball/cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
                 "reference": "cb841c0de8edf09ad1e0d3e3c738e5265897b26f",
                 "shasum": ""
             },
