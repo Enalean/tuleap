@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,10 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     private $template_renderer;
     private $token;
     private $rule_manager;
+    /**
+     * @var string
+     */
+    private $url_query;
 
     public function __construct(
         Tracker $tracker,
@@ -51,6 +55,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
         $this->displayHeader($layout);
 
         $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter(
+            $this->tracker->getId(),
             $this->url_query,
             $this->token
         );

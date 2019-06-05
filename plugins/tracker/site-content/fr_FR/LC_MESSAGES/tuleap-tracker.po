@@ -898,6 +898,9 @@ msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 msgid "The transition has not been updated."
 msgstr "La transition n'a pas été mise à jour."
 
+msgid "The triggers definitions are based on the tracker hierarchy."
+msgstr "La définition de déclencheurs s'appuie sur la hiérarchie entre outils de suivi."
+
 msgid "The unsubscribe list has been successfully updated."
 msgstr "La liste des désabonnements ont été mise à jour avec succès."
 
