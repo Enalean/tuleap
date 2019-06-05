@@ -2,6 +2,7 @@ vendor/
 *.pot
 *.mo
 test-results.xml
+.phpunit.result.cache
 *~
 node_modules/
 

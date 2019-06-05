@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 RPM_TMP=$(HOME)/rpmbuild
 PKG_NAME=tuleap-plugin-baseline
 VERSION=$(shell LANG=C cat VERSION)
@@ -66,7 +67,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
-	cd /build/src && npm install && npm run build && \
+	cd /build/src && npm install && \
+	cd /build/src/plugins/baseline/themes && npm install && npm run build && \
 	cd /build/src/plugins/baseline/scripts && npm install && npm run build && \
 	cd /build/src/plugins/baseline/ && composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
 
@@ -77,6 +79,7 @@ $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	cd $(RPM_TMP)/SOURCES && \
 	    find $(NAME_VERSION)/ \(\
 	    -path $(NAME_VERSION)/tests -o\
+	    -name 'node_modules' -o\
 	    -name '*.spec' -o\
 	    -name 'Makefile' -o\
 	    -name 'build-rpm.sh' -o\
@@ -98,7 +101,8 @@ $(RPM_TMP):
 docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
-	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/baseline && chown -R build /build/src
+	pushd /tuleap && git checkout-index -a --prefix=/build/src/ && popd
+	cp -Rf /plugin/ /build/src/plugins/baseline && chown -R build /build/src
 	su --login --command "make -C /build/src/plugins/baseline all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
 
