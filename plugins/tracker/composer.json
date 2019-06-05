@@ -5,7 +5,10 @@
       "Tuleap\\Tracker\\": ["include/", "include/Tracker/"]
     },
     "classmap": ["include/"],
-    "exclude-from-classmap": ["include/Tracker/Report/Query/Advanced/Grammar/Parser.php"]
+    "exclude-from-classmap": ["include/Tracker/Report/Query/Advanced/Grammar/Parser.php"],
+    "files": [
+        "include/tracker_permissions.php"
+    ]
   },
   "require": {
     "cocur/slugify": "^3.1",
