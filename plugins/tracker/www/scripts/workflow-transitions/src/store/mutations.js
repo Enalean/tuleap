@@ -143,6 +143,10 @@ export function endWorkflowModeChange() {
     state.is_workflow_mode_change_running = false;
 }
 
+export function hiddenFieldsetsCanBeUsed() {
+    state.can_use_hidden_fieldsets = true;
+}
+
 export function resetState(state) {
     Object.assign(state, initial_state);
 }

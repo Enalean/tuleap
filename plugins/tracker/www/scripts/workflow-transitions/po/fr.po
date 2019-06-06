@@ -156,6 +156,13 @@ msgid "Groups that may process the transition"
 msgstr "Groupes autorisés à effectuer la transition"
 
 msgid ""
+"If you have any post actions of type \"Frozen Fields\" or \"Hidden Fieldsets"
+"\", they will be deleted."
+msgstr ""
+"Si vous avez configuré des post-actions de type \"Champs Figés\" ou \"Groupe de champs caché\", elles "
+"seront supprimées."
+
+msgid ""
 "If you have any post actions of type \"Frozen Fields\", they will be deleted."
 msgstr ""
 "Si vous avez configuré des post-actions de type \"Champs Figés\", elles "

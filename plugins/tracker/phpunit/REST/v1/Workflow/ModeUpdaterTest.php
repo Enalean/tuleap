@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\State;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -48,6 +49,7 @@ class ModeUpdaterTest extends TestCase
     private $workflow_dao;
     private $transition_replicator;
     private $frozen_fields_dao;
+    private $hidden_fieldsets_dao;
     private $tracker;
     private $workflow;
     private $state_factory;
@@ -58,6 +60,7 @@ class ModeUpdaterTest extends TestCase
         $this->workflow_dao                   = Mockery::mock(Workflow_Dao::class);
         $this->transition_replicator          = Mockery::mock(TransitionReplicator::class);
         $this->frozen_fields_dao              = Mockery::mock(FrozenFieldsDao::class);
+        $this->hidden_fieldsets_dao           = Mockery::mock(HiddenFieldsetsDao::class);
         $this->state_factory                  = Mockery::mock(StateFactory::class);
         $this->reference_transition_extractor = new TransitionExtractor();
 
@@ -65,6 +68,7 @@ class ModeUpdaterTest extends TestCase
             $this->workflow_dao,
             $this->transition_replicator,
             $this->frozen_fields_dao,
+            $this->hidden_fieldsets_dao,
             $this->state_factory,
             $this->reference_transition_extractor
         );
@@ -81,6 +85,7 @@ class ModeUpdaterTest extends TestCase
 
         $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->once();
         $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->once();
+        $this->hidden_fieldsets_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->once();
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }
@@ -93,6 +98,7 @@ class ModeUpdaterTest extends TestCase
 
         $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->never();
         $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->never();
+        $this->hidden_fieldsets_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->never();
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }

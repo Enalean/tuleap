@@ -26,5 +26,6 @@ export default {
     is_operation_running: false,
     is_rules_enforcement_running: false,
     is_workflow_creation_failed: false,
-    is_workflow_mode_change_running: false
+    is_workflow_mode_change_running: false,
+    can_use_hidden_fieldsets: false
 };
