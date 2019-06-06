@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 /**
  * I am a Template Method to create an initial changeset.
  */
-abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
-
-
+abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
+{
     /** @var Tracker_Artifact_Changeset_FieldsValidator */
     protected $fields_validator;
 
@@ -53,10 +54,8 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         $this->field_initializator = $field_initializator;
     }
 
-    /**
-     * @return bool
-     */
-    protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data) {
+    protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
+    {
         return isset($fields_data[$field->getId()]);
     }
 
@@ -71,10 +70,9 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null
-    ) {
+    ): bool {
         if ($this->artifact_factory->save($artifact)) {
-            $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
-            foreach ($used_fields as $field) {
+            foreach ($this->getFieldsToBeSavedInCorrectOrder($artifact) as $field) {
                 $field->postSaveNewChangeset($artifact, $submitter, $new_changeset, $previous_changeset);
             }
 
@@ -84,5 +82,15 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         }
 
         return false;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Tracker_FormElement_Field[]
+     */
+    protected function getFieldsToBeSavedInCorrectOrder(Tracker_Artifact $artifact): array
+    {
+        return $this->formelement_factory->getUsedFields($artifact->getTracker());
     }
 }

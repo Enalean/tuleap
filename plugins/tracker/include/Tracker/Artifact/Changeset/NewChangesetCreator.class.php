@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+declare(strict_types=1);
 
 /**
  * I create a new changeset (update of an artifact)
@@ -35,7 +35,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
         array $fields_data,
         PFUser $submitter,
         $changeset_id
-    ) {
+    ): bool {
         $is_submission = false;
         $bypass_perms  = true;
         $workflow      = $artifact->getWorkflow();

@@ -96,7 +96,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails()
     {
-        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->changeset_dao)->create()->returns(123);
         stub($this->artifact_factory)->save()->returns(false);
         stub($this->workflow)->validate()->returns(true);
 
@@ -134,7 +134,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         parent::setUp();
 
-        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->changeset_dao)->create()->returns(123);
     }
 
     protected function getFields() {

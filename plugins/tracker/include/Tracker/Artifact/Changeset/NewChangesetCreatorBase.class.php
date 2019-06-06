@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
@@ -85,7 +87,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $submitted_on,
         $send_notification,
         $comment_format
-    ) {
+    ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
         $this->changeset_dao->startTransaction();
@@ -175,9 +177,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         return $new_changeset;
     }
 
-    /**
-     * @return void
-     */
     protected abstract function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
@@ -185,15 +184,19 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         array $fields_data,
         PFUser $submitter,
         $changeset_id
-    );
+    ): bool;
 
     /**
      * @throws Tracker_FieldValueNotStoredException
      */
-    private function storeFieldsValues(Tracker_Artifact $artifact, $previous_changeset, array $fields_data, PFUser $submitter, $changeset_id) {
-        $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
-
-        foreach ($used_fields as $field) {
+    private function storeFieldsValues(
+        Tracker_Artifact $artifact,
+        $previous_changeset,
+        array $fields_data,
+        PFUser $submitter,
+        $changeset_id
+    ): bool {
+        foreach ($this->getFieldsToBeSavedInCorrectOrder($artifact) as $field) {
             if (! $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
                 $this->changeset_dao->rollBack();
                 $purifier = Codendi_HTMLPurifier::instance();
@@ -217,7 +220,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $submitted_on,
         $comment_format,
         $changeset_id
-    ) {
+    ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
 
         $comment_added = $this->changeset_comment_dao->createNewVersion($changeset_id, $comment, $submitter->getId(), $submitted_on, 0, $comment_format);
@@ -243,7 +246,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $comment,
         PFUser $submitter,
         $email
-    ) {
+    ): bool {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
             throw new Tracker_Exception($message);
@@ -270,7 +273,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
          * We need to run the post actions to validate the data
          */
         $workflow->before($fields_data, $submitter, $artifact);
-        $workflow->checkGlobalRules($fields_data, $this->formelement_factory);
+        $workflow->checkGlobalRules($fields_data);
 
         return true;
     }
