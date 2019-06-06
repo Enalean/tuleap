@@ -149,7 +149,26 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      */
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
-        // TODO: Implement duplicate() method.
+        $postactions = $this->loadPostActions($from_transition);
+        foreach ($postactions as $postaction) {
+            $from_fieldsets  = $postaction->getFieldsets();
+            $to_fieldset_ids = [];
+
+            $from_fieldset_ids = [];
+            foreach ($from_fieldsets as $fieldset) {
+                $from_fieldset_ids[] = (int) $fieldset->getID();
+            }
+
+            foreach ($field_mapping as $mapping) {
+                foreach ($from_fieldset_ids as $from_fieldset_id) {
+                    if ($mapping['from'] == $from_fieldset_id) {
+                        $to_fieldset_ids[] = $mapping['to'];
+                    }
+                }
+            }
+
+            $this->hidden_fieldsets_dao->createPostActionForTransitionId($to_transition_id, $to_fieldset_ids);
+        }
     }
 
     /**
