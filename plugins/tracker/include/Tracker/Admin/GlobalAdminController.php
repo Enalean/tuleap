@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,11 +26,11 @@ use Feedback;
 use Project;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_Hierarchy_Dao;
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class GlobalAdminController
 {
@@ -56,7 +56,7 @@ class GlobalAdminController
     private $types_presenter_factory;
 
     /**
-     * @var Tracker_Hierarchy_Dao
+     * @var HierarchyDAO
      */
     private $hierarchy_dao;
 
@@ -69,7 +69,7 @@ class GlobalAdminController
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
-        Tracker_Hierarchy_Dao $hierarchy_dao,
+        HierarchyDAO $hierarchy_dao,
         CSRFSynchronizerToken $global_admin_csrf,
         EventManager $event_manager
     ) {

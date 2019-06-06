@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 require_once 'bootstrap.php';
 
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -131,7 +132,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->tracker_factory                = \Mockery::spy(\TrackerFactory::class);
         $this->event_manager                  = \Mockery::spy(\EventManager::class);
-        $this->hierarchy_dao                  = mockery_stub(\Tracker_Hierarchy_Dao::class)->updateChildren()->returns(true);
+        $this->hierarchy_dao                  = Mockery::spy(HierarchyDAO::class);
         $this->xml_import                     = \Mockery::spy(\Tracker_Artifact_XMLImport::class);
         $this->ugroup_manager                 = \Mockery::spy(\UGroupManager::class);
         $this->logger                         = \Mockery::spy(\Logger::class);
@@ -351,6 +352,10 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
     public function itSouldNotImportHierarchyIfIsChildIsNotUsed()
     {
+        $artifact_links_usage_dao = Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $artifact_links_usage_dao->shouldReceive('isTypeDisabledInProject')
+            ->with(Mockery::any(), '_is_child')->andReturn(true);
+
         $class_parameters = array(
             $this->tracker_factory,
             $this->event_manager,
@@ -368,7 +373,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->ugroup_manager,
             \Mockery::spy(Logger::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
-            \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
+            $artifact_links_usage_dao,
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
             \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
         );
@@ -379,7 +384,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         stub($tracker_xml_importer)->createFromXML()->returns($this->tracker1);
 
-        expect($this->hierarchy_dao)->updateChildren()->never();
+        $this->hierarchy_dao->shouldReceive('updateChildren')->never();
 
         $tracker_xml_importer->import(
             $this->configuration,
@@ -421,7 +426,7 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
         $this->tracker         = \Mockery::spy(\Tracker::class);
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
         $this->event_manager   = \Mockery::spy(\EventManager::class);
-        $this->hierarchy_dao   = mockery_stub(\Tracker_Hierarchy_Dao::class)->updateChildren()->returns(true);
+        $this->hierarchy_dao   = Mockery::spy(HierarchyDAO::class);
         $this->xml_import      = \Mockery::spy(\Tracker_Artifact_XMLImport::class);
         $this->ugroup_manager  = \Mockery::spy(\UGroupManager::class);
 
@@ -499,7 +504,7 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
         $this->tracker_xml_importer = new TrackerXmlImportTestInstance(
             $tracker_factory,
             \Mockery::spy(\EventManager::class),
-            \Mockery::spy(\Tracker_Hierarchy_Dao::class),
+            \Mockery::spy(HierarchyDAO::class),
             \Mockery::spy(\Tracker_CannedResponseFactory::class),
             \Mockery::spy(\Tracker_FormElementFactory::class),
             \Mockery::spy(\Tracker_SemanticFactory::class),
@@ -574,7 +579,7 @@ XML;
         $tracker_xml_importer = new TrackerXmlImportTestInstance(
             mockery_stub(\TrackerFactory::class)->getInstanceFromRow()->returns($tracker),
             \Mockery::spy(\EventManager::class),
-            \Mockery::spy(\Tracker_Hierarchy_Dao::class),
+            \Mockery::spy(HierarchyDAO::class),
             \Mockery::spy(\Tracker_CannedResponseFactory::class),
             \Mockery::spy(\Tracker_FormElementFactory::class),
             \Mockery::spy(\Tracker_SemanticFactory::class),
@@ -790,7 +795,7 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
 
         $this->event_manager = \Mockery::spy(\EventManager::class);
 
-        $this->hierarchy_dao = mockery_stub(\Tracker_Hierarchy_Dao::class)->updateChildren()->returns(true);
+        $this->hierarchy_dao = Mockery::spy(HierarchyDAO::class);
 
         $this->xmlFieldMapping = array(
             'F1685' => '',
@@ -880,7 +885,7 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
             'V2118' => '',
         );
 
-        $this->hierarchy_dao = mockery_stub(\Tracker_Hierarchy_Dao::class)->updateChildren()->returns(true);
+        $this->hierarchy_dao = Mockery::spy(HierarchyDAO::class);
 
 
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
@@ -981,7 +986,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
-        $this->hierarchy_dao               = mockery_stub(\Tracker_Hierarchy_Dao::class)->updateChildren()->returns(true);
+        $this->hierarchy_dao               = Mockery::spy(HierarchyDAO::class);
         $this->artifact_link_usage_updater = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class);
         $this->artifact_link_usage_dao     = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->event_manager               = \Mockery::spy(\EventManager::class);

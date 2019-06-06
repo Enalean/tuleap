@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ use Tracker_SemanticFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\XML\MappingsRegistry;
 use WorkflowFactory;
 use XML_RNGValidator;
@@ -72,7 +73,7 @@ class TrackerXmlImportTest extends TestCase
         $class_parameters = [
             \Mockery::spy(\TrackerFactory::class),
             \Mockery::spy(\EventManager::class),
-            \Mockery::spy(\Tracker_Hierarchy_Dao::class),
+            \Mockery::spy(HierarchyDAO::class),
             \Mockery::spy(Tracker_CannedResponseFactory::class),
             \Mockery::spy(Tracker_FormElementFactory::class),
             \Mockery::spy(Tracker_SemanticFactory::class),

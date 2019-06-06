@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 Mock::generate('Planning');
@@ -309,7 +311,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     {
         parent::setUp();
         $tracker_factory      = TrackerFactory::instance();
-        $hierarchy_dao        = mock('Tracker_Hierarchy_Dao');
+        $hierarchy_dao        = Mockery::spy(HierarchyDAO::class);
         $child_link_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
         $hierarchy_factory    = new Tracker_HierarchyFactory(
             $hierarchy_dao,
@@ -329,7 +331,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         parent::tearDown();
     }
 
-    private function setUpTrackers(TrackerFactory $tracker_factory, Tracker_Hierarchy_Dao $hierarchy_dao) {
+    private function setUpTrackers(TrackerFactory $tracker_factory, HierarchyDAO $hierarchy_dao) {
         $this->epic_tracker  = aMockTracker()->withId(104)->build();
         $this->story_tracker = aMockTracker()->withId(103)->build();
         $this->release_tracker  = aMockTracker()->withId(107)->build();
@@ -342,13 +344,13 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
             108 => $this->sprint_tracker,
         ));
 
-        stub($hierarchy_dao)->searchTrackerHierarchy(array(103, 104))->returnsDar(
-            array('parent_id' => '104', 'child_id' => '103')
+        stub($hierarchy_dao)->searchTrackerHierarchy(array(103, 104))->returns(
+            [['parent_id' => '104', 'child_id' => '103']]
         );
-        stub($hierarchy_dao)->searchTrackerHierarchy(array(108, 107))->returnsDar(
-            array('parent_id' => '107', 'child_id' => '108')
+        stub($hierarchy_dao)->searchTrackerHierarchy(array(108, 107))->returns(
+            [['parent_id' => '107', 'child_id' => '108']]
         );
-        stub($hierarchy_dao)->searchTrackerHierarchy()->returnsEmptyDar();
+        stub($hierarchy_dao)->searchTrackerHierarchy()->returns([]);
     }
 
     private function setUpPlannings(TrackerFactory $tracker_factory) {

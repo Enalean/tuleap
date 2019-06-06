@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
 require_once __DIR__.'/../../bootstrap.php';
 
 
@@ -32,7 +35,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, array());
         $this->request              = aRequest()->withUser(\Mockery::spy(\PFUser::class))->build();
         $this->tracker_factory      = \Mockery::spy(\TrackerFactory::class);
-        $this->dao                  = \Mockery::spy(\Tracker_Hierarchy_Dao::class);
+        $this->dao                  = \Mockery::spy(HierarchyDAO::class);
         $this->type_dao             = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->factory              = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTrackerFactory::class);
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
