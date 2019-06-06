@@ -38,7 +38,7 @@
 
 <script>
 import { mapState } from "vuex";
-import EmptyFolderForReadersSvg from "./EmptyFolderForReadersSvg.vue";
+import EmptyFolderForReadersSvg from "../../svg/folder/EmptyFolderForReadersSvg.vue";
 
 export default {
     name: "EmptyFolderForReaders",

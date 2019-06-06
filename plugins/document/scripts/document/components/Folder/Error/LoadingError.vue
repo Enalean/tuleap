@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import LoadingErrorSvg from "./LoadingErrorSvg.vue";
+import LoadingErrorSvg from "../../svg/error/LoadingErrorSvg.vue";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 
