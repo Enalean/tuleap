@@ -39,6 +39,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresen
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\BurndownLogger;
@@ -56,8 +57,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
@@ -1966,7 +1967,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
-            $this->getFormElementFactory(),
+            new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
             $this->getChangesetDao(),
             $this->getChangesetCommentDao(),
             $this->getArtifactFactory(),

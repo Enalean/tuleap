@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+
 require_once __DIR__.'/../../bootstrap.php';
 
 class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends TuleapTestCase {
@@ -56,7 +58,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
 
         $this->creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
-            $this->factory,
+            new FieldsToBeSavedInSpecificOrderRetriever($this->factory),
             $this->changeset_dao,
             $this->artifact_factory,
             \Mockery::spy(\EventManager::class),

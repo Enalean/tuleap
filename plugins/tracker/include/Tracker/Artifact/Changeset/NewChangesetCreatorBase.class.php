@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 
@@ -41,7 +42,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory $formelement_factory,
+        FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
         Tracker_Artifact_ChangesetDao $changeset_dao,
         Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
         Tracker_ArtifactFactory $artifact_factory,
@@ -52,7 +53,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     ) {
         parent::__construct(
             $fields_validator,
-            $formelement_factory,
+            $fields_retriever,
             $artifact_factory,
             $event_manager,
             $field_initializator
@@ -196,7 +197,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         PFUser $submitter,
         $changeset_id
     ): bool {
-        foreach ($this->getFieldsToBeSavedInCorrectOrder($artifact) as $field) {
+        foreach ($this->fields_retriever->getFields($artifact) as $field) {
             if (! $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
                 $this->changeset_dao->rollBack();
                 $purifier = Codendi_HTMLPurifier::instance();

@@ -19,6 +19,7 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -50,7 +51,7 @@ class Tracker_Artifact_XMLImportBuilder {
             $fields_validator,
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
-                $formelement_factory,
+                new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
                 $changeset_dao,
                 $artifact_factory,
                 EventManager::instance(),
@@ -61,7 +62,7 @@ class Tracker_Artifact_XMLImportBuilder {
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
-            $formelement_factory,
+            new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
             $changeset_dao,
             $changeset_comment_dao,
             $artifact_factory,
