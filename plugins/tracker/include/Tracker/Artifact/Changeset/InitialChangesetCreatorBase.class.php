@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 /**
@@ -32,7 +33,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory $formelement_factory,
+        FieldsToBeSavedInSpecificOrderRetriever $fields_retriever,
         Tracker_Artifact_ChangesetDao $changeset_dao,
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
@@ -40,7 +41,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
     ) {
         parent::__construct(
             $fields_validator,
-            $formelement_factory,
+            $fields_retriever,
             $artifact_factory,
             $event_manager,
             $field_initializator
@@ -105,7 +106,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         PFUser $submitter,
         $changeset_id
     ): void {
-        foreach ($this->getFieldsToBeSavedInCorrectOrder($artifact) as $field) {
+        foreach ($this->fields_retriever->getFields($artifact) as $field) {
             $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id);
         }
     }

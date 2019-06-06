@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+
 require_once __DIR__ . '/bootstrap.php';
 
 //phpcs:ignoreFile
@@ -191,7 +193,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
-            $factory,
+            new FieldsToBeSavedInSpecificOrderRetriever($factory),
             $dao,
             $comment_dao,
             $art_factory,
@@ -769,7 +771,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
-            $factory,
+            new FieldsToBeSavedInSpecificOrderRetriever($factory),
             $this->changeset_dao,
             $comment_dao,
             $this->artifact_factory,

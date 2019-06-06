@@ -25,6 +25,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -59,13 +60,13 @@ use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -3649,7 +3650,7 @@ EOS;
             $fields_validator,
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
-                $this->getFormElementFactory(),
+                new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
                 $changeset_dao,
                 $this->getTrackerArtifactFactory(),
                 EventManager::instance(),
@@ -3660,7 +3661,7 @@ EOS;
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
-            $this->getFormElementFactory(),
+            new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
             $changeset_dao,
             $changeset_comment_dao,
             $this->getTrackerArtifactFactory(),
