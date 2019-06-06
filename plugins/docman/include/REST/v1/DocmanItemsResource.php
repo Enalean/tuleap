@@ -282,7 +282,8 @@ class DocmanItemsResource extends AuthenticatedResource
         return new ItemRepresentationVisitor(
             $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
             new \Docman_VersionFactory(),
-            new \Docman_LinkVersionFactory()
+            new \Docman_LinkVersionFactory(),
+            Docman_ItemFactory::instance($items_request->getProject()->getGroupId())
         );
     }
 

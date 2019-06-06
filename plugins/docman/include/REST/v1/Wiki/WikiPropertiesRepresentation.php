@@ -27,8 +27,14 @@ class WikiPropertiesRepresentation
      */
     public $page_name;
 
-    public function build(\Docman_Wiki $docman_wiki)
+    /**
+     * @var int | null
+     */
+    public $page_id;
+
+    public function build(\Docman_Wiki $docman_wiki, ?int $wiki_page_id) : void
     {
         $this->page_name = $docman_wiki->getPagename();
+        $this->page_id   = $wiki_page_id;
     }
 }

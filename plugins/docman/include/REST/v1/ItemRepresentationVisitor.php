@@ -30,9 +30,9 @@ use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
-use Tuleap\Docman\View\DocmanViewURLBuilder;
-use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {
@@ -51,14 +51,21 @@ class ItemRepresentationVisitor implements ItemVisitor
      */
     private $docman_link_version_factory;
 
+    /**
+     * @var \Docman_ItemFactory
+     */
+    private $item_factory;
+
     public function __construct(
         ItemRepresentationBuilder $item_representation_builder,
         \Docman_VersionFactory $docman_version_factory,
-        \Docman_LinkVersionFactory $docman_link_version_factory
+        \Docman_LinkVersionFactory $docman_link_version_factory,
+        \Docman_ItemFactory $item_factory
     ) {
         $this->item_representation_builder = $item_representation_builder;
         $this->docman_version_factory      = $docman_version_factory;
         $this->docman_link_version_factory = $docman_link_version_factory;
+        $this->item_factory                = $item_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
@@ -77,8 +84,13 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         $wiki_representation = null;
         if ($item->getPagename() !== null) {
+            $wiki_page_id = $this->item_factory->getIdInWikiOfWikiPageItem(
+                $item->getPagename(),
+                $item->getGroupId()
+            );
+
             $wiki_representation = new WikiPropertiesRepresentation();
-            $wiki_representation->build($item);
+            $wiki_representation->build($item, $wiki_page_id);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
