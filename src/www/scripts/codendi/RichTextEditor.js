@@ -21,7 +21,7 @@
 import {
     getUploadImageOptions,
     initiateUploadImage
-} from "../tuleap/ckeditor/getUploadImageOptions.js";
+} from "../tuleap/ckeditor/get-upload-image-options.js";
 
 var codendi = window.codendi || {};
 

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "css.escape";
+import { findAllHiddenInputByNames } from "./form-adapter.js";
+import { getUsedUploadedImagesURLs } from "./ckeditor-adapter.js";
 
 const forms = new Map();
 
@@ -49,18 +50,11 @@ function removeUnusedUploadedFilesFromForm() {
 
 function getUsedUploadedImagesURLsInAllCKEditorInstances(instances) {
     return instances.flatMap(({ ckeditor_instance }) =>
-        Array.from(
-            new DOMParser()
-                .parseFromString(ckeditor_instance.getData(), "text/html")
-                .querySelectorAll("img")
-        ).map(img => img.getAttribute("src"))
+        getUsedUploadedImagesURLs(ckeditor_instance)
     );
 }
 
 function getPotentiallyUsedUploadedFiles(form, instances) {
-    const selector = instances
-        .map(({ field_name }) => "input[type=hidden][name=" + CSS.escape(field_name) + "]")
-        .join(",");
-
-    return form.querySelectorAll(selector);
+    const field_names = instances.map(({ field_name }) => field_name);
+    return findAllHiddenInputByNames(form, field_names);
 }

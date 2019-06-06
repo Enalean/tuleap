@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { isUploadEnabled, informUsersThatTheyCanPasteImagesInEditor } from "./element-adapter.js";
+import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
+import { initGettext } from "./gettext-factory.js";
+import { disablePasteOfImages } from "./ckeditor-adapter.js";
+import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
+import { buildFileUploadHandler } from "./file-upload-handler-factory.js";
+
+export async function initiateUploadImage(ckeditor_instance, options, element) {
+    await initGettext(options);
+    if (!isUploadEnabled(element)) {
+        disablePasteOfImages(ckeditor_instance);
+        return;
+    }
+
+    const form = element.form;
+    const field_name = element.dataset.uploadFieldName;
+    const max_size_upload = parseInt(element.dataset.uploadMaxSize, 10);
+
+    informUsersThatTheyCanPasteImagesInEditor(element);
+
+    const onStartCallback = () => disableFormSubmit(form);
+    const onErrorCallback = () => enableFormSubmit(form);
+
+    function onSuccessCallback(id, download_href) {
+        const hidden_field = document.createElement("input");
+        hidden_field.type = "hidden";
+        hidden_field.name = field_name;
+        hidden_field.value = id;
+        hidden_field.dataset.url = download_href;
+        form.appendChild(hidden_field);
+
+        enableFormSubmit(form);
+    }
+
+    const fileUploadRequestHandler = buildFileUploadHandler(
+        ckeditor_instance,
+        max_size_upload,
+        onStartCallback,
+        onErrorCallback,
+        onSuccessCallback
+    );
+
+    ckeditor_instance.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
+    addInstance(form, ckeditor_instance, field_name);
+}
+
+export function getUploadImageOptions(element) {
+    if (!isUploadEnabled(element)) {
+        return {};
+    }
+
+    return {
+        extraPlugins: "uploadimage",
+        uploadUrl: element.dataset.uploadUrl
+    };
+}

@@ -61,6 +61,9 @@ pipeline {
                 }
                 stage ('Karma') {
                     stages {
+                        stage('Karma Core') {
+                            steps { script { actions.runKarmaTests('core', 'src/www/scripts') } }
+                        }
                         stage('Karma AgileDashboard PlanningV2') {
                             steps { script { actions.runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') } }
                         }
