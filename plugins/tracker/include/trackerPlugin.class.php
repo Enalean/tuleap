@@ -1813,7 +1813,7 @@ class trackerPlugin extends Plugin {
 
     public function routeGetFieldsPermissionsByGroup() : DispatchableWithRequest
     {
-        return new PermissionsOnFieldsDisplayByGroupController(TrackerFactory::instance());
+        return new PermissionsOnFieldsDisplayByGroupController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/permission'));
     }
 
     public function routePostFieldsPermissions(): DispatchableWithRequest
