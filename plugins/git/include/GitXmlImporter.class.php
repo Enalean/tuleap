@@ -210,6 +210,7 @@ class GitXmlImporter
         $extraction_path
     ) {
         $repository_info = $repository_xmlnode->attributes();
+        assert($repository_info !== null);
         $this->logger->debug("Importing {$repository_info['name']} using {$repository_info['bundle-path']}");
         $description = isset($repository_info['description']) ? (string) $repository_info['description'] : GitRepository::DEFAULT_DESCRIPTION;
         $repository = $this->repository_factory->buildRepository($project, $repository_info['name'], $creator, $this->gitolite_backend, $description);

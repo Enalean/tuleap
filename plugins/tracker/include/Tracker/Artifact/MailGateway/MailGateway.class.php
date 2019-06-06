@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -182,14 +182,14 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         );
     }
 
-    /** @return Tracker_Artifact */
+    /** @return Tracker_Artifact|false */
     private function createArtifact(PFUser $user, Tracker $tracker, $title, $body) {
         $this->logger->debug("Receiving new artifact from ". $user->getUserName());
 
         if (! $tracker->userCanSubmitArtifact($user)) {
             $this->logger->info("User ". $user->getUnixName() ." has no right to create an artifact in tracker #" . $tracker->getId());
             $this->notifier->sendErrorMailInsufficientPermissionCreation($user->getEmail(), $title);
-            return;
+            return false;
         }
 
         $title_field       = $tracker->getTitleField();

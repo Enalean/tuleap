@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
+use Tuleap\Tracker\REST\FieldValueRepresentation;
 
 require_once 'common/layout/ColorHelper.class.php';
 
@@ -67,11 +68,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function getDefaultRESTValues() {
         $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
 
-        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\FieldValueRepresentation';
-
         $rest_array = array();
         foreach ($bind_values as $value) {
-            $representation = new $class_with_right_namespace;
+            $representation = new FieldValueRepresentation();
             $representation->build(array(
                 Tracker_FormElement_Field_List_Bind::REST_ID_KEY    => $value->getId(),
                 Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY => $value->getAPIValue()
@@ -150,7 +149,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public abstract function getFieldData($submitted_value, $is_multiple);
     /**
-     * @return array
+     * @return array|Tracker_FormElement_Field_List_BindValue|null
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
     public abstract function getValue($value_id);
@@ -661,8 +660,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public abstract function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
-        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\FieldValueRepresentation';
-        $representation = new $class_with_right_namespace;
+        $representation = new FieldValueRepresentation();
         $values = array(
             self::REST_ID_KEY    => $value->getId(),
             self::REST_LABEL_KEY => $value->getAPIValue()

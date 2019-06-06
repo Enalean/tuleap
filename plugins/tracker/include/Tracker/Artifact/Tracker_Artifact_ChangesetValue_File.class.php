@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 
 /**
  * Manage values in changeset for files fields
@@ -53,7 +55,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * spl\ArrayAccess
      *
-     * @param int $offset to retrieve
+     * @param int|string $offset to retrieve
      *
      * @return mixed value at given offset
      */
@@ -170,8 +172,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
         }
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation';
-        $field_value_file_representation = new $classname_with_namespace;
+        $field_value_file_representation = new ArtifactFieldValueFileFullRepresentation();
         $field_value_file_representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

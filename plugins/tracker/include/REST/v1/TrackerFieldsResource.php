@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,6 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
-use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocatorBuilder;
 
 class TrackerFieldsResource extends AuthenticatedResource
 {

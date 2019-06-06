@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 
 /**
@@ -426,7 +427,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     /**
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
-     * @return string | number
+     * @return string | float
      */
     private function getSemanticEffortValue(PFUser $user, Tracker_Artifact $artifact) {
         if (! $field = $this->getInitialEffortField($artifact->getTracker())) {

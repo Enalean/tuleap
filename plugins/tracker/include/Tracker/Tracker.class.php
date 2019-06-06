@@ -1762,6 +1762,7 @@ EOS;
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
             $html .= '<select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">';
+            $first_part = [];
 
             foreach($ugroups_permissions as $part_permissions) {
                 if ($selected_id === false) {
@@ -2418,7 +2419,7 @@ EOS;
     /**
      * See if the user's perms are >= 2 or project admin.
      *
-     * @param int $user Either the user ID or the User object to test, or current user if false
+     * @param PFUser|int|false $user Either the user ID or the User object to test, or current user if false
      *
      * @return boolean True if the user is tracker admin, false otherwise
      */
@@ -3615,7 +3616,7 @@ EOS;
     /**
      * Return workflow of the current tracker (there is always a workflow).
      *
-     * @return Workflow|null
+     * @return Workflow
      */
     public function getWorkflow() {
         if (! $this->workflow) {

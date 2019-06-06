@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -24,7 +24,6 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterion;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionPresenter;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueSaver;
@@ -236,8 +235,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             foreach ($session_criteria as $key => $value) {
                 if ($value['is_removed'] == 0) {
                     $is_advanced = isset($value['is_advanced']) ? $value['is_advanced'] : 0 ;
-                    if ($formElement = $ff->getUsedFormElementById($key)) {
+                    $formElement = $ff->getUsedFormElementById($key);
+                    if ($formElement !== null) {
                         if ($formElement->userCanRead()) {
+                            assert($formElement instanceof Tracker_FormElement_Field);
                             $criteria_value = $this->getCriteriaValueForFormElement($formElement, $value['value']);
 
                             $formElement->setCriteriaValue($criteria_value, $this->id);

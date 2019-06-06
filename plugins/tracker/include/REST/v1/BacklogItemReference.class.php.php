@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ class BacklogItemReference {
 
     /**
      * @var object Identification of the backlog item {@required true} {@type array}
+     * @psalm-var array
      * <br>
      * E.g. {"id" : 458}
      *

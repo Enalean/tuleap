@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -303,20 +303,15 @@ class Planning_MilestoneFactory
     /**
      * Adds $parent_node children according to $artifact ones.
      *
-     * @param type $user
-     * @param type $artifact
-     * @param type $parent_node
-     * @param type $parents     The list of parents to prevent infinite recursion
-     *
-     * @return bool
+     * @param array $parents     The list of parents to prevent infinite recursion
      */
     private function addChildrenPlannedArtifacts(PFUser             $user,
                                                  Tracker_Artifact $artifact,
                                                  TreeNode         $parent_node,
                                                  array            $parents) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
-        if (! $linked_artifacts) return false;
-        if (in_array($artifact->getId(), $parents)) return false;
+        if (! $linked_artifacts) return;
+        if (in_array($artifact->getId(), $parents)) return;
 
         $parents[] = $artifact->getId();
         foreach ($linked_artifacts as $linked_artifact) {

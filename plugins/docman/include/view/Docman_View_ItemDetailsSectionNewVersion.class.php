@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -115,10 +115,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="'.$label.'" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">'.$changelog.'</textarea></td></tr>';
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
-        foreach($fields as $field) {
-            $content .= '<tr style="vertical-align:top;">';
-            $content .= '<td><label>'. $field->getLabel().'</label></td>';
-            $content .= '<td>'. $field->getField() .'</td></tr>';
+        if ($fields !== null) {
+            foreach($fields as $field) {
+                $content .= '<tr style="vertical-align:top;">';
+                $content .= '<td><label>'. $field->getLabel().'</label></td>';
+                $content .= '<td>'. $field->getField() .'</td></tr>';
+            }
         }
         // Release lock
         $content .= $this->_getReleaseLock();

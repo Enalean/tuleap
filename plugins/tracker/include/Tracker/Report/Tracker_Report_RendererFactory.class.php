@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -466,6 +466,7 @@ class Tracker_Report_RendererFactory {
     public function getInstanceFromXML($xml, $report, &$xmlMapping)
     {
         $att = $xml->attributes();
+        assert($att !== null);
         $row = array(
             'id'            => 0,
             'name'          => (string)$xml->name,

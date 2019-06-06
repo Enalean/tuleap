@@ -486,9 +486,9 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         $query = self::COMMAND . ' set-account --inactive ' . $user->getUserName();
         try {
             $this->ssh->execute($server, $query);
-            $this->logger->info(sprintf(dgettext('tuleap-git', 'Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s'), $user->getId(), $user->getUserName(), $server));
+            $this->logger->info(sprintf(dgettext('tuleap-git', 'Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s'), $user->getId(), $user->getUserName(), (string) $server));
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
-            $this->logger->error(sprintf(dgettext('tuleap-git', 'Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : %4$s'), $user->getId(), $user->getUserName(), $server, $exception->getStdErr()));
+            $this->logger->error(sprintf(dgettext('tuleap-git', 'Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : %4$s'), $user->getId(), $user->getUserName(), (string) $server, $exception->getStdErr()));
         }
     }
 }

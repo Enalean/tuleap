@@ -59,7 +59,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
      * Add an artifact without its first changeset to a tracker
      * The artifact must be completed by writing its first changeset
      *
-     * @return Tracker_Artifact or false if an error occured
+     * @return Tracker_Artifact|false false if an error occurred
      */
     public function createBare(Tracker $tracker, PFUser $user, $submitted_on) {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
@@ -72,7 +72,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
 
     /**
      * Creates the first changeset for a bare artifact.
-     * @return Tracker_Artifact or false if an error occured
+     * @return Tracker_Artifact|false false if an error occurred
      */
     public function createFirstChangeset(
         Tracker $tracker,
@@ -129,7 +129,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     /**
      * Add an artefact in the tracker
      *
-     * @return Tracker_Artifact or false if an error occured
+     * @return Tracker_Artifact|false false if an error occurred
      */
     public function create(
         Tracker $tracker,

@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\Semantic;
 
 use Tracker;
+use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Semantic_Status;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -56,6 +57,7 @@ class SemanticDoneLoader
                     continue;
                 }
 
+                assert($value === null || $value instanceof Tracker_FormElement_Field_List_Value);
                 if ($value && $this->value_checker->isValueAPossibleDoneValue($value, $semantic_status)) {
                     $done_values[$value_id] = $value;
                 }

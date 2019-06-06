@@ -30,6 +30,7 @@ use TemplateRendererFactory;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List_Value;
 use Tracker_Semantic;
 use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
@@ -345,6 +346,7 @@ class SemanticDone extends Tracker_Semantic
 
         foreach ($selected_values as $selected_value_id) {
             $value = $field->getBind()->getValue($selected_value_id);
+            assert($value instanceof Tracker_FormElement_Field_List_Value);
 
             if ($value && $this->value_checker->isValueAPossibleDoneValue($value, $this->semantic_status)) {
                 $this->done_values[$selected_value_id] = $value;

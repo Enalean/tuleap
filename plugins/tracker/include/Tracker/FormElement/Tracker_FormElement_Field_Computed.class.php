@@ -943,6 +943,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $dao   = Tracker_FormElement_Field_ComputedDaoCache::instance();
         $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
 
+        if ($value === false) {
+            return null;
+        }
         return $value;
     }
 

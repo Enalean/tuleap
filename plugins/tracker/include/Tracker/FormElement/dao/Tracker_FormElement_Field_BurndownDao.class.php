@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
      * The request returns values for 2 fields, start_date and duration
      * SUM of null + value give us the value for field in one single line
      *
-     * @return DataAccessResult|false
+     * @return array|false
      */
     public function getBurndownInformation($artifact_id)
     {
