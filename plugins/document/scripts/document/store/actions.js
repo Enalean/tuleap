@@ -40,6 +40,7 @@ import {
     deleteLink,
     deleteEmbeddedFile,
     deleteWiki,
+    deleteEmptyDocument,
     deleteFolder
 } from "../api/rest-querier.js";
 
@@ -530,6 +531,9 @@ export const deleteItem = async (context, [item, additional_options]) => {
                 break;
             case TYPE_WIKI:
                 await deleteWiki(item, additional_options);
+                break;
+            case TYPE_EMPTY:
+                await deleteEmptyDocument(item);
                 break;
             case TYPE_FOLDER:
                 await deleteFolder(item, additional_options);

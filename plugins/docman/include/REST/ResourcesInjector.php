@@ -26,6 +26,7 @@ namespace Tuleap\Docman\REST;
 
 use Luracast\Restler\Restler;
 use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
+use Tuleap\Docman\REST\v1\DocmanEmptyDocumentsResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
@@ -34,12 +35,13 @@ use Tuleap\Docman\REST\v1\DocmanWikiResource;
 
 class ResourcesInjector
 {
-    public const NAME          = 'docman_items';
-    public const FILES_NAME    = 'docman_files';
-    public const FOLDER_NAME   = 'docman_folders';
-    public const EMBEDDED_NAME = 'docman_embedded_files';
-    public const WIKI_NAME     = 'docman_wikis';
-    public const LINK_NAME     = 'docman_links';
+    public const NAME                = 'docman_items';
+    public const FILES_NAME          = 'docman_files';
+    public const FOLDER_NAME         = 'docman_folders';
+    public const EMBEDDED_NAME       = 'docman_embedded_files';
+    public const WIKI_NAME           = 'docman_wikis';
+    public const LINK_NAME           = 'docman_links';
+    public const EMPTY_DOCUMENT_NAME = 'docman_empty_documents';
 
     public function populate(Restler $restler)
     {
@@ -71,6 +73,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanLinksResource::class,
             self::LINK_NAME
+        );
+
+        $restler->addAPIClass(
+            DocmanEmptyDocumentsResource::class,
+            self::EMPTY_DOCUMENT_NAME
         );
     }
 }
