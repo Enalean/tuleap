@@ -39,6 +39,7 @@ import "./tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field-c
 import "./tuleap-artifact-modal-fields/open-list-field/users-open-list-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/permission-field/permission-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/permission-field/permission-field-value-formatter.spec.js";
+import "./tuleap-artifact-modal-fields/text-field/text-field-controller.spec.js";
 import "./tuleap-artifact-modal-service.spec.js";
 import "./tuleap-highlight/highlight-directive.spec.js";
 import "./validate-service.spec.js";

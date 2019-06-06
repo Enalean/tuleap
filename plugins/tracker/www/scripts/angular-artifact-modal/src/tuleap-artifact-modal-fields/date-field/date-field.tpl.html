@@ -14,11 +14,13 @@
     </label>
     <div class="tlp-form-element tlp-form-element-prepend">
         <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-        <input type="text"
-                class="tlp-input tlp-input-date"
-                size="{{ ::date_field.getFieldSize() }}"
-                ng-model="date_field.value_model.value"
-                ng-disabled="::date_field.isDisabled()"
+        <input
+            id="{{ ::('tracker_field_' + date_field.field.field_id) }}"
+            type="text"
+            class="tlp-input tlp-input-date"
+            size="{{ ::date_field.getFieldSize() }}"
+            ng-model="date_field.value_model.value"
+            ng-disabled="::date_field.isDisabled()"
         >
     </div>
     <p

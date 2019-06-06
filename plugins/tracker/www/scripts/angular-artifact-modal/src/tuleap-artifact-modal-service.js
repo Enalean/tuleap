@@ -31,6 +31,7 @@ import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
+import { TEXT_FORMAT_TEXT } from "../../constants/fields-constants.js";
 
 export default ArtifactModalService;
 
@@ -115,13 +116,6 @@ function ArtifactModalService(
         });
     }
 
-    var TEXT_FORMAT_TEXT_ID = "text";
-    var TEXT_FORMAT_HTML_ID = "html";
-    var text_formats = [
-        { id: TEXT_FORMAT_TEXT_ID, label: "Text" },
-        { id: TEXT_FORMAT_HTML_ID, label: "HTML" }
-    ];
-
     function initCreationModalModel(tracker_id, parent_artifact_id, prefill_values) {
         var modal_model = {};
 
@@ -129,7 +123,6 @@ function ArtifactModalService(
         setCreationMode(creation_mode);
         modal_model.tracker_id = tracker_id;
         modal_model.parent_artifact_id = parent_artifact_id;
-        modal_model.text_formats = text_formats;
 
         var promise = $q
             .when(getTracker(tracker_id))
@@ -174,7 +167,6 @@ function ArtifactModalService(
         modal_model.user_id = user_id;
         modal_model.tracker_id = tracker_id;
         modal_model.artifact_id = artifact_id;
-        modal_model.text_formats = text_formats;
         var transformed_tracker;
 
         var promise = $q
@@ -235,7 +227,7 @@ function ArtifactModalService(
             .when(getUserPreference(user_id, "user_edition_default_format"))
             .then(function(data) {
                 modal_model.text_fields_format =
-                    data.value !== false ? data.value : TEXT_FORMAT_TEXT_ID;
+                    data.value !== false ? data.value : TEXT_FORMAT_TEXT;
             });
     }
 

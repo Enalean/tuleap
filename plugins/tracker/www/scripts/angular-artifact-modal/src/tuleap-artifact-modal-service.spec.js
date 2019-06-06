@@ -183,10 +183,6 @@ describe("NewTuleapArtifactModalService", () => {
                 expect(model.ordered_fields).toBeDefined();
                 expect(model.parent_artifacts).toBeUndefined();
                 expect(model.artifact_id).toBeUndefined();
-                expect(model.text_formats).toEqual([
-                    { id: "text", label: "Text" },
-                    { id: "html", label: "HTML" }
-                ]);
             });
 
             it("Given that I could not get the tracker structure, then a promise will be rejected", () => {
@@ -389,10 +385,6 @@ describe("NewTuleapArtifactModalService", () => {
                     expect(model.ordered_fields).toBeDefined();
                     expect(setCreationMode).toHaveBeenCalledWith(false);
                     expect(model.title).toEqual("onomatomania");
-                    expect(model.text_formats).toEqual([
-                        { id: "text", label: "Text" },
-                        { id: "html", label: "HTML" }
-                    ]);
                 });
 
                 it("Given that the user didn't have a preference set for text fields format, when I create the modal's edition model, then the default text_field format will be 'text' by default", () => {
