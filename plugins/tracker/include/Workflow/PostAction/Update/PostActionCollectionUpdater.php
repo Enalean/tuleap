@@ -52,16 +52,4 @@ class PostActionCollectionUpdater
             $updater->updateByTransition($actions, $transition);
         }
     }
-
-    /**
-     * @throws DataAccessQueryException
-     * @throws InvalidPostActionException
-     * @throws UnknownPostActionIdsException
-     */
-    public function updateForAllSiblingsTransition(array $all_sibling_transitions, PostActionCollection $actions): void
-    {
-        foreach ($all_sibling_transitions as $transition) {
-            $this->updateByTransition($transition, $actions);
-        }
-    }
 }

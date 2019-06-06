@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
@@ -118,5 +120,28 @@ class PostActionsMapper
         );
 
         return $update_frozen_fields_value;
+    }
+
+    /**
+     * Converts from HiddenFieldsets to HiddenFieldsetsValue object.
+     * Sets the id to null to force the new post-action to be recreated.
+     * @return HiddenFieldsetsValue[]
+     */
+    public function convertToHiddenFieldsetsValueWithNullId(HiddenFieldsets $hidden_fieldsets): array
+    {
+        $update_hidden_fieldsets_value = [];
+
+        $fieldset_ids = [];
+        foreach ($hidden_fieldsets->getFieldsets() as $fieldset) {
+            $fieldset_ids[] = (int) $fieldset->getID();
+        }
+
+        // We set $id to null so that all post actions are re-created from scratch in the $to transition
+        $update_hidden_fieldsets_value[] = new HiddenFieldsetsValue(
+            null,
+            $fieldset_ids
+        );
+
+        return $update_hidden_fieldsets_value;
     }
 }

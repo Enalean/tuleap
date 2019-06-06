@@ -26,8 +26,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
@@ -129,8 +131,24 @@ class TransitionReplicatorTest extends TestCase
         $frozen_fields = Mockery::mock(FrozenFields::class);
         $frozen_fields->shouldReceive('getFieldIds')->andReturn([999]);
         $this->post_actions_retriever
-            ->shouldReceive('getFrozenFieldsValue')
+            ->shouldReceive('getFrozenFields')
             ->andReturn($frozen_fields);
+
+        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+
+        $fieldset_01->shouldReceive('getID')->andReturn('648');
+        $fieldset_02->shouldReceive('getID')->andReturn('701');
+
+        $hidden_fieldsets = Mockery::mock(HiddenFieldsets::class);
+        $hidden_fieldsets->shouldReceive('getFieldsets')->andReturn([
+            $fieldset_01,
+            $fieldset_02
+        ]);
+
+        $this->post_actions_retriever
+            ->shouldReceive('getHiddenFieldsets')
+            ->andReturn($hidden_fieldsets);
 
         $this->conditions_updater
             ->shouldReceive('update')
@@ -141,7 +159,8 @@ class TransitionReplicatorTest extends TestCase
                 new SetDateValue(null, 197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
                 new SetFloatValue(null, 201, 48.97),
                 new SetIntValue(null, 247, -128),
-                new FrozenFieldsValue(null, [999])
+                new FrozenFieldsValue(null, [999]),
+                new HiddenFieldsetsValue(null, [648, 701])
             ));
 
         $this->transition_replicator->replicate($from_transition, $to_transition);

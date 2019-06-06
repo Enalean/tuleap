@@ -83,43 +83,4 @@ class PostActionCollectionUpdaterTest extends TestCase
 
         $this->collection_updater->updateByTransition($transition, $action_collection);
     }
-
-    public function testUpdateAllSiblingsTransitionDelegatesUpdateToUpdaters()
-    {
-        $transition  = TransitionFactory::buildATransition();
-        $transition2 = TransitionFactory::buildATransition();
-        $transition3 = TransitionFactory::buildATransition();
-
-        $all_transitions = [
-            $transition,
-            $transition2,
-            $transition3
-        ];
-
-        $action            = new CIBuildValue(2, 'http://example.test');
-        $action_collection = new PostActionCollection($action);
-
-        $this->post_action_updater1
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition);
-        $this->post_action_updater2
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition);
-
-        $this->post_action_updater1
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition2);
-        $this->post_action_updater2
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition2);
-
-        $this->post_action_updater1
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition3);
-        $this->post_action_updater2
-            ->shouldReceive('updateByTransition')
-            ->with($action_collection, $transition3);
-
-        $this->collection_updater->updateForAllSiblingsTransition($all_transitions, $action_collection);
-    }
 }

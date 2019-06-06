@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
@@ -38,4 +39,6 @@ interface PostActionVisitor
     public function visitSetFloatValue(SetFloatValue $set_float_value_action);
 
     public function visitFrozenFieldsValue(FrozenFieldsValue $frozen_fields);
+
+    public function visitHiddenFieldsetsValue(HiddenFieldsetsValue $hidden_fieldsets_value);
 }

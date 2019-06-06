@@ -28,7 +28,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
@@ -136,6 +138,29 @@ class PostActionsMapperTest extends TestCase
         $this->assertEquals(
             [
                 new FrozenFieldsValue(null, [999]),
+            ],
+            $result
+        );
+    }
+
+    public function testConvertToHiddenFieldsetsValueValueWithNullId()
+    {
+        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+
+        $fieldset_01->shouldReceive('getID')->andReturn('648');
+        $fieldset_02->shouldReceive('getID')->andReturn('701');
+
+        $hidden_fieldsets = Mockery::mock(HiddenFieldsets::class);
+        $hidden_fieldsets->shouldReceive('getFieldsets')->andReturn([
+            $fieldset_01,
+            $fieldset_02
+        ]);
+
+        $result = $this->mapper->convertToHiddenFieldsetsValueWithNullId($hidden_fieldsets);
+        $this->assertEquals(
+            [
+                new HiddenFieldsetsValue(null, [648, 701]),
             ],
             $result
         );

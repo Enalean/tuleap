@@ -668,6 +668,13 @@ msgstr ""
 "tracker."
 
 #, php-format
+msgid ""
+"The fieldset_id value '%u' does not match a fieldset in use in the tracker."
+msgstr ""
+"Le fieldset_id '%u' ne correspond pas à un groupe de champs utilisé dans le "
+"tracker."
+
+#, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ fichier '%s' ne peut pas être comparé à MYSELF()."
 
@@ -945,6 +952,12 @@ msgid ""
 "type 'int'."
 msgstr ""
 "Les field_ids d'actions 'set_field_value' avec type 'int' ne doivent pas "
+"être en doublons."
+
+msgid ""
+"There should not be duplicate fieldset_ids for 'hidden_fieldsets' actions."
+msgstr ""
+"Les fieldset_ids d'actions 'hidden_fieldsets' avec type 'int' ne doivent pas "
 "être en doublons."
 
 msgid ""

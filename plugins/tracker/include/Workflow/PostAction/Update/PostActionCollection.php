@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
@@ -63,6 +63,11 @@ class PostActionCollection implements PostActionVisitor
      */
     private $frozen_fields_actions = [];
 
+    /**
+     * @var HiddenFieldsetsValue[]
+     */
+    private $hidden_fieldsets_actions = [];
+
     public function __construct(PostAction... $actions)
     {
         foreach ($actions as $action) {
@@ -95,12 +100,25 @@ class PostActionCollection implements PostActionVisitor
         $this->set_float_value_actions[] = $set_float_value_action;
     }
 
+    public function visitHiddenFieldsetsValue(HiddenFieldsetsValue $hidden_fieldsets_value)
+    {
+        $this->hidden_fieldsets_actions[] = $hidden_fieldsets_value;
+    }
+
     /**
      * @throws Internal\InvalidPostActionException
      */
     public function validateFrozenFieldsActions(FrozenFieldsValueValidator $validator, \Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->frozen_fields_actions);
+    }
+
+    /**
+     * @throws Internal\InvalidPostActionException
+     */
+    public function validateHiddenFieldsetsActions(HiddenFieldsetsValueValidator $validator, \Tracker $tracker): void
+    {
+        $validator->validate($tracker, ...$this->hidden_fieldsets_actions);
     }
 
     /**
@@ -215,5 +233,10 @@ class PostActionCollection implements PostActionVisitor
     public function getFrozenFieldsPostActions() : array
     {
         return $this->frozen_fields_actions;
+    }
+
+    public function getHiddenFieldsetsPostActions() : array
+    {
+        return $this->hidden_fieldsets_actions;
     }
 }
