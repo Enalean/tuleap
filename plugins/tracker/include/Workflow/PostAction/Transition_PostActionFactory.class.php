@@ -166,6 +166,12 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         $this->postaction_field_factory = $postaction_field_factory;
     }
 
+    /** For testing purpose */
+    public function setFrozenFieldsFactory(FrozenFieldsFactory $frozen_fields_factory)
+    {
+        $this->frozen_fields_factory = $frozen_fields_factory;
+    }
+
     /** @return Transition_PostActionSubFactory */
     private function getSubFactory($post_action_short_name) {
         $field_factory = $this->getFieldFactory();
