@@ -745,8 +745,10 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event)
     {
-        $frozen_fields_post_actions = $event->getPostActions()->getFrozenFieldsPostActions();
-        if (count($frozen_fields_post_actions) > 0) {
+        $frozen_fields_post_actions    = $event->getPostActions()->getFrozenFieldsPostActions();
+        $hidden_fieldsets_post_actions = $event->getPostActions()->getHiddenFieldsetsPostActions();
+
+        if (count($frozen_fields_post_actions) > 0 || count($hidden_fieldsets_post_actions) > 0) {
             $tracker = $event->getTracker();
             $config  = $this->getConfig();
 
@@ -755,7 +757,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             ) {
                 $message = dgettext(
                     'tuleap-testmanagement',
-                    'The post actions cannot be saved because this tracker is used in TestManagement and frozen fields actions are defined.'
+                    'The post actions cannot be saved because this tracker is used in TestManagement and "frozen fields" or "hidden fieldsets" actions are defined.'
                 );
                 $event->setPostActionsNonEligible();
                 $event->setErrorMessage($message);

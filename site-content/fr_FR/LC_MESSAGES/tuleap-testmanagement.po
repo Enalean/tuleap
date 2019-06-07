@@ -122,10 +122,12 @@ msgstr "Exécution de tests"
 
 msgid ""
 "The post actions cannot be saved because this tracker is used in "
-"TestManagement and frozen fields actions are defined."
+"TestManagement and \"frozen fields\" or \"hidden fieldsets\" actions are "
+"defined."
 msgstr ""
 "Les post actions ne peuvent être enregistrées car ce tracker est utilisé "
-"dans la configuration de TestManagement et des champs figés sont définis."
+"dans la configuration de TestManagement et des \"champs figés\" ou "
+"des \" groupes de champ cachés\" sont définis."
 
 #, php-format
 msgid "The submitted administration configuration is not valid."
@@ -137,11 +139,15 @@ msgstr "L'outil de suivi %1$s ne fait pas parti de ce projet"
 
 #, php-format
 msgid "The tracker id %1$s uses frozen fields workflow post action"
-msgstr "L'outil de suivi %1$s utilise des actions de type champs figés dans son workflow"
+msgstr ""
+"L'outil de suivi %1$s utilise des actions de type champs figés dans son "
+"workflow"
 
 #, php-format
 msgid "The tracker id %1$s uses hidden fieldsets workflow post action"
-msgstr "L'outil de suivi %1$s utilise des actions de type groupe de champs cachés dans son workflow"
+msgstr ""
+"L'outil de suivi %1$s utilise des actions de type groupe de champs cachés "
+"dans son workflow"
 
 msgid ""
 "The tracker is using a field \"Step definition\" that is only available in "
