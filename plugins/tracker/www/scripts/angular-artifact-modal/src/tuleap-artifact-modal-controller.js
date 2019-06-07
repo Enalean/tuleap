@@ -71,23 +71,14 @@ function ArtifactModalController(
             modal_model.title.content !== undefined ? modal_model.title.content : modal_model.title,
         tracker: modal_model.tracker,
         values: modal_model.values,
-        text_formats: [
-            { id: TEXT_FORMAT_TEXT, label: "Text" },
-            { id: TEXT_FORMAT_HTML, label: "HTML" }
-        ],
         followups_comments: {
             content: [],
             loading_comments: true,
             invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc"
         },
-        ckeditor_config: {
-            toolbar: [
-                ["Bold", "Italic", "Underline"],
-                ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
-                ["Link", "Unlink", "Anchor", "Image"],
-                ["Source"]
-            ],
-            height: "100px"
+        new_followup_comment: {
+            body: "",
+            format: modal_model.text_fields_format
         },
         formatColor,
         getDropdownAttribute,
@@ -99,11 +90,7 @@ function ArtifactModalController(
         isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
         submit,
-        toggleFieldset,
-        followup_comment: {
-            body: "",
-            format: modal_model.text_fields_format
-        }
+        toggleFieldset
     });
 
     function init() {
@@ -161,7 +148,7 @@ function ArtifactModalController(
                     promise = editArtifact(
                         modal_model.artifact_id,
                         validated_values,
-                        self.followup_comment
+                        self.new_followup_comment
                     );
                 }
 
