@@ -22,9 +22,11 @@ namespace Tuleap\AgileDashboard\REST;
 
 use Exception;
 
-class MalformedQueryParameterException extends Exception {
+class MalformedQueryStatusParameterException extends Exception
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
     }
 }
