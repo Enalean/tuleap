@@ -19,6 +19,7 @@
 
 import "tlp-mocks";
 import "./field-dependencies-service.spec.js";
+import "./followups/new-followup-component.spec.js";
 import "./model/field-values-service.spec.js";
 import "./model/form-tree-builder.spec.js";
 import "./model/tracker-transformer-service.spec.js";

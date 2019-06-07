@@ -194,20 +194,28 @@ describe("TuleapArtifactModalController", () => {
             expect(mockCallback).toHaveBeenCalled();
         });
 
-        it("and an artifact_id to edit, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be edited, the modal will be closed and the callback will be called", () => {
-            var edit_request = $q.defer();
+        it(`and an artifact_id to edit,
+            when I submit the modal to Tuleap,
+            then the field values will be validated,
+            the artifact will be edited,
+            the modal will be closed
+            and the callback will be called`, () => {
+            const edit_request = $q.defer();
             editArtifact.and.returnValue(edit_request.promise);
             isInCreationMode.and.returnValue(false);
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.tracker_id = 186;
             ArtifactModalController = $controller(BaseModalController, controller_params);
-            var values = [{ field_id: 983, value: 741 }, { field_id: 860, bind_value_ids: [754] }];
-            var followup_comment = {
+            const values = [
+                { field_id: 983, value: 741 },
+                { field_id: 860, bind_value_ids: [754] }
+            ];
+            const followup_comment = {
                 body: "My comment",
                 format: "text"
             };
             ArtifactModalController.values = values;
-            ArtifactModalController.followup_comment = followup_comment;
+            ArtifactModalController.new_followup_comment = followup_comment;
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();

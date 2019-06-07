@@ -16,6 +16,7 @@ import FieldDependenciesService from "./field-dependencies-service.js";
 import ValidateService from "./validate-service.js";
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
+import NewFollowupComponent from "./followups/new-followup-component.js";
 
 angular
     .module("tuleap.artifact-modal", [
@@ -29,6 +30,7 @@ angular
         quota_display,
         tuleap_highlight
     ])
+    .component("tuleapArtifactModalNewFollowup", NewFollowupComponent)
     .controller("TuleapArtifactModalController", ArtifactModalController)
     .value("TuleapArtifactModalLoading", {
         loading: false
