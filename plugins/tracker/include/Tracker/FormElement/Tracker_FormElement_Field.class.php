@@ -1099,12 +1099,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function saveNewChangeset(
         Tracker_Artifact $artifact,
-        $old_changeset,
-        $new_changeset_id,
+        ?Tracker_Artifact_Changeset $old_changeset,
+        int $new_changeset_id,
         $submitted_value,
         PFUser $submitter,
-        $is_submission = false,
-        $bypass_permissions = false
+        bool $is_submission,
+        bool $bypass_permissions
     ) {
         $updated        = false;
         $save_new_value = false;

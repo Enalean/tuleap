@@ -485,13 +485,13 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         );
         $this->field->shouldReceive('saveValue')->with($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null)->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter, false, false);
     }
 
     public function itDoesntFailIfSubmittedValueIsNull() {
         $this->field->shouldReceive('saveValue')->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, null, $this->submitter);
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, null, $this->submitter, false, false);
     }
 
     public function itSavesChangesetInSourceArtifact() {
@@ -500,7 +500,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
 
         $this->field->shouldReceive('saveValue')->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter, false, false);
         $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, \Mockery::spy(\Tracker_Artifact_Changeset::class));
     }
 }
