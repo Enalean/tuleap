@@ -186,6 +186,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
+        $other_file_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_3_id,
+            'other file',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
         $this->addApprovalTable("file_ATC", (int)$file_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATR", (int)$file_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATE", (int)$file_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
@@ -198,6 +205,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->appendCustomMetadataValueToItem($file_ATC_id, "custom value for file A");
         $this->appendCustomMetadataValueToItem($file_ATR_id, "custom value for file B");
         $this->appendCustomMetadataValueToItem($file_ATE_id, "custom value for file C");
+        $this->appendCustomMetadataValueToItem($other_file_id, "custom value for file C");
     }
 
     /**
