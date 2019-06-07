@@ -171,10 +171,10 @@ msgstr "La date d'obsolescence est antérieur à la date actuelle"
 
 msgid ""
 "The project does not support obsolescence date, you should not provide it to "
-"create a new document."
+"create or update a new document."
 msgstr ""
 "Le project ne supporte l'obsolescence date, vous ne devriez pas le "
-"renseigner à la création d'un document."
+"renseigner à la création ou à la mise à jour d'un document."
 
 msgid "The requested version of this file cannot be found."
 msgstr "La version demandée de ce fichier ne peut être trouvé."
