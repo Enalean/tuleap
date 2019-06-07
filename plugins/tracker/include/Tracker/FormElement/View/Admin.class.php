@@ -16,7 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByFieldController;
+use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
 
 /**
@@ -327,7 +327,7 @@ class Tracker_FormElement_View_Admin {
         }
         $html = '';
         $html .= '<p>';
-        $html .= '<a href="'. PermissionsOnFieldsDisplayByFieldController::getUrl($tracker).'?selected_id='.$this->formElement->id.'">';
+        $html .= '<a href="'. ByFieldController::getUrl($tracker).'?selected_id='.$this->formElement->id.'">';
         $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
             'style' => 'vertical-align:middle;',
         ));

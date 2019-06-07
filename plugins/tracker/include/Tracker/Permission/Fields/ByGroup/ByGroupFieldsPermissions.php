@@ -21,11 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-class FieldsPermissionForGroup
+class ByGroupFieldsPermissions
 {
-
     /**
      * @var int
      */
@@ -39,7 +38,7 @@ class FieldsPermissionForGroup
 
     private $fields_permissions = [];
     /**
-     * @var PermissionsUGroupListPresenter[]
+     * @var ByGroupUGroupListPresenter[]
      */
     private $ugroup_list;
     /**
@@ -69,7 +68,7 @@ class FieldsPermissionForGroup
     }
 
     /**
-     * @return PermissionsUGroupListPresenter[]
+     * @return ByGroupUGroupListPresenter[]
      */
     public function getUgroupList(): array
     {
@@ -141,12 +140,12 @@ class FieldsPermissionForGroup
     public function addPermissionsForOtherGroups(\Tracker_FormElement_Field $field, int $id, string $name, array $permissions) : void
     {
         if (count($permissions) > 0) {
-            $this->permissions_for_other_groups[$field->getId()][] = new FieldsPermissionsForOtherGroups($id, $name, $permissions);
+            $this->permissions_for_other_groups[$field->getId()][] = new ByGroupFieldsPermissionsForOtherGroups($id, $name, $permissions);
         }
     }
 
     /**
-     * @return FieldsPermissionsForOtherGroups[]
+     * @return ByGroupFieldsPermissionsForOtherGroups[]
      */
     public function getPermissionsForOtherGroups(\Tracker_FormElement_Field $field)
     {

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
 use Codendi_HTMLPurifier;
 use HTTPRequest;
@@ -31,7 +31,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithRequest
+class ByGroupController implements DispatchableWithRequest
 {
     public const URL = '/permissions/fields-by-group';
 
@@ -82,9 +82,9 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
         $field_list = [];
         foreach ($fields_for_selected_group->getFields() as $field) {
             if ($this->isFirstRow($field_list)) {
-                $field_list[] = new PermissionsFieldWithUGroupListPresenter($field, $fields_for_selected_group);
+                $field_list[] = new ByGroupOneFieldWithUGroupListPresenter($field, $fields_for_selected_group);
             } else {
-                $field_list[] = new PermissionsFieldPresenter($field, $fields_for_selected_group);
+                $field_list[] = new ByGroupOneFieldPresenter($field, $fields_for_selected_group);
             }
         }
 
@@ -99,7 +99,7 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
 
         $this->renderer->renderToPage(
             'fields-by-group',
-            new PermissionsOnFieldsDisplayByGroupPresenter(
+            new ByGroupPresenter(
                 $tracker,
                 $fields_for_selected_group->getUgroupId(),
                 $field_list,
@@ -115,7 +115,7 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
         return TRACKER_BASE_URL.self::URL.'/'.$tracker->getId();
     }
 
-    private function getFieldsPermissionsPerGroup(\Tracker $tracker, int $selected_id) : FieldsPermissionForGroup
+    private function getFieldsPermissionsPerGroup(\Tracker $tracker, int $selected_id) : ByGroupFieldsPermissions
     {
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
             $tracker->getGroupId(),
@@ -141,7 +141,7 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
                         $a_star_is_displayed   = true;
                         $might_not_have_access = true;
                     }
-                    $ugroup_list[$ugroup_id] = new PermissionsUGroupListPresenter(
+                    $ugroup_list[$ugroup_id] = new ByGroupUGroupListPresenter(
                         $ugroup_id,
                         $value_ugroup['ugroup']['name'],
                         $might_not_have_access,
@@ -156,13 +156,13 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
         return $fields_for_selected_group;
     }
 
-    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id) : FieldsPermissionForGroup
+    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id) : ByGroupFieldsPermissions
     {
         foreach ($ugroups_permissions as $field_id => $value_field) {
             foreach ($value_field['ugroups'] as $ugroup_id => $value_ugroup) {
                 $ugroup_id = (int) $ugroup_id;
                 if ($selected_id === 0 || $ugroup_id === $selected_id) {
-                    return new FieldsPermissionForGroup($ugroup_id, $value_ugroup['ugroup']['name']);
+                    return new ByGroupFieldsPermissions($ugroup_id, $value_ugroup['ugroup']['name']);
                 }
             }
         }

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByField;
 
 use Codendi_HTMLPurifier;
 use HTTPRequest;
@@ -30,8 +30,10 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 
-class PermissionsOnFieldsDisplayByFieldController implements DispatchableWithRequest
+class ByFieldController implements DispatchableWithRequest
 {
     public const URL = '/permissions/fields-by-field';
 
@@ -143,7 +145,7 @@ EOS;
 
             //We display 'group_first' or 'field_first'
 
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_toggle_group', PermissionsOnFieldsDisplayByGroupController::getUrl($tracker));
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_toggle_group', ByGroupController::getUrl($tracker));
 
             $html .= html_build_list_table_top($header);
 
@@ -187,7 +189,7 @@ EOS;
                 }
                 $html .= '<td>';
 
-                $name = '<a href="'. PermissionsOnFieldsDisplayByGroupController::getUrl($tracker).'?selected_id='. (int)$second_part['id'] .'">';
+                $name = '<a href="'. ByGroupController::getUrl($tracker).'?selected_id='. (int)$second_part['id'] .'">';
                 $name .=  $hp->purify($second_part['name']) ;
                 $name .= '</a>';
                 if (isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {

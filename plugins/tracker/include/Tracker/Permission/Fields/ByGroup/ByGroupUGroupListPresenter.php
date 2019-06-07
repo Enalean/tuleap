@@ -21,24 +21,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-class PermissionsFieldWithUGroupListPresenter extends PermissionsFieldPresenter
+class ByGroupUGroupListPresenter
 {
-    public $is_first = true;
-    /**
-     * @var PermissionsUGroupListPresenter[]
-     */
-    public $ugroup_list;
     /**
      * @var int
      */
-    public $nb_permissions;
+    public $id;
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var bool
+     */
+    public $might_not_have_access;
+    /**
+     * @var bool
+     */
+    public $is_selected;
 
-    public function __construct(\Tracker_FormElement_Field $field, FieldsPermissionForGroup $fields_permission_for_group)
+    public function __construct(int $id, string $name, bool $might_not_have_access, bool $is_selected)
     {
-        parent::__construct($field, $fields_permission_for_group);
-        $this->nb_permissions = $fields_permission_for_group->getFieldCount() + 1;
-        $this->ugroup_list = $fields_permission_for_group->getUgroupList();
+        $this->id = $id;
+        $this->name = $name;
+        $this->might_not_have_access = $might_not_have_access;
+        $this->is_selected = $is_selected;
     }
 }
