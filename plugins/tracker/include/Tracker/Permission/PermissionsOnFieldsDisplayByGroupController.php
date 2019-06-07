@@ -75,117 +75,16 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
 
     protected function display(\Tracker $tracker, HTTPRequest $request)
     {
-        $selected_id = $request->getValidated('selected_id', 'uint', false);
-        $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
-            $tracker->getGroupId(),
-            $tracker->getId(),
-            Tracker_FormElementFactory::instance()->getUsedFields($tracker)
-        );
+        $selected_id = (int) $request->getValidated('selected_id', 'uint', 1);
 
-        $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
-        $read_permission   = 'PLUGIN_TRACKER_FIELD_READ';
-        $update_permission = 'PLUGIN_TRACKER_FIELD_UPDATE';
-
-        //We reorganize the associative array
-        $tablo = $ugroups_permissions;
-        $ugroups_permissions = array();
-        foreach ($tablo as $key_field => $value_field) {
-            foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
-                if (!isset($ugroups_permissions[$key_ugroup])) {
-                    $ugroups_permissions[$key_ugroup] = array(
-                        'values'              => $value_ugroup['ugroup'],
-                        'related_parts'       => array(),
-                        'tracker_permissions' => $value_ugroup['tracker_permissions']
-                    );
-                }
-                $ugroups_permissions[$key_ugroup]['related_parts'][$key_field] = array(
-                    'values'       => $value_field['field'],
-                    'permissions' => $value_ugroup['permissions']
-                );
-            }
-        }
-        ksort($ugroups_permissions);
-
-        reset($ugroups_permissions);
-        $key = key($ugroups_permissions);
+        $fields_for_selected_group = $this->getFieldsPermissionsPerGroup($tracker, $selected_id);
 
         $field_list = [];
-        $a_star_is_displayed = false;
-        if (count($ugroups_permissions) >= 1) {
-            $related_parts = array();
-            //The select box for the ugroups or fields (depending $group_first)
-
-            $ugroup_list = [];
-            $first_part = [];
-            foreach ($ugroups_permissions as $part_permissions) {
-                if ($selected_id === false) {
-                    $selected_id = $part_permissions['values']['id'];
-                }
-                $is_selected = false;
-                $might_not_have_access = false;
-                if ($part_permissions['values']['id'] === $selected_id) {
-                    $first_part    = $part_permissions['values'];
-                    $related_parts = $part_permissions['related_parts'];
-                    $is_selected = true;
-                }
-                if (isset($part_permissions['tracker_permissions'])
-                    && count($part_permissions['tracker_permissions']) === 0) {
-                    $might_not_have_access = true;
-                    $a_star_is_displayed = true;
-                }
-                $ugroup_list[] = new PermissionsUGroupListPresenter(
-                    (int)$part_permissions['values']['id'],
-                    $part_permissions['values']['name'],
-                    $might_not_have_access,
-                    $is_selected
-                );
-            }
-
-            $nb_permissions = count($ugroups_permissions[$key]['related_parts']) + 1;
-
-            $is_first = true;
-
-            //The permissions for the current item (field or ugroup, depending $group_id)
-            foreach ($related_parts as $ugroup_permissions) {
-                $second_part = $ugroup_permissions['values'];
-                $permissions = $ugroup_permissions['permissions'];
-
-                //The permissions
-                $can_submit = false;
-                $can_update = false;
-                if (isset($first_part['id'])) {
-                    $can_submit = $second_part['field']->isSubmitable();
-                    $can_update = $second_part['field']->isUpdateable();
-                }
-
-                if ($is_first) {
-                    $field_list[] = new PermissionsFieldWithUGroupListPresenter(
-                        (int) $second_part['id'],
-                        $second_part['name'],
-                        isset($first_part['id']) ? (int) $first_part['id'] : 0,
-                        isset($permissions[$submit_permission]),
-                        $can_submit,
-                        $can_update,
-                        !isset($permissions[$read_permission]) && !isset($permissions[$update_permission]),
-                        isset($permissions[$read_permission]) && !isset($permissions[$update_permission]),
-                        isset($permissions[$update_permission]),
-                        $nb_permissions,
-                        $ugroup_list
-                    );
-                    $is_first = false;
-                } else {
-                    $field_list[] = new PermissionsFieldPresenter(
-                        (int)$second_part['id'],
-                        $second_part['name'],
-                        isset($first_part['id']) ? (int) $first_part['id'] : 0,
-                        isset($permissions[$submit_permission]),
-                        $can_submit,
-                        $can_update,
-                        !isset($permissions[$read_permission]) && !isset($permissions[$update_permission]),
-                        isset($permissions[$read_permission]) && !isset($permissions[$update_permission]),
-                        isset($permissions[$update_permission])
-                    );
-                }
+        foreach ($fields_for_selected_group->getFields() as $field) {
+            if ($this->isFirstRow($field_list)) {
+                $field_list[] = new PermissionsFieldWithUGroupListPresenter($field, $fields_for_selected_group);
+            } else {
+                $field_list[] = new PermissionsFieldPresenter($field, $fields_for_selected_group);
             }
         }
 
@@ -202,9 +101,9 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
             'fields-by-group',
             new PermissionsOnFieldsDisplayByGroupPresenter(
                 $tracker,
-                (int) $selected_id,
+                $selected_id,
                 $field_list,
-                $a_star_is_displayed
+                $fields_for_selected_group->getMightNotHaveAccess()
             )
         );
 
@@ -214,5 +113,53 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
     public static function getUrl(\Tracker $tracker): string
     {
         return TRACKER_BASE_URL.self::URL.'/'.$tracker->getId();
+    }
+
+    private function getFieldsPermissionsPerGroup(\Tracker $tracker, int $selected_id) : FieldsPermissionForGroup
+    {
+        $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
+            $tracker->getGroupId(),
+            $tracker->getId(),
+            Tracker_FormElementFactory::instance()->getUsedFields($tracker)
+        );
+
+        $a_star_is_displayed       = false;
+        $fields_for_selected_group = null;
+        $ugroup_list               = [];
+        foreach ($ugroups_permissions as $field_id => $value_field) {
+            foreach ($value_field['ugroups'] as $ugroup_id => $value_ugroup) {
+                $ugroup_id = (int) $ugroup_id;
+                if ($ugroup_id === $selected_id) {
+                    if ($fields_for_selected_group === null) {
+                        $fields_for_selected_group = new FieldsPermissionForGroup($ugroup_id, $value_ugroup['ugroup']['name']);
+                    }
+                    $fields_for_selected_group->addField($value_field['field']['field'], $value_ugroup['permissions']);
+                }
+
+                if (! isset($ugroup_list[$ugroup_id])) {
+                    $might_not_have_access = false;
+                    if (! isset($value_ugroup['tracker_permissions']) || count($value_ugroup['tracker_permissions']) === 0) {
+                        $a_star_is_displayed   = true;
+                        $might_not_have_access = true;
+                    }
+                    $ugroup_list[$ugroup_id] = new PermissionsUGroupListPresenter(
+                        $ugroup_id,
+                        $value_ugroup['ugroup']['name'],
+                        $might_not_have_access,
+                        $ugroup_id === $selected_id
+                    );
+                }
+            }
+        }
+
+        assert($fields_for_selected_group instanceof FieldsPermissionForGroup);
+        $fields_for_selected_group->setUgroupList($ugroup_list);
+        $fields_for_selected_group->setGroupsMightNotHaveAccess($a_star_is_displayed);
+        return $fields_for_selected_group;
+    }
+
+    private function isFirstRow(array $field_list): bool
+    {
+        return count($field_list) === 0;
     }
 }

@@ -35,21 +35,10 @@ class PermissionsFieldWithUGroupListPresenter extends PermissionsFieldPresenter
      */
     public $nb_permissions;
 
-    public function __construct(
-        int $field_id,
-        string $field_name,
-        int $ugroup_id,
-        bool $is_checked,
-        bool $can_submit,
-        bool $can_update,
-        bool $has_no_access,
-        bool $has_read_access,
-        bool $has_update_access,
-        int $nb_permissions,
-        array $ugroup_list
-    ) {
-        parent::__construct($field_id, $field_name, $ugroup_id, $is_checked, $can_submit, $can_update, $has_no_access, $has_read_access, $has_update_access);
-        $this->nb_permissions = $nb_permissions;
-        $this->ugroup_list = $ugroup_list;
+    public function __construct(\Tracker_FormElement_Field $field, FieldsPermissionForGroup $fields_permission_for_group)
+    {
+        parent::__construct($field, $fields_permission_for_group);
+        $this->nb_permissions = $fields_permission_for_group->getFieldCount() + 1;
+        $this->ugroup_list = $fields_permission_for_group->getUgroupList();
     }
 }
