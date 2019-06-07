@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,10 +37,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToEmptyStringException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringException;
 
-class ComparisonChecker implements ValueWrapperVisitor
+abstract class ComparisonChecker implements ValueWrapperVisitor
 {
-    public const OPERATOR = '';
-
     /**
      * @var DateFormatValidator
      */
@@ -58,6 +56,8 @@ class ComparisonChecker implements ValueWrapperVisitor
         $this->list_value_validator = $list_value_validator;
     }
 
+    abstract public function getOperator() : string;
+
     /**
      * @param Metadata $metadata
      * @param Comparison $comparison
@@ -70,11 +70,11 @@ class ComparisonChecker implements ValueWrapperVisitor
         } catch (DateToStringException $exception) {
             throw new ToStringComparisonException($metadata, $exception->getSubmittedValue());
         } catch (DateToEmptyStringException $exception) {
-            throw new EmptyStringComparisonException($metadata, static::OPERATOR);
+            throw new EmptyStringComparisonException($metadata, $this->getOperator());
         } catch (NonExistentListValueException $exception) {
             throw new ToStringComparisonException($metadata, $exception->getSubmittedValue());
         } catch (ListToEmptyStringException $exception) {
-            throw new EmptyStringComparisonException($metadata, static::OPERATOR);
+            throw new EmptyStringComparisonException($metadata, $this->getOperator());
         }
     }
 

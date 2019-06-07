@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class BetweenComparisonChecker extends ComparisonChecker
 {
-    public const OPERATOR = 'BETWEEN()';
+    private const OPERATOR = 'BETWEEN()';
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {
@@ -41,7 +41,7 @@ class BetweenComparisonChecker extends ComparisonChecker
     {
         $metadata = $parameters->getMetadata();
         if (! in_array($metadata->getName(), AllowedMetadata::DATES)) {
-            throw new OperatorNotAllowedForMetadataException($metadata, static::OPERATOR);
+            throw new OperatorNotAllowedForMetadataException($metadata, $this->getOperator());
         }
 
         $value_wrapper->getMinValue()->accept($this, $parameters);
@@ -52,6 +52,11 @@ class BetweenComparisonChecker extends ComparisonChecker
         CurrentDateTimeValueWrapper $value_wrapper,
         ValueWrapperParameters $parameters
     ) {
-        // AllowedMetadata::SUBMITTED_ON can be used with BETWWEN operator
+        // AllowedMetadata::SUBMITTED_ON can be used with BETWEEN operator
+    }
+
+    public function getOperator() : string
+    {
+        return self::OPERATOR;
     }
 }
