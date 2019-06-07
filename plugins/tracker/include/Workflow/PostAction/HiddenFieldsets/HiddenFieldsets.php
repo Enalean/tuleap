@@ -31,7 +31,8 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class HiddenFieldsets extends Transition_PostAction
 {
-    public const SHORT_NAME = 'hidden_fieldsets';
+    public const SHORT_NAME   = 'hidden_fieldsets';
+    public const XML_TAG_NAME = 'postaction_hidden_fieldsets';
 
     /**
      * @var Tracker_FormElement_Container_Fieldset[]

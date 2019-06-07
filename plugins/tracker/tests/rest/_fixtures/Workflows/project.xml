@@ -1175,6 +1175,16 @@
                     <label><![CDATA[Points]]></label>
                     <properties size="5"/>
                 </formElement>
+                <formElement type="fieldset" ID="F10003" rank="4">
+                    <name>fieldset1</name>
+                    <label><![CDATA[Fieldset]]></label>
+                    <formElements>
+                        <formElement type="file" ID="F10004" rank="5">
+                            <name>attachment</name>
+                            <label><![CDATA[Attachments]]></label>
+                        </formElement>
+                    </formElements>
+                </formElement>
             </formElements>
             <semantics>
                 <semantic type="tooltip"/>
@@ -1214,6 +1224,9 @@
                             <postaction_frozen_fields>
                                 <field_id REF="F10002"/>
                             </postaction_frozen_fields>
+                            <postaction_hidden_fieldsets>
+                                <fieldset_id REF="F10003"/>
+                            </postaction_hidden_fieldsets>
                         </postactions>
                         <conditions>
                             <condition type="perms">
@@ -1247,6 +1260,9 @@
                 <permission scope="field" REF="F10002" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F10002" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F10002" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F10004" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F10004" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F10004" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
     </trackers>

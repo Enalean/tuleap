@@ -91,6 +91,7 @@
       <element name="postactions">
         <ref name="advancedActions"/>
         <ref name="frozenFieldsActionContent"/>
+        <ref name="hiddenFieldsetsActionContent"/>
       </element>
     </optional>
   </define>
@@ -196,6 +197,19 @@
       <element name="postaction_frozen_fields">
         <oneOrMore>
           <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
+  </define>
+  <define name="hiddenFieldsetsActionContent">
+    <optional>
+      <element name="postaction_hidden_fieldsets">
+        <oneOrMore>
+          <element name="fieldset_id">
             <attribute name="REF">
               <data type="IDREF"/>
             </attribute>
