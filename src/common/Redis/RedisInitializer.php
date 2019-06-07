@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Redis;
 
 use Tuleap\Cryptography\ConcealedString;
@@ -27,11 +29,11 @@ class RedisInitializer
     public const CONNECT_TIMEOUT = 0.1;
 
     /**
-     * @var string|false
+     * @var string
      */
     private $host;
     /**
-     * @var string|false
+     * @var int
      */
     private $port;
     /**
@@ -39,7 +41,7 @@ class RedisInitializer
      */
     private $password;
 
-    public function __construct($host, $port, ConcealedString $password)
+    public function __construct(string $host, int $port, ConcealedString $password)
     {
         $this->host     = $host;
         $this->port     = $port;
@@ -49,11 +51,10 @@ class RedisInitializer
     /**
      * @throws RedisConnectionException
      * @throws \RedisException
-     * @return void
      */
-    public function init(\Redis $client)
+    public function init(\Redis $client) : void
     {
-        if ($this->host === false) {
+        if ($this->host === '') {
             throw new RedisConnectionException('No Redis server has been setup');
         }
 
@@ -69,9 +70,9 @@ class RedisInitializer
             throw new RedisConnectionException("Redis connection failed ($error_message)");
         }
 
-        $trimmed_password = trim($this->password);
+        $trimmed_password = trim($this->password->getString());
         if ($trimmed_password !== '' && ! $client->auth($trimmed_password)) {
-            $error_message = trim(preg_replace('/^ERR/', '', $client->getLastError()));
+            $error_message = trim(preg_replace('/^ERR/', '', $client->getLastError() ?? ''));
             $error_message = str_replace($trimmed_password, '*********pwd*********', $error_message);
             throw new RedisConnectionException("Redis authentication failed ($error_message)");
         }

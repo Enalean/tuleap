@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Redis;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -31,7 +33,7 @@ class RedisInitializerTest extends TestCase
     public function testRedisConnectionInitialization()
     {
         $password    = '              pwd  ';
-        $initializer = new RedisInitializer('redis', '6379', new ConcealedString($password));
+        $initializer = new RedisInitializer('redis', 6379, new ConcealedString($password));
 
         $redis = \Mockery::mock(\Redis::class);
         $redis->shouldReceive('connect')->once()->andReturns(true);
@@ -40,9 +42,9 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testInitializationFailsIfNoHostHaveBeenProvided()
+    public function testInitializationFailsIfNoHostHaveBeenProvided() : void
     {
-        $initializer = new RedisInitializer(false, false, new ConcealedString(''));
+        $initializer = new RedisInitializer('', 6379, new ConcealedString(''));
 
         $redis = \Mockery::mock(\Redis::class);
 
@@ -51,9 +53,9 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testInitializationFailsIfConnectDoesNotSucceed()
+    public function testInitializationFailsIfConnectDoesNotSucceed() : void
     {
-        $initializer = new RedisInitializer('redis', '6379', new ConcealedString(''));
+        $initializer = new RedisInitializer('redis', 6379, new ConcealedString(''));
 
         $redis = \Mockery::mock(\Redis::class);
         $redis->shouldReceive('connect')->andReturns(false);
@@ -63,10 +65,10 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testNoPasswordLeaksInExceptionMessage()
+    public function testNoPasswordLeaksInExceptionMessage() : void
     {
         $password    = 'my_password';
-        $initializer = new RedisInitializer('redis', '6379', new ConcealedString($password));
+        $initializer = new RedisInitializer('redis', 6379, new ConcealedString($password));
 
         $redis = \Mockery::mock(\Redis::class);
         $redis->shouldReceive('connect')->andReturns(true);
