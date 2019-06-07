@@ -122,9 +122,10 @@ const rule_angular_gettext_loader = {
     test: /\.po$/,
     exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
+        { loader: "json-loader" },
         {
             loader: "angular-gettext-loader",
-            query: "browserify=true"
+            query: "browserify=true&format=json"
         }
     ]
 };

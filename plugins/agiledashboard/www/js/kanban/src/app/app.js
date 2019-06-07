@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
@@ -10,7 +29,7 @@ import "angular-locker";
 import "angular-gettext";
 import "ng-scrollbar";
 import "restangular";
-import "../../po/fr.po";
+import translations from "../../po/fr.po";
 
 import jwt from "./jwt/jwt.js";
 import kanban_item from "./kanban-item/kanban-item.js";
@@ -67,6 +86,14 @@ export default angular
         uuid_generator
     ])
     .config(KanbanConfig)
+    .run([
+        "gettextCatalog",
+        function(gettextCatalog) {
+            for (const [language, strings] of Object.entries(translations)) {
+                gettextCatalog.setStrings(language, strings);
+            }
+        }
+    ])
     .controller("MainCtrl", MainCtrl)
     .controller("FilterTrackerReportController", FilterTrackerReportController)
     .controller("KanbanColumnController", KanbanColumnController)
