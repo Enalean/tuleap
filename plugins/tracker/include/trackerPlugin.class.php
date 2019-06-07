@@ -41,6 +41,7 @@ use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
@@ -1125,10 +1126,7 @@ class trackerPlugin extends Plugin {
     }
 
     private function checkProjectRESTAccess(Project $project, PFUser $user) {
-        $project_authorization_class = '\\Tuleap\\REST\\ProjectAuthorization';
-        $project_authorization       = new $project_authorization_class();
-
-        $project_authorization->userCanAccessProject($user, $project, new Tracker_URLVerification());
+        ProjectAuthorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
     }
 
     private function buildRightVersionOfProjectTrackersResource($version) {
@@ -1541,7 +1539,7 @@ class trackerPlugin extends Plugin {
     {
         AsynchronousActionsRunner::addListener($event);
 
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
+        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
             new PendingArtifactRemovalDao(),

@@ -107,7 +107,7 @@ class TreeNode /*implements Visitable*/ {
             $this->parentNode =& $node;
         }
         else {
-            trigger_error(get_class($this).'::setParentNode => require: TreeNode given: "'.  get_class($node).'"', E_USER_ERROR);
+            trigger_error(static::class.'::setParentNode => require: TreeNode given: "'.  get_class($node).'"', E_USER_ERROR);
         }
     }
 
@@ -136,7 +136,7 @@ class TreeNode /*implements Visitable*/ {
             $this->children[] = $c;
         }
         else {
-            trigger_error(get_class($this).'::addChild => require: TreeNode given: "'.get_class($c).'"', E_USER_ERROR);
+            trigger_error(static::class.'::addChild => require: TreeNode given: "'.get_class($c).'"', E_USER_ERROR);
         }
     }
 
@@ -167,7 +167,7 @@ class TreeNode /*implements Visitable*/ {
             $this->children = array_values($this->children);
         }
         else {
-            trigger_error(get_class($this).'::removeChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
+            trigger_error(static::class.'::removeChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
         }
     }
 
@@ -183,7 +183,7 @@ class TreeNode /*implements Visitable*/ {
             return $this->children[$key];
         }
         else {
-            trigger_error(get_class($this).'::getChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
+            trigger_error(static::class.'::getChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
         }
     }      
 
@@ -211,7 +211,7 @@ class TreeNode /*implements Visitable*/ {
             }
         }
         else {
-            trigger_error(get_class($this).'::setChildren => require: "array" given: "'.gettype($children).'"', E_USER_ERROR);
+            trigger_error(static::class.'::setChildren => require: "array" given: "'.gettype($children).'"', E_USER_ERROR);
         }
     }
 

@@ -65,7 +65,7 @@ class ServiceManager {
      */
     public static function instance() {
         if (!isset(self::$instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$instance = new $c(new ServiceDao(), ProjectManager::instance());
         }
         return self::$instance;

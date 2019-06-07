@@ -639,7 +639,7 @@ extends WikiDB_backend
         if ($orderby) $orderby = ' ORDER BY ' . $orderby;
         //else " ORDER BY rank($field, to_tsquery('$searchon')) DESC";
 
-        $searchclass = get_class($this)."_search";
+        $searchclass = static::class."_search";
         // no need to define it everywhere and then fallback. memory!
         if (!class_exists($searchclass))
             $searchclass = "WikiDB_backend_PearDB_search";
@@ -1072,7 +1072,7 @@ extends WikiDB_backend
     }
 
     function _pear_error_message($error) {
-        $class = get_class($this);
+        $class = static::class;
         $message = "$class: fatal database error\n"
              . "\t" . $error->getMessage() . "\n"
              . "\t(" . $error->getDebugInfo() . ")\n";

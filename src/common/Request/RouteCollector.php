@@ -321,7 +321,7 @@ class RouteCollector
 
     public function collect(FastRoute\RouteCollector $r)
     {
-        $r->get('/', [__CLASS__, 'getSlash']);
+        $r->get('/', [self::class, 'getSlash']);
 
         $r->get('/contact.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/contact.php'));
         $r->addRoute(['GET', 'POST'], '/goto[.php]', $this->getLegacyControllerHandler(__DIR__.'/../../core/goto.php'));
@@ -332,61 +332,61 @@ class RouteCollector
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/toggler.php'));
 
         $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
-            $r->get('/categories', [__CLASS__, 'getProjectAdminIndexCategories']);
-            $r->post('/categories', [__CLASS__, 'getProjectAdminUpdateCategories']);
+            $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
+            $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
         });
 
-        $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [__CLASS__, 'getOrPostProjectHome']);
+        $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
 
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
-            $r->get('/password_policy/', [__CLASS__, 'getAdminPasswordPolicy']);
-            $r->post('/password_policy/', [__CLASS__, 'postAdminPasswordPolicy']);
+            $r->get('/password_policy/', [self::class, 'getAdminPasswordPolicy']);
+            $r->post('/password_policy/', [self::class, 'postAdminPasswordPolicy']);
 
-            $r->get('/project-creation/moderation', [__CLASS__, 'getProjectCreationModeration']);
-            $r->post('/project-creation/moderation', [__CLASS__, 'postProjectCreationModeration']);
+            $r->get('/project-creation/moderation', [self::class, 'getProjectCreationModeration']);
+            $r->post('/project-creation/moderation', [self::class, 'postProjectCreationModeration']);
 
-            $r->get('/project-creation/templates', [__CLASS__, 'getProjectCreationTemplates']);
+            $r->get('/project-creation/templates', [self::class, 'getProjectCreationTemplates']);
 
-            $r->get('/project-creation/webhooks', [__CLASS__, 'getProjectCreationWebhooks']);
-            $r->post('/project-creation/webhooks', [__CLASS__, 'postProjectCreationWebhooks']);
+            $r->get('/project-creation/webhooks', [self::class, 'getProjectCreationWebhooks']);
+            $r->post('/project-creation/webhooks', [self::class, 'postProjectCreationWebhooks']);
 
-            $r->get('/project-creation/fields', [__CLASS__, 'getProjectCreationFields']);
-            $r->post('/project-creation/fields', [__CLASS__, 'postProjectCreationFields']);
+            $r->get('/project-creation/fields', [self::class, 'getProjectCreationFields']);
+            $r->post('/project-creation/fields', [self::class, 'postProjectCreationFields']);
 
-            $r->get('/project-creation/categories', [__CLASS__, 'getProjectCreationCategories']);
-            $r->post('/project-creation/categories', [__CLASS__, 'postProjectCreationCategories']);
+            $r->get('/project-creation/categories', [self::class, 'getProjectCreationCategories']);
+            $r->post('/project-creation/categories', [self::class, 'postProjectCreationCategories']);
 
-            $r->get('/project-creation/visibility', [__CLASS__, 'getProjectCreationVisibility']);
-            $r->post('/project-creation/visibility', [__CLASS__, 'postProjectCreationVisibility']);
+            $r->get('/project-creation/visibility', [self::class, 'getProjectCreationVisibility']);
+            $r->post('/project-creation/visibility', [self::class, 'postProjectCreationVisibility']);
         });
 
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
-            $r->post('/access_key/create', [__CLASS__, 'postAccountAccessKeyCreate']);
-            $r->post('/access_key/revoke', [__CLASS__, 'postAccountAccessKeyRevoke']);
-            $r->post('/avatar', [__CLASS__, 'postAccountAvatar']);
-            $r->post('/logout', [__CLASS__, 'postLogoutAccount']);
-            $r->post('/disable_legacy_browser_warning', [__CLASS__, 'postDisableLegacyBrowsersWarningMessage']);
+            $r->post('/access_key/create', [self::class, 'postAccountAccessKeyCreate']);
+            $r->post('/access_key/revoke', [self::class, 'postAccountAccessKeyRevoke']);
+            $r->post('/avatar', [self::class, 'postAccountAvatar']);
+            $r->post('/logout', [self::class, 'postLogoutAccount']);
+            $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);
         });
 
 
         $r->addGroup('/users', function (FastRoute\RouteCollector $r) {
-            $r->get('/{name}[/]', [__CLASS__, 'getUsersName']);
-            $r->get('/{name}/avatar.png', [__CLASS__, 'getUsersNameAvatar']);
-            $r->get('/{name}/avatar-{hash}.png', [__CLASS__, 'getUsersNameAvatarHash']);
+            $r->get('/{name}[/]', [self::class, 'getUsersName']);
+            $r->get('/{name}/avatar.png', [self::class, 'getUsersNameAvatar']);
+            $r->get('/{name}/avatar-{hash}.png', [self::class, 'getUsersNameAvatarHash']);
         });
 
-        $r->post('/join-private-project-mail/', [__CLASS__, 'postJoinPrivateProjectMail']);
-        $r->post('/join-project-restricted-user-mail/', [__CLASS__, 'postJoinRestrictedUserMail']);
+        $r->post('/join-private-project-mail/', [self::class, 'postJoinPrivateProjectMail']);
+        $r->post('/join-project-restricted-user-mail/', [self::class, 'postJoinRestrictedUserMail']);
 
-        $r->get('/svn/viewvc.php[/{path:.*}]', [__CLASS__, 'getSvnViewVC']);
-        $r->get('/cvs/viewvc.php[/{path:.*}]', [__CLASS__, 'getCVSViewVC']);
+        $r->get('/svn/viewvc.php[/{path:.*}]', [self::class, 'getSvnViewVC']);
+        $r->get('/cvs/viewvc.php[/{path:.*}]', [self::class, 'getCVSViewVC']);
         $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);
         $r->get('/file/download/{file_id:\d+}', [self::class, 'getFileDownload']);
 
-        $r->get('/export/rss_sfprojects.php', [__CLASS__, 'getRssLatestProjects']);
-        $r->get('/export/rss_sfnews.php', [__CLASS__, 'getRssLatestNews']);
+        $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);
+        $r->get('/export/rss_sfnews.php', [self::class, 'getRssLatestNews']);
 
-        $r->get('/news/permissions-per-group', [__CLASS__, 'getNewsPermissionsPerGroup']);
+        $r->get('/news/permissions-per-group', [self::class, 'getNewsPermissionsPerGroup']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

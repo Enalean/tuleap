@@ -123,7 +123,7 @@ class DB_common extends PEAR
      */
     function toString()
     {
-        $info = strtolower(get_class($this));
+        $info = strtolower(static::class);
         $info .=  ': (phptype=' . $this->phptype .
                   ', dbsyntax=' . $this->dbsyntax .
                   ')';

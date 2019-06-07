@@ -271,7 +271,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     {
         $tracker = $this->getTracker();
         if (! $tracker) {
-            throw new LogicException(__CLASS__.' # '.$this->getId().' must have a valid tracker');
+            throw new LogicException(self::class.' # '.$this->getId().' must have a valid tracker');
         }
 
         $hp = Codendi_HTMLPurifier::instance();
@@ -478,12 +478,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public function testImport() {
         if(parent::testImport()){
-            if (get_class($this) == 'Tracker_FormElement_Field_Text') {
+            if (static::class == 'Tracker_FormElement_Field_Text') {
 	            if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
 	                var_dump($this, 'Properties must be "rows" and "cols"');
 	                return false;
 	            }
-            } elseif (get_class($this) == 'Tracker_FormElement_Field_String') {
+            } elseif (static::class == 'Tracker_FormElement_Field_String') {
 	            if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
 	                var_dump($this, 'Properties must be "maxchars" and "size"');
 	                return false;

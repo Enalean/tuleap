@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
@@ -400,7 +402,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
         $html .= '<select multiple="multiple" name="'. $select_name .'" size="'. min(9, max(5, count($ugroups))) .'">';
 
-        $selected_ugroup_ids = array_map(array(__CLASS__, 'getSelectedUgroupIds'), $values);
+        $selected_ugroup_ids = array_map(array(self::class, 'getSelectedUgroupIds'), $values);
         foreach ($ugroups as $ugroup) {
             $selected = "";
             if (in_array($ugroup->getId(), $selected_ugroup_ids)) {
@@ -636,13 +638,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
-        $project                     = $value->getProject();
-        $class_ugroup_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        $ugroup_representation       = new $class_ugroup_representation;
+        $project               = $value->getProject();
+        $ugroup_representation = new UserGroupRepresentation();
         $ugroup_representation->build($project->getID(), $this->ugroup_manager->getUGroup($project, $value->getUgroupId()));
 
-        $class_ugroupvalue_representation = '\\Tuleap\\Tracker\\REST\\FieldListBindUGroupValueRepresentation';
-        $representation                   = new $class_ugroupvalue_representation;
+        $representation = new FieldListBindUGroupValueRepresentation();
         $representation->build($value, $ugroup_representation);
         return $representation;
     }
@@ -650,12 +650,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getDefaultRESTValues() {
         $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
 
-        $class_with_right_namespace = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
         $project_id = $this->getField()->getTracker()->getProject()->getID();
 
         $rest_array = array();
         foreach ($bind_values as $value) {
-            $representation = new $class_with_right_namespace;
+            $representation = new UserGroupRepresentation();
             $representation->build($project_id, $value->getUgroup());
             $rest_array[] = $representation;
 
@@ -667,9 +666,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $project = $field->getTracker()->getProject();
 
         if (isset($rest_data['id'])) {
-            $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-            $value                = call_user_func_array($representation_class.'::getProjectAndUserGroupFromRESTId', array($rest_data['id']));
-            $id                   = $value['user_group_id'];
+            $value = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($rest_data['id']);
+            $id    = $value['user_group_id'];
 
             $bind_value = $this->getValueByUGroupId($id);
             if ($bind_value) {

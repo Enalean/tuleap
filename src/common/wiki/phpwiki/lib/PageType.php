@@ -90,7 +90,7 @@ class PageType {
      * @return string  Page type name.
      */
     function getName() {
-	if (!preg_match('/^PageType_(.+)$/i', get_class($this), $m))
+	if (!preg_match('/^PageType_(.+)$/i', static::class, $m))
 	    trigger_error("Bad class name for formatter(?)", E_USER_ERROR);
 	return $m[1];
     }

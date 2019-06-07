@@ -160,7 +160,7 @@ class Plugin implements PFO_Plugin {
                 )
             )
         );
-        $current_plugin = get_class($this);
+        $current_plugin = static::class;
 
         if (method_exists($this, $hook_in_camel_case)) {
             if ($hook_in_camel_case !== $hook && method_exists($this, $hook)) {

@@ -494,7 +494,7 @@ class Block_blockquote extends BlockMarkup
     }
     
     function merge ($nextBlock) {
-        if (get_class($nextBlock) == get_class($this)) {
+        if (get_class($nextBlock) == static::class) {
             assert ($nextBlock->_depth < $this->_depth);
             $nextBlock->_element->unshiftContent($this->_element);
             $nextBlock->_tight_top = $this->_tight_top;

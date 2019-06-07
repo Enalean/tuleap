@@ -36,7 +36,7 @@ class TestPresenter {
     
     public $content = 'An open ALM solution.';
     
-    public $__ = array(__CLASS__, '_l10n');
+    public $__ = array(self::class, '_l10n');
     
     public function _l10n($key) {
         return $GLOBALS['Language']->getText('module', $key);

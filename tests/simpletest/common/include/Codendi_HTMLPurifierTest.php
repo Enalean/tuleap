@@ -43,7 +43,7 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
 
     public static function instance() {
         if (!isset(self::$Codendi_HTMLPurifier_testversion_instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$Codendi_HTMLPurifier_testversion_instance = new $c;
         }
         return self::$Codendi_HTMLPurifier_testversion_instance;

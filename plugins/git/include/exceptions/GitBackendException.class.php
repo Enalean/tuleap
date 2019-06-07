@@ -24,7 +24,7 @@
 class GitBackendException extends Exception {    
 
     public function __construct($msg) {
-        parent::__construct(__CLASS__.' : '.$msg);
+        parent::__construct(self::class.' : '.$msg);
     }
     
 }

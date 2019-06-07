@@ -112,7 +112,7 @@ class SystemEvent_USER_RENAME extends SystemEvent {
             $params['old_user_name'] = $old_user_name;
             $params['user']          = $user;
 
-            EventManager::instance()->processEvent(__CLASS__, $params);
+            EventManager::instance()->processEvent(self::class, $params);
         }
 
         if ($renameState) {

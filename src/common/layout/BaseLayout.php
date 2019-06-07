@@ -312,7 +312,7 @@ abstract class BaseLayout extends Response
         echo '</fieldset>';
 
         // Display all queries used to generate the page ordered by time taken
-        usort($queries_by_time_taken, array(__CLASS__, 'sortQueriesByTimeTaken'));
+        usort($queries_by_time_taken, array(self::class, 'sortQueriesByTimeTaken'));
         echo '<fieldset><legend id="footer_debug_allqueries_time_taken" class="'. Toggler::getClassname('footer_debug_allqueries_time_taken') .'">All queries by time taken:</legend>';
         echo '<table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="0">';
         echo '<thead><tr><th>n°</th><th style="white-space:nowrap;">time taken</th><th>sum</th><th>sql</th></tr></thead>';

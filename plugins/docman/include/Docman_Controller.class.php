@@ -1726,7 +1726,7 @@ class Docman_Controller extends Controler {
 
     function actionsManagement() {
         // Redefine actions classes names building.
-        $className = get_class($this);
+        $className = static::class;
         $class = substr($className, 0, -(strlen("Controller"))) . 'Actions';
         require_once($class.'.class.php');
         $wa = new $class($this, $this->gid);

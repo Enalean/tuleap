@@ -42,7 +42,7 @@ class MIME {
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$_instance = new $c;
         }
         return self::$_instance;

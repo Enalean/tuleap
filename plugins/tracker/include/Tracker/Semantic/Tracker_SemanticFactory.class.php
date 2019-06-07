@@ -35,7 +35,7 @@ class Tracker_SemanticFactory {
      */
     public static function instance() {
         if (!isset(self::$instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$instance = new $c;
         }
         return self::$instance;

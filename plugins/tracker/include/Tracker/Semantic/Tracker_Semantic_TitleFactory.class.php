@@ -32,7 +32,7 @@ class Tracker_Semantic_TitleFactory implements Tracker_Semantic_IRetrieveSemanti
      */
     public static function instance() {
         if (!isset(self::$instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$instance = new $c;
         }
         return self::$instance;

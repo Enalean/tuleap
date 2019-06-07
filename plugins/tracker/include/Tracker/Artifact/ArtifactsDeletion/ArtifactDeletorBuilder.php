@@ -32,7 +32,7 @@ class ArtifactDeletorBuilder
      */
     public static function build()
     {
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
+        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
 
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
             new PendingArtifactRemovalDao(),
