@@ -87,7 +87,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->item_version_factory,
-            $this->link_version_factory
+            $this->link_version_factory,
+            $this->item_factory
         );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
