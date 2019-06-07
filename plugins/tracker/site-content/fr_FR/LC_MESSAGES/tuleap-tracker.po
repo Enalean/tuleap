@@ -168,6 +168,10 @@ msgid "Bad field_ids attribute format: array of integer expected."
 msgstr ""
 "L'attribut field_ids a un mauvais format : tableau de numérique attendu."
 
+msgid "Bad fieldset_ids attribute format: array of integer expected."
+msgstr ""
+"L'attribut fieldset_ids a un mauvais format : tableau de numérique attendu."
+
 #, php-format
 msgid "Bad format: '%s'. Array expected"
 msgstr "Mauvais format: '%s'. Tableau attendu"
@@ -363,6 +367,13 @@ msgid ""
 msgstr ""
 "Attribut obligatoire field_ids non trouvé dans une action de type "
 "\"frozen_fields\"."
+
+msgid ""
+"Mandatory attribute fieldset_ids not found in action with type "
+"\"hidden_fieldsets\"."
+msgstr ""
+"Attribut obligatoire fieldset_ids non trouvé dans une action de type "
+"\"hidden_fieldsets\"."
 
 msgid "Mandatory attribute job_url not found in CI build action."
 msgstr "L'attribut obligatoire job_url non trouvé dans une action de build CI."
@@ -1207,6 +1218,9 @@ msgstr "vidé"
 
 msgid "field_ids attribute must not be empty."
 msgstr "L'attribut field_ids ne doit pas être vide."
+
+msgid "fieldset_ids attribute must not be empty."
+msgstr "L'attribut fieldset_ids ne doit pas être vide."
 
 msgid "no type"
 msgstr "sans nature"

@@ -909,10 +909,20 @@
                         </items>
                     </bind>
                 </formElement>
-                <formElement type="int" ID="F8457" rank="58824">
+                <formElement type="int" ID="F8457" rank="6">
                     <name>points</name>
                     <label><![CDATA[Points]]></label>
                     <properties size="5"/>
+                </formElement>
+                <formElement type="fieldset" ID="F9002" rank="7">
+                    <name>fieldset1</name>
+                    <label>Fieldset</label>
+                    <formElements>
+                        <formElement type="file" ID="F9003" rank="8">
+                            <name>attachment</name>
+                            <label>Attachments</label>
+                        </formElement>
+                    </formElements>
                 </formElement>
             </formElements>
             <semantics>
@@ -1047,6 +1057,9 @@
                 <permission scope="field" REF="F9001" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F9001" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F9001" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F9003" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F9003" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F9003" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
         <tracker id="T1678" parent_id="0" instantiate_for_new_projects="1">
