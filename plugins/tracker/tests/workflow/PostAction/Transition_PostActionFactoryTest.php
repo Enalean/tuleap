@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+
 require_once __DIR__.'/../../bootstrap.php';
 
 class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
@@ -24,7 +27,7 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
     protected $factory;
     protected $field_factory;
     protected $cibuild_factory;
-
+    protected $frozen_fields_actory;
 
     public function setUp() {
         parent::setUp();
@@ -35,11 +38,13 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
 
         $this->factory = new Transition_PostActionFactory();
 
-        $this->field_factory   = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
-        $this->cibuild_factory = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
+        $this->field_factory        = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
+        $this->cibuild_factory      = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
+        $this->frozen_fields_actory = \Mockery::spy(FrozenFieldsFactory::class);
 
         $this->factory->setFieldFactory($this->field_factory);
         $this->factory->setCIBuildFactory($this->cibuild_factory);
+        $this->factory->setFrozenFieldsFactory($this->frozen_fields_actory);
     }
 }
 
@@ -71,6 +76,7 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
 
         stub($this->field_factory)->duplicate($this->transition, 2, $field_mapping)->once();
         stub($this->cibuild_factory)->duplicate($this->transition, 2, $field_mapping)->once();
+        stub($this->frozen_fields_actory)->duplicate($this->transition, 2, $field_mapping)->once();
 
         $this->factory->duplicate($this->transition, 2, $field_mapping);
     }
