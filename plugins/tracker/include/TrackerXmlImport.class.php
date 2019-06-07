@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -52,7 +53,7 @@ class TrackerXmlImport
     /** @var EventManager */
     private $event_manager;
 
-    /** @var Tracker_Hierarchy_Dao */
+    /** @var HierarchyDAO */
     private $hierarchy_dao;
 
     /** @var Tracker_CannedResponseFactory */
@@ -116,7 +117,7 @@ class TrackerXmlImport
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
-        Tracker_Hierarchy_Dao $hierarchy_dao,
+        HierarchyDAO $hierarchy_dao,
         Tracker_CannedResponseFactory $canned_response_factory,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_SemanticFactory $semantic_factory,
@@ -175,7 +176,7 @@ class TrackerXmlImport
         return new TrackerXmlImport(
             $tracker_factory,
             EventManager::instance(),
-            new Tracker_Hierarchy_Dao(),
+            new HierarchyDAO(),
             Tracker_CannedResponseFactory::instance(),
             Tracker_FormElementFactory::instance(),
             Tracker_SemanticFactory::instance(),

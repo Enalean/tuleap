@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -910,7 +911,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      */
     private function getHierarchyController($request)
     {
-        $dao                  = new Tracker_Hierarchy_Dao();
+        $dao                  = new HierarchyDAO();
         $tracker_factory      = $this->getTrackerFactory();
         $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $hierarchical_tracker = $factory->getWithChildren($this);
@@ -3310,7 +3311,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     protected function getHierarchyFactory()
     {
         return new Tracker_HierarchyFactory(
-            new Tracker_Hierarchy_Dao(),
+            new HierarchyDAO(),
             $this->getTrackerFactory(),
             $this->getTrackerArtifactFactory(),
             new NatureIsChildLinkRetriever(

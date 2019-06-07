@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
@@ -41,7 +42,7 @@ class Tracker_Hierarchy_Controller {
     private $factory;
     
     /**
-     * @var Tracker_Hierarchy_Dao
+     * @var HierarchyDAO
      */
     private $dao;
 
@@ -54,7 +55,7 @@ class Tracker_Hierarchy_Controller {
         Codendi_Request $request,
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
-        Tracker_Hierarchy_Dao $dao,
+        HierarchyDAO $dao,
         ArtifactLinksUsageDao $artifact_links_usage_dao
     ) {
         $this->request                  = $request;

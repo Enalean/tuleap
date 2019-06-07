@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
 require_once __DIR__.'/../../bootstrap.php';
 
-Mock::generate('Tracker_Hierarchy_Dao');
 Mock::generate('Project');
 Mock::generate('TrackerFactory');
 
@@ -28,11 +30,11 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     function testGetWithChildren() {
         $tracker = aTracker()->withId(1)->build();
         
-        $dao = new MockTracker_Hierarchy_Dao();
-        $children_ids = TestHelper::arrayToDar(array('parent_id' => 1, 'child_id' => 2), 
-                                               array('parent_id' => 1, 'child_id' => 3));
-        $dao->setReturnValue('getChildren', $children_ids, array($tracker->getId()));
-        
+        $dao = Mockery::mock(HierarchyDAO::class);
+        $children_ids = [array('parent_id' => 1, 'child_id' => 2),
+                                               array('parent_id' => 1, 'child_id' => 3)];
+        $dao->shouldReceive('getChildren')->with($tracker->getId())->andReturn($children_ids);
+
         
         $child1 = aTracker()->withId(2)->build();
         $child2 = aTracker()->withId(3)->build();
@@ -56,10 +58,9 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     }
     
     public function testGetPossibleChildren() {
-        $dao = new MockTracker_Hierarchy_Dao();
-        $dao->expectOnce('searchAncestorIds', array(1));
-        $dao->setReturnValue('searchAncestorIds', array(4));
-        
+        $dao = Mockery::mock(HierarchyDAO::class);
+        $dao->shouldReceive('searchAncestorIds')->with(1)->andReturn([4])->once();
+
         $project_id = 100;
         $project    = new MockProject();
         $project->setReturnValue('getId', $project_id);
@@ -121,12 +122,12 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
             '6' => aTracker()->withId(6)->withName('Documents')->build()
         );
         
-        $hierarchy_dar = new ArrayIterator(array(
+        $hierarchy_dar = array(
              array('child_id' => 2, 'parent_id' => 1),
              array('child_id' => 3, 'parent_id' => 2),
              array('child_id' => 4, 'parent_id' => 3),
              array('child_id' => 5, 'parent_id' => 2)
-        ));
+        );
         
         $expected_hierarchy = $this->getHierarchyAsTreeNode(array(
             array('name' => 'Releases', 'id'=>1, 'children' => array(
@@ -148,11 +149,11 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     }
     
     public function itCanReturnTheListOfTrackersInHierarchyByParentId() {
-        $hierarchy_dar = new ArrayIterator(array(
+        $hierarchy_dar = array(
              array('child_id' => 2, 'parent_id' => 1),
              array('child_id' => 3, 'parent_id' => 2),
              array('child_id' => 4, 'parent_id' => 3),
-             array('child_id' => 5, 'parent_id' => 2))
+             array('child_id' => 5, 'parent_id' => 2)
         );
         $project_trackers = array(
             '1' => aTracker()->withId(1)->withName('Releases')->build(),
@@ -193,12 +194,12 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
         );
         $tracker = $project_trackers['120'];
         
-        $hierarchy_dar = new ArrayIterator(array(
+        $hierarchy_dar = array(
              array('parent_id' => 120, 'child_id' => 118),
              array('parent_id' => 120, 'child_id' => 117),
              array('parent_id' => 119, 'child_id' => 120),
              array('parent_id' => 120, 'child_id' => 122)
-        ));
+        );
         
         $expected_hierarchy = $this->getHierarchyAsTreeNode(array(
             array('name' => 'Epics', 'id' => 119, 'children' => array(
@@ -266,7 +267,7 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     }
 
     private function getRootTrackerId($hierarchy_dar, $current_tracker_id) {
-        $dao = new MockTracker_Hierarchy_Dao();
+        $dao = Mockery::spy(HierarchyDAO::class);
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
         return $factory->getRootTrackerId($hierarchy_dar, $current_tracker_id);
     }
@@ -279,10 +280,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     }
 
     private function aMockDaoWith($project_id, $hierarchy_dar) {
-        $dao = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('searchParentChildAssociations', $hierarchy_dar, array($project_id));
+        $dao = Mockery::spy(HierarchyDAO::class);
+        $dao->shouldReceive('searchParentChildAssociations')->with($project_id)->andReturn($hierarchy_dar);
         return $dao;
     }
 }
-
-?>

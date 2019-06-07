@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+
 class Tracker_Hierarchy_HierarchicalTrackerFactory {
 
-    public function __construct(TrackerFactory $tracker_factory, Tracker_Hierarchy_Dao $dao) {
+    public function __construct(TrackerFactory $tracker_factory, HierarchyDAO $dao) {
         $this->tracker_factory = $tracker_factory;
         $this->dao             = $dao;
     }
@@ -54,7 +56,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
      */
     public static function instance() {
         if (! self::$instance) {
-            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new Tracker_Hierarchy_Dao());
+            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new HierarchyDAO());
         }
         return self::$instance;
     }
@@ -130,11 +132,11 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         }
     }
     
-    public function getChildrenMapFromDar($hierarchy_dar, $project_trackers) {
-        $hierarchy     = iterator_to_array($hierarchy_dar);
+    public function getChildrenMapFromDar(array $hierarchy_rows, $project_trackers)
+    {
         $children  = array();
         $hierarchy_map = array();
-        foreach($hierarchy as $relationship) {
+        foreach($hierarchy_rows as $relationship) {
             $parent_id = $relationship['parent_id'];
             $child_id  = $relationship['child_id'];
             $children[]= $child_id;

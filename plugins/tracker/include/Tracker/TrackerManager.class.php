@@ -27,6 +27,7 @@ use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
@@ -1230,7 +1231,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     {
         $global_admin_csrf       = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
         $dao                     = new ArtifactLinksUsageDao();
-        $hierarchy_dao           = new Tracker_Hierarchy_Dao();
+        $hierarchy_dao           = new HierarchyDAO();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
         $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
         $event_manager           = EventManager::instance();

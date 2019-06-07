@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 class Tracker_HierarchyFactory
 {
@@ -35,7 +36,7 @@ class Tracker_HierarchyFactory
     private $cache_ancestors = array();
 
     /**
-     * @var Tracker_Hierarchy_Dao
+     * @var HierarchyDAO
      */
     private $hierarchy_dao;
 
@@ -58,7 +59,7 @@ class Tracker_HierarchyFactory
     private $child_link_retriever;
 
     public function __construct(
-        Tracker_Hierarchy_Dao $hierarchy_dao,
+        HierarchyDAO $hierarchy_dao,
         TrackerFactory $tracker_factory,
         Tracker_ArtifactFactory $artifact_factory,
         NatureIsChildLinkRetriever $child_link_retriever
@@ -82,7 +83,7 @@ class Tracker_HierarchyFactory
     {
         if (! self::$_instance) {
             self::$_instance = new Tracker_HierarchyFactory(
-                new Tracker_Hierarchy_Dao(),
+                new HierarchyDAO(),
                 TrackerFactory::instance(),
                 Tracker_ArtifactFactory::instance(),
                 new NatureIsChildLinkRetriever(
@@ -209,11 +210,9 @@ class Tracker_HierarchyFactory
         if ($child->getTracker()->isProjectAllowedToUseNature() === true) {
             $parents = $this->child_link_retriever->getDirectParents($child);
         } else {
-            $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
-            if ($dar && !$dar->isError()) {
-                foreach ($dar as $row) {
-                    $parents[] = $this->artifact_factory->getInstanceFromRow($row);
-                }
+            $rows = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+            foreach ($rows as $row) {
+                $parents[] = $this->artifact_factory->getInstanceFromRow($row);
             }
         }
 
