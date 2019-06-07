@@ -495,6 +495,45 @@ class ProjectTest extends ProjectBase
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
+    public function testGETmilestonesWithPeriodFutureQuery()
+    {
+        $query    = urlencode(json_encode(["period" => "future"]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->project_private_member_id . '/milestones?query=' . $query
+            )
+        );
+
+        $milestones = $response->json();
+        $this->assertCount(1, $milestones);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGETmilestonesWithPeriodNotValidQuery()
+    {
+        $query    = urlencode(json_encode(["period" => "fuTur"]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->project_private_member_id . '/milestones?query=' . $query
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testGETmilestonesWithPeriodNullQuery()
+    {
+        $query    = urlencode(json_encode(["period" => null]));
+        $response = $this->getResponse(
+            $this->client->get(
+                'projects/' . $this->project_private_member_id . '/milestones?query=' . $query
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testOPTIONStrackers()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/trackers'));

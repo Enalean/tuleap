@@ -103,7 +103,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         $order
     ) {
         $sub_milestones = $this->milestone_factory
-            ->getPaginatedSubMilestones($user, $milestone, $criterion, $limit, $offset, $order);
+            ->getPaginatedSubMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = array();
         foreach($sub_milestones->getMilestones() as $submilestone) {
@@ -125,7 +125,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         $offset
     ) {
         $siblings = $this->milestone_factory
-            ->getPaginatedSiblingMilestones($user, $milestone, $criterion, $limit, $offset);
+            ->getPaginatedSiblingMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset);
 
         $sibling_representations = [];
         foreach ($siblings->getMilestones() as $sibling) {
@@ -151,8 +151,9 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
         $offset,
         $order
     ) {
+
         $sub_milestones = $this->milestone_factory
-            ->getPaginatedTopMilestones($user, $project, $criterion, $limit, $offset, $order);
+            ->getPaginatedTopMilestonesWithStatusCriterion($user, $project, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = array();
         foreach($sub_milestones->getMilestones() as $submilestone) {

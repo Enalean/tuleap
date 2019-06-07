@@ -68,21 +68,21 @@ class QueryToCriterionStatusConverterTest extends TuleapTestCase
 
     public function itThrowsExceptionIfStatusKeyIsMalformed()
     {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
+        $this->expectException(MalformedQueryParameterException::class, 'Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
 
         $this->converter->convert('{\"StaTuS\":\"closed\"}');
     }
 
     public function itThrowsExceptionIfStatusValueIsMalformed()
     {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
+        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryParameterException', 'Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
 
         $this->converter->convert('{\"status\":\"ClOsEr\"}');
     }
 
     public function itThrowsExceptionIfNotAnObject()
     {
-        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException');
+        $this->expectException('Tuleap\AgileDashboard\REST\MalformedQueryParameterException', 'Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
 
         $this->converter->convert('open');
     }

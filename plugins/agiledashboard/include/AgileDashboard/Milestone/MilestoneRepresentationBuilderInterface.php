@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST;
+declare(strict_types=1);
 
-use Exception;
+namespace Tuleap\AgileDashboard\Milestone;
 
-class MalformedQueryStatusParameterException extends Exception
+use AgileDashboard_Milestone_PaginatedMilestonesRepresentations;
+use PFUser;
+use Project;
+
+interface MilestoneRepresentationBuilderInterface
 {
-
-    public function __construct()
-    {
-        parent::__construct('Query is malformed. Expecting {"status":"open"} or {"status":"closed"}.');
-    }
+    public function getPaginatedTopMilestonesRepresentations(
+        Project $project,
+        PFUser $user,
+        string $representation_type,
+        int $limit,
+        int $offset,
+        string $order
+    ): AgileDashboard_Milestone_PaginatedMilestonesRepresentations;
 }

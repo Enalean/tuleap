@@ -53,7 +53,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException;
+use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
@@ -469,7 +469,7 @@ class MilestoneResource extends AuthenticatedResource {
 
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);
-        } catch (MalformedQueryStatusParameterException $exception) {
+        } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -531,7 +531,7 @@ class MilestoneResource extends AuthenticatedResource {
 
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);
-        } catch (MalformedQueryStatusParameterException $exception) {
+        } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
