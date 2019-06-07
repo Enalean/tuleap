@@ -23,8 +23,8 @@ use Tuleap\PHPWiki\WikiPage;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
-use Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
 use Wiki;
 use WikiDao;
 use UserManager;
@@ -44,6 +44,11 @@ class PhpWikiResource extends AuthenticatedResource {
 
     /** @var WikiPageVersionFactory */
     private $wiki_version_factory;
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct() {
         $this->wiki_dao             = new WikiDao();
@@ -139,6 +144,43 @@ class PhpWikiResource extends AuthenticatedResource {
         $wiki_page_representation->build($page_version, $wiki_page);
 
         return array($wiki_page_representation);
+    }
+
+    /**
+     * Get the list of items referencing the given wiki page
+     *
+     * Returns the list of items referencing the given wiki page
+     *
+     * @url    GET {id}/items_referencing_wiki_page
+     * @access hybrid
+     *
+     * @param int $id Id of the wiki page
+     *
+     * @status 200
+     *
+     * @return array {@type Tuleap\PhpWiki\Events\ItemsReferencingWikiPageRepresentation}
+     *
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getItemsReferencingWikiPage(int $id) : array
+    {
+        $this->checkAccess();
+        $this->checkPhpWikiPageExists($id);
+
+        $wiki_page    = new WikiPage($id);
+        $current_user = $this->user_manager->getCurrentUser();
+
+        $this->checkUserCanAccessProject($wiki_page->getGid());
+        $this->checkUserCanAccessPhpWikiService($current_user, $wiki_page->getGid());
+        $this->checkUserCanSeeWikiPage($current_user, $wiki_page);
+
+        $event = new GetItemsReferencingWikiPageCollectionEvent($wiki_page, $current_user);
+
+        \EventManager::instance()->dispatch($event);
+
+        return $event->getItemsReferencingWikiPage();
     }
 
     /** @return WikiPageVersion */

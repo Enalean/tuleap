@@ -36,6 +36,7 @@ use Tuleap\Docman\DocmanLegacyController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
+use Tuleap\Docman\DocmanWikisReferencingSameWikiPageRetriever;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
 use Tuleap\Docman\Download\DocmanFileDownloadCORS;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
@@ -87,6 +88,7 @@ use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Tuleap\wiki\Events\GetItemsReferencingWikiPageCollectionEvent;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -190,6 +192,8 @@ class DocmanPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
 
         $this->addHook(ServiceUrlCollector::NAME);
+
+        $this->addHook(GetItemsReferencingWikiPageCollectionEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1494,5 +1498,19 @@ class DocmanPlugin extends Plugin
         }
 
         $collector->setUrl(DOCMAN_BASE_URL . "?group_id=" . $collector->getProject()->getID());
+    }
+
+    public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event) : void
+    {
+        $wiki_page = $event->getWikiPage();
+
+        $wikis_retriever = new DocmanWikisReferencingSameWikiPageRetriever(
+            $this->getItemFactory($wiki_page->getGid()),
+            Docman_PermissionsManager::instance($wiki_page->getGid())
+        );
+
+        $event->addItemsReferencingWikiPage(
+            $wikis_retriever->retrieveWikiDocuments($wiki_page, $event->getUser())
+        );
     }
 }

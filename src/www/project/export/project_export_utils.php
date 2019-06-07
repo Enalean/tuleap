@@ -145,7 +145,7 @@ function prepare_textarea($textarea) {
  * Prepare the column values in the artifact record
  *
  * @param ArtifactType (tracker) $at the tracker the artifact to prepare blelong to
- * @param array{ArtifactField} $fields the fields of the artifact to export 
+ * @param ArtifactField[] $fields the fields of the artifact to export
  * @param int $group_artifact_id the tracker ID
  * @param array $record array 'field_name' => 'field_value'
  * @param string $export type of export ('csv' or 'database' : for date format, csv will take user preference, wheareas for database the format will be mysql format.)
