@@ -40,6 +40,7 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -111,6 +112,9 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByFieldController;
+use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByGroupController;
+use Tuleap\Tracker\Permission\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
@@ -744,7 +748,10 @@ class trackerPlugin extends Plugin {
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
             strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().'/workflow/') !== 0
+            strpos($request_uri, $this->getPluginPath().'/workflow/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsDisplayByGroupController::URL.'/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsDisplayByFieldController::URL.'/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsUpdateController::URL.'/') !== 0
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
@@ -1125,7 +1132,8 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    private function checkProjectRESTAccess(Project $project, PFUser $user) {
+    private function checkProjectRESTAccess(Project $project, PFUser $user)
+    {
         ProjectAuthorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
     }
 
@@ -1793,9 +1801,24 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    public function routeGetTemplates() : \Tuleap\Request\DispatchableWithRequest
+    public function routeGetTemplates() : DispatchableWithRequest
     {
         return new XMLTemplatesController();
+    }
+
+    public function routeGetFieldsPermissionsByField() : DispatchableWithRequest
+    {
+        return new PermissionsOnFieldsDisplayByFieldController(TrackerFactory::instance());
+    }
+
+    public function routeGetFieldsPermissionsByGroup() : DispatchableWithRequest
+    {
+        return new PermissionsOnFieldsDisplayByGroupController(TrackerFactory::instance());
+    }
+
+    public function routePostFieldsPermissions(): DispatchableWithRequest
+    {
+        return new PermissionsOnFieldsUpdateController(TrackerFactory::instance());
     }
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
@@ -1814,6 +1837,10 @@ class trackerPlugin extends Plugin {
             $r->post('/notifications/{id:\d+}/', $this->getRouteHandler('routePostNotifications'));
             $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
             $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
+
+            $r->get(PermissionsOnFieldsDisplayByFieldController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
+            $r->get(PermissionsOnFieldsDisplayByGroupController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
+            $r->post(PermissionsOnFieldsUpdateController::URL.'/{id:\d+}', $this->getRouteHandler('routePostFieldsPermissions'));
 
             $r->post('/webhooks/delete', $this->getRouteHandler('routePostWebhooksDelete'));
             $r->post('/webhooks/create', $this->getRouteHandler('routePostWebhooksCreate'));

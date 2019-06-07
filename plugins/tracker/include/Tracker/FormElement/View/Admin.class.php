@@ -16,7 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByFieldController;
+
 
 /**
  * Manage display of FormElement administration (creation / update).
@@ -320,15 +321,13 @@ class Tracker_FormElement_View_Admin {
      * @return string html
      */
     public function fetchAdminFormPermissionLink() {
+        $tracker = $this->formElement->getTracker();
+        if (! $tracker) {
+            throw new LogicException('FormElement without tracker');
+        }
         $html = '';
         $html .= '<p>';
-        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker'     => $this->formElement->tracker_id,
-                'func'        => 'admin-perms-fields',
-                'selected_id' => $this->formElement->id
-            )
-        ) .'">';
+        $html .= '<a href="'. PermissionsOnFieldsDisplayByFieldController::getUrl($tracker).'?selected_id='.$this->formElement->id.'">';
         $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
             'style' => 'vertical-align:middle;',
         ));
