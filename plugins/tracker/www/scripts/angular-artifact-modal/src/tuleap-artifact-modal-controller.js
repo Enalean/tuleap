@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { contains } from "lodash";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
@@ -8,6 +27,7 @@ import {
 } from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
+import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../constants/fields-constants.js";
 
 export default ArtifactModalController;
 
@@ -51,17 +71,28 @@ function ArtifactModalController(
             modal_model.title.content !== undefined ? modal_model.title.content : modal_model.title,
         tracker: modal_model.tracker,
         values: modal_model.values,
-        text_formats: modal_model.text_formats,
+        text_formats: [
+            { id: TEXT_FORMAT_TEXT, label: "Text" },
+            { id: TEXT_FORMAT_HTML, label: "HTML" }
+        ],
         followups_comments: {
             content: [],
             loading_comments: true,
             invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc"
         },
+        ckeditor_config: {
+            toolbar: [
+                ["Bold", "Italic", "Underline"],
+                ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                ["Link", "Unlink", "Anchor", "Image"],
+                ["Source"]
+            ],
+            height: "100px"
+        },
         formatColor,
         getDropdownAttribute,
         getRestErrorMessage: getErrorMessage,
         hasRestError: hasError,
-        initCkeditorConfig,
         isDisabled,
         isFollowupCommentFormDisplayed,
         isNewParentAlertShown,
@@ -72,17 +103,6 @@ function ArtifactModalController(
         followup_comment: {
             body: "",
             format: modal_model.text_fields_format
-        },
-        ckeditor_options: {
-            default_ckeditor: {
-                toolbar: [
-                    ["Bold", "Italic", "Underline"],
-                    ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
-                    ["Link", "Unlink", "Anchor", "Image"],
-                    ["Source"]
-                ],
-                height: "100px"
-            }
         }
     });
 
@@ -95,27 +115,6 @@ function ArtifactModalController(
         if (!isInCreationMode()) {
             fetchFollowupsComments(self.artifact_id, 50, 0, self.followups_comments.invert_order);
         }
-    }
-
-    function initCkeditorConfig(field) {
-        var id = "default_ckeditor";
-        if (field) {
-            id = field.field_id;
-            if (!self.ckeditor_options[id]) {
-                self.ckeditor_options[id] = {
-                    toolbar: [
-                        ["Bold", "Italic", "Underline"],
-                        ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
-                        ["Link", "Unlink", "Anchor", "Image"],
-                        ["Source"]
-                    ],
-                    height: "100px",
-                    readOnly: self.isDisabled(field)
-                };
-            }
-        }
-
-        return self.ckeditor_options[id];
     }
 
     function setupTooltips() {

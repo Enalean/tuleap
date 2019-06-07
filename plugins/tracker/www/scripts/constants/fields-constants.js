@@ -39,6 +39,8 @@ const FLOAT_FIELD = "float";
 const LIST_BIND_STATIC = "static";
 const LIST_BIND_UGROUPS = "ugroups";
 const LIST_BIND_USERS = "users";
+const TEXT_FORMAT_TEXT = "text";
+const TEXT_FORMAT_HTML = "html";
 
 export {
     STRUCTURAL_FIELDS,
@@ -50,5 +52,7 @@ export {
     FLOAT_FIELD,
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
-    LIST_BIND_USERS
+    LIST_BIND_USERS,
+    TEXT_FORMAT_TEXT,
+    TEXT_FORMAT_HTML
 };
