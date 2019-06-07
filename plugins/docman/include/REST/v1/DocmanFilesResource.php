@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
 use Docman_PermissionsManager;
+use Docman_SettingsBo;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use ProjectManager;
@@ -38,6 +39,9 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -138,15 +142,8 @@ class DocmanFilesResource extends AuthenticatedResource
             new \Docman_ApprovalTableFactoriesFactory(),
             new Docman_VersionFactory()
         );
-        $docman_item_updator             = new DocmanItemFileUpdator(
-            $docman_approval_table_retriever,
-            new Docman_LockFactory(),
-            new VersionToUploadCreator(
-                new DocumentOnGoingVersionToUploadDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new LockChecker(new Docman_LockFactory())
-        );
+
+        $docman_item_updator = $this->getFileUpdator($project, $docman_approval_table_retriever);
 
         try {
             $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
@@ -185,6 +182,11 @@ class DocmanFilesResource extends AuthenticatedResource
                     'tuleap-docman',
                     'Impossible to update a file which already has an approval table without approval action.'
                 )
+            );
+        } catch (Metadata\HardCodedMetadataException $e) {
+            throw new I18NRestException(
+                400,
+                $e->getI18NExceptionMessage()
             );
         }
     }
@@ -241,5 +243,34 @@ class DocmanFilesResource extends AuthenticatedResource
     private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
+    }
+
+    /**
+     * @param \Project               $project
+     * @param ApprovalTableRetriever $docman_approval_table_retriever
+     *
+     * @return DocmanItemFileUpdator
+     */
+    private function getFileUpdator(
+        \Project $project,
+        ApprovalTableRetriever $docman_approval_table_retriever
+    ): DocmanItemFileUpdator {
+        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
+        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
+            $docman_setting_bo
+        );
+        $docman_item_updator                          = new DocmanItemFileUpdator(
+            $docman_approval_table_retriever,
+            new VersionToUploadCreator(
+                new DocumentOnGoingVersionToUploadDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new LockChecker(new Docman_LockFactory()),
+            new ItemStatusMapper($docman_setting_bo),
+            new HardcodedMetadataObsolescenceDateRetriever(
+                $hardcoded_metadata_obsolescence_date_checker
+            )
+        );
+        return $docman_item_updator;
     }
 }

@@ -62,6 +62,10 @@ class VersionToUploadCreator
         string $filename,
         int $filesize,
         bool $is_file_locked,
+        int $status_id,
+        int $obsolescence_date_timestamp,
+        string $title,
+        string $description,
         ?string $approval_table_action
     ) : VersionToUpload {
         $file_size = $filesize;
@@ -81,8 +85,12 @@ class VersionToUploadCreator
                 $filename,
                 $filesize,
                 $is_file_locked,
-                $approval_table_action,
-                &$version_id
+                $status_id,
+                $obsolescence_date_timestamp,
+                &$version_id,
+                $title,
+                $description,
+                $approval_table_action
             ) {
                 $rows = $this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
                     $item->getId(),
@@ -114,6 +122,10 @@ class VersionToUploadCreator
                     $filename,
                     $filesize,
                     $is_file_locked,
+                    $status_id,
+                    $obsolescence_date_timestamp,
+                    $title,
+                    $description,
                     $approval_table_action
                 );
             }

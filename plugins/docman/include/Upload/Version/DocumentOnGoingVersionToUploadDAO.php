@@ -36,6 +36,10 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         string $filename,
         int $filesize,
         bool $is_file_locked,
+        int $status_id,
+        int $obsolescence_date_timestamp,
+        string $title,
+        string $description,
         ?string $approval_table_action
     ) : int {
         $version_id = $this->getDB()->insertReturnId(
@@ -49,7 +53,11 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
                 'filename'              => $filename,
                 'filesize'              => $filesize,
                 'is_file_locked'        => $is_file_locked,
-                'approval_table_action' => $approval_table_action
+                'approval_table_action' => $approval_table_action,
+                'status'                => $status_id,
+                'obsolescence_date'     => $obsolescence_date_timestamp,
+                'title'                 => $title,
+                'description'           => $description
             ]
         );
         return (int)$version_id;

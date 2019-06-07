@@ -123,7 +123,11 @@ class VersionUploadFinisherTest extends TestCase
                 'filesize'              => 123,
                 'filetype'              => 'Filetype',
                 'is_file_locked'        => false,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
+                'title'                 => 'New title',
+                'description'           => '',
+                'obsolescence_date'     => 125861251,
+                'status'                => 101
             ]
         );
         $item = Mockery::mock(Docman_File::class);
@@ -225,7 +229,11 @@ class VersionUploadFinisherTest extends TestCase
                 'filesize'              => 123,
                 'filetype'              => 'Filetype',
                 'is_file_locked'        => false,
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
+                'title'                 => 'New title',
+                'description'           => '',
+                'obsolescence_date'     => 125861251,
+                'status'                => 101
             ]
         );
         $item = Mockery::mock(Docman_File::class);
@@ -327,7 +335,11 @@ class VersionUploadFinisherTest extends TestCase
                 'filesize'              => 123,
                 'filetype'              => 'Filetype',
                 'is_file_locked'        => false,
-                'approval_table_action' => 'blablabla'
+                'approval_table_action' => 'blablabla',
+                'title'                 => 'New title',
+                'description'           => '',
+                'obsolescence_date'     => 125861251,
+                'status'                => 101
             ]
         );
         $item = Mockery::mock(Docman_File::class);

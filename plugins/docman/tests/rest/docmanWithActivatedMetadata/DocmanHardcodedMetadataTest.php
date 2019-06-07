@@ -1046,6 +1046,301 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
     }
 
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchFileDocument(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My new file',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => 0],
+                'status'            => 'rejected',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size    = 123;
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'should_lock_file'  => false,
+                'file_properties'   => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'title'             => 'My new file title',
+                'description'       => 'Description',
+                'status'            => 'approved',
+                'obsolescence_date' => $date->modify('+2 day')->format('Y-m-d')
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('file', $response->json()['type']);
+        $this->assertEquals(null, $response->json()['lock_info']);
+
+        $file_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->get($response->json()['file_properties']['download_href'])
+        );
+        $this->assertEquals(200, $file_content_response->getStatusCode());
+        $this->assertEquals($file_content, $file_content_response->getBody());
+
+        $this->assertEquals('file', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+2 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchFileWithObsolescenceDateThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My new file',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => 0],
+                'status'            => 'rejected',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size    = 123;
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'should_lock_file'  => false,
+                'file_properties'   => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'title'             => 'My new file title',
+                'status'            => 'approved',
+                'obsolescence_date' => '2050-25-558548'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Rejected',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchFileWithStatusThrows400IfThereIsABadStatus(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My new file 2',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => 0],
+                'status'            => 'rejected',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size    = 123;
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'should_lock_file'  => false,
+                'file_properties'   => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'title'             => 'My new file title',
+                'status'            => 'huhuhuhu',
+                'obsolescence_date' => $date->modify('+2 day')->format('Y-m-d')
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Rejected',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
     /**
      * @depends testGetDocumentItemsForAdmin
      */

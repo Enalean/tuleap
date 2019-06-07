@@ -22,6 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+use Tuleap\Docman\REST\v1\ItemRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+
 class DocmanFilesPATCHRepresentation
 {
     /**
@@ -33,6 +36,16 @@ class DocmanFilesPATCHRepresentation
      * @var string Description of changes {@from body} {@required false}
      */
     public $change_log = '';
+
+    /**
+     * @var string Item title {@from body} {@required true}
+     */
+    public $title = '';
+
+    /**
+     * @var string Item description {@from body} {@required false}
+     */
+    public $description = '';
 
     /**
      * @var bool Lock file while updating {@from body} {@required true} {@type bool}
@@ -48,4 +61,14 @@ class DocmanFilesPATCHRepresentation
      * @var string | null action for approval table when an item is updated {@from body} {@required false} {@choice copy,reset,empty}
      */
     public $approval_table_action;
+
+    /**
+     * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     */
+    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+
+    /**
+     * @var string Obsolescence date {@from body} {@required false}
+     */
+    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 }

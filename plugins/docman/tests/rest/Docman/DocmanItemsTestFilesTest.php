@@ -109,7 +109,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
+                'title'                 => 'file AT C'
             ]
         );
 
@@ -163,7 +164,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
-                'approval_table_action' => 'reset'
+                'approval_table_action' => 'reset',
+                'title'                 => 'file AT R'
             ]
         );
 
@@ -196,7 +198,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchAFilewithApprovalTableEmptyAction(array $items): void
+    public function testPatchAFileithApprovalTableEmptyAction(array $items): void
     {
         $file = $this->findItemByTitle($items, 'file AT E');
 
@@ -218,7 +220,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
-                'approval_table_action' => 'empty'
+                'approval_table_action' => 'empty',
+                'title'                 => 'file AT E'
             ]
         );
 
@@ -261,7 +264,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => $file_size]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => $file_size],
+                'title'            => 'file AT C'
             ]
         );
 
@@ -286,7 +290,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
-                'approval_table_action' => 'copy'
+                'approval_table_action' => 'copy',
+                'title'                 => 'new title'
             ]
         );
 
@@ -313,7 +318,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
             ]
         );
 
@@ -340,7 +346,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
             ]
         );
 
@@ -366,7 +373,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 999999999999]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 999999999999],
+                'title'            => 'file AT C'
             ]
         );
 
@@ -389,7 +397,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 0]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 0],
+                'title'            => 'new title'
             ]
         );
 
@@ -411,7 +420,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
             ]
         );
 
@@ -429,6 +439,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'       => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties' => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
             ]
         );
 
@@ -450,6 +461,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
             ]
         );
 
@@ -471,7 +483,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'title'           => 'My new file',
                 'parent_id'       => $root_id,
                 'type'            => 'file',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0],
             ]
         );
 
@@ -498,7 +510,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size]
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'title'            => 'new title'
             ]
         );
 
@@ -560,6 +573,56 @@ class DocmanItemsTestFilesTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
+    public function testPatchFileDocumentWithStatusWhenStatusIsNotEnabledForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new file with status',
+                'parent_id'       => $root_id,
+                'type'            => 'file',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size    = 123;
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'status'           => 'approved',
+                'title'            => 'new title'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testPatchFileDocumentAddLock(int $root_id): void
     {
         $query = json_encode(
@@ -596,7 +659,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => true,
-                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size]
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size],
+                'title'            => 'new title'
             ]
         );
 
@@ -664,7 +728,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'My new file', 'file_size' => 123],
-                'approval_table_action' => 'empty'
+                'approval_table_action' => 'empty',
+                'title'                 => 'file AT C'
             ]
         );
 
