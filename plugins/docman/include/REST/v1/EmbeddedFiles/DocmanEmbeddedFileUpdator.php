@@ -28,7 +28,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanEmbeddedFileUpdator
@@ -88,12 +87,7 @@ class DocmanEmbeddedFileUpdator
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
      */
     public function updateEmbeddedFile(
         \Docman_File $item,

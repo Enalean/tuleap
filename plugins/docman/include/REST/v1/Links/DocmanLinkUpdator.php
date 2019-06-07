@@ -104,12 +104,7 @@ class DocmanLinkUpdator
      * @throws ExceptionItemIsLockedByAnotherUser
      * @throws \Luracast\Restler\RestException
      * @throws \Throwable
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
      */
     public function updateLink(
         \Docman_Link $item,

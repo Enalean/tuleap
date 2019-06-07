@@ -45,6 +45,7 @@ use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataItemStatusChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -108,9 +109,9 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      * @param DocmanEmbeddedFilesPATCHRepresentation $representation {@from body}
      *
      * @status 200
-     * @throws 400
-     * @throws 403
-     * @throws 501
+     * @throws I18NRestException 400
+     * @throws I18NRestException 403
+     * @throws I18NRestException 501
      */
 
     public function patch(int $id, DocmanEmbeddedFilesPATCHRepresentation $representation)
@@ -178,50 +179,10 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
                 400,
                 $exception->getMessage()
             );
-        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+        } catch (HardCodedMetadataException $exception) {
             throw new I18NRestException(
                 400,
-                dgettext(
-                    'tuleap-docman',
-                    'The "Status" property is not activated for this item.'
-                )
-            );
-        } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The obsolescence date is before the current date'
-                )
-            );
-        } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateDisabledException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The project does not support obsolescence date, you should not provide it to create a new document.'
-                )
-            );
-        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
-            throw new I18NRestException(
-                400,
-                sprintf(
-                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    (string) $representation->status
-                )
-            );
-        } catch (Metadata\StatusNotFoundNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext('tuleap-docman', 'null is not a valid status.')
+                $exception->getI18NExceptionMessage()
             );
         }
     }

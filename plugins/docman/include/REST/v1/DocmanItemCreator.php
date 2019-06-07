@@ -128,12 +128,7 @@ class DocmanItemCreator
 
     /**
      * @return CreatedItemRepresentation
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     private function createDocument(
@@ -193,12 +188,7 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      */
     public function createFileDocument(
@@ -210,7 +200,7 @@ class DocmanItemCreator
         ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties
-    ) {
+    ) : CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
@@ -260,12 +250,7 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
@@ -305,12 +290,7 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
@@ -349,12 +329,7 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
@@ -401,12 +376,7 @@ class DocmanItemCreator
 
     /**
      * @return CreatedItemRepresentation
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
@@ -446,12 +416,7 @@ class DocmanItemCreator
 
     /**
      * @return CreatedItemRepresentation
-     * @throws Metadata\InvalidDateComparisonException
-     * @throws Metadata\InvalidDateTimeFormatException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\StatusNotFoundBadStatusGivenException
-     * @throws Metadata\StatusNotFoundNullException
+     * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */

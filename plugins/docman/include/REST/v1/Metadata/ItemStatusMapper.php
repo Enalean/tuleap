@@ -15,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -49,23 +48,21 @@ class ItemStatusMapper
     }
 
     /**
-     * @throws StatusNotFoundBadStatusGivenException
-     * @throws StatusNotFoundNullException
-     * @throws ItemStatusUsageMismatchException
+     * @throws HardCodedMetadataException
      */
     public function getItemStatusIdFromItemStatusString(?string $status_string): int
     {
         $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
         if (!($metadata_usage === "1") && ($status_string !== ItemStatusMapper::ITEM_STATUS_NONE)) {
-            throw new ItemStatusUsageMismatchException();
+            throw HardCodedMetadataException::itemStatusNotAvailable();
         }
 
         if ($status_string === null) {
-            throw new StatusNotFoundNullException();
+            throw HardCodedMetadataException::itemStatusNullIsInvalid();
         }
 
         if (! isset(self::ITEM_STATUS_ARRAY_MAP[$status_string])) {
-            throw new StatusNotFoundBadStatusGivenException($status_string);
+            throw HardCodedMetadataException::itemStatusIsInvalid($status_string);
         }
 
         return self::ITEM_STATUS_ARRAY_MAP[$status_string];
