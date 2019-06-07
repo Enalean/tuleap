@@ -1,0 +1,95 @@
+/*!
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+
+.project-release-label {
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    margin: 0 0 $tlp-spacing;
+    padding: 5px;
+    border-radius: 3px;
+    background: $timeline-color;
+    color: $tlp-theme-color;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    line-height: 7px;
+    text-transform: uppercase;
+}
+
+.dashboard-widget-content.dashboard-widget-content-release {
+    margin: 0 $tlp-spacing $tlp-spacing 0;
+}
+
+.project-release-widget-content {
+    position: relative;
+    padding: $tlp-spacing 0 $tlp-spacing $tlp-spacing;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: $tlp-title-spacing;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
+    }
+}
+
+.project-release-timeframe {
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-other-releases {
+    position: relative;
+    margin: 0 0 $tlp-spacing;
+    padding: 0 0 0 $tlp-title-spacing;
+}
+
+.release-icon {
+    display: flex;
+    position: absolute;
+    z-index: 2;
+    top: 1px;
+    left: 4px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+    color: $tlp-ui-white;
+    font-size: 12px;
+}
+
+.releases-link {
+    color: $tlp-theme-color;
+    font-size: 16px;
+}
+
+.release-loader {
+    height: 100px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
