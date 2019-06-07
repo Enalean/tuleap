@@ -77,9 +77,7 @@ pipeline {
                     }
                     steps {
                         script {
-                            try {
-                                actions.runPsalm('tests/psalm/psalm.xml', '')
-                            } catch (err) { }
+                            actions.runPsalm('tests/psalm/psalm.xml', '')
                         }
                     }
                 }

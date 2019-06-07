@@ -313,7 +313,7 @@ function permission_db_get_defaults($permission_type) {
 /**
  * Check if the given object has some permissions defined
  *
- * @return true if permissions are defined, false otherwise.
+ * @return bool true if permissions are defined, false otherwise.
  */
 function permission_exist($permission_type, $object_id) {
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
@@ -336,7 +336,7 @@ function permission_exist($permission_type, $object_id) {
  * @param $object_id is the ID of the object we want to access (e.g. a docid)
  * @param $user_id is the ID of the user that want to access the object
  * @param $group_id is the group_id the object belongs to; useful for project-specific authorized ugroups (e.g. 'project admins')
- * @return true if user is authorized, false otherwise.
+ * @return bool true if user is authorized, false otherwise.
  */
 function permission_is_authorized($permission_type, $object_id, $user_id, $group_id) {
 

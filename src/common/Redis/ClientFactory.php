@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,8 +36,8 @@ class ClientFactory
      */
     public static function fromForgeConfig()
     {
-        $host     = \ForgeConfig::get('redis_server');
-        $port     = \ForgeConfig::get('redis_port');
+        $host     = (string) \ForgeConfig::get('redis_server', '');
+        $port     = (int) \ForgeConfig::get('redis_port', 6379);
         $password = (string) \ForgeConfig::get('redis_password');
 
         $redis_initializer = new RedisInitializer($host, $port, new ConcealedString($password));
