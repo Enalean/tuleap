@@ -65,6 +65,14 @@ class PermissionsFieldPresenter
      * @var bool
      */
     public $has_update_access;
+    /**
+     * @var array
+     */
+    public $other_groups = [];
+    /**
+     * @var bool
+     */
+    public $has_other_groups = false;
 
     public function __construct(\Tracker_FormElement_Field $field, FieldsPermissionForGroup $fields_permission_for_group)
     {
@@ -77,5 +85,9 @@ class PermissionsFieldPresenter
         $this->has_no_access     = $fields_permission_for_group->hasNoAccess($field);
         $this->has_read_access   = $fields_permission_for_group->hasReadOnlyPermission($field);
         $this->has_update_access = $fields_permission_for_group->hasUpdatePermission($field);
+        foreach ($fields_permission_for_group->getPermissionsForOtherGroups($field) as $other_groups) {
+            $this->has_other_groups = true;
+            $this->other_groups[] = $other_groups;
+        }
     }
 }

@@ -22,6 +22,7 @@
                 <th>{{# dgettext }} tuleap-tracker |Fields{{/ dgettext }}</th>
                 <th>{{# dgettext }} tuleap-tracker |Can submit{{/ dgettext }}</th>
                 <th>{{# dgettext }} tuleap-tracker |Access permissions{{/ dgettext }}</th>
+                <th>{{# dgettext }} tuleap-tracker |Other groups{{/ dgettext }}</th>
             </tr>
             </thead>
 
@@ -52,6 +53,15 @@
                             <option value="1" {{# has_update_access }}selected="selected" style="background:#EEE;"{{/ has_update_access }} >{{# dgettext }} tuleap-tracker |Update{{/ dgettext }}</option>
                         {{/ is_updatable }}
                     </select>
+                </td>
+                <td>
+                    {{# has_other_groups }}
+                        <ul>
+                        {{# other_groups }}
+                            <li><a href="{{ self_url }}?selected_id={{ id }}">{{ name }}</a>: {{ permissions }}</li>
+                        {{/ other_groups }}
+                        </ul>
+                    {{/ has_other_groups}}
                 </td>
             </tr>
             {{/ field_list }}

@@ -46,6 +46,10 @@ class FieldsPermissionForGroup
      * @var bool
      */
     private $might_not_have_access;
+    /**
+     * @var array
+     */
+    private $permissions_for_other_groups;
 
     public function __construct(int $ugroup_id, string $ugroup_name)
     {
@@ -132,5 +136,23 @@ class FieldsPermissionForGroup
     public function getUgroupName(): string
     {
         return $this->ugroup_name;
+    }
+
+    public function addPermissionsForOtherGroups(\Tracker_FormElement_Field $field, int $id, string $name, array $permissions) : void
+    {
+        if (count($permissions) > 0) {
+            $this->permissions_for_other_groups[$field->getId()][] = new FieldsPermissionsForOtherGroups($id, $name, $permissions);
+        }
+    }
+
+    /**
+     * @return FieldsPermissionsForOtherGroups[]
+     */
+    public function getPermissionsForOtherGroups(\Tracker_FormElement_Field $field)
+    {
+        if (! isset($this->permissions_for_other_groups[$field->getId()])) {
+            return [];
+        }
+        return $this->permissions_for_other_groups[$field->getId()];
     }
 }
