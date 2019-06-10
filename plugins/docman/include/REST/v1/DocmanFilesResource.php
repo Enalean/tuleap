@@ -102,38 +102,30 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function postLock(int $id): void
     {
-        $this->checkAccess();
-        $this->setHeadersForLock();
+        $this->updateLock($id, true);
+    }
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
-        $project      = $item_request->getProject();
-
-        $this->checkUserCanWrite($project, $current_user, $item);
-
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $lock_factory = new Docman_LockFactory();
-        $lock_checker = new LockChecker($lock_factory);
-        $lock_updater = new LockUpdater($lock_factory);
-
-        try {
-            $lock_checker->checkItemIsLocked($item, $current_user);
-            $is_file_locked = true;
-            $lock_updater->updateLockInformation($item, $is_file_locked, $current_user);
-        } catch (ExceptionItemIsLockedByAnotherUser $e) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        }
+    /**
+     * Unlock an already locked file
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int  $id Id of the file you want unlock
+     *
+     * @url    DELETE {id}/lock
+     * @access hybrid
+     * @status 200
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     */
+    public function deleteLock(int $id): void
+    {
+        $this->updateLock($id, false);
     }
 
     /**
@@ -334,7 +326,7 @@ class DocmanFilesResource extends AuthenticatedResource
 
     private function setHeadersForLock(): void
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsPostDelete();
     }
 
     /**
@@ -351,6 +343,45 @@ class DocmanFilesResource extends AuthenticatedResource
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'You are not allowed to write this item.')
+            );
+        }
+    }
+
+    /**
+     * @throws I18NRestException
+     * @throws RestException
+     */
+    private function updateLock(int $id, bool $should_lock_item): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $this->checkUserCanWrite($project, $current_user, $item);
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
+        $item->accept($validator, []);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $lock_factory = new Docman_LockFactory();
+        $lock_checker = new LockChecker($lock_factory);
+        $lock_updater = new LockUpdater($lock_factory);
+
+        try {
+            $lock_checker->checkItemIsLocked($item, $current_user);
+            $lock_updater->updateLockInformation($item, $should_lock_item, $current_user);
+        } catch (ExceptionItemIsLockedByAnotherUser $e) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
             );
         }
     }

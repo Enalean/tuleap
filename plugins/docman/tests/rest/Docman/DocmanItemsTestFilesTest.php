@@ -953,6 +953,62 @@ class DocmanItemsTestFilesTest extends DocmanBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItThrowsExceptionForDeleteLockWhenUserCanNotReadTheFile(array $items): void
+    {
+        $locked_document   = $this->findItemByTitle($items, 'other file');
+        $file_to_delete_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::TEST_USER_2_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id . '/lock')
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItUnLocksAFile(array $items): void
+    {
+        $file_to_lock    = $this->findItemByTitle($items, 'other file');
+        $file_to_lock_id = $file_to_lock['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_lock_id . "/lock")
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_lock_id)
+        );
+
+        $file = $response->json();
+        $this->assertEquals($file['lock_info'], null);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItThrowsAndExceptionIfUserTryTOUnlockAFileLockedBySomebodyElse(array $items): void
+    {
+        $locked_document   = $this->findItemByTitle($items, 'file L');
+        $file_to_delete_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id . '/lock')
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testOptions($id): void
@@ -970,7 +1026,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
     {
         $response = $this->getResponse($this->client->options('docman_files/'.$id.'/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'POST', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 }
