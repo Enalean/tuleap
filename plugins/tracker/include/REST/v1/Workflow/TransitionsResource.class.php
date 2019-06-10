@@ -44,6 +44,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\PUTHandler;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\TrackerChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\FrozenFieldsJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\HiddenFieldsetsJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
@@ -477,6 +478,17 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
+        if (\ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            return new PostActionCollectionJsonParser(
+                new CIBuildJsonParser(),
+                new SetDateValueJsonParser(),
+                new SetIntValueJsonParser(),
+                new SetFloatValueJsonParser(),
+                new FrozenFieldsJsonParser(),
+                new HiddenFieldsetsJsonParser()
+            );
+        }
+
         return new PostActionCollectionJsonParser(
             new CIBuildJsonParser(),
             new SetDateValueJsonParser(),

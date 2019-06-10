@@ -374,6 +374,60 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @depends testPUTTrackerWorkflowTransitionsActions
+     */
+    public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActions(int $transition_id)
+    {
+        $used_field_id = $this->getAUsedField(
+            $this->simple_mode_workflow_tracker_id,
+            'fieldset1'
+        );
+
+        $body = json_encode([
+            "post_actions" => [
+                [
+                    "id" => null,
+                    "type" => "hidden_fieldsets",
+                    "fieldset_ids" => [$used_field_id]
+                ]
+            ]
+        ]);
+
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $body
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        return $transition_id;
+    }
+
+    /**
+     * @depends testPUTTrackerWorkflowTransitionHiddenFieldsetsActions
+     */
+    public function testGETTrackerWorkflowTransitionReturnsTheHiddenFieldsetsPostAction(int $transition_id)
+    {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get(
+                "tracker_workflow_transitions/$transition_id/actions"
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json_response = $response->json();
+        $this->assertEquals('hidden_fieldsets', $json_response[0]['type']);
+
+        return $transition_id;
+    }
+
     public function testGETWorkflowImportedFromXML()
     {
         $response = $this->getResponseByName(

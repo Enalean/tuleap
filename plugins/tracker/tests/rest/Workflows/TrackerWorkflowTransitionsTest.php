@@ -469,4 +469,36 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
+
+    /**
+     * @depends testPUTTrackerWorkflowTransitionActions
+     */
+    public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActionsNotPossible(int $transition_id)
+    {
+        $used_field_id = $this->getAUsedField(
+            $this->tracker_workflow_transitions_tracker_id,
+            'fieldset1'
+        );
+
+        $body = json_encode([
+            "post_actions" => [
+                [
+                    "id" => null,
+                    "type" => "hidden_fieldsets",
+                    "fieldset_ids" => [$used_field_id]
+                ]
+            ]
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $body
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
 }
