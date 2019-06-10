@@ -54,7 +54,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
     public $type;
 
     /**
-     * @var array|null {@type Tuleap\Tracker\REST\FieldValueRepresentation }
+     * @var array | null {@type Tuleap\Tracker\REST\FieldValueRepresentation }
      */
     public $values = array();
 
