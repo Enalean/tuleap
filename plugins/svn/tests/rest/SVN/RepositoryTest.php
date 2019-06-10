@@ -42,6 +42,7 @@ class RepositoryTest extends TestBase
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
+        $this->assertEquals($repository['svn_url'], $this->svn_domain.'/svnplugin/SVN-plugin-test/repo01');
         $this->assertArrayHasKey('settings', $repository);
         $this->assertEquals(
             $repository['settings']['commit_rules'],
@@ -91,6 +92,7 @@ class RepositoryTest extends TestBase
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
+        $this->assertEquals($repository['svn_url'], $this->svn_domain.'/svnplugin/SVN-plugin-test/repo01');
         $this->assertArrayNotHasKey('settings', $repository);
     }
 

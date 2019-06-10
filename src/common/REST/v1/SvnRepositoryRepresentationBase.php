@@ -45,4 +45,9 @@ class SvnRepositoryRepresentationBase
      * @var string {@type string}
      */
     public $name;
+
+    /**
+     * @var string {@type string}
+     */
+    public $svn_url;
 }
