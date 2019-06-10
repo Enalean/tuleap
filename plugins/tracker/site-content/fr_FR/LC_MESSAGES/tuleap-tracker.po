@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #, php-format
 msgid "%s has been created"
@@ -44,8 +44,18 @@ msgstr "Tracker %s"
 msgid "'%s' is not supported for the operator %s."
 msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
+msgid ""
+"* denotes user groups that may not have access to the tracker (no <a href="
+"\"%s\">tracker permission</a> set)."
+msgstr ""
+"* il est possible que ces groupes n'aient pas accès au tracker (pas de <a "
+"href=\"%s\">permission sur l'outil de suivi</a> définie)."
+
 msgid "A workflow already exists on the given tracker."
 msgstr "Un workflow est déjà défini pour ce tracker."
+
+msgid "Access permissions"
+msgstr "Droits d'accès"
 
 msgid "Actions"
 msgstr "Actions"
@@ -212,6 +222,9 @@ msgstr ""
 "En cliquant sur \"Désactiver complètement le workflow\", le comportement de "
 "votre workflow sera corrigé."
 
+msgid "Can submit"
+msgstr "Peut soumettre"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -314,6 +327,9 @@ msgstr "Champ non trouvé."
 msgid "Field value cannot be empty"
 msgstr "La valeur du champ ne peux pas être vide"
 
+msgid "Fields"
+msgstr "Champs"
+
 msgid "Force notification configuration usage to all users"
 msgstr "Forcer la configuration des notifications à tous les utilisateurs"
 
@@ -349,6 +365,9 @@ msgstr "Historique pour %s"
 
 msgid "Mail configuration"
 msgstr "Configuration des e-mail"
+
+msgid "Manage Fields Permissions"
+msgstr "Gérer les permissions des champs"
 
 msgid ""
 "Mandatory attribute field_id not found in action with type \"set_field_value"
@@ -399,6 +418,9 @@ msgstr "Aucune notification"
 
 msgid "No semantic defined in this tracker."
 msgstr "Aucune sémantique n'est définie pour cet outil de suivi."
+
+msgid "No user group has access to this tracker"
+msgstr "Aucun groupe ne peut accéder à ce tracker"
 
 msgid "No users have unsubscribed."
 msgstr "Aucun utilisateur ne s'est désabonné."
@@ -455,6 +477,12 @@ msgstr "Un tracker ou plus n'a pas été trouvé : '%s'"
 msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
 
+msgid ""
+"Please note that project administrators and tracker administrators are "
+"granted full access to the tracker."
+msgstr ""
+"Les administrateurs de projet et de tracker ont un accès complet au tracker."
+
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
 
@@ -470,6 +498,16 @@ msgstr ""
 
 msgid "Preview"
 msgstr "Prévisualisation"
+
+msgid ""
+"Project admins can also <a href=\"/project/admin/ugroup.php?group_id=%s"
+"\">create or modify</a> user groups."
+msgstr ""
+"Les administrateurs de projet peuvent aussi <a href=\"/project/admin/ugroup."
+"php?group_id=%s\">créer ou modifier</a> des groupes d'utilisateurs."
+
+msgid "Read only"
+msgstr "Lecture seule"
 
 msgid "Remove"
 msgstr "Enlever"
@@ -520,6 +558,9 @@ msgstr "Valider"
 
 msgid "Submit Changes"
 msgstr "Valider"
+
+msgid "Submit permissions"
+msgstr "Valider les permissions"
 
 msgid "Target URL:"
 msgstr "URL cible :"
@@ -1073,6 +1114,9 @@ msgid "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"
 msgstr ""
 "Contenu de l'attribut value non supporté: '%s'. Contenus autorisés: '%s'"
 
+msgid "Update"
+msgstr "Mise à jour"
+
 msgid "Use"
 msgstr "Utiliser"
 
@@ -1081,6 +1125,9 @@ msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."
 msgstr[0] "L'utilisateur '%s' n'a pas pu être ajouté"
 msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés"
+
+msgid "User groups"
+msgstr "Groupes d'utilisateurs"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
@@ -1181,6 +1228,13 @@ msgstr "Vous n'avez pas accès à ce tracker."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
+
+msgid ""
+"You may <a href=\"%s\">switch to the 'field' view</a> by clicking on a field "
+"label in the table below."
+msgstr ""
+"Vous pouvez <a href=\"%s\">basculer vers l'affichage par champ</a> en "
+"cliquant sur le label d'un champ dans le tableau ci-dessous."
 
 msgid "You must be tracker administrator to access this resource."
 msgstr "Vous devez être administrateur pour accéder à cette ressource."
