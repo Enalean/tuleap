@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,35 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit;
-
-class PollingResponse
-{
-    /**
-     * @var string
-     */
-    private $body;
-    /**
-     * @var string[]
-     */
-    private $job_paths;
-
-    public function __construct(string $body, array $job_paths)
-    {
-        $this->body      = $body;
-        $this->job_paths = $job_paths;
-    }
-
-    public function getBody() : string
-    {
-        return $this->body;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getJobPaths() : array
-    {
-        return $this->job_paths;
-    }
-}
+require_once __DIR__ . '/../include/hudson_gitPlugin.class.php';

@@ -32,7 +32,6 @@ use Tuleap\HudsonGit\Job\JobManager;
 use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
-use Tuleap\HudsonGit\PollingResponseFactory;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
@@ -113,12 +112,14 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
     public function git_hook_post_receive_ref_update($params)
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
-            $controller = new Hook\HookTriggerController(
+            $http_client     = HttpClientFactory::createClient();
+            $request_factory = HTTPFactoryBuilder::requestFactory();
+            $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),
                 new Hook\JenkinsClient(
-                    new Http_Client(),
-                    new PollingResponseFactory(),
-                    new JenkinsCSRFCrumbRetriever(HttpClientFactory::createClient(), HTTPFactoryBuilder::requestFactory())
+                    $http_client,
+                    $request_factory,
+                    new JenkinsCSRFCrumbRetriever($http_client, $request_factory)
                 ),
                 $this->getLogger(),
                 new JobManager(new JobDao())

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,71 +21,71 @@
 
 namespace Tuleap\HudsonGit\Hook;
 
-use Tuleap\HudsonGit\PollingResponseFactory;
-use Http_Client;
-use Http_ClientException;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Tuleap\HudsonGit\PollingResponse;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 class JenkinsClient
 {
-
-    private static $NOTIFY_URL = '/git/notifyCommit';
-
-    /**
-     * @var PollingResponseFactory
-     */
-    private $response_factory;
+    private const NOTIFY_URL = '/git/notifyCommit';
 
     /**
-     * @var Http_Client
+     * @var ClientInterface
      */
-    private $http_curl_client;
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
     /**
      * @var JenkinsCSRFCrumbRetriever
      */
     private $csrf_crumb_retriever;
 
-    /**
-     * @param Http_Client $http_curl_client Any instance of Http_Client
-     */
     public function __construct(
-        Http_Client $http_curl_client,
-        PollingResponseFactory $response_factory,
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory,
         JenkinsCSRFCrumbRetriever $csrf_crumb_retriever
     ) {
-        $this->http_curl_client     = $http_curl_client;
-        $this->response_factory     = $response_factory;
+        $this->http_client          = $http_client;
+        $this->request_factory      = $request_factory;
         $this->csrf_crumb_retriever = $csrf_crumb_retriever;
     }
 
-    public function pushGitNotifications($server_url, $repository_url, string $commit_reference) : ?\Tuleap\HudsonGit\PollingResponse
+    public function pushGitNotifications($server_url, $repository_url, string $commit_reference) : PollingResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 
         if (mb_substr($server_url, -1) === '/') {
             $server_url = mb_substr($server_url, 0, -1);
         }
-        $push_url = $server_url . self::$NOTIFY_URL . '?url=' . urlencode($repository_url) . '&sha1=' . urlencode($commit_reference);
+        $push_url = $server_url . self::NOTIFY_URL . '?url=' . urlencode($repository_url) . '&sha1=' . urlencode($commit_reference);
 
-        $options  = array(
-            CURLOPT_SSL_VERIFYPEER  => true,
-            CURLOPT_POST            => true,
-            CURLOPT_HEADER          => true,
-            CURLOPT_URL             => $push_url,
-            CURLOPT_HTTPHEADER      => array($csrf_crumb_header)
-        );
+        $request = $this->request_factory->createRequest('POST', $push_url);
 
-        $this->http_curl_client->addOptions($options);
+        $crumb_header_split = explode(':', $csrf_crumb_header);
+        if (count($crumb_header_split) === 2) {
+            [$crumb_header_name, $crumb_header_value] = $crumb_header_split;
+            $request = $request->withHeader($crumb_header_name, $crumb_header_value);
+        }
 
         try {
-            $this->http_curl_client->doRequest();
-
-            $response     = $this->http_curl_client->getLastResponse();
-            $header_size  = $this->http_curl_client->getInfo(CURLINFO_HEADER_SIZE);
-
-            return $this->response_factory->buildResponseFormCurl($response, $header_size);
-        } catch (Http_ClientException $exception) {
-            throw new UnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Message: ' . $exception->getMessage());
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            throw new UnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Message: ' . $e->getMessage());
         }
+
+        $status_code = $response->getStatusCode();
+        if ($status_code !== 200) {
+            throw new UnableToLaunchBuildException('pushGitNotifications: ' . $push_url . '; Response: ' .
+                $status_code . ' ' . $response->getReasonPhrase());
+        }
+
+        return new PollingResponse(
+            $response->getBody()->getContents(),
+            $response->getHeader('Triggered')
+        );
     }
 }
