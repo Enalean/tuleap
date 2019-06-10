@@ -106,7 +106,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $submitted_on,
         $send_notification
     ) {
-        $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, $submitted_on);
+        $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on);
         if (! $changeset_id) {
             return;
         }
