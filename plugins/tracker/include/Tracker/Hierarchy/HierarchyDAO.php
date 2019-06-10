@@ -125,35 +125,6 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->run('DELETE FROM tracker_hierarchy WHERE parent_id = ?', $parent_id);
     }
 
-    public function deleteAllChildrenWithNature(int $parent_id) : void
-    {
-        $this->getDB()->tryFlatTransaction(
-            function () use ($parent_id) : void {
-                $this->removeAllIsChildNature($parent_id);
-                $this->deleteAllChildren($parent_id);
-            }
-        );
-    }
-
-    private function removeAllIsChildNature(int $parent_id) : void
-    {
-        $sql = 'UPDATE tracker_changeset_value_artifactlink AS artlink
-                    INNER JOIN tracker_artifact AS child_art
-                        ON (child_art.id = artlink.artifact_id)
-                    INNER JOIN tracker_changeset_value AS cv
-                        ON (cv.id = artlink.changeset_value_id)
-                    INNER JOIN tracker_changeset AS c
-                        ON (cv.changeset_id = c.id)
-                    INNER JOIN tracker_artifact AS parent_art
-                        ON (parent_art.id = c.artifact_id)
-                    INNER JOIN tracker_hierarchy AS hierarchy
-                        ON (hierarchy.child_id = child_art.tracker_id
-                            AND hierarchy.parent_id = ?)
-                SET nature = NULL';
-
-        $this->getDB()->run($sql, $parent_id);
-    }
-
     private function removeIsChildNatureForTrackersThatAreNotAnymoreChildren(int $parent_id, array $child_ids) : void
     {
         $hierarchy_join_condition = EasyStatement::open()->with(
@@ -233,7 +204,7 @@ class HierarchyDAO extends DataAccessObject
 
     public function getChildren($tracker_id) : array
     {
-        return $this->getDB()->run('SELECT child_id FROM tracker_hierarchy WHERE parent_id = ?', $tracker_id);
+        return $this->getDB()->column('SELECT child_id FROM tracker_hierarchy WHERE parent_id = ?', [$tracker_id]);
     }
 
     public function searchTrackerHierarchy(array $tracker_ids) : array

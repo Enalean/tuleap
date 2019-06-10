@@ -30,9 +30,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     function testGetWithChildren() {
         $tracker = aTracker()->withId(1)->build();
         
-        $dao = Mockery::mock(HierarchyDAO::class);
-        $children_ids = [array('parent_id' => 1, 'child_id' => 2),
-                                               array('parent_id' => 1, 'child_id' => 3)];
+        $dao          = Mockery::mock(HierarchyDAO::class);
+        $children_ids = [2, 3];
         $dao->shouldReceive('getChildren')->with($tracker->getId())->andReturn($children_ids);
 
         

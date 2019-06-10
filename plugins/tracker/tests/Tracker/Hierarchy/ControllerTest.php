@@ -18,13 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 require_once __DIR__.'/../../bootstrap.php';
 
 
-class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
-    
+class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
+{
+    /**
+     * @var \Mockery\MockInterface|HierarchyDAO
+     */
+    private $dao;
+    /**
+     * @var \Mockery\MockInterface|Tracker_Workflow_Trigger_RulesDao
+     */
+    private $trigger_rules_dao;
+
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
@@ -39,6 +49,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->type_dao             = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->factory              = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTrackerFactory::class);
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
+        $this->trigger_rules_dao    = Mockery::spy(Tracker_Workflow_Trigger_RulesDao::class);
+        $this->trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')->andReturn([]);
 
         stub($GLOBALS['Language'])->getText()->returns('');
     }
@@ -107,12 +119,13 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfEditAction() {
         ob_start();
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
         $controller->edit();
         $content = ob_get_clean();
@@ -127,27 +140,29 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->expectRedirectTo($this->redirect_url);
 
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
         $controller->update();
     }
     
     public function testWeCanDeleteAllChildrenByNOTprovidingAnArrayOfIds() {
-        $this->dao->shouldReceive('deleteAllChildrenWithNature')->with($this->tracker_id)->once();
+        $this->dao->shouldReceive('updateChildren')->with($this->tracker_id, Mockery::any())->once();
         
         $this->expectRedirectTo($this->redirect_url);
         
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
 
         $controller->update();
@@ -160,12 +175,13 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->expectFeedback('error', '*');
         $this->expectRedirectTo($this->redirect_url);
 
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
         $controller->update();
     }
@@ -178,12 +194,13 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
 
     public function itCreatesHierarchyFromXmlProjectImportProcess() {
         $mapping    = array(111,222,333,444);
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
         $this->dao->shouldReceive('updateChildren')->once();
 
@@ -196,16 +213,16 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         stub($this->type_dao)->isTypeDisabledInProject()->returns(true);
 
         expect($this->dao)->updateChildren()->never();
-        expect($this->dao)->deleteAllChildrenWithNature()->never();
         $this->expectFeedback('error', '*');
         $this->expectRedirectTo($this->redirect_url);
 
-        $controller = new Tracker_Hierarchy_Controller(
+        $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
             $this->dao,
-            $this->type_dao
+            $this->type_dao,
+            $this->trigger_rules_dao
         );
 
         $controller->update();

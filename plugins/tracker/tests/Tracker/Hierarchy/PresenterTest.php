@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,7 @@ class Tracker_Hierarchy_PresenterTest extends TuleapTestCase
             $possible_children,
             new TreeNode(),
             array(),
-            false
+            []
         );
 
         $attributes = $presenter->getPossibleChildren();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,20 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject {
                   INNER JOIN tracker_field_list_bind_static_value lbsv ON (lbsv.id = rule.value_id)
                   INNER JOIN tracker_field field ON (field.id = lbsv.field_id)
                 WHERE field.tracker_id = $tracker_id";
+        return $this->retrieve($sql);
+    }
+
+    public function searchTriggeringTrackersByTargetTrackerID(int $target_tracker_id)
+    {
+        $target_tracker_id = $this->da->escapeInt($target_tracker_id);
+        $sql = "SELECT DISTINCT trigger_field.tracker_id
+                FROM tracker_workflow_trigger_rule_static_value AS rule
+                JOIN tracker_field_list_bind_static_value AS target_lbsv ON (target_lbsv.id = rule.value_id)
+                JOIN tracker_field AS target_field ON (target_field.id = target_lbsv.field_id)
+                JOIN tracker_workflow_trigger_rule_trg_field_static_value AS trigger_field_value ON (trigger_field_value.rule_id = rule.id)
+                JOIN tracker_field_list_bind_static_value AS lbsv_trigger ON (lbsv_trigger.id = trigger_field_value.value_id)
+                JOIN tracker_field AS trigger_field ON (trigger_field.id = lbsv_trigger.field_id)
+                WHERE target_field.tracker_id = $target_tracker_id";
         return $this->retrieve($sql);
     }
 
