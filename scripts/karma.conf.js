@@ -22,10 +22,16 @@
  */
 
 const path = require("path");
+const webpack = require("webpack");
 const [webpack_config_for_angular] = require("./webpack.config.js");
 const karma_configurator = require("../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config_for_angular.mode = "development";
+webpack_config_for_angular.plugins = [
+    ...webpack_config_for_angular.plugins,
+    // Fix ngVue's stupid logger
+    new webpack.DefinePlugin({ "process.env.BABEL_ENV": JSON.stringify("test") })
+];
 
 module.exports = function(config) {
     const coverage_dir = path.resolve(__dirname, "./coverage");
