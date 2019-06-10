@@ -616,7 +616,7 @@ class Tracker_Artifact_XMLImport {
 
     /**
      * @param SimpleXMLElement $xml_changeset
-     * @return false|int
+     * @return int
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function getSubmittedOn(SimpleXMLElement $xml_changeset) {
