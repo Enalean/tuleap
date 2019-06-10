@@ -59,7 +59,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      *
      * @return int The Id of the initial changeset, or null if fields were not valid
      */
-    public function create(Tracker_Artifact $artifact, array $fields_data, PFUser $submitter, $submitted_on): ?int
+    public function create(Tracker_Artifact $artifact, array $fields_data, PFUser $submitter, int $submitted_on): ?int
     {
         if (! $this->doesRequestAppearToBeValid($artifact, $fields_data, $submitter)) {
             return null;

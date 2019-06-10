@@ -68,12 +68,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     /**
      * Update an artifact (means create a new changeset)
      *
-     * @param array   $fields_data       Artifact fields values
-     * @param string  $comment           The comment (follow-up) associated with the artifact update
-     * @param PFUser  $submitter         The user who is doing the update
-     * @param bool $send_notification true if a notification must be sent, false otherwise
-     * @param string  $comment_format    The comment (follow-up) type ("text" | "html")
-     *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
      * @throws FieldValidationException
@@ -83,11 +77,11 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     public function create(
         Tracker_Artifact $artifact,
         array $fields_data,
-        $comment,
+        string $comment,
         PFUser $submitter,
-        $submitted_on,
-        $send_notification,
-        $comment_format
+        int $submitted_on,
+        bool $send_notification,
+        string $comment_format
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
