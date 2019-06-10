@@ -72,7 +72,7 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
             'is_autocomputed' => 0
         );
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
     }
 
     public function itCanRetrieveManualValueWhenDataComesFromJson()
@@ -84,14 +84,14 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
             )
         );
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
     }
 
     public function itRetrieveEmptyValueWhenDataIsIncorrect()
     {
         $value = 'aaa';
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, null));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter);
+        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
     }
 }
 

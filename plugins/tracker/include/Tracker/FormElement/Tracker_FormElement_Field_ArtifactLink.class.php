@@ -1611,29 +1611,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand($this->getSourceOfAssociationCollection());
     }
 
-    /**
-     * Save the value submitted by the user in the new changeset
-     *
-     * @param Tracker_Artifact           $artifact         The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $value  The value submitted by the user
-     * @param bool $is_submission true if artifact submission, false if artifact update
-     *
-     * @return bool true if success
-     */
     public function saveNewChangeset(
-        $artifact,
-        $old_changeset,
-        $new_changeset_id,
-        $value,
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_Changeset $old_changeset,
+        int $new_changeset_id,
+        $submitted_value,
         PFUser $submitter,
-        $is_submission = false,
-        $bypass_permissions = false
+        bool $is_submission,
+        bool $bypass_permissions
     ) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
 
-        $value = $this->getNormalizedSubmittedValue($value);
+        $value = $this->getNormalizedSubmittedValue($submitted_value);
 
         $convertor       = $this->getSubmittedValueConvertor();
         $submitted_value = $convertor->convert(

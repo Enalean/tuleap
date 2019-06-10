@@ -37,7 +37,7 @@ class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Trac
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        int $changeset_id
     ): void {
         $is_submission = true;
         $bypass_perms  = true;

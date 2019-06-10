@@ -97,14 +97,14 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        int $changeset_id
     ): void;
 
     private function storeFieldsValues(
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        int $changeset_id
     ): void {
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id);

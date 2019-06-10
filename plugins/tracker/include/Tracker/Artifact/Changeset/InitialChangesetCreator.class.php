@@ -33,7 +33,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        int $changeset_id
     ): void {
         $is_submission = true;
         $bypass_perms  = true;
@@ -41,7 +41,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanSubmit()) {
-                $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, false);
                 return;
             } else if ($workflow && $workflow->bypassPermissions($field)) {
                 $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
