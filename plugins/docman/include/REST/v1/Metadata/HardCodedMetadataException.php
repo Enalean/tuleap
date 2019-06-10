@@ -57,7 +57,7 @@ class HardCodedMetadataException extends Exception
     {
         return new self(
             "obsolescence date is not enabled for project",
-            dgettext('tuleap-docman', 'The project does not support obsolescence date, you should not provide it to create a new document.')
+            dgettext('tuleap-docman', 'The project does not support obsolescence date, you should not provide it to create or update a new document.')
         );
     }
 
