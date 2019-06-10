@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
@@ -40,10 +41,36 @@ class HiddenFieldsetsDetector
      */
     private $hidden_fieldsets_retriever;
 
-    public function __construct(TransitionRetriever $transition_retriever, HiddenFieldsetsRetriever $hidden_fieldsets_retriever)
-    {
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct(
+        TransitionRetriever $transition_retriever,
+        HiddenFieldsetsRetriever $hidden_fieldsets_retriever,
+        Tracker_FormElementFactory $form_element_factory
+    ) {
         $this->transition_retriever       = $transition_retriever;
         $this->hidden_fieldsets_retriever = $hidden_fieldsets_retriever;
+        $this->form_element_factory       = $form_element_factory;
+    }
+
+    public function doesArtifactContainHiddenFieldsets(Tracker_Artifact $artifact): bool
+    {
+        if (! $this->artifactIsEligibleToHiddenFieldsets($artifact)) {
+            return false;
+        }
+
+        $fieldsets = $this->form_element_factory->getUsedFieldsets($artifact->getTracker());
+
+        foreach ($fieldsets as $fieldset) {
+            if ($this->isFieldsetHidden($artifact, $fieldset)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isFieldsetHidden(Tracker_Artifact $artifact, Tracker_FormElement_Container_Fieldset $fieldset): bool
@@ -64,5 +91,12 @@ class HiddenFieldsetsDetector
         }
 
         return false;
+    }
+
+    private function artifactIsEligibleToHiddenFieldsets(Tracker_Artifact $artifact) : bool
+    {
+        $workflow = $artifact->getWorkflow();
+
+        return $workflow !== null && ! $workflow->isAdvanced();
     }
 }

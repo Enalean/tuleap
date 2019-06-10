@@ -737,9 +737,22 @@ select.tracker-report-expert-allowed-fields {
         margin: 0;
         line-height: 30px;
     }
+    .header-spacer {
+        flex: 1 1 auto;
+        min-width: 20px;
+    }
+
+    .show-hide-fieldsets {
+        flex: 0 0 auto;
+        font-weight: 600;
+        font-size: 15px;
+        font-family: SourceSansPro, "Helvetica Neue", Arial, sans-serif;
+        line-height: 35px;
+    }
 }
 
 .tracker-artifact-actions {
+    line-height: 35px;
     margin: 0 0 0 10px;
     font-weight: 400;
 }

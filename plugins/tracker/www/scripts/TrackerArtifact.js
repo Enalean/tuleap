@@ -54,6 +54,32 @@ function invertFollowups(followupSection) {
 }
 
 document.observe("dom:loaded", function() {
+    $$(".show-fieldsets").each(function(button) {
+        function showFieldsets() {
+            $$(".tracker_artifact_fieldset_hidden").each(function(fieldset) {
+                fieldset.removeClassName("tracker_artifact_fieldset_hidden");
+                fieldset.addClassName("tracker_artifact_fieldset_hidden_visible");
+            });
+        }
+
+        button.observe("click", function() {
+            showFieldsets();
+        });
+    });
+
+    $$(".hide-fieldsets").each(function(button) {
+        function hideFieldsets() {
+            $$(".tracker_artifact_fieldset_hidden_visible").each(function(fieldset) {
+                fieldset.addClassName("tracker_artifact_fieldset_hidden");
+                fieldset.removeClassName("tracker_artifact_fieldset_hidden_visible");
+            });
+        }
+
+        button.observe("click", function() {
+            hideFieldsets();
+        });
+    });
+
     $$(".tracker_statistics").each(function(div) {
         codendi.Tooltips.push(
             new codendi.Tooltip(

@@ -60,6 +60,9 @@ use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
@@ -724,7 +727,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->getFormElementFactory(),
                     $this->getEventManager(),
                     $this->getNatureIsChildLinkRetriever(),
-                    $this->getVisitRecorder()
+                    $this->getVisitRecorder(),
+                    $this->getHiddenFieldsetsDetector()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -813,7 +817,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->getFormElementFactory(),
                     $layout,
                     $this->getNatureIsChildLinkRetriever(),
-                    $this->getVisitRecorder()
+                    $this->getVisitRecorder(),
+                    $this->getHiddenFieldsetsDetector()
                 );
 
                 $renderer->display($request, $current_user);
@@ -844,7 +849,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $this, $this->getFormElementFactory(),
                         $layout,
                         $this->getNatureIsChildLinkRetriever(),
-                        $this->getVisitRecorder()
+                        $this->getVisitRecorder(),
+                        $this->getHiddenFieldsetsDetector()
                     );
                     $renderer->display($request, $current_user);
                 }
@@ -2055,5 +2061,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             )
         );
         return new WorkflowUpdateChecker($frozen_field_detector);
+    }
+
+    private function getHiddenFieldsetsDetector() : HiddenFieldsetsDetector
+    {
+        return new HiddenFieldsetsDetector(
+            new TransitionRetriever(
+                new StateFactory(
+                    new TransitionFactory(
+                        Workflow_Transition_ConditionFactory::build()
+                    ),
+                    new SimpleWorkflowDao()
+                ),
+                new TransitionExtractor()
+            ),
+            new HiddenFieldsetsRetriever(
+                new HiddenFieldsetsDao(),
+                Tracker_FormElementFactory::instance()
+            ),
+            Tracker_FormElementFactory::instance()
+        );
     }
 }

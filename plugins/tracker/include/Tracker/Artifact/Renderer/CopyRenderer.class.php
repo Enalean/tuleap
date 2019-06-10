@@ -24,6 +24,7 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
 
@@ -33,9 +34,10 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
-        parent::__construct($event_manager, $artifact, $formelement_factory, $layout, $retriever, $visit_recorder);
+        parent::__construct($event_manager, $artifact, $formelement_factory, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
         $this->redirect->query_parameters = array(
             'tracker' => $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',

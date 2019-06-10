@@ -349,6 +349,9 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
 msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
+msgid "Hidden fieldsets:"
+msgstr "Groupes de champs cachés:"
+
 msgid "Hierarchy"
 msgstr "Hiérarchie"
 
