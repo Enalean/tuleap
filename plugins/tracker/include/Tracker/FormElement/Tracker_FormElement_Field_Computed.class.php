@@ -21,12 +21,9 @@
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
@@ -855,7 +852,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return UserManager::instance()->getCurrentUser();
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
+    ) {
         $user = $this->getCurrentUser();
         if (! $this->userCanUpdate($user)) {
             return true;

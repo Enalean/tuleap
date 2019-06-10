@@ -42,6 +42,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -56,7 +57,14 @@ class ChangesetValueFileSaverTest extends TestCase
         $savior->shouldReceive('initFolder');
 
         $this->assertTrue(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -67,6 +75,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -95,7 +104,14 @@ class ChangesetValueFileSaverTest extends TestCase
         $dao->shouldReceive('create')->with($changeset_value_id, [69, 70])->andReturn(true);
 
         $this->assertTrue(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -106,6 +122,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -134,7 +151,14 @@ class ChangesetValueFileSaverTest extends TestCase
         $dao->shouldReceive('create')->with($changeset_value_id, [69, 70])->andReturn(false);
 
         $this->assertFalse(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -145,6 +169,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -176,7 +201,14 @@ class ChangesetValueFileSaverTest extends TestCase
         $previous_file_2->shouldReceive('delete');
 
         $this->assertTrue(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -187,6 +219,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -207,7 +240,7 @@ class ChangesetValueFileSaverTest extends TestCase
             'tmp_name'    => '/var/tmp/2'
         ];
 
-        $value            = [$submitted_file_1, $submitted_file_2];
+        $value = [$submitted_file_1, $submitted_file_2];
 
         $attachment_1 = \Mockery::mock(\Tracker_FileInfo::class);
         $attachment_1->shouldReceive('getId')->andReturn(1);
@@ -221,16 +254,23 @@ class ChangesetValueFileSaverTest extends TestCase
         $savior->shouldReceive('initFolder');
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1)
+            ->with($current_user, $field, $submitted_file_1, $url_mapping)
             ->andReturn($attachment_1);
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2)
+            ->with($current_user, $field, $submitted_file_2, $url_mapping)
             ->andReturn($attachment_2);
         $dao->shouldReceive('create')->with($changeset_value_id, [1, 2])->andReturn(true);
 
         $this->assertTrue(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -241,6 +281,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -275,16 +316,23 @@ class ChangesetValueFileSaverTest extends TestCase
         $savior->shouldReceive('initFolder');
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1)
+            ->with($current_user, $field, $submitted_file_1, $url_mapping)
             ->andReturn($attachment_1);
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2)
+            ->with($current_user, $field, $submitted_file_2, $url_mapping)
             ->andReturn($attachment_2);
         $dao->shouldReceive('create')->with($changeset_value_id, [1, 2])->andReturn(false);
 
         $this->assertFalse(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 
@@ -295,6 +343,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_creator = \Mockery::mock(AttachmentCreator::class);
         $current_user       = \Mockery::mock(PFUser::class);
         $field              = \Mockery::mock(Tracker_FormElement_Field_File::class);
+        $url_mapping         = \Mockery::mock(CreatedFileURLMapping::class);
 
         $changeset_value_id = 12345;
 
@@ -327,16 +376,23 @@ class ChangesetValueFileSaverTest extends TestCase
         $savior->shouldReceive('initFolder');
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_1)
+            ->with($current_user, $field, $submitted_file_1, $url_mapping)
             ->andReturn(null);
         $attachment_creator
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_file_2)
+            ->with($current_user, $field, $submitted_file_2, $url_mapping)
             ->andReturn($attachment_2);
         $dao->shouldReceive('create')->with($changeset_value_id, [2])->andReturn(true);
 
         $this->assertTrue(
-            $savior->saveValue($current_user, $field, $changeset_value_id, $value, $previous_changeset_value)
+            $savior->saveValue(
+                $current_user,
+                $field,
+                $changeset_value_id,
+                $value,
+                $previous_changeset_value,
+                $url_mapping
+            )
         );
     }
 }

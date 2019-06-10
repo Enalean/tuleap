@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
@@ -368,17 +369,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return $this->cache_openvalues[$oid];
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return bool
-     */
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
+    ) {
         $openvalue_dao = $this->getOpenValueDao();
         // the separator is a comma
         $values = $this->sanitize($value);

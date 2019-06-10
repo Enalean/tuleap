@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTusUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
 use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
@@ -835,21 +836,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $this->files_info_from_request;
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return bool
-     */
     protected function saveValue(
         $artifact,
         $changeset_value_id,
         $value,
-        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
     ) {
         $mover              = new AttachmentToFinalPlaceMover();
         $rule_file          = new Rule_File();
@@ -879,7 +871,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $this,
             $changeset_value_id,
             $value,
-            $previous_changesetvalue
+            $previous_changesetvalue,
+            $url_mapping
         );
     }
 

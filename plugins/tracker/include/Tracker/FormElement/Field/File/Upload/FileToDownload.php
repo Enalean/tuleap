@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-final class FileToUpload
+final class FileToDownload
 {
     /**
      * @var int
@@ -38,18 +38,8 @@ final class FileToUpload
         $this->filename = $filename;
     }
 
-    public function getUploadHref(): string
-    {
-        return '/uploads/tracker/file/' . urlencode((string) $this->id);
-    }
-
     public function getDownloadHref(): string
     {
-        return (new FileToDownload($this->id, $this->filename))->getDownloadHref();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        return TRACKER_BASE_URL . '/attachments/' . urlencode((string) $this->id) .'-'. rawurlencode($this->filename);
     }
 }

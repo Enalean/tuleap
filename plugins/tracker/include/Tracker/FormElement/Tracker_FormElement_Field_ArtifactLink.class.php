@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 {
@@ -1618,7 +1619,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $submitted_value,
         PFUser $submitter,
         bool $is_submission,
-        bool $bypass_permissions
+        bool $bypass_permissions,
+        CreatedFileURLMapping $url_mapping
     ) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
 
@@ -1639,7 +1641,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $submitted_value,
             $submitter,
             $is_submission,
-            $bypass_permissions
+            $bypass_permissions,
+            $url_mapping
         );
     }
 
@@ -1655,20 +1658,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $value;
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $submitted_value         The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     */
     protected function saveValue(
         $artifact,
         $changeset_value_id,
         $submitted_value,
-        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
     ) {
         $saver = $this->getArtifactLinkValueSaver();
 

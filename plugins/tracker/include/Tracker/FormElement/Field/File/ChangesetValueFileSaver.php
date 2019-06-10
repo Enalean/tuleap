@@ -53,7 +53,8 @@ class ChangesetValueFileSaver
         Tracker_FormElement_Field_File $field,
         int $changeset_value_id,
         array $value,
-        ?Tracker_Artifact_ChangesetValue_File $previous_changesetvalue
+        ?Tracker_Artifact_ChangesetValue_File $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
     ): bool {
         $save_ok = true;
 
@@ -69,7 +70,12 @@ class ChangesetValueFileSaver
                 continue;
             }
 
-            $attachment = $this->attachment_creator->createAttachment($current_user, $field, $submitted_value_info);
+            $attachment = $this->attachment_creator->createAttachment(
+                $current_user,
+                $field,
+                $submitted_value_info,
+                $url_mapping
+            );
             if ($attachment) {
                 $fileinfo_ids[] = $attachment->getId();
             }

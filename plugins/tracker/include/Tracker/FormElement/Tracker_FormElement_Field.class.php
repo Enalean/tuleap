@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -1104,7 +1105,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $submitted_value,
         PFUser $submitter,
         bool $is_submission,
-        bool $bypass_permissions
+        bool $bypass_permissions,
+        CreatedFileURLMapping $url_mapping
     ) {
         $updated        = false;
         $save_new_value = false;
@@ -1145,7 +1147,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($save_new_value) {
             //Save the new value
             if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 1)) {
-                $updated = $this->saveValue($artifact, $changeset_value_id, $submitted_value, $previous_changesetvalue);
+                $updated = $this->saveValue($artifact, $changeset_value_id, $submitted_value, $previous_changesetvalue, $url_mapping);
             }
         }
 
@@ -1176,7 +1178,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return bool
      */
-    protected abstract function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null);
+    protected abstract function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
+    );
 
     /**
      * Keep the value

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -97,7 +98,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        int $changeset_id
+        int $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): void;
 
     private function storeFieldsValues(
@@ -106,8 +108,9 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         PFUser $submitter,
         int $changeset_id
     ): void {
+        $url_mapping = new CreatedFileURLMapping();
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
-            $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id);
+            $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
         }
     }
 

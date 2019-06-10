@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
@@ -125,8 +126,13 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $tracker_key->getFieldSize($key);
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
-    {
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $id_mapping
+    ) {
         if ($value != "") {
             $dao_pub_key        = new TrackerPublicKeyDao();
             $value_dao          = new ValueDao();

@@ -35,6 +35,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
@@ -512,7 +513,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function getRESTAvailableValues() {
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
+    ) {
+        return false;
     }
 
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {

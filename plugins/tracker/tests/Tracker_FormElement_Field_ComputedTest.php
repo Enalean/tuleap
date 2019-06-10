@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
 require_once('bootstrap.php');
@@ -33,6 +34,10 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
     private $submitter;
     private $value_dao;
     private $new_changeset_value_id;
+    /**
+     * @var \Mockery\MockInterface|CreatedFileURLMapping
+     */
+    private $url_mapping;
 
     public function setUp()
     {
@@ -56,6 +61,8 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
         $this->submitter        = aUser()->build();
         $this->new_changeset_value_id = 66666;
 
+        $this->url_mapping = \Mockery::mock(CreatedFileURLMapping::class);
+
         $this->value_dao = mock(ComputedDao::class);
         stub($this->field)->getValueDao()->returns($this->value_dao);
         $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
@@ -72,7 +79,16 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
             'is_autocomputed' => 0
         );
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
+        $this->field->saveNewChangeset(
+            $this->artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            $value,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
     }
 
     public function itCanRetrieveManualValueWhenDataComesFromJson()
@@ -84,14 +100,32 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
             )
         );
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, 20));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
+        $this->field->saveNewChangeset(
+            $this->artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            $value,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
     }
 
     public function itRetrieveEmptyValueWhenDataIsIncorrect()
     {
         $value = 'aaa';
         $this->value_dao->expectOnce('create', array($this->new_changeset_value_id, null));
-        $this->field->saveNewChangeset($this->artifact, $this->old_changeset, $this->new_changeset_id, $value, $this->submitter, false, false);
+        $this->field->saveNewChangeset(
+            $this->artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            $value,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
     }
 }
 

@@ -95,7 +95,10 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->never();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertEquals('readme.mkd', $attachment->getFilename());
     }
 
@@ -161,7 +164,10 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->never();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -223,7 +229,10 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->once();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -241,6 +250,8 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+
         $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
         $temporary_file_manager
             ->shouldReceive('getFileByTemporaryName')
@@ -250,7 +261,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
         $next_creator_in_chain
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info);
+            ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
         /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
@@ -266,7 +277,9 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->never();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -286,10 +299,12 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
 
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
         $next_creator_in_chain
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info);
+            ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
         /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
@@ -305,7 +320,9 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->never();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -325,10 +342,12 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
 
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
         $next_creator_in_chain
             ->shouldReceive('createAttachment')
-            ->with($current_user, $field, $submitted_value_info);
+            ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
         /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
@@ -344,7 +363,9 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $creator->shouldReceive('delete')->never();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 }

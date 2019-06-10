@@ -148,7 +148,16 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $field2->shouldReceive('isValid')->andReturns(true);
         $field2->shouldReceive('userCanUpdate')->andReturns(false);
         $workflow->shouldReceive('bypassPermissions')->with($field2)->andReturns(true);
-        $field2->shouldReceive('saveNewChangeset')->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), $user, false, true)->once()->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->with(
+            Mockery::any(),
+            Mockery::any(),
+            Mockery::any(),
+            Mockery::any(),
+            $user,
+            false,
+            true,
+            Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+        )->once()->andReturns(true);
         $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2));
         $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 

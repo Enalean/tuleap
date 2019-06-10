@@ -61,7 +61,10 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $creator->shouldReceive('save')->andReturn(true);
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertEquals(101, $attachment->getSubmittedBy());
     }
 
@@ -96,7 +99,56 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $creator->shouldReceive('save')->andReturn(true);
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
+        $this->assertEquals(101, $attachment->getSubmittedBy());
+    }
+
+    public function testItStoreMappingBetweenXMIdAndFileInfoId(): void
+    {
+        $rule_file = Mockery::mock(\Rule_File::class);
+        $rule_file->shouldReceive('isValid')->andReturn(true);
+
+        $current_user = Mockery::mock(PFUser::class);
+        $current_user->shouldReceive('getId')->andReturn(101);
+
+        $mover = Mockery::mock(AttachmentToFinalPlaceMover::class);
+        $mover
+            ->shouldReceive('moveAttachmentToFinalPlace')
+            ->with(Mockery::any(), 'copy', '/var/tmp')
+            ->andReturn(true);
+
+        $submitted_value_info = [
+            'description'          => '',
+            'name'                 => 'readme.mkd',
+            'size'                 => 42,
+            'type'                 => 'text/plain',
+            'tmp_name'             => '/var/tmp',
+            'is_migrated'          => true,
+            'previous_fileinfo_id' => 123
+        ];
+
+        $field = Mockery::mock(Tracker_FormElement_Field_File::class);
+
+        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
+        $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        $creator->shouldAllowMockingProtectedMethods();
+
+        $creator->shouldReceive('save')->andReturn(true);
+
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+
+        // When Tracker_FileInfo saves itself, it updates its id (initially set to 0) to the new id.
+        // Since the Tracker_FileInfo instance is created in the method under test, there is no mean
+        // to know the new id, therefore we trust Tracker_FileInfo code and test with default id 0.
+        $url_mapping
+            ->shouldReceive('add')
+            ->with('/plugins/tracker/attachments/123-readme.mkd', '/plugins/tracker/attachments/0-readme.mkd')
+            ->once();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertEquals(101, $attachment->getSubmittedBy());
     }
 
@@ -134,7 +186,10 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $creator->shouldReceive('save')->andReturn(true);
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertEquals(666, $attachment->getSubmittedBy());
     }
 
@@ -168,7 +223,10 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $creator->shouldReceive('save')->andReturn(false);
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -202,7 +260,10 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $creator->shouldReceive('save')->andReturn(true);
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 
@@ -223,7 +284,10 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
         $creator->shouldAllowMockingProtectedMethods();
 
-        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info);
+        $url_mapping = Mockery::mock(CreatedFileURLMapping::class);
+        $url_mapping->shouldReceive('add')->never();
+
+        $attachment = $creator->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         $this->assertNull($attachment);
     }
 }

@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-
 require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
@@ -405,9 +401,20 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
 class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
 
+    /**
+     * @var \Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping
+     */
+    private $url_mapping;
+    /**
+     * @var \Mockery\MockInterface|\Tracker_FormElement_Field_ArtifactLink
+     */
+    private $field;
+
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
+
+        $this->url_mapping = \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class);
 
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         Tracker_HierarchyFactory::setInstance($hierarchy_factory);
@@ -458,6 +465,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
         stub($this->field)->userCanUpdate()->returns(true);
         stub($this->field)->isValid()->returns(true);
+        $this->field->shouldReceive('getTracker')->andReturn($tracker);
 
         stub($this->field)->getProcessChildrenTriggersCommand()->returns(\Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class));
     }
@@ -468,30 +476,58 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         parent::tearDown();
     }
 
-    public function itPostponeSavesChangesetInSourceArtifact() {
+    public function itPostponeSavesChangesetInSourceArtifact()
+    {
         expect($this->artifact_123)->linkArtifact()->never();
 
         // Then update the artifact with other links
-        $remaining_submitted_value = array(
-            'new_values' => '123, 124',
-            'removed_values' => array(
-                345 => array('345'),
-                346 => array('346')
-            ),
+        $remaining_submitted_value = [
+            'new_values'               => '123, 124',
+            'removed_values'           => [
+                345 => ['345'],
+                346 => ['346']
+            ],
             'list_of_artifactlinkinfo' =>
-            array(
-                124 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->artifact_124, '')
+                [
+                    124 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->artifact_124, '')
+                ]
+        ];
+        $this->field
+            ->shouldReceive('saveValue')
+            ->with(
+                $this->modified_artifact,
+                $this->new_changeset_value_id,
+                $remaining_submitted_value,
+                null,
+                $this->url_mapping
             )
-        );
-        $this->field->shouldReceive('saveValue')->with($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null)->once();
+            ->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter, false, false);
+        $this->field->saveNewChangeset(
+            $this->modified_artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            $this->submitted_value,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
     }
 
     public function itDoesntFailIfSubmittedValueIsNull() {
         $this->field->shouldReceive('saveValue')->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, null, $this->submitter, false, false);
+        $this->field->saveNewChangeset(
+            $this->modified_artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            null,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
     }
 
     public function itSavesChangesetInSourceArtifact() {
@@ -500,8 +536,21 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
 
         $this->field->shouldReceive('saveValue')->once();
 
-        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter, false, false);
-        $this->field->postSaveNewChangeset($this->modified_artifact, $this->submitter, \Mockery::spy(\Tracker_Artifact_Changeset::class));
+        $this->field->saveNewChangeset(
+            $this->modified_artifact,
+            $this->old_changeset,
+            $this->new_changeset_id,
+            $this->submitted_value,
+            $this->submitter,
+            false,
+            false,
+            $this->url_mapping
+        );
+        $this->field->postSaveNewChangeset(
+            $this->modified_artifact,
+            $this->submitter,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class)
+        );
     }
 }
 

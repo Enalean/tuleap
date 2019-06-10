@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
@@ -39,6 +40,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @var SourceOfAssociationCollectionBuilder
      */
     private $source_of_association_collection_builder;
+    /**
+     * @var ReferenceManager
+     */
+    private $reference_manager;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -68,11 +73,11 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     /**
      * Update an artifact (means create a new changeset)
      *
-     * @throws Tracker_Exception In the validation
+     * @return Tracker_Artifact_Changeset|null
      * @throws Tracker_NoChangeException In the validation
      * @throws FieldValidationException
      *
-     * @return Tracker_Artifact_Changeset|null
+     * @throws Tracker_Exception In the validation
      */
     public function create(
         Tracker_Artifact $artifact,
@@ -104,9 +109,17 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
              */
             $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
 
-            $changeset_id = $this->changeset_dao->create($artifact->getId(), $submitter->getId(), $email, $submitted_on);
+            $changeset_id = $this->changeset_dao->create(
+                $artifact->getId(),
+                $submitter->getId(),
+                $email,
+                $submitted_on
+            );
             if (! $changeset_id) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update')
+                );
                 $this->changeset_dao->rollBack();
                 throw new Tracker_ChangesetNotCreatedException();
             }
@@ -147,6 +160,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             );
             if (count($collection) > 0) {
                 $collection->linkToArtifact($artifact, $submitter);
+
                 return null;
             } else {
                 $this->changeset_dao->rollBack();
@@ -167,7 +181,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $artifact->getChangeset($changeset_id)->executePostCreationActions();
         }
 
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, ['artifact' => $artifact]);
 
         return $new_changeset;
     }
@@ -178,7 +192,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): bool;
 
     /**
@@ -191,15 +206,24 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         PFUser $submitter,
         $changeset_id
     ): bool {
+        $url_mapping = new CreatedFileURLMapping();
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
-            if (! $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
+            if (! $this->saveNewChangesetForField(
+                $field,
+                $artifact,
+                $previous_changeset,
+                $fields_data,
+                $submitter,
+                $changeset_id,
+                $url_mapping
+            )) {
                 $this->changeset_dao->rollBack();
                 $purifier = Codendi_HTMLPurifier::instance();
                 throw new Tracker_FieldValueNotStoredException(
                     $GLOBALS['Language']->getText(
                         'plugin_tracker',
                         'field_not_stored_exception',
-                        array($purifier->purify($field->getLabel()))
+                        [$purifier->purify($field->getLabel())]
                     )
                 );
             }
@@ -218,7 +242,14 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
 
-        $comment_added = $this->changeset_comment_dao->createNewVersion($changeset_id, $comment, $submitter->getId(), $submitted_on, 0, $comment_format);
+        $comment_added = $this->changeset_comment_dao->createNewVersion(
+            $changeset_id,
+            $comment,
+            $submitter->getId(),
+            $submitted_on,
+            0,
+            $comment_format
+        );
         if (! $comment_added) {
             return false;
         }
@@ -260,7 +291,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             throw new Tracker_NoChangeException($artifact->getId(), $artifact->getXRef());
         }
 
-        $workflow = $artifact->getWorkflow();
+        $workflow    = $artifact->getWorkflow();
         $fields_data = $this->field_initializator->process($artifact, $fields_data);
 
         $workflow->validate($fields_data, $artifact, $comment);

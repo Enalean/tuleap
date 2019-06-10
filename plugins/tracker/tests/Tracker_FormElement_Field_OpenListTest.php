@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+
 require_once('bootstrap.php');
 
 Mock::generatePartial(
@@ -55,8 +58,8 @@ Mock::generatePartial(
     )
 );
 class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracker_FormElement_Field_OpenListTestVersion {
-    public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
+    public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping) {
+        parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue, $url_mapping);
     }
 }
 Mock::generate('Tracker_FormElement_Field_Value_OpenListDao');
@@ -187,7 +190,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $list_field->setReturnReference('getValueDao', $value_dao);
         $list_field->setReturnReference('getOpenValueDao', $open_value_dao);
 
-        $list_field->saveValue($artifact, $changeset_id, $submitted_value);
+        $list_field->saveValue($artifact, $changeset_id, $submitted_value, null, Mockery::mock(CreatedFileURLMapping::class));
     }
 }
 

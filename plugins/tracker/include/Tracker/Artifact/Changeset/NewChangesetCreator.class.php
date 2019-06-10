@@ -20,21 +20,21 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+
 /**
  * I create a new changeset (update of an artifact)
  */
 class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Changeset_NewChangesetCreatorBase
 {
-    /**
-     * @see Tracker_Artifact_Changeset_NewChangesetCreatorBase::saveNewChangesetForField()
-     */
     protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): bool {
         $is_submission = false;
         $bypass_perms  = true;
@@ -42,14 +42,52 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanUpdate()) {
-                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, false);
-            } else if ($workflow && $workflow->bypassPermissions($field)) {
-                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
-            } else {
-                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission, false);
+                return $field->saveNewChangeset(
+                    $artifact,
+                    $previous_changeset,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    false,
+                    $url_mapping
+                );
             }
-        } else {
-            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission, false);
+
+            if ($workflow && $workflow->bypassPermissions($field)) {
+                return $field->saveNewChangeset(
+                    $artifact,
+                    $previous_changeset,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    $bypass_perms,
+                    $url_mapping
+                );
+            }
+
+            return $field->saveNewChangeset(
+                $artifact,
+                $previous_changeset,
+                $changeset_id,
+                null,
+                $submitter,
+                $is_submission,
+                false,
+                $url_mapping
+            );
         }
+
+        return $field->saveNewChangeset(
+            $artifact,
+            $previous_changeset,
+            $changeset_id,
+            null,
+            $submitter,
+            $is_submission,
+            false,
+            $url_mapping
+        );
     }
 }

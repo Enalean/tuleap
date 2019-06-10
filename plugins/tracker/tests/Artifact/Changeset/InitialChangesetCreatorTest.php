@@ -149,7 +149,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         $this->fields_data[123] = 'value';
 
-        expect($this->field)->saveNewChangeset('*', '*', '*', 'default value', '*', '*', '*')->once();
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'default value', '*', '*', '*', '*')->once();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
@@ -160,7 +160,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         $this->fields_data[123] = 'value';
 
-        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*')->once();
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*', '*')->once();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
@@ -172,7 +172,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         $this->fields_data[123] = 'value';
 
-        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*')->once();
+        expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*', '*')->once();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }

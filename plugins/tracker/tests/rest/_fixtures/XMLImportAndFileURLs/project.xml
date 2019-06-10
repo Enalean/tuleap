@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="test-tracker-file-url" full-name="test-tracker-file-url" description="For test" access="public">
+    <long-description></long-description>
+    <services>
+        <service shortname="plugin_tracker" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T164" parent_id="0">
+            <name><![CDATA[Images]]></name>
+            <item_name>image</item_name>
+            <description><![CDATA[Images]]></description>
+            <color>chrome-silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="text" ID="F1661" rank="0">
+                    <name>details</name>
+                    <label><![CDATA[Original Submission]]></label>
+                    <description><![CDATA[A full description of the artifact]]></description>
+                    <properties rows="7" cols="60"/>
+                </formElement>
+                <formElement type="text" ID="F1662" rank="0">
+                    <name>implementation_details</name>
+                    <label><![CDATA[Implementation details]]></label>
+                    <description><![CDATA[Implementation details]]></description>
+                    <properties rows="7" cols="60"/>
+                </formElement>
+                <formElement type="file" ID="F1669" rank="60955">
+                    <name>attachment</name>
+                    <label><![CDATA[Attachment]]></label>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="tooltip"/>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
+                    <criterias/>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                        <renderer type="plugin_graphontrackersv5" rank="1">
+                            <name>Default</name>
+                            <description>Graphic Report By Default For Support Requests</description>
+                            <charts/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F1661" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F1661" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F1661" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F1662" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F1662" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F1662" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F1669" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F1669" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F1669" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+            <artifacts>
+                <artifact id="219">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2019-06-11T11:26:48+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="details" type="text">
+                            <value format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-erreurs.jpeg" /></p>
+]]></value>
+                        </field_change>
+                        <field_change field_name="implementation_details" type="text">
+                            <value format="text"><![CDATA[<p><img src="/plugins/tracker/attachments/132-erreurs.jpeg" /></p>
+]]></value>
+                        </field_change>
+                        <field_change field_name="attachment" type="file">
+                            <value ref="fileinfo_132"/>
+                        </field_change>
+                    </changeset>
+                    <file id="fileinfo_132">
+                        <filename><![CDATA[erreurs.jpeg]]></filename>
+                        <path>data/Artifact132</path>
+                        <filesize>0</filesize>
+                        <filetype>image/jpeg</filetype>
+                        <description><![CDATA[]]></description>
+                    </file>
+                </artifact>
+            </artifacts>
+        </tracker>
+    </trackers>
+</project>

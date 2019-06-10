@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
+use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
-    public const ID_PREFIX = 'fileinfo_';
-
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+{
     /**
      * @var Tracker_XML_Exporter_FilePathXMLExporter
      */
@@ -103,6 +103,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
     }
 
     private function getFileInfoIdForXML(Tracker_FileInfo $file_info) {
-        return self::ID_PREFIX . $file_info->getId();
+        return IdForXMLImportExportConvertor::convertFileInfoIdToXMLId((int) $file_info->getId());
     }
 }
