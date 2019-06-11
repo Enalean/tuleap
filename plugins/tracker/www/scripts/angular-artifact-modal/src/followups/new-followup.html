@@ -17,15 +17,15 @@
   ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<div class="tuleap-artifact-modal-label-with-format">
-    <label class="tlp-label" for="followup_comment">
+<div class="artifact-modal-text-label-with-format">
+    <label class="tlp-label artifact-modal-text-label" for="followup_comment">
         {{ ::'Comment' | translate }}
     </label>
 
     <select
         id="followup-comment-format"
         ng-model="$ctrl.value.format"
-        class="tlp-select tlp-select-small"
+        class="tlp-select tlp-select-small tlp-select-adjusted"
     >
         <option value="{{ ::$ctrl.text_format }}">Text</option>
         <option value="{{ ::$ctrl.html_format }}">HTML</option>

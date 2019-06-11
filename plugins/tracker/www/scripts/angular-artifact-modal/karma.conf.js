@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,16 @@
  */
 
 const path = require("path");
+const webpack = require("webpack");
 const webpack_config = require("../webpack.config.js")[0];
 const karma_configurator = require("../../../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
+webpack_config.plugins = [
+    ...webpack_config.plugins,
+    // Fix ngVue's stupid logger
+    new webpack.DefinePlugin({ "process.env.BABEL_ENV": JSON.stringify("test") })
+];
 
 module.exports = function(config) {
     const coverage_dir = path.resolve(__dirname, "../coverage");

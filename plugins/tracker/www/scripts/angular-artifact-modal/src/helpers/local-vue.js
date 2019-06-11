@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import angular from "angular";
+import { createLocalVue } from "@vue/test-utils";
+import GettextPlugin from "vue-gettext";
 
-import TextFieldDirective from "./text-field-directive.js";
+const localVue = createLocalVue();
+localVue.use(GettextPlugin, {
+    translations: {},
+    silent: true
+});
 
-export default angular
-    .module("tuleap-artifact-modal-text-field", ["ng.ckeditor"])
-    .directive("tuleapArtifactModalTextField", TextFieldDirective).name;
+export default localVue;

@@ -195,12 +195,13 @@
 </script>
 
 <script type="text/ng-template" id="field-text.tpl.html">
-<div
-    class="field"
-    tuleap-artifact-modal-text-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></div>
+<vue-component
+    name="TextField"
+    v-props-field="field"
+    v-props-disabled="modal.isDisabled(field)"
+    v-props-value="modal.values[field.field_id].value"
+    v-on-input="modal.setFieldValue(field.field_id)"
+></vue-component>
 </script>
 
 <script type="text/ng-template" id="field-art_link.tpl.html">

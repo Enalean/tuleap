@@ -27,7 +27,6 @@ import {
 } from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
-import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../constants/fields-constants.js";
 
 export default ArtifactModalController;
 
@@ -90,6 +89,7 @@ function ArtifactModalController(
         isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
         submit,
+        setFieldValue,
         toggleFieldset
     });
 
@@ -293,5 +293,11 @@ function ArtifactModalController(
 
     function isNewParentAlertShown() {
         return isInCreationMode() && self.parent;
+    }
+
+    function setFieldValue(field_id) {
+        return value => {
+            self.values[field_id].value = value;
+        };
     }
 }

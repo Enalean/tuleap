@@ -22,6 +22,7 @@ const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-imp
 const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
 const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
 
 const babel_preset_env_ie_config = [
     BabelPresetEnv,
@@ -118,9 +119,17 @@ const rule_ng_cache_loader = {
     ]
 };
 
+const artifact_modal_vue_initializer_path = path.resolve(
+    __dirname,
+    "../../../plugins/tracker/www/scripts/angular-artifact-modal/src/vue-initializer.js"
+);
+
 const rule_angular_gettext_loader = {
     test: /\.po$/,
     exclude: [/node_modules/, /vendor/, /bower_components/],
+    issuer: {
+        not: [artifact_modal_vue_initializer_path]
+    },
     use: [
         { loader: "json-loader" },
         {
@@ -139,6 +148,14 @@ const rule_angular_gettext_extract_loader = {
             query: "pofile=po/template.pot"
         }
     ]
+};
+
+// This rule is only intended for the progressive migration of an AngularJS App to Vue
+const rule_angular_mixed_vue_gettext = {
+    test: /\.po$/,
+    exclude: [/node_modules/],
+    issuer: artifact_modal_vue_initializer_path,
+    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
 };
 
 const rule_easygettext_loader = {
@@ -189,6 +206,7 @@ module.exports = {
     rule_ng_cache_loader,
     rule_angular_gettext_loader,
     rule_angular_gettext_extract_loader,
+    rule_angular_mixed_vue_gettext,
     rule_easygettext_loader,
     rule_scss_loader,
     rule_css_assets
