@@ -126,10 +126,8 @@ class DocmanLinkUpdator
         );
 
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp) {
+            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp, $current_time) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
-
-                $date = new \DateTimeImmutable();
 
                 $new_link_version_row = [
                     'item_id'           => $item->getId(),
@@ -137,7 +135,7 @@ class DocmanLinkUpdator
                     'user_id'           => $current_user->getId(),
                     'label'             => $representation->version_title,
                     'changelog'         => $representation->change_log,
-                    'date'              => $date->getTimestamp(),
+                    'date'              => $current_time->getTimestamp(),
                     'link_url'          => $representation->link_properties->link_url,
                     'title'             => $representation->title,
                     'description'       => $representation->description,
