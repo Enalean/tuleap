@@ -42,8 +42,8 @@ simpleWorkflow =
 
 simplePostActionsContent =
     element postactions {
-        advancedActions,
-        frozenFieldsActionContent,
+        advancedActions &
+        frozenFieldsActionContent &
         hiddenFieldsetsActionContent
     }?
 
@@ -53,19 +53,19 @@ advancedActions =
         element field_id {
             attribute REF { xsd:IDREF }
         }
-    }*,
+    }* &
     element postaction_field_int {
         attribute value { xsd:long },
         element field_id {
             attribute REF { xsd:IDREF }
         }
-    }*,
+    }* &
     element postaction_field_float {
         attribute value { xsd:float },
         element field_id {
             attribute REF { xsd:IDREF }
         }
-    }*,
+    }* &
     element postaction_ci_build {
         attribute job_url { xsd:string }
     }*
