@@ -436,14 +436,12 @@
                 <div ng-if="! modal.followups_comments.loading_comments && modal.followups_comments.content.length === 0" class="tuleap-artifact-modal-followups-comments-empty" translate>No follow-ups</div>
             </div>
 
-            <div
-                class="tuleap-artifact-modal-followups-add-form"
+            <vue-component
+                name="FollowupEditor"
                 ng-if="modal.isFollowupCommentFormDisplayed()"
-            >
-                <tuleap-artifact-modal-new-followup
-                    value="modal.new_followup_comment"
-                ></tuleap-artifact-modal-new-followup>
-            </div>
+                v-props-value="modal.new_followup_comment"
+                v-on-input="modal.setFollowupComment"
+            ></vue-component>
         </div>
     </div>
 
