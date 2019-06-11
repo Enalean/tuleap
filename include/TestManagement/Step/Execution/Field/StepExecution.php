@@ -34,6 +34,7 @@ use Tuleap\TestManagement\Step\Execution\Tracker_;
 use Tuleap\TestManagement\Step\Execution\Tracker_ReportCriteria;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class StepExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
@@ -331,21 +332,12 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return array_diff_assoc($new_values, $old_values) !== [] || array_diff_assoc($old_values, $new_values) !== [];
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return int or array of int
-     */
     protected function saveValue(
         $artifact,
         $changeset_value_id,
         $value,
-        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $id_mapping
     ) {
         return $this->getValueDao()->create($changeset_value_id, $value[self::UPDATE_VALUE_KEY]);
     }

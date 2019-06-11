@@ -34,6 +34,7 @@ use Tracker_FormElement_FieldVisitor;
 use Tracker_Report_Criteria;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
@@ -421,21 +422,12 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             array_diff($existing_steps, $submitted_steps) !== [];
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return int or array of int
-     */
     protected function saveValue(
         $artifact,
         $changeset_value_id,
         $value,
-        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $id_mapping
     ) {
         $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value);
 
