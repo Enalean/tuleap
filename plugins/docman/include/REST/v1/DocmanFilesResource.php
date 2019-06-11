@@ -36,6 +36,7 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActi
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
@@ -75,9 +76,72 @@ class DocmanFilesResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      */
-    public function optionsDocumentItems($id)
+    public function optionsDocumentItems(int $id): void
     {
         $this->setHeaders();
+    }
+
+    /**
+     * Lock a specific file
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int $id Id of the file you want lock
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     *
+     * @url    POST {id}/lock
+     * @access hybrid
+     * @status 201
+     *
+     */
+    public function postLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $this->checkUserCanWrite($project, $current_user, $item);
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
+        $item->accept($validator, []);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $lock_factory = new Docman_LockFactory();
+        $lock_checker = new LockChecker($lock_factory);
+        $lock_updater = new LockUpdater($lock_factory);
+
+        try {
+            $lock_checker->checkItemIsLocked($item, $current_user);
+            $is_file_locked = true;
+            $lock_updater->updateLockInformation($item, $is_file_locked, $current_user);
+        } catch (ExceptionItemIsLockedByAnotherUser $e) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        }
+    }
+
+    /**
+     * @url OPTIONS {id}/lock
+     */
+    public function optionsIdLock(int $id): void
+    {
+        $this->setHeadersForLock();
     }
 
     /**
@@ -125,13 +189,7 @@ class DocmanFilesResource extends AuthenticatedResource
 
         $project = $item_request->getProject();
 
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to write this item.')
-            );
-        }
+        $this->checkUserCanWrite($project, $current_user, $item);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -272,5 +330,28 @@ class DocmanFilesResource extends AuthenticatedResource
             )
         );
         return $docman_item_updator;
+    }
+
+    private function setHeadersForLock(): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @param \Project     $project
+     * @param \PFUser      $current_user
+     * @param \Docman_Item $item
+     *
+     * @throws I18NRestException
+     */
+    private function checkUserCanWrite(\Project $project, \PFUser $current_user, \Docman_Item $item): void
+    {
+        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to write this item.')
+            );
+        }
     }
 }
