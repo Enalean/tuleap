@@ -66,16 +66,16 @@ class PermissionsFieldPresenter
      */
     public $has_update_access;
 
-    public function __construct(int $field_id, string $field_name, int $ugroup_id, bool $is_checked, bool $can_submit, bool $can_update, bool $has_no_access, bool $has_read_access, bool $has_update_access)
+    public function __construct(\Tracker_FormElement_Field $field, FieldsPermissionForGroup $fields_permission_for_group)
     {
-        $this->field_id          = $field_id;
-        $this->field_name        = $field_name;
-        $this->ugroup_id         = $ugroup_id;
-        $this->has_submit_access = $is_checked;
-        $this->not_submitable    = ! $can_submit;
-        $this->is_updatable      = $can_update;
-        $this->has_no_access     = $has_no_access;
-        $this->has_read_access   = $has_read_access;
-        $this->has_update_access = $has_update_access;
+        $this->field_id          = $field->getId();
+        $this->field_name        = $field->getName();
+        $this->ugroup_id         = $fields_permission_for_group->getUgroupId();
+        $this->has_submit_access = $fields_permission_for_group->hasSubmitPermission($field);
+        $this->not_submitable    = ! $field->isSubmitable();
+        $this->is_updatable      = $field->isUpdateable();
+        $this->has_no_access     = $fields_permission_for_group->hasNoAccess($field);
+        $this->has_read_access   = $fields_permission_for_group->hasReadOnlyPermission($field);
+        $this->has_update_access = $fields_permission_for_group->hasUpdatePermission($field);
     }
 }
