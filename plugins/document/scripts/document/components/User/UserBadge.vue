@@ -22,20 +22,16 @@
         <div class="tlp-avatar-small document-badge-avatar-img">
             <img v-bind:src="user.avatar_url" v-if="user.has_avatar" data-test="document-user-avatar">
         </div>
-        <a v-bind:href="user.user_url"
-           class="document-badge-avatar-username"
-           v-if="! user.is_anonymous"
-           data-test="document-user-profile-link"
-        >{{ user.display_name }}</a>
-        <span v-else
-              class="document-badge-avatar-username"
-        >{{ user.display_name }}</span>
+        <user-name v-bind:user="user"/>
     </div>
 </template>
 
 <script>
+import UserName from "./UserName.vue";
+
 export default {
     name: "UserBadge",
+    components: { UserName },
     props: {
         user: Object
     }
