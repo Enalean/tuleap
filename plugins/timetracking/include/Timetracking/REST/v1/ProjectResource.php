@@ -118,7 +118,8 @@ class ProjectResource
                             new HiddenFieldsetsRetriever(
                                 new HiddenFieldsetsDao(),
                                 Tracker_FormElementFactory::instance()
-                            )
+                            ),
+                            Tracker_FormElementFactory::instance()
                         ),
                         new FieldsExtractor()
                     )

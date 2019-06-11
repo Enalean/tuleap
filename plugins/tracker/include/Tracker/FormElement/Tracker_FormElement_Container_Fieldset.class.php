@@ -96,7 +96,8 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                 new HiddenFieldsetsRetriever(
                     new HiddenFieldsetsDao(),
                     Tracker_FormElementFactory::instance()
-                )
+                ),
+                Tracker_FormElementFactory::instance()
             ),
             new FieldsExtractor()
         );

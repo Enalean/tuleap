@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Action_UpdateArtifact {
 
@@ -37,18 +38,25 @@ class Tracker_Action_UpdateArtifact {
      */
     private $visit_recorder;
 
+    /**
+     * @var HiddenFieldsetsDetector
+     */
+    private $hidden_fieldsets_detector;
+
     public function __construct(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         EventManager $event_manager,
         NatureIsChildLinkRetriever $artifact_retriever,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
-        $this->artifact             = $artifact;
-        $this->form_element_factory = $form_element_factory;
-        $this->event_manager        = $event_manager;
-        $this->artifact_retriever   = $artifact_retriever;
-        $this->visit_recorder       = $visit_recorder;
+        $this->artifact                  = $artifact;
+        $this->form_element_factory      = $form_element_factory;
+        $this->event_manager             = $event_manager;
+        $this->artifact_retriever        = $artifact_retriever;
+        $this->visit_recorder            = $visit_recorder;
+        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -91,7 +99,8 @@ class Tracker_Action_UpdateArtifact {
                     $this->form_element_factory,
                     $layout,
                     $this->artifact_retriever,
-                    $this->visit_recorder
+                    $this->visit_recorder,
+                    $this->hidden_fieldsets_detector
                 );
                 $render->display($request, $current_user);
             }
@@ -106,7 +115,8 @@ class Tracker_Action_UpdateArtifact {
                     $this->form_element_factory,
                     $layout,
                     $this->artifact_retriever,
-                    $this->visit_recorder
+                    $this->visit_recorder,
+                    $this->hidden_fieldsets_detector
                 );
                 $render->display($request, $current_user);
             }

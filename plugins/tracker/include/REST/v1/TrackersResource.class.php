@@ -195,7 +195,8 @@ class TrackersResource extends AuthenticatedResource
                         new HiddenFieldsetsRetriever(
                             new HiddenFieldsetsDao(),
                             $this->formelement_factory
-                        )
+                        ),
+                        Tracker_FormElementFactory::instance()
                     ),
                     new FieldsExtractor()
                 )
@@ -694,7 +695,8 @@ class TrackersResource extends AuthenticatedResource
                             new HiddenFieldsetsRetriever(
                                 new HiddenFieldsetsDao(),
                                 $this->formelement_factory
-                            )
+                            ),
+                            Tracker_FormElementFactory::instance()
                         ),
                         new FieldsExtractor()
                     )

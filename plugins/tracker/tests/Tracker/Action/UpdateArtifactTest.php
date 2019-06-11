@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 require_once __DIR__.'/../../bootstrap.php';
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
 {
@@ -68,6 +69,9 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
     /** @var  Tracker_Action_UpdateArtifact */
     protected $action;
 
+    /** @var HiddenFieldsetsDetector */
+    protected $hidden_fieldsets_detector;
+
     public function setUp()
     {
         parent::setUp();
@@ -104,16 +108,18 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
         stub($this->us_computed_field)->fetchCardValue($this->user_story)->returns(23);
 
-        $this->event_manager      = \Mockery::spy(\EventManager::class);
-        $this->artifact_retriever = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever::class);
-        $visit_recorder           = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $this->event_manager             = \Mockery::spy(\EventManager::class);
+        $this->artifact_retriever        = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever::class);
+        $visit_recorder                  = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
+        $this->hidden_fieldsets_detector = \Mockery::spy(HiddenFieldsetsDetector::class);
 
         $this->action = new Tracker_Action_UpdateArtifact(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
-            $visit_recorder
+            $visit_recorder,
+            $this->hidden_fieldsets_detector
         );
 
     }
@@ -208,7 +214,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
-            $visit_recorder
+            $visit_recorder,
+            $this->hidden_fieldsets_detector
         );
 
         stub($GLOBALS['Language'])->getText('plugin_tracker', 'autocomputed_field')->returns('autocomputed');
@@ -359,7 +366,8 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
             $this->formelement_factory,
             $this->event_manager,
             $this->artifact_retriever,
-            $visit_recorder
+            $visit_recorder,
+            $this->hidden_fieldsets_detector
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
 

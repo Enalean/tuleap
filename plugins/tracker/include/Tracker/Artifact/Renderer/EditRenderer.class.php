@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer
 {
@@ -52,6 +53,11 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     private $retriever;
 
     /**
+     * @var HiddenFieldsetsDetector
+     */
+    private $hidden_fieldsets_detector;
+
+    /**
      * @var Tracker_Artifact[]
      */
     private $hierarchy;
@@ -62,13 +68,15 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
         NatureIsChildLinkRetriever $retriever,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        HiddenFieldsetsDetector $hidden_fieldsets_detector
 
     ) {
         parent::__construct($artifact, $event_manager, $visit_recorder);
-        $this->formelement_factory = $formelement_factory;
-        $this->layout              = $layout;
-        $this->retriever           = $retriever;
+        $this->formelement_factory       = $formelement_factory;
+        $this->layout                    = $layout;
+        $this->retriever                 = $retriever;
+        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
     /**
@@ -211,8 +219,28 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html .= '</li>';
         $html .= '</ul>';
         $html .= $artifact->fetchActionButtons();
+        $html .= $this->fetchShowHideFieldSetsButton();
         $html .= '</div>';
         return $html;
+    }
+
+    private function fetchShowHideFieldSetsButton() : string
+    {
+        if (! ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            return '';
+        }
+
+        if (! $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($this->artifact)) {
+            return '';
+        }
+
+        return '<div class="header-spacer"></div>
+            <div class="show-hide-fieldsets">'.dgettext('tuleap-tracker', 'Hidden fieldsets:').'
+                <div class="btn-group" data-toggle="buttons-radio">
+                    <button type="button" class="btn show-fieldsets"><i class="fa fa-eye"></i></button>
+                    <button type="button" class="btn active hide-fieldsets"><i class="fa fa-eye-slash"></i></button>
+                </div>
+            </div>';
     }
 
     private function displayANumberOfBlankTab($number) {
