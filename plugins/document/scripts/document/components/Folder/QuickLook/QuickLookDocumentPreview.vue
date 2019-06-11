@@ -90,8 +90,8 @@
 <script>
 import { mapState } from "vuex";
 import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
-import IconQuicklookFolder from "../../svg-icons/IconQuicklookFolder.vue";
-import IconQuicklookDropIntoFolder from "../../svg-icons/IconQuicklookDropIntoFolder.vue";
+import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
+import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
 
 export default {
     components: {

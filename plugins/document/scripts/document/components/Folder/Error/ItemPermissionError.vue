@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import ItemPermissionErrorSvg from "./ItemPermissionErrorSvg.vue";
+import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
 import GoBackToRootButton from "./GoBackToRootButton.vue";
 
 export default {

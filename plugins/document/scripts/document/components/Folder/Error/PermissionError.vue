@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import PermissionErrorSvg from "./PermissionErrorSvg.vue";
+import PermissionErrorSvg from "../../svg/error/PermissionErrorSvg.vue";
 
 export default {
     name: "PermissionError",

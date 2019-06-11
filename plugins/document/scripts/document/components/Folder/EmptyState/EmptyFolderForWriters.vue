@@ -38,7 +38,7 @@
 
 <script>
 import { mapState } from "vuex";
-import EmptyFolderForWritersSvg from "./EmptyFolderForWritersSvg.vue";
+import EmptyFolderForWritersSvg from "../../svg/folder/EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenuCurrentFolder from "../ActionsDropDown/DropdownMenuCurrentFolder.vue";
