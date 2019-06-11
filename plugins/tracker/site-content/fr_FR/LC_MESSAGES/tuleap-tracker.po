@@ -491,6 +491,9 @@ msgstr "Un tracker ou plus n'a pas été trouvé : '%s'"
 msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
 
+msgid "Other groups"
+msgstr "Autre groupes"
+
 msgid ""
 "Please note that project administrators and tracker administrators are "
 "granted full access to the tracker."

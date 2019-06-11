@@ -75,7 +75,7 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
 
     protected function display(\Tracker $tracker, HTTPRequest $request)
     {
-        $selected_id = (int) $request->getValidated('selected_id', 'uint', 1);
+        $selected_id = (int) $request->getValidated('selected_id', 'uint', 0);
 
         $fields_for_selected_group = $this->getFieldsPermissionsPerGroup($tracker, $selected_id);
 
@@ -101,7 +101,7 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
             'fields-by-group',
             new PermissionsOnFieldsDisplayByGroupPresenter(
                 $tracker,
-                $selected_id,
+                $fields_for_selected_group->getUgroupId(),
                 $field_list,
                 $fields_for_selected_group->getMightNotHaveAccess()
             )
@@ -124,16 +124,15 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
         );
 
         $a_star_is_displayed       = false;
-        $fields_for_selected_group = null;
+        $fields_for_selected_group = $this->getFieldsPermissionForGroupWithFirstMatchingGroup($ugroups_permissions, $selected_id);
         $ugroup_list               = [];
         foreach ($ugroups_permissions as $field_id => $value_field) {
             foreach ($value_field['ugroups'] as $ugroup_id => $value_ugroup) {
                 $ugroup_id = (int) $ugroup_id;
-                if ($ugroup_id === $selected_id) {
-                    if ($fields_for_selected_group === null) {
-                        $fields_for_selected_group = new FieldsPermissionForGroup($ugroup_id, $value_ugroup['ugroup']['name']);
-                    }
+                if ($ugroup_id === $fields_for_selected_group->getUgroupId()) {
                     $fields_for_selected_group->addField($value_field['field']['field'], $value_ugroup['permissions']);
+                } else {
+                    $fields_for_selected_group->addPermissionsForOtherGroups($value_field['field']['field'], (int) $value_ugroup['ugroup']['id'], $value_ugroup['ugroup']['name'], $value_ugroup['permissions']);
                 }
 
                 if (! isset($ugroup_list[$ugroup_id])) {
@@ -146,16 +145,28 @@ class PermissionsOnFieldsDisplayByGroupController implements DispatchableWithReq
                         $ugroup_id,
                         $value_ugroup['ugroup']['name'],
                         $might_not_have_access,
-                        $ugroup_id === $selected_id
+                        $ugroup_id === $fields_for_selected_group->getUgroupId()
                     );
                 }
             }
         }
 
-        assert($fields_for_selected_group instanceof FieldsPermissionForGroup);
         $fields_for_selected_group->setUgroupList($ugroup_list);
         $fields_for_selected_group->setGroupsMightNotHaveAccess($a_star_is_displayed);
         return $fields_for_selected_group;
+    }
+
+    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id) : FieldsPermissionForGroup
+    {
+        foreach ($ugroups_permissions as $field_id => $value_field) {
+            foreach ($value_field['ugroups'] as $ugroup_id => $value_ugroup) {
+                $ugroup_id = (int) $ugroup_id;
+                if ($selected_id === 0 || $ugroup_id === $selected_id) {
+                    return new FieldsPermissionForGroup($ugroup_id, $value_ugroup['ugroup']['name']);
+                }
+            }
+        }
+        throw new \LogicException('There are no fields with permissions set for this ugroup');
     }
 
     private function isFirstRow(array $field_list): bool
