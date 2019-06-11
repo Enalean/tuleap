@@ -213,27 +213,20 @@ class BaseLanguage {
                 strlen(trim($ary[$i])) == 0) {    //...or empty lines
                 continue;
             }
-            // Language files can include others for defaults.
-            // e.g. an English-Canada.tab file might "include English" first,
-            // then override all those whacky American spellings.
-            if (preg_match("/^include ([a-zA-Z]+)/", $ary[$i], $matches)) {
-                $dir = dirname($fname);
-                $this->parseLanguageFile($dir."/".$matches[1].".tab", $text_array);
+
+            $line = explode("\t", $ary[$i], 3);
+            if (count($line) === 3) {
+                $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
             } else {
-                $line = explode("\t", $ary[$i], 3);
-                if (count($line) === 3) {
-                    $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
-                } else {
-                    echo '* Error in '.$fname.' line '.$i.' string "'.trim($ary[$i]).'" (length: '.strlen(trim($ary[$i])).') : ';
-                    if (!isset($line[0])) {
-                        echo "no index 0: empty line ? ";
-                    } elseif (!isset($line[1])) {
-                        echo "no index 1: did you use tabs to separate elements ? ";
-                    } elseif (!isset($line[2])) {
-                        echo "no index 2: keys present but string is missing ";
-                    }
-                    echo "<br>".PHP_EOL;
+                echo '* Error in '.$fname.' line '.$i.' string "'.trim($ary[$i]).'" (length: '.strlen(trim($ary[$i])).') : ';
+                if (!isset($line[0])) {
+                    echo "no index 0: empty line ? ";
+                } elseif (!isset($line[1])) {
+                    echo "no index 1: did you use tabs to separate elements ? ";
+                } elseif (!isset($line[2])) {
+                    echo "no index 2: keys present but string is missing ";
                 }
+                echo "<br>".PHP_EOL;
             }
         }
     }

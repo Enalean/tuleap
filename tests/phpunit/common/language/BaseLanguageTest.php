@@ -163,17 +163,6 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             $result,
             'Definitions are merged'
         );
-
-        $result = [];
-        $l->parseLanguageFile($GLOBALS['sys_incdir'] . '/en_US/include.tab', $result);
-        $this->assertEquals(
-            [
-                'inc'    => ['key1' => 'value'],
-                'common' => ['key1' => 'value'],
-            ],
-            $result,
-            'Files are included'
-        );
     }
 
     public function testLoadAllTabFiles()
