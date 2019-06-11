@@ -233,9 +233,10 @@ class Docman_ItemFactory
     * @param string $wiki_page
     * @param string $group_id
     *
-    * @return Array items that reference the same given wiki page.
+    * @psalm-return array[Docman_Wiki]
+    * @return Docman_Wiki[] items that reference the same given wiki page.
     */
-    function getWikiPageReferencers($wiki_page, $group_id) {
+    public function getWikiPageReferencers($wiki_page, $group_id) {
         $items    = array();
         $item_dao = $this->_getItemDao();
         if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
