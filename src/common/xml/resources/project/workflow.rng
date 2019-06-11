@@ -89,56 +89,60 @@
   <define name="simplePostActionsContent">
     <optional>
       <element name="postactions">
-        <ref name="advancedActions"/>
-        <ref name="frozenFieldsActionContent"/>
-        <ref name="hiddenFieldsetsActionContent"/>
+        <interleave>
+          <ref name="advancedActions"/>
+          <ref name="frozenFieldsActionContent"/>
+          <ref name="hiddenFieldsetsActionContent"/>
+        </interleave>
       </element>
     </optional>
   </define>
   <define name="advancedActions">
-    <zeroOrMore>
-      <element name="postaction_field_date">
-        <attribute name="valuetype">
-          <data type="long"/>
-        </attribute>
-        <element name="field_id">
-          <attribute name="REF">
-            <data type="IDREF"/>
+    <interleave>
+      <zeroOrMore>
+        <element name="postaction_field_date">
+          <attribute name="valuetype">
+            <data type="long"/>
+          </attribute>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="postaction_field_int">
+          <attribute name="value">
+            <data type="long"/>
+          </attribute>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="postaction_field_float">
+          <attribute name="value">
+            <data type="float"/>
+          </attribute>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="postaction_ci_build">
+          <attribute name="job_url">
+            <data type="string"/>
           </attribute>
         </element>
-      </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="postaction_field_int">
-        <attribute name="value">
-          <data type="long"/>
-        </attribute>
-        <element name="field_id">
-          <attribute name="REF">
-            <data type="IDREF"/>
-          </attribute>
-        </element>
-      </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="postaction_field_float">
-        <attribute name="value">
-          <data type="float"/>
-        </attribute>
-        <element name="field_id">
-          <attribute name="REF">
-            <data type="IDREF"/>
-          </attribute>
-        </element>
-      </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="postaction_ci_build">
-        <attribute name="job_url">
-          <data type="string"/>
-        </attribute>
-      </element>
-    </zeroOrMore>
+      </zeroOrMore>
+    </interleave>
   </define>
   <define name="preConditionsContent">
     <choice>
