@@ -30,6 +30,11 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupFieldsPermissions;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupOneFieldPresenter;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupOneFieldWithUGroupListPresenter;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupPresenter;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupUGroupListPresenter;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 
@@ -41,10 +46,15 @@ class ByFieldController implements DispatchableWithRequest
      * @var \TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var \TemplateRenderer
+     */
+    private $renderer;
 
-    public function __construct(\TrackerFactory $tracker_factory)
+    public function __construct(\TrackerFactory $tracker_factory, \TemplateRenderer $renderer)
     {
         $this->tracker_factory = $tracker_factory;
+        $this->renderer        = $renderer;
     }
 
     /**
@@ -72,6 +82,19 @@ class ByFieldController implements DispatchableWithRequest
 
     protected function display(\Tracker $tracker, HTTPRequest $request)
     {
+        $selected_id = (int) $request->getValidated('selected_id', 'uint', 0);
+
+        $ugroups_for_selected_field = $this->getUGroupPermissionsPerField($tracker, $selected_id);
+
+        $ugroup_list = [];
+        foreach ($ugroups_for_selected_field->getUgroupsOrderedWithPrecedence() as $ugroup) {
+            if ($this->isFirstRow($ugroup_list)) {
+                $ugroup_list[] = new ByFieldOneUGroupWithFieldListPresenter($ugroup, $ugroups_for_selected_field);
+            } else {
+                $ugroup_list[] = new ByFieldOneUGroupPresenter($ugroup, $ugroups_for_selected_field);
+            }
+        }
+
         $tracker_manager = new \TrackerManager();
 
         $items = $tracker->getPermsItems();
@@ -80,170 +103,67 @@ class ByFieldController implements DispatchableWithRequest
             $items['fields']
         );
         $tracker->displayAdminPermsHeader($tracker_manager, $title, $breadcrumbs);
-        echo '<h2>'. $title .'</h2>';
 
-        $hp = Codendi_HTMLPurifier::instance();
+        $this->renderer->renderToPage(
+            'groups-by-field',
+            new ByFieldPresenter(
+                $tracker,
+                $ugroups_for_selected_field->getFieldId(),
+                $ugroup_list,
+                $ugroups_for_selected_field->getMightNotHaveAccess()
+            )
+        );
 
-        $selected_id = $request->get('selected_id');
-        $selected_id = $selected_id ? $selected_id : false;
+        $tracker->displayFooter($tracker_manager);
+    }
+
+
+    private function getUGroupPermissionsPerField(\Tracker $tracker, int $selected_id) : ByFieldGroupPermissions
+    {
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
             $tracker->getGroupId(),
             $tracker->getId(),
             Tracker_FormElementFactory::instance()->getUsedFields($tracker)
         );
 
-        $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
-        $read_permission   = 'PLUGIN_TRACKER_FIELD_READ';
-        $update_permission = 'PLUGIN_TRACKER_FIELD_UPDATE';
-        $none              = 'PLUGIN_TRACKER_NONE';
-        $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
+        $ugroups_for_selected_field = $this->getFieldsPermissionForGroupWithFirstMatchingGroup($ugroups_permissions, $selected_id);
+        $field_list               = [];
+        foreach ($ugroups_permissions as $field_id => $value_field) {
+            $field_id = (int) $field_id;
 
-        $html = '';
-
-        $url_action_with_group_first_for_js = self::getUrl($tracker) .'?selected_id=';
-
-        $html .= <<<EOS
-            <script type="text/javascript">
-            <!--
-            function changeFirstPartId(wanted) {
-                location.href = '$url_action_with_group_first_for_js' + wanted;
+            if (! isset($field_list[$field_id])) {
+                $field_list[$field_id] = new ByFieldFieldListPresenter(
+                    $field_id,
+                    $value_field['field']['field']->getLabel(),
+                    $field_id === $ugroups_for_selected_field->getFieldId()
+                );
             }
-            //-->
-            </script>
-EOS;
 
-        foreach ($ugroups_permissions as $key_field => $value_field) {
-            $ugroups_permissions[$key_field]['values']        =& $ugroups_permissions[$key_field]['field'];
-            $ugroups_permissions[$key_field]['related_parts'] =& $ugroups_permissions[$key_field]['ugroups'];
-            foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
-                $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['values'] =& $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['ugroup'];
+            foreach ($value_field['ugroups'] as $ugroup_id => $value_ugroup) {
+                if ($field_id === $ugroups_for_selected_field->getFieldId()) {
+                    $ugroups_for_selected_field->addUGroup($ugroup_id, $value_ugroup['ugroup']['name'], $value_ugroup['permissions'], $value_ugroup['tracker_permissions']);
+                }
             }
-            ksort($ugroups_permissions[$key_field]['related_parts']);
-            reset($ugroups_permissions[$key_field]['related_parts']);
         }
-        $header = array(
-            $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label'),
-            $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup'),
-            $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submit_permission),
-            $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')) ;
 
-        reset($ugroups_permissions);
-        $key = key($ugroups_permissions);
+        $ugroups_for_selected_field->setFieldList($field_list);
+        return $ugroups_for_selected_field;
+    }
 
-        //header
-        if (count($ugroups_permissions[$key]['related_parts']) < 1) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_no_ugroups');
-        } else {
-            //The permission form
-            $html .= '<form name="form_tracker_permissions" action="'.PermissionsOnFieldsUpdateController::getUrl($tracker).'" method="post">';
-            $html .= '<div>';
-            $html .= '<input type="hidden" name="origin" value="fields-by-field" />';
-            $html .= '<input type="hidden" name="selected_id" value="'. (int)$selected_id .'" />';
-
-            //intro
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_intro');
-
-            //We display 'group_first' or 'field_first'
-
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_toggle_group', ByGroupController::getUrl($tracker));
-
-            $html .= html_build_list_table_top($header);
-
-            //body
-            $i = 0;
-            $a_star_is_displayed = false;
-            $related_parts = array();
-            //The select box for the ugroups or fields (depending $group_first)
-            $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-            $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
-            $html .= '<select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">';
-
-            foreach ($ugroups_permissions as $part_permissions) {
-                if ($selected_id === false) {
-                    $selected_id = $part_permissions['values']['id'];
-                }
-                $html .= '<option value="'. (int)$part_permissions['values']['id'] .'" ';
-                if ($part_permissions['values']['id'] === $selected_id) {
-                    $first_part    = $part_permissions['values'];
-                    $related_parts = $part_permissions['related_parts'];
-                    $html .= $attributes_for_selected;
-                }
-                $html .= ' >';
-                $html .= $hp->purify($part_permissions['values']['name']);
-                $html .= '</option>';
+    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id) : ByFieldGroupPermissions
+    {
+        foreach ($ugroups_permissions as $field_id => $value_field) {
+            $field_id = (int) $field_id;
+            if ($selected_id === 0 || $field_id === $selected_id) {
+                return new ByFieldGroupPermissions($value_field['field']['field']);
             }
-            $html .= '</select>';
-            $html .= '</td>';
-            $is_first = true;
-
-            //The permissions for the current item (field or ugroup, depending $group_id)
-            foreach ($related_parts as $ugroup_permissions) {
-                $second_part = $ugroup_permissions['values'];
-                $permissions = $ugroup_permissions['permissions'];
-
-                //The group
-                if (!$is_first) {
-                    $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                } else {
-                    $is_first = false;
-                }
-                $html .= '<td>';
-
-                $name = '<a href="'. ByGroupController::getUrl($tracker).'?selected_id='. (int)$second_part['id'] .'">';
-                $name .=  $hp->purify($second_part['name']) ;
-                $name .= '</a>';
-                if (isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
-                    $name = '<span >'. $name .' *</span>'; //TODO css
-                    $a_star_is_displayed = true;
-                }
-                $html .= $name;
-
-                $html .= '</td>';
-
-                //The permissions
-                if (isset($first_part['id'])) {
-                    //Submit permission
-                    $html .= '<td style="text-align:center;">';
-                    $name_of_variable = "permissions[".(int)$first_part['id']."][".(int)$second_part['id']."]";
-                    $html .= '<input type="hidden" name="'. $name_of_variable .'[submit]" value="off"/>';
-
-                    $can_submit = $first_part['field']->isSubmitable();
-
-                    $can_update = $first_part['field']->isUpdateable();
-
-                    $html .= "<input type='checkbox' name=\"".$name_of_variable.'[submit]"  '.
-                        (isset($permissions[$submit_permission])?"checked='checked'":"")." ".($can_submit?"":"disabled='disabled'")." /> ";
-                    $html .= "</td><td>";
-
-
-                    //Other permissions (R/W)
-                    $html .= "<select name='".$name_of_variable."[others]' >";
-                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $none)."</option>";
-                    $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $read_permission)."</option>";
-
-                    if ($can_update) {
-                        $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $update_permission)."</option>";
-                    }
-                    $html .= "</select>";
-                }
-                $html .= "</td>";
-                $html .= "</tr>\n";
-            }
-
-            //end of table
-            $html .= "</table>";
-            if ($a_star_is_displayed) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ug_may_have_no_access', TRACKER_BASE_URL."/?tracker=".(int)$tracker->getId()."&func=admin-perms-tracker");
-            }
-            $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions', 'submit_perm')."\" />";
         }
-        $html .= "</div></form>";
-        $html .= "<p>";
-        $html .= $GLOBALS['Language']->getText('project_admin_permissions', 'admins_create_modify_ug', ["/project/admin/ugroup.php?group_id=".(int)$tracker->getGroupId()]);
-        $html .= "</p>";
-        print $html;
+        throw new \LogicException('There are no fields with permissions set for this ugroup');
+    }
 
-        $tracker->displayFooter($tracker_manager);
+    private function isFirstRow(array $ugroup_list): bool
+    {
+        return count($ugroup_list) === 0;
     }
 
     public static function getUrl(\Tracker $tracker) : string
