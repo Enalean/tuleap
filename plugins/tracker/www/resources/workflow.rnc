@@ -43,7 +43,8 @@ simpleWorkflow =
 simplePostActionsContent =
     element postactions {
         advancedActions,
-        frozenFieldsActionContent
+        frozenFieldsActionContent,
+        hiddenFieldsetsActionContent
     }?
 
 advancedActions =
@@ -106,6 +107,13 @@ transitionContent =
 frozenFieldsActionContent =
     element postaction_frozen_fields {
         element field_id {
+            attribute REF { xsd:IDREF }
+        }+
+    }?
+
+hiddenFieldsetsActionContent =
+    element postaction_hidden_fieldsets {
+        element fieldset_id {
             attribute REF { xsd:IDREF }
         }+
     }?

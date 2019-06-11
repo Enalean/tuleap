@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
@@ -35,7 +36,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         Transition_PostAction_Field_Int::XML_TAG_NAME   => Transition_PostAction_Field_Int::SHORT_NAME,
         Transition_PostAction_Field_Date::XML_TAG_NAME  => Transition_PostAction_Field_Date::SHORT_NAME,
         Transition_PostAction_CIBuild::XML_TAG_NAME     => Transition_PostAction_CIBuild::SHORT_NAME,
-        FrozenFields::XML_TAG_NAME                      => FrozenFields::SHORT_NAME
+        FrozenFields::XML_TAG_NAME                      => FrozenFields::SHORT_NAME,
+        HiddenFieldsets::XML_TAG_NAME                   => HiddenFieldsets::SHORT_NAME
     );
 
     /** @var Transition_PostAction_FieldFactory */
@@ -98,8 +100,10 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     {
         if ($post_action instanceof Transition_PostAction_Field) {
             $this->getFieldFactory()->saveObject($post_action);
-        } elseif (is_a($post_action, FrozenFields::class)) {
+        } elseif ($post_action instanceof FrozenFields) {
             $this->getFrozenFieldsFactory()->saveObject($post_action);
+        } elseif ($post_action instanceof HiddenFieldsets) {
+            $this->getHiddenFieldsetsFactory()->saveObject($post_action);
         } else {
             $this->getCIBuildFactory()->saveObject($post_action);
         }
@@ -153,6 +157,7 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             $subfactory = $this->getSubFactory($short_name);
             $post_actions[] = $subfactory->getInstanceFromXML($child, $xmlMapping, $transition);
         }
+
         return $post_actions;
     }
 
@@ -182,6 +187,10 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
             FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory()
         );
+
+        if (ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            $factories[HiddenFieldsets::SHORT_NAME] = $this->getHiddenFieldsetsFactory();
+        }
 
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];

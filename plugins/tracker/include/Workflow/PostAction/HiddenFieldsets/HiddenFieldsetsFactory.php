@@ -112,7 +112,18 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      */
     public function saveObject(Transition_PostAction $post_action)
     {
-        // TODO: Implement saveObject() method.
+        $to_transition_id = (int) $post_action->getTransition()->getId();
+
+        $fieldset_ids = [];
+        /** @var HiddenFieldsets $post_action */
+        foreach ($post_action->getFieldsets() as $fieldset) {
+            $fieldset_ids[] = (int) $fieldset->getID();
+        }
+
+        $this->hidden_fieldsets_dao->createPostActionForTransitionId(
+            $to_transition_id,
+            $fieldset_ids
+        );
     }
 
     /**
@@ -182,6 +193,17 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
-        // TODO: Implement getInstanceFromXML() method.
+        $fieldsets = [];
+        foreach ($xml->fieldset_id as $xml_fieldset_id) {
+            if (isset($xmlMapping[(string)$xml_fieldset_id['REF']])) {
+                $fieldsets[] = $xmlMapping[(string)$xml_fieldset_id['REF']];
+            }
+        }
+
+        if (count($fieldsets) > 0) {
+            return new HiddenFieldsets($transition, 0, $fieldsets);
+        }
+
+        return null;
     }
 }

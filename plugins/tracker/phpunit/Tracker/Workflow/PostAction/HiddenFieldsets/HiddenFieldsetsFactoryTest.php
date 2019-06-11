@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker_FormElementFactory;
 
 class HiddenFieldsetsFactoryTest extends TestCase
@@ -88,5 +89,60 @@ class HiddenFieldsetsFactoryTest extends TestCase
 
         $result = $this->hidden_fieldsets_factory->loadPostActions($transition);
         $this->assertEquals([], $result);
+    }
+
+    public function testItImportsActionFromXML()
+    {
+        $xml_content = <<<XML
+            <postaction_hidden_fieldsets>
+                <fieldset_id REF="F1"/>
+                <fieldset_id REF="F2"/>
+            </postaction_hidden_fieldsets>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+
+        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_02 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+
+        $fieldset_01->shouldReceive('getID')->andReturn(0);
+        $fieldset_02->shouldReceive('getID')->andReturn(0);
+
+        $mapping = [
+            'F1' => $fieldset_01,
+            'F2' => $fieldset_02
+        ];
+
+        $transition = Mockery::mock(\Transition::class);
+
+        $action = $this->hidden_fieldsets_factory->getInstanceFromXML($xml, $mapping, $transition);
+
+        $this->assertInstanceOf(HiddenFieldsets::class, $action);
+        $this->assertCount(2, $action->getFieldsets());
+    }
+
+    public function testItSkipsNonExistingFieldsDuringXMLImport()
+    {
+        $xml_content = <<<XML
+            <postaction_hidden_fieldsets>
+                <fieldset_id REF="F1"/>
+                <fieldset_id REF="F2"/>
+            </postaction_hidden_fieldsets>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+
+        $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01->shouldReceive('getID')->andReturn(0);
+
+
+        $mapping = [
+            'F1' => $fieldset_01,
+        ];
+
+        $transition = Mockery::mock(\Transition::class);
+
+        $action = $this->hidden_fieldsets_factory->getInstanceFromXML($xml, $mapping, $transition);
+
+        $this->assertInstanceOf(HiddenFieldsets::class, $action);
+        $this->assertCount(1, $action->getFieldsets());
     }
 }
