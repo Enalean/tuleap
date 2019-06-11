@@ -27,7 +27,6 @@ namespace Tuleap\Docman\rest;
 use Docman_ApprovalTableItemDao;
 use Docman_ApprovalTableWikiDao;
 use ProjectUGroup;
-use Tuleap\DB\DBFactory;
 use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
 
 require_once __DIR__ .'/DocmanDatabaseInitialization.php';
@@ -406,7 +405,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'filename'  => $title,
             'filesize'  => 3,
             'filetype'  => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
-            'path'      => ''
+            'path'      => __DIR__. '/_fixtures/docmanFile/file.txt'
         ];
 
         $version_factory = new \Docman_VersionFactory();
