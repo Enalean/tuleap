@@ -21,6 +21,7 @@
 
 require_once('common/dao/UGroupDao.class.php');
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
@@ -668,19 +669,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return new PermissionsOnArtifactUGroupRetriever();
     }
 
-    /**
-     * @param Tracker_Artifact $artifact
-     * @param int $changeset_value_id
-     * @param mixed $value
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue
-     *
-     * @return bool
-     */
     protected function saveValue(
         $artifact,
         $changeset_value_id,
         $value,
-        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
     ) {
         $value = $this->getPermissionsOnArtifactUsageRetriever()->setRestrictAccessForArtifact($value, $this);
         $value = $this->getPermissionsOnArtifactUGroupRetriever()->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition($value, $this);

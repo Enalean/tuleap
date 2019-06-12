@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+
 /**
  * I create an initial changeset at a given date.
  *
@@ -37,12 +39,22 @@ class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Trac
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        int $changeset_id
+        int $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): void {
         $is_submission = true;
         $bypass_perms  = true;
         if ($this->isFieldSubmitted($field, $fields_data)) {
-            $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+            $field->saveNewChangeset(
+                $artifact,
+                null,
+                $changeset_id,
+                $fields_data[$field->getId()],
+                $submitter,
+                $is_submission,
+                $bypass_perms,
+                $url_mapping
+            );
         }
     }
 }

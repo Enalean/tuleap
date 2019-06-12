@@ -156,8 +156,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -182,8 +181,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -207,8 +205,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -232,8 +229,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -257,8 +253,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -283,8 +278,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -307,8 +301,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 
@@ -334,8 +327,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->user,
             $artifact,
             $this->changeset_value_id,
-            $value,
-            $this->previous_changesetvalue
+            $value
         );
     }
 }

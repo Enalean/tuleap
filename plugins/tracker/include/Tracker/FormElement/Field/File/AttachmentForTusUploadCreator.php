@@ -56,10 +56,11 @@ class AttachmentForTusUploadCreator implements AttachmentCreator
     public function createAttachment(
         PFUser $current_user,
         Tracker_FormElement_Field_File $field,
-        array $submitted_value_info
+        array $submitted_value_info,
+        CreatedFileURLMapping $url_mapping
     ): ?Tracker_FileInfo {
         if (! isset($submitted_value_info['tus-uploaded-id'])) {
-            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info);
+            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
         }
 
         $file_information = $this->information_provider->getFileInformationByIdForUser(

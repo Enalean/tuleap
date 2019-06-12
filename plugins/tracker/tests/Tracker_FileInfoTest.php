@@ -166,13 +166,13 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
         $this->backend = mock(Backend::class);
         Backend::setInstance(Backend::BACKEND, $this->backend);
 
-        Forgeconfig::store();
+        ForgeConfig::store();
     }
 
     public function tearDown()
     {
         Backend::clearInstances();
-        Forgeconfig::restore();
+        ForgeConfig::restore();
 
         parent::tearDown();
     }

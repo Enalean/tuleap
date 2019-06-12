@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
 
@@ -581,19 +582,20 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return is_array($value) && isset($value['content']) && isset($value['format']);
     }
 
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return bool
-     */
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
+        CreatedFileURLMapping $url_mapping
+    ) {
         $content     = $this->getRightContent($value);
         $body_format = $this->getRightBodyFormat($artifact, $value);
+
+        if ($body_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
+            $content     = $substitutor->substituteURLsInHTML($content, $url_mapping);
+        }
 
         return $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
                $this->extractCrossRefs($artifact, $content);

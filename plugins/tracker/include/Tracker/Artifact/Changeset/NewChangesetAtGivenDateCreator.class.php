@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+
 /**
  * I create a new changeset (update of an artifact) at a given date.
  *
@@ -35,15 +37,34 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): bool {
         $is_submission = false;
         $bypass_perms  = true;
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
-            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
-        } else {
-            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission, $bypass_perms);
+            return $field->saveNewChangeset(
+                $artifact,
+                $previous_changeset,
+                $changeset_id,
+                $fields_data[$field->getId()],
+                $submitter,
+                $is_submission,
+                $bypass_perms,
+                $url_mapping
+            );
         }
+
+        return $field->saveNewChangeset(
+            $artifact,
+            $previous_changeset,
+            $changeset_id,
+            null,
+            $submitter,
+            $is_submission,
+            $bypass_perms,
+            $url_mapping
+        );
     }
 }

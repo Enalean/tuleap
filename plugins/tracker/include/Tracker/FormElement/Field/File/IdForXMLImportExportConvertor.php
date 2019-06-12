@@ -17,39 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-final class FileToUpload
+namespace Tuleap\Tracker\FormElement\Field\File;
+
+class IdForXMLImportExportConvertor
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $filename;
+    private const ID_PREFIX = 'fileinfo_';
 
-    public function __construct(int $id, string $filename)
+    public static function convertFileInfoIdToXMLId(int $fileinfo_id): string
     {
-        $this->id = $id;
-        $this->filename = $filename;
+        return self::ID_PREFIX . $fileinfo_id;
     }
 
-    public function getUploadHref(): string
+    public static function convertXMLIdToFileInfoId(string $xml_id): int
     {
-        return '/uploads/tracker/file/' . urlencode((string) $this->id);
-    }
+        if (! preg_match('/'. preg_quote(self::ID_PREFIX, '/') .'(\d+)/', $xml_id, $matches)) {
+            throw new \InvalidArgumentException("Given id does not look like a valid XML file id.");
+        }
 
-    public function getDownloadHref(): string
-    {
-        return (new FileToDownload($this->id, $this->filename))->getDownloadHref();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        return (int) $matches[1];
     }
 }

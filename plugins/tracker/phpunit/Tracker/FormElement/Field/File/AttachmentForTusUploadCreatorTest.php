@@ -70,6 +70,10 @@ class AttachmentForTusUploadCreatorTest extends TestCase
      * @var AttachmentForTusUploadCreator
      */
     private $creator;
+    /**
+     * @var Mockery\MockInterface|CreatedFileURLMapping
+     */
+    private $url_mapping;
 
     public function setUp(): void
     {
@@ -79,6 +83,7 @@ class AttachmentForTusUploadCreatorTest extends TestCase
         $this->ongoing_upload_dao        = Mockery::mock(FileOngoingUploadDao::class);
         $this->form_element_factory      = Mockery::mock(Tracker_FormElementFactory::class);
         $this->file_information_provider = Mockery::mock(FileBeingUploadedInformationProvider::class);
+        $this->url_mapping                = Mockery::mock(CreatedFileURLMapping::class);
 
         $this->creator = new AttachmentForTusUploadCreator(
             $this->file_information_provider,
@@ -97,12 +102,17 @@ class AttachmentForTusUploadCreatorTest extends TestCase
 
         $this->next_creator_in_chain
             ->shouldReceive('createAttachment')
-            ->with($this->current_user, $this->field, $submitted_value_info)
+            ->with($this->current_user, $this->field, $submitted_value_info, $this->url_mapping)
             ->andReturn($attachment);
 
         $this->assertEquals(
             $attachment,
-            $this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info)
+            $this->creator->createAttachment(
+                $this->current_user,
+                $this->field,
+                $submitted_value_info,
+                $this->url_mapping
+            )
         );
     }
 
@@ -115,7 +125,14 @@ class AttachmentForTusUploadCreatorTest extends TestCase
             ->with(42, $this->current_user)
             ->andReturn(null);
 
-        $this->assertNull($this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info));
+        $this->assertNull(
+            $this->creator->createAttachment(
+                $this->current_user,
+                $this->field,
+                $submitted_value_info,
+                $this->url_mapping
+            )
+        );
     }
 
     public function testItReturnsNullIfFileIsNotComplete(): void
@@ -134,7 +151,12 @@ class AttachmentForTusUploadCreatorTest extends TestCase
             ->with(42, $this->current_user)
             ->andReturn($file_information);
 
-        $attachment = $this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info);
+        $attachment = $this->creator->createAttachment(
+            $this->current_user,
+            $this->field,
+            $submitted_value_info,
+            $this->url_mapping
+        );
         $this->assertNull($attachment);
     }
 
@@ -157,7 +179,12 @@ class AttachmentForTusUploadCreatorTest extends TestCase
 
         $this->ongoing_upload_dao->shouldReceive(['searchFileOngoingUploadById' => null]);
 
-        $attachment = $this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info);
+        $attachment = $this->creator->createAttachment(
+            $this->current_user,
+            $this->field,
+            $submitted_value_info,
+            $this->url_mapping
+        );
         $this->assertNull($attachment);
     }
 
@@ -181,7 +208,12 @@ class AttachmentForTusUploadCreatorTest extends TestCase
         $this->field->shouldReceive(['getId' => 1000]);
         $this->ongoing_upload_dao->shouldReceive(['searchFileOngoingUploadById' => ['field_id' => 1001]]);
 
-        $attachment = $this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info);
+        $attachment = $this->creator->createAttachment(
+            $this->current_user,
+            $this->field,
+            $submitted_value_info,
+            $this->url_mapping
+        );
         $this->assertNull($attachment);
     }
 
@@ -216,7 +248,12 @@ class AttachmentForTusUploadCreatorTest extends TestCase
         );
         $this->ongoing_upload_dao->shouldReceive('deleteUploadedFileThatIsAttached')->with(42)->once();
 
-        $attachment = $this->creator->createAttachment($this->current_user, $this->field, $submitted_value_info);
+        $attachment = $this->creator->createAttachment(
+            $this->current_user,
+            $this->field,
+            $submitted_value_info,
+            $this->url_mapping
+        );
         $this->assertEquals(42, $attachment->getId());
     }
 }

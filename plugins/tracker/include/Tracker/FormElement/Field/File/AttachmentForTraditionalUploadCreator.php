@@ -26,6 +26,7 @@ use Rule_File;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileToDownload;
 
 class AttachmentForTraditionalUploadCreator implements AttachmentCreator
 {
@@ -47,7 +48,8 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
     public function createAttachment(
         \PFUser $current_user,
         Tracker_FormElement_Field_File $field,
-        array $submitted_value_info
+        array $submitted_value_info,
+        CreatedFileURLMapping $url_mapping
     ): ?Tracker_FileInfo {
         if (! $this->rule_file->isValid($submitted_value_info)) {
             return null;
@@ -69,6 +71,13 @@ class AttachmentForTraditionalUploadCreator implements AttachmentCreator
 
         if (! $this->save($attachment)) {
             return null;
+        }
+
+        if (isset($submitted_value_info['previous_fileinfo_id'])) {
+            $url_mapping->add(
+                (new FileToDownload((int) $submitted_value_info['previous_fileinfo_id'], $submitted_value_info['name']))->getDownloadHref(),
+                (new FileToDownload((int) $attachment->getId(), $submitted_value_info['name']))->getDownloadHref()
+            );
         }
 
         $method   = 'move_uploaded_file';

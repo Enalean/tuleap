@@ -17,39 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\File\Upload;
+namespace Tuleap\Tracker\FormElement\Field\File;
 
-final class FileToUpload
+class CreatedFileURLMapping
 {
     /**
-     * @var int
+     * @var array<string, string>
      */
-    private $id;
-    /**
-     * @var string
-     */
-    private $filename;
+    private $mapping = [];
 
-    public function __construct(int $id, string $filename)
+    public function add(string $previous_file_url, string $new_file_url): void
     {
-        $this->id = $id;
-        $this->filename = $filename;
+        $this->mapping[$previous_file_url] = $new_file_url;
     }
 
-    public function getUploadHref(): string
+    public function get(string $previous_file_url): ?string
     {
-        return '/uploads/tracker/file/' . urlencode((string) $this->id);
+        return $this->mapping[$previous_file_url] ?? null;
     }
 
-    public function getDownloadHref(): string
+    public function isEmpty(): bool
     {
-        return (new FileToDownload($this->id, $this->filename))->getDownloadHref();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        return empty($this->mapping);
     }
 }

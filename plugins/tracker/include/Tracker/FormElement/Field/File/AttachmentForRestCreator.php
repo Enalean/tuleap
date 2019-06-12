@@ -62,19 +62,35 @@ class AttachmentForRestCreator implements AttachmentCreator
     public function createAttachment(
         PFUser $current_user,
         Tracker_FormElement_Field_File $field,
-        array $submitted_value_info
+        array $submitted_value_info,
+        CreatedFileURLMapping $url_mapping
     ): ?Tracker_FileInfo {
         if (! $this->rule_file->isValid($submitted_value_info)) {
-            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info);
+            return $this->next_creator_in_chain->createAttachment(
+                $current_user,
+                $field,
+                $submitted_value_info,
+                $url_mapping
+            );
         }
 
         if (! isset($submitted_value_info['id'])) {
-            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info);
+            return $this->next_creator_in_chain->createAttachment(
+                $current_user,
+                $field,
+                $submitted_value_info,
+                $url_mapping
+            );
         }
 
         $temporary_file = $this->temporary_file_manager->getFileByTemporaryName($submitted_value_info['id']);
         if (! $temporary_file) {
-            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info);
+            return $this->next_creator_in_chain->createAttachment(
+                $current_user,
+                $field,
+                $submitted_value_info,
+                $url_mapping
+            );
         }
 
         $attachment = new Tracker_FileInfo(

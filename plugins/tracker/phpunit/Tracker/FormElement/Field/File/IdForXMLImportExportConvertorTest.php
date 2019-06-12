@@ -17,39 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement\Field\File\Upload;
+namespace Tuleap\Tracker\FormElement\Field\File;
 
-final class FileToUpload
+use PHPUnit\Framework\TestCase;
+
+class IdForXMLImportExportConvertorTest extends TestCase
 {
+    public function testItConvertsForXMLExport(): void
+    {
+        $this->assertEquals('fileinfo_123', IdForXMLImportExportConvertor::convertFileInfoIdToXMLId(123));
+    }
+
+    public function testItConvertsForXMLImport(): void
+    {
+        $this->assertEquals(123, IdForXMLImportExportConvertor::convertXMLIdToFileInfoId('fileinfo_123'));
+    }
+
+
     /**
-     * @var int
+     * @testWith [""]
+     *           ["invalid_prefix_123"]
+     *           ["fileinfo_"]
+     *           ["fileinfo_string"]
      */
-    private $id;
-    /**
-     * @var string
-     */
-    private $filename;
-
-    public function __construct(int $id, string $filename)
+    public function testInvalidXMLIds(string $id): void
     {
-        $this->id = $id;
-        $this->filename = $filename;
-    }
-
-    public function getUploadHref(): string
-    {
-        return '/uploads/tracker/file/' . urlencode((string) $this->id);
-    }
-
-    public function getDownloadHref(): string
-    {
-        return (new FileToDownload($this->id, $this->filename))->getDownloadHref();
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+        $this->expectException(\InvalidArgumentException::class);
+        IdForXMLImportExportConvertor::convertXMLIdToFileInfoId($id);
     }
 }

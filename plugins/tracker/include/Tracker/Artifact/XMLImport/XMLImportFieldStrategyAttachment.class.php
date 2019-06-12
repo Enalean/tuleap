@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
 
@@ -109,7 +111,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         if (! is_file($file_path)) {
             throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);
         }
-        return array(
+        $fileinfo = [
             self::FILE_INFO_COPY_OPTION => true,
             'submitted_by'              => $submitted_by,
             'name'                      => (string) $file_xml->filename,
@@ -118,6 +120,20 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
             'size'                      => (int) $file_xml->filesize,
             'tmp_name'                  => $file_path,
             'error'                     => UPLOAD_ERR_OK,
-        );
+        ];
+
+        try {
+            $attributes = $file_xml->attributes();
+            if ($attributes) {
+                $fileinfo_id = (string) $attributes['id'];
+                $fileinfo['previous_fileinfo_id'] = IdForXMLImportExportConvertor::convertXMLIdToFileInfoId(
+                    $fileinfo_id
+                );
+            }
+        } catch (InvalidArgumentException $exception) {
+            // It seems that we don't know this xml id. Just ignore it.
+        }
+
+        return $fileinfo;
     }
 }

@@ -55,7 +55,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase 
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter($this->path_exporter);
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->id_prefix     = Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter::ID_PREFIX;
         $this->artifact      = mock('Tracker_Artifact');
         $this->changeset     = mock('Tracker_Artifact_Changeset');
 
@@ -86,13 +85,13 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         );
 
         $this->assertEqual(count($this->artifact_xml->file), 2);
-        $this->assertEqual((string)$this->artifact_xml->file[0]['id'], $this->id_prefix . 123);
+        $this->assertEqual((string)$this->artifact_xml->file[0]['id'], 'fileinfo_123');
         $this->assertEqual((string)$this->artifact_xml->file[0]->filename, 'file123.txt');
         $this->assertEqual((string)$this->artifact_xml->file[0]->filesize, 123);
         $this->assertEqual((string)$this->artifact_xml->file[0]->filetype, 'text/xml');
         $this->assertEqual((string)$this->artifact_xml->file[0]->description, 'Description 123');
 
-        $this->assertEqual((string)$this->artifact_xml->file[1]['id'], $this->id_prefix . 456);
+        $this->assertEqual((string)$this->artifact_xml->file[1]['id'], 'fileinfo_456');
     }
 
     public function itDelegatesComputationOfPathToDedicatedObject() {
@@ -120,8 +119,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->assertEqual(count($field_change->value), 2);
         $this->assertEqual((string)$field_change['type'], 'file');
         $this->assertEqual((string)$field_change['field_name'], $this->field->getName());
-        $this->assertEqual((string)$field_change->value[0]['ref'], $this->id_prefix . 123);
-        $this->assertEqual((string)$field_change->value[1]['ref'], $this->id_prefix . 456);
+        $this->assertEqual((string)$field_change->value[0]['ref'], 'fileinfo_123');
+        $this->assertEqual((string)$field_change->value[1]['ref'], 'fileinfo_456');
     }
 
     public function itOnlyExportsTheLastChangeset() {
@@ -174,7 +173,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedC
         );
 
         $this->assertEqual(count($this->artifact_xml->file), 1);
-        $this->assertEqual((string)$this->artifact_xml->file[0]['id'], $this->id_prefix . 123);
+        $this->assertEqual((string)$this->artifact_xml->file[0]['id'], 'fileinfo_123');
         $this->assertEqual((string)$this->artifact_xml->file[0]->filename, 'file&123.txt');
         $this->assertEqual((string)$this->artifact_xml->file[0]->description, 'Description & 123');
     }

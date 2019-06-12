@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+
 /**
  * I create an initial changeset
  */
@@ -33,7 +35,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
-        int $changeset_id
+        int $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): void {
         $is_submission = true;
         $bypass_perms  = true;
@@ -41,17 +44,48 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator extends Tracker_Artifac
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanSubmit()) {
-                $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, false);
+                $field->saveNewChangeset(
+                    $artifact,
+                    null,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    false,
+                    $url_mapping
+                );
+
                 return;
-            } else if ($workflow && $workflow->bypassPermissions($field)) {
-                $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+            }
+
+            if ($workflow && $workflow->bypassPermissions($field)) {
+                $field->saveNewChangeset(
+                    $artifact,
+                    null,
+                    $changeset_id,
+                    $fields_data[$field->getId()],
+                    $submitter,
+                    $is_submission,
+                    $bypass_perms,
+                    $url_mapping
+                );
+
                 return;
             }
         }
 
-        if (!$field->userCanSubmit() && $field->isSubmitable()) {
+        if (! $field->userCanSubmit() && $field->isSubmitable()) {
             $this->pushDefaultValueInSubmittedValues($field, $fields_data);
-            $field->saveNewChangeset($artifact, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+            $field->saveNewChangeset(
+                $artifact,
+                null,
+                $changeset_id,
+                $fields_data[$field->getId()],
+                $submitter,
+                $is_submission,
+                $bypass_perms,
+                $url_mapping
+            );
         }
     }
 
