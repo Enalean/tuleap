@@ -46,3 +46,28 @@
     text-align: left;
     white-space: nowrap;
 }
+
+.siteadmin-custom-site-content-empty-icon {
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 100px;
+}
+
+.siteadmin-custom-site-content-customisation,
+.siteadmin-custom-site-content-original {
+    width: 50%;
+}
+
+.siteadmin-custom-site-content-keys {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.siteadmin-custom-site-content-line-number {
+    white-space: nowrap;
+
+    > code {
+        white-space: pre;
+        tab-size: 4;
+        -moz-tab-size: 4;
+    }
+}

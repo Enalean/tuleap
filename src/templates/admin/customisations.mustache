@@ -1,0 +1,67 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">{{ title }}</h1>
+        </div>
+        {{# customisations }}
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">{{ locale }}</h2>
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th class="siteadmin-custom-site-content-line-number">{{# gettext }}Id{{/ gettext }}</th>
+                        <th>{{# gettext }}Customisation{{/ gettext }}</th>
+                        <th>{{# gettext }}Original{{/ gettext }}</th>
+                    </tr>
+                    </thead>
+                    {{# customisations }}
+                        <tbody>
+                        <tr>
+                            <td class="tlp-table-cell-section" colspan="3">{{ path }}</td>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        {{# lines }}
+                            <tr>
+                                <td class="siteadmin-custom-site-content-line-number">
+                                    <code>{{ primary }}<span
+                                            class="siteadmin-custom-site-content-tab">	</span>{{ secondary }}</code>
+                                </td>
+                                <td class="siteadmin-custom-site-content-customisation">
+                                    {{ customisation }}
+                                </td>
+                                <td class="siteadmin-custom-site-content-original">
+                                    {{ original }}
+                                </td>
+                            </tr>
+                        {{/ lines }}
+                        </tbody>
+                    {{/ customisations }}
+                </table>
+            </section>
+        {{/ customisations }}
+        {{# has_customisations }}
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <a type="button"
+                   class="tlp-button tlp-button-primary"
+                   href="data:application/json;charset=utf-8,{{ json_encoded_customisations }}"
+                   download="site-content-customisations.json"
+                   id="siteadmin-custom-site-content-export-button"
+                >
+                    <i class="fa fa-download tlp-button-icon"></i>
+                    {{# gettext }}Export{{/ gettext }}
+                </a>
+            </section>
+        {{/ has_customisations }}
+        {{^ has_customisations }}
+            <div class="empty-page">
+                <i class="fa fa-thumbs-o-up empty-page-icon siteadmin-custom-site-content-empty-icon"></i>
+                <div class="empty-page-text">
+                    {{# gettext }}
+                        Congratulations, you don't have any customisations in your language files!
+                    {{/ gettext }}
+                </div>
+            </div>
+        {{/ has_customisations }}
+    </div>
+</section>
