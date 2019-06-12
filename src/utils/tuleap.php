@@ -21,8 +21,11 @@
 require_once __DIR__.'/../www/include/pre.php';
 
 use Tuleap\CLI\Application;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
+use Tuleap\CLI\Command\QueueSystemCheckCommand;
+use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
@@ -49,13 +52,16 @@ $application->add(
     new ImportProjectXMLCommand()
 );
 $application->add(
-    new \Tuleap\CLI\Command\ProcessSystemEventsCommand(
+    new ProcessSystemEventsCommand(
         new SystemEventProcessor_Factory(BackendLogger::getDefaultLogger(), SystemEventManager::instance(), $event_manager),
         new SystemEventProcessManager()
     )
 );
+$application->add(
+    new QueueSystemCheckCommand($event_manager)
+);
 
-$CLI_command_collector = new \Tuleap\CLI\CLICommandsCollector($application);
+$CLI_command_collector = new CLICommandsCollector($application);
 $event_manager->processEvent($CLI_command_collector);
 
 $application->run();

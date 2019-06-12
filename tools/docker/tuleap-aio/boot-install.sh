@@ -70,7 +70,7 @@ chown gitolite:gitolite /var/lib/gitolite/.ssh/authorized_keys
 chmod 600 /var/lib/gitolite/.ssh/authorized_keys
 
 # Ensure system will be synchronized ASAP
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/launch_system_check.php
+/usr/bin/tuleap queue-system-check
 
 if [ -z "$DB_HOST" ]; then
     service mysqld stop
