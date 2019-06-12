@@ -15,7 +15,7 @@
         <input type="hidden" name="selected_id" value="{{ selected_id }}" />
         <p>{{# dgettext }} tuleap-tracker |Please note that project administrators and tracker administrators are granted full access to the tracker.{{/ dgettext }}</p>
         <p>{{# dgettext }} tuleap-tracker |You may <a href="%s">switch to the 'group' view</a> by clicking on a field label in the table below.| {{ by_group_url }} {{/ dgettext}}</p>
-        <table class="table">
+        <table class="table tracker-admin-permissions-per-field">
             <thead>
             <tr>
                 <th>{{# dgettext }} tuleap-tracker |User groups{{/ dgettext }}</th>
