@@ -21,11 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-class FieldsPermissionsForOtherGroups
+class ByGroupFieldsPermissionsForOtherGroups
 {
-
     /**
      * @var int
      */

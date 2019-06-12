@@ -1598,7 +1598,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_tracker_permissions')
                 ),
                 'fields' => array(
-                        'url'         => \Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByFieldController::getUrl($this),
+                        'url'         => \Tuleap\Tracker\Permission\Fields\ByField\ByFieldController::getUrl($this),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_fields_tracker_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_fields_tracker_permissions')
                 )

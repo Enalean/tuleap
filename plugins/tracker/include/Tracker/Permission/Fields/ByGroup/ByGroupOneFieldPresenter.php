@@ -21,9 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-class PermissionsFieldPresenter
+class ByGroupOneFieldPresenter
 {
     /**
      * @var int
@@ -74,7 +74,7 @@ class PermissionsFieldPresenter
      */
     public $has_other_groups = false;
 
-    public function __construct(\Tracker_FormElement_Field $field, FieldsPermissionForGroup $fields_permission_for_group)
+    public function __construct(\Tracker_FormElement_Field $field, ByGroupFieldsPermissions $fields_permission_for_group)
     {
         $this->field_id          = $field->getId();
         $this->field_name        = $field->getName();

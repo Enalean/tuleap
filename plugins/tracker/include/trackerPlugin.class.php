@@ -112,9 +112,9 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
-use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByFieldController;
-use Tuleap\Tracker\Permission\PermissionsOnFieldsDisplayByGroupController;
-use Tuleap\Tracker\Permission\PermissionsOnFieldsUpdateController;
+use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
+use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
@@ -749,8 +749,8 @@ class trackerPlugin extends Plugin {
             strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().'/workflow/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsDisplayByGroupController::URL.'/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsDisplayByFieldController::URL.'/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().ByGroupController::URL.'/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath().ByFieldController::URL.'/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsUpdateController::URL.'/') !== 0
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
@@ -1808,12 +1808,12 @@ class trackerPlugin extends Plugin {
 
     public function routeGetFieldsPermissionsByField() : DispatchableWithRequest
     {
-        return new PermissionsOnFieldsDisplayByFieldController(TrackerFactory::instance());
+        return new ByFieldController(TrackerFactory::instance());
     }
 
     public function routeGetFieldsPermissionsByGroup() : DispatchableWithRequest
     {
-        return new PermissionsOnFieldsDisplayByGroupController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/permission'));
+        return new ByGroupController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/permission'));
     }
 
     public function routePostFieldsPermissions(): DispatchableWithRequest
@@ -1838,8 +1838,8 @@ class trackerPlugin extends Plugin {
             $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
             $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
 
-            $r->get(PermissionsOnFieldsDisplayByFieldController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
-            $r->get(PermissionsOnFieldsDisplayByGroupController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
+            $r->get(ByFieldController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
+            $r->get(ByGroupController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
             $r->post(PermissionsOnFieldsUpdateController::URL.'/{id:\d+}', $this->getRouteHandler('routePostFieldsPermissions'));
 
             $r->post('/webhooks/delete', $this->getRouteHandler('routePostWebhooksDelete'));

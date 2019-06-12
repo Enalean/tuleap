@@ -21,9 +21,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-class PermissionsOnFieldsDisplayByGroupPresenter
+use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
+use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
+
+class ByGroupPresenter
 {
     /**
      * @var string
@@ -42,7 +45,7 @@ class PermissionsOnFieldsDisplayByGroupPresenter
      */
     public $by_field_url;
     /**
-     * @var PermissionsFieldPresenter[]
+     * @var ByGroupOneFieldPresenter[]
      */
     public $field_list;
     /**
@@ -64,9 +67,9 @@ class PermissionsOnFieldsDisplayByGroupPresenter
 
     public function __construct(\Tracker $tracker, int $selected_id, array $field_list, bool $might_not_have_access)
     {
-        $this->self_url       = PermissionsOnFieldsDisplayByGroupController::getUrl($tracker);
+        $this->self_url       = ByGroupController::getUrl($tracker);
         $this->update_url     = PermissionsOnFieldsUpdateController::getUrl($tracker);
-        $this->by_field_url   = PermissionsOnFieldsDisplayByFieldController::getUrl($tracker);
+        $this->by_field_url   = ByFieldController::getUrl($tracker);
         $this->tracker_url    = TRACKER_BASE_URL.'?tracker='.$tracker->getId();
         $this->selected_id    = $selected_id;
         $this->field_list     = $field_list;

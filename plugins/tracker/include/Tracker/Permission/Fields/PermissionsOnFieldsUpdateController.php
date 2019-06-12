@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Permission;
+namespace Tuleap\Tracker\Permission\Fields;
 
 use HTTPRequest;
 use Tracker_FormElementFactory;
@@ -29,6 +29,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
+use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
 class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
 {
@@ -75,9 +77,9 @@ class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
                     );
                     $layout->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd'));
                     if ($request->get('origin') === 'fields-by-group') {
-                        $layout->redirect(PermissionsOnFieldsDisplayByGroupController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
+                        $layout->redirect(ByGroupController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
                     } else {
-                        $layout->redirect(PermissionsOnFieldsDisplayByFieldController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
+                        $layout->redirect(ByFieldController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
                     }
                 }
             }
