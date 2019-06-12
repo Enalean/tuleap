@@ -72,11 +72,11 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
      * @return array of Tracker
      */
     public function getChildren(Tracker $tracker) {
-        $dar      = $this->dao->getChildren($tracker->getId());
-        $children = array();
+        $children_ids = $this->dao->getChildren($tracker->getId());
+        $children     = [];
         
-        foreach($dar as $row) {
-            $children[] = $this->tracker_factory->getTrackerById($row['child_id']);
+        foreach($children_ids as $child_id) {
+            $children[] = $this->tracker_factory->getTrackerById($child_id);
         }
         
         return $children;

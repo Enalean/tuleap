@@ -343,6 +343,10 @@ msgstr "Désactiver complètement le workflow"
 msgid "Global Rules"
 msgstr "Règles Globales"
 
+msgid "Go to the administration of the cross-tracker triggers."
+msgstr ""
+"Se rendre dans l'administration des règles globales sur les déclencheurs."
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -948,6 +952,23 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
 #, php-format
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
+
+msgid ""
+"The tracker %s is implicated in cross-tracker triggers. You will not be able "
+"to remove this tracker from the hierarchy until the triggers implicating it "
+"are removed."
+msgid_plural ""
+"The trackers %s are implicated in cross-tracker triggers. You will not be "
+"able to remove those trackers from the hierarchy until the triggers "
+"implicating them are removed."
+msgstr[0] ""
+"L'outil de suivi %s est impliqué dans des règles globales sur les "
+"déclencheurs. Il ne sera pas possible de l'enlever de la hiérarchie tant "
+"que des déclencheurs l'impliquent."
+msgstr[1] ""
+"Les outils de suivi %s sont impliqués dans des règles globales sur les "
+"déclencheurs. Il ne sera pas possible de les enlever de la hiérarchie tant "
+"que des déclencheurs les impliquent."
 
 #, php-format
 msgid ""

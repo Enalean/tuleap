@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,11 +70,24 @@ class Tracker_Hierarchy_Presenter {
      */
     public $hierarchy_title;
 
+    /**
+     * @var string
+     */
+    public $tracker_used_in_trigger_rules_names;
+    /**
+     * @var int
+     */
+    public $tracker_used_in_trigger_rules_nb;
+
+    /**
+     * @param Tracker[] $trackers_used_in_trigger_rules
+     */
     public function __construct(
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        $is_child_is_disabled
+        $is_child_is_disabled,
+        array $trackers_used_in_trigger_rules
     ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
@@ -103,6 +116,17 @@ class Tracker_Hierarchy_Presenter {
         );
 
         $this->hierarchy_title = dgettext('tuleap-tracker', 'Hierarchy');
+
+        $this->tracker_used_in_trigger_rules_names = implode(
+            ', ',
+            array_map(
+                static function(Tracker $tracker) : string {
+                    return $tracker->getName();
+                },
+                $trackers_used_in_trigger_rules
+            )
+        );
+        $this->tracker_used_in_trigger_rules_nb = count($trackers_used_in_trigger_rules);
     }
 
     public function getTrackerUrl() {

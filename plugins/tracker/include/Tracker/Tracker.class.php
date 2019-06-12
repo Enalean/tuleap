@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
+use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
@@ -906,21 +907,19 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         return $this->is_project_allowed_to_use_nature;
     }
 
-    /**
-     * @return Tracker_Hierarchy_Controller
-     */
-    private function getHierarchyController($request)
+    private function getHierarchyController(Codendi_Request $request) : HierarchyController
     {
         $dao                  = new HierarchyDAO();
         $tracker_factory      = $this->getTrackerFactory();
         $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $hierarchical_tracker = $factory->getWithChildren($this);
-        $controller           = new Tracker_Hierarchy_Controller(
+        $controller           = new HierarchyController(
             $request,
             $hierarchical_tracker,
             $factory,
             $dao,
-            new ArtifactLinksUsageDao()
+            new ArtifactLinksUsageDao(),
+            new Tracker_Workflow_Trigger_RulesDao()
         );
 
         return $controller;
