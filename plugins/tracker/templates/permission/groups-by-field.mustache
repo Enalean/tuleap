@@ -1,0 +1,71 @@
+<h2>{{# dgettext }} tuleap-tracker |Manage Fields Permissions{{/ dgettext }}</h2>
+
+{{# has_permissions}}
+<script type="text/javascript">
+    <!--
+    function changeFirstPartId(wanted) {
+        location.href = '?selected_id=' + wanted;
+    }
+    //-->
+</script>
+
+<form name="form_tracker_permissions" action="{{ update_url }}" method="post">
+    <div>
+        <input type="hidden" name="origin" value="fields-by-field" />
+        <input type="hidden" name="selected_id" value="{{ selected_id }}" />
+        <p>{{# dgettext }} tuleap-tracker |Please note that project administrators and tracker administrators are granted full access to the tracker.{{/ dgettext }}</p>
+        <p>{{# dgettext }} tuleap-tracker |You may <a href="%s">switch to the 'group' view</a> by clicking on a field label in the table below.| {{ by_group_url }} {{/ dgettext}}</p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{# dgettext }} tuleap-tracker |User groups{{/ dgettext }}</th>
+                <th>{{# dgettext }} tuleap-tracker |Fields{{/ dgettext }}</th>
+                <th>{{# dgettext }} tuleap-tracker |Can submit{{/ dgettext }}</th>
+                <th>{{# dgettext }} tuleap-tracker |Access permissions{{/ dgettext }}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{# ugroup_list }}
+            <tr>
+                {{# is_first }}
+                <td rowspan="{{ nb_permissions }}" style="vertical-align:top;">
+                    <select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">
+                        {{# field_list }}
+                            <option value="{{ id }}"{{# is_selected }} selected="selected" style="background:#EEE;"{{/ is_selected }}>{{ name }}</option>
+                        {{/ field_list }}
+                    </select>
+                </td>
+                {{/ is_first }}
+                <td>
+                    <a href="{{ by_group_url }}?selected_id={{ ugroup_id }}">{{ ugroup_name }}</a>{{# might_not_have_access }} *{{/ might_not_have_access}}
+                </td>
+                <td style="text-align:center;">
+                    <input type="hidden" name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" value="off" />
+                    <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} />
+                </td>
+                <td>
+                    <select name="permissions[{{ field_id }}][{{ ugroup_id }}][others]">
+                        <option value="100" {{# has_no_access }}selected="selected" style="background:#EEE;"{{/ has_no_access }}>-</option>
+                        <option value="0" {{# has_read_access }}selected="selected" style="background:#EEE;"{{/ has_read_access }} >{{# dgettext }} tuleap-tracker |Read only{{/ dgettext }}</option>
+                        {{# is_updatable }}
+                            <option value="1" {{# has_update_access }}selected="selected" style="background:#EEE;"{{/ has_update_access }} >{{# dgettext }} tuleap-tracker |Update{{/ dgettext }}</option>
+                        {{/ is_updatable }}
+                    </select>
+                </td>
+            </tr>
+            {{/ ugroup_list }}
+            </tbody>
+        </table>
+        {{# might_not_have_access }}
+            <p>{{# dgettext }} tuleap-tracker |* denotes user groups that may not have access to the tracker (no <a href="%s">tracker permission</a> set).| {{ tracker_url }} {{/ dgettext }}</p>
+        {{/ might_not_have_access }}
+        <input type='submit' name='update' value="{{# dgettext }} tuleap-tracker |Submit permissions{{/ dgettext }}" />
+    </div>
+</form>
+{{/ has_permissions }}
+{{^ has_permissions }}
+    <p><em>{{# dgettext }} tuleap-tracker |No user group has access to this tracker{{/ dgettext }}</em></p>
+{{/ has_permissions }}
+
+<p>{{# dgettext }} tuleap-tracker |Project admins can also <a href="/project/admin/ugroup.php?group_id=%s">create or modify</a> user groups.| {{ project_id }} {{/ dgettext }}</p>

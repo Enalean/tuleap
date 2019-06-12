@@ -1253,6 +1253,13 @@ msgstr ""
 "Vous pouvez <a href=\"%s\">basculer vers l'affichage par champ</a> en "
 "cliquant sur le label d'un champ dans le tableau ci-dessous."
 
+msgid ""
+"You may <a href=\"%s\">switch to the 'group' view</a> by clicking on a field "
+"label in the table below."
+msgstr ""
+"Vous pouvez <a href=\"%s\">basculer vers l'affichage par groupes "
+"d'utilisateurs</a> en cliquant sur leurs noms dans le tableau ci-dessous."
+
 msgid "You must be tracker administrator to access this resource."
 msgstr "Vous devez être administrateur pour accéder à cette ressource."
 
