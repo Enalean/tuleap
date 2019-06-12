@@ -25,3 +25,4 @@ require_once __DIR__.'/DocmanDataBuilder.php';
 require_once __DIR__.'/helper/DocmanDataBuildCommon.php';
 require_once __DIR__.'/DocmanWithMetadataActivatedBase.php';
 require_once __DIR__.'/DocmanWithMetadataActivatedDataBuilder.php';
+require_once __DIR__ . '/helper/DocmanTestExecutionHelper.php';
