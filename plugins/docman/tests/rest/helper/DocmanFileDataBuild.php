@@ -34,10 +34,10 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      *                                   +
      *                                   |
      *                                   +
-     *                  +----------------+---------------+
-     *                  |                |               |
-     *                  +                +               +
-     *              PATCH File       DELETE File    LOCK File
+     *                  +----------------+---------------+--------------------+
+     *                  |                |               |                    |
+     *                  +                +               +                    +
+     *              PATCH File       DELETE File     POST File Version    LOCK File
      *
      */
     public function createFolderFileWithContent($docman_root): void
@@ -54,6 +54,7 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
 
         $this->createPatchFolder($folder_file_id);
         $this->createDeleteFolder($folder_file_id);
+        $this->createPostVersionFolder($folder_file_id);
         $this->createLockFolder($folder_file_id);
     }
 
@@ -166,6 +167,96 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
         $this->createAndLockItem($folder_delete_id, $this->admin_user_id, $this->admin_user_id, 'DELETE F L', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
         $this->createAdminOnlyItem($folder_delete_id, 'DELETE F RO', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                     POST File version
+     *                           +
+     *                           |
+     *           +---------------+-----------------+-----------------+-----------------+-----------------+
+     *           |               |                 |                 |                 |                 |
+     *           +               +                 +                 +                 +                 +
+     *       POST F V      POST F V AT C   POST F V AT R    POST F V AT E        POST F V L Admin  POST F V L
+     *
+     * F    => File
+     * V    => version
+     * AT C => Approval Table Copy action on new version
+     * AT E => Approval Table Empty action on new version
+     * AT R => Approval Table Reset action on new version
+     * No AT => No approval table
+     * L    => The item is locked by a regular user
+     * L admin => THe item is locked by an admin
+     */
+    private function createPostVersionFolder(int $folder_id): void
+    {
+        $folder_post_version_id = $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'POST File Version',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $this->addWritePermissionOnItem($folder_post_version_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST F V',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createFileWithApprovalTable(
+            $folder_post_version_id,
+            'POST F V AT C',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+        );
+
+        $this->createFileWithApprovalTable(
+            $folder_post_version_id,
+            'POST F V AT E',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+        );
+
+        $this->createFileWithApprovalTable(
+            $folder_post_version_id,
+            'POST F V AT R',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+        );
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST F V No AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->admin_user_id,
+            'POST F V L Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST F V L',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $this->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST F V UL Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
     }
 
     /**

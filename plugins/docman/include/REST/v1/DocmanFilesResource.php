@@ -38,6 +38,8 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
+use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
@@ -140,7 +142,9 @@ class DocmanFilesResource extends AuthenticatedResource
      *
      * Create a new version of an existing file document
      * <pre>
-     * /!\ This route is under construction and will be subject to changes
+     * /!\ This route is under construction and will be subject to changes <br/>
+     * /!\ <strong> this route will be deprecated very soon </strong> <br/>
+     * /!\ To create a file version, please use the {id}/version route instead !
      * </pre>
      *
      * <pre>
@@ -283,6 +287,119 @@ class DocmanFilesResource extends AuthenticatedResource
         $this->event_manager->processEvent('send_notifications', []);
     }
 
+    /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsNewVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    /**
+     * Create a version of a file
+     *
+     * Create a version of an existing file document
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * <pre>
+     * approval_table_action should be provided only if item has an existing approval table.<br>
+     * Possible values:<br>
+     *  * copy: Creates an approval table based on the previous one<br>
+     *  * reset: Reset the current approval table<br>
+     *  * empty: No approbation needed for the new version of this document<br>
+     * </pre>
+     *
+     * @url    POST {id}/version
+     * @access hybrid
+     *
+     * @param int                                 $id             Id of the file
+     * @param DocmanFileVersionPOSTRepresentation $representation {@from body}
+     *
+     * @return CreatedItemFilePropertiesRepresentation
+     *
+     * @status 201
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 409
+     * @throws RestException 501
+     */
+
+    public function postVersion(
+        int $id,
+        DocmanFileVersionPOSTRepresentation $representation
+    ): CreatedItemFilePropertiesRepresentation {
+
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
+        $item->accept($validator, []);
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $this->checkUserCanWrite($project, $current_user, $item);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
+
+        $docman_item_version_creator = $this->getFileVersionCreator($project);
+
+        try {
+            $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
+            $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
+
+            return $docman_item_version_creator->createFileVersion(
+                $item,
+                $current_user,
+                $representation,
+                new \DateTimeImmutable()
+            );
+        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext(
+                        'tuleap-docman',
+                        '%s has an approval table, you must provide an option to have approval table on new version creation.'
+                    ),
+                    $item->title
+                )
+            );
+        } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'Impossible to update a file which already has an approval table without approval action.'
+                )
+            );
+        }
+    }
+
+
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
@@ -293,6 +410,17 @@ class DocmanFilesResource extends AuthenticatedResource
         Header::allowOptionsPatchDelete();
     }
 
+    private function setVersionHeaders(): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @param \Project               $project
+     * @param ApprovalTableRetriever $docman_approval_table_retriever
+     *
+     * @return DocmanItemFileUpdator
+     */
     private function getFileUpdator(
         \Project $project
     ): DocmanItemFileUpdator {
@@ -371,5 +499,16 @@ class DocmanFilesResource extends AuthenticatedResource
         }
 
         $lock_updater->updateLockInformation($item, $should_lock_item, $current_user);
+    }
+
+    private function getFileVersionCreator(\Project $project): DocmanFileVersionCreator
+    {
+        return new DocmanFileVersionCreator(
+            new VersionToUploadCreator(
+                new DocumentOnGoingVersionToUploadDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            Docman_PermissionsManager::instance($project->getID())
+        );
     }
 }
