@@ -35,7 +35,15 @@
             >
                 When you delete a folder, all its content is also deleted. Please think wisely!
             </div>
-            <delete-associated-wiki-page-checkbox v-if="is_item_a_wiki" v-model="additional_options" v-bind:item="item"/>
+            <delete-associated-wiki-page-checkbox
+                v-if="canWikiChecboxBeShown"
+                v-model="additional_options"
+                v-bind:item="item"
+                v-bind:wiki-page-referencers="wiki_page_referencers"
+            />
+            <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
+                <i class="fa fa-spin fa-spinner" v-if="is_item_a_wiki && wiki_page_referencers_loading"></i>
+            </span>
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">Cancel</button>
@@ -44,14 +52,14 @@
                 class="tlp-button-danger tlp-modal-action"
                 data-test="confirm-deletion-button"
                 v-on:click="deleteItem()"
-                v-bind:class="{'disabled': has_modal_error}"
-                v-bind:disabled="has_modal_error"
+                v-bind:class="{'disabled': is_confirm_button_disabled}"
+                v-bind:disabled="is_confirm_button_disabled"
             >
                 <i
                     class="fa tlp-button-icon"
                     v-bind:class="{
-                        'fa-spin fa-circle-o-notch': is_item_being_deleted,
-                        'fa-trash': ! is_item_being_deleted
+                        'fa-spin fa-circle-o-notch': is_an_action_on_going,
+                        'fa-trash': ! is_an_action_on_going
                     }"
                 ></i>
                 <span v-translate>Delete</span>
@@ -80,7 +88,9 @@ export default {
         return {
             modal: null,
             is_item_being_deleted: false,
-            additional_options: {}
+            wiki_page_referencers_loading: false,
+            additional_options: {},
+            wiki_page_referencers: null
         };
     },
     computed: {
@@ -102,6 +112,19 @@ export default {
         },
         is_item_a_folder() {
             return this.item.type === TYPE_FOLDER;
+        },
+        is_confirm_button_disabled() {
+            return this.has_modal_error || this.is_an_action_on_going;
+        },
+        is_an_action_on_going() {
+            return this.is_item_being_deleted || this.wiki_page_referencers_loading;
+        },
+        canWikiChecboxBeShown() {
+            return (
+                this.is_item_a_wiki &&
+                !this.wiki_page_referencers_loading &&
+                this.wiki_page_referencers !== null
+            );
         }
     },
     mounted() {
@@ -109,6 +132,10 @@ export default {
         this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
 
         this.modal.show();
+
+        if (this.is_item_a_wiki && this.item.wiki_properties.page_id !== null) {
+            this.setWikiPageReferencers();
+        }
     },
     methods: {
         async deleteItem() {
@@ -132,6 +159,17 @@ export default {
             }
 
             this.is_item_being_deleted = false;
+        },
+        async setWikiPageReferencers() {
+            this.wiki_page_referencers_loading = true;
+
+            const referencers = await this.$store.dispatch(
+                "getWikisReferencingSameWikiPage",
+                this.item
+            );
+
+            this.wiki_page_referencers_loading = false;
+            this.wiki_page_referencers = referencers;
         },
         resetModal() {
             this.$store.commit("error/resetModalError");

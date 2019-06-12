@@ -41,7 +41,9 @@ import {
     deleteEmbeddedFile,
     deleteWiki,
     deleteEmptyDocument,
-    deleteFolder
+    deleteFolder,
+    getItemsReferencingSameWikiPage,
+    getParents
 } from "../api/rest-querier.js";
 
 import {
@@ -55,13 +57,15 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
+import { buildItemPath } from "./actions-helpers/build-parent-paths.js";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
     TYPE_FILE,
     TYPE_FOLDER,
     TYPE_WIKI,
-    TYPE_LINK
+    TYPE_LINK,
+    USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE
 } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 
@@ -551,5 +555,21 @@ export const deleteItem = async (context, [item, additional_options]) => {
         context.commit("showPostDeletionNotification");
     } catch (exception) {
         return handleErrorsForDeletionModal(context, exception, item);
+    }
+};
+
+export const getWikisReferencingSameWikiPage = async (context, item) => {
+    try {
+        const wiki_page_referencers = await getItemsReferencingSameWikiPage(
+            item.wiki_properties.page_id
+        );
+
+        return await Promise.all(
+            wiki_page_referencers.map(item =>
+                getParents(item.item_id).then(parents => buildItemPath(item, parents))
+            )
+        );
+    } catch (exception) {
+        return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
     }
 };
