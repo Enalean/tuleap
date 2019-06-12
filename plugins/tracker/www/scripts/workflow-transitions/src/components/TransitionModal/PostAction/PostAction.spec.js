@@ -34,11 +34,13 @@ describe("PostAction", () => {
     const float_field = create("field", { field_id: float_field_id, type: "float" });
     const status_field_id = 46;
     const status_field = create("field", { field_id: status_field_id, type: "sb" });
+    const fieldset_id = 47;
+    const fieldset = create("field", { field_id: fieldset_id, type: "fieldset" });
     let wrapper;
 
     beforeEach(() => {
         const current_tracker = {
-            fields: [date_field, int_field, float_field, status_field]
+            fields: [date_field, int_field, float_field, status_field, fieldset]
         };
 
         const store_options = {
@@ -47,7 +49,8 @@ describe("PostAction", () => {
                     current_transition: create("transition"),
                     is_modal_save_running: false
                 },
-                current_tracker: current_tracker
+                current_tracker: current_tracker,
+                can_use_hidden_fieldsets: true
             },
             getters: {
                 "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
@@ -88,6 +91,29 @@ describe("PostAction", () => {
 
         it("should be true otherwise", () => {
             expect(wrapper.vm.frozen_fields_is_valid).toBe(true);
+        });
+    });
+
+    describe("Hidden fieldsets is valid", () => {
+        it("should be false if workflow is advanced", () => {
+            store.getters.is_workflow_advanced = true;
+            expect(wrapper.vm.hidden_fieldsets_is_valid).toBe(false);
+        });
+
+        it("should be false if there are no fieldsets available", () => {
+            store.state.current_tracker.fields = [];
+            expect(wrapper.vm.hidden_fieldsets_is_valid).toBe(false);
+        });
+
+        it("should be false if the post action is already present once", () => {
+            store.getters["transitionModal/post_actions"] = [
+                create("post_action", { type: "hidden_fieldsets" })
+            ];
+            expect(wrapper.vm.hidden_fieldsets_is_valid).toBe(false);
+        });
+
+        it("should be true otherwise", () => {
+            expect(wrapper.vm.hidden_fieldsets_is_valid).toBe(true);
         });
     });
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@
 const POST_ACTION_TYPE = {
     RUN_JOB: "run_job",
     SET_FIELD_VALUE: "set_field_value",
-    FROZEN_FIELDS: "frozen_fields"
+    FROZEN_FIELDS: "frozen_fields",
+    HIDDEN_FIELDSETS: "hidden_fieldsets"
 };
 
 const DATE_FIELD_VALUE = {

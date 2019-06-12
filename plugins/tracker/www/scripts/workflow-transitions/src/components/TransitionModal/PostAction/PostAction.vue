@@ -29,6 +29,7 @@
             >
                 <optgroup v-bind:label="unique_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS" data-test="freeze_fields" v-bind:disabled="! frozen_fields_information.valid" v-bind:title="frozen_fields_information.title">{{ frozen_fields_information.option }}</option>
+                    <option v-if="can_use_hidden_fieldsets" v-bind:value="POST_ACTION_TYPE.HIDDEN_FIELDSETS" data-test="hide_fieldsets" v-bind:disabled="! hidden_fieldsets_information.valid" v-bind:title="hidden_fieldsets_information.title">{{ hidden_fieldsets_information.option }}</option>
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
@@ -56,7 +57,8 @@ import {
     FLOAT_FIELD,
     INT_FIELD,
     READ_ONLY_FIELDS,
-    STRUCTURAL_FIELDS
+    STRUCTURAL_FIELDS,
+    CONTAINER_FIELDSET
 } from "../../../../../constants/fields-constants.js";
 import { mapState, mapGetters } from "vuex";
 import { compare } from "../../../support/string.js";
@@ -78,6 +80,7 @@ export default {
         ...mapGetters("transitionModal", ["post_actions", "set_value_action_fields"]),
         ...mapState("transitionModal", ["is_modal_save_running"]),
         ...mapGetters(["current_workflow_field", "is_workflow_advanced"]),
+        ...mapState(["can_use_hidden_fieldsets"]),
         ...mapState({
             freezable_fields(state) {
                 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
@@ -88,6 +91,14 @@ export default {
                 return state.current_tracker.fields
                     .filter(field => !fields_blacklist.includes(field.type))
                     .filter(field => !(field.field_id === this.current_workflow_field.field_id))
+                    .sort((field1, field2) => compare(field1.label, field2.label));
+            },
+            hidable_fieldsets(state) {
+                if (state.current_tracker === null) {
+                    return [];
+                }
+                return state.current_tracker.fields
+                    .filter(field => field.type === CONTAINER_FIELDSET)
                     .sort((field1, field2) => compare(field1.label, field2.label));
             }
         }),
@@ -122,6 +133,38 @@ export default {
             return {
                 valid: false,
                 option: this.$gettext("Freeze fields (already used)"),
+                title: this.$gettext("You can only have this post-action once.")
+            };
+        },
+        hidden_fieldsets_information() {
+            if (this.hidden_fieldsets_is_valid) {
+                return {
+                    valid: true,
+                    option: this.$gettext("Hide fieldsets"),
+                    title: ""
+                };
+            }
+            if (this.is_workflow_advanced) {
+                return {
+                    valid: false,
+                    option: this.$gettext("Hide fieldsets (incompatible)"),
+                    title: this.$gettext(
+                        "Advanced configuration is incompatible with this post-action"
+                    )
+                };
+            }
+
+            if (this.there_are_no_applicable_fields_for_frozen_fields) {
+                return {
+                    valid: false,
+                    option: this.$gettext("Hide fieldsets (incompatible)"),
+                    title: this.$gettext("Your tracker doesn't seem to have available fieldsets")
+                };
+            }
+
+            return {
+                valid: false,
+                option: this.$gettext("Hide fieldsets (already used)"),
                 title: this.$gettext("You can only have this post-action once.")
             };
         },
@@ -182,6 +225,26 @@ export default {
         },
         there_are_no_applicable_fields_for_frozen_fields() {
             return this.freezable_fields.length === 0;
+        },
+        hidden_fieldsets_is_valid() {
+            return (
+                !this.is_workflow_advanced &&
+                (this.post_action_type === this.POST_ACTION_TYPE.HIDDEN_FIELDSETS ||
+                    !(
+                        this.there_are_no_applicable_fieldsets_for_hidden_fieldsets ||
+                        this.hidden_fieldsets_is_already_present
+                    ))
+            );
+        },
+        hidden_fieldsets_is_already_present() {
+            return (
+                this.post_actions.filter(
+                    post_action => post_action.type === this.POST_ACTION_TYPE.HIDDEN_FIELDSETS
+                ).length > 0
+            );
+        },
+        there_are_no_applicable_fieldsets_for_hidden_fieldsets() {
+            return this.hidable_fieldsets.length === 0;
         },
         post_action_type: {
             get() {

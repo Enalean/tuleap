@@ -41,6 +41,7 @@ const LIST_BIND_UGROUPS = "ugroups";
 const LIST_BIND_USERS = "users";
 const TEXT_FORMAT_TEXT = "text";
 const TEXT_FORMAT_HTML = "html";
+const CONTAINER_FIELDSET = "fieldset";
 
 export {
     STRUCTURAL_FIELDS,
@@ -54,5 +55,6 @@ export {
     LIST_BIND_UGROUPS,
     LIST_BIND_USERS,
     TEXT_FORMAT_TEXT,
-    TEXT_FORMAT_HTML
+    TEXT_FORMAT_HTML,
+    CONTAINER_FIELDSET
 };

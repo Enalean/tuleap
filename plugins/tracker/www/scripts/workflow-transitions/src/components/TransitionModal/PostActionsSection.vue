@@ -55,6 +55,7 @@ import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
 import RunJobAction from "./PostAction/RunJobAction.vue";
 import SetValueAction from "./PostAction/SetValueAction.vue";
 import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";
+import HiddenFieldsetsAction from "./PostAction/HiddenFieldsetsAction.vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
@@ -64,9 +65,11 @@ export default {
         PostActionSkeleton,
         RunJobAction,
         SetValueAction,
-        FrozenFieldsAction
+        FrozenFieldsAction,
+        HiddenFieldsetsAction
     },
     computed: {
+        ...mapState(["can_use_hidden_fieldsets"]),
         ...mapState("transitionModal", ["is_loading_modal", "is_modal_save_running"]),
         ...mapGetters("transitionModal", ["post_actions"]),
         has_post_actions() {
@@ -84,9 +87,14 @@ export default {
                 return SetValueAction;
             } else if (post_action.type === POST_ACTION_TYPE.FROZEN_FIELDS) {
                 return FrozenFieldsAction;
-            } else {
-                return null;
+            } else if (
+                post_action.type === POST_ACTION_TYPE.HIDDEN_FIELDSETS &&
+                this.can_use_hidden_fieldsets
+            ) {
+                return HiddenFieldsetsAction;
             }
+
+            return null;
         }
     }
 };

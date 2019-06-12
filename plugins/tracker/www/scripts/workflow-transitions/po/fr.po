@@ -83,6 +83,9 @@ msgstr "Modifier la valeur d'un champ (incompatible)"
 msgid "Choose a field"
 msgstr "Choisissez un champ"
 
+msgid "Choose a fieldset"
+msgstr "Choisissez un groupe de champs"
+
 msgid "Clear"
 msgstr "Effacer"
 
@@ -137,6 +140,9 @@ msgstr "Le(s) champs suivant(s) doivent obligatoirement avoir une valeur"
 msgid "Fields that will be frozen"
 msgstr "Champs qui seront figés"
 
+msgid "Fieldsets that will be hidden"
+msgstr "Groupes de champs qui seront cachés"
+
 msgid "Floats"
 msgstr "Flottants"
 
@@ -155,12 +161,21 @@ msgstr "Désactiver complètement le workflow"
 msgid "Groups that may process the transition"
 msgstr "Groupes autorisés à effectuer la transition"
 
+msgid "Hide fieldsets"
+msgstr "Cacher des groupes champs"
+
+msgid "Hide fieldsets (already used)"
+msgstr "Cacher des groupes champs (déjà utilisé)"
+
+msgid "Hide fieldsets (incompatible)"
+msgstr "Cacher des groupes champs (incompatible)"
+
 msgid ""
 "If you have any post actions of type \"Frozen Fields\" or \"Hidden Fieldsets"
 "\", they will be deleted."
 msgstr ""
-"Si vous avez configuré des post-actions de type \"Champs Figés\" ou \"Groupe de champs caché\", elles "
-"seront supprimées."
+"Si vous avez configuré des post-actions de type \"Champs Figés\" ou \"Groupes "
+"de Champs Cachés\", elles seront supprimées."
 
 msgid ""
 "If you have any post actions of type \"Frozen Fields\", they will be deleted."
@@ -307,11 +322,17 @@ msgstr ""
 "Merci de bien vouloir vérifier les configurations mises en place pour chaque "
 "état."
 
+msgid "Your tracker doesn't seem to have available fieldsets"
+msgstr ""
+"Votre outil de suivi ne semble pas avoir de groupes de champs disponibles."
+
 msgid "Your tracker doesn't seem to have available writable fields"
-msgstr "Votre tracker ne semble pas avoir de champs inscriptibles disponibles."
+msgstr ""
+"Votre outil de suivi ne semble pas avoir de champs inscriptibles disponibles."
 
 msgid "Your tracker doesn't seem to have integer, float or date fields."
-msgstr "Votre tracker ne semble pas avoir de champs entier, flottant ou date."
+msgstr ""
+"Votre outil de suivi ne semble pas avoir de champs entier, flottant ou date."
 
 msgid ""
 "artifactId: identifier of the artifact where the transition happens (integer)"
