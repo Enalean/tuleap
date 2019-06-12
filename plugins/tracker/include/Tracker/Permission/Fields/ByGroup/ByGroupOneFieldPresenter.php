@@ -32,7 +32,7 @@ class ByGroupOneFieldPresenter
     /**
      * @var string
      */
-    public $field_name;
+    public $field_label;
     /**
      * @var int
      */
@@ -77,7 +77,7 @@ class ByGroupOneFieldPresenter
     public function __construct(\Tracker_FormElement_Field $field, ByGroupFieldsPermissions $fields_permission_for_group)
     {
         $this->field_id          = $field->getId();
-        $this->field_name        = $field->getName();
+        $this->field_label       = $field->getLabel();
         $this->ugroup_id         = $fields_permission_for_group->getUgroupId();
         $this->has_submit_access = $fields_permission_for_group->hasSubmitPermission($field);
         $this->not_submitable    = ! $field->isSubmitable();
