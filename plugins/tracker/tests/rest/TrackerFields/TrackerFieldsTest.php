@@ -106,7 +106,12 @@ class TrackerFieldsTest extends TrackerBase
      */
     public function getFileFieldId(): int
     {
-        return $this->getAUsedField($this->tracker_fields_tracker_id, self::FIELD_FILE);
+        $field = $this->getAUsedField($this->tracker_fields_tracker_id, self::FIELD_FILE);
+        $field_id = $field['field_id'];
+
+        $this->assertEquals("tracker_fields/$field_id/files", $field['file_creation_uri']);
+
+        return $field_id;
     }
 
     /**

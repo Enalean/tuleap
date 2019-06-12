@@ -260,7 +260,7 @@ class SimpleModeTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActions(int $transition_id)
     {
-        $used_field_id = $this->getAUsedField(
+        $used_field_id = $this->getAUsedFieldId(
             $this->simple_mode_workflow_tracker_id,
             'points'
         );
@@ -314,7 +314,7 @@ class SimpleModeTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedTheWorkflowField(int $transition_id)
     {
-        $workflow_field_id = $this->getAUsedField(
+        $workflow_field_id = $this->getAUsedFieldId(
             $this->simple_mode_workflow_tracker_id,
             'status'
         );
@@ -347,7 +347,7 @@ class SimpleModeTest extends TrackerBase
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedAFieldUsedInFieldDependencies(
         int $transition_id
     ) {
-        $workflow_field_id = $this->getAUsedField(
+        $workflow_field_id = $this->getAUsedFieldId(
             $this->simple_mode_workflow_tracker_id,
             'list01'
         );
@@ -379,7 +379,7 @@ class SimpleModeTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActions(int $transition_id)
     {
-        $used_field_id = $this->getAUsedField(
+        $used_field_id = $this->getAUsedFieldId(
             $this->simple_mode_workflow_tracker_id,
             'fieldset1'
         );
