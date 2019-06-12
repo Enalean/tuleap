@@ -89,7 +89,11 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/admindelegation') === 0) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/admindelegation/themes/BurningParrot/',
+                '/assets/admindelegation/themes/BurningParrot'
+            );
+            $params['stylesheets'][] = $css_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
