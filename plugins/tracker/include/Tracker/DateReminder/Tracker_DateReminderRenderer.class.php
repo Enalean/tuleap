@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -147,6 +147,7 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     protected function getAllowedNotifiedForTracker($reminderId = Null) {
+        /** @psalm-suppress DeprecatedFunction */
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $selectedUgroups = '';
@@ -291,6 +292,7 @@ class Tracker_DateReminderRenderer {
      */
     public function validateReminderUgroups(Array  $selectedUgroups) {
         $groupId = $this->getTracker()->getGroupId();
+        /** @psalm-suppress DeprecatedFunction */
         $ugs       = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $ugroupIds = array();
         while ($row = db_fetch_array($ugs)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2008
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once __DIR__ . '/../../../src/common/wiki/phpwiki/lib/HtmlElement.php';
 
 class Docman_WikiController extends Docman_Controller {
 
@@ -352,7 +354,7 @@ class Docman_WikiController extends Docman_Controller {
     function showReferrerPath($referrer_id, $group_id) {
         $parents      = array();
         $html         = HTML();
-        $item_factory = $this->getItemFactory($group_id);
+        $item_factory = $this->getItemFactory();
         $item         = $item_factory->getItemFromDb($referrer_id);
         $reference    = $item;
     
@@ -385,7 +387,7 @@ class Docman_WikiController extends Docman_Controller {
     function getDocumentPath($id, $group_id, $referrer_id = null) {
         $parents      = array();
         $html         = HTML();
-        $item_factory = $this->getItemFactory($group_id);
+        $item_factory = $this->getItemFactory();
         $item         = $item_factory->getItemFromDb($id);
         $reference    = $item;
         if ($reference && $referrer_id != $id) {

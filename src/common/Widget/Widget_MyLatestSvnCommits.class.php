@@ -95,7 +95,7 @@ class Widget_MyLatestSvnCommits extends Widget {
                             $html .= $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML);
                             $html .= '</div>';
                             $html .= '<div style="padding-left:20px; padding-bottom:4px; color:#555">';
-                            $html .= util_make_links(substr($data['description'], 0, 255), $project->getGroupId());
+                            $html .= $hp->purify(substr($data['description'], 0, 255), CODENDI_PURIFIER_BASIC_NOBR, $project->getGroupId());
                             if (strlen($data['description']) > 255) {
                                 $html .= '&nbsp;[...]';
                             }

@@ -347,6 +347,7 @@ function permission_is_authorized($permission_type, $object_id, $user_id, $group
     $res=permission_db_authorized_ugroups($permission_type, $object_id);
     if (db_numrows($res) < 1) {
         // No ugroup defined => no permissions set => get default permissions
+        /** @psalm-suppress DeprecatedFunction */
         $res=permission_db_get_defaults($permission_type);
     } 
     // permissions set for this object.
@@ -923,6 +924,7 @@ function permission_equals_to_default($permission_type, $object_id) {
         // No ugroup defined means default values
         return true; 
     }
+    /** @psalm-suppress DeprecatedFunction */
     $res2=permission_db_get_defaults($permission_type);
     if (db_numrows($res1)!=db_numrows($res2)) return false;
     while ($row1= db_fetch_array($res1)) {

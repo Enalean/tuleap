@@ -442,7 +442,7 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
             return $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent');
             break;
         default:
-            return util_timestamp_to_userdateformat($v, true);
+            return DateHelper::formatForLanguage($GLOBALS['Language'], $v, true);
         }
     }
 

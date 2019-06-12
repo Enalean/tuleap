@@ -115,7 +115,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '</tr>';
 
             // Version
-            if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+            if($this->table instanceof \Docman_ApprovalTableVersionned) {
                 $html .= '<tr>';
                 $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_version').'</td>';
                 $html .= '<td>';
@@ -135,7 +135,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_cycle_start_date').'</td>';
             $html .= '<td>';
-            $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
+            $html .= DateHelper::formatForLanguage($GLOBALS['Language'], $this->table->getDate(), true);
             $html .= '</td>';
             $html .= '</tr>';
 
@@ -200,7 +200,7 @@ extends Docman_View_ItemDetailsSection {
                 $date = $reviewer->getReviewDate();
                 $_dateHtml = '';
                 if($date) {
-                    $_dateHtml = util_timestamp_to_userdateformat($date, true);
+                    $_dateHtml = DateHelper::formatForLanguage($GLOBALS['Language'], $date, true);
                 }
                 $html .= '<td'.$_trClass.'>'.$_dateHtml.'</td>';
 
@@ -310,7 +310,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_cycle_start_date').'</td>';
         $html .= '<td>';
-        $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
+        $html .= DateHelper::formatForLanguage($GLOBALS['Language'], $this->table->getDate(), true);
         $html .= '</td>';
         $html .= '</tr>';
 
@@ -374,7 +374,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_date').'</td>';
             $html .= '<td>';
-            $html .= util_timestamp_to_userdateformat($reviewer->getReviewDate(), true);
+            $html .= DateHelper::formatForLanguage($GLOBALS['Language'], $reviewer->getReviewDate(), true);
             $html .= '</td>';
             $html .= '</tr>';
         }   
@@ -455,7 +455,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<td>'.$href.'</td>';
                 $html .= '<td>'.$this->hp->purify($uh->getDisplayNameFromUserId($table->getOwner())).'</td>';
                 $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$table->getApprovalState()).'</td>';
-                $html .= '<td>'.util_timestamp_to_userdateformat($table->getDate()).'</td>';
+                $html .= '<td>'.DateHelper::formatForLanguage($GLOBALS['Language'], $table->getDate()) .'</td>';
                 $html .= '</tr>';
             }
             $html .= '</table>';

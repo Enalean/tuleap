@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class InlineCommentUpdater
      * @param FileUniDiff $target_diff The unidiff between the new state of the file in the source branch
      *                                    and the state of the file in the destination branch
      *
-     * @return the list of comments to update
+     * @return array the list of comments to update
      */
     public function updateWhenSourceChanges(array $comments, FileUniDiff $original_diff, FileUniDiff $changes_diff, FileUniDiff $dest_changes_diff, FileUniDiff $target_diff)
     {
@@ -45,7 +45,7 @@ class InlineCommentUpdater
             $original_line = $original_diff->getLine($comment->getUniDiffOffset());
             if ($original_line->getType() == UniDiffLine::ADDED || $original_line->getType() == UniDiffLine::KEPT) {
                 $this->updateCommentOnAddedOrKeptLine($comment, $changes_diff, $target_diff, $original_line);
-            } else if ($original_line->getType() == UnidiffLine::REMOVED) {
+            } elseif ($original_line->getType() == UnidiffLine::REMOVED) {
                 $this->updateCommentOnDeletedLine($comment, $dest_changes_diff, $target_diff, $original_line);
             }
             $comments_to_update[] = $comment;

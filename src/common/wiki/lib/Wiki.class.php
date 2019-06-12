@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -83,6 +83,7 @@ class Wiki {
   function setPermissions($groups) {
     global $feedback;
 
+      /** @psalm-suppress DeprecatedFunction */
     list ($ret, $feedback) = permission_process_selection_form($this->gid, 
 							       'WIKI_READ', 
 							       $this->gid, 

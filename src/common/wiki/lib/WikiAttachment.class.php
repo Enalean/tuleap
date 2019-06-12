@@ -533,6 +533,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     public function setPermissions($groups) {
         global $feedback;
 
+        /** @psalm-suppress DeprecatedFunction */
         list ($ret, $feedback) = permission_process_selection_form($this->gid, 
                                                                    'WIKIATTACHMENT_READ', 
                                                                    $this->id, 

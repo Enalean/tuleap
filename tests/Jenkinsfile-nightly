@@ -93,6 +93,7 @@ pipeline {
                             actions.runPsalm('tests/psalm/psalm.xml', '')
                         }
                     }
+                    post { always { recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(pattern: 'results/psalm/checkstyle.xml')] } }
                 }
             }
             post {

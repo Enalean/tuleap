@@ -62,6 +62,7 @@ if ($request->valid($vExport)) {
             header('Content-Type: text/csv');
             echo build_csv_header($col_list, $lbl_list).$eol;
 
+            /** @psalm-suppress DeprecatedFunction */
             $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
             while($ugrp = db_fetch_array($ugs)) {
                 if ($ugrp['ugroup_id'] <= 100) {

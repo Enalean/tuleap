@@ -105,8 +105,8 @@ class Docman_HTTPController extends Docman_Controller {
             $group = $pm->getProject($item->getGroupId());
             
             // Date
-            $obsoDate = util_timestamp_to_userdateformat($item->getObsolescenceDate(), true);
-            
+            $obsoDate = DateHelper::formatForLanguage($GLOBALS['Language'], $item->getObsolescenceDate(), true);
+
             // Urls
             $baseUrl = get_server_url().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
             $directUrl = $baseUrl .'&action=show';

@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2018. All Rights Reserved.
+* Copyright (c) Enalean, 2018-Present. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -61,7 +61,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         $current_user = $request->getCurrentUser();
         if (! $tracker->userIsAdmin($current_user)) {
             $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
+            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $javascriptAssets = new IncludeAssets(

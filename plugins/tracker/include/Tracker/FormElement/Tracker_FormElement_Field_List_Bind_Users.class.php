@@ -572,6 +572,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 	    }
 	    $html .= '<option value="group_admins" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
 
+        /** @psalm-suppress DeprecatedFunction */
 	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
 	    $rows = db_numrows($ugroup_res);
 	    for ( $i = 0 ; $i < $rows ; $i++) {
@@ -595,6 +596,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $group_id = $field->getTracker()->getGroupId();
 	    if ($group_id != 100) {
+            /** @psalm-suppress DeprecatedFunction */
             $ugroup_res = ugroup_db_get_existing_ugroups($group_id);
             $rows = db_numrows($ugroup_res);
             for ($i = 0 ; $i < $rows ; $i++) {

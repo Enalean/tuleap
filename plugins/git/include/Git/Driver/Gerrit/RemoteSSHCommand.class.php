@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $full_cmd      = "-p $port -i $identity_file $login@$host $cmd";
         $this->logger->info("executing $full_cmd");
         $result = $this->sshExec($full_cmd);
-        $this->logger->debug('Result: '. var_export($result, 1));
+        $this->logger->debug('Result: '. var_export($result, true));
         $exit_code = $result['exit_code'];
         $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {

@@ -28,6 +28,7 @@ function db_query($sql,$print=0) {
     if ($print) {
         print "<br>Query is: $sql<br>";
     }
+    /** @psalm-suppress DeprecatedFunction */
     return db_query_params($sql, array());
 }
 
@@ -37,7 +38,9 @@ function db_query($sql,$print=0) {
 function db_query_params($sql, $params) {
 	$dar = CodendiDataAccess::instance()->query($sql, $params);
     $GLOBALS['db_qhandle'] = $dar->getResult();
+    /** @psalm-suppress DeprecatedFunction */
     if (db_numrows($GLOBALS['db_qhandle'])) {
+        /** @psalm-suppress DeprecatedFunction */
         db_reset_result($GLOBALS['db_qhandle']);
     }
     return $GLOBALS['db_qhandle'];
@@ -149,6 +152,7 @@ function db_escape_string($string,$qhandle=false) {
  * @deprecated
  */
 function db_es($string,$qhandle=false) {
+    /** @psalm-suppress DeprecatedFunction */
     return db_escape_string($string,$qhandle);
 }
 
@@ -188,6 +192,7 @@ function db_escape_int($val, $null = CODENDI_DB_NOT_NULL) {
  * @return string Decimal integer encoded as a string
  */
 function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
+    /** @psalm-suppress DeprecatedFunction */
     return db_escape_int($val, $null);
 }
 

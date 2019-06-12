@@ -829,7 +829,7 @@ if ( $func == 'gotoid' ) {
                 if ($request->get('change_report_column')) {
                     $report_id = $request->getValidated('report_id', 'uint');
                     $field_name  = $request->getValidated('change_report_column', 'string');
-                    $arf = new ArtifactReportFactory($ath);
+                    $arf = new ArtifactReportFactory();
                     if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                         $report->toggleFieldColumnUsage($field_name);
                     }
@@ -837,7 +837,7 @@ if ( $func == 'gotoid' ) {
                 } else if ($request->get('change_report_query')) {
                     $report_id = $request->getValidated('report_id', 'uint');
                     $field_name  = $request->getValidated('change_report_query', 'string');
-                    $arf = new ArtifactReportFactory($ath);
+                    $arf = new ArtifactReportFactory();
                     if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                         $report->toggleFieldQueryUsage($field_name);
                     }
@@ -845,7 +845,7 @@ if ( $func == 'gotoid' ) {
                 } else if($reordercolumns = $request->get('reordercolumns')) {
                     if (is_array($reordercolumns)) {
                         $report_id = $request->getValidated('report_id', 'uint');
-                        $arf = new ArtifactReportFactory($ath);
+                        $arf = new ArtifactReportFactory();
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                             //Todo: check that the user can update the report
                             $id           = key($reordercolumns);
@@ -871,7 +871,7 @@ if ( $func == 'gotoid' ) {
                 } else if($resizecolumns = $request->get('resizecolumns')) {
                     if (is_array($resizecolumns)) {
                         $report_id = $request->getValidated('report_id', 'uint');
-                        $arf = new ArtifactReportFactory($ath);
+                        $arf = new ArtifactReportFactory();
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                             //Todo: check that the user can update the report
                             $dao = new ArtifactReportFieldDao(CodendiDataAccess::instance());

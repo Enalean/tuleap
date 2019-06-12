@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
@@ -331,7 +331,7 @@ class ProjectLinksPlugin extends Plugin {
                 $height = 10;
                 $width = 10;
                 $alt = $Language->getText('plugin_plinks',
-                'newly_added', util_timestamp_to_userdateformat($params['date']));
+                'newly_added', DateHelper::formatForLanguage($GLOBALS['Language'], $params['date'], false));
                 break;
             case 'arrow-right':
                 $src = $this->getThemePath()."/images/arrow-right.png";

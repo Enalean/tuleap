@@ -19,7 +19,7 @@
  */
 
 class TrackerDateReminder_ArtifactType {
-    protected $at = null;
+    protected $at;
      
     function __construct(ArtifactType $at) {
         $this->at = $at;

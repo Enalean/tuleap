@@ -103,6 +103,9 @@ class PullRequestUpdater
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
             $repository_destination          = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            if ($repository_destination === null) {
+                continue;
+            }
             $executor_repository_destination = $this->git_exec_factory->getGitExec($repository_destination);
 
             $updated_pr = new PullRequest(
@@ -149,6 +152,9 @@ class PullRequestUpdater
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
         foreach ($prs as $pr) {
             $pr_repository = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            if ($pr_repository === null) {
+                continue;
+            }
             $pr_git_exec   = $this->git_exec_factory->getGitExec($pr_repository);
             $merge_status  = $this->pull_request_merger->detectMergeabilityStatus(
                 $pr_git_exec,

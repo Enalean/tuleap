@@ -1565,8 +1565,8 @@ EOS;
 	      $selected = " selected";
 	    }
 	    echo '<option value="tracker_admins"'.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
-	    
-	    
+
+        /** @psalm-suppress DeprecatedFunction */
 	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
 	    $rows = db_numrows($ugroup_res);
 	    for($i=0;$i<$rows;$i++) {
@@ -1586,6 +1586,7 @@ EOS;
 	    }
 	    
 	    if ($this->Group->getID() != 100) {
+            /** @psalm-suppress DeprecatedFunction */
 	      $ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
 	      $rows = db_numrows($ugroup_res);
 	      for($i=0;$i<$rows;$i++) {

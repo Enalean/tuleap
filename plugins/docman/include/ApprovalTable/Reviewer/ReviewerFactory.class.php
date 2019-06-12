@@ -113,6 +113,7 @@ class Docman_ApprovalTableReviewerFactory {
      * It contains: all dynamic ugroups plus project members and admins.
      */
     function getUgroupsAllowedForTable($groupId) {
+        /** @psalm-suppress DeprecatedFunction */
         $res = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $ugroups = array();

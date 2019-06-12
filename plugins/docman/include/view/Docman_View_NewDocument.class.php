@@ -1,15 +1,24 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-*
-*
-*
-* Docman_View_NewFolder
-*/
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-require_once('Docman_View_New.class.php');
-require_once('Docman_View_GetFieldsVisitor.class.php');
-require_once(dirname(__FILE__).'/../Docman_Document.class.php');
 
 class Docman_View_NewDocument extends Docman_View_New {
 
@@ -83,7 +92,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $html .= '<input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
             $html .= '<b>'. $specific['label'] .'</b></label></div>';
             $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
-            $fields = $specific['obj']->accept($get_specific_fields, array('request' => &$this->controller->request));
+            $fields = $specific['obj']->accept($get_specific_fields, array('request' => $this->_controller->request));
             $html .= '<table>';
             foreach($fields as $field) {
                 $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';

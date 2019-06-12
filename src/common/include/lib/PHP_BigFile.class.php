@@ -75,15 +75,8 @@ class PHP_BigFile {
      * @return int the size of the file $file
      */
     public static function getSize($file) {
-        if (DIRECTORY_SEPARATOR === '/') {
-            $filename = escapeshellarg($file);
-            $size = trim(`stat -c%s $filename`);
-        } else {
-            $fsobj = new COM("Scripting.FileSystemObject");
-            $f = $fsobj->GetFile($file);
-            $size = $file->Size;
-        }
-        return $size;
+        $filename = escapeshellarg($file);
+        return (int) trim(`stat -c%s $filename`);
     }
     
     /**

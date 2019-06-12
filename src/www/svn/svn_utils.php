@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/svn_data.php';
+
 function svn_header(Project $project, $params) {
     global $Language;
 

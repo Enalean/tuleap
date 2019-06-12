@@ -90,6 +90,7 @@ class GitPermissionsManager
     }
 
     private function getDefaultGitAdminPermissions() {
+        /** @psalm-suppress DeprecatedFunction */
         return permission_db_get_defaults(Git::PERM_ADMIN);
     }
 

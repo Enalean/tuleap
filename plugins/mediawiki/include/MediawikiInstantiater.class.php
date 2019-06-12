@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (C) 2010  Olaf Lenz
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is part of FusionForge.
  *
@@ -20,8 +20,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-require_once 'pre.php';
-require_once 'common/backend/BackendLogger.class.php';
 
 class MediaWikiInstantiater {
 

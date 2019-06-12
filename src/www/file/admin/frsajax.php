@@ -21,10 +21,10 @@
 use Tuleap\FRS\FRSPackageController;
 use Tuleap\FRS\FRSReleaseController;
 use Tuleap\FRS\FRSValidator;
+use Tuleap\JSONHeader;
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../project/admin/permissions.php';
-require_once __DIR__ . '/../../include/json.php';
 
 $vAction = new Valid_WhiteList('action',array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
 if ($request->valid($vAction)) {
@@ -64,8 +64,7 @@ if ($action == 'permissions_frs_package') {
             $project    = ProjectManager::instance()->getProject($group_id);
             $release_controller = new FRSReleaseController(
                 FRSReleaseFactory::instance(),
-                new User_ForgeUserGroupFactory(new UserGroupDao()),
-                PermissionsManager::instance()
+                new User_ForgeUserGroupFactory(new UserGroupDao())
             );
 
             $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $object_id);
@@ -105,7 +104,7 @@ if ($action == 'permissions_frs_package') {
                     $feedback->log('error', $errors[0]);
                     $header = array('valid' => false, 'msg' => $feedback->fetch());
                 }
-                header(json_header($header));
+                header(JSONHeader::getHeaderForPrototypeJS($header));
             }
         } else {
             if ($action == 'validator_frs_update') {
@@ -145,7 +144,7 @@ if ($action == 'permissions_frs_package') {
                         $feedback->log('error', $errors[0]);
                         $header = array('valid' => false, 'msg' => $feedback->fetch());
                     }
-                    header(json_header($header));
+                    header(JSONHeader::getHeaderForPrototypeJS($header));
                 }
             } else {
                 if ($action == 'refresh_file_list') {

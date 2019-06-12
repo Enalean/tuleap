@@ -44,6 +44,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
 
     function setDefaultPermissions($objectId, $perm, $force=false) {
         require_once('www/project/admin/permissions.php');
+        /** @psalm-suppress DeprecatedFunction */
         $res = permission_db_get_defaults($perm);
         while($row = $this->getDa()->fetchArray($res)) {
             permission_add_ugroup($this->groupId, $perm, $objectId, $row['ugroup_id'], $force);
