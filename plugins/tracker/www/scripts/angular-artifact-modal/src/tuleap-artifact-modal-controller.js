@@ -90,6 +90,7 @@ function ArtifactModalController(
         setupTooltips,
         submit,
         setFieldValue,
+        setFollowupComment,
         toggleFieldset
     });
 
@@ -299,5 +300,9 @@ function ArtifactModalController(
         return value => {
             self.values[field_id].value = value;
         };
+    }
+
+    function setFollowupComment(value) {
+        self.new_followup_comment = value;
     }
 }

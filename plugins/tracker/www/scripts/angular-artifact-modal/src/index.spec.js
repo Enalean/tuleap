@@ -20,14 +20,34 @@
 import "tlp-mocks";
 import "ckeditor-mocks";
 
+/**
+ * Some AngularJS tests load "tuleap-artifact-modal.js". It in turns initializes
+ * vue-gettext with the language from the <body> tag.
+ * As long as those things depend on the modal's root module, we're stuck with this.
+ * Otherwise, Vue tests fail with:
+ * Error in render: "TypeError: Cannot read property 'split' of undefined"
+ */
+beforeAll(() => {
+    document.body.dataset.userLocale = "en_US";
+});
+
+afterAll(() => {
+    document.body.dataset.userLocale = undefined;
+});
+import "./tuleap-artifact-modal-controller.spec.js";
+import "./tuleap-artifact-modal-service.spec.js";
 import "./field-dependencies-service.spec.js";
-import "./followups/new-followup-component.spec.js";
+import "./validate-service.spec.js";
+// end of annoying AngularJS tests
+
+import "./common/FormatSelector.spec.js";
+import "./common/RichTextEditor.spec.js";
+import "./followups/FollowupEditor.spec.js";
 import "./model/field-values-service.spec.js";
 import "./model/form-tree-builder.spec.js";
 import "./model/tracker-transformer-service.spec.js";
 import "./model/workflow-field-values-filter.spec.js";
 import "./rest/rest-service.spec.js";
-import "./tuleap-artifact-modal-controller.spec.js";
 import "./tuleap-artifact-modal-fields/computed-field/computed-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/computed-field/computed-field-value-formatter.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-field-controller.spec.js";
@@ -43,6 +63,4 @@ import "./tuleap-artifact-modal-fields/open-list-field/users-open-list-field-con
 import "./tuleap-artifact-modal-fields/permission-field/permission-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/permission-field/permission-field-value-formatter.spec.js";
 import "./tuleap-artifact-modal-fields/text-field/TextField.spec.js";
-import "./tuleap-artifact-modal-service.spec.js";
 import "./tuleap-highlight/highlight-directive.spec.js";
-import "./validate-service.spec.js";

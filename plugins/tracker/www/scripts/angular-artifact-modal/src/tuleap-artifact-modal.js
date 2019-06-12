@@ -19,7 +19,6 @@
 
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-import "imports-loader?CKEDITOR=>window.CKEDITOR!ng-ckeditor";
 import "angular-moment";
 import "angular-gettext";
 import translations from "../po/fr.po";
@@ -39,14 +38,13 @@ import FieldDependenciesService from "./field-dependencies-service.js";
 import ValidateService from "./validate-service.js";
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
-import NewFollowupComponent from "./followups/new-followup-component.js";
 
 import TextField from "./tuleap-artifact-modal-fields/text-field/TextField.vue";
+import FollowupEditor from "./followups/FollowupEditor.vue";
 
 export default angular
     .module("tuleap.artifact-modal", [
         "angularMoment",
-        "ng.ckeditor",
         "gettext",
         "ngVue",
         "ngVue.plugins",
@@ -66,7 +64,6 @@ export default angular
             }
         }
     ])
-    .component("tuleapArtifactModalNewFollowup", NewFollowupComponent)
     .controller("TuleapArtifactModalController", ArtifactModalController)
     .value("TuleapArtifactModalLoading", {
         loading: false
@@ -74,4 +71,5 @@ export default angular
     .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
-    .value(TextField.name, Vue.component(TextField.name, TextField)).name;
+    .value(TextField.name, Vue.component(TextField.name, TextField))
+    .value(FollowupEditor.name, Vue.component(FollowupEditor.name, FollowupEditor)).name;

@@ -18,49 +18,43 @@
   -->
 
 <template>
-    <div
-        class="tlp-form-element"
-        v-bind:class="{
-            'tlp-form-element-disabled': disabled,
-            'tlp-form-element-error': is_required_and_empty
-        }"
-    >
+    <div class="artifact-modal-followups-add-form">
         <format-selector
-            v-bind:id="id"
-            v-bind:label="field.label"
-            v-bind:disabled="disabled"
-            v-bind:required="field.required"
+            id="followup_comment"
+            v-bind:label="label"
+            v-bind:disabled="false"
+            v-bind:required="false"
             v-model="format"
         />
         <rich-text-editor
-            v-bind:id="id"
+            id="followup_comment"
             v-bind:format="format"
-            v-bind:disabled="disabled"
-            v-bind:required="field.required"
-            rows="5"
+            v-bind:disabled="false"
+            v-bind:required="false"
+            rows="3"
             v-model="content"
         />
     </div>
 </template>
 <script>
-import RichTextEditor from "../../common/RichTextEditor.vue";
-import FormatSelector from "../../common/FormatSelector.vue";
-
+import FormatSelector from "../common/FormatSelector.vue";
+import RichTextEditor from "../common/RichTextEditor.vue";
 export default {
-    name: "TextField",
-    components: { FormatSelector, RichTextEditor },
+    name: "FollowupEditor",
+    components: { RichTextEditor, FormatSelector },
     props: {
-        field: Object,
-        disabled: Boolean,
         value: Object
     },
     computed: {
+        label() {
+            return this.$gettext("Comment");
+        },
         content: {
             get() {
-                return this.value.content;
+                return this.value.body;
             },
             set(new_content) {
-                this.$emit("input", { format: this.format, content: new_content });
+                this.$emit("input", { format: this.format, body: new_content });
             }
         },
         format: {
@@ -68,14 +62,8 @@ export default {
                 return this.value.format;
             },
             set(new_format) {
-                this.$emit("input", { format: new_format, content: this.content });
+                this.$emit("input", { format: new_format, body: this.content });
             }
-        },
-        id() {
-            return "tracker_field_" + this.field.field_id;
-        },
-        is_required_and_empty() {
-            return this.field.required && this.content === "";
         }
     }
 };
