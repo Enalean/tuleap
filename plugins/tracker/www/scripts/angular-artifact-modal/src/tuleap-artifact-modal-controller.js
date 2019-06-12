@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { contains } from "lodash";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
+import { isDisabled } from "./tuleap-artifact-modal-fields/disabled-field-detector.js";
 import { createArtifact, editArtifact, getFollowupsComments } from "./rest/rest-service.js";
 import {
     getAllFileFields,
@@ -221,13 +221,8 @@ function ArtifactModalController(
         );
     }
 
-    function isDisabled(field) {
-        var necessary_permission = isInCreationMode() ? "create" : "update";
-        return !contains(field.permissions, necessary_permission);
-    }
-
     function getDropdownAttribute(field) {
-        return self.isDisabled(field) ? "" : "dropdown";
+        return isDisabled(field) ? "" : "dropdown";
     }
 
     function toggleFieldset(fieldset) {

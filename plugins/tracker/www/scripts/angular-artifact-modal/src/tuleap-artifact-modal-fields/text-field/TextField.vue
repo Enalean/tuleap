@@ -45,16 +45,19 @@
 <script>
 import RichTextEditor from "../../common/RichTextEditor.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
+import { isDisabled } from "../disabled-field-detector.js";
 
 export default {
     name: "TextField",
     components: { FormatSelector, RichTextEditor },
     props: {
         field: Object,
-        disabled: Boolean,
         value: Object
     },
     computed: {
+        disabled() {
+            return isDisabled(this.field);
+        },
         content: {
             get() {
                 return this.value.content;
