@@ -192,12 +192,20 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
+        $file_locked_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_3_id,
+            'an other locked file L',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
         $this->addApprovalTable("file_ATC", (int)$file_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATR", (int)$file_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATE", (int)$file_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addReadPermissionOnItem($folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
 
         $this->lockItem($file_L_id);
+        $this->lockItem($file_locked_id);
 
         $this->appendCustomMetadataValueToItem($folder_3_id, "custom value for folder_3");
 
