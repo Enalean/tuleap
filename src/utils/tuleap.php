@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,15 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
+use Tuleap\CLI\Command\ImportProjectXMLCommand;
+use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\Password\PasswordSanityChecker;
-use Tuleap\CLI\Command\ImportProjectXMLCommand;
 
-$event_manager = EventManager::instance();
+$event_manager  = EventManager::instance();
+$user_manager   = UserManager::instance();
+$backend_logger = BackendLogger::getDefaultLogger();
 
 $application = new Application();
 $application->add(
@@ -53,12 +56,19 @@ $application->add(
 );
 $application->add(
     new ProcessSystemEventsCommand(
-        new SystemEventProcessor_Factory(BackendLogger::getDefaultLogger(), SystemEventManager::instance(), $event_manager),
+        new SystemEventProcessor_Factory($backend_logger, SystemEventManager::instance(), $event_manager),
         new SystemEventProcessManager()
     )
 );
 $application->add(
     new QueueSystemCheckCommand($event_manager)
+);
+
+$application->add(
+    new LaunchEveryMinuteJobCommand(
+        $event_manager,
+        $backend_logger
+    )
 );
 
 $CLI_command_collector = new CLICommandsCollector($application);
