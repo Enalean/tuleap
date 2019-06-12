@@ -19,9 +19,11 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\FrontRouter;
+use Tuleap\Request\RequestInstrumentation;
 use Tuleap\Request\RouteCollector;
 
 define('FRONT_ROUTER', true);
@@ -41,6 +43,7 @@ $router = new FrontRouter(
             )
         )
     ),
-    PluginManager::instance()
+    PluginManager::instance(),
+    new RequestInstrumentation(Prometheus::instance())
 );
 $router->route($request);

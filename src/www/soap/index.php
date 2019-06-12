@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Request\RequestInstrumentation;
 use Tuleap\Templating\TemplateCache;
 
 require_once __DIR__ . '/../include/pre.php';
 
-\Tuleap\Request\RequestInstrumentation::incrementSoap();
+(new RequestInstrumentation(Prometheus::instance()))->incrementSoap();
 
 define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__).'/VERSION'));
 

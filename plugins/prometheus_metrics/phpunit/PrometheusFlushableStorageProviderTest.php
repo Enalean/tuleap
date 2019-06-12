@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PrometheusMetrics;
 
-namespace Tuleap\Project;
+use Enalean\Prometheus\Storage\NullStore;
+use ForgeConfig;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
-final class ServiceInstrumentation
+final class PrometheusFlushableStorageProviderTest extends TestCase
 {
-    private const METRIC_NAME = 'project_service_access_total';
+    use ForgeConfigSandbox;
 
-    public static function increment(string $service) : void
+    public function testGetANullStoreWhenARedisClientCanNotBeInstantiated() : void
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of project service access', ['service' => $service]);
-        \EventManager::instance()->processEvent(new ServiceAccessEvent($service));
+        $provider = new PrometheusFlushableStorageProvider();
+
+        ForgeConfig::set('redis_server', '');
+
+        $this->assertInstanceOf(
+            NullStore::class,
+            $provider->getFlushableStorage()
+        );
     }
 }

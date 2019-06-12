@@ -22,8 +22,10 @@
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CookieManager;
 use Tuleap\Event\Events\HitEvent;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Plugin\PluginLoader;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Request\RequestInstrumentation;
 use Tuleap\TimezoneRetriever;
 
 if (PHP_VERSION_ID < 70300) {
@@ -213,7 +215,7 @@ if (!IS_SCRIPT) {
         $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
         $urlVerif->assertValidUrl($_SERVER, $request);
 
-        \Tuleap\Request\RequestInstrumentation::incrementLegacy();
+        (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy();
     }
 
     if (! $current_user->isAnonymous()) {

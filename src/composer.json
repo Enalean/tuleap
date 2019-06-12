@@ -49,7 +49,10 @@
     "firebase/php-jwt": "^5.0.0",
     "gumlet/php-image-resize": "^1.9",
     "http-interop/http-factory-guzzle": "^1.0",
-    "jimdo/prometheus_client_php": "^0.9.1",
+    "laminas/laminas-cache": "^2.8",
+    "laminas/laminas-feed": "^2.10",
+    "laminas/laminas-httphandlerrunner": "^1.1",
+    "laminas/laminas-mail": "^2.10",
     "luracast/restler": "dev-master-tuleap#20190410",
     "michelf/php-markdown": "^1.1",
     "mustache/mustache": "dev-master-tuleap#master-tuleap-20191219",
@@ -68,11 +71,8 @@
     "symfony/lock": "^5.0",
     "symfony/process": "^5.0",
     "symfony/var-exporter": "^5.0",
-    "webimpress/safe-writer": "^2.0",
-    "laminas/laminas-cache": "^2.8",
-    "laminas/laminas-feed": "^2.10",
-    "laminas/laminas-httphandlerrunner": "^1.1",
-    "laminas/laminas-mail": "^2.10"
+    "tuleap/prometheus-client": "^1.0",
+    "webimpress/safe-writer": "^2.0"
   },
   "config": {
     "platform": {

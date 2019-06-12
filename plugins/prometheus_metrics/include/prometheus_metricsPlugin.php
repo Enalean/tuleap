@@ -29,6 +29,9 @@ use Tuleap\PrometheusMetrics\MetricsCollectorDao;
 use Tuleap\PrometheusMetrics\MetricsController;
 use Tuleap\Redis\ClientFactory;
 use Tuleap\Redis\RedisConnectionException;
+use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\PrometheusMetrics\ClearPrometheusMetricsCommand;
+use Tuleap\PrometheusMetrics\PrometheusFlushableStorageProvider;
 use Tuleap\Request\CollectRoutesEvent;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -58,6 +61,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function getHooksAndCallbacks()
     {
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(CLICommandsCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -80,6 +84,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
             EventManager::instance(),
             VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
             $redis_client,
+            (new PrometheusFlushableStorageProvider())->getFlushableStorage(),
             new MetricsAuthentication(
                 $response_factory,
                 $this->getPluginEtcRoot()
@@ -90,5 +95,17 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get('/metrics', $this->getRouteHandler('routeGetMetrics'));
+    }
+
+    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
+    {
+        $commands_collector->addCommand(
+            ClearPrometheusMetricsCommand::NAME,
+            static function () : ClearPrometheusMetricsCommand {
+                return new ClearPrometheusMetricsCommand(
+                    (new PrometheusFlushableStorageProvider())->getFlushableStorage()
+                );
+            }
+        );
     }
 }

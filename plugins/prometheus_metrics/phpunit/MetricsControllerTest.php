@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
+use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -63,6 +64,7 @@ final class MetricsControllerTest extends TestCase
             $event_manager,
             $version_presenter,
             $redis_client,
+            Mockery::mock(FlushableStorage::class)
         );
 
         $dao->shouldReceive('getProjectsByStatus')->andReturn([]);
