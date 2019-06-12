@@ -41,7 +41,7 @@ class SenderTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
-        $this->encoder_message      = \Mockery::spy(\Tuleap\BotMattermost\SenderServices\EncoderMessage::class);
+        $this->encoder_message      = new EncoderMessage();
         $this->botMattermost_client = \Mockery::spy(\Tuleap\BotMattermost\SenderServices\ClientBotMattermost::class);
         $this->logger               = \Mockery::spy(\Tuleap\BotMattermost\BotMattermostLogger::class);
 

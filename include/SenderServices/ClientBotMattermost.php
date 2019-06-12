@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,53 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use RuntimeException;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+
 class ClientBotMattermost
 {
+    /**
+     * @var ClientInterface
+     */
     private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
 
     public function __construct()
     {
-        $this->http_client = new \Http_Client;
+        $this->http_client = HttpClientFactory::createClient();
+        $this->request_factory = HTTPFactoryBuilder::requestFactory();
+        $this->stream_factory = HTTPFactoryBuilder::streamFactory();
     }
 
-    public function sendMessage($post_string, $url)
+    public function sendMessage(string $post_string, string $url) : void
     {
-        $options = [
-            CURLOPT_POST       => true,
-            CURLOPT_URL        => $url,
-            CURLOPT_HTTPHEADER => ['Content-type: application/json'],
-            CURLOPT_POSTFIELDS => $post_string
-        ];
-        $this->http_client->addOptions($options);
-        $this->http_client->doRequest();
+        $request = $this->request_factory->createRequest('POST', $url)
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($this->stream_factory->createStream($post_string));
 
+        $response = $this->http_client->sendRequest($request);
+
+        $response_status_code = $response->getStatusCode();
+        if ($response_status_code !== 200) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected a response from %s with a 200 status code, got %s %s',
+                    $url,
+                    $response_status_code,
+                    $response->getReasonPhrase()
+                )
+            );
+        }
     }
 }
