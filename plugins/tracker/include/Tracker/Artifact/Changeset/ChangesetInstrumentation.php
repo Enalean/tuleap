@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact;
+namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Tuleap\Instrument\Prometheus\Prometheus;
 
-final class ArtifactInstrumentation
+final class ChangesetInstrumentation
 {
-    private const METRIC_NAME  = 'tracker_artifacts_total';
+    private const METRIC_NAME  = 'tracker_artifact_changesets_total';
 
-    public const TYPE_CREATED  = 'created';
-    public const TYPE_UPDATED  = 'updated';
-    public const TYPE_VIEWED   = 'viewed';
-    public const TYPE_DELETED  = 'deleted';
-
-    /**
-     * @psalm-param self::TYPE_CREATED|self::TYPE_UPDATED|self::TYPE_VIEWED|self::TYPE_DELETED $type
-     */
-    public static function increment(string $type) : void
+    public static function increment() : void
     {
-        Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of artifacts', ['type' => $type]);
+        Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of artifact changesets');
     }
 }

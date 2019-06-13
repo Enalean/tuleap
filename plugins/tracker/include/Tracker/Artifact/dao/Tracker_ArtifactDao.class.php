@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1295,13 +1295,16 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $row['nb'];
     }
 
+    /**
+     * @return int
+     */
     public function countArtifacts()
     {
         $sql = "SELECT count(*) AS nb FROM tracker_artifact";
 
         $row = $this->retrieve($sql)->getRow();
 
-        return $row['nb'];
+        return (int) $row['nb'];
     }
 
 }

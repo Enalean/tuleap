@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -175,5 +175,21 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                     AND changeset1.submitted_on <= $timestamp";
 
         return $this->retrieve($sql);
+    }
+
+    /**
+     * @return int
+     */
+    public function countChangesets()
+    {
+        $sql = 'SELECT COUNT(id) AS nb FROM tracker_changeset';
+
+        $dar = $this->retrieve($sql);
+        if ($dar === false) {
+            return 0;
+        }
+        $row = $dar->getRow();
+
+        return (int) $row['nb'];
     }
 }
