@@ -39,7 +39,8 @@ export {
     addPostAction,
     deletePostAction,
     updatePostActionType,
-    updateFrozenFieldsPostActionFieldIds
+    updateFrozenFieldsPostActionFieldIds,
+    updateHiddenFieldsetsPostActionFieldsetIds
 };
 
 function showModal(state) {
@@ -162,6 +163,13 @@ function updateFrozenFieldsPostActionFieldIds(state, { post_action, field_ids })
     updatePostAction(state, {
         ...post_action,
         field_ids
+    });
+}
+
+function updateHiddenFieldsetsPostActionFieldsetIds(state, { post_action, fieldset_ids }) {
+    updatePostAction(state, {
+        ...post_action,
+        fieldset_ids
     });
 }
 

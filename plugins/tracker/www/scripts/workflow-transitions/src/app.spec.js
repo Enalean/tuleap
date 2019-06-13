@@ -38,6 +38,7 @@ import "./components/TransitionModal/PostAction/DateInput.spec.js";
 import "./components/TransitionModal/PostAction/SetValueAction.spec.js";
 import "./components/TransitionModal/PostAction/FloatInput.spec.js";
 import "./components/TransitionModal/PostAction/FrozenFieldsAction.spec.js";
+import "./components/TransitionModal/PostAction/HiddenFieldsetsAction.spec.js";
 import "./components/TransitionModal/FilledPreConditionsSection.spec.js";
 import "./components/TransitionModal/PostActionsSection.spec.js";
 import "./components/FirstConfiguration/FirstConfigurationSections.spec.js";
