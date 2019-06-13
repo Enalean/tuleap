@@ -26,11 +26,13 @@ use Tracker_Artifact;
 use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElementFactory;
-use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElement_FieldDateRepresentation;
+use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElementRepresentation;
+use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 
 class FormElementRepresentationsBuilder
@@ -87,7 +89,15 @@ class FormElementRepresentationsBuilder
                 continue;
             }
 
-            if ($form_element instanceof Tracker_FormElement_Field_Date) {
+            if ($form_element instanceof Tracker_FormElement_Field_File) {
+                $form_element_representation = new FieldFileRepresentation();
+
+                $form_element_representation->build(
+                    $form_element,
+                    $this->form_element_factory->getType($form_element),
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                );
+            } elseif ($form_element instanceof Tracker_FormElement_Field_Date) {
                 $form_element_representation = new Tracker_REST_FormElement_FieldDateRepresentation();
 
                 $form_element_representation->build(

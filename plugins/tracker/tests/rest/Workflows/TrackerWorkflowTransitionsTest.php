@@ -443,7 +443,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsNotPossible(int $transition_id)
     {
-        $used_field_id = $this->getAUsedField(
+        $used_field_id = $this->getAUsedFieldId(
             $this->tracker_workflow_transitions_tracker_id,
             'status_id'
         );
@@ -475,7 +475,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionHiddenFieldsetsActionsNotPossible(int $transition_id)
     {
-        $used_field_id = $this->getAUsedField(
+        $used_field_id = $this->getAUsedFieldId(
             $this->tracker_workflow_transitions_tracker_id,
             'fieldset1'
         );

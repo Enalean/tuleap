@@ -42,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 
 class TrackerFieldsResource extends AuthenticatedResource
 {
+    public const ROUTE = 'tracker_fields';
 
     /**
      * @url OPTIONS {id}

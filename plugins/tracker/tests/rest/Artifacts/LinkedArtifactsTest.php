@@ -36,7 +36,7 @@ final class LinkedArtifactsTest extends TrackerBase
     {
         $project_id = $this->getProjectId(self::PROJECT_SHORTNAME);
         $tracker_id = $this->tracker_ids[$project_id][self::TRACKER_SHORTNAME];
-        $field_id   = $this->getAUsedField($tracker_id, self::FIELD_SHORTNAME);
+        $field_id   = $this->getAUsedFieldId($tracker_id, self::FIELD_SHORTNAME);
 
         $artifact_id_1 = $this->createArtifact($tracker_id, $field_id);
         $artifact_id_2 = $this->createArtifact($tracker_id, $field_id);

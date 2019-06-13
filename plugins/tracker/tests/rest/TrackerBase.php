@@ -161,7 +161,7 @@ class TrackerBase extends RestBase
         return $found_transition;
     }
 
-    protected function getAUsedField(int $tracker_id, string $field_shortname) : int
+    protected function getAUsedField(int $tracker_id, string $field_shortname) : ?array
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -174,10 +174,24 @@ class TrackerBase extends RestBase
 
         foreach ($tracker['fields'] as $tracker_field) {
             if ($tracker_field['name'] === $field_shortname) {
-                return $tracker_field['field_id'];
+                return $tracker_field;
             }
         }
 
         $this->fail();
+
+        return null;
+    }
+
+    protected function getAUsedFieldId(int $tracker_id, string $field_shortname) : ?int
+    {
+        $field = $this->getAUsedField($tracker_id, $field_shortname);
+        if ($field !== null) {
+            return $field['field_id'];
+        }
+
+        $this->fail();
+
+        return null;
     }
 }
