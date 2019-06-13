@@ -54,7 +54,6 @@ class TemporaryFileManager_BaseTest extends TuleapTestCase {
         $this->file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             $user_manager,
             $this->dao,
-            $file_info_factory,
             $system,
             $retention_delay
         );

@@ -20,29 +20,28 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use ForgeConfig;
 use Luracast\Restler\RestException;
-use Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFile;
-use Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
-use Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
-use Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
-use Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
-use Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
-use Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
-use Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
-use Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
-use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
+use PFUser;
+use System_Command;
+use Tracker_Artifact_Attachment_CannotCreateException as CannotCreateException;
+use Tracker_Artifact_Attachment_ChunkTooBigException as ChunkTooBigException;
+use Tracker_Artifact_Attachment_FileNotFoundException as FileNotFoundException;
+use Tracker_Artifact_Attachment_InvalidOffsetException as InvalidOffsetException;
+use Tracker_Artifact_Attachment_InvalidPathException as InvalidPathException;
+use Tracker_Artifact_Attachment_TemporaryFile as TemporaryFile;
+use Tracker_Artifact_Attachment_TemporaryFileManager as FileManager;
+use Tracker_Artifact_Attachment_TemporaryFileManagerDao as FileManagerDao;
+use Tracker_ArtifactFactory;
+use Tracker_FileInfo_InvalidFileInfoException as InvalidFileInfoException;
+use Tracker_FileInfoFactory;
+use Tracker_FormElementFactory;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use UserManager;
-use PFUser;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
-use Tracker_FileInfoFactory;
-use Tracker_FileInfoDao;
-use System_Command;
-use ForgeConfig;
 
 class ArtifactTemporaryFilesResource {
 
@@ -58,29 +57,13 @@ class ArtifactTemporaryFilesResource {
     /** @var Tracker_Artifact_Attachment_TemporaryFileManager */
     private $file_manager;
 
-    /** @var Tracker_ArtifactFactory */
-    private $artifact_factory;
+    public function __construct()
+    {
+        $this->user = UserManager::instance()->getCurrentUser();
 
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
-
-    /** @var Tracker_FileInfoFactory */
-    private $fileinfo_factory;
-
-
-    public function __construct() {
-        $this->user                = UserManager::instance()->getCurrentUser();
-        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
-        $this->formelement_factory = Tracker_FormElementFactory::instance();
-        $this->fileinfo_factory    = new Tracker_FileInfoFactory(
-            new Tracker_FileInfoDao(),
-            $this->formelement_factory,
-            $this->artifact_factory
-        );
         $this->file_manager = new FileManager(
             UserManager::instance(),
             new FileManagerDao(),
-            $this->fileinfo_factory,
             new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay')
         );
