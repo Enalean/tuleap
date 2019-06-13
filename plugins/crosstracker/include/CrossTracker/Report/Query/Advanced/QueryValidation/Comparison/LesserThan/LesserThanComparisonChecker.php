@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,5 +24,10 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Greater
 
 class LesserThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
-    public const OPERATOR = '<';
+    private const OPERATOR = '<';
+
+    public function getOperator() : string
+    {
+        return self::OPERATOR;
+    }
 }

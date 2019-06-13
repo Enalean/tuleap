@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotEqualComparisonChecker extends ComparisonChecker
 {
-    public const OPERATOR = '!=';
+    private const OPERATOR = '!=';
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,
@@ -36,9 +36,14 @@ class NotEqualComparisonChecker extends ComparisonChecker
     ) {
         $metadata = $parameters->getMetadata();
         if (in_array($metadata->getName(), AllowedMetadata::DATES)) {
-            throw new OperatorToNowComparisonException($metadata, static::OPERATOR);
+            throw new OperatorToNowComparisonException($metadata, $this->getOperator());
         }
 
         parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
+    }
+
+    public function getOperator() : string
+    {
+        return self::OPERATOR;
     }
 }

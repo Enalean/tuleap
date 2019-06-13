@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotInComparisonChecker extends ComparisonChecker
 {
-    public const OPERATOR = 'NOT IN()';
+    private const OPERATOR = 'NOT IN()';
 
     public function visitInValueWrapper(
         InValueWrapper $value_wrapper,
@@ -36,5 +36,10 @@ class NotInComparisonChecker extends ComparisonChecker
         foreach ($values as $value) {
             $this->list_value_validator->checkValueIsValid($value->getValue());
         }
+    }
+
+    public function getOperator() : string
+    {
+        return self::OPERATOR;
     }
 }
