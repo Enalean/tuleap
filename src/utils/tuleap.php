@@ -29,6 +29,7 @@ use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
+use Tuleap\DB\DBFactory;
 use Tuleap\Password\PasswordSanityChecker;
 
 $event_manager  = EventManager::instance();
@@ -54,20 +55,22 @@ $application->add(
 $application->add(
     new ImportProjectXMLCommand()
 );
+$main_db_connection = DBFactory::getMainTuleapDBConnection();
 $application->add(
     new ProcessSystemEventsCommand(
         new SystemEventProcessor_Factory($backend_logger, SystemEventManager::instance(), $event_manager),
-        new SystemEventProcessManager()
+        new SystemEventProcessManager(),
+        $main_db_connection
     )
 );
 $application->add(
-    new QueueSystemCheckCommand($event_manager)
+    new QueueSystemCheckCommand($event_manager, $main_db_connection)
 );
-
 $application->add(
     new LaunchEveryMinuteJobCommand(
         $event_manager,
-        $backend_logger
+        $backend_logger,
+        $main_db_connection
     )
 );
 
