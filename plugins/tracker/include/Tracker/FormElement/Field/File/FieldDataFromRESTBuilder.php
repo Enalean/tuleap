@@ -68,57 +68,111 @@ class FieldDataFromRESTBuilder
      */
     public function buildFieldDataFromREST($rest_value, ?Tracker_Artifact $artifact)
     {
-        $field_data                = [];
-        $already_attached_file_ids = [];
+        $field_data = [];
+
+        $submitted_ids = $rest_value->value;
+        foreach ($submitted_ids as $file_id) {
+            $file_id = (int) $file_id;
+
+            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoIdInLastChangeset($file_id);
+            if ($linked_artifact) {
+                $this->checkLinkedArtifactIsLinkedToTheCurrentOne($linked_artifact, $artifact, $file_id);
+                continue;
+            }
+
+            $field_data[] = $this->getFileInfoDataForTemporaryFile($file_id);
+        }
+
 
         if ($artifact) {
-            $already_attached_file_ids = $this->getAlreadyAttachedFileIds($artifact);
-        }
-
-        $given_rest_file_ids = $rest_value->value;
-        // Ids given in REST
-        foreach ($given_rest_file_ids as $file_id) {
-            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoIdInLastChangeset($file_id);
-
-            // Temporary => link
-            if (! $linked_artifact && $this->temporary_file_manager->isFileIdTemporary($file_id)) {
-                $temporary_file = $this->temporary_file_manager->getFile($file_id);
-
-                $user = $this->user_manager->getUserById($temporary_file->getCreatorId());
-                if (! $user || ! $this->temporary_file_manager->exists($user, $temporary_file->getTemporaryName())) {
-                    throw new Tracker_Artifact_Attachment_FileNotFoundException(
-                        'Temporary file #' . $file_id . ' not found'
-                    );
-                }
-
-                $field_data[] = $this->file_info_factory->buildFileInfoData(
-                    $temporary_file,
-                    $this->temporary_file_manager->getPath($user, $temporary_file->getTemporaryName())
-                );
-            } elseif (! $linked_artifact && ! $this->temporary_file_manager->isFileIdTemporary($file_id)) {
-                throw new Tracker_Artifact_Attachment_FileNotFoundException(
-                    'Temporary file #' . $file_id . ' not found'
-                );
-                // Already attached to another artifact => error
-            } elseif ($artifact && $linked_artifact && $artifact->getId() != $linked_artifact->getId()
-                    || ! $artifact && $linked_artifact) {
-                throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException(
-                    'File #' . $file_id . ' is already linked to artifact #' . $linked_artifact->getId()
-                );
-            }
-        }
-
-        // Already attached file ids
-        foreach ($already_attached_file_ids as $file_id) {
-            // Not in given ids => unlink
-            if (! in_array($file_id, $given_rest_file_ids)) {
-                $field_data['delete'][] = $file_id;
-            }
+            $this->markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
+                $artifact,
+                $submitted_ids,
+                $field_data
+            );
         }
 
         return $field_data;
     }
 
+    /**
+     * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
+     */
+    private function checkLinkedArtifactIsLinkedToTheCurrentOne(
+        Tracker_Artifact $linked_artifact,
+        ?Tracker_Artifact $current_artifact,
+        int $file_id
+    ): void {
+        if (! $current_artifact) {
+            throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException(
+                $file_id,
+                $linked_artifact
+            );
+        }
+
+        if ((int) $current_artifact->getId() !== (int) $linked_artifact->getId()) {
+            throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException(
+                $file_id,
+                $linked_artifact
+            );
+        }
+    }
+
+    /**
+     * @param int $file_id
+     *
+     * @return array
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     */
+    private function getFileInfoDataForTemporaryFile(int $file_id): array
+    {
+        $this->checkFileIsTemporary($file_id);
+
+        $temporary_file = $this->temporary_file_manager->getFile($file_id);
+
+        $user = $this->user_manager->getUserById($temporary_file->getCreatorId());
+        if (! $user || ! $this->temporary_file_manager->exists($user, $temporary_file->getTemporaryName())) {
+            throw new Tracker_Artifact_Attachment_FileNotFoundException(
+                'Temporary file #' . $file_id . ' not found'
+            );
+        }
+
+        $file_info_data = $this->file_info_factory->buildFileInfoData(
+            $temporary_file,
+            $this->temporary_file_manager->getPath($user, $temporary_file->getTemporaryName())
+        );
+
+        return $file_info_data;
+    }
+
+    /**
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     */
+    private function checkFileIsTemporary(int $file_id): void
+    {
+        if (! $this->temporary_file_manager->isFileIdTemporary($file_id)) {
+            throw new Tracker_Artifact_Attachment_FileNotFoundException(
+                'Temporary file #' . $file_id . ' not found'
+            );
+        }
+    }
+
+    private function markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
+        Tracker_Artifact $artifact,
+        array $submitted_ids,
+        array &$field_data
+    ): void {
+        foreach ($this->getAlreadyAttachedFileIds($artifact) as $file_id) {
+            // Not in given ids => unlink
+            if (! in_array($file_id, $submitted_ids)) {
+                $field_data['delete'][] = $file_id;
+            }
+        }
+    }
+
+    /**
+     * @return int[]
+     */
     private function getAlreadyAttachedFileIds(Tracker_Artifact $artifact): array
     {
         $formelement_files = $this->form_element_factory->getUsedFormElementsByType($artifact->getTracker(), 'file');
