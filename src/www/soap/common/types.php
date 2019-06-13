@@ -1,5 +1,4 @@
 <?php
-
 // Type definition
 $server->wsdl->addComplexType(
     'ArrayOfstring',

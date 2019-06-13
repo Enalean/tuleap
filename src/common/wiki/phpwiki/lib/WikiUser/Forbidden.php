@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: Forbidden.php,v 1.2 2004/12/26 17:11:16 rurban Exp $');
 /* Copyright (C) 2004 ReiniUrban
  * This file is part of PhpWiki. Terms and Conditions see LICENSE. (GPL2)

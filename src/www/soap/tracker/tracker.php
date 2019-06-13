@@ -1,5 +1,4 @@
 <?php
-
 // define fault code constants
 define ('get_group_fault', '3000');
 define ('get_artifact_type_factory_fault', '3002');

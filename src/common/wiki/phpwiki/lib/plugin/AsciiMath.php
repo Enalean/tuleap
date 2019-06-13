@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: AsciiMath.php,v 1.1 2005/01/29 21:50:38 rurban Exp $');
 /*
 Copyright 2005 $ThePhpWikiProgrammingTeam

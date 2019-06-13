@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: BlockParser.php,v 1.55 2005/01/29 21:08:41 rurban Exp $');
+<?php
 /* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
  * Copyright (C) 2004,2005 Reini Urban
  *

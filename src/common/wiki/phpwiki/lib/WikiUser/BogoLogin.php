@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: BogoLogin.php,v 1.6 2005/08/06 13:21:37 rurban Exp $');
 /* Copyright (C) 2004 ReiniUrban
  * This file is part of PhpWiki. Terms and Conditions see LICENSE. (GPL2)

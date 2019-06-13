@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: HtmlParser.php,v 1.3 2004/12/26 17:10:44 rurban Exp $');
 /**
  * HtmlParser Class: Conversion HTML => wikimarkup

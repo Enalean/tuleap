@@ -1,5 +1,4 @@
 <?php
-
 // Copyright 2014-2018 (c) Enalean SAS
 // This file is part of Tuleap
 //

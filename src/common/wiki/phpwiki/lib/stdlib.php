@@ -1,4 +1,5 @@
-<?php //rcs_id('$Id: stdlib.php,v 1.244 2005/09/11 13:24:33 rurban Exp $');
+<?php
+//rcs_id('$Id: stdlib.php,v 1.244 2005/09/11 13:24:33 rurban Exp $');
 /*
  Copyright 1999,2000,2001,2002,2004,2005 $ThePhpWikiProgrammingTeam
 

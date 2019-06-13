@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: WikiPlugin.php,v 1.61 2005/10/31 17:20:40 rurban Exp $');
 
 class WikiPlugin

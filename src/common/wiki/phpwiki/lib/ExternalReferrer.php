@@ -1,7 +1,5 @@
 <?php
-rcs_id('$Id: ExternalReferrer.php,v 1.3 2004/10/12 14:22:14 rurban Exp $');
-
-/** 
+/**
  * Detect external referrers
  * Currently only search engines, and highlight the searched item.
  *

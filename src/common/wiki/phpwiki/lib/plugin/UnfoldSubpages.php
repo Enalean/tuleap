@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
 /*
  Copyright 2002,2004,2005 $ThePhpWikiProgrammingTeam

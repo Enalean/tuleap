@@ -1,5 +1,4 @@
 <?php
-
 // Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //

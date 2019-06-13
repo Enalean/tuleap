@@ -1,6 +1,4 @@
 <?php
-rcs_id('$Id: difflib.php,v 1.12 2005/02/04 13:44:45 rurban Exp $');
-
 // difflib.php
 //
 // A PHP diff engine for phpwiki.

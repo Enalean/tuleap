@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: backend.php,v 1.26 2005/11/14 22:24:33 rurban Exp $');
 
 /*

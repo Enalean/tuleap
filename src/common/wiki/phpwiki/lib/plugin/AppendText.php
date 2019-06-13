@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: AppendText.php,v 1.7 2005/04/02 03:05:43 uckelman Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

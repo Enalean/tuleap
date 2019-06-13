@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: TextSearchQuery.php,v 1.21 2005/09/14 05:59:48 rurban Exp $');
+<?php
 /**
  * A text search query, converting queries to PCRE and SQL matchers.
  *

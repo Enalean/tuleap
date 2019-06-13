@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: BlogJournal.php,v 1.4 2005/11/21 20:56:23 rurban Exp $');
 /*
  * Copyright 2005 $ThePhpWikiProgrammingTeam

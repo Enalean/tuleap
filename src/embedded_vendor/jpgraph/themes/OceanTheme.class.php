@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Ocean Theme class
 */

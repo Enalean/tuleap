@@ -1,5 +1,4 @@
-<?php 
-rcs_id('$Id: CachedMarkup.php,v 1.35 2005/04/23 11:18:58 rurban Exp $');
+<?php
 /* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
  * Copyright (C) 2004, 2005 $ThePhpWikiProgrammingTeam
  *

@@ -1,5 +1,4 @@
 <?php
-
 /*
     
     Copyright (c) 2006-2008 Ulrich Mierendorff

@@ -1,8 +1,6 @@
 <?php
-use Tuleap\User\UserGroup\NameTranslator;
-
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +17,8 @@ use Tuleap\User\UserGroup\NameTranslator;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\User\UserGroup\NameTranslator;
 
 class User_ForgeUserGroupFactory {
 

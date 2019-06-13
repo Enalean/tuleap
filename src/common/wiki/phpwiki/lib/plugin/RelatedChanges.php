@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: RelatedChanges.php,v 1.5 2005/01/25 03:50:54 uckelman Exp $');
 
 /**

@@ -1,5 +1,5 @@
-<?php 
-  /* Download hyperwiki.jar and GraphXML.dtd from 
+<?php
+/* Download hyperwiki.jar and GraphXML.dtd from 
    *   http://hypergraph.sourceforge.net/download.html
    *   and place it into your theme directory.
    * Include this php file and adjust the width/height.

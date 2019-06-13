@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: IncludePages.php,v 1.2 2005/09/30 18:41:39 uckelman Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

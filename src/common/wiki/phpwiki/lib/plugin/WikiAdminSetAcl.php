@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: WikiAdminSetAcl.php,v 1.23 2005/02/12 17:24:24 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

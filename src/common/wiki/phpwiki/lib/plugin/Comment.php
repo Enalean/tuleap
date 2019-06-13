@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: Comment.php,v 1.2 2004/02/17 12:11:36 rurban Exp $');
 /**
  * A WikiPlugin for putting comments in WikiPages

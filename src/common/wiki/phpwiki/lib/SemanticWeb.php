@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: SemanticWeb.php,v 1.8 2004/04/18 01:11:51 rurban Exp $');
+<?php
 /**
  * What to do on ?format=rdf  What to do on ?format=owl
  *

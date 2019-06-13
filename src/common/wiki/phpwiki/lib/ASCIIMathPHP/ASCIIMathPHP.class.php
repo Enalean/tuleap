@@ -1,5 +1,4 @@
 <?php
-
 /****
  * ASCIIMathPHP and associated classes:
  * -- XMLNode

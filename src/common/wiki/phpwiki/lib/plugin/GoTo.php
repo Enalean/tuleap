@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: GoTo.php,v 1.4 2004/07/08 20:30:07 rurban Exp $');
 
 /**

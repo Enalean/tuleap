@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: RdfDefinition.php,v 1.6 2004/09/14 10:33:39 rurban Exp $');
 /*
  Copyright 2004 Reini Urban

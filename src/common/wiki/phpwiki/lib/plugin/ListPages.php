@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: ListPages.php,v 1.10 2005/09/27 17:34:19 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

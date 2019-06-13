@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: WikiAdminSelect.php,v 1.23 2005/09/14 06:06:09 rurban Exp $');
 /*
  Copyright 2002 $ThePhpWikiProgrammingTeam

@@ -1,5 +1,4 @@
-<?php 
-rcs_id('$Id: InlineParser.php,v 1.70 2005/10/31 16:45:23 rurban Exp $');
+<?php
 /* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
  * Copyright (C) 2004,2005 Reini Urban
  *
