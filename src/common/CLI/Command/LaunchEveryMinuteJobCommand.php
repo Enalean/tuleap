@@ -23,19 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Command;
 
-use EventManager;
 use Logger;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\Cron\EventCronJobEveryMinute;
+use Tuleap\DB\DBConnection;
 
-class LaunchEveryMinuteJobCommand extends Command
+final class LaunchEveryMinuteJobCommand extends Command
 {
-    public const NAME = 'launch-every-minute-job';
+    private const NAME = 'launch-every-minute-job';
 
     /**
      * @var EventDispatcherInterface
@@ -45,31 +43,32 @@ class LaunchEveryMinuteJobCommand extends Command
      * @var Logger
      */
     private $logger;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
 
-    public function __construct(EventDispatcherInterface $event_dispatcher, Logger $logger)
+    public function __construct(EventDispatcherInterface $event_dispatcher, Logger $logger, DBConnection $db_connection)
     {
         parent::__construct(self::NAME);
         $this->event_dispatcher = $event_dispatcher;
         $this->logger           = $logger;
+        $this->db_connection    = $db_connection;
     }
 
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Trigger an event that is supposed to be launched every minute by Cron or SystemD timers');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            try {
-                sleep(random_int(0, 59));
-            } catch (\Exception $e) {
-                $error_output = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-                $error_output->writeln('Unable to get a random time for delay, aborting');
-                return 1;
-            }
+            sleep(random_int(0, 59));
+            $this->db_connection->reconnectAfterALongRunningProcess();
         }
 
         $this->event_dispatcher->dispatch(new EventCronJobEveryMinute($this->logger));
+        return 0;
     }
 }

@@ -26,14 +26,14 @@ namespace Tuleap\CLI\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use SystemEvent;
 use SystemEventProcessManager;
 use SystemEventProcessor_Factory;
 use SystemEventProcessorMutex;
+use Tuleap\DB\DBConnection;
 
-class ProcessSystemEventsCommand extends Command
+final class ProcessSystemEventsCommand extends Command
 {
     public const NAME = 'process-system-events';
 
@@ -45,31 +45,34 @@ class ProcessSystemEventsCommand extends Command
      * @var SystemEventProcessManager
      */
     private $system_event_process_manager;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
 
-    public function __construct(SystemEventProcessor_Factory $system_event_processor_factory, SystemEventProcessManager $system_event_process_manager)
-    {
+    public function __construct(
+        SystemEventProcessor_Factory $system_event_processor_factory,
+        SystemEventProcessManager $system_event_process_manager,
+        DBConnection $db_connection
+    ) {
         parent::__construct(self::NAME);
         $this->system_event_processor_factory = $system_event_processor_factory;
-        $this->system_event_process_manager = $system_event_process_manager;
+        $this->system_event_process_manager   = $system_event_process_manager;
+        $this->db_connection                  = $db_connection;
     }
 
-    protected function configure()
+    protected function configure() : void
     {
         $this
             ->setDescription('Process pending system events')
             ->addArgument('queue', InputArgument::REQUIRED, sprintf('Which queue should be run. Default queue is `%s`', SystemEvent::DEFAULT_QUEUE));
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            try {
-                sleep(random_int(0, 59));
-            } catch (\Exception $e) {
-                $error_output = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-                $error_output->writeln('Unable to get a random time for delay, aborting');
-                return 1;
-            }
+            sleep(random_int(0, 59));
+            $this->db_connection->reconnectAfterALongRunningProcess();
         }
         $request_queue = $input->getArgument('queue');
 
@@ -77,5 +80,6 @@ class ProcessSystemEventsCommand extends Command
 
         $mutex = new SystemEventProcessorMutex($this->system_event_process_manager, $processor);
         $mutex->execute();
+        return 0;
     }
 }
