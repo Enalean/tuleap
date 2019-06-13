@@ -35,6 +35,11 @@ final class DocmanValidateUploadTest extends TestCase
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
 
+    protected function tearDown() : void
+    {
+        $GLOBALS['_FILES'] = [];
+    }
+
     public function testValidFileIsAccepted() : void
     {
         $request   = Mockery::mock(Codendi_Request::class);

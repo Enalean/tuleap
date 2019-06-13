@@ -45,11 +45,32 @@ class BackendSVNTest extends TestCase
     private $backend;
 
     /**
+     * @var bool
+     */
+    private $globals_svnaccess_set_initially;
+    /**
+     * @var bool
+     */
+    private $globals_svngroups_set_initially;
+
+    /**
      * @before
      */
-    public function createInstance()
+    public function createInstance() : void
     {
-        $this->backend = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
+        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
+        $this->backend                         = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    }
+
+    protected function tearDown() : void
+    {
+        if (! $this->globals_svnaccess_set_initially) {
+            unset($GLOBALS['SVNACCESS']);
+        }
+        if (! $this->globals_svngroups_set_initially) {
+            unset($GLOBALS['SVNGROUPS']);
+        }
     }
 
     public function testItAddsProjectMembers()

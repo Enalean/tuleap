@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,8 +28,6 @@ use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 
-require_once __DIR__.'/../bootstrap.php';
-
 class ArtifactViewBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -39,7 +37,7 @@ class ArtifactViewBuilderTest extends TestCase
      */
     private $builder;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -72,6 +70,11 @@ class ArtifactViewBuilderTest extends TestCase
             $this->time_presenter_builder,
             $this->date_formatter
         );
+    }
+
+    protected function tearDown() : void
+    {
+        unset($GLOBALS['_SESSION']);
     }
 
     public function testItBuildsTheArtifactView()
