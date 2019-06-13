@@ -283,11 +283,6 @@ class trackerPlugin extends Plugin {
         $file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
-            new Tracker_FileInfoFactory(
-                new Tracker_FileInfoDao(),
-                Tracker_FormElementFactory::instance(),
-                Tracker_ArtifactFactory::instance()
-            ),
             new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay')
         );

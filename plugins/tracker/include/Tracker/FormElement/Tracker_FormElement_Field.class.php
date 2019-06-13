@@ -1413,7 +1413,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @param Tracker_Artifact
      *
-     * @return Tracker_Artifact_ChangesetValue
+     * @return Tracker_Artifact_ChangesetValue|null
      */
     public function getLastChangesetValue(Tracker_Artifact $artifact) {
         return $artifact->getValue($this);

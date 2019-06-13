@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 — Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,11 +33,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     private $dao;
 
     /**
-     * @var Tracker_FileInfoFactory
-     */
-    private $file_info_factory;
-
-    /**
      * @var System_Command
      */
     private $system;
@@ -56,12 +50,10 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     public function __construct(
         UserManager $user_manager,
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
-        Tracker_FileInfoFactory $file_info_factory,
         System_Command $system,
         $retention_delay
     ) {
         $this->dao                     = $dao;
-        $this->file_info_factory       = $file_info_factory;
         $this->system                  = $system;
         $this->retention_delay_in_days = $retention_delay;
         $this->user_manager            = $user_manager;
@@ -328,80 +320,4 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             $row['filetype']
         );
     }
-
-    public function getAlreadyAttachedFileIds(Tracker_Artifact $artifact) {
-        $formelement_factory     = Tracker_FormElementFactory::instance();
-        $formelement_files       = $formelement_factory->getUsedFormElementsByType($artifact->getTracker(), 'file');
-
-        $last_changeset_file_ids = array();
-
-        foreach($formelement_files as $formelement_files) {
-            $field = $formelement_factory->getFormElementById($formelement_files->getId());
-            $value = $field->getLastChangesetValue($artifact);
-
-            if ($value) {
-                foreach($value->getFiles() as $file) {
-                    $last_changeset_file_ids[] = (int) $file->getId();
-                }
-            }
-        }
-
-        return $last_changeset_file_ids;
-    }
-
-    /**
-     * Get the field data for artifact submission
-     * @throws Tracker_Artifact_Attachment_FileNotFoundException
-     * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
-     */
-    public function buildFieldDataForREST($rest_value, ?Tracker_Artifact $artifact = null) {
-        $field_data                = array();
-        $already_attached_file_ids = array();
-
-        if ($artifact) {
-            $already_attached_file_ids = $this->getAlreadyAttachedFileIds($artifact);
-        }
-
-        $given_rest_file_ids = $rest_value->value;
-        // Ids given in REST
-        foreach ($given_rest_file_ids as $file_id) {
-            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoIdInLastChangeset($file_id);
-
-            // Temporary => link
-            if (! $linked_artifact && $this->isFileIdTemporary($file_id)) {
-                $temporary_file = $this->getFile($file_id);
-
-                $user = $this->user_manager->getUserById($temporary_file->getCreatorId());
-                if (! $this->exists($user, $temporary_file->getTemporaryName())) {
-                    throw new Tracker_Artifact_Attachment_FileNotFoundException('Temporary file #' . $file_id . ' not found');
-                }
-
-                $field_data[] = $this->file_info_factory->buildFileInfoData(
-                    $temporary_file,
-                    $this->getPath($user, $temporary_file->getTemporaryName())
-                );
-
-            } elseif (! $linked_artifact && ! $this->isFileIdTemporary($file_id)) {
-                throw new Tracker_Artifact_Attachment_FileNotFoundException('Temporary file #' . $file_id . ' not found');
-
-            // Already attached to another artifact => error
-            } elseif ($artifact && $artifact->getId() != $linked_artifact->getId()
-                    || ! $artifact && $linked_artifact) {
-
-                throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException('File #' . $file_id . ' is already linked to artifact #' . $linked_artifact->getId());
-            }
-        }
-
-        // Already attached file ids
-        foreach ($already_attached_file_ids as $file_id) {
-            // Not in given ids => unlink
-            if (! in_array($file_id, $given_rest_file_ids)) {
-                $field_data['delete'][] = $file_id;
-            }
-        }
-
-        return $field_data;
-    }
 }
-
-?>

@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\File\AttachmentForTusUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
 use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\File\FieldDataFromRESTBuilder;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
@@ -969,8 +970,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
         $this->validateDataFromREST($value);
 
-        $file_manager = $this->getTemporaryFileManager();
-        return $file_manager->buildFieldDataForREST($value, $artifact);
+        $builder = new FieldDataFromRESTBuilder(
+            $this->getUserManager(),
+            $this->getFormElementFactory(),
+            $this->getTrackerFileInfoFactory(),
+            $this->getTemporaryFileManager()
+        );
+        return $builder->buildFieldDataFromREST($value, $artifact);
     }
 
     public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null) {
@@ -991,7 +997,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
-            $this->getTrackerFileInfoFactory(),
             new System_Command(),
             ForgeConfig::get('sys_file_deletion_delay')
         );
