@@ -21,9 +21,11 @@
 
 namespace Tuleap\Docman\rest\v1;
 
+use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
 use Docman_MetadataValueFactory;
 use PluginManager;
+use ProjectUGroup;
 use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanDatabaseInitialization;
 
@@ -34,6 +36,15 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 
+    /**
+     * @var int
+     */
+
+    protected $admin_user_id;
+    /**
+     * @var int
+     */
+    protected $docman_user_id;
 
     /**
      * @var \Docman_ItemFactory
@@ -47,7 +58,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @var \PFUser
      */
-    private $docman_user;
+    private $user;
     /**
      * @var \Docman_MetadataFactory
      */
@@ -183,9 +194,9 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
 
     protected function generateDocmanRegularUser(): void
     {
-        $this->docman_user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
-        $this->docman_user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
-        $this->user_manager->updateDb($this->docman_user);
+        $this->user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
+        $this->user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
+        $this->user_manager->updateDb($this->user);
     }
 
     protected function installPlugin(\Project $project): void
@@ -252,5 +263,100 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $this->project = $this->project_manager->getProjectByUnixName($project_name);
         $initializer   = new DocmanDatabaseInitialization();
         $initializer->setup($this->project);
+    }
+
+    protected function addApprovalTable(string $title, int $version_id, int $status): void
+    {
+        $dao = new Docman_ApprovalTableItemDao();
+        $table_id = $dao->createTable(
+            'version_id',
+            $version_id,
+            $this->docman_user_id,
+            $title,
+            time(),
+            $status,
+            false
+        );
+
+        $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
+        $reviewer_dao-> addUser($table_id, $this->docman_user_id);
+        $reviewer_dao->updateReview($table_id, $this->docman_user_id, time(), 1, "", 1);
+    }
+
+    protected function lockItem(int $item_id, int $user_id)
+    {
+        $dao = new \Docman_LockDao();
+        $dao->addLock(
+            $item_id,
+            $user_id,
+            time()
+        );
+    }
+
+    protected function createFileWithApprovalTable(
+        int $folder_id,
+        string $file_name,
+        string $file_version_title,
+        $approval_status
+    ): void {
+        $item_id         = $this->createItem(
+            $this->docman_user_id,
+            $folder_id,
+            $file_name,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', "");
+
+        $this->addApprovalTable($file_name, (int)$version_id, $approval_status);
+    }
+
+    /**
+     * @param $folder_id
+     */
+    protected function createAndLockItem(int $folder_id, int $item_owner_id, int $lock_owner_id, string $item_title, int $docman_item_type): void
+    {
+        $file_id = $this->createItem(
+            $item_owner_id,
+            $folder_id,
+            $item_title,
+            $docman_item_type
+        );
+        $this->addWritePermissionOnItem($file_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->lockItem($file_id, $lock_owner_id);
+    }
+
+    /**
+     * @param $folder_id
+     */
+    protected function createReadOnlyItem(int $folder_id, string $title, int $item_type): void
+    {
+        $file_id = $this->createItem(
+            $this->docman_user_id,
+            $folder_id,
+            $title,
+            $item_type
+        );
+        $this->addReadPermissionOnItem($file_id, ProjectUGroup::PROJECT_MEMBERS);
+    }
+
+    /**
+     * @param $folder_id
+     */
+    protected function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
+    {
+        $read_only_file_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_id,
+            $title,
+            $item_type
+        );
+        $this->addReadPermissionOnItem($read_only_file_id, ProjectUGroup::DOCUMENT_ADMIN);
+    }
+
+    protected function getUseByName(string $user_name): int
+    {
+        $this->user = $this->user_manager->getUserByUserName($user_name);
+        return $this->user->getId();
     }
 }

@@ -24,13 +24,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\rest;
 
-use Docman_ApprovalTableItemDao;
 use Docman_ApprovalTableWikiDao;
 use ProjectUGroup;
 use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
+use Tuleap\Docman\rest\v1\DocmanFileDataBuild;
 
 require_once __DIR__ .'/DocmanDatabaseInitialization.php';
 require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
+require_once __DIR__ . '/helper/DocmanFileDataBuild.php';
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
@@ -55,13 +56,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+---------------+---------------------+--------------+---------------+
-     *    |           |               |                     |              |               |
-     *    +           +               +                     +              +               +
-     * folder 1   Folder A File   Folder B Embedded   Folder C wiki   Folder D Link   Trash (Folder)
-     *    +           +               +                     +
-     *    |           |               |                     |
-     *   ...         ...             ...                   ...
+     *    +-----+-----+---------------------+--------------+---------------+
+     *    |           |                     |              |               |
+     *    +           +                     +              +               +
+     * folder 1   Folder B Embedded   Folder C wiki   Folder D Link   Trash (Folder)
+     *    +          +                     +
+     *    |          |                     |
+     *   ...        ...                   ...
      *
      * * HM => Hardcoded Metadata
      */
@@ -69,153 +70,17 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     {
         $docman_root = $this->docman_item_factory->getRoot($this->project->getID());
 
+        $file_builder = new DocmanFileDataBuild(self::PROJECT_NAME);
+        $file_builder->createFolderFileWithContent($docman_root);
+
         $this->createFolderLinkWithContent($docman_root);
         $this->createFolder1WithSubContent($docman_root);
-        $this->createFolderFileWithContent($docman_root);
         $this->createFolderEmbeddedWithContent($docman_root);
         $this->createFolderWikiWithContent($docman_root);
         $this->createFolderContentToDelete($docman_root);
     }
 
-    private function addApprovalTable(string $title, int $version_id, int $status): void
-    {
-        $dao = new Docman_ApprovalTableItemDao();
-        $table_id = $dao->createTable(
-            'version_id',
-            $version_id,
-            self::REGULAR_USER_ID,
-            $title,
-            time(),
-            $status,
-            false
-        );
-
-        $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
-        $reviewer_dao-> addUser($table_id, self::REGULAR_USER_ID);
-        $reviewer_dao->updateReview($table_id, self::REGULAR_USER_ID, time(), 1, "", 1);
-    }
-
-    private function lockItem(int $item_id)
-    {
-        $dao = new \Docman_LockDao();
-        $dao->addLock(
-            $item_id,
-            self::REGULAR_USER_ID,
-            time()
-        );
-    }
-
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *                                    Folder File (L) (AT)
-     *                                            +
-     *                                            |
-     *                                            +
-     *                  +----------------+--------+-------+----------------+---------------+--------------+
-     *                  |                |                |                |               |              |
-     *                  +                +                +                +               +              +
-     *              file AT C       file AT R         file AT E        file DIS AT      file NO AT     file L
-     *
-     * (L)    => Lock on this item
-     * (AT)   => Approval table on this item
-     * (AT C) => Copy Approval table on this item
-     * (AT R) => Reset Approval table on this item
-     * (AT E) => Empty Approval table on this item
-     * (DIS AT) => Disabled Approval table on this item
-     *
-     */
-    private function createFolderFileWithContent($docman_root)
-    {
-        $folder_3_id = $this->createItemWithVersion(
-            self::REGULAR_USER_ID,
-            $docman_root->getId(),
-            'Folder A File',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-
-        $file_ATC_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file AT C',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $file_ATC_version_id = $this->addFileVersion($file_ATC_id, 'First !', 'application/pdf', "");
-
-        $this->addWritePermissionOnItem($file_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
-        $file_ATR_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file AT R',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $file_ATR_version_id = $this->addFileVersion($file_ATR_id, 'Second !', 'application/pdf', "");
-        $this->addWritePermissionOnItem($file_ATR_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $file_ATE_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file AT E',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $file_ATE_version_id = $this->addFileVersion($file_ATE_id, 'Third !', 'application/pdf', "");
-        $this->addWritePermissionOnItem($file_ATE_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $file_DIS_AT_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file DIS AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $file_DIS_AT_version_id = $this->addFileVersion($file_DIS_AT_id, ':o !', 'application/pdf', "");
-        $this->addWritePermissionOnItem($file_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addApprovalTable("file_DIS_AT", (int)$file_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file NO AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $file_L_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'file L',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $other_file_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'other file',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $file_locked_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_3_id,
-            'an other locked file L',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->addApprovalTable("file_ATC", (int)$file_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("file_ATR", (int)$file_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("file_ATE", (int)$file_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addReadPermissionOnItem($folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
-
-        $this->lockItem($file_L_id);
-        $this->lockItem($file_locked_id);
-
-        $this->appendCustomMetadataValueToItem($folder_3_id, "custom value for folder_3");
-
-        $this->appendCustomMetadataValueToItem($file_ATC_id, "custom value for file A");
-        $this->appendCustomMetadataValueToItem($file_ATR_id, "custom value for file B");
-        $this->appendCustomMetadataValueToItem($file_ATE_id, "custom value for file C");
-        $this->appendCustomMetadataValueToItem($other_file_id, "custom value for file C");
-    }
-
-    /**
+     /**
      * To help understand tests structure, below a representation of folder 1 hierarchy
      *
      *                      folder 1
@@ -239,6 +104,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
+        $ro_folder_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $docman_root->getId(),
+            'Folder RO',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->addReadPermissionOnItem($ro_folder_id, \ProjectUGroup::PROJECT_ADMIN);
 
         $empty_id = $this->createItemWithVersion(
             self::ANON_ID,
@@ -253,6 +125,17 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'file',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
+
+        $file_DIS_AT_id         = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file DIS AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $file_DIS_AT_version_id = $this->addFileVersion($file_DIS_AT_id, ':o !', 'application/pdf', "");
+        $this->addWritePermissionOnItem($file_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addApprovalTable("file_DIS_AT", (int)$file_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
+
 
         $folder_2_id = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
@@ -400,7 +283,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->addApprovalTable("embedded_ATE", (int)$embedded_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addReadPermissionOnItem($folder_embedded_id, \ProjectUGroup::PROJECT_ADMIN);
 
-        $this->lockItem($embedded_L_id);
+        $this->lockItem($embedded_L_id, self::REGULAR_USER_ID);
 
         $this->appendCustomMetadataValueToItem($folder_embedded_id, "custom value for folder_3");
 
@@ -472,7 +355,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->addApprovalTableForWiki((int)$wiki_ATC_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addReadPermissionOnItem($folder_wiki_id, \ProjectUGroup::PROJECT_ADMIN);
 
-        $this->lockItem($wiki_L_id);
+        $this->lockItem($wiki_L_id, self::REGULAR_USER_ID);
 
         $this->appendCustomMetadataValueToItem($folder_wiki_id, "custom value for folder_3");
         $this->appendCustomMetadataValueToItem($wiki_ATC_id, "custom value for wiki AT");
@@ -585,7 +468,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->addApprovalTable("link_ATE", (int)$link_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("link_ATR", (int)$link_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
 
-        $this->lockItem($link_L_id);
+        $this->lockItem($link_L_id, self::REGULAR_USER_ID);
 
         $this->appendCustomMetadataValueToItem($folder_link_id, "custom value for folder_3");
 
@@ -617,15 +500,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'Trash',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-
-        $file_L_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "old file L",
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->addReadPermissionOnItem($file_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
         $link_L_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
@@ -674,11 +548,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         );
 
         $dao = new \Docman_LockDao();
-        $dao->addLock(
-            $file_L_id,
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            time()
-        );
 
         $dao->addLock(
             $link_L_id,
