@@ -207,6 +207,9 @@ tuleap.textarea = tuleap.textarea || {};
                     self.showArtifactEditForm(data, artifact_id, update_callback);
                     tuleap.tracker.runTrackerFieldDependencies();
 
+                    var modalLoadedEvent = new Event("EditModalLoaded");
+                    document.dispatchEvent(modalLoadedEvent);
+
                     $(".tuleap-modal-main-panel form textarea").each(function() {
                         var element = $(this).get(0); //transform to prototype
                         self.enableRichTextArea(element);

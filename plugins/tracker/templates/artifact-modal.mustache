@@ -49,6 +49,15 @@
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tr valign="top">
                             <td>
+                                {{# has_hidden_fieldsets }}
+                                    <div class="header-spacer"></div>
+                                    <div class="show-hide-fieldsets"> {{# dgettext }} tuleap-tracker | Hidden fieldsets:{{/ dgettext}}
+                                        <div class="btn-group" data-toggle="buttons-radio">
+                                            <button type="button" class="btn show-fieldsets"><i class="fa fa-eye"></i></button>
+                                            <button type="button" class="btn active hide-fieldsets"><i class="fa fa-eye-slash"></i></button>
+                                        </div>
+                                    </div>
+                                {{/ has_hidden_fieldsets }}
                                 {{{ form_elements }}}
                             </td>
                         </tr>

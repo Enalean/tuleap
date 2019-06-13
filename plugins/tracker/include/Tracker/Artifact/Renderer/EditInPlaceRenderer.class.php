@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+
 class Tracker_Artifact_Renderer_EditInPlaceRenderer{
 
     /** @var Tracker_Artifact */
@@ -30,9 +32,13 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
     /** @var MustacheRenderer */
     private $renderer;
 
-    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer) {
-        $this->renderer = $renderer;
-        $this->artifact = $artifact;
+    /** @var HiddenFieldsetsDetector */
+    private $hidden_fieldsets_detector;
+
+    public function __construct(Tracker_Artifact $artifact, MustacheRenderer $renderer, HiddenFieldsetsDetector $hidden_fieldsets_detector) {
+        $this->renderer                  = $renderer;
+        $this->artifact                  = $artifact;
+        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
     public function display(PFUser $current_user, Codendi_Request $request) {
@@ -43,7 +49,8 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
             $this->fetchArtifactLinks($current_user),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, $submitted_values),
             $this->artifact,
-            $current_user
+            $current_user,
+            $this->hidden_fieldsets_detector
         );
         $this->renderer->renderToPage('artifact-modal', $presenter);
     }

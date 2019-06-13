@@ -54,31 +54,38 @@ function invertFollowups(followupSection) {
 }
 
 document.observe("dom:loaded", function() {
-    $$(".show-fieldsets").each(function(button) {
-        function showFieldsets() {
-            $$(".tracker_artifact_fieldset_hidden").each(function(fieldset) {
-                fieldset.removeClassName("tracker_artifact_fieldset_hidden");
-                fieldset.addClassName("tracker_artifact_fieldset_hidden_visible");
+    function bindShowHideFieldsets() {
+        $$(".show-fieldsets").each(function(button) {
+            function showFieldsets() {
+                $$(".tracker_artifact_fieldset_hidden").each(function(fieldset) {
+                    fieldset.removeClassName("tracker_artifact_fieldset_hidden");
+                    fieldset.addClassName("tracker_artifact_fieldset_hidden_visible");
+                });
+            }
+
+            button.observe("click", function() {
+                showFieldsets();
             });
-        }
-
-        button.observe("click", function() {
-            showFieldsets();
         });
-    });
 
-    $$(".hide-fieldsets").each(function(button) {
-        function hideFieldsets() {
-            $$(".tracker_artifact_fieldset_hidden_visible").each(function(fieldset) {
-                fieldset.addClassName("tracker_artifact_fieldset_hidden");
-                fieldset.removeClassName("tracker_artifact_fieldset_hidden_visible");
+        $$(".hide-fieldsets").each(function(button) {
+            function hideFieldsets() {
+                $$(".tracker_artifact_fieldset_hidden_visible").each(function(fieldset) {
+                    fieldset.addClassName("tracker_artifact_fieldset_hidden");
+                    fieldset.removeClassName("tracker_artifact_fieldset_hidden_visible");
+                });
+            }
+
+            button.observe("click", function() {
+                hideFieldsets();
             });
-        }
-
-        button.observe("click", function() {
-            hideFieldsets();
         });
+    }
+
+    document.addEventListener("EditModalLoaded", function() {
+        bindShowHideFieldsets();
     });
+    bindShowHideFieldsets();
 
     $$(".tracker_statistics").each(function(div) {
         codendi.Tooltips.push(
