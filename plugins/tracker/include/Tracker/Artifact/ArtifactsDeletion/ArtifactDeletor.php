@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use PFUser;
 use ProjectHistoryDao;
 use Tracker_Artifact;
 use Tracker_ArtifactDao;
+use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 
 class ArtifactDeletor
 {
@@ -63,6 +64,7 @@ class ArtifactDeletor
         $this->dao->startTransaction();
         $this->processDelete($artifact, $user);
         $this->dao->commit();
+        ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_DELETED);
         $this->addProjectHistory($artifact);
     }
 

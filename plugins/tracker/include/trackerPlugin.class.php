@@ -28,6 +28,7 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -241,6 +242,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(CLICommandsCollector::NAME);
         $this->addHook(GetProjectWithTrackerAdministrationPermission::NAME);
+
+        $this->addHook(CollectTuleapComputedMetrics::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1982,5 +1985,23 @@ class trackerPlugin extends Plugin {
     private function getArtifactDao()
     {
         return new Tracker_ArtifactDao();
+    }
+
+    /**
+     * @see CollectTuleapComputedMetrics
+     */
+    public function collectComputedMetrics(CollectTuleapComputedMetrics $collect_tuleap_computed_metrics) : void
+    {
+        $prometheus = $collect_tuleap_computed_metrics->getPrometheus();
+        $prometheus->gaugeSet(
+            'tracker_artifacts_count',
+            'Number of tracker artifacts',
+            $this->getArtifactDao()->countArtifacts()
+        );
+        $prometheus->gaugeSet(
+            'tracker_artifact_changesets_count',
+            'Number of tracker artifact changesets',
+            (new Tracker_Artifact_ChangesetDao())->countChangesets()
+        );
     }
 }

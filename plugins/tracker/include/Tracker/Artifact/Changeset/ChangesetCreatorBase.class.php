@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Changeset\ChangesetInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 
 /**
@@ -81,6 +82,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase
 
             $artifact->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
 
+            ChangesetInstrumentation::increment();
             return true;
         }
 
