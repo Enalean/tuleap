@@ -27,6 +27,7 @@ import {
 } from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
+import _ from "lodash";
 
 export default ArtifactModalController;
 
@@ -79,6 +80,7 @@ function ArtifactModalController(
             body: "",
             format: modal_model.text_fields_format
         },
+        hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
         getDropdownAttribute,
         getRestErrorMessage: getErrorMessage,
@@ -91,7 +93,9 @@ function ArtifactModalController(
         submit,
         setFieldValue,
         setFollowupComment,
-        toggleFieldset
+        toggleFieldset,
+        hasHiddenFieldsets,
+        showHiddenFieldsets
     });
 
     function init() {
@@ -304,5 +308,19 @@ function ArtifactModalController(
 
     function setFollowupComment(value) {
         self.new_followup_comment = value;
+    }
+
+    function extractHiddenFieldsets(fields) {
+        return _.reject(fields, { is_hidden: false });
+    }
+
+    function hasHiddenFieldsets() {
+        return self.hidden_fieldsets.length > 0;
+    }
+
+    function showHiddenFieldsets(is_visible) {
+        self.hidden_fieldsets.forEach(function(field) {
+            field.is_hidden = !is_visible;
+        });
     }
 }

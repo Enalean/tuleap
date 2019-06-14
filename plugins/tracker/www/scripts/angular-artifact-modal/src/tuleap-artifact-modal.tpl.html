@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="field-fieldset.tpl.html">
-<div class="tlp-pane tlp-pane-collapsable" ng-class="{ 'tlp-pane-collapsed': field.collapsed }">
+<div class="tlp-pane tlp-pane-collapsable" ng-class="{ 'tlp-pane-collapsed': field.collapsed, 'tlp-pane-hidden': field.is_hidden }">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header" ng-click="modal.toggleFieldset(field)">
             <h1 class="tlp-pane-title">
@@ -384,6 +384,23 @@
 
     <div class="tlp-modal-body tuleap-artifact-modal-body">
         <div class="tuleap-artifact-modal-artifact">
+            <div class="tuleap-artifact-modal-show-hide-fieldsets" ng-if="modal.hasHiddenFieldsets()">
+                <label class="tlp-label">{{ 'Hidden fieldsets:' | translate }}</label>
+                <div class="tlp-button-bar">
+                    <div class="tlp-button-bar-item">
+                        <input type="radio" id="button-bar-left" name="button-bar-radio" class="tlp-button-bar-checkbox" ng-click="modal.showHiddenFieldsets(true)">
+                        <label for="button-bar-left" class="tlp-button-secondary tlp-button-outline">
+                            <i class="fa fa-eye"></i>
+                        </label>
+                    </div>
+                    <div class="tlp-button-bar-item">
+                        <input type="radio" id="button-bar-center" name="button-bar-radio" class="tlp-button-bar-checkbox" ng-click="modal.showHiddenFieldsets(false)"checked>
+                        <label for="button-bar-center" class="tlp-button-secondary tlp-button-outline">
+                            <i class="fa fa-eye-slash"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="tlp-alert-danger" ng-if="modal.hasRestError()">
                 {{ 'Error:' | translate }} {{ modal.getRestErrorMessage() }}
             </div>
