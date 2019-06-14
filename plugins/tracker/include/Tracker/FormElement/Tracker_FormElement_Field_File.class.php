@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
 use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\File\FieldDataFromRESTBuilder;
+use Tuleap\Tracker\FormElement\Field\File\FileInfoForTusUploadedFileReadyToBeAttachedProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
@@ -848,13 +849,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         $rule_file          = new Rule_File();
         $ongoing_upload_dao = new FileOngoingUploadDao();
         $attachment_creator = new AttachmentForTusUploadCreator(
-            new FileBeingUploadedInformationProvider(
-                new UploadPathAllocator(
-                    $ongoing_upload_dao,
-                    Tracker_FormElementFactory::instance()
-                ),
-                $ongoing_upload_dao
-            ),
+            $this->getFileInfoForTusUploadedFileReadyToBeAttachedProvider($ongoing_upload_dao),
             $ongoing_upload_dao,
             new AttachmentForRestCreator(
                 $mover,
@@ -974,9 +969,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $this->getUserManager(),
             $this->getFormElementFactory(),
             $this->getTrackerFileInfoFactory(),
-            $this->getTemporaryFileManager()
+            $this->getTemporaryFileManager(),
+            $this->getFileInfoForTusUploadedFileReadyToBeAttachedProvider(new FileOngoingUploadDao())
         );
-        return $builder->buildFieldDataFromREST($value, $artifact);
+        return $builder->buildFieldDataFromREST($value, $this, $artifact);
     }
 
     public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null) {
@@ -1066,4 +1062,23 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         return ForgeConfig::get('sys_data_dir') . '/tracker/';
     }
+
+    /**
+     * @param FileOngoingUploadDao $ongoing_upload_dao
+     *
+     * @return FileInfoForTusUploadedFileReadyToBeAttachedProvider
+     */
+    protected function getFileInfoForTusUploadedFileReadyToBeAttachedProvider(FileOngoingUploadDao $ongoing_upload_dao
+    ): FileInfoForTusUploadedFileReadyToBeAttachedProvider {
+        return new FileInfoForTusUploadedFileReadyToBeAttachedProvider(
+            new FileBeingUploadedInformationProvider(
+                new UploadPathAllocator(
+                    $ongoing_upload_dao,
+                    Tracker_FormElementFactory::instance()
+                ),
+                $ongoing_upload_dao
+            ),
+            $ongoing_upload_dao
+        );
+}
 }

@@ -72,19 +72,25 @@ class FieldDataFromRESTBuilderTest extends TestCase
      * @var Mockery\MockInterface|Tracker
      */
     private $tracker;
+    /**
+     * @var Mockery\MockInterface|FileInfoForTusUploadedFileReadyToBeAttachedProvider
+     */
+    private $tus_uploaded_file_provider;
 
     protected function setUp(): void
     {
-        $this->user_manager           = Mockery::mock(UserManager::class);
-        $this->form_element_factory   = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->file_info_factory      = Mockery::mock(Tracker_FileInfoFactory::class);
-        $this->temporary_file_manager = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $this->user_manager               = Mockery::mock(UserManager::class);
+        $this->form_element_factory       = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->file_info_factory          = Mockery::mock(Tracker_FileInfoFactory::class);
+        $this->temporary_file_manager     = Mockery::mock(Tracker_Artifact_Attachment_TemporaryFileManager::class);
+        $this->tus_uploaded_file_provider = Mockery::mock(FileInfoForTusUploadedFileReadyToBeAttachedProvider::class);
 
         $this->builder = new FieldDataFromRESTBuilder(
             $this->user_manager,
             $this->form_element_factory,
             $this->file_info_factory,
-            $this->temporary_file_manager
+            $this->temporary_file_manager,
+            $this->tus_uploaded_file_provider
         );
 
 
@@ -100,7 +106,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
     {
         $this->assertEquals(
             [],
-            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), null)
+            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), $this->field, null)
         );
     }
 
@@ -131,7 +137,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             [
                 'delete' => [123, 456]
             ],
-            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), $this->artifact)
+            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([]), $this->field, $this->artifact)
         );
     }
 
@@ -171,7 +177,11 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
         $this->assertEquals(
             [],
-            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123, 456]), $this->artifact)
+            $this->builder->buildFieldDataFromREST(
+                $this->buildRESTRepresentation([123, 456]),
+                $this->field,
+                $this->artifact
+            )
         );
     }
 
@@ -187,7 +197,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->once();
 
         $this->expectException(Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException::class);
-        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null);
+        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
     }
 
     public function testExceptionWhenArtifactAndFileIsLinkedToAnotherOne(): void
@@ -202,10 +212,10 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->once();
 
         $this->expectException(Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException::class);
-        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->artifact);
+        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, $this->artifact);
     }
 
-    public function testFileIsNotLinkedAndNotTemporary(): void
+    public function testFileIsNotLinkedAndNotTemporaryButTusUploaded(): void
     {
         $this->file_info_factory
             ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
@@ -219,8 +229,50 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->andReturn(false)
             ->once();
 
+        $current_user = Mockery::mock(PFUser::class);
+        $this->user_manager
+            ->shouldReceive('getCurrentUser')
+            ->andReturn($current_user)
+            ->once();
+
+        $this->tus_uploaded_file_provider
+            ->shouldReceive('getFileInfo')
+            ->andReturn(Mockery::mock(\Tracker_FileInfo::class))
+            ->once();
+
+        $this->assertEquals(
+            [['tus-uploaded-id' => 123]],
+            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null)
+        );
+    }
+
+    public function testFileIsNotLinkedAndNotTemporaryAndNotTusUploaded(): void
+    {
+        $this->file_info_factory
+            ->shouldReceive('getArtifactByFileInfoIdInLastChangeset')
+            ->with(123)
+            ->andReturn(null)
+            ->once();
+
+        $this->temporary_file_manager
+            ->shouldReceive('isFileIdTemporary')
+            ->with(123)
+            ->andReturn(false)
+            ->once();
+
+        $current_user = Mockery::mock(PFUser::class);
+        $this->user_manager
+            ->shouldReceive('getCurrentUser')
+            ->andReturn($current_user)
+            ->once();
+
+        $this->tus_uploaded_file_provider
+            ->shouldReceive('getFileInfo')
+            ->andReturn(null)
+            ->once();
+
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
-        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null);
+        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
     }
 
     public function testFileIsTemporaryButDoesNotExist(): void
@@ -261,7 +313,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->once();
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
-        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null);
+        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
     }
 
     public function testFileIsTemporaryButItsCreatorDoesNotExist(): void
@@ -297,7 +349,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->never();
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
-        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null);
+        $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null);
     }
 
     public function testTemporaryFileIsGivenInRESTData(): void
@@ -351,7 +403,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             [
                 ['id' => 123]
             ],
-            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null)
+            $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), $this->field, null)
         );
     }
 

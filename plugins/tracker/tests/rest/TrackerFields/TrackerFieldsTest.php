@@ -117,7 +117,7 @@ class TrackerFieldsTest extends TrackerBase
     /**
      * @depends getFileFieldId
      */
-    public function testPOSTFile(int $field_id): void
+    public function testPOSTFile(int $field_id): int
     {
         $file_size = 123;
         $data      = str_repeat('A', $file_size);
@@ -167,6 +167,44 @@ class TrackerFieldsTest extends TrackerBase
             $data,
             (string) $data_response->getBody()
         );
+
+        return $response1->json()['id'];
+    }
+
+    /**
+     * @depends getFileFieldId
+     * @depends testPOSTFile
+     */
+    public function testUploadedFileCanBeAttachedToTheArtifact($field_id, $file_id): void
+    {
+        $payload = [
+            'tracker' => ['id' => $this->tracker_fields_tracker_id],
+            'values'  => [
+                [
+                    'field_id' => $field_id,
+                    'value'    => [$file_id]
+                ]
+            ]
+        ];
+
+        $response = $this->getResponse(
+            $this->client->post('artifacts', null, json_encode($payload))
+        );
+        $this->assertEquals(201, $response->getStatusCode());
+        $artifact_id = $response->json()['id'];
+
+        $response = $this->getResponse(
+            $this->client->get('artifacts/'. $artifact_id)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        foreach ($response->json()['values'] as $field) {
+            if ($field['field_id'] === $field_id) {
+                $this->assertCount(1, $field['file_descriptions']);
+                $this->assertEquals($file_id, $field['file_descriptions'][0]['id']);
+                return;
+            }
+        }
+        $this->fail('File not attached to the artifact');
     }
 
     /**

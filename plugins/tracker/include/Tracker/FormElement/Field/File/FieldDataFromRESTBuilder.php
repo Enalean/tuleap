@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File;
 
+use PFUser;
 use Tracker_Artifact;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Attachment_TemporaryFileManager;
 use Tracker_FileInfoFactory;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use UserManager;
 
@@ -48,17 +50,23 @@ class FieldDataFromRESTBuilder
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var FileInfoForTusUploadedFileReadyToBeAttachedProvider
+     */
+    private $tus_uploaded_file_provider;
 
     public function __construct(
         UserManager $user_manager,
         Tracker_FormElementFactory $form_element_factory,
         Tracker_FileInfoFactory $file_info_factory,
-        Tracker_Artifact_Attachment_TemporaryFileManager $temporary_file_manager
+        Tracker_Artifact_Attachment_TemporaryFileManager $temporary_file_manager,
+        FileInfoForTusUploadedFileReadyToBeAttachedProvider $tus_uploaded_file_provider
     ) {
-        $this->user_manager           = $user_manager;
-        $this->form_element_factory   = $form_element_factory;
-        $this->file_info_factory      = $file_info_factory;
-        $this->temporary_file_manager = $temporary_file_manager;
+        $this->user_manager               = $user_manager;
+        $this->form_element_factory       = $form_element_factory;
+        $this->file_info_factory          = $file_info_factory;
+        $this->temporary_file_manager     = $temporary_file_manager;
+        $this->tus_uploaded_file_provider = $tus_uploaded_file_provider;
     }
 
     /**
@@ -66,8 +74,11 @@ class FieldDataFromRESTBuilder
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
      */
-    public function buildFieldDataFromREST($rest_value, ?Tracker_Artifact $artifact)
-    {
+    public function buildFieldDataFromREST(
+        $rest_value,
+        Tracker_FormElement_Field_File $field,
+        ?Tracker_Artifact $artifact
+    ) {
         $field_data = [];
 
         $submitted_ids = $rest_value->value;
@@ -80,7 +91,13 @@ class FieldDataFromRESTBuilder
                 continue;
             }
 
-            $field_data[] = $this->getFileInfoDataForTemporaryFile($file_id);
+            if (! $this->appendFileInfoDataForTemporaryFile($file_id, $field_data)
+                && ! $this->appendFileInfoDataForTusUploadedFile($file_id, $field, $field_data)
+            ) {
+                throw new Tracker_Artifact_Attachment_FileNotFoundException(
+                    'File #' . $file_id . ' not found'
+                );
+            }
         }
 
 
@@ -119,14 +136,13 @@ class FieldDataFromRESTBuilder
     }
 
     /**
-     * @param int $file_id
-     *
-     * @return array
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      */
-    private function getFileInfoDataForTemporaryFile(int $file_id): array
+    private function appendFileInfoDataForTemporaryFile(int $file_id, array &$field_data): bool
     {
-        $this->checkFileIsTemporary($file_id);
+        if (! $this->temporary_file_manager->isFileIdTemporary($file_id)) {
+            return false;
+        }
 
         $temporary_file = $this->temporary_file_manager->getFile($file_id);
 
@@ -137,24 +153,34 @@ class FieldDataFromRESTBuilder
             );
         }
 
-        $file_info_data = $this->file_info_factory->buildFileInfoData(
+        $field_data[] = $this->file_info_factory->buildFileInfoData(
             $temporary_file,
             $this->temporary_file_manager->getPath($user, $temporary_file->getTemporaryName())
         );
 
-        return $file_info_data;
+        return true;
     }
 
     /**
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      */
-    private function checkFileIsTemporary(int $file_id): void
-    {
-        if (! $this->temporary_file_manager->isFileIdTemporary($file_id)) {
-            throw new Tracker_Artifact_Attachment_FileNotFoundException(
-                'Temporary file #' . $file_id . ' not found'
-            );
+    private function appendFileInfoDataForTusUploadedFile(
+        int $file_id,
+        Tracker_FormElement_Field_File $field,
+        array &$field_data
+    ): bool {
+        $file_information = $this->tus_uploaded_file_provider->getFileInfo(
+            $file_id,
+            $this->user_manager->getCurrentUser(),
+            $field
+        );
+        if (! $file_information) {
+            return false;
         }
+
+        $field_data[] = ['tus-uploaded-id' => $file_id];
+
+        return true;
     }
 
     private function markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
@@ -180,13 +206,15 @@ class FieldDataFromRESTBuilder
         $last_changeset_file_ids = [];
 
         foreach ($formelement_files as $field) {
-            assert($field instanceof \Tracker_FormElement_Field_File);
+            assert($field instanceof Tracker_FormElement_Field_File);
             $value = $field->getLastChangesetValue($artifact);
+            if (! $value) {
+                continue;
+            }
 
-            if ($value) {
-                foreach ($value->getFiles() as $file) {
-                    $last_changeset_file_ids[] = (int) $file->getId();
-                }
+            assert($value instanceof \Tracker_Artifact_ChangesetValue_File);
+            foreach ($value->getFiles() as $file) {
+                $last_changeset_file_ids[] = (int) $file->getId();
             }
         }
 
