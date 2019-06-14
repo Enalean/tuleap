@@ -23,8 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -35,17 +34,9 @@ use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 class DocmanItemFileUpdator
 {
     /**
-     * @var ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
-    /**
      * @var VersionToUploadCreator
      */
     private $creator;
-    /**
-     * @var LockChecker
-     */
-    private $lock_checker;
     /**
      * @var ItemStatusMapper
      */
@@ -54,19 +45,21 @@ class DocmanItemFileUpdator
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
+    /**
+     * @var \Docman_PermissionsManager
+     */
+    private $docman_permissions_manager;
 
     public function __construct(
-        ApprovalTableRetriever $approval_table_retriever,
         VersionToUploadCreator $creator,
-        LockChecker $lock_checker,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
+        \Docman_PermissionsManager $docman_permissions_manager
     ) {
-        $this->approval_table_retriever  = $approval_table_retriever;
-        $this->creator                   = $creator;
-        $this->lock_checker              = $lock_checker;
-        $this->status_mapper             = $status_mapper;
-        $this->date_retriever            = $date_retriever;
+        $this->creator                    = $creator;
+        $this->status_mapper              = $status_mapper;
+        $this->date_retriever             = $date_retriever;
+        $this->docman_permissions_manager = $docman_permissions_manager;
     }
 
     /**
@@ -81,7 +74,9 @@ class DocmanItemFileUpdator
         DocmanFilesPATCHRepresentation $patch_representation,
         \DateTimeImmutable $current_time
     ): CreatedItemFilePropertiesRepresentation {
-        $this->lock_checker->checkItemIsLocked($item, $user);
+        if ($this->docman_permissions_manager->_itemIsLockedForUser($user, (int)$item->getId())) {
+            throw new ExceptionItemIsLockedByAnotherUser();
+        }
 
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
             $patch_representation->status

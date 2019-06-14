@@ -24,7 +24,6 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_Link;
 use Docman_LinkVersionFactory;
-use Docman_LockFactory;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
@@ -37,7 +36,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
@@ -51,10 +49,6 @@ use Tuleap\REST\UserManager as RestUserManager;
 
 class DocmanLinksResource extends AuthenticatedResource
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
     /**
      * @var \EventManager
      */
@@ -71,8 +65,7 @@ class DocmanLinksResource extends AuthenticatedResource
     public function __construct()
     {
         $this->rest_user_manager = RestUserManager::build();
-        $this->project_manager   = ProjectManager::instance();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, $this->project_manager);
+        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
         $this->event_manager     = \EventManager::instance();
     }
 
@@ -129,8 +122,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
         $project = $item_request->getProject();
 
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
+        if (!  Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'You are not allowed to write this item.')
@@ -235,8 +227,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $builder                                      = new DocmanItemUpdatorBuilder();
         $updator                                      = $builder->build($this->event_manager);
         $version_factory                              = new \Docman_VersionFactory();
-        $lock_factory                                 = new Docman_LockFactory();
-        $lock_checker                                 = new LockChecker($lock_factory);
         $docman_item_factory                          = new \Docman_ItemFactory();
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
@@ -245,7 +235,6 @@ class DocmanLinksResource extends AuthenticatedResource
         return new DocmanLinkUpdator(
             $version_factory,
             $updator,
-            $lock_checker,
             $docman_item_factory,
             \EventManager::instance(),
             new DocmanLinksValidityChecker(),
@@ -254,7 +243,8 @@ class DocmanLinksResource extends AuthenticatedResource
             new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
-            )
+            ),
+            Docman_PermissionsManager::instance($project->getGroupId())
         );
     }
 }

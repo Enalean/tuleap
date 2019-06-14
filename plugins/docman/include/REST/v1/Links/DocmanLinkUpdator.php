@@ -26,11 +26,9 @@ use Docman_ItemFactory;
 use Docman_VersionFactory;
 use EventManager;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanLinkUpdator
@@ -39,10 +37,6 @@ class DocmanLinkUpdator
      * @var \Docman_VersionFactory
      */
     private $version_factory;
-    /**
-     * @var LockChecker
-     */
-    private $lock_checker;
     /**
      * @var DocmanItemUpdator
      */
@@ -75,22 +69,25 @@ class DocmanLinkUpdator
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
+    /**
+     * @var \Docman_PermissionsManager
+     */
+    private $docman_permissions_manager;
 
     public function __construct(
         Docman_VersionFactory $version_factory,
         DocmanItemUpdator $updator,
-        LockChecker $lock_checker,
         Docman_ItemFactory $item_factory,
         EventManager $event_manager,
         DocmanLinksValidityChecker $links_validity_checker,
         \Docman_LinkVersionFactory $docman_link_version_factory,
         DBTransactionExecutor $transaction_executor,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
+        \Docman_PermissionsManager $docman_permissions_manager
     ) {
         $this->version_factory             = $version_factory;
         $this->updator                     = $updator;
-        $this->lock_checker                = $lock_checker;
         $this->item_factory                = $item_factory;
         $this->event_manager               = $event_manager;
         $this->links_validity_checker      = $links_validity_checker;
@@ -98,6 +95,7 @@ class DocmanLinkUpdator
         $this->transaction_executor        = $transaction_executor;
         $this->status_mapper               = $status_mapper;
         $this->date_retriever              = $date_retriever;
+        $this->docman_permissions_manager  = $docman_permissions_manager;
     }
 
     /**
@@ -112,7 +110,9 @@ class DocmanLinkUpdator
         DocmanLinkPATCHRepresentation $representation,
         \DateTimeImmutable $current_time
     ): void {
-        $this->lock_checker->checkItemIsLocked($item, $current_user);
+        if ($this->docman_permissions_manager->_itemIsLockedForUser($current_user, (int)$item->getId())) {
+            throw new ExceptionItemIsLockedByAnotherUser();
+        }
 
         $this->links_validity_checker->checkLinkValidity($representation->link_properties->link_url);
 

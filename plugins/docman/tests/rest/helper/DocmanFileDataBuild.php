@@ -65,14 +65,14 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      *                                            +
      *                                            |
      *                                            +
-     *    +-------------+-------------+-----------------+--------------+----------+-------------+-----------+
-     *    |             |             |                 |              |          |             |           |
-     *    +             +             +                 +              +          +             +           +
-     *  PATCH F AT C  PATCH F AT R  PATCH F AT E   PATCH F AT   PATCH F NO AT  PATCH F L   PATCH F KO     PATCH F
+     *    +-------------+-------------+-----------------+--------------+----------+-------------+-----------+---------+
+     *    |             |             |                 |              |          |             |           |         |
+     *    +             +             +                 +              +          +             +           +         +
+     *  PATCH F AT C  PATCH F AT R  PATCH F AT E   PATCH F AT   PATCH F NO AT  PATCH F AL   PATCH F KO     PATCH F   PATCH F RL
      *
      *
-     *
-     * (L)    => Lock on this item
+     * (RL)   => Docman Regular user Lock on this item
+     * (AL)   => Docman Admin Lock on this item
      * (AT)   => Approval table on this item
      * (AT C) => Copy Approval table on this item
      * (AT R) => Reset Approval table on this item
@@ -119,8 +119,16 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
         $this->createAndLockItem(
             $folder_file_id,
             $this->docman_user_id,
+            $this->admin_user_id,
+            'PATCH F AL',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createAndLockItem(
+            $folder_file_id,
             $this->docman_user_id,
-            'PATCH F L',
+            $this->docman_user_id,
+            'PATCH F RL',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
     }
@@ -170,8 +178,11 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      *                  +----------------+---------------+-------------+
      *                  |                |               |             |
      *                  +                +               +             +
-     *              LOCK F RO         LOCK F       LOCK F L       LOCK F L Admin
+     *              LOCK F RO         LOCK F       LOCK F AL       LOCK F RF
      *
+     * (RL)   => Docman Regular user Lock on this item
+     * (AL)   => Docman Admin Lock on this item
+     * (RO)   => Only admins has read permission this item
      */
     private function createLockFolder(int $folder_id): void
     {
@@ -192,8 +203,8 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK F L', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK F RL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK F L Admin', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK F AL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
     }
 }
