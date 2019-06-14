@@ -935,7 +935,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                         $sql[] = "(
-                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
+                            SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name
                                 FROM tracker_artifact AS a
                                 INNER JOIN user
                                     ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
@@ -953,7 +953,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                         $sql[] = "(
-                            SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
+                            SELECT DISTINCT user.user_id, $display_name_sql, user.realname, user.user_name
                                 FROM tracker_artifact AS a
                                 INNER JOIN tracker_changeset c ON a.id = c.artifact_id
                                 INNER JOIN user
@@ -984,21 +984,28 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         }
 
-        $sql = array_filter($sql);
+        $order_by_sql = $user_helper->getDisplayNameSQLOrder();
+        $sql          = array_filter($sql);
+
         if (empty($sql)) {
             return array();
         }
+        $query   = $this->getUsersSorted($sql, $order_by_sql);
+        $dao     = $this->getDefaultValueDao();
+        $rows    = $dao->retrieve($query);
+
+        if(!$rows) {
+            return [];
+        }
 
         $values = array();
-        $dao    = $this->getDefaultValueDao();
-        foreach ($dao->retrieve(implode(' UNION ', $sql)) as $row) {
+        foreach ($rows as $row) {
             $values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
                 $row['user_id'],
                 $row['user_name'],
                 $row['full_name']
             );
         }
-
         return $values;
     }
 
@@ -1009,5 +1016,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getBindValueById($bindvalue_id)
     {
         return new Tracker_FormElement_Field_List_Bind_UsersValue($bindvalue_id);
+    }
+
+    private function getUsersSorted($sql, $order_by_sql)
+    {
+        $tempory_request = implode(' UNION ', $sql);
+        return "SELECT user.user_id, user.full_name, user.user_name, user.realname FROM ($tempory_request) AS user ORDER BY $order_by_sql";
     }
 }
