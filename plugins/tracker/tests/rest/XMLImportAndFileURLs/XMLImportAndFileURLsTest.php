@@ -34,12 +34,18 @@ class XMLImportAndFileURLsTest extends TrackerBase
         $file_url = $this->getURLOfTheFileAttachment($artifact);
 
         $html = $this->getOriginalSubmissionContent($artifact);
-        $this->assertStringNotContainsString('/plugins/tracker/attachments/132-erreurs.jpeg', $html);
+        $this->assertStringNotContainsString('/plugins/tracker/attachments/132-blank.gif', $html);
         $this->assertStringContainsString($file_url, $html);
 
         $text = $this->getImplementationDetailsContent($artifact);
-        $this->assertStringContainsString('/plugins/tracker/attachments/132-erreurs.jpeg', $text);
+        $this->assertStringContainsString('/plugins/tracker/attachments/132-blank.gif', $text);
         $this->assertStringNotContainsString($file_url, $text);
+
+        $comments = $this->getComments($artifact);
+        $this->assertStringNotContainsString('/plugins/tracker/attachments/132-blank.gif', $comments[0]);
+        $this->assertStringContainsString($file_url, $comments[0]);
+        $this->assertStringContainsString('/plugins/tracker/attachments/132-blank.gif', $comments[1]);
+        $this->assertStringNotContainsString($file_url, $comments[1]);
     }
 
     private function getArtifact(): array
@@ -101,5 +107,25 @@ class XMLImportAndFileURLsTest extends TrackerBase
         $this->assertNotEmpty($html);
 
         return $html;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getComments(array $artifact): array
+    {
+        $response = $this->getResponse(
+            $this->client->get($artifact['changesets_uri'] . '?fields=comments')
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $changesets = $response->json();
+        $this->assertCount(2, $changesets);
+        return array_map(
+            static function (array $changeset) {
+                return $changeset['last_comment']['body'];
+            },
+            $changesets
+        );
     }
 }

@@ -386,21 +386,24 @@ XML;
                 $artifact123,
                 \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }))
-            ->once();
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+            )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact456,
                 \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact789,
                 \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}),
                 \Mockery::any(),
-                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
 
         $this->action->process($this->layout, $this->request, $this->user);

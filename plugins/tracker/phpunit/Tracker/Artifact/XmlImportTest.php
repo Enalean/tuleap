@@ -27,9 +27,11 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PFUser;
+use PHPUnit\Framework\TestCase;
 use Response;
 use Tracker;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreatorBase;
@@ -46,13 +48,16 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use UserManager;
+use Workflow;
 use XML_RNGValidator;
 use XMLImportHelper;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class XmlImportTest extends \PHPUnit\Framework\TestCase
+class XmlImportTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -171,26 +176,31 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
      * @var TrackerArtifactSourceIdDao
      */
     private $artifact_source_id_dao;
+    /**
+     * @var Mockery\MockInterface|CreatedFileURLMapping
+     */
+    private $url_mapping;
 
     public function setUp() : void
     {
-        $this->tracker = \Mockery::mock(Tracker::class);
+        $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
-        $this->tracker->shouldReceive('getWorkflow')->andReturn(\Mockery::spy(\Workflow::class));
+        $this->tracker->shouldReceive('getWorkflow')->andReturn(Mockery::spy(Workflow::class));
 
-        $this->artifact_creator                       = \Mockery::mock(Tracker_ArtifactCreator::class);
-        $this->new_changeset_creator                  = \Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
-        $this->formelement_factory                    = \Mockery::mock(Tracker_FormElementFactory::class);
-        $this->tracker_artifact_factory               = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->existing_artifact_source_id_extractor  = \Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class);
+        $this->artifact_creator                       = Mockery::mock(Tracker_ArtifactCreator::class);
+        $this->new_changeset_creator                  = Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
+        $this->formelement_factory                    = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->tracker_artifact_factory               = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->existing_artifact_source_id_extractor  = Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class);
         $this->tracker_formelement_field_source_id    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $this->tracker_formelement_field_effort       = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $this->static_value_dao                       = \Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
-        $this->xml_artifact_source_platform_extractor = \Mockery::mock(XMLArtifactSourcePlatformExtractor::class);
-        $this->response                               = \Mockery::mock(Response::class);
-        $this->config                                 = \Mockery::mock(ImportConfig::class);
+        $this->static_value_dao                       = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $this->xml_artifact_source_platform_extractor = Mockery::mock(XMLArtifactSourcePlatformExtractor::class);
+        $this->response                               = Mockery::mock(Response::class);
+        $this->config                                 = Mockery::mock(ImportConfig::class);
         $this->artifacts_id_mapping                   = new Tracker_XML_Importer_ArtifactImportedMapping();
         $this->xml_mapping                            = new TrackerXmlFieldsMapping_FromAnotherPlatform([]);
+        $this->url_mapping                            = Mockery::mock(CreatedFileURLMapping::class);
         $this->artifact_source_id_dao                 = Mockery::mock(TrackerArtifactSourceIdDao::class);
 
         $this->tracker_formelement_field_string = Mockery::mock(Tracker_FormElement_Field_String::class);
@@ -201,10 +211,10 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
         $this->tracker_formelement_field_string->shouldReceive('getLabel')->andReturns('summary');
         $this->tracker_formelement_field_string->shouldReceive('validateField')->andReturns(true);
 
-        $this->john_doe = \Mockery::mock(PFUser::class);
+        $this->john_doe = Mockery::mock(PFUser::class);
         $this->john_doe->shouldReceive('getId')->andReturn(200);
 
-        $this->user_manager = \Mockery::mock(UserManager::class);
+        $this->user_manager = Mockery::mock(UserManager::class);
         $this->user_manager->shouldReceive('getUserByIdentifier')->withArgs(['john_doe'])->andReturn($this->john_doe);
         $this->user_manager->shouldReceive('getUserAnonymous')->andReturn(new PFUser(array('language_id' => 'en_US', 'user_id' => 0)));
 
@@ -213,11 +223,11 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
         $this->extraction_path = $this->getTmpDir();
 
-        $this->logger = \Mockery::mock(Logger::class);
+        $this->logger = Mockery::mock(Logger::class);
         $this->logger->shouldReceive('info');
         $this->logger->shouldReceive('debug');
 
-        $this->rng_validator =  \Mockery::mock(XML_RNGValidator::class);
+        $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
 
         $this->importer = new Tracker_Artifact_XMLImport(
@@ -230,7 +240,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $this->logger,
             false,
             $this->tracker_artifact_factory,
-            \Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+            Mockery::mock(NatureDao::class),
             $this->xml_artifact_source_platform_extractor,
             $this->existing_artifact_source_id_extractor,
             $this->artifact_source_id_dao
@@ -264,7 +274,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $data,
                 $this->john_doe,
                 Mockery::any(),
-                false
+                false,
+                Mockery::any()
             )
             ->andReturn($changeset_1)
             ->once();
@@ -282,7 +293,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_2)
             ->once();
@@ -300,7 +312,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_3)
             ->once();
@@ -321,6 +334,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $xml_input,
             $this->extraction_path,
             $this->xml_mapping,
+            $this->url_mapping,
             $this->config
         );
     }
@@ -358,7 +372,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $data,
                 $this->john_doe,
                 Mockery::any(),
-                false
+                false,
+                $this->url_mapping
             )
             ->andReturn($changeset_1)
             ->once();
@@ -376,7 +391,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_2)
             ->once();
@@ -394,7 +410,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_3)
             ->once();
@@ -406,6 +423,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $xml_input,
             $this->extraction_path,
             $this->xml_mapping,
+            $this->url_mapping,
             $this->config
         );
     }
@@ -443,7 +461,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $data,
                 $this->john_doe,
                 Mockery::any(),
-                false
+                false,
+                $this->url_mapping
             )
             ->andReturn($changeset_1)
             ->once();
@@ -461,7 +480,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_2)
             ->once();
@@ -479,7 +499,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_3)
             ->once();
@@ -491,6 +512,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $xml_input,
             $this->extraction_path,
             $this->xml_mapping,
+            $this->url_mapping,
             $this->config
         );
     }
@@ -526,7 +548,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $data,
                 $this->john_doe,
                 Mockery::any(),
-                false
+                false,
+                $this->url_mapping
             )
             ->andReturn($changeset_1)
             ->once();
@@ -544,7 +567,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_2)
             ->once();
@@ -562,7 +586,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_3)
             ->once();
@@ -578,6 +603,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $xml_input,
             $this->extraction_path,
             $this->xml_mapping,
+            $this->url_mapping,
             $this->config
         );
     }
@@ -620,7 +646,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->once()
             ->andReturn($changeset_1);
@@ -638,7 +665,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_2)
             ->once();
@@ -656,7 +684,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                "text"
+                "text",
+                $this->url_mapping
             )
             ->andReturn($changeset_3)
             ->once();
@@ -666,6 +695,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             $xml_input,
             $this->extraction_path,
             $this->xml_mapping,
+            $this->url_mapping,
             $this->config
         );
     }
@@ -683,11 +713,11 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
      * @param $tracker
      * @param $tracker_id
      * @param array $changeset
-     * @return \Tracker_Artifact
+     * @return Tracker_Artifact
      */
     private function mockAnArtifact($id, $tracker, $tracker_id, $changeset = [])
     {
-        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($id);
         $artifact->shouldReceive('getTracker')->andReturn($tracker);
         $artifact->shouldReceive('getTrackerId')->andReturn($tracker_id);
@@ -697,22 +727,22 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
     private function mockAChangeset($subby, $subon, $txt_com, $subby_com, $subon_com, $id_tracker, $name_field, $value_change, $id)
     {
-        $formelement_field = \Mockery::mock(Tracker_FormElement_Field::class);
+        $formelement_field = Mockery::mock(Tracker_FormElement_Field::class);
         $formelement_field->shouldReceive('getName')->andReturn($name_field);
 
-        $changesetValue = \Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $changesetValue = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $changesetValue->shouldReceive('getField')->andReturn($formelement_field);
         $changesetValue->shouldReceive('getValue')->andReturn($value_change);
 
-        $tracker = \Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($id_tracker);
 
-        $comment = \Mockery::mock(Tracker_Artifact_Changeset_Comment::class);
+        $comment = Mockery::mock(Tracker_Artifact_Changeset_Comment::class);
         $comment->shouldReceive('getSubmittedOn')->andReturn($subon_com);
         $comment->shouldReceive('getSubmittedBy')->andReturn($subby_com);
         $comment->shouldReceive('getPurifiedBodyForText')->andReturn($txt_com);
 
-        $changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
+        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getComment')->andReturn($comment);
         $changeset->shouldReceive('getSubmittedOn')->andReturn($subon);
         $changeset->shouldReceive('getSubmittedBy')->andReturn($subby);
