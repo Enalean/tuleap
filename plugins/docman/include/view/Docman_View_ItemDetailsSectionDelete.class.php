@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('Docman_View_ItemDetailsSectionActions.class.php');
 
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
     
@@ -106,6 +104,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $parents = array();
         $html = '';
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $reference = $item;
 
         while ($item && $item->getParentId() != 0) {
@@ -116,18 +116,18 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             );
         }
         $parents = array_reverse($parents);
-        $item_url = '/plugins/docman/?group_id=' . $item->getGroupId() . '&sort_update_date=0&action=show&id=';
+        $item_url = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&sort_update_date=0&action=show&id=';
         foreach($parents as $parent) {
-            $html .= '<a href="'. $item_url. $parent['id']. '">'. $parent['title']. '</a>';
+            $html .= '<a href="'. $item_url. urlencode($parent['id']). '">'. $purifier->purify($parent['title']) . '</a>';
             $html .= ' / ';
         }
 
-        $md_uri = '/plugins/docman/?group_id=' . $item->getGroupId() . '&action=details&id=' . $item->getId();
+        $md_uri = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=details&id=' . urlencode($item->getId());
 
         //Add a pen icon linked to document properties.
         $pen_icon = '<a href="'. $md_uri . '"><img src="' . util_get_image_theme("ic/edit.png") . '" /></a>';
 
-        $html .= '<a href="'. $item_url . $reference->getId() . '">'. $reference->getTitle() . '</a>';
+        $html .= '<a href="'. $item_url . $reference->getId() . '">'. $purifier->purify($reference->getTitle()) . '</a>';
         $html .= $pen_icon;
         $html .= '<br>';
 
