@@ -192,21 +192,6 @@ class FieldDataFromRESTBuilderTest extends TestCase
 
     public function testExceptionWhenArtifactAndFileIsLinkedToAnotherOne(): void
     {
-        $value = Mockery::mock(\Tracker_Artifact_ChangesetValue_File::class);
-        $value->shouldReceive('getFiles')->andReturn([]);
-
-        $this->field
-            ->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($value)
-            ->once();
-
-        $this->form_element_factory
-            ->shouldReceive('getUsedFormElementsByType')
-            ->with($this->tracker, 'file')
-            ->andReturn([$this->field])
-            ->once();
-
         $another_artifact = Mockery::mock(Tracker_Artifact::class);
         $another_artifact->shouldReceive('getId')->andReturn(666);
 
@@ -232,7 +217,7 @@ class FieldDataFromRESTBuilderTest extends TestCase
             ->shouldReceive('isFileIdTemporary')
             ->with(123)
             ->andReturn(false)
-            ->twice();
+            ->once();
 
         $this->expectException(Tracker_Artifact_Attachment_FileNotFoundException::class);
         $this->builder->buildFieldDataFromREST($this->buildRESTRepresentation([123]), null);

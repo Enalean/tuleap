@@ -103,14 +103,9 @@ class Tracker_FileInfoFactory {
     }
 
     /**
-     *
-     * @param type $id
-     *
      * @return Tracker_Artifact|null
-     * @throws Tracker_FileInfo_InvalidFileInfoException
-     * @throws Tracker_FileInfo_UnauthorisedException
      */
-    public function getArtifactByFileInfoIdInLastChangeset($id) {
+    public function getArtifactByFileInfoIdInLastChangeset(int $id) {
         $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
         if (! $row) {
             return null;

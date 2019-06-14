@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2014. All rights reserved
+  * Copyright (c) Enalean, 2014 - Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -17,6 +17,12 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
+declare(strict_types=1);
 
-class Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException extends Exception {}
-?>
+class Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException extends Exception
+{
+    public function __construct(int $file_id, Tracker_Artifact $linked_artifact)
+    {
+        parent::__construct('File #' . $file_id . ' is already linked to artifact #' . $linked_artifact->getId());
+    }
+}
