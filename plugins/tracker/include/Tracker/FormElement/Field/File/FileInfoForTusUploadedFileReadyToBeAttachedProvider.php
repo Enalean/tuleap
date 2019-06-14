@@ -28,50 +28,59 @@ use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 
-class AttachmentForTusUploadCreator implements AttachmentCreator
+class FileInfoForTusUploadedFileReadyToBeAttachedProvider
 {
     /**
-     * @var AttachmentCreator
+     * @var FileBeingUploadedInformationProvider
      */
-    private $next_creator_in_chain;
+    private $information_provider;
     /**
      * @var FileOngoingUploadDao
      */
     private $ongoing_upload_dao;
-    /**
-     * @var FileInfoForTusUploadedFileReadyToBeAttachedProvider
-     */
-    private $provider;
 
     public function __construct(
-        FileInfoForTusUploadedFileReadyToBeAttachedProvider $provider,
-        FileOngoingUploadDao $ongoing_upload_dao,
-        AttachmentCreator $next_creator_in_chain
+        FileBeingUploadedInformationProvider $information_provider,
+        FileOngoingUploadDao $ongoing_upload_dao
     ) {
+        $this->information_provider  = $information_provider;
         $this->ongoing_upload_dao    = $ongoing_upload_dao;
-        $this->next_creator_in_chain = $next_creator_in_chain;
-        $this->provider = $provider;
     }
 
-    public function createAttachment(
+    public function getFileInfo(
+        int $id,
         PFUser $current_user,
-        Tracker_FormElement_Field_File $field,
-        array $submitted_value_info,
-        CreatedFileURLMapping $url_mapping
+        Tracker_FormElement_Field_File $field
     ): ?Tracker_FileInfo {
-        if (! isset($submitted_value_info['tus-uploaded-id'])) {
-            return $this->next_creator_in_chain->createAttachment($current_user, $field, $submitted_value_info, $url_mapping);
-        }
-
-        $id = (int) $submitted_value_info['tus-uploaded-id'];
-
-        $file_information = $this->provider->getFileInfo($id, $current_user, $field);
+        $file_information = $this->information_provider->getFileInformationByIdForUser(
+            $id,
+            $current_user
+        );
         if (! $file_information) {
             return null;
         }
 
-        $this->ongoing_upload_dao->deleteUploadedFileThatIsAttached($file_information->getID());
+        if ($file_information->getLength() !== $file_information->getOffset()) {
+            return null;
+        }
 
-        return $file_information;
+        $row = $this->ongoing_upload_dao->searchFileOngoingUploadById($file_information->getID());
+        if (! $row) {
+            return null;
+        }
+
+        if ((int) $field->getId() !== (int) $row['field_id']) {
+            return null;
+        }
+
+        return new Tracker_FileInfo(
+            $row['id'],
+            $field,
+            $row['submitted_by'],
+            $row['description'],
+            $row['filename'],
+            $row['filesize'],
+            $row['filetype']
+        );
     }
 }
