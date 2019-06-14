@@ -1315,7 +1315,7 @@ class Docman_ItemFactory
         // Delete Lock if any
         $lF = $this->getLockFactory();
         if($lF->itemIsLocked($item)) {
-            $lF->unlock($item);
+            $lF->unlock($item, $user);
         }
 
         $item->setDeleteDate(time());
@@ -1329,7 +1329,7 @@ class Docman_ItemFactory
 
     public function getLockFactory()
     {
-        return new Docman_LockFactory();
+        return new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
     }
 
     private function deleteNotifications($item_id)

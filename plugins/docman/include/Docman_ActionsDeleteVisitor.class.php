@@ -221,7 +221,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     var $lock_factory;
     function _getLockFactory() {
         if (!$this->lock_factory) {
-            $this->lock_factory = new Docman_LockFactory();
+            $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
         }
         return $this->lock_factory;
     }   

@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Docman_LockDao.class.php';
-
 /**
  * Manage all the locking stuff of items
  * 
@@ -29,10 +27,22 @@ require_once 'Docman_LockDao.class.php';
  * Once locked, only the locker or a Document Manager can release the lock.
  * While an item is locked, it's still accessible by Document Reader.
  */
-class Docman_LockFactory {
-    protected $_cachedItem = null;
+class Docman_LockFactory
+{
+    protected $_cachedItem;
+    /**
+     * @var Docman_LockDao
+     */
+    private $dao;
+    /**
+     * @var Docman_Log
+     */
+    private $docman_log;
 
-    function __construct() {
+    public function __construct(Docman_LockDao $dao, Docman_Log $docman_log)
+    {
+        $this->dao           = $dao;
+        $this->docman_log    = $docman_log;
     }
 
    /**
@@ -43,9 +53,7 @@ class Docman_LockFactory {
     * @return DataAccessResult|false of lockinfos or false if there isn't any document locked inside the project.
     */
     function getProjectLockInfos($groupId) {
-        $items = array();
-        $dao = $this->getDao();
-        $dar = $dao->searchLocksForProjectByGroupId($groupId);
+        $dar = $this->dao->searchLocksForProjectByGroupId($groupId);
         if ($dar && !$dar->isError()) {
             return $dar;
         } else {
@@ -61,8 +69,7 @@ class Docman_LockFactory {
      * @return Array
      */
     function getLockInfoForItem($item) {
-        $dao = $this->getDao();
-        $dar = $dao->searchLockForItem($item->getId());
+        $dar = $this->dao->searchLockForItem($item->getId());
         if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
             return $dar->current();
         }
@@ -138,8 +145,7 @@ class Docman_LockFactory {
     function _cacheLocksForProject($itemId) {
         if ($this->_cachedItem === null) {
             $this->_cachedItem = array();
-            $dao = $this->getDao();
-            $dar = $dao->searchLocksForProjectByItemId($itemId);
+            $dar               = $this->dao->searchLocksForProjectByItemId($itemId);
             foreach ($dar as $row) {
                 $this->_cachedItem[$row['item_id']] = $row;
             }
@@ -154,8 +160,7 @@ class Docman_LockFactory {
      * @return DataAccessResult|false
      */
     function retreiveLocksForItems(array $itemIds) {
-        $dao = $this->getDao();
-        $dar = $dao->searchLocksForItemIds($itemIds);
+        $dar = $this->dao->searchLocksForItemIds($itemIds);
         if ($dar === false) {
             return false;
         }
@@ -164,38 +169,70 @@ class Docman_LockFactory {
         }
         return $dar;
     }
-    
+
     /**
      * Lock an item for a user
      *
      * @param Docman_Item $item Item to lock
      * @param PFUser        $user User who lock
      *
-     * @return bool
+     * @return void
      */
-    function lock($item, $user) {
-        $dao = $this->getDao();
-        return $dao->addLock($item->getId(), $user->getId(), $_SERVER['REQUEST_TIME']);
+    public function lock($item, $user)
+    {
+        if (! $this->itemIsLocked($item)) {
+            $this->dao->addLock($item->getId(), $user->getId(), $_SERVER['REQUEST_TIME']);
+            $this->logLock($item, $user);
+        }
     }
 
     /**
      * Release locked item
      *
      * @param Docman_Item $item Item to lock
+     * @param PFUser      $user
      *
-     * @return bool
+     * @return void
      */
-    function unlock($item) {
-        $dao = $this->getDao();
-        return $dao->delLock($item->getId());
+    public function unlock($item, $user)
+    {
+        $this->dao->delLock($item->getId());
+        $this->logUnlock($item, $user);
     }
 
     /**
-     * Wrapper for Docman_LockDao
+     * Raise "Lock add" event
      *
-     * @return Docman_LockDao
+     * @param Docman_Item $item Locked item
+     * @param PFUser      $user Who locked the item
+     *
+     * @return void
      */
-    function getDao() {
-        return new Docman_LockDao(CodendiDataAccess::instance());
+    private function logLock(Docman_Item $item, PFUser $user)
+    {
+        $p             = [
+            'group_id' => $item->getGroupId(),
+            'item'     => $item,
+            'user'     => $user
+        ];
+        $this->docman_log->log('plugin_docman_event_lock_add', $p);
+    }
+
+    /**
+     * Raise "Lock deletion" event
+     *
+     * @param Docman_Item $item Unlocked item
+     * @param PFUser      $user Who unlocked the item
+     *
+     * @return void
+     */
+    private function logUnlock(Docman_Item $item, PFUser $user)
+    {
+        $p             = [
+            'group_id' => $item->getGroupId(),
+            'item'     => $item,
+            'user'     => $user
+        ];
+        $this->docman_log->log('plugin_docman_event_lock_del', $p);
     }
 }

@@ -294,7 +294,7 @@ class DocmanItemsResource extends AuthenticatedResource
             \UserManager::instance(),
             Docman_ItemFactory::instance($item->getGroupId()),
             $this->getDocmanPermissionManager($project),
-            new \Docman_LockFactory(),
+            new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log()),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new \Docman_MetadataFactory($project->getID())

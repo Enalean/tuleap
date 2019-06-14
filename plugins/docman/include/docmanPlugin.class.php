@@ -44,7 +44,6 @@ use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
 use Tuleap\Docman\LegacySendMessageController;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -1269,7 +1268,7 @@ class DocmanPlugin extends Plugin
             $this->getUserManager(),
             $this->getItemFactory(),
             Docman_PermissionsManager::instance($project->getID()),
-            new \Docman_LockFactory(),
+            $this->getDocmanLockFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new Docman_MetadataFactory($project->getID())
@@ -1371,7 +1370,7 @@ class DocmanPlugin extends Plugin
                     UserManager::instance(),
                     new DocmanItemsEventAdder($event_manager),
                     ProjectManager::instance(),
-                    new LockUpdater(new Docman_LockFactory()),
+                    $this->getDocmanLockFactory(),
                     new ApprovalTableUpdater($approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
                     $approval_table_retriever,
                     new ApprovalTableUpdateActionChecker($approval_table_retriever)
@@ -1512,5 +1511,13 @@ class DocmanPlugin extends Plugin
         $event->addItemsReferencingWikiPage(
             $wikis_retriever->retrieveWikiDocuments($wiki_page, $event->getUser())
         );
+    }
+
+    /**
+     * @return Docman_LockFactory
+     */
+    private function getDocmanLockFactory(): Docman_LockFactory
+    {
+        return new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
     }
 }

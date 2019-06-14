@@ -23,13 +23,17 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_ItemFactory;
+use Docman_LockFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\Version\Version;
 
 class DocmanItemUpdator
 {
+    /**
+     * @var Docman_LockFactory
+     */
+    private $lock_factory;
     /**
      * @var ApprovalTableUpdater
      */
@@ -46,23 +50,20 @@ class DocmanItemUpdator
      * @var Docman_ItemFactory
      */
     private $docman_item_factory;
-    /**
-     * @var LockUpdater
-     */
-    private $lock_updater;
+
 
     public function __construct(
         ApprovalTableUpdater $approval_table_updater,
         ApprovalTableUpdateActionChecker $approval_table_action_checker,
         PostUpdateEventAdder $post_update_event_adder,
         Docman_ItemFactory $docman_item_factory,
-        LockUpdater $lock_updater
+        Docman_LockFactory $lock_factory
     ) {
         $this->approval_table_updater        = $approval_table_updater;
         $this->approval_table_action_checker = $approval_table_action_checker;
         $this->post_update_event_adder       = $post_update_event_adder;
         $this->docman_item_factory           = $docman_item_factory;
-        $this->lock_updater                  = $lock_updater;
+        $this->lock_factory                  = $lock_factory;
     }
 
     public function updateCommonData(
@@ -84,18 +85,12 @@ class DocmanItemUpdator
         \PFUser $user,
         ?Version $version
     ): void {
-        $this->updateLock($item, $should_lock_item, $user);
+        if ($should_lock_item) {
+            $this->lock_factory->lock($item, $user);
+        } else {
+            $this->lock_factory->unlock($item, $user);
+        }
         $this->post_update_event_adder->triggerPostUpdateEvents($item, $user, $version);
-    }
-
-    /**
-     * @param \Docman_Item $item
-     * @param bool         $should_lock_item
-     * @param \PFUser      $user
-     */
-    private function updateLock(\Docman_Item $item, bool $should_lock_item, \PFUser $user): void
-    {
-        $this->lock_updater->updateLockInformation($item, $should_lock_item, $user);
     }
 
     private function updateApprovalTable(\Docman_Item $item, \PFUser $user, string $approval_table_action): void

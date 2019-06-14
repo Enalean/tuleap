@@ -23,8 +23,6 @@
 
 use Tuleap\Docman\DeleteFailedException;
 
-require_once('service.php');
-require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
 
 class Docman_Actions extends Actions {
@@ -91,36 +89,6 @@ class Docman_Actions extends Actions {
 
         $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                            $logEventParam);
-    }
-
-    /**
-     * Raise "Lock add" event
-     *
-     * @param Docman_Item $item Locked item
-     * @param PFUser        $user Who locked the item
-     *
-     * @return void
-     */
-    function _raiseLockEvent($item, $user) {
-        $p = array('group_id' => $item->getGroupId(),
-                   'item'     => $item,
-                   'user'     => $user);
-        $this->event_manager->processEvent('plugin_docman_event_lock_add', $p);
-    }
-
-    /**
-     * Raise "Lock deletion" event
-     *
-     * @param Docman_Item $item Unlocked item
-     * @param PFUser        $user Who unlocked the item
-     *
-     * @return void
-     */
-    function _raiseUnlockEvent($item, $user) {
-        $p = array('group_id' => $item->getGroupId(),
-                   'item'     => $item,
-                   'user'     => $user);
-        $this->event_manager->processEvent('plugin_docman_event_lock_del', $p);
     }
 
     /**
@@ -750,15 +718,9 @@ class Docman_Actions extends Actions {
     private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request) {
         $permission_manager = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
         if ($request->existAndNonEmpty('lock_document')) {
-            if (! $permission_manager->getLockFactory()->itemIsLocked($item)) {
-                $permission_manager->getLockFactory()->lock($item);
-                $this->_raiseLockEvent($item, $user);
-            }
+            $permission_manager->getLockFactory()->lock($item, $user);
         } else {
-            if ($permission_manager->getLockFactory()->itemIsLocked($item)) {
-                $permission_manager->getLockFactory()->unlock($item);
-                $this->_raiseUnlockEvent($item, $user);
-            }
+            $permission_manager->getLockFactory()->unlock($item, $user);
         }
     }
 
@@ -2184,7 +2146,7 @@ class Docman_Actions extends Actions {
         $item = $this->_controler->_actionParams['item'];
         if ($this->_controler->userCanWrite($item->getId())) {
             $user = $this->_controler->getUser();
-            $lockFactory = new Docman_LockFactory();
+            $lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
             $dIF = $this->_getItemFactory();
             $canLock = true;
 
@@ -2208,9 +2170,7 @@ class Docman_Actions extends Actions {
             }
 
             if($canLock) {
-                if ($lockFactory->lock($item, $user)) {
-                    $this->_raiseLockEvent($item, $user);
-                }
+                $lockFactory->lock($item, $user);
             }
         }
     }
@@ -2219,10 +2179,9 @@ class Docman_Actions extends Actions {
         /** @var Docman_Controller $this->_controler */
         $item = $this->_controler->_actionParams['item'];
         $user = $this->_controler->getUser();
-        $lockFactory = new Docman_LockFactory();
+        $lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
         if ($user !== null && $this->_controler->userCanWrite($item->getId())) {
-            $lockFactory->unlock($item);
-            $this->_raiseUnlockEvent($item, $user);
+            $lockFactory->unlock($item, $user);
         }
     }
 

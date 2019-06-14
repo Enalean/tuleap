@@ -41,7 +41,6 @@ class VersionUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $lock_updater;
     private $project_manager;
     private $adder;
     private $logger;
@@ -54,6 +53,7 @@ class VersionUploadFinisherTest extends TestCase
     private $approval_table_updater;
     private $approval_table_retriever;
     private $approval_table_update_checker;
+    private $lock_factory;
 
     protected function setUp() : void
     {
@@ -66,10 +66,10 @@ class VersionUploadFinisherTest extends TestCase
         $this->user_manager                  = Mockery::mock(\UserManager::class);
         $this->adder                         = Mockery::mock(DocmanItemsEventAdder::class);
         $this->project_manager               = Mockery::mock(\ProjectManager::class);
-        $this->lock_updater                  = Mockery::mock(LockUpdater::class);
         $this->approval_table_updater        = Mockery::mock(ApprovalTableUpdater::class);
         $this->approval_table_retriever      = Mockery::mock(ApprovalTableRetriever::class);
         $this->approval_table_update_checker = Mockery::mock(ApprovalTableUpdateActionChecker::class);
+        $this->lock_factory                  = Mockery::mock(\Docman_LockFactory::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -91,7 +91,7 @@ class VersionUploadFinisherTest extends TestCase
             $this->user_manager,
             $this->adder,
             $this->project_manager,
-            $this->lock_updater,
+            $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
             $this->approval_table_update_checker
@@ -164,7 +164,7 @@ class VersionUploadFinisherTest extends TestCase
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
-        $this->lock_updater->shouldReceive('updateLockInformation');
+        $this->lock_factory->shouldReceive('unlock');
 
         $this->approval_table_update_checker
             ->shouldReceive('checkAvailableUpdateAction')
@@ -197,7 +197,7 @@ class VersionUploadFinisherTest extends TestCase
             $this->user_manager,
             $this->adder,
             $this->project_manager,
-            $this->lock_updater,
+            $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
             $this->approval_table_update_checker
@@ -270,7 +270,6 @@ class VersionUploadFinisherTest extends TestCase
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(false);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
-        $this->lock_updater->shouldReceive('updateLockInformation');
 
         $this->approval_table_update_checker
             ->shouldReceive('checkAvailableUpdateAction')
@@ -278,6 +277,7 @@ class VersionUploadFinisherTest extends TestCase
             ->andReturn(true);
 
         $this->approval_table_updater->shouldReceive('updateApprovalTable')->never();
+        $this->lock_factory->shouldReceive('unlock');
 
         $upload_finisher->finishUpload($file_information);
 
@@ -303,7 +303,7 @@ class VersionUploadFinisherTest extends TestCase
             $this->user_manager,
             $this->adder,
             $this->project_manager,
-            $this->lock_updater,
+            $this->lock_factory,
             $this->approval_table_updater,
             $this->approval_table_retriever,
             $this->approval_table_update_checker
@@ -376,7 +376,7 @@ class VersionUploadFinisherTest extends TestCase
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
-        $this->lock_updater->shouldReceive('updateLockInformation');
+        $this->lock_factory->shouldReceive('unlock');
 
         $this->approval_table_update_checker
             ->shouldReceive('checkAvailableUpdateAction')
