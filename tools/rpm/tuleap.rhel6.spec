@@ -548,6 +548,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1314,6 +1316,7 @@ fi
 %files plugin-artifactsfolders
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/artifactsfolders
+%{APP_DIR}/src/www/assets/artifactsfolders
 
 %files plugin-captcha
 %defattr(-,%{APP_USER},%{APP_USER},-)

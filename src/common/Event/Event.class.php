@@ -314,16 +314,6 @@ class Event {
     const SYSTEM_EVENT_GET_CUSTOM_QUEUES = 'system_event_get_custom_queues';
 
     /**
-     * Display javascript snippets in the page footer (just before </body>)
-     *
-     * No Parameters.
-     *
-     * Expected result:
-     *   Javascript snippets are directly output to the browser
-     */
-    const JAVASCRIPT_FOOTER = 'javascript_footer';
-
-    /**
      * Get an instance of service object corresponding to $row
      *
      * Parameters:
