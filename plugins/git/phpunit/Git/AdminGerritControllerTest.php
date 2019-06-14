@@ -123,6 +123,11 @@ class GitAdminProcessTest extends TestCase
         );
     }
 
+    public function tearDown() : void
+    {
+        unset($GLOBALS['Response']);
+    }
+
     /**
      * @test
      */

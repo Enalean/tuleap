@@ -1,6 +1,9 @@
 <?xml version='1.0'?>
 <phpunit bootstrap="bootstrap.php" verbose="true" colors="true"
-         failOnRisky="true" beStrictAboutChangesToGlobalState="true" beStrictAboutTestsThatDoNotTestAnything="true">
+         failOnRisky="true"
+         beStrictAboutChangesToGlobalState="true" backupGlobals="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+>
     <php>
         <ini name="assert.exception" value="1"/>
         <ini name="date.timezone" value="Europe/Paris"/>

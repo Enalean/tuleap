@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,31 +24,21 @@ namespace Tuleap;
 use BaseLanguage;
 use Mockery;
 
-/**
- * Mock global "Language" variable. This variable is restore after each test.
- */
 trait GlobalLanguageMock
 {
-    private $initial_language;
-
     /**
      * @before
      */
     protected function mockLanguage()
     {
-        if (isset($GLOBALS['Language'])) {
-            $this->initial_language = $GLOBALS['Language'];
-        }
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
     /**
      * @after
      */
-    protected function restoreLanguage()
+    protected function clearLanguage()
     {
-        if (isset($this->initial_language)) {
-            $GLOBALS['Language'] = $this->initial_language;
-        }
+        unset($GLOBALS['Language']);
     }
 }

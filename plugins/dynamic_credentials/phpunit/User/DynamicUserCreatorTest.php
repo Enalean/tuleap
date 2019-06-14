@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,6 @@ use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialNotFoundException;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSession;
 use Tuleap\DynamicCredentials\Session\DynamicCredentialSessionNotInitializedException;
-
-require_once __DIR__ . '/../bootstrap.php';
 
 class DynamicUserCreatorTest extends TestCase
 {

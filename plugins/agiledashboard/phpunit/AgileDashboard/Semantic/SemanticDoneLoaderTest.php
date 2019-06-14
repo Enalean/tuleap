@@ -69,6 +69,11 @@ class SemanticDoneLoaderTest extends TestCase
         $this->loader = new SemanticDoneLoader($this->dao, $this->value_checker);
     }
 
+    public function tearDown() : void
+    {
+        unset($GLOBALS['_SESSION']);
+    }
+
     public function testLoadWhenStatusIsNotDefined(): void
     {
         $this->semantic_status->shouldReceive('getField')->andReturn(null);
