@@ -26,6 +26,11 @@
          role="menu"
     >
         <slot></slot>
+        <template v-if="item.user_can_write && is_lock_supported_for_item">
+            <lock-item v-bind:item="item" data-test="dropdown-menu-lock-item"/>
+            <unlock-item v-bind:item="item" data-test="dropdown-menu-unlock-item"/>
+            <span class="tlp-dropdown-menu-separator" role="separator" v-if="hideItemTitle" data-test="docman-lock-separator"></span>
+        </template>
         <span v-if="! hideItemTitle" class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
             {{ item.title }}
         </span>
@@ -88,10 +93,13 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import LockItem from "./LockItem.vue";
+import UnlockItem from "./UnlockItem.vue";
+import { TYPE_FILE } from "../../../constants.js";
 
 export default {
     name: "DropdownMenu",
-    components: { QuickLookDeleteButton },
+    components: { UnlockItem, LockItem, QuickLookDeleteButton },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
@@ -113,6 +121,9 @@ export default {
         ...mapGetters(["is_item_an_empty_document"]),
         can_user_delete_item() {
             return this.item.user_can_write && this.item.parent_id;
+        },
+        is_lock_supported_for_item() {
+            return this.item.type === TYPE_FILE;
         }
     },
     methods: {

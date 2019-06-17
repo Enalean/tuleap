@@ -18,13 +18,25 @@
  */
 
 export const does_folder_have_any_error = state => {
-    return state.has_folder_permission_error || state.has_folder_loading_error;
+    return (
+        state.has_folder_permission_error ||
+        state.has_folder_loading_error ||
+        state.has_document_lock_error
+    );
 };
 
 export const does_document_have_any_error = state => {
-    return state.has_document_permission_error || state.has_document_loading_error;
+    return (
+        state.has_document_permission_error ||
+        state.has_document_loading_error ||
+        state.has_document_lock_error
+    );
 };
 
 export const has_any_loading_error = state => {
-    return state.has_folder_loading_error || state.has_document_loading_error;
+    return (
+        state.has_folder_loading_error ||
+        state.has_document_loading_error ||
+        state.has_document_lock_error
+    );
 };

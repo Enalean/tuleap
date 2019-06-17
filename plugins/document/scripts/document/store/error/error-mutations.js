@@ -24,7 +24,8 @@ export {
     setFolderLoadingError,
     setModalError,
     resetModalError,
-    setItemLoadingError
+    setItemLoadingError,
+    setLockError
 };
 
 function resetErrors(state) {
@@ -34,6 +35,8 @@ function resetErrors(state) {
     state.has_document_permission_error = false;
     state.has_document_loading_error = false;
     state.document_loading_error = null;
+    state.has_document_lock_error = false;
+    state.document_lock_error = null;
 }
 
 function switchFolderPermissionError(state) {
@@ -62,4 +65,9 @@ function setModalError(state, error_message) {
 function resetModalError(state) {
     state.has_modal_error = false;
     state.modal_error = null;
+}
+
+function setLockError(state, error_message) {
+    state.has_document_lock_error = true;
+    state.document_lock_error = error_message;
 }

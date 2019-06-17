@@ -30,7 +30,9 @@ export default {
         has_folder_loading_error: false,
         folder_loading_error: null,
         has_modal_error: false,
-        modal_error: null
+        modal_error: null,
+        has_document_lock_error: false,
+        document_lock_error: null
     },
     getters,
     mutations

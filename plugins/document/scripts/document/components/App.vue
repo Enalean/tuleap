@@ -19,9 +19,9 @@
 
 <template>
     <div class="document-app">
-        <permission-error v-if="has_folder_permission_error"/>
+        <permission-error v-if="has_folder_permission_error "/>
         <document-breadcrumb v-if="! has_folder_permission_error"/>
-        <loading-error v-if="has_folder_loading_error || has_document_loading_error"/>
+        <loading-error v-if="has_folder_loading_error || has_document_loading_error || has_document_lock_error"/>
         <item-permission-error v-if="has_document_permission_error"/>
         <router-view/>
         <switch-to-old-u-i v-if="user_id !== 0"/>
@@ -62,7 +62,8 @@ export default {
             "has_folder_permission_error",
             "has_folder_loading_error",
             "has_document_permission_error",
-            "has_document_loading_error"
+            "has_document_loading_error",
+            "has_document_lock_error"
         ]),
         ...mapGetters(["is_uploading"])
     },
