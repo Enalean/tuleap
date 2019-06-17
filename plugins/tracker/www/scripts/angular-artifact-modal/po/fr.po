@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-06-29 13:45+0200\n"
+"PO-Revision-Date: 2019-06-17 10:43+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,15 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Add a new comment"
-msgstr "Ajouter un nouveau commentaire"
 
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
@@ -55,10 +51,6 @@ msgstr "Par: {{ file.submitted_by }}"
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Comment"
-msgstr "Commentaire"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Create a new {{ modal.title }}"
@@ -97,6 +89,10 @@ msgstr "Quota d'envoi de fichiers autorisé"
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Follow-ups"
 msgstr "Commentaires"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Hidden fieldsets:"
+msgstr "Groupes de champs cachés :"
 
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Keep the file"

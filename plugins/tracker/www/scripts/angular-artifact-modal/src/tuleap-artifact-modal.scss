@@ -59,6 +59,16 @@
     .tlp-form-element:last-child {
         margin: 0 0 $tlp-spacing;
     }
+
+    > .tuleap-artifact-modal-show-hide-fieldsets {
+        display: flex;
+        margin-bottom: 10px;
+
+        label.tlp-label {
+            line-height: 35px;
+            margin-right: 5px;
+        }
+    }
 }
 
 .tuleap-artifact-modal-artifact-field-user {
