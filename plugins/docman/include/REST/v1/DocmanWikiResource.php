@@ -31,7 +31,6 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
@@ -114,8 +113,7 @@ class DocmanWikiResource extends AuthenticatedResource
 
         $project = $item_request->getProject();
 
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
+        if (! Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'You are not allowed to write this item.')
@@ -229,16 +227,15 @@ class DocmanWikiResource extends AuthenticatedResource
         );
         return new DocmanWikiUpdator(
             new \Docman_VersionFactory(),
-            new LockChecker(new \Docman_LockFactory()),
             new \Docman_ItemFactory(),
             $this->event_manager,
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ItemStatusMapper($docman_setting_bo),
-            $hardcoded_metadata_obsolescence_date_checker,
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
-            )
+            ),
+            Docman_PermissionsManager::instance($project->getGroupId())
         );
     }
 }

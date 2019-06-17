@@ -138,7 +138,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchThrowsExceptionWhenADocumentIsLockedByAnOtherUser(array $items): void
+    public function testAdminShouldAlwaysBeAbleToUnlockAnItem(array $items): void
     {
         $locked_wiki = $this->findItemByTitle($items, 'wiki L');
 
@@ -158,7 +158,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
                 $put_resource
             )
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**

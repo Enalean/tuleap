@@ -24,11 +24,9 @@ namespace Tuleap\Docman\REST\v1\Wiki;
 
 use Docman_ItemFactory;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanWikiUpdator
@@ -37,10 +35,6 @@ class DocmanWikiUpdator
      * @var \Docman_VersionFactory
      */
     private $version_factory;
-    /**
-     * @var LockChecker
-     */
-    private $lock_checker;
     /**
      * @var \Docman_ItemFactory
      */
@@ -58,10 +52,6 @@ class DocmanWikiUpdator
      */
     private $transaction_executor;
     /**
-     * @var HardcodedMetdataObsolescenceDateChecker
-     */
-    private $obsolescence_date_checker;
-    /**
      * @var ItemStatusMapper
      */
     private $status_mapper;
@@ -69,27 +59,29 @@ class DocmanWikiUpdator
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
+    /**
+     * @var \Docman_PermissionsManager
+     */
+    private $docman_permissions_manager;
 
     public function __construct(
         \Docman_VersionFactory $version_factory,
-        LockChecker $lock_checker,
         Docman_ItemFactory $docman_item_factory,
         \EventManager $event_manager,
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor,
         ItemStatusMapper $status_mapper,
-        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
+        \Docman_PermissionsManager $docman_permissions_manager
     ) {
-        $this->version_factory           = $version_factory;
-        $this->lock_checker              = $lock_checker;
-        $this->docman_item_factory       = $docman_item_factory;
-        $this->event_manager             = $event_manager;
-        $this->updator                   = $updator;
-        $this->transaction_executor      = $transaction_executor;
-        $this->obsolescence_date_checker = $obsolescence_date_checker;
-        $this->status_mapper             = $status_mapper;
-        $this->date_retriever            = $date_retriever;
+        $this->version_factory            = $version_factory;
+        $this->docman_item_factory        = $docman_item_factory;
+        $this->event_manager              = $event_manager;
+        $this->updator                    = $updator;
+        $this->transaction_executor       = $transaction_executor;
+        $this->status_mapper              = $status_mapper;
+        $this->date_retriever             = $date_retriever;
+        $this->docman_permissions_manager = $docman_permissions_manager;
     }
 
     /**
@@ -102,7 +94,9 @@ class DocmanWikiUpdator
         DocmanWikiPATCHRepresentation $representation,
         \DateTimeImmutable $current_time
     ): void {
-        $this->lock_checker->checkItemIsLocked($item, $current_user);
+        if ($this->docman_permissions_manager->_itemIsLockedForUser($current_user, (int)$item->getId())) {
+            throw new ExceptionItemIsLockedByAnotherUser();
+        }
 
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
             $representation->status

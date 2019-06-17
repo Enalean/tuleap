@@ -23,31 +23,45 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use DateTimeZone;
-use Docman_Item;
+use Docman_ItemFactory;
+use Docman_Wiki;
+use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\Upload\Version\VersionToUpload;
-use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiUpdator;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 
-class DocmanItemFileUpdatorTest extends TestCase
+class DocmanWikiUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
-     * @var \Docman_PermissionsManager|Mockery\MockInterface
+     * @var \Docman_VersionFactory|Mockery\MockInterface
      */
-    private $docman_permission_manager;
+    private $version_factory;
     /**
-     * @var Mockery\MockInterface|VersionToUploadCreator
+     * @var Docman_ItemFactory|Mockery\MockInterface
      */
-    private $creator;
+    private $docman_item_factory;
     /**
-     * @var DocmanItemFileUpdator
+     * @var EventManager|Mockery\MockInterface
+     */
+    private $event_manager;
+    /**
+     * @var Mockery\MockInterface|DocmanItemUpdator
      */
     private $updator;
+    /**
+     * @var Mockery\MockInterface|DBTransactionExecutor
+     */
+    private $transaction_executor;
     /**
      * @var Mockery\MockInterface|ItemStatusMapper
      */
@@ -56,32 +70,48 @@ class DocmanItemFileUpdatorTest extends TestCase
      * @var Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
+    /**
+     * @var \Docman_PermissionsManager|Mockery\MockInterface
+     */
+    private $docman_permissions_manager;
+    /**
+     * @var DocmanWikiUpdator
+     */
+    public $wiki_updator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->creator                   = Mockery::mock(VersionToUploadCreator::class);
-        $this->status_mapper             = Mockery::mock(ItemStatusMapper::class);
-        $this->date_retriever            = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
-        $this->docman_permission_manager = Mockery::mock(\Docman_PermissionsManager::class);
+        $this->version_factory            = Mockery::mock(\Docman_VersionFactory::class);
+        $this->docman_item_factory        = Mockery::mock(Docman_ItemFactory::class);
+        $this->event_manager              = Mockery::mock(\EventManager::class);
+        $this->updator                    = Mockery::mock(DocmanItemUpdator::class);
+        $this->transaction_executor       = Mockery::mock(DBTransactionExecutor::class);
+        $this->status_mapper              = Mockery::mock(ItemStatusMapper::class);
+        $this->date_retriever             = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
+        $this->docman_permissions_manager = Mockery::mock(\Docman_PermissionsManager::class);
 
-        $this->updator = new DocmanItemFileUpdator(
-            $this->creator,
+        $this->wiki_updator = new DocmanWikiUpdator(
+            $this->version_factory,
+            $this->docman_item_factory,
+            $this->event_manager,
+            $this->updator,
+            $this->transaction_executor,
             $this->status_mapper,
             $this->date_retriever,
-            $this->docman_permission_manager
+            $this->docman_permissions_manager
         );
     }
 
     public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect(): void
     {
-        $item = Mockery::mock(Docman_Item::class);
+        $item = Mockery::mock(Docman_Wiki::class);
         $item->shouldReceive('getId')->andReturn(1);
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
-        $this->docman_permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 
         $date                        = new \DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
@@ -95,34 +125,26 @@ class DocmanItemFileUpdatorTest extends TestCase
             [$obsolescence_date_formatted, $date]
         )->andReturn($obsolescence_date->getTimestamp());
 
-        $representation                             = new DocmanFilesPATCHRepresentation();
-        $representation->change_log                 = 'changelog';
-        $representation->version_title              = 'version title';
+        $representation                             = new DocmanWikiPATCHRepresentation();
         $representation->should_lock_file           = false;
-        $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
-        $representation->file_properties->file_name = 'file';
-        $representation->file_properties->file_size = 0;
-        $representation->approval_table_action      = 'copy';
+        $representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
+        $representation->wiki_properties->page_name = 'wiki name';
         $representation->status                     = 'rejected';
         $representation->obsolescence_date          = $obsolescence_date_formatted;
 
-        $version_id        = 1;
-        $version_to_upload = new VersionToUpload($version_id);
-        $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
+        $this->transaction_executor->shouldReceive('execute')->once();
 
-        $created_version_representation = $this->updator->updateFile($item, $user, $representation, $date);
-
-        $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
+        $this->wiki_updator->updateWiki($item, $user, $representation, $date);
     }
 
     public function testItThrowsAnExceptionWhenItemIsLocked(): void
     {
-        $item = Mockery::mock(Docman_Item::class);
+        $item = Mockery::mock(Docman_Wiki::class);
         $item->shouldReceive('getId')->andReturn(1);
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
-        $this->docman_permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
+        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
 
         $date                        = new \DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
@@ -130,22 +152,16 @@ class DocmanItemFileUpdatorTest extends TestCase
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
-        $representation                             = new DocmanFilesPATCHRepresentation();
-        $representation->change_log                 = 'changelog';
-        $representation->version_title              = 'version title';
+        $representation                             = new DocmanWikiPATCHRepresentation();
         $representation->should_lock_file           = false;
-        $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
-        $representation->file_properties->file_name = 'file';
-        $representation->file_properties->file_size = 0;
-        $representation->approval_table_action      = 'copy';
+        $representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
+        $representation->wiki_properties->page_name = 'wiki name';
         $representation->status                     = 'rejected';
         $representation->obsolescence_date          = $obsolescence_date_formatted;
 
-        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->never();
-        $this->creator->shouldReceive('create')->never();
-
         $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
+        $this->transaction_executor->shouldReceive('execute')->never();
 
-        $this->updator->updateFile($item, $user, $representation, $date);
+        $this->wiki_updator->updateWiki($item, $user, $representation, $date);
     }
 }

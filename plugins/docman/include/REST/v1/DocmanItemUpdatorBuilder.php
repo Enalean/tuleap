@@ -28,7 +28,6 @@ use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
 
 class DocmanItemUpdatorBuilder
@@ -43,7 +42,6 @@ class DocmanItemUpdatorBuilder
         return new DocmanItemUpdator(
             new ApprovalTableUpdater($docman_approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
             new ApprovalTableUpdateActionChecker($docman_approval_table_retriever),
-            new LockChecker(new Docman_LockFactory()),
             new PostUpdateEventAdder(\ProjectManager::instance(), new DocmanItemsEventAdder($event_manager), $event_manager),
             new \Docman_ItemFactory(),
             new LockUpdater(new Docman_LockFactory())

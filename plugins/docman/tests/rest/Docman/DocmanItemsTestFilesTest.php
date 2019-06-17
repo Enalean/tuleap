@@ -278,9 +278,9 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchOnDocumentLockedByAnOtherUserThrowException(array $items): void
+    public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH F L');
+        $file = $this->findItemByTitle($items, 'PATCH F RL');
 
         $put_resource = json_encode(
             [
@@ -300,8 +300,36 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
                 $put_resource
             )
         );
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'PATCH F AL');
+
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'title'            => 'new title'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanFileDataBuild::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch(
+                'docman_files/' . $file['id'],
+                null,
+                $put_resource
+            )
+        );
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("locked", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -349,7 +377,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/4", $response->json()['upload_href']);
+        $this->assertEquals("/uploads/docman/version/5", $response->json()['upload_href']);
 
 
         $put_resource = json_encode(
@@ -391,7 +419,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(200, $response->getStatusCode());
         $item = $response->json();
-        $this->assertEquals("/uploads/docman/version/5", $item['upload_href']);
+        $this->assertEquals("/uploads/docman/version/6", $item['upload_href']);
     }
 
     /**
@@ -766,18 +794,34 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testLockThrowsAndExceptionIfAnOtherUserHasLockedTheFile(array $items): void
+    public function testPostLockThrowsAndExceptionIfAnOtherUserHasLockedTheFile(array $items): void
     {
-        $locked_document   = $this->findItemByTitle($items, 'LOCK F L');
+        $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
         $file_to_delete_id = $locked_document['id'];
 
         $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_files/' . $file_to_delete_id . '/lock')
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("locked", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testAdminShouldAlwaysBeAbleToUnLockAFile(array $items): void
+    {
+        $locked_document   = $this->findItemByTitle($items, 'LOCK F AL');
+        $file_to_delete_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id . '/lock')
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**
@@ -794,47 +838,6 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testItThrowsAndExceptionIfUserTryTOUnlockAFileLockedBySomebodyElse(array $items): void
-    {
-        $locked_document   = $this->findItemByTitle($items, 'LOCK F L');
-        $file_to_delete_id = $locked_document['id'];
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_files/' . $file_to_delete_id . '/lock')
-        );
-
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("locked", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testItUnLocksAFile(array $items): void
-    {
-        $file_to_lock    = $this->findItemByTitle($items, 'LOCK F L Admin');
-        $file_to_lock_id = $file_to_lock['id'];
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_files/' . $file_to_lock_id . "/lock")
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file_to_lock_id)
-        );
-
-        $file = $response->json();
-        $this->assertEquals($file['lock_info'], null);
     }
 
     /**

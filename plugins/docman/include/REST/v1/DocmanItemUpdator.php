@@ -23,10 +23,8 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_ItemFactory;
-use Docman_Version;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\Version\Version;
 
@@ -40,10 +38,6 @@ class DocmanItemUpdator
      * @var ApprovalTableUpdateActionChecker
      */
     private $approval_table_action_checker;
-    /**
-     * @var LockChecker
-     */
-    private $lock_checker;
     /**
      * @var PostUpdateEventAdder
      */
@@ -60,15 +54,12 @@ class DocmanItemUpdator
     public function __construct(
         ApprovalTableUpdater $approval_table_updater,
         ApprovalTableUpdateActionChecker $approval_table_action_checker,
-        LockChecker $lock_checker,
         PostUpdateEventAdder $post_update_event_adder,
         Docman_ItemFactory $docman_item_factory,
         LockUpdater $lock_updater
     ) {
-
         $this->approval_table_updater        = $approval_table_updater;
         $this->approval_table_action_checker = $approval_table_action_checker;
-        $this->lock_checker                  = $lock_checker;
         $this->post_update_event_adder       = $post_update_event_adder;
         $this->docman_item_factory           = $docman_item_factory;
         $this->lock_updater                  = $lock_updater;

@@ -23,7 +23,6 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_FileStorage;
-use Docman_LockFactory;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
@@ -38,14 +37,12 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
+use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataItemStatusChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -53,10 +50,6 @@ use Tuleap\REST\UserManager as RestUserManager;
 
 class DocmanEmbeddedFilesResource extends AuthenticatedResource
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
     /**
      * @var \EventManager
      */
@@ -73,8 +66,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     public function __construct()
     {
         $this->rest_user_manager = RestUserManager::build();
-        $this->project_manager   = ProjectManager::instance();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, $this->project_manager);
+        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
         $this->event_manager     = \EventManager::instance();
     }
 
@@ -252,18 +244,17 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             $docman_setting_bo
         );
 
-        $docman_item_updator = new DocmanEmbeddedFileUpdator(
+        return new DocmanEmbeddedFileUpdator(
             new Docman_FileStorage($docman_root),
             $version_factory,
             new \Docman_ItemFactory(),
-            new LockChecker(new Docman_LockFactory()),
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
-            )
+            ),
+            Docman_PermissionsManager::instance($project->getGroupId())
         );
-        return $docman_item_updator;
     }
 }

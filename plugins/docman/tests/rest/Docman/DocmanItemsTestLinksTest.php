@@ -261,7 +261,7 @@ class DocmanItemsTestLinksTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchThrowsExceptionWhenADocumentIsLockedByAnOtherUser(array $items): void
+    public function testAdminShouldAlwaysBeAbleToUnlockAnItem(array $items): void
     {
         $locked_links = $this->findItemByTitle($items, 'link L');
 
@@ -283,7 +283,7 @@ class DocmanItemsTestLinksTest extends DocmanBase
                 $put_resource
             )
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     /**

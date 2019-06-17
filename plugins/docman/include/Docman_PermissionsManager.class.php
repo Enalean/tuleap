@@ -225,7 +225,7 @@ class Docman_PermissionsManager {
             // Check permissions
             $hasWritePerm = $this->_userHasWritePermission($user, $item_id);
             // Check lock status
-            $itemLocked = $this->_itemIsLockedForUser($user, $item_id);
+            $itemLocked = $this->_itemIsLockedForUser($user, (int)$item_id);
 
             $canWrite = false;
             if(!$itemLocked) {
@@ -284,11 +284,12 @@ class Docman_PermissionsManager {
      * is owner of the lock. This method doesn't check write permission.
      *
      * @param PFUser    $user
-     * @param Integer $item_id
+     * @param int $item_id
      *
-     * @return Boolean
+     * @return bool
      */
-    function _itemIsLockedForUser($user, $item_id) {
+    public function _itemIsLockedForUser(PFUser $user, $item_id)
+    {
         $locked = true;
         $lockFactory = $this->getLockFactory();
         if($lockFactory->itemIsLockedByItemId($item_id)) {

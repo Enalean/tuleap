@@ -35,7 +35,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
@@ -187,13 +186,12 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-
         $docman_approval_table_retriever = new ApprovalTableRetriever(
             new \Docman_ApprovalTableFactoriesFactory(),
             new Docman_VersionFactory()
         );
 
-        $docman_item_updator = $this->getFileUpdator($project, $docman_approval_table_retriever);
+        $docman_item_updator = $this->getFileUpdator($project);
 
         try {
             $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
@@ -295,33 +293,25 @@ class DocmanFilesResource extends AuthenticatedResource
         Header::allowOptionsPatchDelete();
     }
 
-    /**
-     * @param \Project               $project
-     * @param ApprovalTableRetriever $docman_approval_table_retriever
-     *
-     * @return DocmanItemFileUpdator
-     */
     private function getFileUpdator(
-        \Project $project,
-        ApprovalTableRetriever $docman_approval_table_retriever
+        \Project $project
     ): DocmanItemFileUpdator {
         $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
         $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
             $docman_setting_bo
         );
-        $docman_item_updator                          = new DocmanItemFileUpdator(
-            $docman_approval_table_retriever,
+
+        return new DocmanItemFileUpdator(
             new VersionToUploadCreator(
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
-            new LockChecker(new Docman_LockFactory()),
             new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
-            )
+            ),
+            Docman_PermissionsManager::instance($project->getGroupId())
         );
-        return $docman_item_updator;
     }
 
     private function setHeadersForLock(): void
@@ -338,8 +328,7 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     private function checkUserCanWrite(\Project $project, \PFUser $current_user, \Docman_Item $item): void
     {
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
+        if (! Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'You are not allowed to write this item.')
@@ -372,17 +361,15 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
 
         $lock_factory = new Docman_LockFactory();
-        $lock_checker = new LockChecker($lock_factory);
         $lock_updater = new LockUpdater($lock_factory);
 
-        try {
-            $lock_checker->checkItemIsLocked($item, $current_user);
-            $lock_updater->updateLockInformation($item, $should_lock_item, $current_user);
-        } catch (ExceptionItemIsLockedByAnotherUser $e) {
+        if (Docman_PermissionsManager::instance($project->getGroupId())->_itemIsLockedForUser($current_user, (int)$item->getId())) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
             );
         }
+
+        $lock_updater->updateLockInformation($item, $should_lock_item, $current_user);
     }
 }
