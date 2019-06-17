@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+
 class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public $artifact_title;
@@ -39,22 +42,27 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
     /** @var PFUser */
     private $user;
 
+    /** @var HiddenFieldsetsDetector */
+    private $hidden_fieldsets_detector;
+
     public function __construct(
         $follow_ups,
         $artifact_links,
         $form_elements,
         Tracker_Artifact $artifact,
-        PFUser $user
+        PFUser $user,
+        HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
-        $this->follow_ups        = $follow_ups;
-        $this->artifact_links    = $artifact_links;
-        $this->artifact          = $artifact;
-        $this->artifact_id       = $artifact->getId();
-        $this->artifact_title    = $this->getEmptyStringIfNull($artifact->getTitle());
-        $this->artifact_uri      = $artifact->getUri();
-        $this->last_changeset_id = $artifact->getLastChangeset()->getId();
-        $this->form_elements     = $form_elements;
-        $this->user              = $user;
+        $this->follow_ups                = $follow_ups;
+        $this->artifact_links            = $artifact_links;
+        $this->artifact                  = $artifact;
+        $this->artifact_id               = $artifact->getId();
+        $this->artifact_title            = $this->getEmptyStringIfNull($artifact->getTitle());
+        $this->artifact_uri              = $artifact->getUri();
+        $this->last_changeset_id         = $artifact->getLastChangeset()->getId();
+        $this->form_elements             = $form_elements;
+        $this->user                      = $user;
+        $this->hidden_fieldsets_detector = $hidden_fieldsets_detector;
     }
 
     public function artifact_links_title() {
@@ -120,5 +128,14 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
     public function parent_artifact_label()
     {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'parent_artifact');
+    }
+
+    public function has_hidden_fieldsets(): bool
+    {
+        if (! ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
+            return false;
+        }
+
+        return $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($this->artifact);
     }
 }

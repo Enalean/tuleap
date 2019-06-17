@@ -793,11 +793,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect($this->getUri());
                 break;
             case 'get-edit-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer(), $this->getHiddenFieldsetsDetector());
                 $renderer->display($current_user, $request);
                 break;
             case 'update-in-place':
-                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
+                $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer(), $this->getHiddenFieldsetsDetector());
                 $renderer->updateArtifact($request, $current_user);
                 break;
             case 'copy-artifact':
