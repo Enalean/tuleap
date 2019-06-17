@@ -22,16 +22,16 @@ import { shallowMount } from "@vue/test-utils";
 import TextField from "./TextField.vue";
 import FormatSelector from "../../common/FormatSelector.vue";
 import RichTextEditor from "../../common/RichTextEditor.vue";
+import { rewire$isDisabled, restore } from "../disabled-field-detector.js";
 
 const field = { field_id: 105, required: false };
-let disabled, value;
+let isDisabled, value;
 
 function getInstance() {
     return shallowMount(TextField, {
         localVue,
         propsData: {
             field,
-            disabled,
             value
         }
     });
@@ -39,11 +39,17 @@ function getInstance() {
 
 describe(`TextField`, () => {
     beforeEach(() => {
-        disabled = false;
+        isDisabled = jasmine.createSpy("isDisabled").and.returnValue(false);
+        rewire$isDisabled(isDisabled);
+
         value = {
             format: "text",
             content: ""
         };
+    });
+
+    afterEach(() => {
+        restore();
     });
 
     it(`will set the "error" class when the field is required
@@ -56,7 +62,7 @@ describe(`TextField`, () => {
     });
 
     it(`will set the "disabled" class`, () => {
-        disabled = true;
+        isDisabled.and.returnValue(true);
         const wrapper = getInstance();
 
         expect(wrapper.classes("tlp-form-element-disabled")).toBe(true);
