@@ -110,6 +110,7 @@ class TrackerFieldsTest extends TrackerBase
         $field_id = $field['field_id'];
 
         $this->assertEquals("tracker_fields/$field_id/files", $field['file_creation_uri']);
+        $this->assertEquals(67108864, $field['max_size_upload']);
 
         return $field_id;
     }
