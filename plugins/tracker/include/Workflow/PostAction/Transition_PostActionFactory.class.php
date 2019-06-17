@@ -185,12 +185,9 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
             Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
-            FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory()
+            FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory(),
+            HiddenFieldsets::SHORT_NAME                   => $this->getHiddenFieldsetsFactory()
         );
-
-        if (ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
-            $factories[HiddenFieldsets::SHORT_NAME] = $this->getHiddenFieldsetsFactory();
-        }
 
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];
@@ -249,12 +246,9 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         $sub_factories = [
             $this->getFieldFactory(),
             $this->getCIBuildFactory(),
-            $this->getFrozenFieldsFactory()
+            $this->getFrozenFieldsFactory(),
+            $this->getHiddenFieldsetsFactory()
         ];
-
-        if (ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
-            $sub_factories[] = $this->getHiddenFieldsetsFactory();
-        }
 
         return new Transition_PostActionSubFactories($sub_factories);
     }

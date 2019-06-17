@@ -53,11 +53,6 @@ class HiddenFieldsetChecker
         Tracker_FormElement_Container_Fieldset $fieldset,
         Tracker_Artifact $artifact
     ) : bool {
-
-        if (! ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
-            return false;
-        }
-
         if ($this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)) {
             $fields = $this->fields_extractor->extractFieldsInsideContainer($fieldset);
             foreach ($fields as $field) {
