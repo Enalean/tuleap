@@ -76,13 +76,6 @@
                    v-if="! is_workflow_advanced"
                    key="warning_switch"
                 >
-                    If you have any post actions of type "Frozen Fields", they will be deleted.
-                </p>
-                <p v-translate
-                   class="tlp-alert-danger"
-                   v-if="! is_workflow_advanced"
-                   key="warning_switch_with_hidden"
-                >
                     If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they will be deleted.
                 </p>
             </template>
