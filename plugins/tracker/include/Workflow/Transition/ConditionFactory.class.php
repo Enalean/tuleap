@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -101,7 +101,16 @@ class Workflow_Transition_ConditionFactory {
      */
     public function getCommentNotEmptyCondition(Transition $transition)
     {
-        return $this->commentnotempty_factory->getCommentNotEmpty($transition);
+        $condition = $this->commentnotempty_factory->getCommentNotEmpty($transition);
+        if ($condition === null) {
+            return new Workflow_Transition_Condition_CommentNotEmpty(
+                $transition,
+                $this->getCommentNotEmptyDao(),
+                false
+            );
+        }
+
+        return $condition;
     }
 
     /**
@@ -118,9 +127,7 @@ class Workflow_Transition_ConditionFactory {
         }
 
         if ($transition->getIdFrom() !== '') {
-            if (! $this->getCommentNotEmptyDao()->create($transition->getId(), $is_comment_required)) {
-                throw new CannotCreateTransitionException();
-            }
+            $this->getCommentNotEmptyDao()->create($transition->getId(), $is_comment_required);
         }
     }
 
@@ -182,7 +189,7 @@ class Workflow_Transition_ConditionFactory {
                 $condition = $this->fieldnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 break;
             case 'commentnotempty':
-                $condition = $this->commentnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
+                $condition = $this->commentnotempty_factory->getInstanceFromXML($xml, $transition);
                 break;
         }
         return $condition;

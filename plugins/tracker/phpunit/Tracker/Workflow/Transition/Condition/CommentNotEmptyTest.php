@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,21 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../../bootstrap.php';
+namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
-class CommentNotEmpty_validateTest extends TuleapTestCase
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker_Artifact;
+use Transition;
+use Tuleap\GlobalLanguageMock;
+use Workflow_Transition_Condition_CommentNotEmpty;
+use Workflow_Transition_Condition_CommentNotEmpty_Dao;
+
+require_once __DIR__.'/../../../../bootstrap.php';
+
+class CommentNotEmpty_validateTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+
     private $empty_data = '';
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->dao        = mock('Workflow_Transition_Condition_CommentNotEmpty_Dao');
-        $this->transition = stub('Transition')->getId()->returns(42);
-        $this->artifact   = mock('Tracker_Artifact');
+        $this->dao        = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);
+        $this->transition = Mockery::mock(Transition::class);
+        $this->artifact   = Mockery::mock(Tracker_Artifact::class);
+
+        $this->transition->shouldReceive('getId')->andReturn(42);
+
+        $GLOBALS['Response'] = \Mockery::spy(\Layout::class);
     }
 
-    public function itReturnsTrueIfCommentIsNotRequired()
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['Response']);
+
+        parent::tearDown();
+    }
+
+    public function testItReturnsTrueIfCommentIsNotRequired()
     {
         $is_comment_required = false;
         $condition = new Workflow_Transition_Condition_CommentNotEmpty(
@@ -46,7 +69,7 @@ class CommentNotEmpty_validateTest extends TuleapTestCase
         $this->assertTrue($condition->validate($this->empty_data, $this->artifact, ''));
     }
 
-    public function itReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided()
+    public function testItReturnsFalseIfCommentIsRequiredAndNoCommentIsProvided()
     {
         $is_comment_required = true;
         $condition = new Workflow_Transition_Condition_CommentNotEmpty(
@@ -58,7 +81,7 @@ class CommentNotEmpty_validateTest extends TuleapTestCase
         $this->assertFalse($condition->validate($this->empty_data, $this->artifact, ''));
     }
 
-    public function itReturnsTrueIfCommentIsRequiredAndCommentIsProvided()
+    public function testItReturnsTrueIfCommentIsRequiredAndCommentIsProvided()
     {
         $is_comment_required = true;
         $condition = new Workflow_Transition_Condition_CommentNotEmpty(
