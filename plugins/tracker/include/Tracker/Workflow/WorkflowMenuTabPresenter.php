@@ -25,15 +25,9 @@ class WorkflowMenuTabPresenter
     public $tabs_menu;
     public $tracker_id;
 
-    /**
-     * @var int
-     */
-    public $can_use_hidden_fieldsets;
-
     public function __construct(array $tabs_menu, $tracker_id)
     {
         $this->tabs_menu                = $tabs_menu;
         $this->tracker_id               = $tracker_id;
-        $this->can_use_hidden_fieldsets = (int) \ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions');
     }
 }

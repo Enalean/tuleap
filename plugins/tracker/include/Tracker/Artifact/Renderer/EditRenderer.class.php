@@ -226,10 +226,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     private function fetchShowHideFieldSetsButton() : string
     {
-        if (! ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
-            return '';
-        }
-
         if (! $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($this->artifact)) {
             return '';
         }

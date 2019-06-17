@@ -63,19 +63,8 @@ class HiddenFieldsetCheckerTest extends TestCase
         $this->artifact = Mockery::mock(Tracker_Artifact::class);
     }
 
-    public function testFieldsetsAreNeverHiddenIfOptionIsNotSetInConfiguration()
-    {
-        // Test without the option added in the config file/database
-        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
-
-        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', false);
-        $this->assertFalse($this->checker->mustFieldsetBeHidden($this->fieldset, $this->artifact));
-    }
-
     public function testFieldsetIsHiddenIfConfiguredInState()
     {
-        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
-
         $this->detector->shouldReceive('isFieldsetHidden')
             ->with($this->artifact, $this->fieldset)
             ->once()
@@ -95,8 +84,6 @@ class HiddenFieldsetCheckerTest extends TestCase
 
     public function testFieldsetIsNotHiddenIfItContainsAMandatoryField()
     {
-        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
-
         $this->detector->shouldReceive('isFieldsetHidden')
             ->with($this->artifact, $this->fieldset)
             ->once()
@@ -116,8 +103,6 @@ class HiddenFieldsetCheckerTest extends TestCase
 
     public function testFieldsetIsNotHiddenIfNotConfiguredInState()
     {
-        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
-
         $this->detector->shouldReceive('isFieldsetHidden')
             ->with($this->artifact, $this->fieldset)
             ->once()
@@ -128,8 +113,6 @@ class HiddenFieldsetCheckerTest extends TestCase
 
     public function testFieldsetIsNotHiddenIfContainsFieldUsedInFieldDependency()
     {
-        ForgeConfig::set('sys_should_use_hidden_fieldsets_post_actions', true);
-
         $this->detector->shouldReceive('isFieldsetHidden')
             ->with($this->artifact, $this->fieldset)
             ->once()

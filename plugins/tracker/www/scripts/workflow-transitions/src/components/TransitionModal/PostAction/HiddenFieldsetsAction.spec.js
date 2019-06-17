@@ -47,8 +47,7 @@ describe("HiddenFieldsetsAction", () => {
                     current_transition: create("transition"),
                     is_modal_save_running: false
                 },
-                current_tracker: current_tracker,
-                can_use_hidden_fieldsets: true
+                current_tracker: current_tracker
             },
             getters: {
                 "transitionModal/set_value_action_fields": [float_field],

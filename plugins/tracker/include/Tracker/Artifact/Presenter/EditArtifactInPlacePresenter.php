@@ -132,10 +132,6 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
 
     public function has_hidden_fieldsets(): bool
     {
-        if (! ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions')) {
-            return false;
-        }
-
         return $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($this->artifact);
     }
 }

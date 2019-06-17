@@ -29,7 +29,7 @@
             >
                 <optgroup v-bind:label="unique_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS" data-test="freeze_fields" v-bind:disabled="! frozen_fields_information.valid" v-bind:title="frozen_fields_information.title">{{ frozen_fields_information.option }}</option>
-                    <option v-if="can_use_hidden_fieldsets" v-bind:value="POST_ACTION_TYPE.HIDDEN_FIELDSETS" data-test="hide_fieldsets" v-bind:disabled="! hidden_fieldsets_information.valid" v-bind:title="hidden_fieldsets_information.title">{{ hidden_fieldsets_information.option }}</option>
+                    <option v-bind:value="POST_ACTION_TYPE.HIDDEN_FIELDSETS" data-test="hide_fieldsets" v-bind:disabled="! hidden_fieldsets_information.valid" v-bind:title="hidden_fieldsets_information.title">{{ hidden_fieldsets_information.option }}</option>
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
@@ -80,7 +80,6 @@ export default {
         ...mapGetters("transitionModal", ["post_actions", "set_value_action_fields"]),
         ...mapState("transitionModal", ["is_modal_save_running"]),
         ...mapGetters(["current_workflow_field", "is_workflow_advanced"]),
-        ...mapState(["can_use_hidden_fieldsets"]),
         ...mapState({
             freezable_fields(state) {
                 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
