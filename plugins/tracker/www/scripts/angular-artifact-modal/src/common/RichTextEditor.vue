@@ -18,18 +18,47 @@
   -->
 
 <template>
-    <textarea
-        v-bind:id="id"
-        v-model="content"
-        v-bind:required="required"
-        v-bind:disabled="disabled"
-        class="tlp-textarea"
-        v-bind:rows="rows"
-    ></textarea>
+    <div>
+        <textarea
+            ref="textarea"
+            data-test="textarea"
+            v-bind:id="id"
+            v-model="content"
+            v-bind:required="required"
+            v-bind:disabled="disabled"
+            class="tlp-textarea"
+            v-bind:rows="rows"
+        ></textarea>
+        <p
+            v-if="is_error_shown"
+            key="error"
+            data-test="error"
+            class="tlp-text-danger"
+        > {{ error_message }}</p>
+        <p
+            v-else-if="is_help_shown"
+            key="help"
+            data-test="help"
+            class="tlp-text-muted"
+        >{{ help_message }}</p>
+    </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import CKEDITOR from "ckeditor";
+import { sprintf } from "sprintf-js";
+import prettyKibibytes from "pretty-kibibytes";
+import {
+    buildFileUploadHandler,
+    MaxSizeUploadExceededError,
+    UploadError
+} from "tuleap-core/tuleap/ckeditor/file-upload-handler-factory.js";
+import { isThereAnImageWithDataURI } from "tuleap-core/tuleap/ckeditor/image-urls-finder.js";
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
+import {
+    setIsNotUploadingInCKEditor,
+    setIsUploadingInCKEditor
+} from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 
 export default {
     name: "RichTextEditor",
@@ -54,10 +83,34 @@ export default {
     },
     data() {
         return {
+            error_message: "",
             editor: null
         };
     },
     computed: {
+        ...mapGetters(["first_file_field"]),
+
+        is_upload_possible() {
+            return this.first_file_field !== null;
+        },
+
+        is_html_format() {
+            return this.format === TEXT_FORMAT_HTML;
+        },
+
+        is_error_shown() {
+            return this.is_html_format && this.error_message !== "";
+        },
+
+        is_help_shown() {
+            return this.is_html_format && this.is_upload_possible;
+        },
+
+        help_message() {
+            // Translate attribute does not work with ng-vue out of the box.
+            return this.$gettext("You can drag 'n drop or paste image directly in the editor.");
+        },
+
         content: {
             get() {
                 return this.value;
@@ -67,7 +120,16 @@ export default {
                 this.$emit("input", value);
             }
         },
+
         ckeditor_config() {
+            let additional_options = {};
+            if (this.is_upload_possible) {
+                additional_options = {
+                    extraPlugins: "uploadimage",
+                    uploadUrl: "/api/v1/" + this.first_file_field.file_creation_uri
+                };
+            }
+
             return {
                 toolbar: [
                     ["Bold", "Italic", "Underline"],
@@ -76,7 +138,8 @@ export default {
                     ["Source"]
                 ],
                 height: "100px",
-                readOnly: this.disabled
+                readOnly: this.disabled,
+                ...additional_options
             };
         }
     },
@@ -93,20 +156,22 @@ export default {
         this.destroyCKEditor();
     },
     mounted() {
-        if (this.format === TEXT_FORMAT_HTML) {
+        if (this.is_html_format) {
             this.createCKEditor();
         }
     },
     methods: {
         createCKEditor() {
-            this.editor = CKEDITOR.replace(this.$el, this.ckeditor_config);
+            this.editor = CKEDITOR.replace(this.$refs.textarea, this.ckeditor_config);
             this.editor.on("instanceReady", this.onInstanceReady);
         },
+
         destroyCKEditor() {
             if (this.editor) {
                 this.editor.destroy();
             }
         },
+
         onInstanceReady() {
             this.editor.on("change", this.onChange);
 
@@ -118,7 +183,14 @@ export default {
                     });
                 }
             });
+
+            const cancelEvent = event => event.cancel();
+            this.editor.on("notificationShow", cancelEvent);
+            this.editor.on("notificationUpdate", cancelEvent);
+
+            this.setupImageUpload();
         },
+
         onChange() {
             const new_content = this.editor.getData();
 
@@ -126,6 +198,55 @@ export default {
             if (this.content !== new_content) {
                 this.$emit("input", new_content);
             }
+        },
+
+        setupImageUpload() {
+            if (!this.is_upload_possible) {
+                this.disablePasteOfImages();
+                return;
+            }
+
+            const onStartCallback = () => {
+                this.error_message = "";
+                setIsUploadingInCKEditor();
+            };
+            const onErrorCallback = error => {
+                // We use an error message here because CKEditor's notification pop-up
+                // appears behind the artifact modal, due to its very large z-index value
+                if (error instanceof MaxSizeUploadExceededError) {
+                    this.error_message = sprintf(
+                        this.$gettext("You are not allowed to upload files bigger than %s."),
+                        prettyKibibytes(error.max_size_upload)
+                    );
+                } else if (error instanceof UploadError) {
+                    this.error_message = this.$gettext("Unable to upload the file");
+                }
+                setIsNotUploadingInCKEditor();
+            };
+            const onSuccessCallback = (id, download_href) => {
+                this.$emit("upload-image", this.first_file_field.field_id, { id, download_href });
+                setIsNotUploadingInCKEditor();
+            };
+
+            const fileUploadRequestHandler = buildFileUploadHandler({
+                ckeditor_instance: this.editor,
+                max_size_upload: this.first_file_field.max_size_upload,
+                onStartCallback,
+                onErrorCallback,
+                onSuccessCallback
+            });
+
+            this.editor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
+        },
+
+        disablePasteOfImages() {
+            this.editor.on("paste", event => {
+                if (isThereAnImageWithDataURI(event.data.dataValue)) {
+                    event.data.dataValue = "";
+                    event.cancel();
+                    this.error_message = this.$gettext("You are not allowed to paste images here");
+                }
+            });
         }
     }
 };

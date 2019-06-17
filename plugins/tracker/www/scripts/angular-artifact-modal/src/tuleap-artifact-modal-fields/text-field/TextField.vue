@@ -38,6 +38,7 @@
             v-bind:disabled="disabled"
             v-bind:required="field.required"
             rows="5"
+            v-on:upload-image="reemit"
             v-model="content"
         />
     </div>
@@ -79,6 +80,11 @@ export default {
         },
         is_required_and_empty() {
             return this.field.required && this.content === "";
+        }
+    },
+    methods: {
+        reemit(...args) {
+            this.$emit("upload-image", ...args);
         }
     }
 };

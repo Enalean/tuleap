@@ -22,6 +22,8 @@ import { validateOpenListFieldValue } from "./tuleap-artifact-modal-fields/open-
 import { formatComputedFieldValue } from "./tuleap-artifact-modal-fields/computed-field/computed-field-value-formatter.js";
 import { formatPermissionFieldValue } from "./tuleap-artifact-modal-fields/permission-field/permission-field-value-formatter.js";
 import { formatLinkFieldValue } from "./tuleap-artifact-modal-fields/link-field/link-field-value-formatter.js";
+import { validateFileField } from "./tuleap-artifact-modal-fields/file-field/file-field-validator.js";
+import { FILE_FIELD, TEXT_FIELD } from "../../constants/fields-constants.js";
 
 export default ValidateService;
 
@@ -29,10 +31,13 @@ ValidateService.$inject = [];
 
 function ValidateService() {
     return {
-        validateArtifactFieldsValues: validateArtifactFieldsValues
+        validateArtifactFieldsValues
     };
 
-    function validateArtifactFieldsValues(field_values, creation_mode) {
+    function validateArtifactFieldsValues(field_values, creation_mode, followup_value_model) {
+        const text_field_value_models = Object.values(field_values).filter(
+            ({ type }) => type === TEXT_FIELD
+        );
         var validated_values = _(field_values)
             .filter(function(field) {
                 return filterFieldPermissions(field, creation_mode);
@@ -47,6 +52,12 @@ function ValidateService() {
                         return validateOpenListFieldValue(field);
                     case "art_link":
                         return formatLinkFieldValue(field);
+                    case FILE_FIELD:
+                        return validateFileField(
+                            field,
+                            text_field_value_models,
+                            followup_value_model
+                        );
                     default:
                         return validateOtherFields(field);
                 }
@@ -66,9 +77,6 @@ function ValidateService() {
 
     function validateOtherFields(field) {
         if (!filterAtLeastOneAttribute(field)) {
-            return;
-        }
-        if (!filterEmptyFileFieldValue(field)) {
             return;
         }
 
@@ -109,14 +117,6 @@ function ValidateService() {
                 break;
         }
         return field;
-    }
-
-    function filterEmptyFileFieldValue(field) {
-        if (field.type !== "file") {
-            return true;
-        }
-
-        return !_.isEmpty(field.value);
     }
 
     function removeUnusedAttributes(field) {

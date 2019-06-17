@@ -44,9 +44,17 @@ export const SELECTBOX_FIELD = "sb";
 export const DATE_FIELD = "date";
 export const INT_FIELD = "int";
 export const FLOAT_FIELD = "float";
+
 export const LIST_BIND_STATIC = "static";
 export const LIST_BIND_UGROUPS = "ugroups";
 export const LIST_BIND_USERS = "users";
+
+export const TEXT_FIELD = "text";
 export const TEXT_FORMAT_TEXT = "text";
 export const TEXT_FORMAT_HTML = "html";
+
 export const FILE_FIELD = "file";
+
+export const FIELD_PERMISSION_READ = "read";
+export const FIELD_PERMISSION_CREATE = "create";
+export const FIELD_PERMISSION_UPDATE = "update";

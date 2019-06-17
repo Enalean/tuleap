@@ -32,6 +32,7 @@
             v-bind:disabled="false"
             v-bind:required="false"
             rows="3"
+            v-on:upload-image="reemit"
             v-model="content"
         />
     </div>
@@ -64,6 +65,11 @@ export default {
             set(new_format) {
                 this.$emit("input", { format: new_format, body: this.content });
             }
+        }
+    },
+    methods: {
+        reemit(...args) {
+            this.$emit("upload-image", ...args);
         }
     }
 };

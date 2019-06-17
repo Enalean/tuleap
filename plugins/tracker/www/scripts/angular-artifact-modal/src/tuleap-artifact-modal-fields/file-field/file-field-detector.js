@@ -30,3 +30,8 @@ export function getAllFileFields(tracker_fields) {
 export function isThereAtLeastOneFileField(tracker_fields) {
     return tracker_fields.some(isEnabledFileField);
 }
+
+export function getFirstFileField(tracker_fields) {
+    const result = tracker_fields.find(isEnabledFileField);
+    return result !== undefined ? result : null;
+}

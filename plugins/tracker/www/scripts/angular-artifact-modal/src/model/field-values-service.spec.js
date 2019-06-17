@@ -863,16 +863,18 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
     });
 
-    describe("Given a tracker containing a file field,", function() {
-        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's value will be returned", function() {
-            var artifact_values = {
+    describe("Given a tracker containing a file field,", () => {
+        it(`and given a map of artifact field values containing that field,
+            when I get the fields' selected values,
+            then a map of objects containing the artifact's value will be returned`, () => {
+            const artifact_values = {
                 103: {
                     field_id: 103,
                     file_descriptions: [{ id: 4 }, { id: 9 }],
                     type: "file"
                 }
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 103,
@@ -883,12 +885,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 103: {
                     field_id: 103,
                     file_descriptions: [{ id: 4 }, { id: 9 }],
                     type: "file",
+                    images_added_by_text_fields: [],
                     temporary_files: [
                         {
                             file: {},
@@ -901,8 +904,10 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
         });
 
-        it("when I get the fields' selected values, then a map of objects containing the fields' id and an empty value array will be returned", function() {
-            var tracker = {
+        it(`when I get the fields' selected values,
+            then a map of objects containing the fields' id
+            and an empty value array will be returned`, () => {
+            const tracker = {
                 fields: [
                     {
                         field_id: 542,
@@ -913,11 +918,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 542: {
                     field_id: 542,
                     type: "file",
+                    images_added_by_text_fields: [],
                     temporary_files: [
                         {
                             file: {},

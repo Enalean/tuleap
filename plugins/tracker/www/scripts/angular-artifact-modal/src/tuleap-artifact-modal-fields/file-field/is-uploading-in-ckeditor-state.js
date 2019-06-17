@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isInCreationMode } from "../modal-creation-mode-state.js";
-import {
-    FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE
-} from "../../../constants/fields-constants.js";
+let is_uploading_in_ckeditor = false;
 
-export function isDisabled(field) {
-    const necessary_permission = isInCreationMode()
-        ? FIELD_PERMISSION_CREATE
-        : FIELD_PERMISSION_UPDATE;
-    return !field.permissions.includes(necessary_permission);
+export function isUploadingInCKEditor() {
+    return is_uploading_in_ckeditor;
+}
+
+export function setIsUploadingInCKEditor() {
+    is_uploading_in_ckeditor = true;
+}
+
+export function setIsNotUploadingInCKEditor() {
+    is_uploading_in_ckeditor = false;
 }

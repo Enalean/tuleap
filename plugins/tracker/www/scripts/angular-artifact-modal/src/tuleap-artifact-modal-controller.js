@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
 import { isDisabled } from "./tuleap-artifact-modal-fields/disabled-field-detector.js";
@@ -25,7 +26,10 @@ import {
     getAllFileFields,
     isThereAtLeastOneFileField
 } from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
-import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
+import {
+    isUploadingInCKEditor,
+    setIsNotUploadingInCKEditor
+} from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 import _ from "lodash";
 
@@ -88,10 +92,12 @@ function ArtifactModalController(
         isDisabled,
         isFollowupCommentFormDisplayed,
         isNewParentAlertShown,
+        isUploadingInCKEditor,
         isThereAtLeastOneFileField: () => isThereAtLeastOneFileField(Object.values(self.values)),
         setupTooltips,
         submit,
         setFieldValue,
+        addToFilesAddedByTextField,
         setFollowupComment,
         toggleFieldset,
         hasHiddenFieldsets,
@@ -101,6 +107,7 @@ function ArtifactModalController(
     function init() {
         setFieldDependenciesWatchers();
 
+        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", setIsNotUploadingInCKEditor);
         TuleapArtifactModalLoading.loading = false;
         self.setupTooltips();
 
@@ -137,13 +144,17 @@ function ArtifactModalController(
     }
 
     function submit() {
+        if (isUploadingInCKEditor()) {
+            return;
+        }
         TuleapArtifactModalLoading.loading = true;
 
         uploadAllFileFields()
             .then(function() {
                 var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(
                     self.values,
-                    isInCreationMode()
+                    isInCreationMode(),
+                    self.new_followup_comment
                 );
 
                 var promise;
@@ -299,6 +310,14 @@ function ArtifactModalController(
         return value => {
             self.values[field_id].value = value;
         };
+    }
+
+    function addToFilesAddedByTextField(field_id, uploaded_file) {
+        const value_model = self.values[field_id];
+        value_model.value = [uploaded_file.id].concat(value_model.value);
+        value_model.images_added_by_text_fields = [uploaded_file].concat(
+            value_model.images_added_by_text_fields
+        );
     }
 
     function setFollowupComment(value) {

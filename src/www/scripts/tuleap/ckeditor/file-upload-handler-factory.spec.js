@@ -21,7 +21,11 @@ import { rewire$post, restore as restoreTLP } from "tlp-fetch";
 import * as TUS from "tus-js-client";
 import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
 import { rewire$getGettextProvider, restore as restoreGettext } from "./gettext-factory.js";
-import { buildFileUploadHandler } from "./file-upload-handler-factory.js";
+import {
+    buildFileUploadHandler,
+    MaxSizeUploadExceededError,
+    UploadError
+} from "./file-upload-handler-factory.js";
 
 describe(`file-upload-handler-factory`, () => {
     let file_upload_event,
@@ -69,29 +73,50 @@ describe(`file-upload-handler-factory`, () => {
     });
 
     describe(`buildFileUploadHandler() - when a fileUploadRequest event is dispatched`, () => {
-        it(`the event will be stopped`, async () => {
-            mockFetchSuccess(post, {
-                return_json: {
-                    id: 71,
-                    download_href: "https://example.com/extenuator"
-                }
+        describe(``, () => {
+            beforeEach(async () => {
+                mockFetchSuccess(post, {
+                    return_json: {
+                        id: 71,
+                        download_href: "https://example.com/extenuator"
+                    }
+                });
+
+                const handler = handlerFactory();
+                await handler(file_upload_event);
             });
 
-            const handler = handlerFactory();
-            await handler(file_upload_event);
-
-            expect(file_upload_event.stop).toHaveBeenCalled();
+            it(`will stop the event`, () => expect(file_upload_event.stop).toHaveBeenCalled());
+            it(`will call the onStartCallback`, () =>
+                expect(options.onStartCallback).toHaveBeenCalled());
         });
 
-        it(`when the file size is above the max upload size,
-                then the loader will show an error`, async () => {
-            options.max_size_upload = 100;
-            loader.file.size = 1024;
+        describe(`when the file size is above the max upload size`, () => {
+            beforeEach(async () => {
+                options.max_size_upload = 100;
+                loader.file.size = 1024;
 
-            const handler = handlerFactory();
-            await handler(file_upload_event);
+                const handler = handlerFactory();
+                await handler(file_upload_event);
+            });
 
-            expect(loader.changeStatus).toHaveBeenCalledWith("error");
+            it(`will call the Error callback with a MaxSizeUploadExceededError`, () => {
+                expect(options.onErrorCallback).toHaveBeenCalled();
+                const [error] = options.onErrorCallback.calls.first().args;
+
+                expect(error instanceof MaxSizeUploadExceededError).toBe(
+                    true,
+                    "Expected error to be a MaxSizeUploadExceededError"
+                );
+                expect(error.loader).toBe(loader, "Expected error.loader to be the file loader");
+                expect(error.max_size_upload).toEqual(
+                    100,
+                    "Expected error.max_size_upload to equal 100"
+                );
+            });
+
+            it(`then the loader will show an error`, () =>
+                expect(loader.changeStatus).toHaveBeenCalledWith("error"));
         });
 
         describe(`when the file size is ok`, () => {
@@ -127,7 +152,7 @@ describe(`file-upload-handler-factory`, () => {
             });
 
             describe(`when the POST endpoint returns an error`, () => {
-                it(`will call the Error callback`, async () => {
+                it(`will call the Error callback with an UploadError`, async () => {
                     post.and.returnValue(Promise.reject({}));
 
                     const handler = handlerFactory();
@@ -136,8 +161,17 @@ describe(`file-upload-handler-factory`, () => {
                         fail("Promise should be rejected on error");
                     } catch (exception) {
                         expect(options.onErrorCallback).toHaveBeenCalled();
+                        const [error] = options.onErrorCallback.calls.first().args;
+
+                        expect(error instanceof UploadError).toBe(
+                            true,
+                            "Expected error to be an UploadError"
+                        );
+                        expect(error.loader).toBe(
+                            loader,
+                            "Expected error.loader to be the file loader"
+                        );
                         expect(loader.changeStatus).toHaveBeenCalledWith("error");
-                        expect(loader.message).toBeDefined();
                     }
                 });
 
@@ -333,6 +367,9 @@ describe(`file-upload-handler-factory`, () => {
                                 fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.message).toEqual("Translated error message");
+                                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                    new UploadError(loader)
+                                );
                             }
                         });
 
@@ -351,6 +388,9 @@ describe(`file-upload-handler-factory`, () => {
                                 fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.message).toEqual("Error 500");
+                                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                    new UploadError(loader)
+                                );
                             }
                         });
 
@@ -366,6 +406,9 @@ describe(`file-upload-handler-factory`, () => {
                                 fail("Promise should be rejected on error");
                             } catch (exception) {
                                 expect(loader.changeStatus).toHaveBeenCalledWith("error");
+                                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                    new UploadError(loader)
+                                );
                             }
                         });
                     });

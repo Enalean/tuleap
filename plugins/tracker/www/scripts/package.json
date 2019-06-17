@@ -23,6 +23,7 @@
     "moment": "^2.18.1",
     "ngVue": "^1.7.6",
     "node-gettext": "^2.0.0",
+    "pretty-kibibytes": "^4.0.4",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.6",
     "sprintf-js": "^1.1.1",

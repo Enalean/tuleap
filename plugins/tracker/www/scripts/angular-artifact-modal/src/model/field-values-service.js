@@ -82,7 +82,7 @@ function TuleapArtifactFieldValuesService($sce) {
                 value_obj = formatForOpenListField(field, artifact_value);
                 break;
             case "file":
-                value_obj = addTemporaryFileToValue(value_obj);
+                value_obj = addPropertiesToFileValueModel(value_obj);
                 value_obj.value = _.pluck(artifact_value.file_descriptions, "id");
                 break;
             case "computed":
@@ -175,7 +175,7 @@ function TuleapArtifactFieldValuesService($sce) {
                 value_obj = defaultForOpenListField(field);
                 break;
             case "file":
-                value_obj = addTemporaryFileToValue(value_obj);
+                value_obj = addPropertiesToFileValueModel(value_obj);
                 value_obj.value = [];
                 break;
             case "computed":
@@ -189,13 +189,14 @@ function TuleapArtifactFieldValuesService($sce) {
         return value_obj;
     }
 
-    function addTemporaryFileToValue(value_obj) {
+    function addPropertiesToFileValueModel(value_obj) {
         value_obj.temporary_files = [
             {
                 file: {},
                 description: ""
             }
         ];
+        value_obj.images_added_by_text_fields = [];
         return value_obj;
     }
 

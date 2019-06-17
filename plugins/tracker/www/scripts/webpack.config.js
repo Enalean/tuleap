@@ -35,6 +35,7 @@ const webpack_config_for_artifact_modal = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.angular_artifact_modal_aliases,
+            webpack_configurator.vue_components_alias,
             {
                 // Those are needed for tests
                 angular$: path.resolve(__dirname, "node_modules/angular"),

@@ -75,9 +75,10 @@ const angular_artifact_modal_aliases = Object.assign(
     angular_artifact_modal_alias,
     angular_tlp_alias,
     ckeditor_mocks_alias,
+    node_streams_alias,
+    tlp_fetch_alias,
     tlp_mocks_alias,
-    tuleap_core_alias,
-    node_streams_alias
+    tuleap_core_alias
 );
 
 function extendAliases(...aliases) {

@@ -25,7 +25,9 @@ import {
 import { rewire$initGettext, restore as restoreGettext } from "./gettext-factory.js";
 import {
     rewire$buildFileUploadHandler,
-    restore as restoreHandlerFactory
+    restore as restoreHandlerFactory,
+    MaxSizeUploadExceededError,
+    UploadError
 } from "./file-upload-handler-factory.js";
 import {
     rewire$addInstance,
@@ -192,16 +194,37 @@ describe(`get-upload-image-options`, () => {
                 });
             });
 
-            it(`when the upload fails, it enables back form submits`, async () => {
+            describe(`when the upload fails`, () => {
                 let triggerError;
-                buildFileUploadHandler.and.callFake(({ onErrorCallback }) => {
-                    triggerError = onErrorCallback;
+                beforeEach(async () => {
+                    buildFileUploadHandler.and.callFake(({ onErrorCallback }) => {
+                        triggerError = onErrorCallback;
+                    });
+
+                    await initiateUploadImage(ckeditor_instance, options, element);
                 });
 
-                await initiateUploadImage(ckeditor_instance, options, element);
-                triggerError();
+                it(`enables back form submits`, () => {
+                    triggerError();
+                    expect(enableFormSubmit).toHaveBeenCalled();
+                });
 
-                expect(enableFormSubmit).toHaveBeenCalled();
+                it(`and the max size has been exceeded,
+                    then it sets the loader error message`, () => {
+                    const loader = {};
+                    const error = new MaxSizeUploadExceededError(300, loader);
+                    triggerError(error);
+
+                    expect(loader.message).toBeDefined();
+                });
+
+                it(`and the upload failed, then it sets the loader error message`, () => {
+                    const loader = {};
+                    const error = new UploadError(loader);
+                    triggerError(error);
+
+                    expect(loader.message).toBeDefined();
+                });
             });
 
             it(`registers the CKEditor instance to clear unused uploaded files`, async () => {

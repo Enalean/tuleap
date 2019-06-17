@@ -53,6 +53,7 @@ import "./tuleap-artifact-modal-fields/computed-field/computed-field-value-forma
 import "./tuleap-artifact-modal-fields/disabled-field-detector.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-field-detector.spec.js";
+import "./tuleap-artifact-modal-fields/file-field/file-field-validator.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.spec.js";
 import "./tuleap-artifact-modal-fields/link-field/link-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/link-field/link-field-service.spec.js";
