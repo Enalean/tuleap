@@ -24,16 +24,19 @@
 require_once __DIR__.'/../www/include/pre.php';
 
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
+use Tuleap\DB\DBFactory;
 
-$application                = new Application();
-$launch_system_check_command = new QueueSystemCheckCommand(EventManager::instance());
+$application                 = new Application();
+$launch_system_check_command = new QueueSystemCheckCommand(EventManager::instance(), DBFactory::getMainTuleapDBConnection());
 $application->add($launch_system_check_command);
 $application->setDefaultCommand($launch_system_check_command->getName(), $is_single_command = true);
 
 $console_output = new ConsoleOutput();
-$console_output->writeln('<fg=yellow;options=bold>This command is deprecated. Please use `/usr/bin/tuleap '.QueueSystemCheckCommand::NAME.'` instead.</>');
+$console_output->writeln('<fg=yellow;options=bold>This command is deprecated. Please use `/usr/bin/tuleap ' .
+    OutputFormatter::escape($launch_system_check_command->getName()) . '` instead.</>');
 
 $application->run(new ArgvInput($_SERVER['argv']), $console_output);
