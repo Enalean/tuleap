@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * Null-object pattern for planning milestones.
  */
-class Planning_NoMilestone implements Planning_Milestone {
+class Planning_NoMilestone implements Planning_Milestone
+{
 
     /**
      * The project where the milestone is defined
@@ -106,7 +106,8 @@ class Planning_NoMilestone implements Planning_Milestone {
         return array();
     }
 
-    public function setAncestors(array $ancestors) {
+    public function setAncestors(array $ancestors)
+    {
     }
 
     public function getStartDate() {
@@ -157,4 +158,15 @@ class Planning_NoMilestone implements Planning_Milestone {
         return null;
     }
 
+    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period)
+    {
+    }
+
+    public function setCapacity($capacity)
+    {
+    }
+
+    public function setRemainingEffort($remaining_effort)
+    {
+    }
 }

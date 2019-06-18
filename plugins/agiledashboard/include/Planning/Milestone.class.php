@@ -125,14 +125,14 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     /**
      * Get the start date of the milestone
      *
-     * @return int the timestamp value of start_date field
+     * @return int|null the timestamp value of start_date field
      */
     public function getStartDate();
 
     /**
      * Get the end date of the milestone
      *
-     * @return int the timestamp value of the duration field
+     * @return int|null the timestamp value of the duration field
      */
     public function getEndDate();
 
@@ -150,7 +150,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     /**
      * Return milestone duration in days
      *
-     * @return float
+     * @return int|null
      */
     public function getDuration();
 
@@ -186,4 +186,8 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
      * @return mixed Tracker_Chart_Data_Burndown | null
      */
     public function getBurndownData(PFUser $user);
+
+    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period);
+    public function setCapacity($capacity);
+    public function setRemainingEffort($remaining_effort);
 }

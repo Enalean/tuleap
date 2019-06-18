@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,8 @@
  * and null
  *
  */
-class Planning_VirtualTopMilestone  implements Planning_Milestone {
+class Planning_VirtualTopMilestone  implements Planning_Milestone
+{
 
     /**
      * The project where the milestone is defined
@@ -59,8 +60,9 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
      * @param Project  $project
      * @param Planning $planning
      */
-    public function __construct(Project $project, Planning $planning) {
-        $this->project = $project;
+    public function __construct(Project $project, Planning $planning)
+    {
+        $this->project  = $project;
         $this->planning = $planning;
     }
 
@@ -139,7 +141,8 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
         return null;
     }
 
-    public function setDuration($duration) {
+    public function setDuration($duration)
+    {
     }
 
     public function getEndDate() {
@@ -184,5 +187,17 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
 
     public function getBurndownData(PFUser $user) {
         return null;
+    }
+
+    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period)
+    {
+    }
+
+    public function setCapacity($capacity)
+    {
+    }
+
+    public function setRemainingEffort($remaining_effort)
+    {
     }
 }

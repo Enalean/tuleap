@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
-class Planning_ArtifactMilestone implements Planning_Milestone {
+class Planning_ArtifactMilestone implements Planning_Milestone
+{
 
     /**
      * The project where the milestone is defined
@@ -74,18 +75,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     private $parent_milestones = array();
 
     /**
-     * The duration before hitting the end date of the milestone.
-     *
-     * @var Int
+     * @var TimePeriodWithoutWeekEnd|null
      */
-     private $duration = null;
-
-    /**
-     * The start date of the milestone
-     *
-     * @var String
-     */
-     private $start_date = null;
+    private $time_period = null;
 
     /**
      * The capacity of the milestone
@@ -253,60 +245,66 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         $this->parent_milestones = $parents;
     }
 
-    public function setStartDate($start_date) {
-        $this->start_date = $start_date;
-        return $this;
+    public function getStartDate()
+    {
+        if ($this->time_period !== null) {
+            return $this->time_period->getStartDate();
+        }
+
+        return null;
     }
 
-    public function getStartDate() {
-        return $this->start_date;
-    }
-
-    public function setDuration($duration) {
-        $this->duration = $duration;
-        return $this;
-    }
-
-    public function getEndDate() {
-        if (! $this->start_date) {
+    public function getEndDate()
+    {
+        if (! $this->getStartDate()) {
             return null;
         }
 
-        if ($this->duration <= 0) {
+        if ($this->getDuration() === null || $this->getDuration() <= 0) {
             return null;
         }
 
-        return $this->getTimePeriod()->getEndDate();
+        if ($this->time_period !== null) {
+            return $this->time_period->getEndDate();
+        }
+
+        return null;
     }
 
-    private function getTimePeriod() {
-        return new TimePeriodWithoutWeekEnd($this->start_date, $this->duration);
+    public function getDaysSinceStart()
+    {
+        if ($this->time_period !== null) {
+            return $this->time_period->getNumberOfDaysSinceStart();
+        }
+
+        return null;
     }
 
-    public function getDaysSinceStart() {
-        return $this->getTimePeriod()->getNumberOfDaysSinceStart();
-    }
+    public function getDaysUntilEnd()
+    {
+        if ($this->time_period !== null) {
+            return $this->time_period->getNumberOfDaysUntilEnd();
+        }
 
-    public function getDaysUntilEnd() {
-        return $this->getTimePeriod()->getNumberOfDaysUntilEnd();
+        return null;
     }
 
     public function getCapacity() {
         return $this->capacity;
     }
 
-    public function setCapacity($capacity) {
+    public function setCapacity($capacity)
+    {
         $this->capacity = $capacity;
-        return $this;
     }
 
     public function getRemainingEffort() {
         return $this->remaining_effort;
     }
 
-    public function setRemainingEffort($remaining_effort) {
+    public function setRemainingEffort($remaining_effort)
+    {
         $this->remaining_effort = $remaining_effort;
-        return $this;
     }
 
     /**
@@ -331,10 +329,15 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     /**
      * @see Planning_Milestone::getDuration()
-     * @return float
+     * @return int|null
      */
-    public function getDuration() {
-        return $this->duration;
+    public function getDuration()
+    {
+        if ($this->time_period !== null) {
+            return $this->time_period->getDuration();
+        }
+
+        return null;
     }
 
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone) {
@@ -375,9 +378,17 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return (bool) $this->has_useable_burndown_field;
     }
 
-    public function getBurndownData(PFUser $user) {
+    public function getBurndownData(PFUser $user)
+    {
         if (! $this->hasBurdownField($user)) {
-            return;
+            return null;
+        }
+
+        $start_date = $this->getStartDate();
+        $duration   = $this->getDuration();
+
+        if ($start_date === null || $duration === null) {
+            return null;
         }
 
         $burndown_field = $this->getArtifact()->getABurndownField($user);
@@ -385,8 +396,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $burndown_field->getBurndownData(
             $this->getArtifact(),
             $user,
-            $this->getStartDate(),
-            $this->getDuration()
+            $start_date,
+            $duration
         );
+    }
+
+    public function setTimePeriod(TimePeriodWithoutWeekEnd $time_period)
+    {
+        $this->time_period = $time_period;
     }
 }
