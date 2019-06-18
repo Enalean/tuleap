@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-class Workflow_Transition_Condition_CommentNotEmpty_Factory
+class Workflow_Transition_Condition_CommentNotEmpty_Factory //phpcs:ignore
 {
     /** @var Workflow_Transition_Condition_CommentNotEmpty_Dao */
     private $dao;
@@ -29,18 +28,35 @@ class Workflow_Transition_Condition_CommentNotEmpty_Factory
         $this->dao = $dao;
     }
 
+    /**
+     * @return Workflow_Transition_Condition_CommentNotEmpty|null
+     */
     public function getCommentNotEmpty(Transition $transition)
     {
-        $row = $this->dao->searchByTransitionId($transition->getId())->getRow();
+        if ($transition->getIdFrom() === '') {
+            return null;
+        }
+
+        $row = $this->dao->searchByTransitionId($transition->getId());
         $is_comment_required = $row && $row['is_comment_required'];
 
         return new Workflow_Transition_Condition_CommentNotEmpty($transition, $this->dao, $is_comment_required);
     }
 
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
+    /**
+     * @return Workflow_Transition_Condition_CommentNotEmpty|null
+     */
+    public function getInstanceFromXML(SimpleXMLElement $xml, Transition $transition)
     {
+        if ($transition->getIdFrom() === '') {
+            return null;
+        }
+
         $xml_attributes      = $xml->attributes();
-        $is_comment_required = (string) $xml_attributes['is_comment_required'];
+        $is_comment_required = false;
+        if (isset($xml_attributes['is_comment_required'])) {
+            $is_comment_required = (string) $xml_attributes['is_comment_required'];
+        }
 
         return new Workflow_Transition_Condition_CommentNotEmpty($transition, $this->dao, $is_comment_required);
     }

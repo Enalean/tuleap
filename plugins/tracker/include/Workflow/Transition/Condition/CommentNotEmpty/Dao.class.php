@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,41 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_Condition_CommentNotEmpty_Dao extends DataAccessObject // phpcs:ignore
+class Workflow_Transition_Condition_CommentNotEmpty_Dao extends \Tuleap\DB\DataAccessObject // phpcs:ignore
 {
 
     public function create($transition_id, $is_comment_required)
     {
-        $transition_id       = $this->da->escapeInt($transition_id);
         $is_comment_required = $is_comment_required ? 1 : 0;
 
         $sql = "REPLACE INTO tracker_workflow_transition_condition_comment_notempty(transition_id, is_comment_required)
-                VALUES ($transition_id, $is_comment_required)";
+                VALUES (?, ?)";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $transition_id, $is_comment_required);
     }
 
     public function searchByTransitionId($transition_id)
     {
-        $transition_id = $this->da->escapeInt($transition_id);
-
-        $sql = "SELECT *
-                FROM tracker_workflow_transition_condition_comment_notempty
-                WHERE transition_id = $transition_id";
-
-        return $this->retrieve($sql);
+        return $this->getDB()->row(
+            'SELECT * FROM tracker_workflow_transition_condition_comment_notempty WHERE transition_id = ?',
+            $transition_id
+        );
     }
 
     public function duplicate($from_transition_id, $to_transition_id)
     {
-        $from_transition_id = $this->da->escapeInt($from_transition_id);
-        $to_transition_id   = $this->da->escapeInt($to_transition_id);
-
         $sql = "INSERT INTO tracker_workflow_transition_condition_comment_notempty (transition_id, is_comment_required)
-                SELECT $to_transition_id, is_comment_required
+                SELECT ?, is_comment_required
                 FROM tracker_workflow_transition_condition_comment_notempty
-                WHERE transition_id = $from_transition_id";
+                WHERE transition_id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $to_transition_id, $from_transition_id);
     }
 }
