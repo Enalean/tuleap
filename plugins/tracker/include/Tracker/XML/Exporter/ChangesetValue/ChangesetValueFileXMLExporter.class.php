@@ -41,11 +41,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
-
-        if (! $this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
-            return;
-        }
-
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml
@@ -64,6 +59,10 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends 
             array($this, 'appendFileToFieldChangeNode'),
             $field_change
         );
+
+        if (! $this->isCurrentChangesetTheLastChangeset($artifact, $changeset_value)) {
+            return;
+        }
 
         array_walk(
             $files,

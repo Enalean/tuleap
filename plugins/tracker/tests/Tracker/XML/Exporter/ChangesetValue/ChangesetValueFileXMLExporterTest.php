@@ -123,11 +123,18 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         $this->assertEqual((string)$field_change->value[1]['ref'], 'fileinfo_456');
     }
 
-    public function itOnlyExportsTheLastChangeset() {
+    public function itDoesNotAppendFileToArtifactNodeForAChangesetThatIsNotTheLastChangeset() {
         $older_changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
         stub($older_changeset_value)->getId()->returns(9722);
         stub($older_changeset_value)->getField()->returns(aFileField()->build());
-        stub($this->artifact)->getLastChangeset()->returns($older_changeset_value);
+
+        $last_changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
+        stub($last_changeset_value)->getField()->returns($this->field);
+        stub($last_changeset_value)->getId()->returns(575);
+
+        $changeset     = mock('Tracker_Artifact_Changeset');
+        stub($changeset)->getValue()->returns($last_changeset_value);
+        stub($this->artifact)->getLastChangeset()->returns($changeset);
 
         $this->exporter->export(
             $this->artifact_xml,
@@ -137,6 +144,17 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
         );
 
         $this->assertEqual(count($this->artifact_xml->file), 0);
+    }
+
+    public function itAppendsFileToArtifactNodeForTheLastChangeset() {
+        $this->exporter->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            $this->changeset_value
+        );
+
+        $this->assertEqual(count($this->artifact_xml->file), 2);
     }
 
     public function itExportsFilePathInArchiveContext() {
