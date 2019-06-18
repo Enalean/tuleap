@@ -87,6 +87,7 @@
                         <comments/>
                         <field_change field_name="details" type="text">
                             <value format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>
+                            <p><img src="/plugins/tracker/attachments/133-attachment-that-will-be-deleted-later.gif" /></p>
 ]]></value>
                         </field_change>
                         <field_change field_name="implementation_details" type="text">
@@ -107,6 +108,9 @@
                                 <body format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>]]></body>
                             </comment>
                         </comments>
+                        <field_change field_name="attachment" type="file">
+                            <value ref="fileinfo_132"/>
+                        </field_change>
                     </changeset>
                     <changeset>
                         <submitted_by format="username">rest_api_tester_1</submitted_by>
@@ -118,6 +122,9 @@
                                 <body format="text"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>]]></body>
                             </comment>
                         </comments>
+                        <field_change field_name="attachment" type="file">
+                            <value ref="fileinfo_132"/>
+                        </field_change>
                     </changeset>
                     <file id="fileinfo_132">
                         <filename><![CDATA[blank.gif]]></filename>

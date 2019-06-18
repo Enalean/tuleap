@@ -36,6 +36,7 @@ class XMLImportAndFileURLsTest extends TrackerBase
         $html = $this->getOriginalSubmissionContent($artifact);
         $this->assertStringNotContainsString('/plugins/tracker/attachments/132-blank.gif', $html);
         $this->assertStringContainsString($file_url, $html);
+        $this->assertStringContainsString('/plugins/tracker/attachments/133-attachment-that-will-be-deleted-later.gif', $html);
 
         $text = $this->getImplementationDetailsContent($artifact);
         $this->assertStringContainsString('/plugins/tracker/attachments/132-blank.gif', $text);
