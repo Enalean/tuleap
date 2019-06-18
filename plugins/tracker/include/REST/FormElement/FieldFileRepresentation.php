@@ -31,6 +31,11 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
      */
     public $file_creation_uri;
 
+    /**
+     * @var int
+     */
+    public $max_size_upload;
+
     public function build(Tracker_FormElement $form_element, $type, array $permissions)
     {
         if (! $form_element instanceof Tracker_FormElement_Field_File) {
@@ -39,5 +44,6 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
 
         parent::build($form_element, $type, $permissions);
         $this->file_creation_uri = TrackerFieldsResource::ROUTE .'/'. (int) $form_element->getId() .'/files';
+        $this->max_size_upload = \ForgeConfig::get('sys_max_size_upload');
     }
 }
