@@ -19,7 +19,6 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 const project_id = 102;
@@ -49,20 +48,20 @@ describe("Given a release widget", () => {
         getPersonalWidgetInstance(store_options);
     });
 
-    it("When there are no errors, then roadmapSection will be displayed", () => {
+    it("When there are no errors, then the widget content will be displayed", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(RoadmapSection)).toBeTruthy();
+        expect(wrapper.contains("[data-test=widget-content]")).toBeTruthy();
         expect(wrapper.contains("[data-test=show-error-message]")).toBeFalsy();
         expect(wrapper.contains("[data-test=is-loading]")).toBeFalsy();
     });
 
-    it("When there is an error, then roadmapSection will not be displayed", () => {
+    it("When there is an error, then the widget content will not be displayed", () => {
         store_options.getters.has_rest_error = true;
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=show-error-message]")).toBeTruthy();
-        expect(wrapper.contains(RoadmapSection)).toBeFalsy();
+        expect(wrapper.contains("[data-test=widget-content]")).toBeFalsy();
         expect(wrapper.contains("[data-test=is-loading]")).toBeFalsy();
     });
 
@@ -71,7 +70,7 @@ describe("Given a release widget", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=is-loading]")).toBeTruthy();
-        expect(wrapper.contains(RoadmapSection)).toBeFalsy();
+        expect(wrapper.contains("[data-test=widget-content]")).toBeFalsy();
         expect(wrapper.contains("[data-test=show-error-message]")).toBeFalsy();
     });
 });

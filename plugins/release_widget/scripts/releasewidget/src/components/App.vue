@@ -24,17 +24,23 @@
             {{ error }}
         </div>
         <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
-        <div v-else><roadmap-section/></div>
+        <div v-else>
+            <div class="project-release-widget-content" data-test="widget-content">
+                <roadmap-section/>
+                <whats-hot-section/>
+            </div>
+        </div>
     </section>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
+import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
 
 export default {
     name: "App",
-    components: { RoadmapSection },
+    components: { WhatsHotSection, RoadmapSection },
     props: {
         projectId: Number
     },
