@@ -1767,51 +1767,6 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $this->displayFooter($layout);
     }
 
-    public function updateArtifactsMasschange(
-        $submitter,
-        $masschange_aids,
-        $fields_data,
-        $comment,
-        $send_notifications,
-        $comment_format
-    ) {
-        $fields_data['request_method_called'] = 'artifact-masschange';
-
-        $this->augmentDataFromRequest($fields_data);
-
-        unset($fields_data['request_method_called']);
-
-        $not_updated_aids = array();
-        foreach ( $masschange_aids as $aid ) {
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid);
-            if ( !$artifact ) {
-                $not_updated_aids[] = $aid;
-                continue;
-            }
-
-            try {
-                $artifact->createNewChangeset($fields_data, $comment, $submitter, $send_notifications, $comment_format);
-            } catch (Tracker_NoChangeException $e) {
-                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $not_updated_aids[] = $aid;
-                continue;
-            } catch (Tracker_Exception $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                $not_updated_aids[] = $aid;
-                continue;
-            }
-        }
-        if ( !empty($not_updated_aids) ) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_failed', implode(', ', $not_updated_aids)));
-            return false;
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_success'));
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'updated_aid', implode(', ', $masschange_aids)));
-            return true;
-        }
-    }
-
     protected function editOptions($request) {
         $old_item_name = $this->getItemName();
         $old_name      = $this->getName();

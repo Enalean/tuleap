@@ -96,13 +96,15 @@ tuleap.tracker.RuleNode = Class.create({
             tuleap.tracker.fields.get(this.field).updateSelectedState(selected_sources);
         }
 
+        const unchanged_value = "-1";
         //for each targets of this field
         $H(this.targets).each(function(target) {
             var target_field_id = target.key;
             var transitions = target.value;
 
             //retrieve options of the target
-            var target_options = tuleap.tracker.fields.get(target_field_id).options;
+            const target_field = tuleap.tracker.fields.get(target_field_id);
+            var target_options = target_field.options;
 
             //Build the new options accordingly to the rules
             var new_target_options = {};
@@ -114,7 +116,15 @@ tuleap.tracker.RuleNode = Class.create({
                         );
                     });
                 }
+
+                if (selected_value === unchanged_value) {
+                    new_target_options[unchanged_value] = new Option(
+                        unchanged_value,
+                        unchanged_value
+                    );
+                }
             });
+
             //Force field to new options
             tuleap.tracker.fields.get(target_field_id).force(new_target_options);
 
