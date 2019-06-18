@@ -24,7 +24,7 @@
                 <input
                     type="checkbox"
                     data-test="delete-associated-wiki-page-checkbox"
-                    v-on:input="$emit('input', { delete_associated_wiki_page: $event.target.checked })"
+                    v-on:click="processInput"
                 >
                 <span v-translate>Propagate deletion to wiki service</span>
             </label>
@@ -33,32 +33,59 @@
                 <span v-translate>Please note that if you check the option above, the referenced wiki page will no longer exist in the wiki service too.</span>
             </p>
         </div>
-        <div class="tlp-alert-warning">
+        <div
+            class="tlp-alert-warning"
+            v-if="is_option_checked && wikiPageReferencers.length > 0"
+            data-test="delete-associated-wiki-page-warning-message"
+        >
             {{ wiki_deletion_warning }}
+            <ul>
+                <li v-for="referencer in wikiPageReferencers" v-bind:key="referencer.id">
+                    <a v-bind:href="getWikiPageUrl(referencer)" data-test="wiki-page-referencer-link">{{ referencer.path }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
-import { TYPE_WIKI } from "../../../../constants.js";
 
 export default {
     props: {
         item: Object,
-        model: Object
+        model: Object,
+        wikiPageReferencers: Array
+    },
+    data() {
+        return {
+            is_option_checked: false
+        };
     },
     computed: {
-        is_item_a_wiki() {
-            return this.item.type === TYPE_WIKI;
-        },
+        ...mapState(["project_id"]),
         wiki_deletion_warning() {
             return sprintf(
                 this.$gettext(
-                    'You should also be aware that the other wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service.'
+                    'You should also be aware that the following wiki documents referencing page "%s" will no longer be valid if you choose to propagate the deletion to the wiki service:'
                 ),
                 this.item.wiki_properties.page_name
             );
+        }
+    },
+    methods: {
+        processInput($event) {
+            const is_checked = $event.target.checked;
+
+            this.$emit("input", { delete_associated_wiki_page: is_checked });
+
+            this.is_option_checked = is_checked;
+        },
+        getWikiPageUrl(referencer) {
+            return `/plugins/docman/?group_id=${encodeURIComponent(
+                this.project_id
+            )}&action=show&id=${encodeURIComponent(referencer.id)}`;
         }
     }
 };

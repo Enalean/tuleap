@@ -45,7 +45,8 @@ export {
     deleteEmbeddedFile,
     deleteWiki,
     deleteEmptyDocument,
-    deleteFolder
+    deleteFolder,
+    getItemsReferencingSameWikiPage
 };
 
 async function getProject(project_id) {
@@ -296,4 +297,11 @@ function deleteFolder(item) {
 function deleteEmptyDocument(item) {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_empty_documents/${escaped_item_id}`);
+}
+
+async function getItemsReferencingSameWikiPage(page_id) {
+    const escaped_page_id = encodeURIComponent(page_id);
+    const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
+
+    return response.json();
 }

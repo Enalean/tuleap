@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,24 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'headers';
-@import 'icons';
-@import 'folder-content';
-@import 'new-document';
-@import 'upload';
-@import 'notifications';
-@import 'switch-to-docman';
-@import 'quicklook';
-@import 'update-document';
-@import 'confirm-deletion-modal';
-@import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
-.document-app {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+export function buildItemPath(item, parents) {
+    const path = parents.reduce((path, parent) => {
+        path += `/${parent.title}`;
 
-    > .breadcrumb {
-        flex: 0 0 auto;
-    }
+        return path;
+    }, "");
+
+    return {
+        path: path + `/${item.item_name}`,
+        id: item.item_id
+    };
 }

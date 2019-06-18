@@ -35,7 +35,8 @@ import {
     updateEmbeddedFileFromModal,
     updateWikiFromModal,
     updateLinkFromModal,
-    deleteItem
+    deleteItem,
+    getWikisReferencingSameWikiPage
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -63,7 +64,9 @@ import {
     rewire$deleteEmbeddedFile,
     rewire$deleteWiki,
     rewire$deleteFolder,
-    rewire$deleteEmptyDocument
+    rewire$deleteEmptyDocument,
+    rewire$getParents,
+    rewire$getItemsReferencingSameWikiPage
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1311,6 +1314,90 @@ describe("Store actions", () => {
                 item_to_delete
             );
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
+        });
+    });
+
+    describe("getWikisReferencingSameWikiPage()", () => {
+        let getItemsReferencingSameWikiPage,
+            getParents,
+            context = {};
+
+        beforeEach(() => {
+            getItemsReferencingSameWikiPage = jasmine.createSpy("getItemsReferencingSameWikiPage");
+            rewire$getItemsReferencingSameWikiPage(getItemsReferencingSameWikiPage);
+
+            getParents = jasmine.createSpy("getParents");
+            rewire$getParents(getParents);
+        });
+
+        it("it should return a collection of the items referencing the same wiki page", async () => {
+            const wiki_1 = {
+                item_name: "wiki 1",
+                item_id: 1
+            };
+
+            const wiki_2 = {
+                item_name: "wiki 2",
+                item_id: 2
+            };
+
+            getItemsReferencingSameWikiPage.and.returnValue([wiki_1, wiki_2]);
+
+            getParents.withArgs(wiki_1.item_id).and.returnValue(
+                Promise.resolve([
+                    {
+                        title: "Project documentation"
+                    }
+                ])
+            );
+
+            getParents.withArgs(wiki_2.item_id).and.returnValue(
+                Promise.resolve([
+                    {
+                        title: "Project documentation"
+                    },
+                    {
+                        title: "Folder 1"
+                    }
+                ])
+            );
+
+            const target_wiki = {
+                title: "wiki 3",
+                wiki_properties: {
+                    page_name: "A wiki page",
+                    page_id: 123
+                }
+            };
+
+            const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
+
+            expect(referencers).toEqual([
+                {
+                    path: "/Project documentation/wiki 1",
+                    id: 1
+                },
+                {
+                    path: "/Project documentation/Folder 1/wiki 2",
+                    id: 2
+                }
+            ]);
+        });
+
+        it("it should return null if there is a rest exception", async () => {
+            getParents.and.returnValue(Promise.reject());
+
+            const target_wiki = {
+                title: "wiki 3",
+                wiki_properties: {
+                    page_name: "A wiki page",
+                    page_id: 123
+                }
+            };
+
+            const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
+
+            expect(referencers).toEqual(null);
         });
     });
 });
