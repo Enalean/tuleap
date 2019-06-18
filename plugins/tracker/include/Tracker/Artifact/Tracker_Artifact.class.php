@@ -1067,7 +1067,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory(), $this->getWorkflowUpdateChecker());
         $creator      = $this->getNewChangesetCreator($validator);
 
-        return $creator->create($this, $fields_data, (string) $comment, $submitter, (int) $submitted_on, (bool) $send_notification, (string) $comment_format);
+        return $creator->create(
+            $this,
+            $fields_data,
+            (string) $comment,
+            $submitter,
+            (int) $submitted_on,
+            (bool) $send_notification,
+            (string) $comment_format,
+            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping()
+        );
     }
 
     public function createNewChangesetWhitoutRequiredValidation(
@@ -1082,7 +1091,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $creator      = $this->getNewChangesetCreator($validator);
 
         return $creator->create(
-            $this, $fields_data, (string) $comment, $submitter, (int) $submitted_on, (bool) $send_notification, (string) $comment_format
+            $this,
+            $fields_data,
+            (string) $comment,
+            $submitter,
+            (int) $submitted_on,
+            (bool) $send_notification,
+            (string) $comment_format,
+            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping()
         );
     }
 

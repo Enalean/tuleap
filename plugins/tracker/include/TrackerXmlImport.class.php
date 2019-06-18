@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
@@ -258,6 +259,7 @@ class TrackerXmlImport
         $created_trackers_mapping = array();
         $created_trackers_objects = array();
         $artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $url_mapping              = new CreatedFileURLMapping();
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
 
@@ -282,6 +284,7 @@ class TrackerXmlImport
             $extraction_path,
             $xml_mapping,
             $artifacts_id_mapping,
+            $url_mapping,
             $created_artifacts,
             $configuration
         );
@@ -470,13 +473,6 @@ class TrackerXmlImport
     }
 
     /**
-     * @param array $xml_trackers
-     * @param array $created_trackers_objects
-     * @param $extraction_path
-     * @param TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping
-     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
-     * @param array $created_artifacts
-     * @param ImportConfig $configuration
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
     private function importChangesets(
@@ -485,6 +481,7 @@ class TrackerXmlImport
         $extraction_path,
         TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
+        CreatedFileURLMapping $url_mapping,
         array $created_artifacts,
         ImportConfig $configuration
     ) {
@@ -496,8 +493,10 @@ class TrackerXmlImport
                     $extraction_path,
                     $xml_mapping,
                     $artifacts_id_mapping,
+                    $url_mapping,
                     $created_artifacts[$xml_tracker_id],
-                    $configuration);
+                    $configuration
+                );
             }
         }
     }

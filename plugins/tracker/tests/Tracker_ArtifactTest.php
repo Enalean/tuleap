@@ -23,14 +23,6 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 
 require_once __DIR__ . '/bootstrap.php';
 
-//phpcs:ignoreFile
-class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends Workflow {
-    function before(&$fields_data, $submitter, $artifact) {
-        $fields_data[102] = '456';
-        return parent::before($fields_data, $submitter, $artifact);
-    }
-}
-
 class Tracker_ArtifactTest extends TuleapTestCase
 {
     function setUp() {
@@ -212,7 +204,16 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory)
         );
 
-        $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
+        $creator->create(
+            $artifact,
+            $fields_data,
+            $comment,
+            $user,
+            $submitted_on,
+            $send_notification,
+            $comment_format,
+            \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+        );
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
@@ -300,6 +301,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
 
 class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 {
+
     function testCreateNewChangeset() {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
@@ -496,6 +498,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        assert($artifact instanceof Tracker_Artifact);
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
         $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
@@ -511,8 +514,21 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
         $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
 
-        $workflow = Mockery::spy(MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields::class);
+        $workflow = Mockery::mock(Workflow::class);
         $workflow->shouldReceive('validate')->andReturns(true);
+        $workflow->shouldReceive('before')->with(
+            Mockery::on(
+                static function (&$fields_data) : bool {
+                    if ($fields_data !== [101 => '123']) {
+                        return false;
+                    }
+                    $fields_data[102] = '456';
+                    return true;
+                }
+            ),
+            $user,
+            $artifact
+        )->once();
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         $art_factory->shouldReceive('save')->never();
@@ -527,7 +543,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
             101 => '123',
             102 => '456'
         );
-        stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow, $factory)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
+        stub($workflow)->checkGlobalRules($updated_fields_data_by_workflow)->once()->throws(new Tracker_Workflow_GlobalRulesViolationException());
 
         $this->expectException('Tracker_Exception');
         $artifact->createNewChangeset($fields_data, $comment, $user);
@@ -741,6 +757,10 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
 
 class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     private $changeset_dao;
+    /**
+     * @var Tracker_Artifact_Changeset_NewChangesetCreator
+     */
+    private $creator;
 
     public function setUp() {
         parent::setUp();
@@ -809,7 +829,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $this->submitter,
             $this->submitted_on,
             false,
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
         );
     }
 
@@ -827,7 +848,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $this->submitter,
             $this->submitted_on,
             false,
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
         );
     }
 }

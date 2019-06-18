@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 /**
@@ -80,7 +81,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
         array $fields_data,
         PFUser $user,
         $submitted_on,
-        $send_notification
+        $send_notification,
+        CreatedFileURLMapping $url_mapping
     ) {
         if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
             return;
@@ -91,7 +93,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
             $fields_data,
             $user,
             $submitted_on,
-            $send_notification
+            $send_notification,
+            $url_mapping
         );
     }
 
@@ -104,9 +107,10 @@ class Tracker_ArtifactCreator //phpcs:ignore
         array $fields_data,
         PFUser $user,
         $submitted_on,
-        $send_notification
+        $send_notification,
+        CreatedFileURLMapping $url_mapping
     ) {
-        $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on);
+        $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on, $url_mapping);
         if (! $changeset_id) {
             return;
         }
@@ -148,7 +152,15 @@ class Tracker_ArtifactCreator //phpcs:ignore
             return false;
         }
 
-        if (! $this->createFirstChangesetNoValidation($artifact, $fields_data, $user, $submitted_on, $send_notification)) {
+        $url_mapping = new CreatedFileURLMapping();
+        if (! $this->createFirstChangesetNoValidation(
+            $artifact,
+            $fields_data,
+            $user,
+            $submitted_on,
+            $send_notification,
+            $url_mapping
+        )) {
             $this->revertBareArtifactInsertion($artifact);
             return false;
         }

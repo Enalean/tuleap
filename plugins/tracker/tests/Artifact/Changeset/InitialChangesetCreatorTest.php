@@ -56,6 +56,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
         $fields_validator = mock('Tracker_Artifact_Changeset_InitialChangesetFieldsValidator');
         stub($fields_validator)->validate()->returns(true);
 
+        $this->url_mapping = Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class);
+
         $this->creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
             new FieldsToBeSavedInSpecificOrderRetriever($this->factory),
@@ -83,7 +85,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
 
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails()
@@ -93,7 +95,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
 
         expect($this->workflow)->after()->never();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
     public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails()
@@ -104,7 +106,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
 
         expect($this->workflow)->after()->never();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
     public function itDoesNotCreateTheChangesetIfTheWorkflowValidationFailed()
@@ -119,7 +121,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tr
         expect($this->artifact_factory)->save()->never();
         expect($this->workflow)->after()->never();
 
-        $creation = $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $creation = $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
 
         $this->assertFalse($creation);
     }
@@ -151,7 +153,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         expect($this->field)->saveNewChangeset('*', '*', '*', 'default value', '*', '*', '*', '*')->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
     public function itIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit() {
@@ -162,7 +164,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*', '*')->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 
     public function itBypassPermsWhenWorkflowBypassPerms() {
@@ -174,6 +176,6 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_DefaultValueTest extend
 
         expect($this->field)->saveNewChangeset('*', '*', '*', 'value', '*', '*', '*', '*')->once();
 
-        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+        $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on, $this->url_mapping);
     }
 }

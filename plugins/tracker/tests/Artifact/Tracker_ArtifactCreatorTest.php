@@ -168,7 +168,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
                 }),
                 $this->fields_data,
                 $this->user,
-                $this->submitted_on
+                $this->submitted_on,
+                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )
             ->once();
 

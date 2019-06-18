@@ -86,7 +86,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         PFUser $submitter,
         int $submitted_on,
         bool $send_notification,
-        string $comment_format
+        string $comment_format,
+        CreatedFileURLMapping $url_mapping
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
@@ -124,12 +125,27 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 throw new Tracker_ChangesetNotCreatedException();
             }
 
-            if (! $this->storeComment($artifact, $comment, $submitter, $submitted_on, $comment_format, $changeset_id)) {
+            $this->storeFieldsValues(
+                $artifact,
+                $previous_changeset,
+                $fields_data,
+                $submitter,
+                $changeset_id,
+                $url_mapping
+            );
+
+            if (! $this->storeComment(
+                $artifact,
+                $comment,
+                $submitter,
+                $submitted_on,
+                $comment_format,
+                $changeset_id,
+                $url_mapping
+            )) {
                 $this->changeset_dao->rollBack();
                 throw new Tracker_CommentNotStoredException();
             }
-
-            $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
 
             $new_changeset = new Tracker_Artifact_Changeset(
                 $changeset_id,
@@ -204,9 +220,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $previous_changeset,
         array $fields_data,
         PFUser $submitter,
-        $changeset_id
+        $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): bool {
-        $url_mapping = new CreatedFileURLMapping();
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             if (! $this->saveNewChangesetForField(
                 $field,
@@ -238,9 +254,15 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         PFUser $submitter,
         $submitted_on,
         $comment_format,
-        $changeset_id
+        $changeset_id,
+        CreatedFileURLMapping $url_mapping
     ): bool {
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
+
+        if ($comment_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
+            $comment     = $substitutor->substituteURLsInHTML($comment, $url_mapping);
+        }
 
         $comment_added = $this->changeset_comment_dao->createNewVersion(
             $changeset_id,

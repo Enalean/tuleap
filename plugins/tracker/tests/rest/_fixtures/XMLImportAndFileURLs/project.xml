@@ -86,22 +86,44 @@
                         <submitted_on format="ISO8601">2019-06-11T11:26:48+02:00</submitted_on>
                         <comments/>
                         <field_change field_name="details" type="text">
-                            <value format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-erreurs.jpeg" /></p>
+                            <value format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>
 ]]></value>
                         </field_change>
                         <field_change field_name="implementation_details" type="text">
-                            <value format="text"><![CDATA[<p><img src="/plugins/tracker/attachments/132-erreurs.jpeg" /></p>
+                            <value format="text"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>
 ]]></value>
                         </field_change>
                         <field_change field_name="attachment" type="file">
                             <value ref="fileinfo_132"/>
                         </field_change>
                     </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2019-06-12T11:26:48+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2019-06-12T11:26:48+02:00</submitted_on>
+                                <body format="html"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>]]></body>
+                            </comment>
+                        </comments>
+                    </changeset>
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2019-06-13T11:26:48+02:00</submitted_on>
+                        <comments>
+                            <comment>
+                                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                                <submitted_on format="ISO8601">2019-06-13T11:26:48+02:00</submitted_on>
+                                <body format="text"><![CDATA[<p><img src="/plugins/tracker/attachments/132-blank.gif" /></p>]]></body>
+                            </comment>
+                        </comments>
+                    </changeset>
                     <file id="fileinfo_132">
-                        <filename><![CDATA[erreurs.jpeg]]></filename>
+                        <filename><![CDATA[blank.gif]]></filename>
                         <path>data/Artifact132</path>
-                        <filesize>0</filesize>
-                        <filetype>image/jpeg</filetype>
+                        <filesize>35</filesize>
+                        <filetype>image/gif</filetype>
                         <description><![CDATA[]]></description>
                     </file>
                 </artifact>
