@@ -36,7 +36,7 @@
         <div class="document-quick-look-image-overlay">
             <i class="fa fa-ban"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
-                You are not allowed to update this file
+                You are not allowed to upload a new version of this file
             </span>
         </div>
         <img class="document-quick-look-image" v-bind:src="currently_previewed_item.file_properties.download_href" v-bind:alt="currently_previewed_item.title">
@@ -83,7 +83,7 @@
               class="document-quick-look-dropzone-text"
               v-translate
         >
-            You are not allowed to update this file
+            You are not allowed to upload a new version of this file
         </span>
     </div>
 </template>

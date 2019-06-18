@@ -88,14 +88,29 @@ msgstr "Copier la table d'approbation précedente."
 msgid "Corrupted"
 msgstr "Corrompu"
 
+msgid "Create a new embedded file version"
+msgstr "Créer une nouvelle version de fichier embarqué"
+
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
+
+msgid "Create a new file version"
+msgstr "Créer une nouvelle version de fichier"
+
+msgid "Create a new link version"
+msgstr "Créer une nouvelle version de lien"
+
+msgid "Create a new wiki page version"
+msgstr "Créer une nouvelle version de page wiki"
 
 msgid "Create document"
 msgstr "Créer le document"
 
 msgid "Create folder"
 msgstr "Créer le dossier"
+
+msgid "Create new version"
+msgstr "Créer une nouvelle version"
 
 msgid "Creation date"
 msgstr "Date de création"
@@ -213,6 +228,10 @@ msgstr "Lien"
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
 
+msgid "Modal \"create a new version\" for documents of type \"empty\""
+msgstr ""
+"Modale \"créer une nouvelle version\" pour les documents de type \"vide\""
+
 msgid "My content..."
 msgstr "Mon contenu..."
 
@@ -322,17 +341,17 @@ msgstr "Recommencer le cycle d'approbation."
 
 msgid ""
 "Set the read and write permissions of a document in the document creation "
-"and update modals"
+"and \"update properties\" modals"
 msgstr ""
 "Configurer les permissions de lecture et d'écriture d'un document dans les "
-"modales de création et de mise à jour de documents"
+"modales de création et de mise à jour des propriétés de documents"
 
 msgid ""
 "Set the values of custom document properties in the document creation and "
-"update modals"
+"\"update properties\" modals"
 msgstr ""
 "Configurer les valeurs des propriétés personnalisées dans les modales de "
-"création et de mise à jour de documents"
+"création et de mise à jour des propriétés de documents"
 
 msgid "Share the preview url of a document"
 msgstr "Partager l'url de prévisualisation d'un document"
@@ -401,24 +420,6 @@ msgstr "Titre"
 msgid "URL"
 msgstr "URL"
 
-msgid "Update"
-msgstr "Mettre à jour"
-
-msgid "Update embedded file"
-msgstr "Mettre à jour un fichier embarqué"
-
-msgid "Update file"
-msgstr "Mettre à jour"
-
-msgid "Update link"
-msgstr "Mettre à jour un lien"
-
-msgid "Update modal for documents of type \"empty\""
-msgstr "Modale de mise à jour des documents de type \"vide\""
-
-msgid "Update wiki page"
-msgstr "Mettre à jour la page wiki"
-
 msgid "Upload error"
 msgstr "Erreur de téléversement"
 
@@ -458,8 +459,9 @@ msgstr[1] ""
 "Vous n'êtes pas autorisés à glisser-déposer plus de %{ nb } fichiers à la "
 "fois."
 
-msgid "You are not allowed to update this file"
-msgstr "Vous n'êtes pas autorisé à mettre à jour ce fichier"
+msgid "You are not allowed to upload a new version of this file"
+msgstr ""
+"Vous n'êtes pas autorisé à téléverser une nouvelle version de ce fichier"
 
 msgid "You are not allowed to upload files bigger than %s."
 msgstr ""

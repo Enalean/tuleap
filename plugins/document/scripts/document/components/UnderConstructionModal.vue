@@ -33,9 +33,9 @@
             </p>
             <ul>
                 <li v-translate>Cut / Copy / Paste documents</li>
-                <li v-translate>Update modal for documents of type "empty"</li>
-                <li v-translate>Set the values of custom document properties in the document creation and update modals</li>
-                <li v-translate>Set the read and write permissions of a document in the document creation and update modals</li>
+                <li v-translate>Modal "create a new version" for documents of type "empty"</li>
+                <li v-translate>Set the values of custom document properties in the document creation and "update properties" modals</li>
+                <li v-translate>Set the read and write permissions of a document in the document creation and "update properties" modals</li>
                 <li v-translate>Share the preview url of a document</li>
             </ul>
             <p v-translate>

@@ -354,7 +354,7 @@ export default {
             }
 
             try {
-                await this.$store.dispatch("updateFile", [dropzone_item, file]);
+                await this.$store.dispatch("createNewFileVersion", [dropzone_item, file]);
             } catch (error) {
                 this.error_modal_shown = this.CREATION_ERROR;
                 this.error_modal_reasons.push({ filename: file.name, message: error });

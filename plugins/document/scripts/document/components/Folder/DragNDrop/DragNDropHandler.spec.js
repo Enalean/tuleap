@@ -182,7 +182,7 @@ describe("DragNDropHandler", () => {
 
                 await wrapper.vm.ondrop(drop_event);
 
-                expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
+                expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.EDITION_LOCKED);
             });
 
@@ -205,7 +205,7 @@ describe("DragNDropHandler", () => {
 
                 await wrapper.vm.ondrop(drop_event);
 
-                expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
+                expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DOCUMENT_NEEDS_APPROVAL);
             });
 
@@ -228,7 +228,7 @@ describe("DragNDropHandler", () => {
 
                 await wrapper.vm.ondrop(drop_event);
 
-                expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
+                expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.MAX_SIZE_ERROR);
             });
 
@@ -251,7 +251,7 @@ describe("DragNDropHandler", () => {
 
                 await wrapper.vm.ondrop(drop_event);
 
-                expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
+                expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.CREATION_ERROR);
             });
         });
@@ -353,7 +353,10 @@ describe("DragNDropHandler", () => {
             await wrapper.vm.ondrop(drop_event);
 
             expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
-            expect(store.dispatch).toHaveBeenCalledWith("updateFile", [target_file, file1]);
+            expect(store.dispatch).toHaveBeenCalledWith("createNewFileVersion", [
+                target_file,
+                file1
+            ]);
         });
     });
 
@@ -396,7 +399,10 @@ describe("DragNDropHandler", () => {
 
             await wrapper.vm.ondrop(drop_event);
 
-            expect(store.dispatch).not.toHaveBeenCalledWith("updateFile", jasmine.any(Array));
+            expect(store.dispatch).not.toHaveBeenCalledWith(
+                "createNewFileVersion",
+                jasmine.any(Array)
+            );
         });
 
         it("If the user drops his file in a modal", async () => {

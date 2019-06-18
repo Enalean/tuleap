@@ -224,7 +224,7 @@ export const loadFolder = (context, folder_id) => {
     }
 };
 
-export async function updateFile(context, [item, dropped_file]) {
+export async function createNewFileVersion(context, [item, dropped_file]) {
     try {
         await uploadNewVersion(context, [
             item,
@@ -241,7 +241,7 @@ export async function updateFile(context, [item, dropped_file]) {
     }
 }
 
-export const updateFileFromModal = async (
+export const createNewFileVersionFromModal = async (
     context,
     [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
 ) => {
@@ -260,7 +260,7 @@ export const updateFileFromModal = async (
     }
 };
 
-export const updateEmbeddedFileFromModal = async (
+export const createNewEmbeddedFileVersionFromModal = async (
     context,
     [item, new_html_content, version_title, changelog, is_file_locked, approval_table_action]
 ) => {
@@ -279,7 +279,7 @@ export const updateEmbeddedFileFromModal = async (
     }
 };
 
-export const updateWikiFromModal = async (
+export const createNewWikiVersionFromModal = async (
     context,
     [item, new_wiki_page, version_title, changelog, is_file_locked]
 ) => {
@@ -291,7 +291,7 @@ export const updateWikiFromModal = async (
     }
 };
 
-export const updateLinkFromModal = async (
+export const createNewLinkVersionFromModal = async (
     context,
     [item, new_link_url, version_title, changelog, is_file_locked, approval_table_action]
 ) => {

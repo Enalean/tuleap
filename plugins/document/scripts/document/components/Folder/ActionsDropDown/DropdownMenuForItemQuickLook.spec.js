@@ -122,7 +122,7 @@ describe("DropdownMenuForItemQuickLook", () => {
 
     it(`Given item is a a file
         When the dropdown is open
-        Then the dropdown should allow user to update element`, () => {
+        Then the dropdown should allow user to create a new version of the item`, () => {
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -132,12 +132,14 @@ describe("DropdownMenuForItemQuickLook", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=docman-dropdown-update-button]")).toBeTruthy();
+        expect(
+            wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
+        ).toBeTruthy();
     });
 
     it(`Given item is a folder
         When the dropdown is open
-        Then user should not have the update option`, () => {
+        Then user should not have the "create new version" option`, () => {
         const wrapper = dropdown_quicklook_menu_factory({
             item: {
                 id: 1,
@@ -147,6 +149,8 @@ describe("DropdownMenuForItemQuickLook", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=docman-dropdown-update-button]")).toBeFalsy();
+        expect(
+            wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
+        ).toBeFalsy();
     });
 });

@@ -30,11 +30,11 @@ import {
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
     unsetUnderConstructionUserPreference,
-    updateFile,
-    updateFileFromModal,
-    updateEmbeddedFileFromModal,
-    updateWikiFromModal,
-    updateLinkFromModal,
+    createNewFileVersion,
+    createNewFileVersionFromModal,
+    createNewEmbeddedFileVersionFromModal,
+    createNewWikiVersionFromModal,
+    createNewLinkVersionFromModal,
     deleteItem,
     getWikisReferencingSameWikiPage
 } from "./actions.js";
@@ -878,14 +878,14 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("removeVersionUploadProgress", item);
         });
     });
-    describe("updateFile", () => {
+    describe("createNewFileVersion", () => {
         it("does not trigger any upload if the file is empty", async () => {
             const dropped_file = { name: "filename.txt", size: 0, type: "text/plain" };
             const item = {};
 
             createNewVersion.and.returnValue(Promise.resolve());
 
-            await updateFile(context, [item, dropped_file]);
+            await createNewFileVersion(context, [item, dropped_file]);
 
             expect(uploadVersion).not.toHaveBeenCalled();
         });
@@ -900,12 +900,12 @@ describe("Store actions", () => {
             const uploader = {};
             uploadVersion.and.returnValue(uploader);
 
-            await updateFile(context, [item, dropped_file]);
+            await createNewFileVersion(context, [item, dropped_file]);
 
             expect(uploadVersion).toHaveBeenCalled();
         });
     });
-    describe("updateFileFromModal", () => {
+    describe("createNewFileVersionFromModal", () => {
         it("uploads a new version of a file", async () => {
             const item = { id: 45 };
             context.state.folder_content = [{ id: 45 }];
@@ -921,7 +921,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed the version because...";
             const is_version_locked = true;
 
-            await updateFileFromModal(context, [
+            await createNewFileVersionFromModal(context, [
                 item,
                 updated_file,
                 version_title,
@@ -942,7 +942,7 @@ describe("Store actions", () => {
             const version_title = "My new version";
             const version_changelog = "Changed the version because...";
 
-            await updateFileFromModal(context, [
+            await createNewFileVersionFromModal(context, [
                 item,
                 update_fail,
                 version_title,
@@ -955,7 +955,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("updateEmbeddedFileFromModal", () => {
+    describe("createNewEmbeddedFileVersionFromModal", () => {
         it("updates an embedded file", async () => {
             const item = { id: 45 };
             context.state.folder_content = [{ id: 45 }];
@@ -965,7 +965,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed the version because...";
             const is_version_locked = true;
 
-            await updateEmbeddedFileFromModal(context, [
+            await createNewEmbeddedFileVersionFromModal(context, [
                 item,
                 new_html_content,
                 version_title,
@@ -986,7 +986,7 @@ describe("Store actions", () => {
 
             patchEmbeddedFile.and.throwError("nope");
 
-            await updateEmbeddedFileFromModal(context, [
+            await createNewEmbeddedFileVersionFromModal(context, [
                 item,
                 new_html_content,
                 version_title,
@@ -999,7 +999,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("updateWikiFromModal", () => {
+    describe("createNewWikiVersionFromModal", () => {
         it("updates a wiki page name", async () => {
             const item = { id: 45 };
             context.state.folder_content = [{ id: 45 }];
@@ -1009,7 +1009,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed title to NSFW";
             const is_version_locked = true;
 
-            await updateWikiFromModal(context, [
+            await createNewWikiVersionFromModal(context, [
                 item,
                 page_name,
                 version_title,
@@ -1030,7 +1030,7 @@ describe("Store actions", () => {
 
             patchWiki.and.throwError("nope");
 
-            await updateWikiFromModal(context, [
+            await createNewWikiVersionFromModal(context, [
                 item,
                 page_name,
                 version_title,
@@ -1043,7 +1043,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("updateLinkFromModal", () => {
+    describe("createNewLinkVersionFromModal", () => {
         it("updates a link url", async () => {
             const item = { id: 45 };
             context.state.folder_content = [{ id: 45 }];
@@ -1053,7 +1053,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed the version because...";
             const is_version_locked = true;
 
-            await updateLinkFromModal(context, [
+            await createNewLinkVersionFromModal(context, [
                 item,
                 new_link_url,
                 version_title,
@@ -1074,7 +1074,7 @@ describe("Store actions", () => {
 
             patchLink.and.throwError("nope");
 
-            await updateLinkFromModal(context, [
+            await createNewLinkVersionFromModal(context, [
                 item,
                 new_link_url,
                 version_title,

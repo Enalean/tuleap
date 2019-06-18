@@ -51,7 +51,9 @@ describe("QuickLookDocumentPreview", () => {
             }
         });
 
-        expect(wrapper.find("[data-test=item-action-update-button]").exists()).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=item-action-create-new-version-button]").exists()
+        ).toBeTruthy();
         expect(wrapper.find("[data-test=item-action-details-button]").exists()).toBeFalsy();
     });
 
@@ -67,7 +69,9 @@ describe("QuickLookDocumentPreview", () => {
             }
         });
 
-        expect(wrapper.find("[data-test=item-action-update-button]").exists()).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=item-action-create-new-version-button]").exists()
+        ).toBeFalsy();
         expect(wrapper.find("[data-test=item-action-details-button]").exists()).toBeTruthy();
     });
 });

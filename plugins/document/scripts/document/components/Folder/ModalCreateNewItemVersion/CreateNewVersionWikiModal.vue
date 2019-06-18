@@ -18,13 +18,16 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateLink">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="createNewWikiVersion">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <link-properties v-if="link_model" v-model="link_model" v-bind:item="item" key="link-props"/>
-            </item-update-properties>
+            <div class="docman-item-update-property">
+                <div class="docman-item-title-update-property">
+                    <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model"/>
+                    <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
+                </div>
+            </div>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -36,24 +39,24 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
-import LinkProperties from "../Property/LinkProperties.vue";
+import WikiProperties from "../Property/WikiProperties.vue";
+import LockProperty from "../Property/LockProperty.vue";
 
 export default {
-    name: "UpdateLinkModal",
+    name: "CreateNewVersionWikiModal",
     components: {
-        LinkProperties,
-        ItemUpdateProperties,
+        WikiProperties,
         ModalFeedback,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
+        LockProperty
     },
     props: {
         item: Object
     },
     data() {
         return {
-            link_model: null,
+            wiki_model: {},
             version: {},
             is_loading: false,
             is_displayed: false,
@@ -63,18 +66,20 @@ export default {
     computed: {
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Update");
+            return this.$gettext("Create new version");
         },
         modal_title() {
-            return this.$gettext("Update link");
+            return this.$gettext("Create a new wiki page version");
         },
         aria_labelled_by() {
-            return "document-update-item-modal";
+            return "document-new-item-version-modal";
         }
     },
     mounted() {
         this.modal = createModal(this.$el);
         this.registerEvents();
+
+        this.show();
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -82,8 +87,6 @@ export default {
         },
         registerEvents() {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
-
-            this.show();
         },
         show() {
             this.version = {
@@ -91,9 +94,10 @@ export default {
                 changelog: "",
                 is_file_locked: this.item.lock_info !== null
             };
-
-            this.link_model = this.item.link_properties;
-
+            this.wiki_model = {
+                type: this.item.type,
+                wiki_properties: this.item.wiki_properties
+            };
             this.is_displayed = true;
             this.modal.show();
         },
@@ -101,26 +105,26 @@ export default {
             this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
-            this.link_model = null;
+            this.wiki_model = {};
         },
-        async updateLink(event) {
+        async createNewWikiVersion(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
 
-            await this.$store.dispatch("updateLinkFromModal", [
+            await this.$store.dispatch("createNewWikiVersionFromModal", [
                 this.item,
-                this.link_model.link_url,
+                this.wiki_model.wiki_properties.page_name,
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
                 this.approval_table_action
             ]);
-
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.$store.dispatch("refreshLink", this.item);
-                this.link_model = null;
+                this.item.wiki_properties.page_name = this.wiki_model.wiki_properties.page_name;
+                this.$store.dispatch("refreshWiki", this.item);
+                this.wiki_model = {};
                 this.modal.hide();
             }
         }

@@ -20,11 +20,12 @@
 <template>
     <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
-            <update-item-button v-bind:item="item"
-                                v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
-                                v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
-                                v-if="! is_item_a_wiki_with_approval_table"
-                                data-test="docman-quicklook-action-button-update"
+            <create-new-item-version-button
+                v-bind:item="item"
+                v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
+                v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
+                v-if="! is_item_a_wiki_with_approval_table"
+                data-test="docman-quicklook-action-button-new-version"
             />
             <dropdown-button
                 v-bind:is-in-quick-look-mode="true"
@@ -45,10 +46,10 @@
 import { TYPE_WIKI } from "../../../constants.js";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
-import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
+import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 
 export default {
-    components: { UpdateItemButton, DropdownButton, DropdownMenu },
+    components: { CreateNewItemVersionButton, DropdownButton, DropdownMenu },
     props: {
         item: Object,
         isDetailsButtonShown: Boolean

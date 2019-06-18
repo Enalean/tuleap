@@ -21,11 +21,11 @@
     <div class="document-header-actions">
         <div class="tlp-dropdown document-dropdown-menu-button">
             <div class="tlp-dropdown-split-button">
-                <update-item-button class="tlp-button-primary tlp-dropdown-split-button-main"
-                                    v-bind:item="item"
-                                    v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
-                                    data-test="item-action-update-button"
-                                    v-if="item.user_can_write"
+                <create-new-item-version-button class="tlp-button-primary tlp-dropdown-split-button-main"
+                                                v-bind:item="item"
+                                                v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
+                                                data-test="item-action-create-new-version-button"
+                                                v-if="item.user_can_write"
                 />
                 <details-item-button v-bind:item="item"
                                      v-bind:button-class="'tlp-dropdown-split-button-main'"
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
+import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import DetailsItemButton from "../ActionsButton/DetailsItemButton.vue";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenuForItemQuickLook from "../ActionsDropDown/DropdownMenuForItemQuickLook.vue";
@@ -51,7 +51,7 @@ export default {
         DropdownMenuForItemQuickLook,
         DropdownButton,
         DetailsItemButton,
-        UpdateItemButton
+        CreateNewItemVersionButton
     },
     props: {
         item: Object

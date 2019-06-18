@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,17 +14,16 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateFile">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="createNewEmbeddedFileVersion">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
             <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
+                <embedded-properties v-if="embedded_file_model" v-model="embedded_file_model" v-bind:item="item" key="embedded-props"/>
             </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
@@ -37,47 +36,44 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import FileProperties from "../Property/FileProperties.vue";
+import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
 
 export default {
-    name: "UpdateFileModal",
+    name: "CreateNewVersionEmbeddedFileModal",
     components: {
         ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        FileProperties
+        EmbeddedProperties
     },
     props: {
         item: Object
     },
     data() {
         return {
-            uploaded_item: {},
+            embedded_file_model: null,
             version: {},
             is_loading: false,
-            is_displayed: false,
             modal: null
         };
     },
     computed: {
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Update");
+            return this.$gettext("Create new version");
         },
         modal_title() {
-            return this.$gettext("Update file");
+            return this.$gettext("Create a new embedded file version");
         },
         aria_labelled_by() {
-            return "document-update-item-modal";
+            return "document-new-item-version-modal";
         }
     },
     mounted() {
         this.modal = createModal(this.$el);
         this.registerEvents();
-
-        this.show();
     },
     methods: {
         setApprovalUpdateAction(value) {
@@ -85,6 +81,8 @@ export default {
         },
         registerEvents() {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
+
+            this.show();
         },
         show() {
             this.version = {
@@ -92,37 +90,42 @@ export default {
                 changelog: "",
                 is_file_locked: this.item.lock_info !== null
             };
-            this.uploaded_item = {
-                type: this.item.type,
-                file_properties: {}
-            };
-            this.is_displayed = true;
+
+            this.embedded_file_model = this.item.embedded_file_properties;
+
             this.modal.show();
         },
         reset() {
             this.$store.commit("error/resetModalError");
-            this.is_displayed = false;
             this.is_loading = false;
-            this.uploaded_item = {};
+            this.embedded_file_model = null;
+            this.hide();
         },
-        async updateFile(event) {
+        async createNewEmbeddedFileVersion(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
 
-            await this.$store.dispatch("updateFileFromModal", [
+            await this.$store.dispatch("createNewEmbeddedFileVersionFromModal", [
                 this.item,
-                this.uploaded_item.file_properties.file,
+                this.embedded_file_model.content,
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
                 this.approval_table_action
             ]);
+
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.uploaded_item = {};
+                this.$store.dispatch("refreshEmbeddedFile", this.item);
+                this.item.embedded_file_properties.content = this.embedded_file_model.content;
+                this.embedded_file_model = null;
+                this.hide();
                 this.modal.hide();
             }
+        },
+        hide() {
+            this.$emit("hidden");
         }
     }
 };
