@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *

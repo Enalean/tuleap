@@ -1,6 +1,5 @@
 <?php
-
-  // This script is for development use only
+// This script is for development use only
 
 require_once 'pre.php';
 

@@ -1,5 +1,4 @@
 <?php
-
 /*                                                                                                                                                                         
 * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.                                                       
 *                                                                                                                                                                           

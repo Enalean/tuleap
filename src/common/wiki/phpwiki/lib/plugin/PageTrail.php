@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: PageTrail.php,v 1.8 2005/08/06 13:23:14 rurban Exp $');
 /**
  Copyright 1999,2000,2001,2002,2005 $ThePhpWikiProgrammingTeam

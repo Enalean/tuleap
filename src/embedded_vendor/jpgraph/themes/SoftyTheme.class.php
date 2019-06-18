@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Softy Theme class
 */

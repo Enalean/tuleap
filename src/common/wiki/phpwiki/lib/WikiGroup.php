@@ -1,5 +1,4 @@
 <?php
-rcs_id('$Id: WikiGroup.php,v 1.52 2004/11/28 15:59:17 rurban Exp $');
 /*
  Copyright (C) 2003, 2004 $ThePhpWikiProgrammingTeam
 

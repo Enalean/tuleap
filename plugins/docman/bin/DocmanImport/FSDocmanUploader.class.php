@@ -1,6 +1,6 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
- /**
+/**
   * Script to upload an entire block of folders & files
   * into Codendi document manager.
   *

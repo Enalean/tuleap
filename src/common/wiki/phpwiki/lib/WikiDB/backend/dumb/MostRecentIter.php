@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: MostRecentIter.php,v 1.6 2005/04/09 09:16:54 rurban Exp $');
 
 require_once('lib/WikiDB/backend.php');

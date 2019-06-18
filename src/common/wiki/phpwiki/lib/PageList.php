@@ -1,5 +1,4 @@
-<?php rcs_id('$Id: PageList.php,v 1.135 2005/09/14 05:59:03 rurban Exp $');
-
+<?php
 /**
  * List a number of pagenames, optionally as table with various columns.
  * This library relieves some work for these plugins:

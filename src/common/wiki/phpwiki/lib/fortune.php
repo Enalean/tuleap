@@ -1,7 +1,5 @@
 <?php
-rcs_id('PHP Fortune - Made by henrik@aasted.org. HP: http://www.aasted.org');
-rcs_id('$Id: fortune.php,v 1.2 2004/11/21 11:59:20 rurban Exp $');
-/* 
+/*
 Main methods to use:
  quoteFromDir($dir):
    Quotes from any of the fortune-files in the dir.

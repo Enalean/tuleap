@@ -1,6 +1,4 @@
 <?php
-rcs_id('$Id: EditToolbar.php,v 1.5 2005/10/29 14:16:17 rurban Exp $');
-
 /**
  * EDIT Toolbar Initialization.
  * The default/themes/toolbar.js is from mediawiki, this php is written from scratch.

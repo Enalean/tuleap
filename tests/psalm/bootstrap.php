@@ -24,6 +24,8 @@ require_once __DIR__ . '/../../src/vendor/autoload.php';
 require_once __DIR__ . '/../../src/www/themes/FlamingParrot/vendor/autoload.php';
 require_once __DIR__ . '/../../src/www/themes/BurningParrot/vendor/autoload.php';
 
+require_once __DIR__ . '/../../src/vendor/squizlabs/php_codesniffer/autoload.php';
+
 ini_set('include_path', ini_get('include_path').':' . __DIR__ . '/../../src:'. __DIR__ . '/../../src/www/include');
 
 $plugins_directory = __DIR__ . '/../../plugins/';

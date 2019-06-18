@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: WikiCallback.php,v 1.3 2004/11/01 10:43:56 rurban Exp $');
 
 /**

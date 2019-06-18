@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: RecentComments.php,v 1.3 2004/05/14 20:55:03 rurban Exp $');
 
 /**

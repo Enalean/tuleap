@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: Template.php,v 1.4 2005/09/11 13:30:22 rurban Exp $');
 /*
  Copyright 2005 $ThePhpWikiProgrammingTeam

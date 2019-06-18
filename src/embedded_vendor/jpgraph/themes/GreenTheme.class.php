@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Green Theme class
 */

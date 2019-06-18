@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: WantedPagesIter.php,v 1.1 2004/11/20 17:35:58 rurban Exp $');
 
 //require_once('lib/WikiDB/backend.php');

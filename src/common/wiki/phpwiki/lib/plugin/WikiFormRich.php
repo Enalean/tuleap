@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: WikiFormRich.php,v 1.15 2004/11/26 18:25:33 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

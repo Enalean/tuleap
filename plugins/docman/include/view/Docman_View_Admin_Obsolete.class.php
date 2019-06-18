@@ -1,7 +1,4 @@
 <?php
-
-use Tuleap\Docman\View\DocmanViewURLBuilder;
-
 /**
  * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
@@ -24,6 +21,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 

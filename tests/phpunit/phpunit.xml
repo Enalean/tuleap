@@ -22,6 +22,7 @@
             <directory suffix=".php">../../src/tuleap-cfg/</directory>
             <directory suffix=".php">../../plugins/*/include/</directory>
             <directory suffix=".php">../../tests/lib/</directory>
+            <directory suffix=".php">../../tests/phpcs/TuleapCodingStandard/</directory>
             <exclude>
                 <directory suffix=".php">../../src/common/tracker/</directory>
                 <directory suffix=".php">../../src/common/wiki/</directory>
@@ -65,6 +66,9 @@
         </testsuite>
         <testsuite name="Plugins">
             <directory>../../plugins/*/phpunit</directory>
+        </testsuite>
+        <testsuite name="CodingStandard">
+            <directory>../phpcs/tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 use Tuleap\PHPWiki\WikiPage;
 
 rcs_id('$Id: loadsave.php,v 1.137 2005/01/30 23:14:38 rurban Exp $');

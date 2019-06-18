@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: Template.php,v 1.73 2005/04/08 05:41:00 rurban Exp $');
 
 require_once("lib/ErrorManager.php");

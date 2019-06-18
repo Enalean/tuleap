@@ -1,9 +1,6 @@
 <?php
-
-use Tuleap\chart\GanttVerticalLine;
-
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -23,6 +20,8 @@ use Tuleap\chart\GanttVerticalLine;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\chart\GanttVerticalLine;
 
 class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* Download hyperapplet.jar (or hyperwiki.jar) and GraphXML.dtd from 
  *   http://hypergraph.sourceforge.net/download.html
  *   and place it into your theme directory.

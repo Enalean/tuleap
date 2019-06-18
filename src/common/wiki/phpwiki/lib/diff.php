@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: diff.php,v 1.52 2005/04/01 14:45:14 rurban Exp $');
 // diff.php
 //

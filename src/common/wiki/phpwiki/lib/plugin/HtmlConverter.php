@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 /*
  Copyright 2005 Wincor Nixdorf International GmbH
 

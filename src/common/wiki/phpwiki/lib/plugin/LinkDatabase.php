@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: LinkDatabase.php,v 1.7 2004/12/26 17:17:25 rurban Exp $');
 /**
  Copyright 2004 $ThePhpWikiProgrammingTeam

@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Rose Theme class
 */

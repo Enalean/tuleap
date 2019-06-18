@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: XmlElement.php,v 1.38 2005/10/10 19:36:09 rurban Exp $');
+<?php
 /**
  * Code for writing XML.
  * @author: Jeff Dairiki,

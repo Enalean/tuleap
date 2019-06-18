@@ -33,3 +33,5 @@ require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
 foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
     require_once $bootstrap_plugin;
 }
+
+require_once __DIR__ . '/../../src/vendor/squizlabs/php_codesniffer/autoload.php';

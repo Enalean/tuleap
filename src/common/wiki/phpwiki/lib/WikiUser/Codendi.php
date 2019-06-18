@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 /* 
  * Copyright (c) STMicroelectronics, 2006
  *

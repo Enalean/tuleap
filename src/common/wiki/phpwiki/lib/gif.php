@@ -1,5 +1,4 @@
 <?php
-
 // GIF Util - (C) 2003 Yamasoft (S/C)
 // http://www.yamasoft.com
 // All Rights Reserved

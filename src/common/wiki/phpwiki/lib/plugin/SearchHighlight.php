@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: SearchHighlight.php,v 1.1 2004/09/26 14:58:36 rurban Exp $');
 /*
 Copyright 2004 $ThePhpWikiProgrammingTeam

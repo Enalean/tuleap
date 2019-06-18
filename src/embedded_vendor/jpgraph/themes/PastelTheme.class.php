@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Pastel Theme class
 */

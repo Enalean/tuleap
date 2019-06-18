@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: PopularNearby.php,v 1.5 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam

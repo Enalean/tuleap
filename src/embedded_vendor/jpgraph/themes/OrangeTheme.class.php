@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Orange Theme class
 */

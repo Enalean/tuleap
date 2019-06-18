@@ -1,4 +1,5 @@
-<?php //-*-php-*-
+<?php
+//-*-php-*-
 rcs_id('$Id: Buddy.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
 
 // It is anticipated that when userid support is added to phpwiki,

@@ -1,4 +1,5 @@
-<?php // -*-php-*-
+<?php
+// -*-php-*-
 rcs_id('$Id: PageType.php,v 1.45 2005/05/06 16:48:41 rurban Exp $');
 /*
  Copyright 1999,2000,2001,2002,2003,2004,2005 $ThePhpWikiProgrammingTeam
