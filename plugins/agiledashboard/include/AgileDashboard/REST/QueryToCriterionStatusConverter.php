@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST;
 
 use stdClass;
@@ -40,7 +42,7 @@ class QueryToCriterionStatusConverter
         $query_object = json_decode(stripslashes($query));
 
         if (! is_object($query_object)) {
-            throw new MalformedQueryStatusParameterException();
+            throw MalformedQueryParameterException::invalidQueryStatusParameter();
         }
 
         if ($query_object == new stdClass) {
@@ -53,10 +55,10 @@ class QueryToCriterionStatusConverter
             } elseif ($query_object->status === 'closed') {
                 return new StatusClosed();
             } else {
-                throw new MalformedQueryStatusParameterException();
+                throw MalformedQueryParameterException::invalidQueryStatusParameter();
             }
         }
 
-        throw new MalformedQueryStatusParameterException();
+        throw MalformedQueryParameterException::invalidQueryStatusParameter();
     }
 }

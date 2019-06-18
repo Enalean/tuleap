@@ -176,7 +176,7 @@ class MilestoneCrumbBuilder
         $limit     = 10;
         $offset    = 0;
         do {
-            $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestones(
+            $paginated_milestones = $this->milestone_factory->getPaginatedSiblingMilestonesWithStatusCriterion(
                 $user,
                 $milestone,
                 $criterion,

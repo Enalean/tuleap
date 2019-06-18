@@ -30,21 +30,23 @@ use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
+use Tuleap\AgileDashboard\Milestone\FutureMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
+use Tuleap\AgileDashboard\REST\QueryToMilestoneRepresentationBuilderConverter;
 use \Tuleap\REST\Header;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
-use \Planning_Milestone;
 use \AgileDashboard_Milestone_Backlog_BacklogFactory;
 use \PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
 use AgileDashboard_Milestone_MilestoneDao;
-use Tuleap\AgileDashboard\REST\MalformedQueryStatusParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
+use Tuleap\AgileDashboard\REST\QueryToFutureMilestoneRepresentationBuilderConverter;
 
 /**
  * Wrapper for milestone related REST methods
@@ -70,11 +72,8 @@ class ProjectMilestonesResource {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
-    private $milestone_representation_builder;
-
-    /** @var QueryToCriterionStatusConverter */
-    private $query_to_criterion_status_converter;
+    /** @var QueryToMilestoneRepresentationBuilderConverter */
+    private $query_to_milestone_representation_builder_converter;
 
     public function __construct() {
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
@@ -118,7 +117,7 @@ class ProjectMilestonesResource {
 
         $parent_tracker_retriever = new ParentTrackerRetriever($this->planning_factory);
 
-        $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
+        $milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $backlog_factory,
             EventManager::instance(),
@@ -126,11 +125,21 @@ class ProjectMilestonesResource {
             $parent_tracker_retriever
         );
 
-        $this->query_to_criterion_status_converter = new QueryToCriterionStatusConverter();
+        $future_milestone_representation_builder = new FutureMilestoneRepresentationBuilder(
+            $milestone_representation_builder,
+            $this->milestone_factory
+        );
+
+        $this->query_to_milestone_representation_builder_converter = new QueryToMilestoneRepresentationBuilderConverter(
+            $milestone_representation_builder,
+            new QueryToFutureMilestoneRepresentationBuilderConverter($future_milestone_representation_builder),
+            new QueryToCriterionStatusConverter()
+        );
     }
 
     /**
      * Get the top milestones of a given project
+     * @throws RestException
      */
     public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order) {
 
@@ -139,13 +148,14 @@ class ProjectMilestonesResource {
         }
 
         try {
-            $criterion = $this->query_to_criterion_status_converter->convert($query);
-        } catch (MalformedQueryStatusParameterException $exception) {
+            $builder = $this->query_to_milestone_representation_builder_converter->convert($query);
+        } catch (MalformedQueryParameterException $exception)
+        {
             throw new RestException(400, $exception->getMessage());
         }
 
-        $paginated_top_milestones_representations = $this->milestone_representation_builder
-            ->getPaginatedTopMilestonesRepresentations($project, $user, $representation_type, $criterion, $limit, $offset, $order);
+        $paginated_top_milestones_representations = $builder
+            ->getPaginatedTopMilestonesRepresentations($project, $user, $representation_type, $limit, $offset, $order);
 
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());
@@ -169,4 +179,3 @@ class ProjectMilestonesResource {
         Header::allowOptionsGet();
     }
 }
-?>
