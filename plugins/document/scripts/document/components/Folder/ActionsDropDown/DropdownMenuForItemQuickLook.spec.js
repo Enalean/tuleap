@@ -18,16 +18,22 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenuForItemQuickLook from "./DropdownMenuForItemQuickLook.vue";
 
 describe("DropdownMenuForItemQuickLook", () => {
-    let dropdown_quicklook_menu_factory;
+    let dropdown_quicklook_menu_factory, store;
     beforeEach(() => {
+        store = createStoreMock({});
+
+        store.getters.is_item_a_folder = () => false;
+
         dropdown_quicklook_menu_factory = (props = {}) => {
             return shallowMount(DropdownMenuForItemQuickLook, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
+                mocks: { $store: store }
             });
         };
     });
@@ -59,65 +65,10 @@ describe("DropdownMenuForItemQuickLook", () => {
             }
         });
 
+        store.getters.is_item_a_folder = () => true;
+
         expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeTruthy();
         expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeTruthy();
-    });
-
-    it(`Given item is a folder and user can read
-        When we display the menu
-        Then the user should not be able to create folder/documents`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: false
-            }
-        });
-
-        expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeFalsy();
-    });
-
-    it(`Given item is a folder and given user click on action button
-        When we hit create new folder
-        Then it should open a modal`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: true
-            }
-        });
-        spyOn(document, "dispatchEvent");
-
-        wrapper.find("[data-test=dropdown-menu-folder-creation]").trigger("click");
-
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-new-folder-modal")
-        );
-    });
-
-    it(`Given item is a folder and given user click on action button
-        When we hit create new document
-        Then it should open a modal`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: true
-            }
-        });
-
-        spyOn(document, "dispatchEvent");
-
-        wrapper.find("[data-test=dropdown-menu-file-creation]").trigger("click");
-
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-new-folder-modal")
-        );
     });
 
     it(`Given item is a a file
@@ -137,20 +88,62 @@ describe("DropdownMenuForItemQuickLook", () => {
         ).toBeTruthy();
     });
 
-    it(`Given item is a folder
-        When the dropdown is open
-        Then user should not have the "create new version" option`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: true
-            }
+    describe("Given item is a folder", () => {
+        let wrapper;
+
+        const item = {
+            id: 1,
+            title: "my folder",
+            type: "folder",
+            user_can_write: true
+        };
+
+        beforeEach(() => {
+            store.getters.is_item_a_folder = () => true;
         });
 
-        expect(
-            wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
-        ).toBeFalsy();
+        it(`When the dropdown is open
+            Then user should not have the "create new version" option`, () => {
+            wrapper = dropdown_quicklook_menu_factory({ item });
+
+            expect(
+                wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
+            ).toBeFalsy();
+        });
+
+        it(`When user clicks on [create new folder]
+            Then it should open a modal`, () => {
+            wrapper = dropdown_quicklook_menu_factory({ item });
+
+            spyOn(document, "dispatchEvent");
+
+            wrapper.find("[data-test=dropdown-menu-folder-creation]").trigger("click");
+
+            expect(document.dispatchEvent).toHaveBeenCalledWith(
+                new CustomEvent("show-new-folder-modal")
+            );
+        });
+
+        it(`When user clicks on [create new document]
+            Then it should open a modal`, () => {
+            wrapper = dropdown_quicklook_menu_factory({ item });
+
+            spyOn(document, "dispatchEvent");
+
+            wrapper.find("[data-test=dropdown-menu-file-creation]").trigger("click");
+
+            expect(document.dispatchEvent).toHaveBeenCalledWith(
+                new CustomEvent("show-new-folder-modal")
+            );
+        });
+        it(`When user cannot write and the menu is displayed
+            Then the user should not be able to create folder/documents`, () => {
+            item.user_can_write = false;
+
+            wrapper = dropdown_quicklook_menu_factory({ item });
+
+            expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeFalsy();
+        });
     });
 });

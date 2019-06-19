@@ -23,7 +23,7 @@
                    role="menu"
     >
         <a
-            v-if="is_item_a_folder && item.user_can_write"
+            v-if="is_item_a_folder(item) && item.user_can_write"
             class="tlp-dropdown-menu-item"
             role="menuitem"
             v-on:click.prevent="showNewFolderModal"
@@ -33,7 +33,7 @@
             <translate>New folder</translate>
         </a>
         <a
-            v-if="is_item_a_folder && item.user_can_write"
+            v-if="is_item_a_folder(item) && item.user_can_write"
             class="tlp-dropdown-menu-item"
             role="menuitem"
             v-on:click.prevent="showNewDocumentModal"
@@ -46,14 +46,14 @@
             v-bind:item="item"
             v-bind:button-classes="button_classes"
             v-bind:icon-classes="icon_classes"
-            v-if="! is_item_a_folder"
+            v-if="! is_item_a_folder(item)"
             data-test="docman-dropdown-create-new-version-button"
         />
     </dropdown-menu>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import DropdownMenu from "./DropdownMenu.vue";
-import { TYPE_FOLDER } from "../../../constants.js";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 
 export default {
@@ -62,9 +62,7 @@ export default {
         item: Object
     },
     computed: {
-        is_item_a_folder() {
-            return this.item.type === TYPE_FOLDER;
-        },
+        ...mapGetters(["is_item_a_folder"]),
         button_classes() {
             return "tlp-dropdown-menu-item";
         },

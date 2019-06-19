@@ -20,7 +20,7 @@
 <template>
     <div v-dompurify-html="currently_previewed_item.embedded_file_properties.content"
          class="document-quick-look-embedded"
-         v-if="is_embedded"
+         v-if="is_item_an_embedded_file(currently_previewed_item)"
     ></div>
 
     <div class="document-quick-look-image-container" v-else-if="is_an_image && currently_previewed_item.user_can_write">
@@ -42,7 +42,7 @@
         <img class="document-quick-look-image" v-bind:src="currently_previewed_item.file_properties.download_href" v-bind:alt="currently_previewed_item.title">
     </div>
 
-    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && currently_previewed_item.user_can_write">
+    <div class="document-quick-look-folder-container" v-else-if="is_item_a_folder(currently_previewed_item) && currently_previewed_item.user_can_write">
         <icon-quicklook-folder/>
         <icon-quicklook-drop-into-folder/>
         <span key="upload"
@@ -52,7 +52,7 @@
             Drop to upload in folder
         </span>
     </div>
-    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && ! currently_previewed_item.user_can_write">
+    <div class="document-quick-look-folder-container" v-else-if="is_item_a_folder(currently_previewed_item) && ! currently_previewed_item.user_can_write">
         <icon-quicklook-folder/>
         <i class="fa fa-ban"></i>
         <span key="folder"
@@ -88,8 +88,7 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
+import { mapState, mapGetters } from "vuex";
 import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
 
@@ -103,6 +102,7 @@ export default {
     },
     computed: {
         ...mapState(["currently_previewed_item"]),
+        ...mapGetters(["is_item_a_folder", "is_item_an_embedded_file"]),
         is_an_image() {
             if (!this.currently_previewed_item.file_properties) {
                 return false;
@@ -111,15 +111,6 @@ export default {
                 this.currently_previewed_item.file_properties &&
                 this.currently_previewed_item.file_properties.file_type.includes("image")
             );
-        },
-        is_embedded() {
-            return (
-                this.currently_previewed_item.type === TYPE_EMBEDDED &&
-                this.currently_previewed_item.embedded_file_properties
-            );
-        },
-        is_a_folder() {
-            return this.currently_previewed_item.type === TYPE_FOLDER;
         }
     }
 };

@@ -63,7 +63,7 @@
                 Permissions
             </span>
         </a>
-        <a v-if="! is_item_type_empty"
+        <a v-if="! is_item_an_empty_document(item)"
            v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
@@ -86,8 +86,7 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import { TYPE_EMPTY } from "../../../constants.js";
+import { mapState, mapGetters } from "vuex";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
@@ -111,9 +110,7 @@ export default {
     },
     computed: {
         ...mapState(["project_id"]),
-        is_item_type_empty() {
-            return this.item.type === TYPE_EMPTY;
-        },
+        ...mapGetters(["is_item_an_empty_document"]),
         can_user_delete_item() {
             return this.item.user_can_write && this.item.parent_id;
         }
