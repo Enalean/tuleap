@@ -22,10 +22,6 @@ namespace Tuleap\Tracker\Notifications;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
-
 class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
 {
     public const FIELD1_DATA = "123456";

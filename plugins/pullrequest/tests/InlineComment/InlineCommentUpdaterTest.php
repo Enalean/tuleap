@@ -23,9 +23,9 @@ namespace Tuleap\PullRequest\InlineComment;
 use TuleapTestCase;
 use GitRepository;
 use ForgeConfig;
-use \Tuleap\PullRequest\FileUniDiff;
-use \Tuleap\PullRequest\FileNullDiff;
-use \Tuleap\PullRequest\UniDiffLine;
+use Tuleap\PullRequest\FileUniDiff;
+use Tuleap\PullRequest\FileNullDiff;
+use Tuleap\PullRequest\UniDiffLine;
 
 require_once __DIR__ . '/../bootstrap.php';
 

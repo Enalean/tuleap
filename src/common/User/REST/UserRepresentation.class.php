@@ -19,8 +19,7 @@
 
 namespace Tuleap\User\REST;
 
-use \PFUser;
-use \Tuleap\User\REST\MinimalUserRepresentation;
+use PFUser;
 
 class UserRepresentation extends MinimalUserRepresentation {
 

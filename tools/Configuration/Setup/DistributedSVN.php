@@ -21,7 +21,7 @@
 
 namespace Tuleap\Configuration\Setup;
 
-use \Tuleap\Configuration;
+use Tuleap\Configuration;
 use Tuleap\Configuration\Apache\LogrotateDeployer;
 
 class DistributedSVN

@@ -19,10 +19,10 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
-use \Luracast\Restler\RestException;
-use \Tracker_Artifact;
-use \Cardwall_SingleCard;
-use \PFUser;
+use Luracast\Restler\RestException;
+use Tracker_Artifact;
+use Cardwall_SingleCard;
+use PFUser;
 
 class CardUpdater {
 

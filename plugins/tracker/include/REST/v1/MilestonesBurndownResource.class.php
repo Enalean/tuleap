@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use \PFUser;
-use \Planning_Milestone;
-use \Tuleap\REST\Header;
-use \Luracast\Restler\RestException;
+use PFUser;
+use Planning_Milestone;
+use Tuleap\REST\Header;
+use Luracast\Restler\RestException;
 
 class MilestonesBurndownResource {
 

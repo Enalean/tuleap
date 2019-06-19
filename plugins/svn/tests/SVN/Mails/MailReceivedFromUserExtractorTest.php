@@ -23,8 +23,6 @@ namespace Tuleap\SVN\Admin;
 use Mock;
 use TuleapTestCase;
 
-
-
 require_once __DIR__ .'/../../bootstrap.php';
 
 class MailReceivedFromUserExtractorTest extends TuleapTestCase {

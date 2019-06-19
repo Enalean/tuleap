@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use \RuntimeException;
+use RuntimeException;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 

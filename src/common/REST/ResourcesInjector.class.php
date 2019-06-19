@@ -22,18 +22,18 @@ namespace Tuleap\REST;
 use Luracast\Restler\Restler;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\Label\REST\LabelRepresentation;
-use \Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
 use Tuleap\Project\REST\v1\ServiceResource;
-use \Tuleap\Token\REST\TokenRepresentation;
-use \Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Token\REST\TokenRepresentation;
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\User\AccessKey\REST\AccessKeyResource;
-use \Tuleap\User\REST\UserRepresentation;
-use \Tuleap\REST\v1\PhpWikiPageRepresentation;
-use \Tuleap\User\REST\v1\UserMembershipRepresentation;
+use Tuleap\User\REST\UserRepresentation;
+use Tuleap\REST\v1\PhpWikiPageRepresentation;
+use Tuleap\User\REST\v1\UserMembershipRepresentation;
 use Tuleap\SystemEvent\REST\v1\SystemEventRepresentation;
-use \Tuleap\Project\REST\ProjectResourceReference;
-use \Project;
+use Tuleap\Project\REST\ProjectResourceReference;
+use Project;
 
 /**
  * Inject core resources into restler

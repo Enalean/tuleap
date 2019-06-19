@@ -28,7 +28,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
-use Tuleap\GitLFS\HTTP\LSFAPIHTTPAuthorization;
 
 class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 {

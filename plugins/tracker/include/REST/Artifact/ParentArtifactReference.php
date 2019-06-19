@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use \Tracker_Artifact;
+use Tracker_Artifact;
 
 class ParentArtifactReference extends ArtifactReference {
 

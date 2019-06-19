@@ -21,7 +21,6 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-
 class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
 
     public $default_properties = array(

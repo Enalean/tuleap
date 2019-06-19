@@ -19,8 +19,8 @@
  *
  */
 
-
 use Tuleap\REST\ArtifactFileBase;
+
 /**
  * @group ArtifactFilesTest
  */

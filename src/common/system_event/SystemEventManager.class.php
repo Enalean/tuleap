@@ -25,7 +25,7 @@ use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
-use \Tuleap\Redis;
+use Tuleap\Redis;
 use Tuleap\SystemEvent\SystemEventUserActiveStatusChange;
 
 /**

@@ -19,13 +19,13 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
-use \Luracast\Restler\RestException;
-use \Tracker_Semantic_Title;
-use \Tracker_FormElement_Field;
-use \CardResourceBadValueFormatException;
-use \Cardwall_FieldNotOnCardException;
-use \Cardwall_SingleCard;
-use \PFUser;
+use Luracast\Restler\RestException;
+use Tracker_Semantic_Title;
+use Tracker_FormElement_Field;
+use CardResourceBadValueFormatException;
+use Cardwall_FieldNotOnCardException;
+use Cardwall_SingleCard;
+use PFUser;
 
 class CardValidator {
 

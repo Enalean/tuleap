@@ -49,8 +49,8 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\REST\TrackerReference as TrackerReference;
-use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation as ArtifactValuesRepresentation;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use UserManager;
 
 class KanbanItemsResource extends AuthenticatedResource {

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST;
 
-use \Tracker_Report;
+use Tracker_Report;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 

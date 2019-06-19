@@ -22,7 +22,6 @@ namespace Tuleap\ReferenceAliasTracker;
 
 use Tuleap\ReferenceAliasTracker\Reference\ArtifactReference;
 use Tuleap\ReferenceAliasTracker\Reference\TrackerReference;
-use Tuleap\ReferenceAliasTracker\ReferencesImporter;
 use Reference;
 use ReferenceInstance;
 use ProjectManager;

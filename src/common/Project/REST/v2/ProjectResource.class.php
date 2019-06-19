@@ -19,15 +19,15 @@
 
 namespace Tuleap\Project\REST\v2;
 
-use \ProjectManager;
-use \UserManager;
-use \Project;
-use \EventManager;
-use \Event;
-use \Tuleap\REST\Header;
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\AuthenticatedResource;
-use \URLVerification;
+use ProjectManager;
+use UserManager;
+use Project;
+use EventManager;
+use Event;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\AuthenticatedResource;
+use URLVerification;
 
 /**
  * Wrapper for project related REST methods

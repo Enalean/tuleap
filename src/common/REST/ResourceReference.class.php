@@ -19,8 +19,6 @@
 
 namespace Tuleap\REST;
 
-use \Tuleap\REST\JsonCast;
-
 class ResourceReference {
 
     /** Use this variable as a placeholder for future route implementation */

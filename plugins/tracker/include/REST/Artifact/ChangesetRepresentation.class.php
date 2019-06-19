@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
-use \Tracker_Artifact_Changeset;
-use \Tracker_Artifact_Changeset_Comment;
-use \PFUser;
-use \UserManager;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_Comment;
+use PFUser;
+use UserManager;
 
 class ChangesetRepresentation {
     public const ROUTE = 'changesets';

@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,12 @@
  *
  */
 
-// How to deploy this command
-//
-// ln -s /usr/share/tuleap/plugins/gitlfs/bin/git-lfs-authenticate /usr/share/gitolite3/commands/git-lfs-authenticate
-// sed -i -e "/# These are the commands enabled by default/a 'git-lfs-authenticate'," /var/lib/gitolite/.gitolite.rc
-// install -o root -g root -m 0440 /usr/share/tuleap/plugins/gitlfs/etc/sudoers.d/tuleap_gitlfs_authenticate /etc/sudoers.d/tuleap_gitlfs_authenticate
+/* How to deploy this command
+ *
+ * ln -s /usr/share/tuleap/plugins/gitlfs/bin/git-lfs-authenticate /usr/share/gitolite3/commands/git-lfs-authenticate
+ * sed -i -e "/# These are the commands enabled by default/a 'git-lfs-authenticate'," /var/lib/gitolite/.gitolite.rc
+ * install -o root -g root -m 0440 /usr/share/tuleap/plugins/gitlfs/etc/sudoers.d/tuleap_gitlfs_authenticate /etc/sudoers.d/tuleap_gitlfs_authenticate
+ */
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;

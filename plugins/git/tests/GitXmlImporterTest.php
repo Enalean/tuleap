@@ -25,7 +25,6 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\XmlUgroupRetriever;
 
-
 class GitXmlImporterTest extends TuleapTestCase {
     /**
      * @var XMLImportHelper

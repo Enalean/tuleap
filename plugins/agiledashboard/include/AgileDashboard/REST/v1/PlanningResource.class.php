@@ -19,23 +19,23 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \PlanningFactory;
-use \Luracast\Restler\RestException;
-use \Planning;
+use PlanningFactory;
+use Luracast\Restler\RestException;
+use Planning;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use \Tuleap\REST\Header;
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
-use \UserManager;
-use \AgileDashboard_Milestone_MilestoneStatusCounter;
-use \AgileDashboard_BacklogItemDao;
-use \Tracker_ArtifactDao;
-use \URLVerification;
-use \PlanningPermissionsManager;
+use UserManager;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use AgileDashboard_BacklogItemDao;
+use Tracker_ArtifactDao;
+use URLVerification;
+use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneDao;
 
 class PlanningResource extends AuthenticatedResource {

@@ -20,7 +20,6 @@
 
 namespace Tuleap\HudsonSvn\Plugin;
 
-use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginDescriptor;
 use PluginInfo;
 use Plugin;
 

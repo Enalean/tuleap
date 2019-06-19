@@ -19,9 +19,9 @@
 
 namespace Tuleap\Tracker\REST;
 
-use \Tracker;
+use Tracker;
 use Tuleap\Project\REST\ProjectReference;
-use \Tuleap\REST\JsonCast;
+use Tuleap\REST\JsonCast;
 
 class TrackerReference {
 

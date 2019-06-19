@@ -19,7 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Exception;
+use Exception;
 
 class UserCannotUpdateMilestoneException extends Exception {
     public function __construct($milestone_id) {

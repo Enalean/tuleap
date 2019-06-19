@@ -18,8 +18,9 @@
  */
 
 namespace Tuleap\Project\REST;
-use \UserHelper;
-use \Tracker_FormElement_Field_List_Bind_UsersValue;
+
+use UserHelper;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
 
 class UserRepresentation {
 

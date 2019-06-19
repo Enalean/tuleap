@@ -26,7 +26,6 @@ require_once 'pre.php';
 use Tuleap\Statistics\Frequencies\GraphDataBuilder\SampleFactory;
 use Tuleap\Statistics\Frequencies\GraphDataBuilder\SampleGraph;
 
-
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');

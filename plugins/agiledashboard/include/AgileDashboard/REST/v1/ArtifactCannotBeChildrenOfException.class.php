@@ -19,7 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Exception;
+use Exception;
 
 class ArtifactCannotBeChildrenOfException extends Exception {
     public function __construct($parent_id, $child_id) {

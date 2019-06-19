@@ -21,7 +21,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Exception;
+use Exception;
 
 class IdsFromBodyAreNotUniqueException extends Exception {
 

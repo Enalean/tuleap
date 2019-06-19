@@ -21,10 +21,8 @@
 namespace Tuleap\PullRequest\Reference;
 
 use Tuleap\PullRequest\Factory;
-use Tuleap\PullRequest\Reference\Reference;
 use GitRepositoryFactory;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 class ReferenceFactory
 {

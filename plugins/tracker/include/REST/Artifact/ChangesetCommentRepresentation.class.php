@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\REST;
 
-use \Tracker_Artifact_Changeset_Comment;
+use Tracker_Artifact_Changeset_Comment;
 
 class ChangesetCommentRepresentation {
 

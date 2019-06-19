@@ -24,7 +24,6 @@ use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
-use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use TuleapTestCase;
 use User_ForgeUGroup;
 use User_ForgeUserGroupPermission_ProjectApproval;

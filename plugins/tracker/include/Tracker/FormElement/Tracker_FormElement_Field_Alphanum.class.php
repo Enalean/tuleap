@@ -20,7 +20,6 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */

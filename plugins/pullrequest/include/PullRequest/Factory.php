@@ -20,8 +20,8 @@
 
 namespace Tuleap\PullRequest;
 
-use \GitRepository;
-use \PFUser;
+use GitRepository;
+use PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
 use pullrequestPlugin;

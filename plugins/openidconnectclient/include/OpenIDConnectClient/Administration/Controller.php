@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
-
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;

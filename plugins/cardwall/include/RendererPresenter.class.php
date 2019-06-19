@@ -20,7 +20,6 @@
 
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
-
 /**
  * The content of the renderer
  */

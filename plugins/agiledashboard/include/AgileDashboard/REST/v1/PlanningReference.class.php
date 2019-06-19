@@ -18,9 +18,9 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Planning;
-use \Tuleap\REST\JsonCast;
-use \Tuleap\REST\v1\PlanningReferenceBase;
+use Planning;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\PlanningReferenceBase;
 
 /**
  * Basic reference of a planning

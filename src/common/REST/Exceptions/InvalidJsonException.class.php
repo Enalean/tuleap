@@ -19,7 +19,7 @@
 
 namespace Tuleap\REST\Exceptions;
 
-use \Luracast\Restler\RestException;
+use Luracast\Restler\RestException;
 
 class InvalidJsonException extends RestException {
     public function __construct($message) {

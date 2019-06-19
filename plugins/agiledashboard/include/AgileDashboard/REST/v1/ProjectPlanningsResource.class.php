@@ -22,8 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PlanningFactory;
 use PFUser;
 use Project;
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\Header;
+use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
 
 /**
  * Wrapper for milestone related REST methods

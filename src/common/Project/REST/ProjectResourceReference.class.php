@@ -19,7 +19,7 @@
 
 namespace Tuleap\Project\REST;
 
-use \Project;
+use Project;
 
 class ProjectResourceReference {
 

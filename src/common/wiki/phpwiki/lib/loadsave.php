@@ -1,9 +1,4 @@
 <?php
-//-*-php-*-
-use Tuleap\PHPWiki\WikiPage;
-
-rcs_id('$Id: loadsave.php,v 1.137 2005/01/30 23:14:38 rurban Exp $');
-
 /*
  Copyright 1999,2000,2001,2002,2004,2005 $ThePhpWikiProgrammingTeam
 
@@ -23,6 +18,8 @@ rcs_id('$Id: loadsave.php,v 1.137 2005/01/30 23:14:38 rurban Exp $');
  along with PhpWiki; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\PHPWiki\WikiPage;
 
 require_once("lib/ziplib.php");
 require_once("lib/Template.php");

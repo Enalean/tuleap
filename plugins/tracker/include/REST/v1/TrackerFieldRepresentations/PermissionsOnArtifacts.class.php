@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations;
 
-use Tuleap\Project\REST\UserGroupRepresentation as UserGroupRepresentation;
+use Tuleap\Project\REST\UserGroupRepresentation;
 
 class PermissionsOnArtifacts {
 

@@ -21,7 +21,6 @@
 namespace Tuleap\ReferenceAliasSVN;
 
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\SVN\Reference\Reference;
 use ReferenceInstance;
 use ProjectManager;
