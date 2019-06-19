@@ -34,12 +34,12 @@ class BaseLanguage {
      * Supported languages
      */
     public $allLanguages;
-    
+
     /**
      * Default languages
      */
     public $defaultLanguage;
-    
+
     /**
      * Constructor
      * @param $supported_languages string 'en_US,fr_FR'
@@ -136,7 +136,7 @@ class BaseLanguage {
     function loadPluginsCustomSiteContent($lang, &$text_array) {
         $this->_loadPluginsSiteContent($GLOBALS['sys_custompluginsroot'], $lang, $text_array);
     }
-    
+
     /**
      * This method walk through all the plugins and load all .tab files for
      * each plugin found.
@@ -193,14 +193,6 @@ class BaseLanguage {
             mkdir($this->getCacheDirectory(), 0755);
         }
         file_put_contents($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php', '<?php'.PHP_EOL.'return '.\Symfony\Component\VarExporter\VarExporter::export($text_array).';');
-    }
-
-    function loadLanguageFile($fname) {
-        if (array_key_exists($fname, $this->file_array)) { 
-            return; 
-        }
-        $this->file_array[$fname] = 1;
-        $this->parseLanguageFile($fname, $this->text_array);
     }
 
     /**
@@ -264,7 +256,7 @@ class BaseLanguage {
     }
 
     function getText($pagename, $category, $args="") {
-        // If the language files were modified by an update, the compiled version might not have been generated, 
+        // If the language files were modified by an update, the compiled version might not have been generated,
         // and the message not present.
         if (! $this->hasText($pagename, $category)) {
             // Force compile (only once)
@@ -317,7 +309,7 @@ class BaseLanguage {
     function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt'){
 
         // Language for current user unless it is specified in the param list
-        if (!isset($lang_code)) { 
+        if (!isset($lang_code)) {
             $lang_code = $this->lang;
         }
 
@@ -328,7 +320,7 @@ class BaseLanguage {
             $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext ;
         }
         if ( file_exists($custom_fn) ) {
-            // The custom file exists. 
+            // The custom file exists.
             return $custom_fn;
         } else {
             // Use the default file
@@ -339,7 +331,7 @@ class BaseLanguage {
                 $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext;
             }
             if ( file_exists($fn) ) {
-                // The custom file exists. 
+                // The custom file exists.
                 return $fn;
             } else {
                 if ($lang_code == self::DEFAULT_LANG) {
@@ -380,7 +372,7 @@ class BaseLanguage {
     function getLoadedLangageFiles() {
         return array_keys($this->file_array);
     }
-    
+
     /**
      * Parse the Accept-Language header according to RFC 2616
      * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
@@ -388,85 +380,85 @@ class BaseLanguage {
      *
      * Based on Jesse Skinner work
      * @see http://www.thefutureoftheweb.com/blog/use-accept-language-header#comment1
-     * 
+     *
      * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
      * @return array ('en-us' => 1, 'en' => 0.8, 'fr' => 0.5, 'fr-fr' => 0.3) ordered by score
      */
     function parseAcceptLanguage($accept_language) {
         $langs      = array();
         $lang_parse = array();
-        
+
         // break up string into pieces (languages and q factors)
-        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', 
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
                        $accept_language,
                        $lang_parse);
-        
+
         if (count($lang_parse[1])) {
             // create a list like "en" => 0.8
             $langs = array_combine($lang_parse[1], $lang_parse[4]);
-            
+
             // set default to 1 for any without q factor
             foreach ($langs as $lang => $val) {
                 if ($val === '') {
                     $langs[$lang] = 1;
                 }
             }
-            
+
             // sort list based on value
             arsort($langs, SORT_NUMERIC);
         }
-        
+
         return $langs;
     }
-    
+
     /**
-     * Get the relevant language code "en_US" provided by Codendi 
+     * Get the relevant language code "en_US" provided by Codendi
      * depending on the Accept-Language header
-     * 
-     * According to RFC 2616, the separator between language abbreviation and 
+     *
+     * According to RFC 2616, the separator between language abbreviation and
      * country code is a dash (-) for Accept-Language header.
      * In Codendi, we use underscore (_).
-     * 
+     *
      * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
      * @return string en_US
      */
     function getLanguageFromAcceptLanguage($accept_language) {
         $relevant_language = $this->defaultLanguage;
-        
+
         //extract language abbr and country codes from Codendi languages
         $provided_languages = array();
         foreach($this->allLanguages as $lang) {
             list($l,$c) = explode('_', $lang);
             $provided_languages[strtolower($l)][strtolower($c)] = $lang;
         }
-        
-        //Now do the same thing for accept_language, 
+
+        //Now do the same thing for accept_language,
         $parse_accept_lang = $this->parseAcceptLanguage($accept_language);
         foreach($parse_accept_lang as $lang => $score) {
             $lang = explode('-', $lang);
             $l = strtolower($lang[0]);
             if (isset($provided_languages[$l])) {
-                
+
                 //We've just found a matching languages
                 //check now for the country code
                 if (isset($lang[1]) && isset($provided_languages[$l][strtolower($lang[1])])) {
-                    
+
                     $relevant_language = $provided_languages[$l][strtolower($lang[1])];
                 } else {
-                    
-                    //If there is no country code, then take the first one 
+
+                    //If there is no country code, then take the first one
                     //provided by Codendi
                     $relevant_language = array_shift($provided_languages[strtolower($lang[0])]);
                 }
-                
+
                 //We have our relevant language. We can go out
                 break;
             }
         }
-        
+
         return $relevant_language;
     }
-    
+
     /**
      * @param $language string 'en_US'
      * @return bool true if the $language is supported

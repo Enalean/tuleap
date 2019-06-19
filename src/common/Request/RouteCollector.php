@@ -40,6 +40,7 @@ use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
+use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
@@ -106,6 +107,15 @@ class RouteCollector
     public static function getOrPostProjectHome()
     {
         return new Home();
+    }
+
+    public static function getAdminSiteContentCustomisation()
+    {
+        return new SiteContentCustomisationController(
+            new AdminPageRenderer,
+            \TemplateRendererFactory::build(),
+            new \BaseLanguageFactory()
+        );
     }
 
     public static function getAdminPasswordPolicy()
@@ -358,6 +368,8 @@ class RouteCollector
 
             $r->get('/project-creation/visibility', [self::class, 'getProjectCreationVisibility']);
             $r->post('/project-creation/visibility', [self::class, 'postProjectCreationVisibility']);
+
+            $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
         });
 
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
