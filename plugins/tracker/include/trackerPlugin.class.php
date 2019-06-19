@@ -209,7 +209,6 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
-        $this->addHook(Event::SITE_ADMIN_CONFIGURATION_TRACKER);
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
@@ -1261,12 +1260,6 @@ class trackerPlugin extends Plugin {
         if ($project->usesService($this->getServiceShortname())) {
             $params['services'][] = $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
         }
-    }
-
-    public function site_admin_configuration_tracker($params) {
-        $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
-
-        $params['additional_entries'][] = '<a href="/plugins/tracker/?group_id=100" class="admin-sidebar-section-nav-item">'. $label .'</a>';
     }
 
     public function export_xml_project($params) {

@@ -1042,14 +1042,6 @@ class Event {
     const REST_GET_PROJECT_FRS_PACKAGES = 'rest_get_project_frs_packages';
 
     /**
-     * Event raised when we display the trackers link in admin > configuration panel
-     *
-     * Parameters:
-     *      'additional_entries' => array of <li> element
-     */
-    const SITE_ADMIN_CONFIGURATION_TRACKER = 'site_admin_configuration_tracker';
-
-    /**
      * Throw an event to allow a plugin to refdefine the type of search
      *
      * Parameters:
