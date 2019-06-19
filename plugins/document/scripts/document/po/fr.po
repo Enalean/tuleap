@@ -134,7 +134,7 @@ msgid ""
 "Drag and drop is not supported under IE11. Please use a more recent browser."
 msgstr ""
 "Le glisser déposer n'est pas supporté pour IE11. Merci d'utiliser un "
-"navigateur plus récent. "
+"navigateur plus récent."
 
 msgid "Drop one file to upload it to %(folder)s (max size is %(size)s)."
 msgid_plural ""
@@ -293,7 +293,7 @@ msgid "Permissions"
 msgstr "Permissions"
 
 msgid "Please describe the changes of the new version here"
-msgstr "Merci de décrire ici le changement de version."
+msgstr "Merci de décrire ici le changement de version"
 
 msgid ""
 "Please note that if you check the option above, the referenced wiki page "
@@ -384,7 +384,7 @@ msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
 msgid "This document is currently locked."
-msgstr "Ce document est actuellement verrouillé"
+msgstr "Ce document est actuellement verrouillé."
 
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"
@@ -484,7 +484,7 @@ msgstr ""
 "d'approbation n'a pas été close."
 
 msgid "You don't have read permission for this item."
-msgstr "Vous n'avez pas le droit de lecture sur ces éléments"
+msgstr "Vous n'avez pas le droit de lecture sur ces éléments."
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""
