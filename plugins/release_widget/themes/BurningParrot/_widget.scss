@@ -60,13 +60,35 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     margin: 0 0 $tlp-spacing;
 }
 
+.project-release {
+    position: relative;
+    margin: 0 0 $tlp-double-spacing;
+    padding: 0 0 0 35px;
+}
+
+.project-release.project-release-toggle-closed {
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-release.project-release-toggle-closed > .project-release-toggle {
+    background: none;
+}
+
+.project-release.project-release-toggle-closed > .project-release-toggle:hover > .project-release-icon > .fa::before {
+    content: '\f0da'; // fa-caret-right
+}
+
+.project-release > .project-release-toggle:hover > .project-release-icon > .fa::before {
+    content: '\f0d7'; // fa-caret-down
+}
+
 .project-other-releases {
     position: relative;
     margin: 0 0 $tlp-spacing;
     padding: 0 0 0 $tlp-title-spacing;
 }
 
-.project-release-icon {
+.project-other-releases .project-release-icon {
     display: flex;
     position: absolute;
     z-index: 2;
@@ -80,8 +102,61 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     margin: 0 $tlp-half-spacing 0 0;
     border-radius: 50%;
     background: $tlp-theme-color;
-    color: $tlp-ui-white;
     font-size: 12px;
+}
+
+.project-other-releases .project-release-icon > .fa {
+    color: $tlp-ui-white;
+}
+
+.project-other-releases .releases-link {
+    font-size: 16px;
+}
+
+.project-release-toggle {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 $tlp-spacing;
+    padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    cursor: pointer;
+}
+
+.project-release-toggle .project-release-icon {
+    display: flex;
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: 0;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+    font-size: 100%;
+}
+
+.project-release-toggle .project-release-icon > .fa {
+    color: $tlp-ui-white;
+}
+
+.project-release-toggle .project-release-title {
+    display: inline-block;
+    margin: 0 $tlp-half-spacing 0 0;
+    font-size: 26px;
+    line-height: 28px;
+}
+
+.project-release-toggle .project-release-date {
+    display: inline-block;
+    color: #747474;
+    font-size: 12px;
+}
+
+.project-release-toggle .project-release-date > .fa {
+    margin: 0 5px;
 }
 
 .releases-link {
@@ -92,14 +167,4 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-}
-
-.project-release.closed {
-    margin: 0 0 $tlp-spacing;
-}
-
-.project-release {
-    position: relative;
-    margin: 0 0 $tlp-double-spacing;
-    padding: 0 0 0 35px;
 }

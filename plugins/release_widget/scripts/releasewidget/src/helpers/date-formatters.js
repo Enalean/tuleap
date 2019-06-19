@@ -17,32 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    setProjectId(state, project_id) {
-        state.project_id = project_id;
-    },
+import { getUserLocale } from "./user-locale-helper.js";
 
-    setIsLoading(state, loading) {
-        state.is_loading = loading;
-    },
+export { formatDateYearMonthDay };
 
-    setNbBacklogItem(state, total) {
-        state.nb_backlog_items = total;
-    },
-
-    setNbUpcomingReleases(state, total) {
-        state.nb_upcoming_releases = total;
-    },
-
-    setErrorMessage(state, error_message) {
-        state.error_message = error_message;
-    },
-
-    resetErrorMessage(state) {
-        state.error_message = null;
-    },
-
-    setCurrentMilestones(state, milestones) {
-        state.current_milestones = milestones;
+function formatDateYearMonthDay(date) {
+    if (!(date && Date.parse(date))) {
+        return "";
     }
-};
+
+    return new Date(date).toLocaleDateString(getUserLocale(), {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    });
+}

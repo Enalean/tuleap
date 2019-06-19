@@ -18,35 +18,35 @@
  */
 
 import {
+    getCurrentMilestones as getAllCurrentMilestones,
     getNbOfBacklogItems as getBacklogs,
     getNbOfUpcomingReleases as getReleases
 } from "../api/rest-querier.js";
 
 export async function getNumberOfBacklogItems(context) {
     context.commit("resetErrorMessage");
-    const total = await getBacklogs(
-        context.state.project_id,
-        context.state.pagination_limit,
-        context.state.pagination_offset
-    );
+    const total = await getBacklogs(context.state);
     return context.commit("setNbBacklogItem", total);
 }
 
 export async function getNumberOfUpcomingReleases(context) {
     context.commit("resetErrorMessage");
-    const total = await getReleases(
-        context.state.project_id,
-        context.state.pagination_limit,
-        context.state.pagination_offset
-    );
+    const total = await getReleases(context.state);
     return context.commit("setNbUpcomingReleases", total);
 }
 
-export async function getTotalsBacklogAndUpcomingReleases(context) {
+export async function getCurrentMilestones(context) {
+    context.commit("resetErrorMessage");
+    const milestones = await getAllCurrentMilestones(context.state);
+    return context.commit("setCurrentMilestones", milestones);
+}
+
+export async function getMilestones(context) {
     try {
         context.commit("setIsLoading", true);
         await getNumberOfUpcomingReleases(context);
         await getNumberOfBacklogItems(context);
+        await getCurrentMilestones(context);
     } catch (error) {
         await handleErrorMessage(context, error);
     } finally {

@@ -21,6 +21,7 @@ import * as actions from "./actions.js";
 import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
 import { rewire$getNumberOfBacklogItems } from "./actions.js";
 import { rewire$getNumberOfUpcomingReleases } from "./actions.js";
+import { rewire$getCurrentMilestones } from "./actions.js";
 
 describe("Store actions", () => {
     let context;
@@ -32,7 +33,8 @@ describe("Store actions", () => {
                 nb_backlog_items: 0,
                 nb_upcoming_releases: 0,
                 pagination_offset: 0,
-                pagination_limit: 50
+                pagination_limit: 50,
+                current_milestones: []
             }
         };
     });
@@ -53,7 +55,7 @@ describe("Store actions", () => {
             });
         });
         describe("getNumberOfBacklogItems - success", () => {
-            it("Given a success response, When total of backlog are received, Then no message error is reveived", async () => {
+            it("Given a success response, When total of backlog are received, Then no message error is received", async () => {
                 context.state.project_id = 102;
 
                 mockFetchSuccess(tlp.get, {
@@ -91,7 +93,7 @@ describe("Store actions", () => {
             });
         });
         describe("getNumberOfUpcomingReleases - success", () => {
-            it("Given a success response, When total of backlog are received, Then no message error is reveived", async () => {
+            it("Given a success response, When total of backlog are received, Then no message error is received", async () => {
                 context.state.project_id = 102;
 
                 mockFetchSuccess(tlp.get, {
@@ -113,8 +115,57 @@ describe("Store actions", () => {
         });
     });
 
-    describe("getTotalsBacklogAndUpcomingReleases - rest", () => {
-        describe("getTotalsBacklogAndUpcomingReleases - rest errors", () => {
+    describe("getCurrentMilestones - rest", () => {
+        describe("getCurrentMilestones - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
+                mockFetchError(tlp.get, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await expectAsync(actions.getCurrentMilestones(context)).toBeRejected();
+            });
+        });
+
+        describe("getCurrentMilestones - success", () => {
+            it("Given a success response, When all current milestones are received, Then no message error is received", async () => {
+                let milestones = [
+                    [
+                        {
+                            start_date: {},
+                            end_date: {},
+                            project: {}
+                        }
+                    ]
+                ];
+
+                mockFetchSuccess(tlp.get, {
+                    headers: {
+                        get: header_name => {
+                            const headers = {
+                                "X-PAGINATION-SIZE": 1
+                            };
+
+                            return headers[header_name];
+                        }
+                    },
+                    return_json: milestones
+                });
+
+                await actions.getCurrentMilestones(context);
+
+                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
+                expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
+            });
+        });
+    });
+
+    describe("getMilestones - rest", () => {
+        describe("getMilestones - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the error message is set.", async () => {
                 mockFetchError(tlp.get, {
                     error_json: {
@@ -125,15 +176,15 @@ describe("Store actions", () => {
                     }
                 });
 
-                await actions.getTotalsBacklogAndUpcomingReleases(context);
+                await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
                 expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });
-        describe("getTotalsBacklogAndUpcomingReleases - success", () => {
-            it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is reveived", async () => {
+        describe("getMilestones - success", () => {
+            it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
                 const getNumberOfBacklogItems = jasmine.createSpy("getNumberOfBacklogItems");
                 rewire$getNumberOfBacklogItems(getNumberOfBacklogItems);
 
@@ -141,6 +192,9 @@ describe("Store actions", () => {
                     "getNumberOfUpcomingReleases"
                 );
                 rewire$getNumberOfUpcomingReleases(getNumberOfUpcomingReleases);
+
+                const getCurrentMilestones = jasmine.createSpy("getCurrentMilestones");
+                rewire$getCurrentMilestones(getCurrentMilestones);
 
                 context.state.project_id = 102;
 
@@ -156,10 +210,11 @@ describe("Store actions", () => {
                     }
                 });
 
-                await actions.getTotalsBacklogAndUpcomingReleases(context);
+                await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(getNumberOfBacklogItems).toHaveBeenCalled();
                 expect(getNumberOfUpcomingReleases).toHaveBeenCalled();
+                expect(getCurrentMilestones).toHaveBeenCalled();
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });

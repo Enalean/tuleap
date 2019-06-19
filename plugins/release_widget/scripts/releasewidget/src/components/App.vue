@@ -55,7 +55,7 @@ export default {
     },
     created() {
         this.$store.commit("setProjectId", this.projectId);
-        this.$store.dispatch("getTotalsBacklogAndUpcomingReleases");
+        this.$store.dispatch("getMilestones");
     }
 };
 </script>

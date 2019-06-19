@@ -17,32 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    setProjectId(state, project_id) {
-        state.project_id = project_id;
-    },
+let user_locale;
 
-    setIsLoading(state, loading) {
-        state.is_loading = loading;
-    },
+export function setUserLocale(current_user_locale) {
+    user_locale = current_user_locale;
+}
 
-    setNbBacklogItem(state, total) {
-        state.nb_backlog_items = total;
-    },
-
-    setNbUpcomingReleases(state, total) {
-        state.nb_upcoming_releases = total;
-    },
-
-    setErrorMessage(state, error_message) {
-        state.error_message = error_message;
-    },
-
-    resetErrorMessage(state) {
-        state.error_message = null;
-    },
-
-    setCurrentMilestones(state, milestones) {
-        state.current_milestones = milestones;
-    }
-};
+export function getUserLocale() {
+    return user_locale;
+}
