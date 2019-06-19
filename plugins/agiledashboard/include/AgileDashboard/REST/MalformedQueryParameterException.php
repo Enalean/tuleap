@@ -34,7 +34,7 @@ class MalformedQueryParameterException extends Exception
 
     public static function invalidQueryParameter(): self
     {
-        return new self('Query is malformed. Expecting {"period":"future"} or {"status":"open"} or {"status":"closed"}.');
+        return new self('Query is malformed. Expecting {"period":"future"} or {"period":"current"} or {"status":"open"} or {"status":"closed"}.');
     }
 
     public static function invalidQueryStatusParameter(): self
@@ -44,6 +44,6 @@ class MalformedQueryParameterException extends Exception
 
     public static function invalidQueryPeriodParameter(): self
     {
-        return new self('Query is malformed. Expecting {"period":"future"}.');
+        return new self('Query is malformed. Expecting {"period":"future"} or {"period":"current"}.');
     }
 }

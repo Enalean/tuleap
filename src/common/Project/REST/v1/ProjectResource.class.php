@@ -708,8 +708,9 @@ class ProjectResource extends AuthenticatedResource
      * <p>
      * $query parameter is optional, by default we return all milestones. If
      * query={"status":"open"} then only open milestones are returned, if
-     * query={"status":"closed"} then only closed milestones are returned and if
-     * query={"period":"future"} then only milestones planned are returned.
+     * query={"status":"closed"} then only closed milestones are returned, if
+     * query={"period":"future"} then only milestones planned are returned and if
+     * query={"period":"current"} then only current milestones are returned.
      * </p>
      *
      * @url    GET {id}/milestones

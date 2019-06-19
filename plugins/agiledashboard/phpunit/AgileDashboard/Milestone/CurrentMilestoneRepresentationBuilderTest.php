@@ -24,38 +24,38 @@ namespace Tuleap\AgileDashboard\Milestone;
 
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use AgileDashboard_Milestone_PaginatedMilestones;
-use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Mockery;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Project;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 
-class PeriodMilestoneRepresentationBuilderTest extends TestCase
+class CurrentMilestoneRepresentationBuilderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
-     * @var Planning_MilestoneFactory
+     * @var Mockery\MockInterface|PFUser
+     */
+    private $john_doe;
+    /**
+     * @var Mockery\MockInterface|Planning_MilestoneFactory
      */
     private $milestone_factory;
+    /**
+     * @var AgileDashboard_Milestone_MilestoneRepresentationBuilder|Mockery\MockInterface
+     */
+    private $representation_builder;
     /**
      * @var FutureMilestoneRepresentationBuilder
      */
     private $builder;
     /**
-     * @var PFUser
-     */
-    private $john_doe;
-    /**
      * @var Mockery\MockInterface|Project
      */
     private $project;
-    /**
-     * @var AgileDashboard_Milestone_MilestoneRepresentationBuilder|Mockery\MockInterface
-     */
-    private $representation_builder;
 
     protected function setUp(): void
     {
@@ -68,15 +68,15 @@ class PeriodMilestoneRepresentationBuilderTest extends TestCase
 
         $this->representation_builder = Mockery::mock(AgileDashboard_Milestone_MilestoneRepresentationBuilder::class);
 
-        $this->builder = new FutureMilestoneRepresentationBuilder($this->representation_builder, $this->milestone_factory);
+        $this->builder = new CurrentMilestoneRepresentationBuilder($this->representation_builder, $this->milestone_factory);
 
         $this->project = Mockery::mock(Project::class);
     }
 
-    public function testGetNothingIfNoFutureMilestones(): void
+    public function testGetNothingIfNoCurrentMilestones(): void
     {
         $this->milestone_factory
-            ->shouldReceive('getPaginatedTopMilestonesInTheFuture')
+            ->shouldReceive('getCurrentPaginatedTopMilestones')
             ->andReturn(new AgileDashboard_Milestone_PaginatedMilestones([], 0));
 
         $response = $this->builder->getPaginatedTopMilestonesRepresentations(
@@ -92,14 +92,14 @@ class PeriodMilestoneRepresentationBuilderTest extends TestCase
         $this->assertEmpty($response->getMilestonesRepresentations());
     }
 
-    public function testGetAllFutureMilestones(): void
+    public function testGetAllCurrentMilestones(): void
     {
         $milestone1 = Mockery::mock(Planning_Milestone::class);
         $milestone2 = Mockery::mock(Planning_Milestone::class);
         $milestone3 = Mockery::mock(Planning_Milestone::class);
 
         $this->milestone_factory
-            ->shouldReceive('getPaginatedTopMilestonesInTheFuture')
+            ->shouldReceive('getCurrentPaginatedTopMilestones')
             ->andReturn(new AgileDashboard_Milestone_PaginatedMilestones([$milestone1, $milestone2, $milestone3], 3));
 
         $this->representation_builder

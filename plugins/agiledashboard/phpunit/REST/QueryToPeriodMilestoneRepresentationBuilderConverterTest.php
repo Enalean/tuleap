@@ -24,62 +24,66 @@ namespace Tuleap\AgileDashboard\REST;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\AgileDashboard\Milestone\CurrentMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\Milestone\FutureMilestoneRepresentationBuilder;
 
-class QueryToFutureMilestoneRepresentationBuilderConverterTest extends TestCase
+class QueryToPeriodMilestoneRepresentationBuilderConverterTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
-     * @var QueryToFutureMilestoneRepresentationBuilderConverter
+     * @var QueryToPeriodMilestoneRepresentationBuilderConverter
      */
     private $converter;
 
     protected function setUp(): void
     {
-        $this->converter = new QueryToFutureMilestoneRepresentationBuilderConverter(Mockery::mock(FutureMilestoneRepresentationBuilder::class));
+        $this->converter = new QueryToPeriodMilestoneRepresentationBuilderConverter(
+            Mockery::mock(FutureMilestoneRepresentationBuilder::class),
+            Mockery::mock(CurrentMilestoneRepresentationBuilder::class)
+        );
     }
 
-    public function testConvertsFutureToPeriodFuture(): void
+    public function testConvertsFutureToFutureBuilder(): void
     {
         $this->assertInstanceOf(FutureMilestoneRepresentationBuilder::class, $this->converter->convert('{\"period\":\"future\"}'));
     }
 
-    public function testConvertsEmptyStringToPeriodAll(): void
+    public function testConvertsCurrentToCurrentBuilder(): void
     {
-        $this->expectException(MalformedQueryParameterException::class);
-        $this->expectExceptionMessage('Query is malformed. Expecting {"period":"future"}.');
+        $this->assertInstanceOf(CurrentMilestoneRepresentationBuilder::class, $this->converter->convert('{\"period\":\"current\"}'));
+    }
+
+    public function testThrowsExceptionIfEmptyString(): void
+    {
+        $this->expectExceptionObject(MalformedQueryParameterException::invalidQueryPeriodParameter());
 
         $this->converter->convert('');
     }
 
-    public function testConvertsEmptyObjectToPeriodAll(): void
+    public function testThrowsExceptionIfEmptyObject(): void
     {
-        $this->expectException(MalformedQueryParameterException::class);
-        $this->expectExceptionMessage('Query is malformed. Expecting {"period":"future"}.');
+        $this->expectExceptionObject(MalformedQueryParameterException::invalidQueryPeriodParameter());
 
         $this->converter->convert('{}');
     }
 
     public function testThrowsExceptionIfPeriodKeyIsMalformed(): void
     {
-        $this->expectException(MalformedQueryParameterException::class);
-        $this->expectExceptionMessage('Query is malformed. Expecting {"period":"future"}.');
+        $this->expectExceptionObject(MalformedQueryParameterException::invalidQueryPeriodParameter());
 
         $this->converter->convert('{\"perIod\":\"closed\"}');
     }
 
     public function testThrowsExceptionIfPeriodValueIsMalformed(): void
     {
-        $this->expectException(MalformedQueryParameterException::class);
-        $this->expectExceptionMessage('Query is malformed. Expecting {"period":"future"}.');
+        $this->expectExceptionObject(MalformedQueryParameterException::invalidQueryPeriodParameter());
 
         $this->converter->convert('{\"period\":\"FutUre\"}');
     }
 
     public function testThrowsExceptionIfNotAnObject(): void
     {
-        $this->expectException(MalformedQueryParameterException::class);
-        $this->expectExceptionMessage('Query is malformed. Expecting {"period":"future"}.');
+        $this->expectExceptionObject(MalformedQueryParameterException::invalidQueryPeriodParameter());
 
         $this->converter->convert('future');
     }

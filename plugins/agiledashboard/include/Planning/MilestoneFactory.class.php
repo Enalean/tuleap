@@ -507,6 +507,36 @@ class Planning_MilestoneFactory
         return new AgileDashboard_Milestone_PaginatedMilestones($milestones, count($milestones));
     }
 
+    public function getCurrentPaginatedTopMilestones (
+        PFUser $user,
+        Project $project,
+        int $limit,
+        int $offset,
+        string $order
+    ) {
+        $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion(
+            $user,
+            $project,
+            new StatusAll(),
+            $limit,
+            $offset,
+            $order);
+
+        $milestones = [];
+
+        foreach ($paginated_top_milestones->getMilestones() as $milestone) {
+            if (!$this->isMilestoneCurrent($milestone->getArtifact(), $user) && $this->milestoneHasStartDate($milestone->getArtifact(), $user)) {
+                continue;
+            }
+
+            $milestone->setTimePeriod($this->getMilestoneTimePeriod($milestone->getArtifact(), $user));
+
+            $milestones[] = $milestone;
+        }
+
+        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, count($milestones));
+    }
+
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts) {
         $sub_milestones          = array();
         $sub_milestone_artifacts = $sub_milestone_artifacts->instanciateWith(
