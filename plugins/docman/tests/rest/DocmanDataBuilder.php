@@ -414,7 +414,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'link AT C',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
-        $link_ATC_version_id = 50;
+        $link_ATC_version_id = 500;
         $this->addLinkWithCustomVersionNumber($link_ATC_id, $link_ATC_version_id);
 
         $this->addWritePermissionOnItem($link_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
@@ -424,7 +424,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'link AT R',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
-        $link_ATR_version_id = 51;
+        $link_ATR_version_id = 501;
         $this->addLinkWithCustomVersionNumber($link_ATR_id, $link_ATR_version_id);
         $this->addWritePermissionOnItem($link_ATR_id, ProjectUGroup::PROJECT_MEMBERS);
 
@@ -435,7 +435,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
 
-        $link_ATE_version_id = 52;
+        $link_ATE_version_id = 502;
         $this->addLinkWithCustomVersionNumber($link_ATE_id, $link_ATE_version_id);
         $this->addWritePermissionOnItem($link_ATE_id, ProjectUGroup::PROJECT_MEMBERS);
 
@@ -445,7 +445,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'link DIS AT',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
-        $link_DIS_AT_version_id = 53;
+        $link_DIS_AT_version_id = 503;
         $this->addLinkWithCustomVersionNumber($link_DIS_AT_id, $link_DIS_AT_version_id);
         $this->addWritePermissionOnItem($link_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addApprovalTable("link_DIS_AT", (int)$link_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);

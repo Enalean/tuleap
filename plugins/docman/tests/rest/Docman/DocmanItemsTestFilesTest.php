@@ -44,8 +44,17 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         $patch_files   = $this->loadFolderContent($items_file_id, 'PATCH File');
         $deleted_files = $this->loadFolderContent($items_file_id, 'DELETE File');
         $lock_files    = $this->loadFolderContent($items_file_id, 'LOCK File');
+        $post_files    = $this->loadFolderContent($items_file_id, 'POST File Version');
 
-        return array_merge($root_folder, $folder_files, $items_file, $patch_files, $deleted_files, $lock_files);
+        return array_merge(
+            $root_folder,
+            $folder_files,
+            $items_file,
+            $patch_files,
+            $deleted_files,
+            $lock_files,
+            $post_files
+        );
     }
 
     /**
@@ -841,14 +850,598 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testOptions($id): void
+    public function testPostVersionItCreatesAFile(array $items): void
     {
-        $response = $this->getResponse($this->client->options('docman_files/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V');
+        $file_to_update_id = $file_to_update['id'];
 
-        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
-        $this->assertEquals($response->getStatusCode(), 200);
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version              = $current_version_response->json();
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+        $file_size                    = 15;
+        $new_version_resource         = json_encode(
+            [
+                'version_title'   => 'My new versionnn',
+                'description'     => 'whatever',
+                "file_properties" => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false
+            ]
+        );
+        $new_version_response         = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version_file            = $new_version_file_response->json();
+        $date_after_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version_file['last_update_date']
+        );
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->checkItemHasADisabledApprovalTable($items, 'POST F V');
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionCopyThePreviousApprovalTableStatus(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V AT C');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version = $current_version_response->json();
+
+        $current_version_approval_table = $current_version['approval_table']['approval_state'];
+        $this->assertEquals($current_version_approval_table, 'Approved');
+
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+        $file_size                    = 15;
+        $new_version_resource         = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                "file_properties"       => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'copy'
+            ]
+        );
+        $new_version_response         = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version       = $new_version_file_response->json();
+        $date_after_update = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version['last_update_date']
+        );
+
+        $this->checkItemHasAnApprovalTable($items, 'POST F V AT C', 'Approved');
+
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionResetTheApprovalTableStatus(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V AT R');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version = $current_version_response->json();
+
+        $current_version_approval_table = $current_version['approval_table']['approval_state'];
+        $this->assertEquals($current_version_approval_table, 'Approved');
+
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+        $file_size                    = 15;
+        $new_version_resource         = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                "file_properties"       => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'reset'
+            ]
+        );
+        $new_version_response         = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version       = $new_version_file_response->json();
+        $date_after_update = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version['last_update_date']
+        );
+
+        $this->checkItemHasAnApprovalTable($items, 'POST F V AT R', 'Not yet');
+
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionDisableApprovalTable(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V AT E');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version = $current_version_response->json();
+
+        $current_version_approval_table = $current_version['approval_table']['approval_state'];
+        $this->assertEquals($current_version_approval_table, 'Approved');
+
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+        $file_size                    = 15;
+        $new_version_resource         = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                "file_properties"       => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'empty'
+            ]
+        );
+        $new_version_response         = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version       = $new_version_file_response->json();
+        $date_after_update = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version['last_update_date']
+        );
+
+        $this->assertTrue($new_version['has_approval_table']);
+
+        $this->checkItemHasADisabledApprovalTable($items, 'POST F V AT E');
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThan($date_before_update_timestamp, $date_after_update_timestamp);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
+        array $items
+    ): void {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V No AT');
+        $file_to_update_id = $file_to_update['id'];
+
+        $file_size            = 15;
+        $new_version_resource = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                "file_properties"       => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'reset'
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(400, $new_version_response->getStatusCode());
+        $this->assertStringContainsString(
+            "already has an approval table",
+            $new_version_response->json()["error"]['i18n_error_message']
+        );
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionCanUnlockAFile(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V L');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version              = $current_version_response->json();
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+
+        $this->assertNotNull($current_version['lock_info']);
+
+        $file_size            = 15;
+        $new_version_resource = json_encode(
+            [
+                'version_title'    => 'My new versionnn',
+                'description'      => 'whatever',
+                "file_properties"  => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file" => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version_file            = $new_version_file_response->json();
+        $date_after_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version_file['last_update_date']
+        );
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+        $this->assertNull($new_version_file['lock_info']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionAdminAlwaysCanUnlockAFile(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V UL Admin');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version              = $current_version_response->json();
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+
+        $this->assertNotNull($current_version['lock_info']);
+
+        $file_size            = 15;
+        $new_version_resource = json_encode(
+            [
+                'version_title'    => 'My new versionnn',
+                'description'      => 'whatever',
+                "file_properties"  => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file" => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(201, $new_version_response->getStatusCode());
+        $this->assertNotNull($new_version_response->json()['upload_href']);
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $general_use_http_client->patch(
+                $new_version_response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version_file            = $new_version_file_response->json();
+        $date_after_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version_file['last_update_date']
+        );
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+        $this->assertNull($new_version_file['lock_info']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionRegularUserCanNotUnlockFileLockedByOtherUser(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'POST F V L Admin');
+        $file_to_update_id = $file_to_update['id'];
+
+        $current_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($current_version_response->getStatusCode(), 200);
+
+        $current_version              = $current_version_response->json();
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $current_version['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+        $this->assertNotNull($current_version['lock_info']);
+
+        $file_size            = 15;
+        $new_version_resource = json_encode(
+            [
+                'version_title'    => 'My new versionnn',
+                'description'      => 'whatever',
+                "file_properties"  => [
+                    "file_name" => "string",
+                    "file_size" => $file_size
+                ],
+                "should_lock_file" => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_files/' . $file_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(403, $new_version_response->getStatusCode());
+        $this->assertNotNull($current_version['lock_info']);
+
+        $new_version_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+        $this->assertEquals($new_version_file_response->getStatusCode(), 200);
+
+        $new_version_file            = $new_version_file_response->json();
+        $date_after_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version_file['last_update_date']
+        );
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertEquals($date_before_update_timestamp, $date_after_update_timestamp);
+        $this->assertEquals($new_version_file['lock_info'], $current_version['lock_info']);
     }
 
     /**
@@ -859,6 +1452,20 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         $response = $this->getResponse($this->client->options('docman_files/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
         $this->assertEquals(array('OPTIONS', 'POST', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsVersion(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_files/' . $id . '/version'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

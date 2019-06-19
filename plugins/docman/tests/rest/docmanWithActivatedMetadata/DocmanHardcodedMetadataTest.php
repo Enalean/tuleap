@@ -1380,13 +1380,13 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => 'My embedded to patched with a new title',
-                'should_lock_file'    => false,
-                'status'              => 'rejected',
-                'obsolescence_date'   => $date->modify('+2 day')->format('Y-m-d'),
-                'embedded_properties' => $embedded_properties
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'title'                 => 'My embedded to patched with a new title',
+                'should_lock_file'      => false,
+                'status'                => 'rejected',
+                'obsolescence_date'     => $date->modify('+2 day')->format('Y-m-d'),
+                'embedded_properties'   => $embedded_properties
             ]
         );
 
