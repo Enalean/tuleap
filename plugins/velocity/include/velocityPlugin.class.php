@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -246,10 +247,39 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event)
     {
-        $builder        = new VelocityRepresentationBuilder(new VelocityDao(), Tracker_ArtifactFactory::instance(), Tracker_FormElementFactory::instance());
-        $representation = $builder->buildRepresentations($event->getMilestone(), $event->getUser());
+        $builder = new VelocityRepresentationBuilder(
+            new SemanticVelocityFactory(
+                new BacklogRequiredTrackerCollectionFormatter()
+            ),
+            new SemanticDoneFactory(
+                new SemanticDoneDao(),
+                new SemanticDoneValueChecker()
+            ),
+            new Planning_MilestoneFactory(
+                PlanningFactory::build(),
+                Tracker_ArtifactFactory::instance(),
+                Tracker_FormElementFactory::instance(),
+                TrackerFactory::instance(),
+                new AgileDashboard_Milestone_MilestoneStatusCounter(
+                    new AgileDashboard_BacklogItemDao(),
+                    new Tracker_ArtifactDao(),
+                    Tracker_ArtifactFactory::instance()
+                ),
+                new PlanningPermissionsManager(),
+                new AgileDashboard_Milestone_MilestoneDao(),
+                new ScrumForMonoMilestoneChecker(
+                    new ScrumForMonoMilestoneDao(),
+                    PlanningFactory::build()
+                )
+            )
+        );
 
-        $presenter             = new VelocityChartPresenter($representation);
+        $representations_collection = $builder->buildCollectionOfRepresentations(
+            $event->getMilestone(),
+            $event->getUser()
+        );
+
+        $presenter             = new VelocityChartPresenter($representations_collection);
         $renderer              = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $string_representation = $renderer->renderToString("chart-field", $presenter);
 
