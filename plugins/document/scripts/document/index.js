@@ -63,7 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
         vue_mount_point.dataset.isObsolescenceDateMetadataUsed
     );
 
-    moment.tz(user_timezone).locale(user_locale);
+    moment.tz(user_timezone);
+    moment.locale(user_locale);
 
     const AppComponent = Vue.extend(App);
     const router = createRouter(project_name);
