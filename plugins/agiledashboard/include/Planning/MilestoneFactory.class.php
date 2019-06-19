@@ -228,13 +228,15 @@ class Planning_MilestoneFactory
      *
      * @return Planning_Milestone
      */
-    public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone) {
+    public function updateMilestoneContextualInfo(PFUser $user, Planning_Milestone $milestone)
+    {
         $artifact = $milestone->getArtifact();
-        return $milestone
-            ->setStartDate($this->getTimestamp($user, $artifact, Planning_Milestone::START_DATE_FIELD_NAME))
-            ->setDuration($this->getComputedFieldValue($user, $artifact, Planning_Milestone::DURATION_FIELD_NAME))
-            ->setCapacity($this->getComputedFieldValue($user, $artifact, Planning_Milestone::CAPACITY_FIELD_NAME))
-            ->setRemainingEffort($this->getComputedFieldValue($user, $artifact, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+
+        $milestone->setTimePeriod($this->getMilestoneTimePeriod($artifact, $user));
+        $milestone->setCapacity($this->getComputedFieldValue($user, $artifact, Planning_Milestone::CAPACITY_FIELD_NAME));
+        $milestone->setRemainingEffort($this->getComputedFieldValue($user, $artifact, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+
+        return $milestone;
     }
 
     private function getTimestamp(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
@@ -871,7 +873,7 @@ class Planning_MilestoneFactory
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
 
         foreach ($artifacts as $artifact) {
-            if (! $this->isMilestonePast($artifact, $user) && $this->milestoneHasStartDate($artifact, $user)) {
+            if (! $this->isMilestonePast($artifact) && $this->milestoneHasStartDate($artifact, $user)) {
                 continue;
             }
 
@@ -929,11 +931,13 @@ class Planning_MilestoneFactory
             ->isTodayBeforeTimePeriod();
     }
 
-    private function isMilestonePast(Tracker_Artifact $milestone_artifact, PFUser $user) {
+    private function isMilestonePast(Tracker_Artifact $milestone_artifact)
+    {
         return ! $milestone_artifact->isOpen();
     }
 
-    private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user) {
+    private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user)
+    {
         $start_date  = $this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME);
         $duration    = $this->getComputedFieldValue($user, $milestone_artifact, Planning_Milestone::DURATION_FIELD_NAME);
 
