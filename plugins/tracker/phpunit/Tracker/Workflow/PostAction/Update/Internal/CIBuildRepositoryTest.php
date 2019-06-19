@@ -81,86 +81,25 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_repository->create($transition, $ci_build);
     }
 
-    public function testUpdateUpdatesGivenCIBuild()
+    public function testDeleteAllByTransitionDeletesExpectedTransitions()
     {
         $this->ci_build_dao
-            ->shouldReceive('updatePostAction')
-            ->with(9, 'http://updated-ci-url.test')
-            ->andReturn(true);
-        $ci_build = new CIBuildValue(9, 'http://updated-ci-url.test');
-        $this->ci_build_repository->update($ci_build);
-    }
-
-    public function testUpdateThrowsWhenUpdateFail()
-    {
-        $this->ci_build_dao
-            ->shouldReceive('updatePostAction')
-            ->andReturn(false);
-        $ci_build = new CIBuildValue(9, 'http://updated-ci-url.test');
-
-        $this->expectException(DataAccessQueryException::class);
-
-        $this->ci_build_repository->update($ci_build);
-    }
-
-    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
-    {
-        $ci_builds = [
-            new CIBuildValue(1, 'http://updated-ci-url-1.test'),
-            new CIBuildValue(2, 'http://updated-ci-url-2.test'),
-            new CIBuildValue(3, 'http://updated-ci-url-3.test')
-        ];
-        $this->ci_build_dao
-            ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
-            ->with(1, [1, 2, 3])
+            ->shouldReceive('deletePostActionByTransition')
+            ->with(1)
             ->andReturn(true);
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $ci_builds);
+        $this->ci_build_repository->deleteAllByTransition($transition);
     }
 
     public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
     {
-        $ci_builds = [
-            new CIBuildValue(1, 'http://updated-ci-url-1.test'),
-            new CIBuildValue(2, 'http://updated-ci-url-2.test'),
-            new CIBuildValue(3, 'http://updated-ci-url-3.test')
-        ];
         $this->ci_build_dao
-            ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
+            ->shouldReceive('deletePostActionByTransition')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
 
         $this->expectException(DataAccessQueryException::class);
 
-        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $ci_builds);
-    }
-
-    public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()
-    {
-        $this->ci_build_dao
-            ->shouldReceive('findAllIdsByTransitionId')
-            ->with(1)
-            ->andReturn(new FakeDataAccessResult([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3]
-            ]));
-
-        $transition = TransitionFactory::buildATransitionWithId(1);
-        $ids        = $this->ci_build_repository->findAllIdsByTransition($transition);
-
-        $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
-    }
-
-    public function testFindAllIdsByTransitionThrowsWhenFindFail()
-    {
-        $this->ci_build_dao
-            ->shouldReceive('findAllIdsByTransitionId')
-            ->andReturn(false);
-        $transition = TransitionFactory::buildATransition();
-
-        $this->expectException(DataAccessQueryException::class);
-
-        $this->ci_build_repository->findAllIdsByTransition($transition);
+        $this->ci_build_repository->deleteAllByTransition($transition);
     }
 }

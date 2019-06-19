@@ -30,7 +30,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()->with('remove_postaction', array($id => 1))->build();
 
-        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+        $ci_build_dao = Mockery::mock('Transition_PostAction_CIBuildDao');
 
         $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
@@ -50,7 +50,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
             ->with('workflow_postaction_ci_build', array($id => $new_job_url))
             ->build();
 
-        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+        $ci_build_dao = Mockery::mock('Transition_PostAction_CIBuildDao');
 
         $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
@@ -72,7 +72,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
             ->with('workflow_postaction_ci_build', array($id => $new_job_url))
             ->build();
 
-        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+        $ci_build_dao = Mockery::mock('Transition_PostAction_CIBuildDao');
 
         $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
@@ -92,7 +92,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
             ->with('workflow_postaction_ci_build', array($id => $job_url))
             ->build();
 
-        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+        $ci_build_dao = Mockery::mock('Transition_PostAction_CIBuildDao');
 
         $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);

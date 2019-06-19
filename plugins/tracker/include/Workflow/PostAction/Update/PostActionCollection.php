@@ -154,17 +154,6 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
-     * Compare only CIBuild actions against a list of action ids:
-     * - Actions without id are marked as added
-     * - Actions whose id is in given list are marked as updated
-     * @throws UnknownPostActionIdsException
-     */
-    public function compareCIBuildActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
-    {
-        return $this->compare($our_ids, $this->ci_build_actions);
-    }
-
-    /**
      * Compare only Set Date Value actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
@@ -238,5 +227,10 @@ class PostActionCollection implements PostActionVisitor
     public function getHiddenFieldsetsPostActions() : array
     {
         return $this->hidden_fieldsets_actions;
+    }
+
+    public function getCIBuildPostActions() : array
+    {
+        return $this->ci_build_actions;
     }
 }

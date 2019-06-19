@@ -22,7 +22,7 @@
 /**
  * Base class for field post action DAOs.
  */
-class Transition_PostAction_CIBuildDao extends DataAccessObject {
+class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignoreFile
 
     /**
      * Create a new postaction entry
@@ -91,24 +91,12 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
     }
 
-    /**
-     * @param int $transition_id
-     * @param int[] $ids_to_skip
-     * @return bool true if successful. False otherwise
-     */
-    public function deletePostActionByTransitionIfIdNotIn(int $transition_id, array $ids_to_skip)
+    public function deletePostActionByTransition(int $transition_id) : bool
     {
         $escaped_transition_id = $this->da->escapeInt($transition_id);
 
-        $where_clause = "";
-        if (!empty($ids_to_skip)) {
-            $escaped_ids_to_skip = $this->da->escapeIntImplode($ids_to_skip);
-            $where_clause        = "AND id NOT IN ($escaped_ids_to_skip)";
-        }
-
         $sql = "DELETE FROM tracker_workflow_transition_postactions_cibuild
-                WHERE transition_id = $escaped_transition_id
-                $where_clause";
+                WHERE transition_id = $escaped_transition_id";
         return $this->update($sql);
     }
 
@@ -130,20 +118,6 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
                 WHERE transition_id = $from_transition_id";
 
         return $this->update($sql);
-    }
-
-    /**
-     * @return DataAccessResult|false Found ids or false if query failed
-     */
-    public function findAllIdsByTransitionId(int $transition_id)
-    {
-        $transition_id = $this->da->escapeInt($transition_id);
-
-        $sql = "SELECT id
-                FROM tracker_workflow_transition_postactions_cibuild
-                WHERE transition_id = $transition_id";
-
-        return $this->retrieve($sql);
     }
 }
 
