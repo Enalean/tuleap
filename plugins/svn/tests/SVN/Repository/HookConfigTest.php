@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,9 @@
 
 namespace Tuleap\SVN\Repository;
 
+use Mockery;
 use ProjectManager;
+use Tuleap\Project\ProjectAccessChecker;
 
 class HookConfigTest extends \TuleapTestCase
 {
@@ -52,7 +54,7 @@ class HookConfigTest extends \TuleapTestCase
         $project_dao         = mock('ProjectDao');
         $this->hook_dao      = mock('Tuleap\SVN\Repository\HookDao');
 
-        $project_manager = ProjectManager::testInstance($project_dao);
+        $project_manager = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $project_dao);
 
         $this->project = $project_manager->getProjectFromDbRow(
             array(

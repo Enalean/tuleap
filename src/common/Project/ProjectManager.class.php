@@ -25,6 +25,8 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -57,14 +59,19 @@ class ProjectManager
      * @var Project_HierarchyManager
      */
     private $hierarchy_manager;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     /**
      * A private constructor; prevents direct creation of object
      */
-    private function __construct(ProjectDao $dao = null) {
-        $this->_dao = $dao;
-    //    $this->_dao = $this->getDao();
-        $this->_cached_projects = array();
+    private function __construct(ProjectAccessChecker $project_access_checker, ProjectDao $dao = null)
+    {
+        $this->_dao                   = $dao;
+        $this->_cached_projects       = array();
+        $this->project_access_checker = $project_access_checker;
     }
 
     /**
@@ -73,8 +80,12 @@ class ProjectManager
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
+            $project_access_checker = new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            );
+            self::$_instance = new self($project_access_checker);
         }
         return self::$_instance;
     }
@@ -93,8 +104,9 @@ class ProjectManager
         self::$_instance = null;
     }
 
-    public static function testInstance(ProjectDao $dao) {
-        return new ProjectManager($dao);
+    public static function testInstance(ProjectAccessChecker $project_access_checker, ProjectDao $dao)
+    {
+        return new self($project_access_checker, $dao);
     }
 
     /**
@@ -849,14 +861,14 @@ class ProjectManager
     {
         $projects = array();
         foreach ($result as $row) {
-            if (
-                $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                ForgeConfig::areRestrictedUsersAllowed() &&
-                $user->isRestricted()
-            ) {
+            $project = $this->getProjectFromDbRow($row);
+            try {
+                $this->project_access_checker->checkUserCanAccessProject($user, $project);
+            } catch (Project_AccessException $e) {
                 continue;
             }
-            $projects[] = $this->getProjectFromDbRow($row);
+
+            $projects[] = $project;
         }
 
         return new Tuleap\Project\PaginatedProjects($projects, $total_size);
