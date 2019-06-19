@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -68,7 +68,7 @@ class MinimalArtifactRepresentation
 
         $this->html_url        = $artifact->getUri();
         $this->title           = $artifact->getTitle();
-        $this->badge_color     = $artifact->getTracker()->getNormalizedColor();
+        $this->badge_color     = $artifact->getTracker()->getColor()->getName();
         $this->submission_date = JsonCast::toDate($artifact->getSubmittedOn());
     }
 }

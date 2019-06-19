@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../bootstrap.php';
 
-Mock::generate('Tracker');
-Mock::generate('Tracker_Artifact');
+use Tuleap\Tracker\TrackerColor;
+
+require_once __DIR__.'/../bootstrap.php';
 
 class MockArtifactBuilder {
     public function __construct() {
         $this->id       = 123;
-        $this->tracker  = new MockTracker();
+        $this->tracker  = Mockery::spy(Tracker::class);
+        $this->tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
         $this->title    = '';
-        $this->artifact = new MockTracker_Artifact();
+        $this->artifact = Mockery::spy(Tracker_Artifact::class);
         $this->linkedArtifacts  = array();
         $this->uniqueLinkedArtifacts  = array();
         $this->allowedChildrenTypes   = array();
@@ -115,20 +116,20 @@ class MockArtifactBuilder {
         return $this;
     }
 
-    /** @return \Tracker_Artifact */
+    /** @return \Tracker_Artifact|\Mockery\MockInterface */
     public function build() {
-        $this->artifact->setReturnValue('getId', $this->id);
-        $this->artifact->setReturnValue('getTracker', $this->tracker);
-        $this->artifact->setReturnValue('getTitle', $this->title);
-        $this->artifact->setReturnValue('getUri', $this->uri);
-        $this->artifact->setReturnValue('getXRef', $this->xref);
-        $this->artifact->setReturnValue('getLinkedArtifacts', $this->linkedArtifacts);
-        $this->artifact->setReturnValue('getUniqueLinkedArtifacts', $this->uniqueLinkedArtifacts);
-        $this->artifact->setReturnValue('getAllowedChildrenTypes', $this->allowedChildrenTypes);
-        $this->artifact->setReturnValue('getValue', $this->value);
-        $this->artifact->setReturnValue('getParent', $this->parent);
-        $this->artifact->setReturnValue('userCanView', $this->userCanView);
-        $this->artifact->setReturnValue('getLastChangeset', $this->lastChangeset);
+        $this->artifact->shouldReceive('getId')->andReturn($this->id);
+        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->artifact->shouldReceive('getTitle')->andReturn($this->title);
+        $this->artifact->shouldReceive('getUri')->andReturn($this->uri);
+        $this->artifact->shouldReceive('getXRef')->andReturn($this->xref);
+        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturn($this->linkedArtifacts);
+        $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn($this->uniqueLinkedArtifacts);
+        $this->artifact->shouldReceive('getAllowedChildrenTypes')->andReturn($this->allowedChildrenTypes);
+        $this->artifact->shouldReceive('getValue')->andReturn($this->value);
+        $this->artifact->shouldReceive('getParent')->andReturn($this->parent);
+        $this->artifact->shouldReceive('userCanView')->andReturn($this->userCanView);
+        $this->artifact->shouldReceive('getLastChangeset')->andReturn($this->lastChangeset);
 
         return $this->artifact;
     }

@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\TrackerColor;
 
 final class ArtifactRepresentationBuilderTest extends TestCase
 {
@@ -418,10 +419,10 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive(
             [
-                'getId'              => 888,
-                'getProject'         => $project,
-                'getName'            => 'Tracker_Artifact',
-                'getNormalizedColor' => 'inca_silver'
+                'getId'      => 888,
+                'getProject' => $project,
+                'getName'    => 'Tracker_Artifact',
+                'getColor'   => TrackerColor::default()
             ]
         );
         return $tracker;

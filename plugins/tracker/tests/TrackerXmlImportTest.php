@@ -543,7 +543,7 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
         $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
         $this->assertEqual($tracker->browse_instructions, 'and some for browsing');
 
-        $this->assertEqual($tracker->getColor(), 'inca_gray');
+        $this->assertEqual($tracker->getColor()->getName(), 'inca-silver');
 
         //testing default values
         $this->assertEqual($tracker->allow_copy, 0);

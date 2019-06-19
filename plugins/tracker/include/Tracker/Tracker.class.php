@@ -56,6 +56,7 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
+use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -97,7 +98,6 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     const IMPEDIMENT_FIELD_NAME       = "impediment";
     const TYPE_FIELD_NAME             = "type";
     const NO_PARENT                   = -1;
-    const DEFAULT_COLOR               = 'inca_silver';
 
     const XML_ID_PREFIX = 'T';
 
@@ -107,7 +107,10 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     public $group_id;
     public $name;
     public $description;
-    public $color;
+    /**
+     * @var TrackerColor
+     */
+    private $color;
     public $item_name;
     public $allow_copy;
     public $submit_instructions;
@@ -150,7 +153,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $instantiate_for_new_projects,
         $log_priority_changes,
         $notifications_level,
-        $color,
+        TrackerColor $color,
         $enable_emailgateway
     ) {
         $this->id                           = $id;
@@ -170,16 +173,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
         $this->renderer                     = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-
-        $this->setColor($color);
-    }
-
-    private function setColor($color) {
-        if (! $color) {
-            $color = self::DEFAULT_COLOR;
-        }
-
-        $this->color = $color;
+        $this->color                        = $color;
     }
 
     public function __toString() {
@@ -1547,13 +1541,12 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $this->displayAdminHeader($layout, $title, $breadcrumbs, $params);
     }
 
-    public function getColor() {
-        return $this->color;
-    }
-
-    public function getNormalizedColor()
+    /**
+     * @return TrackerColor
+     */
+    public function getColor()
     {
-        return str_replace('_', '-', $this->color);
+        return $this->color;
     }
 
     public function isEmailgatewayEnabled() {
@@ -1767,22 +1760,17 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $this->displayFooter($layout);
     }
 
-    protected function editOptions($request) {
+    protected function editOptions(HTTPRequest $request)
+    {
         $old_item_name = $this->getItemName();
         $old_name      = $this->getName();
         $cannot_configure_instantiate_for_new_projects = false;
         $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
         EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
-        $this->name        = trim($request->getValidated('name', 'string', ''));
-        $this->description = trim($request->getValidated('description', 'text', ''));
-        $this->color       = '';
-        $available_colors  = new Tracker_ColorPresenterCollection($this);
-        foreach ($available_colors as $color_value) {
-            if ($request->get('tracker_color') === $color_value['color']) {
-                $this->color = $color_value['color'];
-                break;
-            }
-        }
+        $this->name            = trim($request->getValidated('name', 'string', ''));
+        $this->description     = trim($request->getValidated('description', 'text', ''));
+        $request_tracker_color = $request->get('tracker_color');
+
         $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
@@ -1791,7 +1779,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') || $cannot_configure_instantiate_for_new_projects ? 1 : 0;
         $this->log_priority_changes         = $request->getValidated('log_priority_changes') ? 1 : 0;
 
-        if (!$this->name || !$this->description || !$this->color || !$this->item_name) {
+        if (!$this->name || !$this->description || !$request_tracker_color || !$this->item_name) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
         } else {
             if ($old_name != $this->name) {
@@ -1828,6 +1816,18 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
 
                 $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
                 $artifact_link_value_dao->updateItemName($this->group_id, $old_item_name, $this->item_name);
+            }
+
+            if ($request_tracker_color !== false) {
+                try {
+                    $this->color = TrackerColor::fromName((string) $request_tracker_color);
+                } catch (InvalidArgumentException $ex) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        dgettext('tuleap-tracker', 'Invalid color tracker name')
+                    );
+                    return false;
+                }
             }
 
             $dao = new TrackerDao();
@@ -2321,7 +2321,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         $cdata_section_factory->insert($xmlElem, 'name', $this->getName());
         $xmlElem->addChild('item_name', $this->getItemName());
         $cdata_section_factory->insert($xmlElem, 'description', $this->getDescription());
-        $xmlElem->addChild('color', $this->getColor());
+        $xmlElem->addChild('color', $this->getColor()->getName());
 
         // add only if not empty
         if ($this->submit_instructions) {

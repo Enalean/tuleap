@@ -37,7 +37,48 @@ tracker =
         element name { non_empty_string }?,
         element item_name { xsd:string { pattern = "[a-zA-Z0-9_]+" } }?,
         element description { non_empty_string }?,
-        element color { xsd:string }?,
+        element color {
+            "inca-silver" |
+            "chrome-silver" |
+            "firemist-silver" |
+            "red-wine" |
+            "fiesta-red" |
+            "coral-pink" |
+            "teddy-brown" |
+            "clockwork-orange" |
+            "graffiti-yellow" |
+            "army-green" |
+            "neon-green" |
+            "acid-green" |
+            "sherwood-green" |
+            "ocean-turquoise" |
+            "surf-green" |
+            "deep-blue" |
+            "lake-placid-blue" |
+            "daphne-blue" |
+            "plum-crazy" |
+            "ultra-violet" |
+            "lilac-purple" |
+            "panther-pink" |
+            "peggy-pink" |
+            "flamingo-pink" |
+            "inca_silver" |
+            "chrome_silver" |
+            "teddy_brown" |
+            "red_wine" |
+            "fiesta_red" |
+            "clockwork_orange" |
+            "acid_green" |
+            "army_green" |
+            "sherwood_green" |
+            "ocean_turquoise" |
+            "daphne_blue" |
+            "lake_placid_blue" |
+            "deep_blue" |
+            "plum_crazy" |
+            "peggy_pink" |
+            "flamingo_pink"
+        }?,
 
         element submit_instructions { xsd:string }?,
         element browse_instructions { xsd:string }?,

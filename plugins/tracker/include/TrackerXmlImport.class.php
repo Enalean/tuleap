@@ -23,6 +23,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -724,6 +725,14 @@ class TrackerXmlImport
      */
     protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname)
     {
+        $xml_tracker_color_name = (string) $xml->color;
+        if ($xml_tracker_color_name === '') {
+            $tracker_color = TrackerColor::default();
+        } else {
+            $tracker_color = TrackerColor::fromNotStandardizedName($xml_tracker_color_name);
+        }
+
+
         // set general settings
         // real id will be set during Database update
         $att = $xml->attributes();
@@ -737,7 +746,7 @@ class TrackerXmlImport
             'browse_instructions' => (string)$xml->browse_instructions,
             'status'              => '',
             'deletion_date'       => '',
-            'color'               => (string)$xml->color
+            'color'               => $tracker_color->getName()
         );
         $row['allow_copy'] = isset($att['allow_copy']) ?
             (int) $att['allow_copy'] : 0;

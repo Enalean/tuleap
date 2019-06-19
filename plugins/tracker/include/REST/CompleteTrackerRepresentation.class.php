@@ -96,11 +96,12 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     public $resources;
 
     /**
-     * @var array rgb
+     * @var string
      */
     public $color_name;
 
-    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null) {
+    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null)
+    {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
@@ -121,7 +122,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
                 'uri'  => $this->uri .'/'. ReportRepresentation::ROUTE
             )
         );
-        $this->color_name  = $tracker->getColor();
+        $this->color_name  = $tracker->getColor()->getName();
 
         if ($tracker->getParent()) {
             $this->parent = new TrackerReference();

@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\TrackerColor;
+
 require_once __DIR__ . '/../../../../bootstrap.php';
 
 class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TuleapTestCase
@@ -91,9 +93,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
         stub($this->factory)->userCanReadBacklogStatusField()->returns(true);
 
-        $this->tracker1 = mock('Tracker');
-        $this->tracker2 = mock('Tracker');
-        $this->tracker3 = mock('Tracker');
+        $this->tracker1 = Mockery::spy(Tracker::class);
+        $this->tracker2 = Mockery::spy(Tracker::class);
+        $this->tracker3 = Mockery::spy(Tracker::class);
+        foreach ([$this->tracker1, $this->tracker2, $this->tracker3] as $tracker_mock) {
+            $tracker_mock->shouldReceive('getColor')->andReturn(TrackerColor::default());
+        }
 
         $this->story1 = anArtifact()->withTitle('story 1')->withId($this->open_story_id)->withStatus(Tracker_Semantic_Status::OPEN)->withTracker($this->tracker1)->build();
         $this->story2 = anArtifact()->withTitle('story 2')->withId($this->open_unplanned_story_id)->withStatus(Tracker_Semantic_Status::OPEN)->withTracker($this->tracker2)->build();
@@ -105,7 +110,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $backlog_items->push($this->story3);
 
         $this->backlog = stub('AgileDashboard_Milestone_Backlog_Backlog')->getArtifacts($this->user)->returns($backlog_items);
-        stub($this->backlog)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
+        $milestone_backlog_tracker = Mockery::spy(Tracker::class);
+        $milestone_backlog_tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
+        stub($this->backlog)->getMilestoneBacklogArtifactsTracker()->returns($milestone_backlog_tracker);
 
         $this->redirect_to_self = 'whatever';
 

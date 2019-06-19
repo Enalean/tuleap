@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,7 +43,7 @@ class SingleCardPreviewDetailsBuilder
         $fields_details = $this->extractDetailsFields($semantic_card, $possible_background);
 
         $card_preview['card_preview_details'] = $fields_details;
-        $card_preview['tracker_color']        = $semantic_card->getTracker()->getNormalizedColor();
+        $card_preview['tracker_color']        = $semantic_card->getTracker()->getColor()->getName();
 
         return $card_preview;
     }

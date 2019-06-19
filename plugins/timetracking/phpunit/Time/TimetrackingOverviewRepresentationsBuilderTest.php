@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018-2019. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
  *  Tuleap and Enalean names and logos are registered trademarks owned by
  *  Enalean SAS. All other trademarks or names are properties of their respective
@@ -36,6 +36,7 @@ use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\TrackerColor;
 
 class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
 {
@@ -110,7 +111,8 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
         $this->tracker = \Mockery::spy(Tracker::class);
         $this->tracker->shouldReceive(
             [
-                'getId' => 16,
+                'getId'    => 16,
+                'getColor' => TrackerColor::default()
             ]
         );
 

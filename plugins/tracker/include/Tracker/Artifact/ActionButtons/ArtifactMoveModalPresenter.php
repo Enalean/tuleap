@@ -47,7 +47,7 @@ class ArtifactMoveModalPresenter
     {
         $this->tracker_id    = $artifact->getTrackerId();
         $this->tracker_name  = $artifact->getTracker()->getItemName();
-        $this->tracker_color = $artifact->getTracker()->getColor();
+        $this->tracker_color = $artifact->getTracker()->getColor()->getName();
         $this->artifact_id   = $artifact->getId();
         $this->project_id    = $artifact->getTracker()->getProject()->getID();
     }

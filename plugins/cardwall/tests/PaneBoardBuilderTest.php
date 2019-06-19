@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,7 @@ class Cardwall_PaneBuilderTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->card_in_cell_presenter_builder = mock('Cardwall_CardInCellPresenterBuilder');
+        $this->card_in_cell_presenter_builder = Mockery::spy(Cardwall_CardInCellPresenterBuilder::class);
         $this->artifact_factory               = mock('Tracker_ArtifactFactory');
         $this->dao                            = mock('AgileDashboard_BacklogItemDao');
         $this->swimline_factory               = mock('Cardwall_SwimlineFactory');
