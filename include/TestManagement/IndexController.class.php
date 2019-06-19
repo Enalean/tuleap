@@ -85,7 +85,7 @@ class IndexController extends TestManagementController
                 "create" => $issue_tracker->userCanSubmitArtifact($current_user),
                 "link"   => $link_field && $link_field->userCanUpdate($current_user)
             ),
-            "xref_color" => $issue_tracker->getNormalizedColor()
+            "xref_color" => $issue_tracker->getColor()->getName()
         );
     }
 }
