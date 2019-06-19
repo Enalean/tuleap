@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         can_delete_folder() {
-            return this.$store.getters.can_user_delete_folder(this.item);
+            return this.item.user_can_write;
         }
     },
     methods: {
