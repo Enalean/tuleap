@@ -20,6 +20,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignoreFile
 
 class ArtifactHtml extends Artifact {
 
@@ -45,7 +46,8 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function display($ro, $pv, $user_id) {
-            global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
+            global $art_field_fact,$art_fieldset_fact,$Language;
+            $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
             $hp = Codendi_HTMLPurifier::instance();
             $fields_per_line=2;
             // the column number is the number of field per line * 2 (label + value)
@@ -472,7 +474,8 @@ class ArtifactHtml extends Artifact {
      * @return void
      */
     function displayCopy($ro,$pv) {
-        global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
+        global $art_field_fact,$art_fieldset_fact,$Language;
+        $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
         $hp = Codendi_HTMLPurifier::instance();
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
@@ -864,7 +867,8 @@ class ArtifactHtml extends Artifact {
 
         
     function displayAdd($user_id) {
-        global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
+        global $art_field_fact,$art_fieldset_fact,$Language;
+        $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
         $hp = Codendi_HTMLPurifier::instance();
         
         $fields_per_line=2;

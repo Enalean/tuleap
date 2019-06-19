@@ -256,10 +256,6 @@ $sys_file_deletion_delay = 3;
 // are also configured to allow this size.
 $sys_max_size_upload = 67108864;
 
-// Max upload size for attachments (bugs, SR, artifacts, etc.)
-// in bytes. E.g. 16777216 for 16 MB
-$sys_max_size_attachment = 16777216;
-
 //Proxy used to access to Internet. "host:port"
 $sys_proxy = "";
 

@@ -10,13 +10,15 @@
   *
   */
 
-
+// phpcs:ignoreFile
 //require_once('common/tracker/ArtifactFile.class.php');
 
 
-class ArtifactFileHtml extends ArtifactFile {
+class ArtifactFileHtml extends ArtifactFile
+{
+    public const MAX_SIZE_DEFAULT = 16777216;
 
-	/**
+    /**
 	 *  ArtifactFileHtml() - constructor
 	 *
 	 *  Use this constructor if you are modifying an existing artifact
@@ -35,7 +37,8 @@ class ArtifactFileHtml extends ArtifactFile {
 	 * @return bool
 	 */
 	function upload($input_file,$input_file_name,$input_file_type,$description,&$changes) {
-            global $sys_max_size_attachment,$Language;
+            global $Language;
+        $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', self::MAX_SIZE_DEFAULT);
 
             if (!util_check_fileupload($input_file)) {
 	      $this->setError($Language->getText('tracker_include_artifactfile','invalid_name'));

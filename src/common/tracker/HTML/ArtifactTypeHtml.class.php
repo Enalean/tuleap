@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+// phpcs:ignoreFile
+
 require_once('common/tracker/ArtifactType.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
@@ -2233,7 +2235,8 @@ EOS;
          * @return void
          */
         function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=0) {
-            global $art_field_fact,$sys_max_size_attachment,$Language;
+            global $art_field_fact,$Language;
+            $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', ArtifactFileHtml::MAX_SIZE_DEFAULT);
             $hp = Codendi_HTMLPurifier::instance();
             $fields_per_line=2;
             $max_size=40;
