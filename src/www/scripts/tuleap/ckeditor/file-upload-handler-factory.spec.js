@@ -26,11 +26,7 @@ import { buildFileUploadHandler } from "./file-upload-handler-factory.js";
 describe(`file-upload-handler-factory`, () => {
     let file_upload_event,
         loader,
-        ckeditor_instance,
-        max_size_upload,
-        onStartCallback,
-        onErrorCallback,
-        onSuccessCallback,
+        options = {},
         getGettextProvider,
         post;
     beforeEach(() => {
@@ -45,7 +41,7 @@ describe(`file-upload-handler-factory`, () => {
         // TUS exports as CommonJS, so rewire does not seem to work
         spyOn(TUS, "Upload");
 
-        ckeditor_instance = jasmine.createSpyObj("ckeditor_instance", ["fire"]);
+        options.ckeditor_instance = jasmine.createSpyObj("ckeditor_instance", ["fire"]);
         loader = jasmine.createSpyObj("fileLoader", ["changeStatus"]);
         loader.file = {
             name: "pentacyanic.jpg",
@@ -57,19 +53,14 @@ describe(`file-upload-handler-factory`, () => {
             },
             stop: jasmine.createSpy("event.stop")
         };
-        onStartCallback = jasmine.createSpy("onStartCallback");
-        onErrorCallback = jasmine.createSpy("onErrorCallback");
-        onSuccessCallback = jasmine.createSpy("onSuccessCallback");
+        options.onStartCallback = jasmine.createSpy("onStartCallback");
+        options.onErrorCallback = jasmine.createSpy("onErrorCallback");
+        options.onSuccessCallback = jasmine.createSpy("onSuccessCallback");
+        options.max_size_upload = 100;
     });
 
     function handlerFactory() {
-        return buildFileUploadHandler(
-            ckeditor_instance,
-            max_size_upload,
-            onStartCallback,
-            onErrorCallback,
-            onSuccessCallback
-        );
+        return buildFileUploadHandler(options);
     }
 
     afterEach(() => {
@@ -94,7 +85,7 @@ describe(`file-upload-handler-factory`, () => {
 
         it(`when the file size is above the max upload size,
                 then the loader will show an error`, async () => {
-            max_size_upload = 100;
+            options.max_size_upload = 100;
             loader.file.size = 1024;
 
             const handler = handlerFactory();
@@ -105,7 +96,7 @@ describe(`file-upload-handler-factory`, () => {
 
         describe(`when the file size is ok`, () => {
             beforeEach(() => {
-                max_size_upload = 1024;
+                options.max_size_upload = 1024;
                 loader.file = {
                     size: 1024
                 };
@@ -144,7 +135,7 @@ describe(`file-upload-handler-factory`, () => {
                         await handler(file_upload_event);
                         fail("Promise should be rejected on error");
                     } catch (exception) {
-                        expect(onErrorCallback).toHaveBeenCalled();
+                        expect(options.onErrorCallback).toHaveBeenCalled();
                         expect(loader.changeStatus).toHaveBeenCalledWith("error");
                         expect(loader.message).toBeDefined();
                     }
@@ -225,7 +216,7 @@ describe(`file-upload-handler-factory`, () => {
                     const handler = handlerFactory();
                     await handler(file_upload_event);
 
-                    expect(onSuccessCallback).toHaveBeenCalledWith(
+                    expect(options.onSuccessCallback).toHaveBeenCalledWith(
                         71,
                         "https://example.com/download_url"
                     );
@@ -251,7 +242,7 @@ describe(`file-upload-handler-factory`, () => {
                     const handler = handlerFactory();
                     await handler(file_upload_event);
 
-                    expect(onStartCallback).toHaveBeenCalled();
+                    expect(options.onStartCallback).toHaveBeenCalled();
                 });
 
                 describe(`will create and start the TUS uploader`, () => {
@@ -305,14 +296,14 @@ describe(`file-upload-handler-factory`, () => {
                             const handler = handlerFactory();
                             await handler(file_upload_event);
 
-                            expect(ckeditor_instance.fire).toHaveBeenCalledWith("change");
+                            expect(options.ckeditor_instance.fire).toHaveBeenCalledWith("change");
                         });
 
                         it(`will call the Success callback with the returned id and download_href`, async () => {
                             const handler = handlerFactory();
                             await handler(file_upload_event);
 
-                            expect(onSuccessCallback).toHaveBeenCalledWith(
+                            expect(options.onSuccessCallback).toHaveBeenCalledWith(
                                 23,
                                 "https://example.com/download_url"
                             );

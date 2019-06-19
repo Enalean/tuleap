@@ -18,7 +18,7 @@
  */
 
 import { findAllHiddenInputByNames } from "./form-adapter.js";
-import { getUsedUploadedImagesURLs } from "./ckeditor-adapter.js";
+import { findImageUrls } from "./image-urls-finder.js";
 
 const forms = new Map();
 
@@ -49,9 +49,7 @@ function removeUnusedUploadedFilesFromForm() {
 }
 
 function getUsedUploadedImagesURLsInAllCKEditorInstances(instances) {
-    return instances.flatMap(({ ckeditor_instance }) =>
-        getUsedUploadedImagesURLs(ckeditor_instance)
-    );
+    return instances.flatMap(({ ckeditor_instance }) => findImageUrls(ckeditor_instance.getData()));
 }
 
 function getPotentiallyUsedUploadedFiles(form, instances) {

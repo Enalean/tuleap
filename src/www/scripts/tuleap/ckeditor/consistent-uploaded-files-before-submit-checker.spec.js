@@ -19,33 +19,30 @@
 
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
 import { rewire$findAllHiddenInputByNames, restore as restoreForm } from "./form-adapter.js";
-import {
-    rewire$getUsedUploadedImagesURLs,
-    restore as restoreCKEditor
-} from "./ckeditor-adapter.js";
+import { rewire$findImageUrls, restore as restoreFinder } from "./image-urls-finder.js";
 
 describe(`consistent-uploaded-files-before-submit-checker`, () => {
-    let findAllHiddenInputByNames, getUsedUploadedImagesURLs;
+    let findAllHiddenInputByNames, findImageUrls;
 
     beforeEach(() => {
         findAllHiddenInputByNames = jasmine
             .createSpy("findAllHiddenInputByNames")
             .and.returnValue([]);
         rewire$findAllHiddenInputByNames(findAllHiddenInputByNames);
-        getUsedUploadedImagesURLs = jasmine
-            .createSpy("getUsedUploadedImagesURLs")
-            .and.returnValue([]);
-        rewire$getUsedUploadedImagesURLs(getUsedUploadedImagesURLs);
+        findImageUrls = jasmine.createSpy("findImageUrls").and.returnValue([]);
+        rewire$findImageUrls(findImageUrls);
     });
 
     afterEach(() => {
         restoreForm();
-        restoreCKEditor();
+        restoreFinder();
     });
 
     describe(`addInstance()`, () => {
         let form, triggerFormSubmit;
-        const ckeditor_instance = {};
+        const ckeditor_instance = {
+            getData: () => ""
+        };
         const field_name = "Attachments";
 
         beforeEach(() => {
@@ -73,7 +70,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
                 }
             };
             findAllHiddenInputByNames.and.returnValue([file_input, unused_file_input]);
-            getUsedUploadedImagesURLs.and.returnValue(["https://example.com/advertently.jpg"]);
+            findImageUrls.and.returnValue(["https://example.com/advertently.jpg"]);
 
             addInstance(form, ckeditor_instance, field_name);
             triggerFormSubmit();
@@ -104,14 +101,16 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
         });
 
         it(`takes into account images from multiple CKEditor instances`, () => {
-            const other_ckeditor_instance = {};
+            const other_ckeditor_instance = {
+                getData: () => ""
+            };
             const other_field_name = "anisopodal";
 
             addInstance(form, ckeditor_instance, field_name);
             addInstance(form, other_ckeditor_instance, other_field_name);
             triggerFormSubmit();
 
-            expect(getUsedUploadedImagesURLs.calls.count()).toBe(2);
+            expect(findImageUrls.calls.count()).toBe(2);
         });
     });
 });

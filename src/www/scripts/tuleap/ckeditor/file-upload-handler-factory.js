@@ -23,13 +23,15 @@ import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import { getGettextProvider } from "./gettext-factory.js";
 
-export function buildFileUploadHandler(
-    ckeditor_instance,
-    max_size_upload,
-    onStartCallback,
-    onErrorCallback,
-    onSuccessCallback
-) {
+export function buildFileUploadHandler(options) {
+    const {
+        ckeditor_instance,
+        max_size_upload,
+        onStartCallback,
+        onErrorCallback,
+        onSuccessCallback
+    } = options;
+
     return async function handler(event) {
         const loader = event.data.fileLoader;
         event.stop();

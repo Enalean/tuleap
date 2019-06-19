@@ -17,8 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./consistent-uploaded-files-before-submit-checker.spec.js";
-import "./file-upload-handler-factory.spec.js";
-import "./form-adapter.spec.js";
-import "./get-upload-image-options.spec.js";
-import "./image-urls-finder.spec.js";
+export function findImageUrls(html_string) {
+    return Array.from(
+        new DOMParser().parseFromString(html_string, "text/html").querySelectorAll("img")
+    ).map(img => img.getAttribute("src"));
+}
+
+export function isThereAnImageWithDataURI(html_string) {
+    return Array.from(
+        new DOMParser().parseFromString(html_string, "text/html").querySelectorAll("img")
+    ).some(doesImageHaveADataURI);
+}
+
+function doesImageHaveADataURI(img) {
+    return data_uri_regexp.test(img.getAttribute("src"));
+}
+
+const data_uri_regexp = /^data:/i;

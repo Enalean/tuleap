@@ -23,7 +23,6 @@ import {
     restore as restoreDocument
 } from "./element-adapter.js";
 import { rewire$initGettext, restore as restoreGettext } from "./gettext-factory.js";
-import { rewire$disablePasteOfImages, restore as restoreCKEditor } from "./ckeditor-adapter.js";
 import {
     rewire$buildFileUploadHandler,
     restore as restoreHandlerFactory
@@ -37,14 +36,18 @@ import {
     rewire$enableFormSubmit,
     restore as restoreFormAdapter
 } from "./form-adapter.js";
+import { rewire$isThereAnImageWithDataURI, restore as restoreFinder } from "./image-urls-finder.js";
 import { getUploadImageOptions, initiateUploadImage } from "./get-upload-image-options.js";
 
 describe(`get-upload-image-options`, () => {
     let isUploadEnabled,
         initGettext,
-        disablePasteOfImages,
+        gettext_provider = {
+            gettext: () => ""
+        },
         informUsersThatTheyCanPasteImagesInEditor,
         addInstance,
+        isThereAnImageWithDataURI,
         buildFileUploadHandler,
         disableFormSubmit,
         enableFormSubmit;
@@ -57,31 +60,31 @@ describe(`get-upload-image-options`, () => {
         );
         rewire$informUsersThatTheyCanPasteImagesInEditor(informUsersThatTheyCanPasteImagesInEditor);
 
-        disablePasteOfImages = jasmine.createSpy("disablePasteOfImages");
-        rewire$disablePasteOfImages(disablePasteOfImages);
-
         addInstance = jasmine.createSpy("addInstance");
         rewire$addInstance(addInstance);
 
         buildFileUploadHandler = jasmine.createSpy("buildFileUploadHandler");
         rewire$buildFileUploadHandler(buildFileUploadHandler);
 
+        isThereAnImageWithDataURI = jasmine.createSpy("isThereAnImageWithDataURI");
+        rewire$isThereAnImageWithDataURI(isThereAnImageWithDataURI);
+
         disableFormSubmit = jasmine.createSpy("disableFormSubmit");
         enableFormSubmit = jasmine.createSpy("enableFormSubmit");
         rewire$disableFormSubmit(disableFormSubmit);
         rewire$enableFormSubmit(enableFormSubmit);
 
-        initGettext = jasmine.createSpy("initGettext");
+        initGettext = jasmine.createSpy("initGettext").and.returnValue(gettext_provider);
         rewire$initGettext(initGettext);
     });
 
     afterEach(() => {
         restoreDocument();
         restoreGettext();
-        restoreCKEditor();
         restoreChecker();
         restoreFormAdapter();
         restoreHandlerFactory();
+        restoreFinder();
     });
 
     describe(`initiateUploadImage()`, () => {
@@ -89,18 +92,34 @@ describe(`get-upload-image-options`, () => {
         const options = {};
 
         beforeEach(() => {
-            ckeditor_instance = jasmine.createSpyObj("ckeditor_instance", ["on"]);
+            ckeditor_instance = jasmine.createSpyObj("ckeditor_instance", [
+                "on",
+                "showNotification"
+            ]);
         });
 
-        it(`when upload is disabled, it disables paste of images`, async () => {
+        it(`when upload is disabled, it will disable paste of images
+            and show a notification`, async () => {
             isUploadEnabled.and.returnValue(false);
             const element = {
                 dataset: { uploadUrl: "https://example.com/disprobabilize/gavyuti" }
             };
+            let triggerPaste;
+            ckeditor_instance.on.and.callFake((event_name, handler) => {
+                triggerPaste = handler;
+            });
+            isThereAnImageWithDataURI.and.returnValue(true);
 
             await initiateUploadImage(ckeditor_instance, options, element);
 
-            expect(disablePasteOfImages).toHaveBeenCalledWith(ckeditor_instance);
+            const event = {
+                cancel: jasmine.createSpy("event.cancel"),
+                data: { dataValue: `<p></p>` }
+            };
+            triggerPaste(event);
+
+            expect(event.cancel).toHaveBeenCalled();
+            expect(ckeditor_instance.showNotification).toHaveBeenCalled();
         });
 
         describe(`when upload is enabled`, () => {
@@ -126,18 +145,19 @@ describe(`get-upload-image-options`, () => {
             it(`builds the file upload handler and registers it on the CKEditor instance`, async () => {
                 await initiateUploadImage(ckeditor_instance, options, element);
 
-                expect(buildFileUploadHandler).toHaveBeenCalledWith(
+                const expected_options = {
                     ckeditor_instance,
-                    1024,
-                    jasmine.any(Function),
-                    jasmine.any(Function),
-                    jasmine.any(Function)
-                );
+                    max_size_upload: 1024,
+                    onStartCallback: jasmine.any(Function),
+                    onErrorCallback: jasmine.any(Function),
+                    onSuccessCallback: jasmine.any(Function)
+                };
+                expect(buildFileUploadHandler).toHaveBeenCalledWith(expected_options);
             });
 
             it(`when the upload starts, it disables form submits`, async () => {
                 let triggerStart;
-                buildFileUploadHandler.and.callFake((a, b, onStartCallback) => {
+                buildFileUploadHandler.and.callFake(({ onStartCallback }) => {
                     triggerStart = onStartCallback;
                 });
 
@@ -150,7 +170,7 @@ describe(`get-upload-image-options`, () => {
             describe(`when the upload succeeds`, () => {
                 let triggerSuccess;
                 beforeEach(async () => {
-                    buildFileUploadHandler.and.callFake((a, b, c, d, onSuccessCallback) => {
+                    buildFileUploadHandler.and.callFake(({ onSuccessCallback }) => {
                         triggerSuccess = onSuccessCallback;
                     });
                     form.appendChild = jasmine.createSpy("form.appendChild");
@@ -174,7 +194,7 @@ describe(`get-upload-image-options`, () => {
 
             it(`when the upload fails, it enables back form submits`, async () => {
                 let triggerError;
-                buildFileUploadHandler.and.callFake((a, b, c, onErrorCallback) => {
+                buildFileUploadHandler.and.callFake(({ onErrorCallback }) => {
                     triggerError = onErrorCallback;
                 });
 
