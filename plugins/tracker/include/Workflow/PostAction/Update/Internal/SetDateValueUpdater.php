@@ -46,23 +46,16 @@ class SetDateValueUpdater implements PostActionUpdater
     /**
      * Update (and replace) all set date value post actions with those included in given collection.
      * @throws DataAccessQueryException
-     * @throws UnknownPostActionIdsException
      * @throws InvalidPostActionException
      * @throws OrphanTransitionException
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetDateValueActions($this->validator, $transition->getWorkflow()->getTracker());
-        $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
-        $diff                    = $actions->compareSetDateValueActionsTo($existing_ids_collection);
+        $this->repository->deleteAllByTransition($transition);
 
-        $this->repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
-
-        foreach ($diff->getAddedActions() as $added_action) {
-            $this->repository->create($transition, $added_action);
-        }
-        foreach ($diff->getUpdatedActions() as $updated_action) {
-            $this->repository->update($updated_action);
+        foreach ($actions->getSetDateValuePostActions() as $action) {
+            $this->repository->create($transition, $action);
         }
     }
 }

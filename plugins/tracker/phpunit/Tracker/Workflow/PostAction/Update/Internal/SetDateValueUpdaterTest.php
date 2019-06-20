@@ -59,10 +59,7 @@ class SetDateValueUpdaterTest extends TestCase
     {
         $this->set_date_value_repository = Mockery::mock(SetDateValueRepository::class);
         $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->byDefault();
-        $this->set_date_value_repository
-            ->shouldReceive('update')
+            ->shouldReceive('deleteAllByTransition')
             ->byDefault();
         $this->tracker   = Mockery::mock(\Tracker::class);
         $this->validator = Mockery::mock(SetDateValueValidator::class);
@@ -71,9 +68,7 @@ class SetDateValueUpdaterTest extends TestCase
 
     public function testUpdateAddsNewSetDateValueActions()
     {
-        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $this->mockFindAllIdsByTransition($transition, [1]);
-
+        $transition   = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $added_action = new SetDateValue(null, 43, 1);
         $actions      = new PostActionCollection($added_action);
 
@@ -89,10 +84,9 @@ class SetDateValueUpdaterTest extends TestCase
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateUpdatesSetDateValueActionsWhichAlreadyExists()
+    public function testUpdateDeletesAndCreatesSetDateValueActionsWhichAlreadyExists()
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new SetDateValue(1, 43, 1);
         $actions        = new PostActionCollection($updated_action);
@@ -102,8 +96,13 @@ class SetDateValueUpdaterTest extends TestCase
             ->with($this->tracker, $updated_action);
 
         $this->set_date_value_repository
-            ->shouldReceive('update')
-            ->with($updated_action)
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition)
+            ->andReturnTrue();
+
+        $this->set_date_value_repository
+            ->shouldReceive('create')
+            ->with($transition, $updated_action)
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
@@ -112,7 +111,6 @@ class SetDateValueUpdaterTest extends TestCase
     public function testUpdateDeletesRemovedSetDateValueActions()
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
         $action  = new SetDateValue(2, 43, 1);
         $actions = new PostActionCollection($action);
@@ -122,21 +120,15 @@ class SetDateValueUpdaterTest extends TestCase
             ->with($this->tracker, $action);
 
         $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->with($transition, [$action])
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition)
+            ->andReturns();
+
+        $this->set_date_value_repository
+            ->shouldReceive('create')
+            ->with($transition, $action)
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
-    }
-
-    private function mockFindAllIdsByTransition(
-        $transition,
-        array $ids
-    ) {
-        $existing_ids = new PostActionIdCollection(...$ids);
-        $this->set_date_value_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->withArgs([$transition])
-            ->andReturn($existing_ids);
     }
 }
