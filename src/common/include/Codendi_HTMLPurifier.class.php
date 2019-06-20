@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -87,7 +87,11 @@ class Codendi_HTMLPurifier {
     protected function getCodendiConfig() {
         $config = HTMLPurifier_Config::createDefault();
         $this->setConfigAttribute($config, 'Core', 'Encoding', 'UTF-8');
-        $this->setConfigAttribute($config, 'Cache', 'SerializerPath', $GLOBALS['codendi_cache_dir']);
+        if (posix_getpwuid(posix_geteuid())['name'] === ForgeConfig::getApplicationUserLogin()) {
+            $this->setConfigAttribute($config, 'Cache', 'SerializerPath', ForgeConfig::getCacheDir());
+        } else {
+            $this->setConfigAttribute($config, 'Cache', 'DefinitionImpl', null);
+        }
         $this->setConfigAttribute($config, 'URI', 'AllowedSchemes', self::$allowed_schemes);
         return $config;
     }
