@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
-import { TYPE_WIKI, USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../constants.js";
+import { USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE } from "../../../constants.js";
 import ConfirmationModal from "./ModalConfirmDeletion.vue";
 import { tlp } from "tlp-mocks";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
@@ -56,72 +56,81 @@ describe("ModalConfirmDeletion", () => {
             addEventListener: () => {},
             show: jasmine.createSpy("show")
         });
+
+        store.getters.is_item_a_wiki = () => false;
+        store.getters.is_item_a_folder = () => false;
     });
 
-    it(`When the item is a wiki and some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
-        const item = {
-            id: 42,
-            title: "my wiki",
-            wiki_properties: {
-                page_name: "my wiki",
-                page_id: 123
-            },
-            type: TYPE_WIKI
-        };
+    describe("When the item is a wiki", () => {
+        let item;
 
-        store.dispatch.withArgs("getWikisReferencingSameWikiPage", item).and.returnValue([
-            {
-                id: 43,
-                title: "my other wiki",
+        beforeEach(() => {
+            item = {
+                id: 42,
+                title: "my wiki",
                 wiki_properties: {
                     page_name: "my wiki",
                     page_id: 123
                 },
-                type: TYPE_WIKI
-            }
-        ]);
+                type: "wiki"
+            };
 
-        const deletion_modal = await getDeletionModal(item);
+            store.getters.is_item_a_wiki = () => true;
+        });
 
-        expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
-        expect(deletion_modal.contains("[data-test=checkbox]")).toBeTruthy();
+        it(`When some docman wikis reference the same wiki page, then it should add a checkbox`, async () => {
+            store.dispatch.withArgs("getWikisReferencingSameWikiPage", item).and.returnValue([
+                {
+                    id: 43,
+                    title: "my other wiki",
+                    wiki_properties: {
+                        page_name: "my wiki",
+                        page_id: 123
+                    },
+                    type: "wiki"
+                }
+            ]);
+
+            const deletion_modal = await getDeletionModal(item);
+
+            expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
+            expect(deletion_modal.contains("[data-test=checkbox]")).toBeTruthy();
+        });
+
+        it(`When there is a problem retrieving the wiki page referencers (either not found or either unreadable), then it should not add a checkbox`, async () => {
+            store.dispatch
+                .withArgs("getWikisReferencingSameWikiPage", item)
+                .and.returnValue(USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE);
+
+            const deletion_modal = await getDeletionModal(item);
+
+            expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
+            expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+        });
+
+        it(`when it does not reference an existing wiki page, then it should not add a checkbox`, () => {
+            item.wiki_properties.page_id = null;
+
+            const deletion_modal = getDeletionModal(item);
+
+            expect(store.dispatch).not.toHaveBeenCalled();
+            expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+        });
     });
 
-    it(`When the item is a wiki and there is a problem retrieving the wiki page referencers (either not found or either unreadable), then it should not add a checkbox`, async () => {
+    it("When the item is a folder, then it should display a special warning and the checkbox should not be shown", () => {
         const item = {
             id: 42,
-            title: "my wiki",
-            wiki_properties: {
-                page_name: "my wiki",
-                page_id: 123
-            },
-            type: TYPE_WIKI
+            title: "my folder",
+            type: "folder"
         };
 
-        store.dispatch
-            .withArgs("getWikisReferencingSameWikiPage", item)
-            .and.returnValue(USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE);
-
-        const deletion_modal = await getDeletionModal(item);
-
-        expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
-        expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
-    });
-
-    it(`When the item is a wiki which does not reference an existing wiki page, then it should not add a checkbox`, () => {
-        const item = {
-            id: 42,
-            title: "my wiki",
-            wiki_properties: {
-                page_name: "my wiki",
-                page_id: null
-            },
-            type: TYPE_WIKI
-        };
+        store.getters.is_item_a_folder = () => true;
 
         const deletion_modal = getDeletionModal(item);
 
         expect(store.dispatch).not.toHaveBeenCalled();
+        expect(deletion_modal.contains("[data-test=delete-folder-warning]")).toBeTruthy();
         expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
     });
 });

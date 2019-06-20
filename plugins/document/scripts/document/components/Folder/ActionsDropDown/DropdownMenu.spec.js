@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue.js";
 import DropdownMenu from "./DropdownMenu.vue";
 
 describe("DropdownMenu", () => {
-    let dropdown_menu_factory, getters;
+    let dropdown_menu_factory, store;
     beforeEach(() => {
         const state = {
             max_files_dragndrop: 10,
@@ -32,11 +32,10 @@ describe("DropdownMenu", () => {
         };
 
         const store_options = {
-            state,
-            getters
+            state
         };
 
-        const store = createStoreMock(store_options);
+        store = createStoreMock(store_options);
         dropdown_menu_factory = (props = {}) => {
             return shallowMount(DropdownMenu, {
                 localVue,
@@ -44,6 +43,8 @@ describe("DropdownMenu", () => {
                 mocks: { $store: store }
             });
         };
+
+        store.getters.is_item_an_empty_document = () => false;
     });
     it(`Given item title should be hidden (button displayed in quick look view)
         When we display the menu
@@ -191,6 +192,8 @@ describe("DropdownMenu", () => {
                 can_user_manage: false
             }
         });
+
+        store.getters.is_item_an_empty_document = () => true;
 
         expect(wrapper.contains("[data-test=docman-dropdown-approval-tables]")).toBeFalsy();
     });

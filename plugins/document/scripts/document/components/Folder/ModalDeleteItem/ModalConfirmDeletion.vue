@@ -30,7 +30,8 @@
             <p>{{ modal_description }}</p>
             <div
                 class="tlp-alert-warning"
-                v-if="is_item_a_folder"
+                v-if="is_item_a_folder(item)"
+                data-test="delete-folder-warning"
                 v-translate
             >
                 When you delete a folder, all its content is also deleted. Please think wisely!
@@ -42,7 +43,7 @@
                 v-bind:wiki-page-referencers="wiki_page_referencers"
             />
             <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
-                <i class="fa fa-spin fa-spinner" v-if="is_item_a_wiki && wiki_page_referencers_loading"></i>
+                <i class="fa fa-spin fa-spinner" v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"></i>
             </span>
         </div>
         <div class="tlp-modal-footer">
@@ -70,10 +71,9 @@
 
 <script>
 import { sprintf } from "sprintf-js";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { modal } from "tlp";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import { TYPE_WIKI, TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     components: {
@@ -96,6 +96,7 @@ export default {
     computed: {
         ...mapState("error", ["has_modal_error"]),
         ...mapState(["current_folder"]),
+        ...mapGetters(["is_item_a_wiki", "is_item_a_folder"]),
         close() {
             return this.$gettext("Close");
         },
@@ -107,12 +108,6 @@ export default {
                 this.item.title
             );
         },
-        is_item_a_wiki() {
-            return this.item.type === TYPE_WIKI;
-        },
-        is_item_a_folder() {
-            return this.item.type === TYPE_FOLDER;
-        },
         is_confirm_button_disabled() {
             return this.has_modal_error || this.is_an_action_on_going;
         },
@@ -121,7 +116,7 @@ export default {
         },
         canWikiChecboxBeShown() {
             return (
-                this.is_item_a_wiki &&
+                this.is_item_a_wiki(this.item) &&
                 !this.wiki_page_referencers_loading &&
                 this.wiki_page_referencers !== null
             );
@@ -133,7 +128,7 @@ export default {
 
         this.modal.show();
 
-        if (this.is_item_a_wiki && this.item.wiki_properties.page_id !== null) {
+        if (this.is_item_a_wiki(this.item) && this.item.wiki_properties.page_id !== null) {
             this.setWikiPageReferencers();
         }
     },
@@ -146,7 +141,7 @@ export default {
 
             if (!this.has_modal_error) {
                 if (
-                    deleted_item.type === TYPE_FOLDER &&
+                    this.is_item_a_folder(this.item) &&
                     deleted_item.id === this.current_folder.id
                 ) {
                     this.$router.replace(
