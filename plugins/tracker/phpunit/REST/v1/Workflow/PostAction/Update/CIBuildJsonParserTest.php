@@ -74,7 +74,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuildValue(2, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
     }
 
     public function testParseWhenIdNotProvided()

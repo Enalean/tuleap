@@ -57,10 +57,13 @@ class CIBuildUpdaterTest extends TestCase
     {
         $this->ci_build_repository = Mockery::mock(CIBuildValueRepository::class);
         $this->ci_build_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
+            ->shouldReceive('deleteAllByTransition')
             ->byDefault();
         $this->ci_build_repository
-            ->shouldReceive('update')
+            ->shouldReceive('create')
+            ->byDefault();
+        $this->ci_build_repository
+            ->shouldReceive('delete')
             ->byDefault();
 
         $this->validator = Mockery::mock(CIBuildValueValidator::class);
@@ -70,7 +73,6 @@ class CIBuildUpdaterTest extends TestCase
     public function testUpdateAddsNewCIBuildActions()
     {
         $transition = TransitionFactory::buildATransition();
-        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new CIBuildValue(null, 'http://example.test');
         $actions      = new PostActionCollection($added_action);
@@ -81,18 +83,16 @@ class CIBuildUpdaterTest extends TestCase
 
         $this->ci_build_repository
             ->shouldReceive('create')
-            ->with($transition, $added_action)
-            ->andReturns();
+            ->with($transition, $added_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateUpdatesCIBuildActionsWhichAlreadyExists()
+    public function testUpdateDeleteAndCreateCIBuildActionsWhichAlreadyExists()
     {
         $transition = TransitionFactory::buildATransition();
-        $this->mockFindAllIdsByTransition($transition, [1]);
 
-        $updated_action = new CIBuildValue(1, 'http://example.test');
+        $updated_action = new CIBuildValue(null, 'http://example.test');
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
@@ -100,9 +100,12 @@ class CIBuildUpdaterTest extends TestCase
             ->with($updated_action);
 
         $this->ci_build_repository
-            ->shouldReceive('update')
-            ->with($updated_action)
-            ->andReturns();
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition);
+
+        $this->ci_build_repository
+            ->shouldReceive('create')
+            ->with($updated_action);
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -111,9 +114,7 @@ class CIBuildUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransition();
 
-        $this->mockFindAllIdsByTransition($transition, [2, 3]);
-
-        $action  = new CIBuildValue(2, 'http://example.test');
+        $action  = new CIBuildValue(null, 'http://example.test');
         $actions = new PostActionCollection($action);
 
         $this->validator
@@ -121,21 +122,13 @@ class CIBuildUpdaterTest extends TestCase
             ->with($action);
 
         $this->ci_build_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->with($transition, [$action])
-            ->andReturns();
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition);
+
+        $this->ci_build_repository
+            ->shouldReceive('create')
+            ->with($action);
 
         $this->updater->updateByTransition($actions, $transition);
-    }
-
-    private function mockFindAllIdsByTransition(
-        $transition,
-        array $ids
-    ) {
-        $existing_ids = new PostActionIdCollection(...$ids);
-        $this->ci_build_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->withArgs([$transition])
-            ->andReturn($existing_ids);
     }
 }

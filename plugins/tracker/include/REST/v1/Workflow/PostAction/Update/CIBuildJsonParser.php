@@ -54,14 +54,8 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
             );
         }
 
-        // In workflow simple mode, we drop and recreate all post actions. Therefore, the $id must be null to recreate them
-        $id = null;
-        if ($workflow->isAdvanced()) {
-            $id = $json['id'] ?? null;
-        }
-
         return new CIBuildValue(
-            $id,
+            null,
             $json['job_url']
         );
     }

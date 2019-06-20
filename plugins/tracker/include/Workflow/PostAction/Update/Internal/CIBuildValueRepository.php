@@ -59,73 +59,16 @@ class CIBuildValueRepository
         };
     }
 
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function update(CIBuildValue $build): void
+    public function deleteAllByTransition(Transition $transition)
     {
-        $build_id = $build->getId();
-        if ($build_id === null) {
-            throw new LogicException('Cannot update a CI build value that does not exist');
-        }
-        $build_job_url = $build->getJobUrl();
-        $success       = $this->ci_build_dao->updatePostAction($build_id, $build_job_url);
+        $success = $this->ci_build_dao->deletePostActionByTransition($transition->getId());
         if ($success === false) {
             throw new DataAccessQueryException(
                 sprintf(
-                    "Cannot update CI Build post action with id '%u' and Job_url '%s'",
-                    $build_id,
-                    $build_job_url
-                )
-            );
-        }
-    }
-
-    /**
-     * @param CIBuildValue[] $ci_builds
-     * @throws DataAccessQueryException
-     */
-    public function deleteAllByTransitionIfNotIn(Transition $transition, array $ci_builds)
-    {
-        $ids_to_skip = [];
-        foreach ($ci_builds as $ci_build) {
-            $ci_build_id = $ci_build->getId();
-            if ($ci_build_id !== null) {
-                $ids_to_skip[] = $ci_build_id;
-            }
-        }
-
-        $success = $this->ci_build_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
-        if ($success === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot delete all CI Build post actions which ids are not in [%s], and on transition with id '%u'",
-                    implode(", ", $ids_to_skip),
+                    "Cannot delete all CI Build post actions on transition with id '%u'",
                     $transition->getId()
                 )
             );
         }
-    }
-
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function findAllIdsByTransition(Transition $transition): PostActionIdCollection
-    {
-        $rows_or_failure = $this->ci_build_dao->findAllIdsByTransitionId($transition->getId());
-        if ($rows_or_failure === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot find ids of all actions on transition with id '%u'",
-                    $transition->getId()
-                )
-            );
-        }
-
-        $ids = [];
-        foreach ($rows_or_failure as $row) {
-            $ids[] = (int)$row['id'];
-        }
-        return new PostActionIdCollection(...$ids);
     }
 }

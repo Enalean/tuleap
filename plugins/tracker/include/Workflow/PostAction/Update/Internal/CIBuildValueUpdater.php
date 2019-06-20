@@ -52,20 +52,10 @@ class CIBuildValueUpdater implements PostActionUpdater
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateCIBuildActions($this->validator);
-        $existing_ids_collection = $this->ci_build_repository->findAllIdsByTransition($transition);
-        $diff                    = $actions->compareCIBuildActionsTo($existing_ids_collection);
+        $this->ci_build_repository->deleteAllByTransition($transition);
 
-        /** @var CIBuildValue[] $updated_actions */
-        $updated_actions = $diff->getUpdatedActions();
-        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $updated_actions);
-
-        foreach ($diff->getAddedActions() as $added_action) {
-            assert($added_action instanceof CIBuildValue);
-            $this->ci_build_repository->create($transition, $added_action);
-        }
-        foreach ($diff->getUpdatedActions() as $updated_action) {
-            assert($updated_action instanceof CIBuildValue);
-            $this->ci_build_repository->update($updated_action);
+        foreach ($actions->getCIBuildPostActions() as $action) {
+            $this->ci_build_repository->create($transition, $action);
         }
     }
 }
