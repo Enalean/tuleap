@@ -23,9 +23,11 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
+use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
+use EventManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -35,7 +37,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
@@ -488,9 +489,6 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $lock_factory = new Docman_LockFactory();
-        $lock_updater = new LockUpdater($lock_factory);
-
         if (Docman_PermissionsManager::instance($project->getGroupId())->_itemIsLockedForUser($current_user, (int)$item->getId())) {
             throw new I18NRestException(
                 403,
@@ -498,7 +496,12 @@ class DocmanFilesResource extends AuthenticatedResource
             );
         }
 
-        $lock_updater->updateLockInformation($item, $should_lock_item, $current_user);
+        $lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
+        if ($should_lock_item) {
+            $lock_factory->lock($item, $current_user);
+        } else {
+            $lock_factory->unlock($item, $current_user);
+        }
     }
 
     private function getFileVersionCreator(\Project $project): DocmanFileVersionCreator

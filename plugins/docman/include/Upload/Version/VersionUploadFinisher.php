@@ -24,12 +24,12 @@ namespace Tuleap\Docman\Upload\Version;
 
 use Docman_File;
 use Docman_Item;
+use Docman_LockFactory;
 use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
@@ -37,6 +37,10 @@ use Tuleap\Upload\UploadPathAllocator;
 
 final class VersionUploadFinisher implements TusFinisherDataStore
 {
+    /**
+     * @var Docman_LockFactory
+     */
+    private $lock_factory;
     /**
      * @var DocmanItemsEventAdder
      */
@@ -66,7 +70,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      */
     private $version_to_upload_dao;
     /**
-    /**
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
@@ -86,10 +89,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var ProjectManager
      */
     private $project_manager;
-    /**
-     * @var LockUpdater
-     */
-    private $lock_updater;
     /**
      * @var ApprovalTableUpdater
      */
@@ -116,7 +115,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         \UserManager $user_manager,
         DocmanItemsEventAdder $items_event_adder,
         ProjectManager $project_manager,
-        LockUpdater $lock_updater,
+        Docman_LockFactory $lock_factory,
         ApprovalTableUpdater $approval_table_updater,
         ApprovalTableRetriever $approval_table_retriever,
         ApprovalTableUpdateActionChecker $approval_table_action_checker
@@ -133,7 +132,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->user_manager                   = $user_manager;
         $this->items_event_adder              = $items_event_adder;
         $this->project_manager                = $project_manager;
-        $this->lock_updater                   = $lock_updater;
+        $this->lock_factory                   = $lock_factory;
         $this->approval_table_updater         = $approval_table_updater;
         $this->approval_table_retriever       = $approval_table_retriever;
         $this->approval_table_action_checker = $approval_table_action_checker;
@@ -214,7 +213,12 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 if ($current_user === null) {
                     throw new \RuntimeException('Can not find user ID #' . $upload_row['user_id']);
                 }
-                $this->lock_updater->updateLockInformation($item, (bool)$upload_row['is_file_locked'], $current_user);
+
+                if ((bool)$upload_row['is_file_locked']) {
+                    $this->lock_factory->lock($item, $current_user);
+                } else {
+                    $this->lock_factory->unlock($item, $current_user);
+                }
 
                 if (! $has_version_been_created) {
                     \unlink($file_path);

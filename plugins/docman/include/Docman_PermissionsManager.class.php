@@ -130,7 +130,7 @@ class Docman_PermissionsManager {
      */
     function getLockFactory() {
         if (!isset($this->lockFactory)) {
-            $this->lockFactory = new Docman_LockFactory();
+            $this->lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
         }
         return $this->lockFactory;
     }
