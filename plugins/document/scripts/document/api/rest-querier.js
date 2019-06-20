@@ -50,13 +50,13 @@ export {
 };
 
 async function getProject(project_id) {
-    const response = await get("/api/projects/" + project_id);
+    const response = await get("/api/projects/" + encodeURIComponent(project_id));
 
     return response.json();
 }
 
 async function getItem(id) {
-    const response = await get("/api/docman_items/" + id);
+    const response = await get("/api/docman_items/" + encodeURIComponent(id));
 
     return response.json();
 }
@@ -77,27 +77,45 @@ async function addNewDocumentType(url, item) {
 }
 
 function addNewFile(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/files", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
+        item
+    );
 }
 
 function addNewEmpty(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/empties", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
+        item
+    );
 }
 
 function addNewEmbedded(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/embedded_files", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
+        item
+    );
 }
 
 function addNewWiki(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/wikis", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
+        item
+    );
 }
 
 function addNewLink(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/links", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
+        item
+    );
 }
 
 function addNewFolder(item, parent_id) {
-    return addNewDocumentType("/api/docman_folders/" + parent_id + "/folders", item);
+    return addNewDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
+        item
+    );
 }
 
 async function createNewVersion(
@@ -108,7 +126,7 @@ async function createNewVersion(
     should_lock_file,
     approval_table_action
 ) {
-    const response = await patch(`/api/docman_files/${item.id}`, {
+    const response = await patch(`/api/docman_files/${encodeURIComponent(item.id)}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -130,7 +148,7 @@ async function createNewVersion(
 }
 
 function getFolderContent(folder_id) {
-    return recursiveGet("/api/docman_items/" + folder_id + "/docman_items", {
+    return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/docman_items", {
         params: {
             limit: 50,
             offset: 0
@@ -139,7 +157,7 @@ function getFolderContent(folder_id) {
 }
 
 function getParents(folder_id) {
-    return recursiveGet("/api/docman_items/" + folder_id + "/parents", {
+    return recursiveGet("/api/docman_items/" + encodeURIComponent(folder_id) + "/parents", {
         params: {
             limit: 50,
             offset: 0
@@ -148,7 +166,7 @@ function getParents(folder_id) {
 }
 
 async function patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {
-    await patch(`/api/users/${user_id}/preferences`, {
+    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -167,7 +185,7 @@ function patchEmbeddedFile(
     should_lock_file,
     approval_table_action
 ) {
-    return patch(`/api/docman_embedded_files/${item.id}`, {
+    return patch(`/api/docman_embedded_files/${encodeURIComponent(item.id)}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -186,7 +204,7 @@ function patchEmbeddedFile(
 }
 
 function patchWiki(item, page_name, version_title, change_log, should_lock_file) {
-    return patch(`/api/docman_wikis/${item.id}`, {
+    return patch(`/api/docman_wikis/${encodeURIComponent(item.id)}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -209,7 +227,7 @@ function patchLink(
     should_lock_file,
     approval_table_action
 ) {
-    return patch(`/api/docman_links/${item.id}`, {
+    return patch(`/api/docman_links/${encodeURIComponent(item.id)}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -228,7 +246,9 @@ function patchLink(
 }
 
 async function deleteUserPreference(user_id, key) {
-    await del(`/api/users/${user_id}/preferences?key=${key}`);
+    await del(
+        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
+    );
 }
 
 async function deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {
@@ -246,7 +266,7 @@ async function deleteUserPreferenciesForUnderConstructionModal(user_id, project_
 async function addUserLegacyUIPreferency(user_id, project_id) {
     const key = `plugin_docman_display_new_ui_${project_id}`;
 
-    await patch(`/api/users/${user_id}/preferences`, {
+    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
             "Content-Type": "application/json"
         },
