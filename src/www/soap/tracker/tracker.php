@@ -2418,7 +2418,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
     $return = array();
     $rows = db_numrows($followups_res);
     for ($i=0; $i < $rows; $i++) {
-        $comment = util_make_links(db_result($followups_res, $i, 'new_value'),$group_id,$group_artifact_id);
+        $comment = Codendi_HTMLPurifier::instance()->purify(db_result($followups_res, $i, 'new_value'), CODENDI_PURIFIER_BASIC_NOBR, $group_id);
         $id = db_result($followups_res, $i, 'artifact_history_id');
         $return[] = array (
             'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),    

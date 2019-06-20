@@ -165,7 +165,7 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('style');
         return $el->_init2(func_get_args());
     }
-    function script (/*...*/) {
+    static function script (/*...*/) {
         $el = new HtmlElement('script');
         return $el->_init2(func_get_args());
     }
@@ -174,15 +174,15 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    function a (/*...*/) {
+    static function a (/*...*/) {
         $el = new HtmlElement('a');
         return $el->_init2(func_get_args());
     }
-    function img (/*...*/) {
+    static function img (/*...*/) {
         $el = new HtmlElement('img');
         return $el->_init2(func_get_args());
     }
-    function br (/*...*/) {
+    static function br (/*...*/) {
         $el = new HtmlElement('br');
         return $el->_init2(func_get_args());
     }
@@ -199,7 +199,7 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('h2');
         return $el->_init2(func_get_args());
     }
-    function h3 (/*...*/) {
+    static function h3 (/*...*/) {
         $el = new HtmlElement('h3');
         return $el->_init2(func_get_args());
     }
@@ -220,7 +220,7 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('hr');
         return $el->_init2(func_get_args());
     }
-    function div (/*...*/) {
+    static function div (/*...*/) {
         $el = new HtmlElement('div');
         return $el->_init2(func_get_args());
     }
@@ -241,7 +241,7 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('em');
         return $el->_init2(func_get_args());
     }
-    function strong (/*...*/) {
+    static function strong (/*...*/) {
         $el = new HtmlElement('strong');
         return $el->_init2(func_get_args());
     }
@@ -394,11 +394,11 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('embed');
         return $el->_init2(func_get_args());
     }
-    function fieldset(/*...*/) {
+    static function fieldset(/*...*/) {
         $el = new HtmlElement('fieldset');
         return $el->_init2(func_get_args());    
     }
-    function legend(/*...*/) {
+    static function legend(/*...*/) {
         $el = new HtmlElement('legend');
         return $el->_init2(func_get_args());
     }

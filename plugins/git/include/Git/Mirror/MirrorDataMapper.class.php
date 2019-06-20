@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -329,6 +329,9 @@ class Git_Mirror_MirrorDataMapper {
         }
 
         $user = $this->user_manager->getUserById($mirror->owner_id);
+        if ($user === null) {
+            return false;
+        }
         $user->setStatus(PFUser::STATUS_DELETED);
         $this->user_manager->updateDb($user);
         $this->git_system_event_manager->queueDeleteMirror($id, $mirror->hostname);

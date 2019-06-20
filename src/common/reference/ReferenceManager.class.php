@@ -703,7 +703,7 @@ class ReferenceManager {
      * Extract References from a given text and insert extracted refs into the database
      *
      * @param String  $html        Text to parse
-     * @param int $source_id Id of the item where the text was added
+     * @param int|string $source_id Id of the item where the text was added
      * @param String  $source_type Nature of the source
      * @param int $source_gid Project Id of the project the source item belongs to
      * @param int $user_id User who owns the text to parse

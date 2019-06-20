@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
@@ -448,7 +448,7 @@ class ArtifactHtml extends Artifact {
                         // original submission is editable
                         $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
                     } else {
-                        $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id, $group_artifact_id);
+                        $value = Codendi_HTMLPurifier::instance()->purify($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true), CODENDI_PURIFIER_BASIC_NOBR, $group_id);
                     }
                 } else if ($field->getName() == 'submitted_by') {
                     $value = util_user_link(user_getname($field_value));

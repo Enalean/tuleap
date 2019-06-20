@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -523,7 +523,7 @@ class LDAP_UserManager {
 
         foreach (explode(';', $this->ldap->getLDAPParam('people_dn')) as $people_dn) {
             $ldapSearch = $this->ldap->search($people_dn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
-            if (count($ldapSearch) == 1 && $ldapSearch != false) {
+            if ($ldapSearch !== false && count($ldapSearch) === 1) {
                 break;
             }
         }

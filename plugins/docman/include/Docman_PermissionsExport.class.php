@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2009
@@ -27,8 +27,8 @@ require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 
 class Docman_PermissionsExport {
-    protected $group        = null;
-    protected $ugroups      = null;
+    protected $group;
+    protected $ugroups;
     protected $parentTitles = array();
 
     public function __construct(Project $group) {
@@ -70,6 +70,7 @@ class Docman_PermissionsExport {
 
     public function getUgroups() {
         if ($this->ugroups === null) {
+            /** @psalm-suppress DeprecatedFunction */
             $result = ugroup_db_get_existing_ugroups($this->group->getId(), array($GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
             while(($row = db_fetch_array($result))) {
                 $this->ugroups[$row['ugroup_id']] = util_translate_name_ugroup($row['name']);
@@ -91,7 +92,7 @@ class Docman_PermissionsExport {
     public function toCSV() {
         $output   = $this->gatherPermissions();
         $sep      = get_csv_separator();
-        $date     = util_timestamp_to_userdateformat($_SERVER['REQUEST_TIME'], true);
+        $date     = DateHelper::formatForLanguage($GLOBALS['Language'], $_SERVER['REQUEST_TIME'], true);
         $filename = 'export_permissions_'.$this->group->getUnixName().'_'.$date.'.csv';
         header('Content-Disposition: filename='.$filename);
         header('Content-Type: text/csv');

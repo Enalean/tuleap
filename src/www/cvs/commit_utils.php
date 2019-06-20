@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  * SourceForge: Breaking Down the Barriers to Open Source Development
  *
@@ -314,7 +314,7 @@ function show_commitslist(
 			<TR class="'. util_get_alt_row_color($i) .'">'.
 			'<TD class="small"><b><A HREF="?func=detailcommit&group_id='.$group_id.$id_link.$filter_str.'">'.$id_str.
 		  '</b></A></TD>'.
-			'<TD class="small">'.util_make_links(join('<br>', preg_split("/\n/D",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
+			'<TD class="small">'.Codendi_HTMLPurifier::instance()->purify(implode('<br>', preg_split("/\n/D",db_result($result, $i, 'description'))), CODENDI_PURIFIER_BASIC_NOBR, $group_id).$id_sublink.'</TD>'.
 			// '<TD class="small">'.$commits_url.'</TD>'.
 			'<TD class="small">'.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'c_when')).'</TD>'.
 			// '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
@@ -439,7 +439,8 @@ function show_commit_details ($group_id, $commit_id, $result)
 
 	$rows=db_numrows($result);
 	$url = "/cvs/?func=detailcommit&commit_id=$commit_id&group_id=$group_id&order=";
-	$list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+    $purifier = Codendi_HTMLPurifier::instance();
+	$list_log = '<pre>'.$purifier->purify(util_line_wrap(db_result($result, 0, 'description')), CODENDI_PURIFIER_BASIC_NOBR, $group_id).'</pre>';
 
 	if ($commit_id) {
 	  $hdr = '['.$GLOBALS['Language']->getText('cvs_commit_utils', 'commit').$commit_id.'] - ';

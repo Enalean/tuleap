@@ -352,6 +352,7 @@ class Docman_PermissionsManager {
         $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
         if (db_numrows($res) < 1 && $permission_type == self::PLUGIN_DOCMAN_ADMIN) {
             // No ugroup defined => no permissions set => get default permissions only for admin permission
+            /** @psalm-suppress DeprecatedFunction */
             $res=permission_db_get_defaults($permission_type);
         }
         while (!$has_permission && ($row = db_fetch_array($res))) {

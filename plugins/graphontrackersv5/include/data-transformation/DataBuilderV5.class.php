@@ -158,12 +158,17 @@ class DataBuilderV5 {
             //artifact permissions
             $sql_group_id = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=". db_ei($this->atid);
             $result_group_id = db_query($sql_group_id);
+            $group_id        = null;
             if (db_numrows($result_group_id)>0) {
                 $row = db_fetch_array($result_group_id);
                 $group_id = $row['group_id'];
             }
             $user  = UserManager::instance()->getCurrentUser();
-            $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
+            if ($group_id !== null) {
+                $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
+            } else {
+                $ugroups = ['NULL'];
+            }
 
             $from  .= " LEFT JOIN permissions
                          ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
@@ -177,17 +182,18 @@ class DataBuilderV5 {
             $sql ="$select $from $where $group_by $order_by";
             //echo "$sql<br>\n";
             $res = db_query($sql);
+            $r   = [];
             for($i=0;$i<db_numrows($res);$i++) {
                 $r[$i] = db_fetch_array($res);
                 $result['field1'][$i] = $r[$i]['field1'];
           
-                if ($af_x->isUsername() && $r[$i]['id1']==100){
+                if ($r[$i]['id1']==100){
                     $result['field1'][$i]=$GLOBALS['Language']->getText('global','none');
                     
                  }
                 if (!is_null($this->field_Y)) {
                     $result['field2'][$i] = $r[$i]['field2'];
-                    if ($af_y->isUsername() && $r[$i]['id2']==100){
+                    if ($r[$i]['id2']==100){
                         $result['field2'][$i]=$GLOBALS['Language']->getText('global','none');
                     
                     }  

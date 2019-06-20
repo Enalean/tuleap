@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Format a content to be sent through a X-JSON header
- *
- * @param mixed $content The content
- *
- * @return string 'X-JSON: ...'
- */
+declare(strict_types=1);
 
-function json_header($content)
+namespace Tuleap;
+
+final class JSONHeader
 {
-    return 'X-JSON: '. json_encode($content);
+    public static function getHeaderForPrototypeJS($params) : string
+    {
+        return 'X-JSON: ' . json_encode($params);
+    }
 }

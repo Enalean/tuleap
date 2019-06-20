@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2018. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -88,7 +88,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
             );
             $html .= '</div>';
             $html .= '<div style="padding-left:20px; padding-bottom:4px; color:#555">';
-            $html .= util_make_links(substr($data['description'], 0, 255), $this->group_id);
+            $html .= $hp->purify(substr($data['description'], 0, 255), CODENDI_PURIFIER_BASIC_NOBR, $this->group_id);
             if (strlen($data['description']) > 255) {
                 $html .= '&nbsp;[...]';
             }

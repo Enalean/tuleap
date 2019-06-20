@@ -1408,6 +1408,7 @@ class Docman_Actions extends Actions {
     }
 
     function admin_set_permissions() {
+        /** @psalm-suppress DeprecatedFunction */
         list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_updated', $feedback));

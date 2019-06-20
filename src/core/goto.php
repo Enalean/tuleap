@@ -144,7 +144,7 @@ if ($request->isAjax()) {
                                 
                                 $open_date = $art_field_fact->getFieldFromName($field_name);
                                 if ($field->userCanRead($group_id, $atid)) {
-                                    $value .= $html_purifier->purify(', '. util_time_ago_in_words($ah->getValue('open_date')));
+                                    $value .= $html_purifier->purify(', '. DateHelper::timeAgoInWords($ah->getValue('open_date')));
                                 }
                             } else {
                                 $value = $field_html->display($at->getID(), $field_value, false, false, true);

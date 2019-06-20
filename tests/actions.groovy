@@ -72,7 +72,7 @@ def runPsalm(String configPath, String filesToAnalyze) {
         if (filesToAnalyze == '') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php73 "src/vendor/bin/psalm --show-info=false --config='${configPath}' --report=../results/psalm/checkstyle.xml"
+            scl enable php73 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --report=../results/psalm/checkstyle.xml"
             """
         } else {
             sh """

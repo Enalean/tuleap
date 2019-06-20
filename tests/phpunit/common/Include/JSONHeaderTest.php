@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,28 +22,25 @@ namespace Tuleap;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../../../../src/www/include/json.php';
-
-class JsonTest extends TestCase
+final class JSONHeaderTest extends TestCase
 {
-
-    public function testStartsWithHeaderInfo()
+    public function testStartsWithHeaderInfo() : void
     {
-        $this->assertRegExp("/^X-JSON:.*/", json_header('something'));
+        $this->assertRegExp('/^X-JSON:.*/', JSONHeader::getHeaderForPrototypeJS('something'));
     }
 
     /**
      * @dataProvider contentProvider
      */
-    public function testJsonFormat($entry, $expected)
+    public function testJsonFormat($entry, string $expected) : void
     {
         $this->assertSame(
             'X-JSON: {"whatever":false,"msg":'.$expected.'}',
-            json_header(array("whatever" => false, "msg" => $entry))
+            JSONHeader::getHeaderForPrototypeJS(['whatever' => false, 'msg' => $entry])
         );
     }
 
-    public function contentProvider()
+    public function contentProvider() : array
     {
         return [
             ['toto', '"toto"'],

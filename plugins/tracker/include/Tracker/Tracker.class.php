@@ -73,8 +73,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
-require_once('json.php');
-
 class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
 {
     const PERMISSION_ADMIN               = 'PLUGIN_TRACKER_ADMIN';

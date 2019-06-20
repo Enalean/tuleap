@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -830,7 +830,7 @@ class UserManager
      * validating keys each time we update a user
      *
      * @param PFUser $user
-     * @param String $keys
+     * @param string[] $keys
      */
     public function updateUserSSHKeys(PFUser $user, array $keys) {
         $original_authorised_keys = $user->getAuthorizedKeysRaw();

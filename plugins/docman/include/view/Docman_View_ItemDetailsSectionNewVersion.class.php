@@ -25,10 +25,6 @@
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
-require_once('Docman_View_ItemDetailsSectionActions.class.php');
-require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
-require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
     
     var $force;
@@ -114,7 +110,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<table>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="'.$label.'" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">'.$changelog.'</textarea></td></tr>';
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         if ($fields !== null) {
             foreach($fields as $field) {
                 $content .= '<tr style="vertical-align:top;">';

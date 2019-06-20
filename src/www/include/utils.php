@@ -77,24 +77,6 @@ function util_get_user_preferences_export_datefmt() {
     return $fmt;
 }
 
-/**
- * Convert a timestamp unix into the user defined format.
- * This format is depending on the choosen language, and is defined
- * in the site-content file <language>.tab
- *
- * @global $sys_datefmt the user preference date format defined in the language file
- *
- * @param string $date the date in the unix timestamp format
- * @param bool $day_only false: return the day AND the time, true only the date.
- *
- * @deprecated Use DateHelper::formatForLanguage() instead
- *
- * @return string the date in the user format, or null if the conversion was not possible or wrong
- */
-function util_timestamp_to_userdateformat($date, $day_only=false) {
-    return DateHelper::formatForLanguage($GLOBALS['Language'], $date, $day_only);
-}
-
 // Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
 // into a Unix time. if string is empty return 0 (Epoch time)
 // Returns a list with two values: the unix time and a boolean saying whether the conversion
@@ -375,14 +357,6 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 		}       
 	}		       
 	return implode($break, $result);
-}
-
-/**
- * @deprecated
- */
-function util_make_links ($data='',$group_id = 0) {
-    $hp = Codendi_HTMLPurifier::instance();
-    return $hp->purify($data, CODENDI_PURIFIER_BASIC_NOBR, $group_id);
 }
 
 function util_make_reference_links ($data,$group_id) {
@@ -949,20 +923,6 @@ function util_return_to($url) {
     $return_to     = $request->get('return_to');
     $GLOBALS['Response']->redirect($url_redirect->makeReturnToUrl($url, $return_to));
     exit;
-}
-
-
-/**
-* return the apporximate distance between a time and now 
-* inspired from ActionView::Helpers::DateHelper in RubyOnRails
-* @deprecated Use DateHelper::timeAgoInWords() instead
-*/
-function util_time_ago_in_words($time, $include_seconds = false) {
-    if ($time) {
-        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, $_SERVER['REQUEST_TIME'], $include_seconds));
-    } else {
-        return '-';
-    }
 }
 
 /**

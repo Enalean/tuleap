@@ -145,7 +145,7 @@ class Docman_Widget_MyDocman extends Widget
 
                     // Date
                     $html .= '<td align="right">';
-                    $html .= util_timestamp_to_userdateformat($review['date'], true);
+                    $html .=  DateHelper::formatForLanguage($GLOBALS['Language'], $review['date'], true);
                     $html .= '</td>';
                 }
 

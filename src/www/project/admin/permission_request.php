@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -186,6 +186,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
 
 
 $ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
+/** @psalm-suppress DeprecatedFunction */
 $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {
     $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);

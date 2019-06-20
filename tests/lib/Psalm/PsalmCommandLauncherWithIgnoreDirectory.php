@@ -94,7 +94,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
 
     private function isPsalmCommand(string $command) : bool
     {
-        return preg_match('/(psalm|psalm-language-server|psalm-plugin|psalter)$/', $command) === 1;
+        return preg_match('/(psalm|psalm-language-server|psalm-plugin|psalter|psalm-refactor)$/', $command) === 1;
     }
 
     private function writeTemporaryConfigWithExcludedDirectories(\SimpleXMLElement $config) : string

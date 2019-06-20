@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -341,7 +341,7 @@ XML;
             'processor_id'  => 69,
             'release_time'  => strtotime('2015-12-03T16:46:00'),
             'file_location' => $GLOBALS['ftp_frs_dir_prefix']."/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
-            'file_size'     => '14',
+            'file_size'     => 14,
             'post_date'     => strtotime('2015-12-03T16:46:42'),
             'status'        => "A",
             'computed_md5'  => "c58ef9ab0b1fc7f6f90ffb607dee0073",

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\JSONHeader;
 
 class Tracker_Action_CreateArtifact {
     private $tracker;
@@ -52,6 +54,7 @@ class Tracker_Action_CreateArtifact {
             $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
             $this->redirect($request, $current_user, $artifact);
         }
+        assert($layout instanceof Tracker_IFetchTrackerSwitcher);
         $this->tracker->displaySubmit($layout, $request, $current_user, $link);
     }
 
@@ -62,7 +65,7 @@ class Tracker_Action_CreateArtifact {
      * @param Codendi_Request                $request
      * @param PFUser                         $user
      *
-     * @return Tracker_Artifact the new artifact
+     * @return Tracker_Artifact|false the new artifact
      */
     private function createArtifact(Tracker_IDisplayTrackerLayout $layout, $request, $user) {
         $email = null;
@@ -103,7 +106,7 @@ class Tracker_Action_CreateArtifact {
 
     private function executeRedirect(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect) {
         if ($request->isAjax()) {
-            header(json_header(array('aid' => $artifact->getId())));
+            header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
             exit;
         } else if ($this->isFromOverlay($request)) {
             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact(' . (int) $artifact->getId() . ');</script>';

@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -235,7 +236,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     }
     
     protected function displayAjax($title, $form) {
-        header(json_header(array('dialog-title' => $title)));
+        header(JSONHeader::getHeaderForPrototypeJS(['dialog-title' => $title]));
         echo $form;
     }
     

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +85,11 @@ class BacklogItemRepresentation {
      * @var array
      */
     public $accept;
+
+    /**
+     * @var array
+     */
+    public $card_fields = [];
 
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields) {
         $this->id             = JsonCast::toInt($backlog_item->id());

@@ -193,7 +193,7 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
     
     if (!is_a($user, 'User')) {
-        $user = ugroup_get_user_manager()->getUserById($user);
+        $user = UserManager::instance()->getUserById($user);
     }
   
   if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
@@ -681,16 +681,6 @@ function ugroup_delete($group_id, $ugroup_id) {
 /**
  * Wrapper for tests
  *
- * @deprecated
- * @return UserManager
- */
-function ugroup_get_user_manager() {
-    return UserManager::instance();
-}
-
-/**
- * Wrapper for tests
- *
  * @return ProjectUGroup
  */
 function ugroup_get_ugroup() {
@@ -709,7 +699,7 @@ function ugroup_count_project_admins($groupId, $usersSql) {
     $admins    = 0;
     $nonAdmins = 0;
     if ($usersSql !== null) {
-        $um = ugroup_get_user_manager();
+        $um = UserManager::instance();
         $res = db_query($usersSql);
         while ($row = db_fetch_array($res)) {
             $user = $um->getUserById($row['user_id']);

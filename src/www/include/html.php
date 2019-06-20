@@ -694,8 +694,7 @@ function html_field_date($field_name='',
 }
 
 function html_time_ago($time, $include_seconds = false) {
-    $hp = Codendi_HTMLPurifier::instance();
-    return '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $time) .'">'.  $hp->purify(util_time_ago_in_words($time, $include_seconds), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
+    return DateHelper::timeAgoInWords($time, $include_seconds, true);
 }
 
 ?>

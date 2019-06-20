@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('Docman_View_ItemDetailsSectionActions.class.php');
 
 class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions {
     var $validate;
@@ -67,8 +65,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         
         $content .= $this->_updateHeader();
         
-        require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         $content .= '<table>';
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
