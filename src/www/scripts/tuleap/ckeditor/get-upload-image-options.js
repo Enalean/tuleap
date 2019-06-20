@@ -20,14 +20,14 @@
 import { isUploadEnabled, informUsersThatTheyCanPasteImagesInEditor } from "./element-adapter.js";
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
 import { initGettext } from "./gettext-factory.js";
-import { disablePasteOfImages } from "./ckeditor-adapter.js";
 import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
 import { buildFileUploadHandler } from "./file-upload-handler-factory.js";
+import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {
-    await initGettext(options);
+    const gettext_provider = await initGettext(options);
     if (!isUploadEnabled(element)) {
-        disablePasteOfImages(ckeditor_instance);
+        disablePasteOfImages(ckeditor_instance, gettext_provider);
         return;
     }
 
@@ -51,16 +51,29 @@ export async function initiateUploadImage(ckeditor_instance, options, element) {
         enableFormSubmit(form);
     }
 
-    const fileUploadRequestHandler = buildFileUploadHandler(
+    const fileUploadRequestHandler = buildFileUploadHandler({
         ckeditor_instance,
         max_size_upload,
         onStartCallback,
         onErrorCallback,
         onSuccessCallback
-    );
+    });
 
     ckeditor_instance.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
     addInstance(form, ckeditor_instance, field_name);
+}
+
+function disablePasteOfImages(ckeditor_instance, gettext_provider) {
+    ckeditor_instance.on("paste", event => {
+        if (isThereAnImageWithDataURI(event.data.dataValue)) {
+            event.data.dataValue = "";
+            event.cancel();
+            ckeditor_instance.showNotification(
+                gettext_provider.gettext("You are not allowed to paste images here"),
+                "warning"
+            );
+        }
+    });
 }
 
 export function getUploadImageOptions(element) {

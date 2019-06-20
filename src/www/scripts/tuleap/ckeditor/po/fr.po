@@ -16,12 +16,12 @@ msgid "Unable to upload the file"
 msgstr "Impossible de téléverser le fichier"
 
 msgid "You are not allowed to paste images here"
-msgstr "Vous n'êtes pas autorisés à coller des images ici"
+msgstr "Vous n'êtes pas autorisé à coller des images ici"
 
 #, javascript-format
 msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
-"Vous n'êtes pas autorisés à téléverser des fichiers avec une taille excédant "
+"Vous n'êtes pas autorisé à téléverser des fichiers avec une taille excédant "
 "%s."
 
 msgid "You can drag 'n drop or paste image directly in the editor."
