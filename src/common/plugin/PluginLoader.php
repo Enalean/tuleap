@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,7 +49,7 @@ class PluginLoader
     public function loadPlugins()
     {
         $proxy = $this->getFromCache();
-        if ($proxy === false) {
+        if ($proxy === null) {
             $proxy = $this->getHooksOfAvailablePlugins();
             $this->storeInCache($proxy);
         }
@@ -79,16 +79,18 @@ class PluginLoader
         return ForgeConfig::get('codendi_cache_dir') . '/' . self::HOOK_CACHE_KEY;
     }
 
-    /**
-     * @return bool|SerializedPluginProxy
-     */
-    private function getFromCache()
+    private function getFromCache() : ?SerializedPluginProxy
     {
-        if (file_exists(self::getHooksCacheFile())) {
-            $cache = include self::getHooksCacheFile();
-            return new SerializedPluginProxy($cache);
+        if (! file_exists(self::getHooksCacheFile())) {
+            return null;
         }
-        return false;
+        ob_start();
+        $cache = include self::getHooksCacheFile();
+        ob_end_clean();
+        if (! $cache instanceof EventPluginCache) {
+            return null;
+        }
+        return new SerializedPluginProxy($cache);
     }
 
     private function storeInCache(SerializedPluginProxy $proxy)
