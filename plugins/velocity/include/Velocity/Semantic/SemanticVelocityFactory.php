@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,14 @@ class SemanticVelocityFactory
     public function __construct(BacklogRequiredTrackerCollectionFormatter $semantic_formatter)
     {
         $this->semantic_formatter = $semantic_formatter;
+    }
+
+    /**
+     * @return SemanticVelocity
+     */
+    public function getInstanceByTracker(Tracker $tracker) : SemanticVelocity
+    {
+        return SemanticVelocity::load($tracker);
     }
 
     public function getInstanceFromXML(

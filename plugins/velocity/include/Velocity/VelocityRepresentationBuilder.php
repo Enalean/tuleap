@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,60 +22,59 @@ namespace Tuleap\Velocity;
 
 use PFUser;
 use Planning_Milestone;
-use Tracker_Artifact;
-use Tracker_ArtifactFactory;
-use Tracker_FormElementFactory;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
-use Tuleap\Velocity\Semantic\SemanticVelocity;
+use Planning_MilestoneFactory;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 
 class VelocityRepresentationBuilder
 {
-    public const START_DATE_FIELD_NAME = 'start_date';
-    public const DURATION_FIELD_NAME   = 'duration';
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
 
     /**
-     * @var VelocityDao
+     * @var SemanticVelocityFactory
      */
-    private $velocity_dao;
+    private $semantic_velocity_factory;
+
     /**
-     * @var Tracker_ArtifactFactory
+     * @var SemanticDoneFactory
      */
-    private $artifact_factory;
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private $semantic_done_factory;
 
     public function __construct(
-        VelocityDao $velocity_dao,
-        Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $form_element_factory
+        SemanticVelocityFactory $semantic_velocity_factory,
+        SemanticDoneFactory $semantic_done_factory,
+        Planning_MilestoneFactory $milestone_factory
     ) {
-        $this->velocity_dao         = $velocity_dao;
-        $this->artifact_factory     = $artifact_factory;
-        $this->form_element_factory = $form_element_factory;
+        $this->milestone_factory         = $milestone_factory;
+        $this->semantic_velocity_factory = $semantic_velocity_factory;
+        $this->semantic_done_factory     = $semantic_done_factory;
     }
 
-    public function buildRepresentations(Planning_Milestone $milestone, PFUser $user)
+    public function buildCollectionOfRepresentations(Planning_Milestone $milestone, PFUser $user) : VelocityCollection
     {
         $representations = new VelocityCollection();
 
         $backlog_artifacts = $milestone->getLinkedArtifacts($user);
         foreach ($backlog_artifacts as $artifact) {
-            $velocity      = SemanticVelocity::load($artifact->getTracker());
-            $done_semantic = SemanticDone::load($artifact->getTracker());
+            $velocity      = $this->semantic_velocity_factory->getInstanceByTracker($artifact->getTracker());
+            $done_semantic = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
 
             if ($velocity->getVelocityField() && $done_semantic->isDone($artifact->getLastChangeset())) {
                 $computed_velocity = $artifact->getLastChangeset()->getValue($velocity->getVelocityField());
+                $sub_milestone     = $this->milestone_factory->getMilestoneFromArtifact($artifact);
+                $this->milestone_factory->updateMilestoneContextualInfo($user, $sub_milestone);
 
-                $start_date     = $this->getArtifactStartDate($artifact, $user);
+                $start_date = $sub_milestone->getStartDate();
 
                 if ($start_date) {
                     $representation = new VelocityRepresentation(
                         $artifact->getId(),
                         $artifact->getTitle(),
                         $start_date,
-                        $this->getArtifactDuration($artifact, $user),
+                        $sub_milestone->getDuration(),
                         ($computed_velocity) ? $computed_velocity->getNumeric() : 0
                     );
                     $representations->addVelocityRepresentation($representation);
@@ -88,38 +87,5 @@ class VelocityRepresentationBuilder
         }
 
         return $representations;
-    }
-
-    private function getArtifactStartDate(Tracker_Artifact $artifact, PFUser $user)
-    {
-        $field = $this->form_element_factory->getDateFieldByNameForUser(
-            $artifact->getTracker(),
-            $user,
-            self::START_DATE_FIELD_NAME
-        );
-
-        if (! $field) {
-            return;
-        }
-
-        $value = $field->getLastChangesetValue($artifact);
-        if (! $value) {
-            return;
-        }
-
-        return $value->getTimestamp();
-    }
-
-    private function getArtifactDuration(Tracker_Artifact $artifact, PFUser $user)
-    {
-        $field = $this->form_element_factory->getComputableFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            self::DURATION_FIELD_NAME,
-            $user
-        );
-        if ($field) {
-            return $field->getComputedValue($user, $artifact);
-        }
-        return 0;
     }
 }
