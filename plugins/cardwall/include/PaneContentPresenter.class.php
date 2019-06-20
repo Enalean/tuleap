@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,8 @@
 /**
  * A board to display in agiledashboard
  */
-class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
+class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:ignore
+{
 
     /**
     * @var string
@@ -126,18 +127,36 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_days_to_go');
     }
 
-    public function milestone_start_date() {
-        return date('d M', $this->milestone->getStartDate());
+    public function milestone_start_date()
+    {
+        $milestone_start_date = $this->milestone->getStartDate();
+        if ($milestone_start_date !== null) {
+            return date('d M', $milestone_start_date);
+        }
+
+        return '';
     }
 
-    public function milestone_end_date() {
-        return date('d M', $this->milestone->getEndDate());
+    public function milestone_end_date()
+    {
+        $milestone_end_date = $this->milestone->getEndDate();
+        if ($milestone_end_date !== null) {
+            return date('d M', $milestone_end_date);
+        }
+
+        return '';
     }
 
-    public function initial_time_completion() {
+    public function initial_time_completion()
+    {
+        $milestone_duration = $this->milestone->getDuration();
+
+        if ($milestone_duration === null || $milestone_duration === 0) {
+            return 0;
+        }
+
         $completion = ceil(
-            ($this->milestone->getDuration() - $this->milestone_days_remaining())
-            / $this->milestone->getDuration() * 100
+            ($milestone_duration - $this->milestone_days_remaining()) / $milestone_duration * 100
         );
 
         return $this->returnRelevantProgressBarValue($completion);
