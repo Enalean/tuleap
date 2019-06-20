@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,56 +18,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// This is an on going work to help developers to build more expressive tests
-// please add the functions/methods below when needed.
-// For further information about the Test Data Builder pattern
-// @see http://nat.truemesh.com/archives/000727.html
-
-Mock::generate('PlanningDao');
-Mock::generate('TrackerFactory');
-Mock::generate('PFUser');
-
-function aPlanningFactory() {
+function aPlanningFactory()
+{
     return new TestPlanningFactoryBuilder();
 }
 
-class TestPlanningFactoryBuilder {
-    
+class TestPlanningFactoryBuilder
+{
     public $dao;
     public $tracker_factory;
-    public $form_element_factory;
     public $planning_permissions_manager;
     
-    public function __construct() {
-        $this->dao                          = new MockPlanningDao();
-        $this->tracker_factory              = new MockTrackerFactory();
-        $this->form_element_factory         = mock('Tracker_FormElementFactory');
-        $this->planning_permissions_manager = mock('PlanningPermissionsManager');
+    public function __construct()
+    {
+        $this->dao                          = Mockery::mock(PlanningDao::class);
+        $this->tracker_factory              = Mockery::mock(TrackerFactory::class);
+        $this->planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
     }
     
-    public function withDao(DataAccessObject $dao) {
+    public function withDao(DataAccessObject $dao)
+    {
         $this->dao = $dao;
         return $this;
     }
     
-    public function withTrackerFactory(TrackerFactory $tracker_factory) {
+    public function withTrackerFactory(TrackerFactory $tracker_factory)
+    {
         $this->tracker_factory = $tracker_factory;
         return $this;
     }
 
-    public function withFormElementFactory(Tracker_FormElementFactory $factory) {
+    public function withFormElementFactory(Tracker_FormElementFactory $factory)
+    {
         $this->form_element_factory = $factory;
         return $this;
     }
 
-    public function withPlanningPermissionsManager(PlanningPermissionsManager $planning_permissions_manager) {
+    public function withPlanningPermissionsManager(PlanningPermissionsManager $planning_permissions_manager)
+    {
         $this->planning_permissions_manager = $planning_permissions_manager;
         return $this;
     }
 
-    public function build() {
-        return new PlanningFactory($this->dao, $this->tracker_factory, $this->form_element_factory, $this->planning_permissions_manager);
+    public function build()
+    {
+        return new PlanningFactory($this->dao, $this->tracker_factory, $this->planning_permissions_manager);
     }
 }
-
-?>

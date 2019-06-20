@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 require_once 'common/plugin/Plugin.class.php';
 
@@ -115,6 +116,11 @@ class AgileDashboardRouter
      */
     private $admin_crumb_builder;
 
+    /**
+     * @var TimeframeChecker
+     */
+    private $timeframe_checker;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -131,7 +137,8 @@ class AgileDashboardRouter
         ScrumPlanningFilter $planning_filter,
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
         AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder
+        AdministrationCrumbBuilder $admin_crumb_builder,
+        TimeframeChecker $timeframe_checker
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -149,6 +156,7 @@ class AgileDashboardRouter
         $this->permissions_retriever        = $permissions_retriever;
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
+        $this->timeframe_checker            = $timeframe_checker;
     }
 
     /**
@@ -387,7 +395,8 @@ class AgileDashboardRouter
             TrackerFactory::instance(),
             Tracker_FormElementFactory::instance(),
             $this->service_crumb_builder,
-            $this->admin_crumb_builder
+            $this->admin_crumb_builder,
+            $this->timeframe_checker
         );
     }
 

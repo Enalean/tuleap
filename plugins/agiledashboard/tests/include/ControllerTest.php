@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
 
@@ -67,7 +68,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             $service_crumb_builder,
-            $admin_crumb_builder
+            $admin_crumb_builder,
+            Mockery::mock(TimeframeChecker::class)
         );
 
 
@@ -203,7 +205,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             mock(AgileDashboardCrumbBuilder::class),
-            mock(AdministrationCrumbBuilder::class)
+            mock(AdministrationCrumbBuilder::class),
+            Mockery::mock(TimeframeChecker::class)
         );
 
         stub($GLOBALS['Language'])->getText()->returns('');
@@ -359,7 +362,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock(AgileDashboardCrumbBuilder::class),
-                mock(AdministrationCrumbBuilder::class)
+                mock(AdministrationCrumbBuilder::class),
+                Mockery::mock(TimeframeChecker::class)
             )
         );
 

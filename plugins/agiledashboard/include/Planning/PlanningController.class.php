@@ -46,6 +46,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 use Tuleap\Widget\WidgetFactory;
 
 /**
@@ -122,6 +123,11 @@ class Planning_Controller extends BaseController
     /** @var AdministrationCrumbBuilder */
     private $admin_crumb_builder;
 
+    /**
+     * @var TimeframeChecker
+     */
+    private $timeframe_checker;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -140,7 +146,8 @@ class Planning_Controller extends BaseController
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder
+        AdministrationCrumbBuilder $admin_crumb_builder,
+        TimeframeChecker $timeframe_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -163,6 +170,7 @@ class Planning_Controller extends BaseController
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
+        $this->timeframe_checker            = $timeframe_checker;
     }
 
     public function index() {
@@ -268,8 +276,9 @@ class Planning_Controller extends BaseController
         return $milestone_access_presenters;
     }
 
-    private function getPlanningMilestonesDependingOnTimePeriodOrStatus(Planning $planning) {
-        $set_in_time = $this->planning_factory->canPlanningBeSetInTime($planning->getPlanningTracker());
+    private function getPlanningMilestonesDependingOnTimePeriodOrStatus(Planning $planning)
+    {
+        $set_in_time = $this->timeframe_checker->isATimePeriodBuildableInTracker($planning->getPlanningTracker());
 
         if ($set_in_time) {
             $milestones = $this->getPlanningMilestonesForTimePeriod($planning);
