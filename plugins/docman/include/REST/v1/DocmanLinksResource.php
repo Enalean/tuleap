@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
@@ -112,22 +111,16 @@ class DocmanLinksResource extends AuthenticatedResource
 
         $item_request = $this->request_builder->buildFromItemId($id);
 
-        /** @var \Docman_Link $item */
-        $item = $item_request->getItem();
 
-        $validator =  new DocumentBeforeModificationValidatorVisitor(Docman_Link::class);
-        $item->accept($validator, []);
+        $item = $item_request->getItem();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
 
-        if (!  Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to write this item.')
-            );
-        }
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+        /** @var \Docman_Link $item */
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -188,13 +181,12 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeaders();
 
-        $item_request      = $this->request_builder->buildFromItemId($id);
-        $item_to_delete    = $item_request->getItem();
-        $current_user      = $this->rest_user_manager->getCurrentUser();
-        $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_Link::class);
-
-        $item_to_delete->accept($validator_visitor);
+        $item_request   = $this->request_builder->buildFromItemId($id);
+        $item_to_delete = $item_request->getItem();
+        $current_user   = $this->rest_user_manager->getCurrentUser();
+        $project        = $item_request->getProject();
+        $validator      = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_to_delete->accept($validator);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -244,7 +236,17 @@ class DocmanLinksResource extends AuthenticatedResource
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             ),
-            Docman_PermissionsManager::instance($project->getGroupId())
+            $this->getPermissionManager($project)
         );
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Link::class);
     }
 }

@@ -37,8 +37,8 @@ import {
     createNewLinkVersionFromModal,
     deleteItem,
     getWikisReferencingSameWikiPage,
-    lockFile,
-    unlockFile
+    lockDocument,
+    unlockDocument
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -70,7 +70,9 @@ import {
     rewire$getParents,
     rewire$getItemsReferencingSameWikiPage,
     rewire$postLockFile,
-    rewire$deleteLockFile
+    rewire$deleteLockFile,
+    rewire$postLockEmbedded,
+    rewire$deleteLockEmbedded
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1405,14 +1407,17 @@ describe("Store actions", () => {
         });
     });
 
-    describe("lockFile()", () => {
-        let postLockFile, getItem, context;
+    describe("lock", () => {
+        let postLockFile, postLockEmbedded, getItem, context;
 
         beforeEach(() => {
             context = { commit: jasmine.createSpy("commit") };
 
             postLockFile = jasmine.createSpy("postLockFile");
             rewire$postLockFile(postLockFile);
+
+            postLockEmbedded = jasmine.createSpy("postLockEmbedded");
+            rewire$postLockEmbedded(postLockEmbedded);
 
             getItem = jasmine.createSpy("getItem");
             rewire$getItem(getItem);
@@ -1436,7 +1441,33 @@ describe("Store actions", () => {
                 })
             );
 
-            await lockFile(context, item_to_lock);
+            await lockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
+                item_to_lock,
+                { user_id: 123 }
+            ]);
+        });
+
+        it("it should lock an embedded file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_EMBEDDED
+            };
+
+            getItem.and.returnValue(
+                Promise.resolve({
+                    id: 123,
+                    title: "My embedded",
+                    type: TYPE_EMBEDDED,
+                    lock_info: {
+                        user_id: 123
+                    }
+                })
+            );
+
+            await lockDocument(context, item_to_lock);
 
             expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
                 item_to_lock,
@@ -1445,8 +1476,8 @@ describe("Store actions", () => {
         });
     });
 
-    describe("unlockFile()", () => {
-        let deleteLockFile, getItem, context;
+    describe("unlock", () => {
+        let deleteLockFile, deleteLockEmbedded, getItem, context;
 
         beforeEach(() => {
             context = { commit: jasmine.createSpy("commit") };
@@ -1454,11 +1485,14 @@ describe("Store actions", () => {
             deleteLockFile = jasmine.createSpy("deleteLockFile");
             rewire$deleteLockFile(deleteLockFile);
 
+            deleteLockEmbedded = jasmine.createSpy("deleteLockEmbedded");
+            rewire$deleteLockEmbedded(deleteLockEmbedded);
+
             getItem = jasmine.createSpy("getItem");
             rewire$getItem(getItem);
         });
 
-        it("it should lock a file and then update its information", async () => {
+        it("it should unlock a file and then update its information", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1476,7 +1510,33 @@ describe("Store actions", () => {
                 })
             );
 
-            await unlockFile(context, item_to_lock);
+            await unlockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
+                item_to_lock,
+                { user_id: 123 }
+            ]);
+        });
+
+        it("it should unlock an embedded file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_EMBEDDED
+            };
+
+            getItem.and.returnValue(
+                Promise.resolve({
+                    id: 123,
+                    title: "My embedded",
+                    type: TYPE_EMBEDDED,
+                    lock_info: {
+                        user_id: 123
+                    }
+                })
+            );
+
+            await unlockDocument(context, item_to_lock);
 
             expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
                 item_to_lock,

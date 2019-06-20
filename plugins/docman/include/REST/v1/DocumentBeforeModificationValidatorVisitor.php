@@ -39,9 +39,25 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
      */
     private $document_type;
 
-    public function __construct(String $document_type)
+    /**
+     * @var \PFUser
+     */
+    private $current_user;
+    /**
+     * @var Docman_Item
+     */
+    private $item;
+    /**
+     * @var \Docman_PermissionsManager
+     */
+    private $permission_manager;
+
+    public function __construct(\Docman_PermissionsManager $permission_manager, \PFUser $current_user, Docman_Item $item, string $document_type)
     {
-        $this->document_type = $document_type;
+        $this->document_type      = $document_type;
+        $this->current_user       = $current_user;
+        $this->item               = $item;
+        $this->permission_manager = $permission_manager;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []) : void
@@ -56,6 +72,8 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         if ($this->document_type !== Docman_Wiki::class) {
             $this->throwItemHasNotTheRightType();
         }
+
+        $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitLink(Docman_Link $item, array $params = []) : void
@@ -63,6 +81,8 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         if ($this->document_type !== Docman_Link::class) {
             $this->throwItemHasNotTheRightType();
         }
+
+        $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitFile(Docman_File $item, array $params = []) : void
@@ -70,6 +90,8 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         if ($this->document_type !== Docman_File::class) {
             $this->throwItemHasNotTheRightType();
         }
+
+        $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : void
@@ -77,6 +99,8 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         if ($this->document_type !== Docman_EmbeddedFile::class) {
             $this->throwItemHasNotTheRightType();
         }
+
+        $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []) : void
@@ -84,6 +108,8 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         if ($this->document_type !== Docman_Empty::class) {
             $this->throwItemHasNotTheRightType();
         }
+
+        $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitItem(Docman_Item $item, array $params = []) : void
@@ -103,5 +129,18 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
                 $this->document_type
             )
         );
+    }
+
+    /**
+     * @throws I18NRestException
+     */
+    private function checkUserCanWrite(\PFUser $user, \Docman_Item $item): void
+    {
+        if (! $this->permission_manager->userCanWrite($user, $item->getId())) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to write this item.')
+            );
+        }
     }
 }

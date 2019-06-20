@@ -88,23 +88,6 @@ describe("LockItem", () => {
         expect(wrapper.contains("[data-test=dropdown-menu-lock-item]")).toBeFalsy();
     });
 
-    it(`Given item is a folder and given user can write
-        Then lock option should not be displayed`, () => {
-        const wrapper = lock_factory({
-            item: {
-                id: 1,
-                title: "my file",
-                type: "folder",
-                user_can_write: true,
-                lock_info: {
-                    id: 101
-                }
-            }
-        });
-
-        expect(wrapper.contains("[data-test=dropdown-menu-lock-item]")).toBeFalsy();
-    });
-
     it(`Given item is a file and given user can write
         Then lock option should be displayed`, () => {
         const wrapper = lock_factory({

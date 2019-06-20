@@ -30,8 +30,6 @@
     </a>
 </template>
 <script>
-import { TYPE_FILE } from "../../../constants.js";
-
 export default {
     name: "LockItem",
     props: {
@@ -39,10 +37,6 @@ export default {
     },
     computed: {
         can_lock_document() {
-            if (this.item.type !== TYPE_FILE) {
-                return false;
-            }
-
             if (this.item.lock_info !== null) {
                 return false;
             }
@@ -52,7 +46,7 @@ export default {
     },
     methods: {
         async lockDocument() {
-            await this.$store.dispatch("lockFile", this.item);
+            await this.$store.dispatch("lockDocument", this.item);
         }
     }
 };

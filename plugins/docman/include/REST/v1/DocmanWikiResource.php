@@ -106,19 +106,11 @@ class DocmanWikiResource extends AuthenticatedResource
         /** @var \Docman_Wiki $item */
         $item = $item_request->getItem();
 
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_Wiki::class);
-        $item->accept($validator, []);
-
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
-
-        if (! Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to write this item.')
-            );
-        }
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -187,9 +179,8 @@ class DocmanWikiResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_Wiki::class);
-
-        $item_to_delete->accept($validator_visitor);
+        $validator = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_to_delete->accept($validator);
         /** @var \Docman_Wiki $item_to_delete */
 
         $event_adder = $this->getDocmanItemsEventAdder();
@@ -235,7 +226,24 @@ class DocmanWikiResource extends AuthenticatedResource
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             ),
-            Docman_PermissionsManager::instance($project->getGroupId())
+            $this->getPermissionManager($project)
         );
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    /**
+     * @param              $project
+     * @param              $current_user
+     * @param \Docman_Item $item
+     *
+     * @return DocumentBeforeModificationValidatorVisitor
+     */
+    private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Wiki::class);
     }
 }

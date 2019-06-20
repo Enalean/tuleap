@@ -204,10 +204,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *                                            +
      *                                            |
      *                                            +
-     *                  +----------------+--------+-------+----------------+---------------+---------------+
-     *                  |                |                |                |               |               |
-     *                  +                +                +                +               +               +
-     *          embedded AT C    embedded AT R     embedded AT E   embedded DIS AT  embedded NO AT     embedded L
+     *                  +----------------+--------+-------+----------------+---------------+---------------+---------------+------------+
+     *                  |                |                |                |               |               |               |            |
+     *                  +                +                +                +               +               +               +            +
+     *          embedded AT C    embedded AT R     embedded AT E   embedded DIS AT  embedded NO AT     embedded L    embedded LA     embedded POST L
      *
      * (L)    => Lock on this item
      * (AT)   => Approval table on this item
@@ -277,6 +277,20 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
         );
 
+        $embedded_LA_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_embedded_id,
+            'embedded LA',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_embedded_id,
+            'embedded POST L',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
 
         $this->addApprovalTable("embedded_ATC", (int)$embedded_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("embedded_ATR", (int)$embedded_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
@@ -284,6 +298,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->addReadPermissionOnItem($folder_embedded_id, \ProjectUGroup::PROJECT_ADMIN);
 
         $this->lockItem($embedded_L_id, self::REGULAR_USER_ID);
+        $this->lockItem($embedded_LA_id, self::REGULAR_USER_ID);
 
         $this->appendCustomMetadataValueToItem($folder_embedded_id, "custom value for folder_3");
 

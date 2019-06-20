@@ -32,7 +32,6 @@
 
 <script>
 import { mapState } from "vuex";
-import { TYPE_FILE } from "../../../constants.js";
 export default {
     name: "UnlockItem",
     props: {
@@ -41,10 +40,6 @@ export default {
     computed: {
         ...mapState(["user_id"]),
         can_unlock_document() {
-            if (this.item.type !== TYPE_FILE) {
-                return false;
-            }
-
             if (this.item.lock_info === null) {
                 return false;
             }
@@ -54,7 +49,7 @@ export default {
     },
     methods: {
         async unlockDocument() {
-            await this.$store.dispatch("unlockFile", this.item);
+            await this.$store.dispatch("unlockDocument", this.item);
         }
     }
 };

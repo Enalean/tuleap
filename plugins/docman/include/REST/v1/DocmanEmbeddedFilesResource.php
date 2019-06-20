@@ -23,6 +23,8 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_FileStorage;
+use Docman_LockFactory;
+use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
@@ -39,6 +41,7 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalA
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
+use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
@@ -116,20 +119,11 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         /** @var \Docman_EmbeddedFile $item */
         $item = $item_request->getItem();
 
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_EmbeddedFile::class);
-        $item->accept($validator, []);
-
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $project = $item_request->getProject();
-
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to write this item.')
-            );
-        }
+        $project   = $item_request->getProject();
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -203,8 +197,9 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_EmbeddedFile::class);
-        $item_to_delete->accept($validator_visitor);
+
+        $validator = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_to_delete->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -254,7 +249,108 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             ),
-            Docman_PermissionsManager::instance($project->getGroupId())
+            $this->getPermissionManager($project)
         );
+    }
+
+    /**
+     * Lock a specific embedded file
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int $id Id of the embedded  file file you want to lock
+     *
+     * @url    POST {id}/lock
+     * @access hybrid
+     * @status 201
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     *
+     */
+    public function postLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->lockItem($item, $current_user);
+    }
+
+    /**
+     * Unlock an already locked embedded file
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int $id Id of the embbeded file you want to unlock
+     *
+     * @url    DELETE {id}/lock
+     * @access hybrid
+     * @status 200
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     */
+    public function deleteLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->unlockItem($item, $current_user);
+    }
+
+    private function setHeadersForLock(): void
+    {
+        Header::allowOptionsPostDelete();
+    }
+
+    /**
+     * @url OPTIONS {id}/lock
+     */
+    public function optionsIdLock(int $id): void
+    {
+        $this->setHeadersForLock();
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_EmbeddedFile::class);
+    }
+
+    private function getRestLockUpdater(\Project $project): RestLockUpdater
+    {
+        return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
     }
 }
