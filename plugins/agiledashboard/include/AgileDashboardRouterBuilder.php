@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 class AgileDashboardRouterBuilder
@@ -228,7 +229,10 @@ class AgileDashboardRouterBuilder
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            $this->getMonoMileStoneChecker()
+            $this->getMonoMileStoneChecker(),
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            )
         );
     }
 

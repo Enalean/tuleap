@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElementFactory;
 
-class TimeframeCheckerTest extends TestCase
+final class TimeframeCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -220,4 +220,28 @@ final class ArtifactMilestoneTest extends TestCase
 
         $this->assertCount(3, $all_artifacts);
     }
+
+    public function testEndDateIsNullIfNoStartDate()
+    {
+        $time_period = new \TimePeriodWithoutWeekEnd(0, 10);
+        $this->milestone->setTimePeriod($time_period);
+
+        $this->assertNull($this->milestone->getEndDate());
+    }
+
+    public function testEndDateIsNullIfNoDuration()
+    {
+        $time_period = new \TimePeriodWithoutWeekEnd(10, 0);
+        $this->milestone->setTimePeriod($time_period);
+
+        $this->assertNull($this->milestone->getEndDate());
+    }
+
+    public function testEndDateIsNullIfNegativeDuration()
+    {
+        $time_period = new \TimePeriodWithoutWeekEnd(10, -2);
+        $this->milestone->setTimePeriod($time_period);
+
+        $this->assertNull($this->milestone->getEndDate());
+    }
 }
