@@ -31,7 +31,7 @@
                 <folder-header-action v-bind:item="current_folder"/>
                 <new-item-modal/>
                 <new-folder-modal/>
-                <update-item-modal v-bind:is="shown_modal" v-bind:item="updated_item"/>
+                <create-new-item-version-modal v-bind:is="shown_modal" v-bind:item="updated_item"/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
@@ -92,11 +92,17 @@ export default {
         }
     },
     mounted() {
-        document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
+        document.addEventListener(
+            "show-create-new-item-version-modal",
+            this.showCreateNewItemVersionModal
+        );
         document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
 
         this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("show-update-item-modal", this.showUpdateItemModal);
+            document.removeEventListener(
+                "show-create-new-item-version-modal",
+                this.showCreateNewItemVersionModal
+            );
             document.removeEventListener(
                 "show-confirm-item-deletion-modal",
                 this.showDeleteItemModal
@@ -104,25 +110,25 @@ export default {
         });
     },
     methods: {
-        showUpdateItemModal(event) {
+        showCreateNewItemVersionModal(event) {
             this.updated_item = event.detail.current_item;
 
             switch (this.updated_item.type) {
                 case TYPE_FILE:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-file-modal" */ "./ModalUpdateItem/UpdateFileModal.vue");
+                        import(/* webpackChunkName: "document-new-file-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionFileModal.vue");
                     break;
                 case TYPE_EMBEDDED:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./ModalUpdateItem/UpdateEmbeddedFileModal.vue");
+                        import(/* webpackChunkName: "document-new-embedded-version-file-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue");
                     break;
                 case TYPE_WIKI:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./ModalUpdateItem/UpdateWikiModal.vue");
+                        import(/* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionWikiModal.vue");
                     break;
                 case TYPE_LINK:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./ModalUpdateItem/UpdateLinkModal.vue");
+                        import(/* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionLinkModal.vue");
             }
         },
         showDeleteItemModal(event) {

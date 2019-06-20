@@ -34,27 +34,27 @@ describe("QuickLookDocumentActionButton", () => {
         };
     });
 
-    it(`Update button is displayed if item is a file`, () => {
+    it(`[Create new version] button is displayed if item is a file`, () => {
         const item = {
             type: TYPE_FILE,
             approval_table: null
         };
         const wrapper = document_action_button_factory({ item });
         expect(
-            wrapper.find("[data-test=docman-quicklook-action-button-update]").exists()
+            wrapper.find("[data-test=docman-quicklook-action-button-new-version]").exists()
         ).toBeTruthy();
     });
-    it(`Update button is displayed if item is a wiki without approval table`, () => {
+    it(`[Create new version] button is displayed if item is a wiki without approval table`, () => {
         const item = {
             type: TYPE_WIKI,
             approval_table: null
         };
         const wrapper = document_action_button_factory({ item });
         expect(
-            wrapper.find("[data-test=docman-quicklook-action-button-update]").exists()
+            wrapper.find("[data-test=docman-quicklook-action-button-new-version]").exists()
         ).toBeTruthy();
     });
-    it(`Update button is not displayed if item is a wiki with an approval table`, () => {
+    it(`[Create new version] button is not displayed if item is a wiki with an approval table`, () => {
         const item = {
             type: TYPE_WIKI,
             approval_table: {
@@ -63,7 +63,7 @@ describe("QuickLookDocumentActionButton", () => {
         };
         const wrapper = document_action_button_factory({ item });
         expect(
-            wrapper.find("[data-test=docman-quicklook-action-button-update]").exists()
+            wrapper.find("[data-test=docman-quicklook-action-button-new-version]").exists()
         ).toBeFalsy();
     });
 });

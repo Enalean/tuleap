@@ -21,12 +21,12 @@
     <a
         v-if="item.user_can_write"
         v-bind:class="button_classes"
-        v-bind:data-tlp-tooltip="cannot_update_wiki_beacause_approval_table"
+        v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_beacause_approval_table"
         v-on:click="goToUpdate"
-        data-test="docman-item-update-button"
+        data-test="docman-new-item-version-button"
     >
         <i v-bind:class="iconClasses"></i>
-        <translate>Update</translate>
+        <translate>Create new version</translate>
     </a>
 </template>
 <script>
@@ -46,14 +46,15 @@ export default {
         is_item_a_wiki_with_approval_table() {
             return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
         },
-        cannot_update_wiki_beacause_approval_table() {
+        cannot_create_new_wiki_version_beacause_approval_table() {
             return this.$gettext("This wiki has a approval table, you can't update it.");
         },
         button_classes() {
             let classes = this.buttonClasses;
 
             if (this.is_item_a_wiki_with_approval_table) {
-                classes += " document-update-button-disabled tlp-tooltip tlp-tooltip-left";
+                classes +=
+                    " document-new-item-version-button-disabled tlp-tooltip tlp-tooltip-left";
             }
 
             return classes;
@@ -77,7 +78,7 @@ export default {
         },
         showUpdateFileModal() {
             document.dispatchEvent(
-                new CustomEvent("show-update-item-modal", {
+                new CustomEvent("show-create-new-item-version-modal", {
                     detail: { current_item: this.item }
                 })
             );

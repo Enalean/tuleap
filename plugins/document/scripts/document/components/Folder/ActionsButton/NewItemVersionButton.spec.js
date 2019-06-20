@@ -18,14 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import UpdateItemButton from "./UpdateItemButton.vue";
+import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
-describe("UpdateItemButton", () => {
-    let update_button_factory;
+describe("CreateNewItemVersionButton", () => {
+    let create_new_item_version_button_factory;
     beforeEach(() => {
         const state = {
             project_id: 101
@@ -37,8 +37,8 @@ describe("UpdateItemButton", () => {
 
         const store = createStoreMock(store_options);
 
-        update_button_factory = (props = {}) => {
-            return shallowMount(UpdateItemButton, {
+        create_new_item_version_button_factory = (props = {}) => {
+            return shallowMount(CreateNewItemVersionButton, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
@@ -51,11 +51,11 @@ describe("UpdateItemButton", () => {
     });
 
     it(`Given item is a file
-        When we click on update button
-        Then item update event should be dispatched`, () => {
+        When we click on [create new version]
+        Then create-new-item-version event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -64,19 +64,19 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-item-modal")
+            new CustomEvent("show-create-new-item-version-modal")
         );
     });
 
     it(`Given item is an embedded file
-        When we click on update button
-        Then item update event should be dispatched`, () => {
+        When we click on [create new version]
+        Then create-new-item-version event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -85,19 +85,19 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-item-modal")
+            new CustomEvent("show-create-new-item-version-modal")
         );
     });
 
     it(`Given item is a wiki with no approval table
-        When we click on update button
-        Then item update event should be dispatched`, () => {
+        When we click on [create new version]
+        Then create-new-item-version event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -107,19 +107,19 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-item-modal")
+            new CustomEvent("show-create-new-item-version-modal")
         );
     });
 
     it(`Given item is a wiki with an approval table
-        When we click on update button
+        When we click on [create new version]
         Then no event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -131,18 +131,18 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(document.dispatchEvent).not.toHaveBeenCalled();
     });
 
     it(`Given item is an empty document
-        When we click on update button
+        When we click on [create new version]
         Then user should be redirected on legacy UI`, () => {
         const redirect_to_url = jasmine.createSpy("redirectToUrl");
         rewire$redirectToUrl(redirect_to_url);
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -151,7 +151,7 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/plugins/docman/index.php?group_id=101&id=1&action=action_update"
@@ -159,11 +159,11 @@ describe("UpdateItemButton", () => {
     });
 
     it(`Given item is a link document
-        When we click on update button
-        Then update item event should be dispatched`, () => {
+        When we click on [create new version]
+        Then create-new-item-version event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -172,16 +172,16 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-item-modal")
+            new CustomEvent("show-create-new-item-version-modal")
         );
     });
 
     it(`Given user can't write in folder
         Then update link is not available`, () => {
-        const wrapper = update_button_factory({
+        const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -190,7 +190,7 @@ describe("UpdateItemButton", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=docman-item-update-button]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=docman-new-item-version-button]")).toBeFalsy();
         expect(wrapper.contains("[data-test=docman-folder-update-button]")).toBeFalsy();
     });
 });

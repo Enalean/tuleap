@@ -18,12 +18,12 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateEmbeddedFile">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="createNewLinkVersion">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
             <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <embedded-properties v-if="embedded_file_model" v-model="embedded_file_model" v-bind:item="item" key="embedded-props"/>
+                <link-properties v-if="link_model" v-model="link_model" v-bind:item="item" key="link-props"/>
             </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
@@ -36,39 +36,40 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
+import LinkProperties from "../Property/LinkProperties.vue";
 
 export default {
-    name: "UpdateEmbeddedFileModal",
+    name: "CreateNewVersionLinkModal",
     components: {
+        LinkProperties,
         ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
-        ModalFooter,
-        EmbeddedProperties
+        ModalFooter
     },
     props: {
         item: Object
     },
     data() {
         return {
-            embedded_file_model: null,
+            link_model: null,
             version: {},
             is_loading: false,
+            is_displayed: false,
             modal: null
         };
     },
     computed: {
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Update");
+            return this.$gettext("Create new version");
         },
         modal_title() {
-            return this.$gettext("Update embedded file");
+            return this.$gettext("Create a new link version");
         },
         aria_labelled_by() {
-            return "document-update-item-modal";
+            return "document-new-item-version-modal";
         }
     },
     mounted() {
@@ -91,24 +92,25 @@ export default {
                 is_file_locked: this.item.lock_info !== null
             };
 
-            this.embedded_file_model = this.item.embedded_file_properties;
+            this.link_model = this.item.link_properties;
 
+            this.is_displayed = true;
             this.modal.show();
         },
         reset() {
             this.$store.commit("error/resetModalError");
+            this.is_displayed = false;
             this.is_loading = false;
-            this.embedded_file_model = null;
-            this.hide();
+            this.link_model = null;
         },
-        async updateEmbeddedFile(event) {
+        async createNewLinkVersion(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
 
-            await this.$store.dispatch("updateEmbeddedFileFromModal", [
+            await this.$store.dispatch("createNewLinkVersionFromModal", [
                 this.item,
-                this.embedded_file_model.content,
+                this.link_model.link_url,
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
@@ -117,15 +119,10 @@ export default {
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.$store.dispatch("refreshEmbeddedFile", this.item);
-                this.item.embedded_file_properties.content = this.embedded_file_model.content;
-                this.embedded_file_model = null;
-                this.hide();
+                this.$store.dispatch("refreshLink", this.item);
+                this.link_model = null;
                 this.modal.hide();
             }
-        },
-        hide() {
-            this.$emit("hidden");
         }
     }
 };

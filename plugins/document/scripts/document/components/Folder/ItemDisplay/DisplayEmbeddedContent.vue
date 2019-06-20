@@ -37,7 +37,7 @@
             </div>
         </section>
 
-        <update-embedded-file-modal
+        <create-new-embedded-file-version-modal
             v-if="is_modal_shown"
             v-bind:item="embedded_file"
             v-on:hidden="hideModal()"
@@ -48,7 +48,6 @@
 <script>
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
-import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
@@ -59,10 +58,9 @@ export default {
         DocumentTitleLockInfo,
         ActionsHeader,
         DropdownMenu,
-        UpdateItemButton,
         DropdownButton,
-        "update-embedded-file-modal": () =>
-            import(/* webpackChunkName: "document-update-embedded-file-modal" */ "../ModalUpdateItem/UpdateEmbeddedFileModal.vue")
+        "create-new-embedded-file-version-modal": () =>
+            import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue")
     },
     props: {
         embedded_file: Object
@@ -85,14 +83,20 @@ export default {
         }
     },
     mounted() {
-        document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
+        document.addEventListener(
+            "show-create-new-item-version-modal",
+            this.showCreateNewItemVersionModal
+        );
 
         this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("show-update-item-modal", this.showUpdateItemModal);
+            document.removeEventListener(
+                "show-create-new-item-version-modal",
+                this.showCreateNewItemVersionModal
+            );
         });
     },
     methods: {
-        showUpdateItemModal() {
+        showCreateNewItemVersionModal() {
             this.is_modal_shown = true;
         },
         hideModal() {

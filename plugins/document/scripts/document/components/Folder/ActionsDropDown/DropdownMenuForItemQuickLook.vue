@@ -20,7 +20,8 @@
 <template>
     <dropdown-menu v-bind:item="item"
                    v-bind:is-in-quick-look-mode="true"
-                   role="menu">
+                   role="menu"
+    >
         <a
             v-if="is_item_a_folder && item.user_can_write"
             class="tlp-dropdown-menu-item"
@@ -41,21 +42,22 @@
             <i class="fa fa-fw fa-plus tlp-dropdown-menu-item-icon"></i>
             <translate>New document</translate>
         </a>
-        <update-item-button v-bind:item="item"
-                            v-bind:button-classes="button_classes"
-                            v-bind:icon-classes="icon_classes"
-                            v-if="! is_item_a_folder"
-                            data-test="docman-dropdown-update-button"
+        <create-new-item-version-button
+            v-bind:item="item"
+            v-bind:button-classes="button_classes"
+            v-bind:icon-classes="icon_classes"
+            v-if="! is_item_a_folder"
+            data-test="docman-dropdown-create-new-version-button"
         />
     </dropdown-menu>
 </template>
 <script>
 import DropdownMenu from "./DropdownMenu.vue";
 import { TYPE_FOLDER } from "../../../constants.js";
-import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
+import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 
 export default {
-    components: { UpdateItemButton, DropdownMenu },
+    components: { CreateNewItemVersionButton, DropdownMenu },
     props: {
         item: Object
     },

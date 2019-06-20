@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,20 +14,18 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  -
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateWiki">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="createNewFileVersion">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <div class="docman-item-update-property">
-                <div class="docman-item-title-update-property">
-                    <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model"/>
-                    <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
-                </div>
-            </div>
+            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
+                <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
+            </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -39,24 +37,24 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import WikiProperties from "../Property/WikiProperties.vue";
-import LockProperty from "../Property/LockProperty.vue";
+import FileProperties from "../Property/FileProperties.vue";
+import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
 
 export default {
-    name: "UpdateWikiModal",
+    name: "CreateNewVersionFileModal",
     components: {
-        WikiProperties,
+        ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        LockProperty
+        FileProperties
     },
     props: {
         item: Object
     },
     data() {
         return {
-            wiki_model: {},
+            uploaded_item: {},
             version: {},
             is_loading: false,
             is_displayed: false,
@@ -66,13 +64,13 @@ export default {
     computed: {
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Update");
+            return this.$gettext("Create new version");
         },
         modal_title() {
-            return this.$gettext("Update wiki page");
+            return this.$gettext("Create a new file version");
         },
         aria_labelled_by() {
-            return "document-update-item-modal";
+            return "document-new-item-version-modal";
         }
     },
     mounted() {
@@ -94,9 +92,9 @@ export default {
                 changelog: "",
                 is_file_locked: this.item.lock_info !== null
             };
-            this.wiki_model = {
+            this.uploaded_item = {
                 type: this.item.type,
-                wiki_properties: this.item.wiki_properties
+                file_properties: {}
             };
             this.is_displayed = true;
             this.modal.show();
@@ -105,16 +103,16 @@ export default {
             this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
-            this.wiki_model = {};
+            this.uploaded_item = {};
         },
-        async updateWiki(event) {
+        async createNewFileVersion(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
 
-            await this.$store.dispatch("updateWikiFromModal", [
+            await this.$store.dispatch("createNewFileVersionFromModal", [
                 this.item,
-                this.wiki_model.wiki_properties.page_name,
+                this.uploaded_item.file_properties.file,
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
@@ -122,9 +120,7 @@ export default {
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.item.wiki_properties.page_name = this.wiki_model.wiki_properties.page_name;
-                this.$store.dispatch("refreshWiki", this.item);
-                this.wiki_model = {};
+                this.uploaded_item = {};
                 this.modal.hide();
             }
         }

@@ -41,7 +41,7 @@ import "./components/Folder/FolderHeaderAction.spec.js";
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
-import "./components/Folder/ActionsButton/UpdateItemButton.spec.js";
+import "./components/Folder/ActionsButton/NewItemVersionButton.spec.js";
 
 import "./components/Folder/ActionsDropDown/DropdownButton.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenu.spec.js";
