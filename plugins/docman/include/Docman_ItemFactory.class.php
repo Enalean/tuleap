@@ -756,7 +756,7 @@ class Docman_ItemFactory
         return EventManager::instance();
     }
 
-    function update($row) {
+    public function update($row) {
         // extract cross references
         $reference_manager = ReferenceManager::instance();
         if (isset($row['title'])) {

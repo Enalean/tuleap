@@ -31,18 +31,22 @@ use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Files\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -72,7 +76,7 @@ class DocmanFilesResource extends AuthenticatedResource
     {
         $this->rest_user_manager = RestUserManager::build();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager = \EventManager::instance();
+        $this->event_manager     = \EventManager::instance();
     }
 
     /**
@@ -169,8 +173,7 @@ class DocmanFilesResource extends AuthenticatedResource
      *
      * Create a new version of an existing file document
      * <pre>
-     * /!\ This route is under construction and will be subject to changes <br/>
-     * /!\ <strong> this route will be deprecated very soon </strong> <br/>
+     * /!\ This route is <strong> deprecated </strong> <br/>
      * /!\ To create a file version, please use the {id}/version route instead !
      * </pre>
      *
@@ -182,9 +185,6 @@ class DocmanFilesResource extends AuthenticatedResource
      *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
-     * @url    PATCH {id}
-     * @access hybrid
-     *
      * @param int                            $id             Id of the item
      * @param DocmanFilesPATCHRepresentation $representation {@from body}
      *
@@ -192,10 +192,15 @@ class DocmanFilesResource extends AuthenticatedResource
      *
      * @status 200
      * @throws RestException 400
+     * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 501
+     *
+     * @url    PATCH {id}
+     * @access hybrid
+     *
+     * @deprecated
      */
-
     public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
     {
         $this->checkAccess();
@@ -421,10 +426,87 @@ class DocmanFilesResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    /**
+     * Update the file metadata
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url    PUT {id}/metadata
+     * @access hybrid
+     *
+     * @param int                       $id             Id of the file
+     * @param PUTMetadataRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws RestException 404
+     */
+    public function putMetadata(
+        int $id,
+        PUTMetadataRepresentation $representation
+    ): void {
+
+        $this->checkAccess();
+        $this->setMetadataHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $updator = $this->getHardcodedMetadataUpdator($project);
+
+        try {
+            $updator->updateDocumentMetadata(
+                $representation,
+                $item,
+                new \DateTimeImmutable(),
+                $current_user
+            );
+        } catch (Metadata\HardCodedMetadataException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        } catch (\UserNotExistException $e) {
+            throw new I18nRestException(
+                400,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
+            );
+        } catch (\UserNotAuthorizedException $e) {
+            throw new I18nRestException(
+                403,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
+            );
+        }
+    }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
+    }
+
+    private function setMetadataHeaders()
+    {
+        Header::allowOptionsPut();
     }
 
     private function setHeaders(): void
@@ -493,5 +575,34 @@ class DocmanFilesResource extends AuthenticatedResource
     private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
         return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_File::class);
+    }
+
+
+    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
+    {
+        $user_manager = \UserManager::instance();
+        return new MetadataUpdator(
+            new \Docman_ItemFactory(),
+            $this->getItemStatusMapper($project),
+            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
+            $user_manager,
+            new OwnerRetriever($user_manager),
+            new MetadataEventProcessor($this->event_manager)
+        );
+    }
+
+    private function getItemStatusMapper(\Project $project): ItemStatusMapper
+    {
+        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
+    }
+
+    private function getHardcodedMetadataObsolescenceDateRetriever(
+        \Project $project
+    ): HardcodedMetadataObsolescenceDateRetriever {
+        return new HardcodedMetadataObsolescenceDateRetriever(
+            new HardcodedMetdataObsolescenceDateChecker(
+                new Docman_SettingsBo($project->getID())
+            )
+        );
     }
 }

@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\DeleteFailedException;
 
 require_once('www/news/news_utils.php');
@@ -60,23 +61,26 @@ class Docman_Actions extends Actions {
     }
 
     //@todo need to check owner rights on parent
-    function _checkOwnerChange($owner, &$user) {
-        $ret_id = null;
 
-        $_owner = UserManager::instance()->findUser($owner);
-        if(!$_owner) {
-            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner'));
-            $ret_id = $user->getId();
+    /**
+     * protected for testing purpose (SOAP)
+     */
+    protected function _checkOwnerChange($owner, &$user) {
+        try {
+            return (new OwnerRetriever(UserManager::instance()))->getOwnerIdFromLoginName($owner);
+        } catch (UserNotExistException $e) {
+            $this->_controler->feedback->log(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
+            );
+            return $user->getId();
+        } catch (UserNotAuthorizedException $e) {
+            $this->_controler->feedback->log(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
+            );
+            return $user->getId();
         }
-        else {
-            if(!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
-                $ret_id = $_owner->getId();
-            } else {
-                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
-                $ret_id = $user->getId();
-            }
-        }
-        return $ret_id;
     }
 
     private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {
