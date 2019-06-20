@@ -75,7 +75,12 @@ class Workflow_Transition_ConditionFactory {
         $collection = new Workflow_Transition_ConditionsCollection();
         $collection->add(new Workflow_Transition_Condition_Permissions($transition));
         $collection->add($this->fieldnotempty_factory->getFieldNotEmpty($transition));
-        $collection->add($this->commentnotempty_factory->getCommentNotEmpty($transition));
+        $collection->add(
+            $this->formatCommentNotEmptyCondition(
+                $this->commentnotempty_factory->getCommentNotEmpty($transition),
+                $transition
+            )
+        );
 
         return $collection;
     }
@@ -99,9 +104,18 @@ class Workflow_Transition_ConditionFactory {
     /**
      * @return Workflow_Transition_Condition_CommentNotEmpty
      */
-    public function getCommentNotEmptyCondition(Transition $transition)
+    public function getCommentNotEmptyCondition(Transition $transition) : Workflow_Transition_Condition_CommentNotEmpty
     {
-        $condition = $this->commentnotempty_factory->getCommentNotEmpty($transition);
+        return $this->formatCommentNotEmptyCondition(
+            $this->commentnotempty_factory->getCommentNotEmpty($transition),
+            $transition
+        );
+    }
+
+    private function formatCommentNotEmptyCondition(
+        ?Workflow_Transition_Condition_CommentNotEmpty $condition,
+        Transition $transition
+    ) : Workflow_Transition_Condition_CommentNotEmpty {
         if ($condition === null) {
             return new Workflow_Transition_Condition_CommentNotEmpty(
                 $transition,
@@ -189,7 +203,10 @@ class Workflow_Transition_ConditionFactory {
                 $condition = $this->fieldnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 break;
             case 'commentnotempty':
-                $condition = $this->commentnotempty_factory->getInstanceFromXML($xml, $transition);
+                $condition = $this->formatCommentNotEmptyCondition(
+                    $this->commentnotempty_factory->getInstanceFromXML($xml, $transition),
+                    $transition
+                );
                 break;
         }
         return $condition;
