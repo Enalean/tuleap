@@ -1332,7 +1332,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
         }
         $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
-                'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
+                'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
         );
 
         return $toolbar;
