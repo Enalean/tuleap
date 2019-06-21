@@ -1912,16 +1912,19 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    public function collectCLICommands(CLICommandsCollector $commands_collector)
+    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
     {
         $commands_collector->addCommand(
-            new TrackerForceNotificationsLevelCommand(
-                $this->getForceUsageUpdater(),
-                ProjectManager::instance(),
-                new NotificationLevelExtractor(),
-                $this->getTrackerFactory(),
-                new TrackerDao()
-            )
+            TrackerForceNotificationsLevelCommand::NAME,
+            function() : TrackerForceNotificationsLevelCommand {
+                return new TrackerForceNotificationsLevelCommand(
+                    $this->getForceUsageUpdater(),
+                    ProjectManager::instance(),
+                    new NotificationLevelExtractor(),
+                    $this->getTrackerFactory(),
+                    new TrackerDao()
+                );
+            }
         );
     }
 

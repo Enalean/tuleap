@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,30 @@
 
 namespace Tuleap\CLI;
 
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 use Tuleap\Event\Dispatchable;
-use Symfony\Component\Console\Command\Command;
 
 class CLICommandsCollector implements Dispatchable
 {
     public const NAME = 'collectCLICommands';
-    /**
-     * @var Application
-     */
-    private $application;
 
-    public function __construct(Application $application)
+    /**
+     * @var array<string,callable():\Symfony\Component\Console\Command\Command>
+     */
+    private $command_factories = [];
+
+    /**
+     * @psalm-param callable():\Symfony\Component\Console\Command\Command $command_factory
+     */
+    public function addCommand(string $command_name, callable $command_factory) : void
     {
-        $this->application = $application;
+        $this->command_factories[$command_name] = $command_factory;
     }
 
-    public function addCommand(Command $command)
+    public function loadCommands(Application $application) : void
     {
-        return $this->application->add($command);
+        $factory_command_loader = new FactoryCommandLoader($this->command_factories);
+        $application->setCommandLoader($factory_command_loader);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         parent::__construct(
             'Tuleap',
-            trim(file_get_contents(ForgeConfig::get('codendi_dir').DIRECTORY_SEPARATOR.'VERSION'))
+            trim(file_get_contents(__DIR__.'/../../../VERSION'))
         );
     }
 

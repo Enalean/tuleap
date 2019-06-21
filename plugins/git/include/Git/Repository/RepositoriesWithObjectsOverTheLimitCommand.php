@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class RepositoriesWithObjectsOverTheLimitCommand extends Command
 {
+    public const NAME = 'git:repositories-with-object-over-the-size-limit';
+
     /**
      * @var \GitRepositoryFactory
      */
@@ -44,7 +46,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
         \GitRepositoryFactory $repository_factory,
         GitRepositoryObjectsSizeRetriever $repository_objects_size_retriever
     ) {
-        parent::__construct('git:repositories-with-object-over-the-size-limit');
+        parent::__construct(self::NAME);
         $this->repository_factory                = $repository_factory;
         $this->repository_objects_size_retriever = $repository_objects_size_retriever;
     }

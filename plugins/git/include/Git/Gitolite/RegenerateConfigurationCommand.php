@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RegenerateConfigurationCommand extends Command
 {
+    public const NAME = 'git:regenerate-gitolite-configuration';
+
     /**
      * @var \ProjectManager
      */
@@ -43,7 +45,7 @@ class RegenerateConfigurationCommand extends Command
 
     public function __construct(\ProjectManager $project_manager, Git_SystemEventManager $system_event_manager)
     {
-        parent::__construct('git:regenerate-gitolite-configuration');
+        parent::__construct(self::NAME);
 
         $this->project_manager      = $project_manager;
         $this->system_event_manager = $system_event_manager;
