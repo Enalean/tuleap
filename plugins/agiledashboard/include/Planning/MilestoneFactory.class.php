@@ -513,7 +513,7 @@ class Planning_MilestoneFactory
             if (!$this->isMilestoneFuture($milestone->getArtifact(), $user) && $this->milestoneHasStartDate($milestone->getArtifact(), $user)) {
                 continue;
             }
-            $milestones[] = $this->getMilestoneFromArtifactWithBurndownInfo($milestone->getArtifact(), $user);
+            $milestones[] = $milestone;
         }
 
         return new AgileDashboard_Milestone_PaginatedMilestones($milestones, count($milestones));
