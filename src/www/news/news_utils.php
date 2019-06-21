@@ -389,7 +389,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     $body .= $Language->getText('news_utils','news_request_mail_summary', array($summary)).$GLOBALS['sys_lf'];
     $body .= $Language->getText('news_utils','news_request_mail_details', array($details)).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
     $body .= $Language->getText('news_utils','news_request_mail_approve_link').$GLOBALS['sys_lf'];
-    $body .= get_server_url()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
+    $body .= HTTPRequest::instance()->getServerUrl()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
     $mail->setBodyText($body);
 
     $is_sent = $mail->send();

@@ -62,6 +62,7 @@ class MattermostNotifier
             $message = new Message();
             $message->setText($text);
 
+            /** @psalm-suppress UndefinedDocblockClass $bot */
             $bot = $this->bot_factory->getBotById($bot_id);
             if ($bot) {
                 $this->sender->pushNotification($bot, $message, []);
