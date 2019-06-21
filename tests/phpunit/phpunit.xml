@@ -3,6 +3,7 @@
          failOnRisky="true"
          beStrictAboutChangesToGlobalState="true" backupGlobals="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
 >
     <php>
         <ini name="assert.exception" value="1"/>
