@@ -33,6 +33,7 @@ use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusCORSMiddleware;
 use Tuleap\Tus\TusDataStore;
+use Tuleap\Tus\TusRequestMethodOverride;
 use Tuleap\Tus\TusServer;
 use UserManager;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
@@ -62,14 +63,16 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
 
     public static function build(TusDataStore $data_store): self
     {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
         return new self(
-            new TusServer(HTTPFactoryBuilder::responseFactory(), $data_store),
+            new TusServer($response_factory, $data_store),
             UserManager::instance(),
             new SapiEmitter(),
             new SessionWriteCloseMiddleware(),
             new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
             new TuleapRESTCORSMiddleware(),
-            new TusCORSMiddleware()
+            new TusCORSMiddleware(),
+            new TusRequestMethodOverride($response_factory)
         );
     }
 
