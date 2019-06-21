@@ -32,6 +32,7 @@ import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
 import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 import { TEXT_FORMAT_TEXT } from "../../constants/fields-constants.js";
+import { store } from "./vuex-store.js";
 
 export default ArtifactModalService;
 
@@ -78,7 +79,7 @@ function ArtifactModalService(
             templateUrl: "tuleap-artifact-modal.tpl.html",
             controller: TuleapArtifactModalController,
             controllerAs: "modal",
-            tlpModalOptions: { keyboard: false },
+            tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
                 modal_model: self.initCreationModalModel(
                     tracker_id,
@@ -108,7 +109,7 @@ function ArtifactModalService(
             templateUrl: "tuleap-artifact-modal.tpl.html",
             controller: TuleapArtifactModalController,
             controllerAs: "modal",
-            tlpModalOptions: { keyboard: false },
+            tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
                 modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
                 displayItemCallback: displayItemCallback ? displayItemCallback : _.noop
@@ -153,6 +154,7 @@ function ArtifactModalService(
                 return file_upload_rules_promise;
             })
             .then(function() {
+                initializeVuexStore(modal_model);
                 return modal_model;
             });
 
@@ -208,10 +210,15 @@ function ArtifactModalService(
                 return file_upload_rules_promise;
             })
             .then(function() {
+                initializeVuexStore(modal_model);
                 return modal_model;
             });
 
         return promise;
+    }
+
+    function initializeVuexStore(modal_model) {
+        store.commit("saveTrackerFields", modal_model.tracker.fields);
     }
 
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {

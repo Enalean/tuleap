@@ -17,11 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { sprintf } from "sprintf-js";
+import prettyKibibytes from "pretty-kibibytes";
 import { isUploadEnabled, informUsersThatTheyCanPasteImagesInEditor } from "./element-adapter.js";
 import { addInstance } from "./consistent-uploaded-files-before-submit-checker.js";
 import { initGettext } from "./gettext-factory.js";
 import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
-import { buildFileUploadHandler } from "./file-upload-handler-factory.js";
+import {
+    buildFileUploadHandler,
+    MaxSizeUploadExceededError,
+    UploadError
+} from "./file-upload-handler-factory.js";
 import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {
@@ -38,7 +44,17 @@ export async function initiateUploadImage(ckeditor_instance, options, element) {
     informUsersThatTheyCanPasteImagesInEditor(element);
 
     const onStartCallback = () => disableFormSubmit(form);
-    const onErrorCallback = () => enableFormSubmit(form);
+    const onErrorCallback = error => {
+        if (error instanceof MaxSizeUploadExceededError) {
+            error.loader.message = sprintf(
+                gettext_provider.gettext("You are not allowed to upload files bigger than %s."),
+                prettyKibibytes(error.max_size_upload)
+            );
+        } else if (error instanceof UploadError) {
+            error.loader.message = gettext_provider.gettext("Unable to upload the file");
+        }
+        enableFormSubmit(form);
+    };
 
     function onSuccessCallback(id, download_href) {
         const hidden_field = document.createElement("input");

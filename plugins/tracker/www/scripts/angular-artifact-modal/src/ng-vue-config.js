@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { store } from "./vuex-store.js";
 
-import { isInCreationMode } from "../modal-creation-mode-state.js";
-import {
-    FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE
-} from "../../../constants/fields-constants.js";
+export default NgVueConfig;
 
-export function isDisabled(field) {
-    const necessary_permission = isInCreationMode()
-        ? FIELD_PERMISSION_CREATE
-        : FIELD_PERMISSION_UPDATE;
-    return !field.permissions.includes(necessary_permission);
+NgVueConfig.$inject = ["$ngVueProvider"];
+
+function NgVueConfig($ngVueProvider) {
+    $ngVueProvider.setRootVueInstanceProps({
+        store
+    });
 }

@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
@@ -22,6 +41,11 @@ import {
     rewire$uploadAllTemporaryFiles,
     restore as restoreFileUpload
 } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
+import {
+    rewire$setIsNotUploadingInCKEditor,
+    rewire$isUploadingInCKEditor,
+    restore as restoreUploadInCKEditor
+} from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 
 describe("TuleapArtifactModalController", () => {
     let $scope,
@@ -39,7 +63,9 @@ describe("TuleapArtifactModalController", () => {
         createArtifact,
         editArtifact,
         getAllFileFields,
-        uploadAllTemporaryFiles;
+        uploadAllTemporaryFiles,
+        isUploadingInCKEditor,
+        setIsNotUploadingInCKEditor;
 
     beforeEach(() => {
         angular.mock.module(artifact_modal_module, function($provide) {
@@ -71,7 +97,7 @@ describe("TuleapArtifactModalController", () => {
             TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
             TuleapArtifactModalLoading = _TuleapArtifactModalLoading_;
 
-            tlp_modal = jasmine.createSpyObj("tlp_modal", ["hide"]);
+            tlp_modal = jasmine.createSpyObj("tlp_modal", ["hide", "addEventListener"]);
             const modal_instance = {
                 tlp_modal: tlp_modal
             };
@@ -116,6 +142,11 @@ describe("TuleapArtifactModalController", () => {
         rewire$getAllFileFields(getAllFileFields);
         uploadAllTemporaryFiles = jasmine.createSpy("uploadAllTemporaryFiles");
         rewire$uploadAllTemporaryFiles(uploadAllTemporaryFiles);
+
+        setIsNotUploadingInCKEditor = jasmine.createSpy("setIsNotUploadingInCKEditor");
+        isUploadingInCKEditor = jasmine.createSpy("isUploadingInCKEditor");
+        rewire$setIsNotUploadingInCKEditor(setIsNotUploadingInCKEditor);
+        rewire$isUploadingInCKEditor(isUploadingInCKEditor);
     });
 
     afterEach(() => {
@@ -123,6 +154,7 @@ describe("TuleapArtifactModalController", () => {
         restoreRest();
         restoreFileDetector();
         restoreFileUpload();
+        restoreUploadInCKEditor();
     });
 
     describe("init() -", function() {
@@ -161,6 +193,21 @@ describe("TuleapArtifactModalController", () => {
                     jasmine.any(Function)
                 );
             });
+
+            it(`when I close the modal, then it will reset the isUploadingInCKEditor state`, () => {
+                let triggerHidden;
+                controller_params.modal_instance.tlp_modal.addEventListener.and.callFake(
+                    (event_name, handler) => {
+                        triggerHidden = handler;
+                    }
+                );
+
+                ArtifactModalController = $controller(BaseModalController, controller_params);
+                ArtifactModalController.$onInit();
+                triggerHidden();
+
+                expect(setIsNotUploadingInCKEditor).toHaveBeenCalled();
+            });
         });
     });
 
@@ -169,16 +216,39 @@ describe("TuleapArtifactModalController", () => {
             TuleapArtifactModalValidateService.validateArtifactFieldsValues.and.callFake(
                 values => values
             );
+            isUploadingInCKEditor.and.returnValue(false);
             getAllFileFields.and.returnValue([]);
         });
 
-        it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", () => {
+        it(`and given that an upload is still ongoing in CKEditor,
+            then it does nothing`, () => {
+            isUploadingInCKEditor.and.returnValue(true);
+
+            ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.submit();
+
+            expect(createArtifact).not.toHaveBeenCalled();
+            expect(editArtifact).not.toHaveBeenCalled();
+            expect(mockCallback).not.toHaveBeenCalled();
+        });
+
+        it(`and no artifact_id,
+            when I submit the modal to Tuleap,
+            then the field values will be validated,
+            the artifact will be created ,
+            the modal will be closed
+            and the callback will be called`, () => {
             createArtifact.and.returnValue($q.resolve({ id: 3042 }));
             isInCreationMode.and.returnValue(true);
             controller_params.modal_model.tracker_id = 39;
             ArtifactModalController = $controller(BaseModalController, controller_params);
-            var values = [{ field_id: 359, value: 907 }, { field_id: 613, bind_value_ids: [919] }];
+            const values = [
+                { field_id: 359, value: 907 },
+                { field_id: 613, bind_value_ids: [919] }
+            ];
             ArtifactModalController.values = values;
+            const followup_comment = { body: "My comment", format: "text" };
+            ArtifactModalController.new_followup_comment = followup_comment;
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
@@ -186,7 +256,7 @@ describe("TuleapArtifactModalController", () => {
 
             expect(
                 TuleapArtifactModalValidateService.validateArtifactFieldsValues
-            ).toHaveBeenCalledWith(values, true);
+            ).toHaveBeenCalledWith(values, true, followup_comment);
             expect(createArtifact).toHaveBeenCalledWith(39, values);
             expect(editArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
@@ -210,10 +280,7 @@ describe("TuleapArtifactModalController", () => {
                 { field_id: 983, value: 741 },
                 { field_id: 860, bind_value_ids: [754] }
             ];
-            const followup_comment = {
-                body: "My comment",
-                format: "text"
-            };
+            const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.values = values;
             ArtifactModalController.new_followup_comment = followup_comment;
 
@@ -224,7 +291,7 @@ describe("TuleapArtifactModalController", () => {
 
             expect(
                 TuleapArtifactModalValidateService.validateArtifactFieldsValues
-            ).toHaveBeenCalledWith(values, false);
+            ).toHaveBeenCalledWith(values, false, followup_comment);
             expect(editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(createArtifact).not.toHaveBeenCalled();
             expect(tlp_modal.hide).toHaveBeenCalled();
@@ -410,53 +477,55 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController.$onInit();
         });
 
-        describe("isDisabled() -", () => {
-            describe("Given that the modal was opened in creation mode", () => {
-                it("and given a field that had the 'create' permission, when I check if it is disabled, then it will return false", () => {
-                    isInCreationMode.and.returnValue(true);
-                    const field = {
-                        permissions: ["read", "update", "create"]
-                    };
+        describe(`setFieldValue()`, () => {
+            it(`Given a field id, it returns a function
+                that updates the field's value model`, () => {
+                ArtifactModalController.values = { 190: { value: "Some value" } };
 
-                    const result = ArtifactModalController.isDisabled(field);
+                const updater = ArtifactModalController.setFieldValue(190);
+                updater("Changed value");
 
-                    expect(result).toBe(false);
-                });
-
-                it("and given a field that didn't have the 'create' permission, when I check if it is disabled then it will return true", function() {
-                    isInCreationMode.and.returnValue(true);
-                    const field = {
-                        permissions: ["read", "update"]
-                    };
-
-                    const result = ArtifactModalController.isDisabled(field);
-
-                    expect(result).toBe(true);
-                });
+                expect(ArtifactModalController.values[190].value).toEqual("Changed value");
             });
+        });
 
-            describe("Given that the modal was opened in edition mode", () => {
-                it("and given a field that had the 'update' permission, when I check if it is disabled then it will return false", () => {
-                    isInCreationMode.and.returnValue(false);
-                    const field = {
-                        permissions: ["read", "update", "create"]
-                    };
+        describe(`addToFilesAddedByTextField()`, () => {
+            it(`Given a file field id and an uploaded file,
+                it adds the file to the field's value model`, () => {
+                ArtifactModalController.values = {
+                    204: {
+                        images_added_by_text_fields: [
+                            {
+                                id: 180,
+                                download_href: "https://example.com/sacrilegiously"
+                            },
+                            { id: 59, download_href: "https://example.com/swinishly" }
+                        ]
+                    }
+                };
 
-                    const result = ArtifactModalController.isDisabled(field);
+                const uploaded_file = {
+                    id: 16,
+                    download_href: "https://example.com/microthorax"
+                };
+                ArtifactModalController.addToFilesAddedByTextField(204, uploaded_file);
 
-                    expect(result).toBe(false);
-                });
+                expect(ArtifactModalController.values[204].images_added_by_text_fields).toContain(
+                    uploaded_file
+                );
+                expect(ArtifactModalController.values[204].value).toContain(uploaded_file.id);
+            });
+        });
 
-                it("and given a field that didn't have the 'update' permission, when I check if it is disabled then it will return true", () => {
-                    isInCreationMode.and.returnValue(false);
-                    const field = {
-                        permissions: ["read", "create"]
-                    };
+        describe(`setFollowupComment()`, () => {
+            it(`Given a comment object, it sets the new_followup_comment with the new object`, () => {
+                const comment = {
+                    format: "html",
+                    body: `<p>Lorem ipsum dolor sit amet</p>`
+                };
+                ArtifactModalController.setFollowupComment(comment);
 
-                    const result = ArtifactModalController.isDisabled(field);
-
-                    expect(result).toBe(true);
-                });
+                expect(ArtifactModalController.new_followup_comment).toEqual(comment);
             });
         });
 

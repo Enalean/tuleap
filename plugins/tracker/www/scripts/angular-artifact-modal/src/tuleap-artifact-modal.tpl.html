@@ -200,6 +200,7 @@
     v-props-field="field"
     v-props-value="modal.values[field.field_id].value"
     v-on-input="modal.setFieldValue(field.field_id)"
+    v-on-upload-image="modal.addToFilesAddedByTextField"
 ></vue-component>
 </script>
 
@@ -457,6 +458,7 @@
                 ng-if="modal.isFollowupCommentFormDisplayed()"
                 v-props-value="modal.new_followup_comment"
                 v-on-input="modal.setFollowupComment"
+                v-on-upload-image="modal.addToFilesAddedByTextField"
             ></vue-component>
         </div>
     </div>
@@ -477,6 +479,7 @@
             type="submit"
             class="tlp-button-primary tlp-modal-action"
             value="{{ 'Save changes' | translate }}"
+            ng-disabled="modal.isUploadingInCKEditor()"
         >
     </div>
 </form>

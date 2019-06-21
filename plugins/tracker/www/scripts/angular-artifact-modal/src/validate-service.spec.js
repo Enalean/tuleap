@@ -21,8 +21,10 @@ import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
 
-describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", function() {
-    var ValidateService, creation_mode;
+describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", () => {
+    let ValidateService,
+        creation_mode,
+        followup_value_model = {};
     beforeEach(function() {
         angular.mock.module(artifact_modal_module);
 
@@ -54,7 +56,11 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     value: "Kasie Steppello"
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([{ field_id: 503, value: "Kasie Steppello" }]);
         });
 
@@ -90,7 +96,11 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     permissions: ["update"]
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([
                 { field_id: 422, value: null },
                 { field_id: 967, value: "petrogenic" },
@@ -123,7 +133,11 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     value: "Malorie Labossiere"
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([{ field_id: 939, value: "Tyesha Schatzman" }]);
         });
 
@@ -154,7 +168,11 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     value: null
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([
                 { field_id: 54, value: "" },
                 { field_id: 257, value: "" },
@@ -185,7 +203,11 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     permissions: ["create"]
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([
                 { field_id: 597, bind_value_ids: [] },
                 { field_id: 785, bind_value_ids: [787, 857] }
@@ -200,27 +222,12 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     permissions: ["create"]
                 }
             ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
+            var output = ValidateService.validateArtifactFieldsValues(
+                input,
+                creation_mode,
+                followup_value_model
+            );
             expect(output).toEqual([{ field_id: 643, bind_value_ids: [840, 959] }]);
-        });
-
-        it("and given an array containing a file field with an empty value array, when I validate the fields, then the returned object will not contain the file field", function() {
-            var input = [
-                {
-                    field_id: 166,
-                    type: "int",
-                    permissions: ["create"],
-                    value: 1
-                },
-                {
-                    field_id: 837,
-                    type: "file",
-                    permissions: ["create"],
-                    value: []
-                }
-            ];
-            var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-            expect(output).toEqual([{ field_id: 166, value: 1 }]);
         });
     });
 });

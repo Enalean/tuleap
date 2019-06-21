@@ -17,15 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isInCreationMode } from "../modal-creation-mode-state.js";
-import {
-    FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE
-} from "../../../constants/fields-constants.js";
+import Vue from "vue";
+import Vuex from "vuex";
+import store_options from "./store/index.js";
 
-export function isDisabled(field) {
-    const necessary_permission = isInCreationMode()
-        ? FIELD_PERMISSION_CREATE
-        : FIELD_PERMISSION_UPDATE;
-    return !field.permissions.includes(necessary_permission);
-}
+Vue.use(Vuex);
+
+export const store = new Vuex.Store(store_options);

@@ -19,9 +19,6 @@
 
 import { post } from "tlp-fetch";
 import { Upload } from "tus-js-client";
-import { sprintf } from "sprintf-js";
-import prettyKibibytes from "pretty-kibibytes";
-import { getGettextProvider } from "./gettext-factory.js";
 
 export function buildFileUploadHandler(options) {
     const {
@@ -36,11 +33,10 @@ export function buildFileUploadHandler(options) {
         const loader = event.data.fileLoader;
         event.stop();
 
+        onStartCallback();
+
         if (loader.file.size > max_size_upload) {
-            loader.message = sprintf(
-                getGettextProvider().gettext("You are not allowed to upload files bigger than %s."),
-                prettyKibibytes(max_size_upload)
-            );
+            onErrorCallback(new MaxSizeUploadExceededError(max_size_upload, loader));
             loader.changeStatus("error");
             return;
         }
@@ -52,8 +48,12 @@ export function buildFileUploadHandler(options) {
             return;
         }
 
-        onStartCallback();
-        await startUploader(loader, upload_href, download_href);
+        try {
+            await startUploader(loader, upload_href, download_href);
+        } catch (error) {
+            onErrorCallback(new UploadError(loader));
+            throw error;
+        }
         ckeditor_instance.fire("change");
         onSuccessCallback(id, download_href);
     };
@@ -69,11 +69,9 @@ async function startUpload(loader, onErrorCallback) {
                 file_type: loader.file.type
             })
         });
-
         return response.json();
     } catch (exception) {
-        onErrorCallback();
-        loader.message = getGettextProvider().gettext("Unable to upload the file");
+        onErrorCallback(new UploadError(loader));
         if (typeof exception.response === "undefined") {
             loader.changeStatus("error");
             throw exception;
@@ -113,9 +111,9 @@ function startUploader(loader, upload_href, download_href) {
                 onSuccess(loader, download_href);
                 return resolve();
             },
-            onError: ({ originalRequest }) => {
-                onError(loader, originalRequest);
-                return reject();
+            onError: error => {
+                onError(loader, error.originalRequest);
+                return reject(error);
             }
         });
 
@@ -145,4 +143,21 @@ function onSuccess(loader, download_href) {
     loader.fileName = loader.file.name;
     loader.url = download_href;
     loader.changeStatus("uploaded");
+}
+
+export class MaxSizeUploadExceededError extends Error {
+    constructor(max_size_upload, loader) {
+        super();
+        this.name = "MaxSizeUploadExceededError";
+        this.loader = loader;
+        this.max_size_upload = max_size_upload;
+    }
+}
+
+export class UploadError extends Error {
+    constructor(loader) {
+        super();
+        this.name = "UploadError";
+        this.loader = loader;
+    }
 }

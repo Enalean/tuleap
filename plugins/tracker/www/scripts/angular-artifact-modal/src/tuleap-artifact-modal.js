@@ -41,6 +41,7 @@ import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
 import TextField from "./tuleap-artifact-modal-fields/text-field/TextField.vue";
 import FollowupEditor from "./followups/FollowupEditor.vue";
+import NgVueConfig from "./ng-vue-config.js";
 
 export default angular
     .module("tuleap.artifact-modal", [
@@ -64,6 +65,7 @@ export default angular
             }
         }
     ])
+    .config(NgVueConfig)
     .controller("TuleapArtifactModalController", ArtifactModalController)
     .value("TuleapArtifactModalLoading", {
         loading: false

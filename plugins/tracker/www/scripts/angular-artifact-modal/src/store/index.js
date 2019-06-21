@@ -17,15 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isInCreationMode } from "../modal-creation-mode-state.js";
-import {
-    FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE
-} from "../../../constants/fields-constants.js";
+import state from "./state.js";
+import * as mutations from "./mutations.js";
+import * as getters from "./getters.js";
 
-export function isDisabled(field) {
-    const necessary_permission = isInCreationMode()
-        ? FIELD_PERMISSION_CREATE
-        : FIELD_PERMISSION_UPDATE;
-    return !field.permissions.includes(necessary_permission);
-}
+export default {
+    state,
+    actions: {},
+    mutations,
+    getters
+};
