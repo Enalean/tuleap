@@ -19,11 +19,37 @@
   -->
 
 <template>
-    <p class="empty-pane-text" translate>There is nothing here!</p>
+    <section>
+        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
+            {{ error }}
+        </div>
+        <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
+        <div v-else><roadmap-section/></div>
+    </section>
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
+import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
+
 export default {
-    name: "App"
+    name: "App",
+    components: { RoadmapSection },
+    props: {
+        projectId: Number
+    },
+    computed: {
+        ...mapState(["error_message", "is_loading"]),
+        ...mapGetters(["has_rest_error"]),
+        error() {
+            return this.error_message === ""
+                ? this.$gettext("Oops, an error occurred!")
+                : this.error_message;
+        }
+    },
+    created() {
+        this.$store.commit("setProjectId", this.projectId);
+        this.$store.dispatch("getTotalsBacklogAndUpcomingReleases");
+    }
 };
 </script>

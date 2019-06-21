@@ -23,6 +23,7 @@ import GetTextPlugin from "vue-gettext";
 
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
+import { createStore } from "./src/store/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -40,7 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const AppComponent = Vue.extend(App);
+    const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
 
-    new AppComponent().$mount(vue_mount_point);
+    const AppComponent = Vue.extend(App);
+    const store = createStore();
+
+    new AppComponent({
+        store,
+        propsData: {
+            projectId: project_id
+        }
+    }).$mount(vue_mount_point);
 });

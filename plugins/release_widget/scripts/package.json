@@ -7,7 +7,11 @@
   "private": true,
   "dependencies": {
     "vue": "^2.6.10",
-    "vue-gettext": "^2.1.5"
+    "vue-gettext": "^2.1.5",
+    "vuex": "^3.1.1"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.27"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"
@@ -15,6 +19,8 @@
   "scripts": {
     "build": "rm -rf ../../../src/www/assets/releasewidget/scripts && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development'",
-    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find releasewidget/src/components/ -type f -name '*.vue')"
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find releasewidget/src/components/ -type f -name '*.vue')",
+    "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
+    "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9090 coverage/"
   }
 }

@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ReleaseWidget\Widget;
 
-use ForgeConfig;
 use TemplateRenderer;
 use TemplateRendererFactory;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Widget;
+use HTTPRequest;
 
 class ProjectReleaseWidget extends Widget
 {
@@ -54,9 +56,11 @@ class ProjectReleaseWidget extends Widget
 
     public function getContent() : string
     {
+        $request = HTTPRequest::instance();
+
         $renderer = $this->getRenderer(__DIR__ . '/../../templates');
 
-        return $renderer->renderToString('releasewidget', []);
+        return $renderer->renderToString('releasewidget', new ProjectReleasePresenter($request->getProject()));
     }
 
     private function getRenderer(string $template_path) : TemplateRenderer
@@ -73,5 +77,15 @@ class ProjectReleaseWidget extends Widget
         return [
             ['file' => $include_assets->getFileURL('releasewidget.js')]
         ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/releasewidget/themes/BurningParrot',
+            '/assets/releasewidget/themes/BurningParrot'
+        );
+
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 }
