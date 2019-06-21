@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,9 @@ namespace Tuleap\Tracker\FormElement;
 
 use Logger;
 use PFUser;
+use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
+use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Chart_Field_Exception;
 
 class ChartConfigurationValueRetriever
@@ -63,21 +65,37 @@ class ChartConfigurationValueRetriever
     }
 
     /**
+     * @return TimePeriodWithoutWeekEnd
+     *
+     * @throws Tracker_FormElement_Chart_Field_Exception
+     */
+    public function getTimePeriod(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
+    {
+        $start_date = $this->getStartDate($artifact, $user);
+        $duration = $this->getDuration($artifact, $user);
+
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+    }
+
+    /**
      * @return int
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function getDuration(Tracker_Artifact $artifact, PFUser $user)
     {
-        $field = $this->configuration_field_retriever->getDurationField($artifact, $user);
+        $field          = $this->configuration_field_retriever->getDurationField($artifact, $user);
+        $duration_value = $artifact->getValue($field);
 
-        if ($artifact->getValue($field) === null) {
+        if ($duration_value === null) {
             throw new Tracker_FormElement_Chart_Field_Exception(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
             );
         }
 
-        $duration = $artifact->getValue($field)->getValue();
+        assert($duration_value instanceof \Tracker_Artifact_ChangesetValue_Numeric);
+
+        $duration = $duration_value->getValue();
 
         if ($duration <= 0) {
             throw new Tracker_FormElement_Chart_Field_Exception(
@@ -91,23 +109,28 @@ class ChartConfigurationValueRetriever
             );
         }
 
-        return $duration;
+        return (int) $duration;
     }
 
     /**
      * @param Tracker_Artifact $artifact
      *
-     * @return int
+     * @return int|null
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function getStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
         $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
-        if (! $artifact->getValue($start_date_field)) {
-            return;
+        $start_date_value = $artifact->getValue($start_date_field);
+
+        if (! $start_date_value) {
+            return null;
         }
-        $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
+
+        assert($start_date_value instanceof Tracker_Artifact_ChangesetValue_Date);
+
+        $timestamp = $start_date_value->getTimestamp();
 
         if (! $timestamp) {
             throw new Tracker_FormElement_Chart_Field_Exception(
@@ -115,6 +138,6 @@ class ChartConfigurationValueRetriever
             );
         }
 
-        return $timestamp;
+        return (int) $timestamp;
     }
 }

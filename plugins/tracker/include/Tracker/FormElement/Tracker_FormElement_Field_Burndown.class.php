@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
@@ -43,7 +45,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Request parameter to display burndown image
      */
-    public const FUNC_SHOW_BURNDOWN          = 'show_burndown';
+    public const FUNC_SHOW_BURNDOWN = 'show_burndown';
 
     /**
      * @var Tracker_HierarchyFactory
@@ -151,8 +153,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown_data = $this->getBurndownData(
                 $artifact,
                 $user,
-                $value_retriever->getStartDate($artifact, $user),
-                $value_retriever->getDuration($artifact, $user)
+                $value_retriever->getTimePeriod($artifact, $user)
             );
 
 
@@ -329,31 +330,20 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $child->addAttribute('use_cache', '1');
     }
 
-    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         $artifact = $changeset->getArtifact();
 
-        try{
-            $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
-        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
-            $start_date = null;
-        }
+        $time_period = $this->getBurndownConfigurationValueRetriever()->getTimePeriod($artifact, $user);
 
-        try{
-            $duration = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
-        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
-            $duration = null;
-        }
-
-        $artifact_field_value_representation = new $classname_with_namespace;
+        $artifact_field_value_representation = new ArtifactFieldValueRepresentation();
         $artifact_field_value_representation->build(
             $this->getId(),
             $this->getLabel(),
             $this->getBurndownDataForREST(
                 $artifact,
                 $user,
-                $start_date,
-                $duration
+                $time_period
             )->getRESTRepresentation()
         );
 
@@ -366,33 +356,22 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
-     * @param int $start_date
-     * @param int $duration
-     *
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
+    public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
     {
         $builder = $this->getBurndownDataBuilderForREST();
-        return $builder->build($artifact, $user, $start_date, $duration);
+        return $builder->build($artifact, $user, $time_period);
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param PFUser $user
-     * @param int $start_date
-     * @param int $duration
-     *
      * @return Tracker_Chart_Data_Burndown
      * @throws BurndownCacheIsCurrentlyCalculatedException
      */
-    public function getBurndownDataForREST(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
+    public function getBurndownDataForREST(Tracker_Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
     {
-        $builder = $this->getBurndownDataBuilderForREST();
-        return $builder->build($artifact, $user, $start_date, $duration);
+        return $this->getBurndownData($artifact, $user, $time_period);
     }
 
 
@@ -781,11 +760,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function buildBurndownDataForLegacy(PFUser $user, Tracker_Artifact $artifact)
     {
-        $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
-        $duration   = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
-        $builder    = $this->getBurndownDataBuilderForLegacy();
+        $time_period = $this->getBurndownConfigurationValueRetriever()->getTimePeriod($artifact, $user);
+        $builder     = $this->getBurndownDataBuilderForLegacy();
 
-        return $builder->build($artifact, $user, $start_date, $duration);
+        return $builder->build($artifact, $user, $time_period);
     }
 
     private function getBurndownDataBuilderForLegacy()
@@ -804,6 +782,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getBurndownAdderForLegacy()
     {
-        return new BurndownRemainingEffortAdderForLegacy($this->getBurdownConfigurationFieldRetriever());
+        return new BurndownRemainingEffortAdderForLegacy(
+            $this->getBurdownConfigurationFieldRetriever(),
+            new UserWithReadAllPermissionBuilder()
+        );
     }
 }

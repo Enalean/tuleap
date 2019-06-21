@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Logger;
 use PFUser;
+use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
 use Tuleap\TimezoneRetriever;
@@ -53,7 +54,7 @@ class BurndownDataBuilderForREST
         $this->common_data_builder    = $common_data_builder;
     }
 
-    public function build(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
+    public function build(Tracker_Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
     {
         $capacity      = $this->common_data_builder->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -61,8 +62,7 @@ class BurndownDataBuilderForREST
         $is_burndown_under_calculation = $this->common_data_builder->getBurndownCalculationStatus(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity,
             $user_timezone
         );
@@ -70,8 +70,7 @@ class BurndownDataBuilderForREST
         $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity,
             $is_burndown_under_calculation
         );
@@ -86,12 +85,11 @@ class BurndownDataBuilderForREST
     private function addBurndownRemainingEffortDotsBasedOnServerTimezoneForREST(
         Tracker_Artifact $artifact,
         PFUser $user,
-        $start_date,
-        $duration,
+        TimePeriodWithoutWeekEnd $time_period,
         $capacity,
         $is_burndown_under_calculation
     ) {
-        $user_time_period   = $this->common_data_builder->getTimePeriod($start_date, $duration);
+        $user_time_period   = $this->common_data_builder->getTimePeriod($time_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {

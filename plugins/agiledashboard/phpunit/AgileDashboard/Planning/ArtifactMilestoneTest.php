@@ -29,6 +29,7 @@ use Planning;
 use Planning_ArtifactMilestone;
 use Project;
 use Tracker_Artifact;
+use Tracker_FormElement_Field_Burndown;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -243,5 +244,50 @@ final class ArtifactMilestoneTest extends TestCase
         $this->milestone->setTimePeriod($time_period);
 
         $this->assertNull($this->milestone->getEndDate());
+    }
+
+    public function testItRetrievesBurndownData()
+    {
+        $user           = Mockery::mock(PFUser::class);
+        $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
+
+        $time_period = new \TimePeriodWithoutWeekEnd(10, 10);
+        $this->milestone->setTimePeriod($time_period);
+
+        $this->artifact->shouldReceive('getABurndownField')
+            ->times(2)
+            ->with($user)
+            ->andReturn($burndown_field);
+
+        $burndown_field->shouldReceive('getBurndownData')
+            ->with($this->artifact, $user, $time_period)
+            ->once();
+
+        $this->milestone->getBurndownData($user);
+    }
+
+    public function testItRetrievesBurndownDataAsNullIfNoTimePeriodSet()
+    {
+        $user           = Mockery::mock(PFUser::class);
+        $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
+
+        $this->artifact->shouldReceive('getABurndownField')
+            ->once()
+            ->with($user)
+            ->andReturn($burndown_field);
+
+        $this->assertNull($this->milestone->getBurndownData($user));
+    }
+
+    public function testItRetrievesBurndownDataAsNullIfNoBurndownField()
+    {
+        $user = Mockery::mock(PFUser::class);
+
+        $this->artifact->shouldReceive('getABurndownField')
+            ->once()
+            ->with($user)
+            ->andReturnNull();
+
+        $this->assertNull($this->milestone->getBurndownData($user));
     }
 }

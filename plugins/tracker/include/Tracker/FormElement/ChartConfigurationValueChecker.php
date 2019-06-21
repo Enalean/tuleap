@@ -67,11 +67,15 @@ class ChartConfigurationValueChecker
         return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }
 
+    /**
+     * @return bool
+     */
     public function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
     {
+        $time_period = $this->configuration_value_retriever->getTimePeriod($artifact, $user);
+
         try {
-            return $this->configuration_value_retriever->getDuration($artifact, $user) !== null
-                && $this->configuration_value_retriever->getStartDate($artifact, $user) !== null;
+            return (bool) ($time_period->getStartDate() !== null && $time_period->getDuration() !== null);
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
             return false;
         }

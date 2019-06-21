@@ -27,6 +27,7 @@ use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
 use Tracker_UserWithReadAllPermission;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 class BurndownRemainingEffortAdderForLegacy
 {
@@ -35,15 +36,21 @@ class BurndownRemainingEffortAdderForLegacy
      */
     private $field_retriever;
 
+    /**
+     * @var UserWithReadAllPermissionBuilder
+     */
+    private $user_with_read_all_permission_builder;
+
     public function __construct(
-        ChartConfigurationFieldRetriever $field_retriever
+        ChartConfigurationFieldRetriever $field_retriever,
+        UserWithReadAllPermissionBuilder $user_with_read_all_permission_builder
     ) {
-        $this->field_retriever = $field_retriever;
+        $this->field_retriever                       = $field_retriever;
+        $this->user_with_read_all_permission_builder = $user_with_read_all_permission_builder;
     }
 
     public function addRemainingEffortDataForLegacy(
         Tracker_Chart_Data_Burndown $burndown_data,
-        TimePeriodWithoutWeekEnd $time_period,
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
@@ -52,6 +59,8 @@ class BurndownRemainingEffortAdderForLegacy
         if (! $field) {
             return;
         }
+
+        $time_period = $burndown_data->getTimePeriod();
 
         $date = $this->getFirstDayDate($time_period);
         $now  = new DateTime();
@@ -68,7 +77,7 @@ class BurndownRemainingEffortAdderForLegacy
             }
 
             $remaining_effort = $field->getCachedValue(
-                new Tracker_UserWithReadAllPermission($user),
+                $this->user_with_read_all_permission_builder->buildUserWithReadAllPermission($user),
                 $artifact,
                 $date->getTimestamp()
             );

@@ -30,7 +30,7 @@ class Tracker_Chart_Data_Burndown
      */
     private $remaining_efforts_at_date;
     /**
-     * @var TimePeriod
+     * @var TimePeriodWithoutWeekEnd
      */
     private $time_period;
 
@@ -184,7 +184,7 @@ class Tracker_Chart_Data_Burndown
     }
 
     /**
-     * @return  TimePeriod
+     * @return TimePeriodWithoutWeekEnd
      */
     public function getTimePeriod()
     {
