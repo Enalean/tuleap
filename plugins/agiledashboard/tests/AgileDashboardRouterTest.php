@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,7 +55,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
             mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter'),
             mock('Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever'),
             mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
-            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class)
+            mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class),
+            Mockery::mock(\Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker::class)
         );
 
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

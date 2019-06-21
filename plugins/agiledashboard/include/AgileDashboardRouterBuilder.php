@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 class AgileDashboardRouterBuilder
 {
@@ -147,7 +148,10 @@ class AgileDashboardRouterBuilder
                 )
             ),
             $service_crumb_builder,
-            $admin_crumb_builder
+            $admin_crumb_builder,
+            new TimeframeChecker(
+                Tracker_FormElementFactory::instance()
+            )
         );
     }
 
