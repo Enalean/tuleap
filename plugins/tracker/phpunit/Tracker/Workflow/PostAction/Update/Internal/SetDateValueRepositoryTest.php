@@ -69,7 +69,7 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_dao->shouldReceive('updatePostAction')
             ->with(9, 43, 1);
 
-        $transition     = TransitionFactory::buildATransitionWithId(1);
+        $transition = TransitionFactory::buildATransitionWithId(1);
         $set_date_value = new SetDateValue(null, 43, 1);
 
         $this->set_date_value_repository->create($transition, $set_date_value);
@@ -80,7 +80,7 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_dao->shouldReceive('create')
             ->andReturn(false);
 
-        $transition     = TransitionFactory::buildATransition();
+        $transition = TransitionFactory::buildATransition();
         $set_date_value = new SetDateValue(null, 43, 1);
 
         $this->expectException(DataAccessQueryException::class);
@@ -88,86 +88,28 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_repository->create($transition, $set_date_value);
     }
 
-    public function testUpdateUpdatesGivenSetDateValue()
+    public function testDeleteDeletesByTransitionId()
     {
-        $this->set_date_value_dao
-            ->shouldReceive('updatePostAction')
-            ->with(9, 43, 1)
-            ->andReturn(true);
-        $set_date_value = new SetDateValue(9, 43, 1);
-        $this->set_date_value_repository->update($set_date_value);
-    }
-
-    public function testUpdateThrowsWhenUpdateFail()
-    {
-        $this->set_date_value_dao
-            ->shouldReceive('updatePostAction')
-            ->andReturn(false);
-        $set_date_value = new SetDateValue(9, 43, 1);
-
-        $this->expectException(DataAccessQueryException::class);
-
-        $this->set_date_value_repository->update($set_date_value);
-    }
-
-    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
-    {
-        $set_date_values = [
-            new SetDateValue(1, 43, 1),
-            new SetDateValue(2, 43, 1),
-            new SetDateValue(3, 43, 1)
-        ];
-        $this->set_date_value_dao
-            ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
-            ->with(1, [1, 2, 3])
-            ->andReturn(true);
-        $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->set_date_value_repository->deleteAllByTransitionIfNotIn($transition, $set_date_values);
-    }
-
-    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
-    {
-        $set_date_values = [
-            new SetDateValue(1, 43, 1),
-            new SetDateValue(2, 43, 1),
-            new SetDateValue(3, 43, 1)
-        ];
-        $this->set_date_value_dao
-            ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
-            ->andReturn(false);
-        $transition = TransitionFactory::buildATransition();
-
-        $this->expectException(DataAccessQueryException::class);
-
-        $this->set_date_value_repository->deleteAllByTransitionIfNotIn($transition, $set_date_values);
-    }
-
-    public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()
-    {
-        $this->set_date_value_dao
-            ->shouldReceive('findAllIdsByTransitionId')
+        $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')
             ->with(1)
-            ->andReturn(new FakeDataAccessResult([
-                ['id' => 1],
-                ['id' => 2],
-                ['id' => 3]
-            ]));
+            ->andReturn(true);
 
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $ids        = $this->set_date_value_repository->findAllIdsByTransition($transition);
 
-        $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
+        $this->set_date_value_repository->deleteAllByTransition($transition);
     }
 
-    public function testFindAllIdsByTransitionThrowsWhenFindFail()
+
+    public function testDeleteThrowsWhenDeletionFails()
     {
-        $this->set_date_value_dao
-            ->shouldReceive('findAllIdsByTransitionId')
+        $this->set_date_value_dao->shouldReceive('deletePostActionsByTransitionId')
+            ->with(1)
             ->andReturn(false);
-        $transition = TransitionFactory::buildATransition();
+
+        $transition = TransitionFactory::buildATransitionWithId(1);
 
         $this->expectException(DataAccessQueryException::class);
 
-        $this->set_date_value_repository->findAllIdsByTransition($transition);
+        $this->set_date_value_repository->deleteAllByTransition($transition);
     }
 }

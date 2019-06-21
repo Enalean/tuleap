@@ -88,7 +88,7 @@ class SetDateValueJsonParserTest extends TestCase
                 "value" => ""
             ]
         );
-        $expected_action = new SetDateValue(2, 43, Transition_PostAction_Field_Date::CLEAR_DATE);
+        $expected_action = new SetDateValue(null, 43, Transition_PostAction_Field_Date::CLEAR_DATE);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
