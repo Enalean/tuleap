@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,7 +43,11 @@ class DocmanItemsEventAdder
     public function addNotificationEvents(Project $project) : void
     {
         $feedback                         = new NullResponseFeedbackWrapper();
-        $notifications_builders           = new NotificationBuilders($feedback, $project, null);
+        $notifications_builders           = new NotificationBuilders(
+            $feedback,
+            $project,
+            '/plugins/docman/?group_id=' . urlencode((string) $project->getID())
+        );
         $notification_manager             = $notifications_builders->buildNotificationManager();
         $notification_manager_add         = $notifications_builders->buildNotificationManagerAdd();
         $notification_manager_delete      = $notifications_builders->buildNotificationManagerDelete();

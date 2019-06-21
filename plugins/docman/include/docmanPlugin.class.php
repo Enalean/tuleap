@@ -1121,7 +1121,7 @@ class DocmanPlugin extends Plugin
             $this->getItemFactory($project->getID()),
             new Docman_NotificationsManager(
                 $project,
-                null,
+                $this->getPluginPath() . '/?group_id=' . urlencode((string) $project->getID()),
                 null,
                 $this->getMailBuilder(),
                 $this->getUsersToNotifyDao(),

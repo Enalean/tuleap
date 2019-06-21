@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean 2015 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -81,7 +81,7 @@ class Docman_NotificationsManager
 
     public function __construct(
         Project $project,
-        $url,
+        string $url,
         $feedback,
         MailBuilder $mail_builder,
         UsersToNotifyDao $users_to_notify_dao,

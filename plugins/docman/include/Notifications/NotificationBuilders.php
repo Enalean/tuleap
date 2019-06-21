@@ -27,6 +27,7 @@ use Docman_NotificationsManager_Delete;
 use Docman_NotificationsManager_Move;
 use Docman_NotificationsManager_Subscribers;
 use EventManager;
+use HTTPRequest;
 use MailBuilder;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
@@ -39,7 +40,6 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;
-use URLVerification;
 use UserManager;
 
 class NotificationBuilders
@@ -52,20 +52,20 @@ class NotificationBuilders
      * @var Project
      */
     private $project;
-    private $default_url;
+    private $base_url;
 
-    public function __construct(ResponseFeedbackWrapper $feedback, Project $project, $default_url)
+    public function __construct(ResponseFeedbackWrapper $feedback, Project $project, string $base_url)
     {
-        $this->feedback    = $feedback;
-        $this->project     = $project;
-        $this->default_url = $default_url;
+        $this->feedback = $feedback;
+        $this->project  = $project;
+        $this->base_url = $base_url;
     }
 
     public function buildNotificationManager()
     {
         return new Docman_NotificationsManager(
             $this->project,
-            get_server_url() . $this->default_url,
+            HTTPRequest::instance()->getServerUrl() . $this->base_url,
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -81,7 +81,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Add(
             $this->project,
-            get_server_url() . $this->default_url,
+            HTTPRequest::instance()->getServerUrl() . $this->base_url,
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -97,7 +97,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Delete(
             $this->project,
-            get_server_url() . $this->default_url,
+            HTTPRequest::instance()->getServerUrl() . $this->base_url,
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -113,7 +113,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Move(
             $this->project,
-            get_server_url() . $this->default_url,
+            HTTPRequest::instance()->getServerUrl() . $this->base_url,
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
@@ -129,7 +129,7 @@ class NotificationBuilders
     {
         return new Docman_NotificationsManager_Subscribers(
             $this->project,
-            get_server_url() . $this->default_url,
+            HTTPRequest::instance()->getServerUrl() . $this->base_url,
             $this->feedback,
             $this->getMailBuilder(),
             $this->getUsersToNotifyDao(),
