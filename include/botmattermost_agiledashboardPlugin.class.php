@@ -38,6 +38,7 @@ use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -150,7 +151,10 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
                     $milestone_status_counter,
                     new PlanningPermissionsManager(),
                     new AgileDashboard_Milestone_MilestoneDao(),
-                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
+                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+                    new TimeframeBuilder(
+                        Tracker_FormElementFactory::instance()
+                    )
                 ),
                 $milestone_status_counter,
                 $planning_factory,
