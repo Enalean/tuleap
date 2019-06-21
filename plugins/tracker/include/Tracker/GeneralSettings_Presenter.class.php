@@ -133,7 +133,7 @@ class Tracker_GeneralSettings_Presenter {
     }
 
     public function tracker_color() {
-        return $this->tracker->getColor();
+        return $this->tracker->getColor()->getName();
     }
 
     public function preview_label() {

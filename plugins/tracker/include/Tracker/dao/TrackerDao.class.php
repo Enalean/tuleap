@@ -255,7 +255,7 @@ class TrackerDao extends DataAccessObject {
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
         $description                  = $this->da->quoteSmart($tracker->description);
-        $color                        = $this->da->quoteSmart($tracker->color);
+        $color                        = $this->da->quoteSmart($tracker->getColor()->getName());
         $item_name                    = $this->da->quoteSmart($tracker->item_name);
         $allow_copy                   = $this->da->escapeInt($tracker->allow_copy);
         $enable_emailgateway          = $this->da->escapeInt($tracker->isEmailgatewayEnabled());

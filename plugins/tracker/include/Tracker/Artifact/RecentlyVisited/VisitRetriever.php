@@ -90,7 +90,7 @@ class VisitRetriever
                 $artifact->getXRef(),
                 $artifact->getUri(),
                 $artifact->getTitle(),
-                $tracker->getColor(),
+                $tracker->getColor()->getName(),
                 $this->glyph_finder->get('tuleap-tracker-small'),
                 $this->glyph_finder->get('tuleap-tracker'),
                 $artifact->getTracker()->getProject(),

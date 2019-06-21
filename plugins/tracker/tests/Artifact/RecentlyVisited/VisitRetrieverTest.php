@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 namespace Tuleap\Tracker\RecentlyVisited;
+
+use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -39,6 +41,7 @@ class VisitRetrieverTest extends \TuleapTestCase
         $tracker = mock('Tracker');
         stub($artifact)->getTracker()->returns($tracker);
         stub($tracker)->getProject()->returns(mock('Project'));
+        stub($tracker)->getColor()->returns(TrackerColor::default());
         $glyph_finder = mock('Tuleap\\Glyph\\GlyphFinder');
         stub($glyph_finder)->get()->returns(mock('Tuleap\\Glyph\\Glyph'));
 

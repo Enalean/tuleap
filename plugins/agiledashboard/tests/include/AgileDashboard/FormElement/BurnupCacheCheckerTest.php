@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use Mockery;
+use Mockery\MockInterface;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 
@@ -28,11 +30,11 @@ require_once __DIR__ . '/../../../bootstrap.php';
 class BurnupCacheCheckerTest extends \TuleapTestCase
 {
     /**
-     * @var ChartCachedDaysComparator
+     * @var ChartCachedDaysComparator|MockInterface
      */
     private $cache_days_comparator;
     /**
-     * @var BurnupCacheGenerator
+     * @var BurnupCacheGenerator|MockInterface
      */
     private $cache_generator;
     /**
@@ -60,10 +62,10 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->cache_generator       = mock(BurnupCacheGenerator::class);
+        $this->cache_generator       = Mockery::spy(BurnupCacheGenerator::class);
         $this->chart_value_checker   = mock(ChartConfigurationValueChecker::class);
         $burnup_cache_dao            = mock(BurnupCacheDao::class);
-        $this->cache_days_comparator = mock(ChartCachedDaysComparator::class);
+        $this->cache_days_comparator = Mockery::mock(ChartCachedDaysComparator::class);
         $this->burnup_cache_Checker  = new BurnupCacheChecker(
             $this->cache_generator,
             $this->chart_value_checker,
@@ -92,7 +94,8 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     public function itReturnsTrueWhenBurnupIsAlreadyUnderCalculation()
     {
         stub($this->chart_value_checker)->hasStartDate()->returns(true);
-        stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(true);
+        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturn(true);
+        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(false);
 
         $this->assertTrue(
             $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
@@ -102,24 +105,24 @@ class BurnupCacheCheckerTest extends \TuleapTestCase
     public function itReturnsTrueAndSendAnEventWhenCacheIsIncompleteForBurnup()
     {
         stub($this->chart_value_checker)->hasStartDate()->returns(true);
-        stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(false);
-        stub($this->cache_days_comparator)->isNumberOfCachedDaysExpected()->returns(false);
+        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturn(false);
+        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(false);
 
+        $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->once();
         $this->assertTrue(
             $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
-        expect($this->cache_generator)->forceBurnupCacheGeneration($this->artifact->getId())->once();
     }
 
     public function itReturnsFalseWhenBurnupHasNoNeedToBeComputed()
     {
         stub($this->chart_value_checker)->hasStartDate()->returns(true);
-        stub($this->cache_generator)->isCacheBurnupAlreadyAsked($this->artifact)->returns(false);
-        stub($this->cache_days_comparator)->isNumberOfCachedDaysExpected()->returns(true);
+        $this->cache_generator->shouldReceive('isCacheBurnupAlreadyAsked')->with($this->artifact)->andReturn(false);
+        $this->cache_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(true);
 
+        $this->cache_generator->shouldReceive('forceBurnupCacheGeneration')->with($this->artifact->getId())->never();
         $this->assertFalse(
             $this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->time_period, $this->user)
         );
-        expect($this->cache_generator)->forceBurnupCacheGeneration($this->artifact->getId())->never();
     }
 }

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\TrackerColor;
+
 require_once __DIR__ . '/bootstrap.php';
 
 class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_Interface {
@@ -108,7 +110,7 @@ class TrackerTest extends TuleapTestCase {
         $group_id = 999;
         $this->tracker->shouldReceive('getGroupId')->andReturns($group_id);
         $this->tracker->shouldReceive('getId')->andReturns(110);
-        $this->tracker->shouldReceive('getColor')->andReturns('inca_gray');
+        $this->tracker->shouldReceive('getColor')->andReturns(TrackerColor::default());
         $this->tracker1->shouldReceive('getGroupId')->andReturns($group_id);
         $this->tracker1->shouldReceive('getId')->andReturns(111);
         $this->tracker2->shouldReceive('getGroupId')->andReturns($group_id);
@@ -1104,7 +1106,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     private function GivenATrackerAndItsFactories() {
-        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
         $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $tracker->setFormElementFactory($factory);
         $sharedFactory = \Mockery::spy(\Tracker_SharedFormElementFactory::class);
@@ -1126,7 +1128,7 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->setUpGlobalsMockery();
         $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         stub($this->tracker)->getId()->returns(110);
-        stub($this->tracker)->getColor()->returns('inca_gray');
+        stub($this->tracker)->getColor()->returns(TrackerColor::default());
         stub($this->tracker)->getUserManager()->returns(\Mockery::spy(\UserManager::class));
         stub($this->tracker)->getProject()->returns(\Mockery::spy(\Project::class));
 
@@ -1249,7 +1251,7 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $xml = $this->tracker->exportToXML($xml);
 
         $color = $xml->color;
-        $this->assertEqual((string)$color, 'inca_gray');
+        $this->assertEqual((string)$color, TrackerColor::default()->getName());
     }
 
 }

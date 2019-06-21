@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ class KanbanItemRepresentation
         $this->id                    = JsonCast::toInt($artifact->getId());
         $this->item_name             = $artifact->getTracker()->getItemName();
         $this->label                 = $artifact->getTitle();
-        $this->color                 = $artifact->getTracker()->getNormalizedColor();
+        $this->color                 = $artifact->getTracker()->getColor()->getName();
         $this->timeinfo              = $timeinfo;
         $this->in_column             = $in_column;
         $this->card_fields           = $card_fields;

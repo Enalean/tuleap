@@ -134,7 +134,48 @@
     </optional>
     <optional>
       <element name="color">
-        <data type="string"/>
+        <choice>
+          <value>inca-silver</value>
+          <value>chrome-silver</value>
+          <value>firemist-silver</value>
+          <value>red-wine</value>
+          <value>fiesta-red</value>
+          <value>coral-pink</value>
+          <value>teddy-brown</value>
+          <value>clockwork-orange</value>
+          <value>graffiti-yellow</value>
+          <value>army-green</value>
+          <value>neon-green</value>
+          <value>acid-green</value>
+          <value>sherwood-green</value>
+          <value>ocean-turquoise</value>
+          <value>surf-green</value>
+          <value>deep-blue</value>
+          <value>lake-placid-blue</value>
+          <value>daphne-blue</value>
+          <value>plum-crazy</value>
+          <value>ultra-violet</value>
+          <value>lilac-purple</value>
+          <value>panther-pink</value>
+          <value>peggy-pink</value>
+          <value>flamingo-pink</value>
+          <value>inca_silver</value>
+          <value>chrome_silver</value>
+          <value>teddy_brown</value>
+          <value>red_wine</value>
+          <value>fiesta_red</value>
+          <value>clockwork_orange</value>
+          <value>acid_green</value>
+          <value>army_green</value>
+          <value>sherwood_green</value>
+          <value>ocean_turquoise</value>
+          <value>daphne_blue</value>
+          <value>lake_placid_blue</value>
+          <value>deep_blue</value>
+          <value>plum_crazy</value>
+          <value>peggy_pink</value>
+          <value>flamingo_pink</value>
+        </choice>
       </element>
     </optional>
     <optional>

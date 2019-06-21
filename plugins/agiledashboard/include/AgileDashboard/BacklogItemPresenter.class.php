@@ -80,7 +80,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->redirect_to_self = $redirect_to_self;
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
-        $this->color            = $this->artifact->getTracker()->getNormalizedColor();
+        $this->color            = $this->artifact->getTracker()->getColor()->getName();
         $this->is_inconsistent  = $is_inconsistent;
     }
 

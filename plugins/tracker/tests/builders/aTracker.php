@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
+
+use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__.'/../bootstrap.php';
 function aTracker() {
@@ -98,7 +100,7 @@ class Test_Tracker_Builder {
             null,
             null,
             null,
-            null,
+            TrackerColor::default(),
             null
         );
 

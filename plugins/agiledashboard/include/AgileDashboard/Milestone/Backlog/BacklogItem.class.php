@@ -75,7 +75,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         $this->title           = $artifact->getTitle();
         $this->url             = $artifact->getUri();
         $this->artifact        = $artifact;
-        $this->color           = $this->artifact->getTracker()->getNormalizedColor();
+        $this->color           = $this->artifact->getTracker()->getColor()->getName();
         $this->type            = $this->artifact->getTracker()->getName();
         $this->short_type      = $this->artifact->getTracker()->getItemName();
         $this->is_inconsistent = $is_inconsistent;

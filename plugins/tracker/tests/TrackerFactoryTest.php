@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\TrackerColor;
+
 require_once('bootstrap.php');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('Tracker_SharedFormElementFactory');
@@ -395,6 +398,6 @@ class TrackerFactoryCollectErrorWithoutImportingTest extends TuleapTestCase
      */
     private function getTracker($name, $description, $shortname)
     {
-        return new Tracker(1, self::PROJECT_ID, $name, $description, $shortname, 0, '', '', '', '', 0, 0, 0, '', 0);
+        return new Tracker(1, self::PROJECT_ID, $name, $description, $shortname, 0, '', '', '', '', 0, 0, 0, TrackerColor::default(), 0);
     }
 }

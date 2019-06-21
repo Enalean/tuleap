@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
@@ -247,7 +248,7 @@ class TrackerFactory {
                     $row['instantiate_for_new_projects'],
                     $row['log_priority_changes'],
                     $row['notifications_level'],
-                    $row['color'],
+                    TrackerColor::fromName($row['color']),
                     $row['enable_emailgateway']
         );
     }
@@ -762,7 +763,7 @@ class TrackerFactory {
                 $tracker->instantiate_for_new_projects,
                 $tracker->log_priority_changes,
                 $tracker->getNotificationsLevel(),
-                $tracker->color,
+                $tracker->getColor()->getName(),
                 $tracker->isEmailgatewayEnabled()
         );
         if ($tracker_id) {
