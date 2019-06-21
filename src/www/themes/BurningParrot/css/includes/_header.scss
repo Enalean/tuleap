@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ header {
     width: 100%;
     background: $navbar-background;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-    z-index: 100000;
+    z-index: 1000;
 }
 
 .header-motd {

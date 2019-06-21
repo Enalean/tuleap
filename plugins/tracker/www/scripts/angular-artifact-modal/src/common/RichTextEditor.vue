@@ -30,13 +30,7 @@
             v-bind:rows="rows"
         ></textarea>
         <p
-            v-if="is_error_shown"
-            key="error"
-            data-test="error"
-            class="tlp-text-danger"
-        > {{ error_message }}</p>
-        <p
-            v-else-if="is_help_shown"
+            v-if="is_help_shown"
             key="help"
             data-test="help"
             class="tlp-text-muted"
@@ -83,7 +77,6 @@ export default {
     },
     data() {
         return {
-            error_message: "",
             editor: null
         };
     },
@@ -96,10 +89,6 @@ export default {
 
         is_html_format() {
             return this.format === TEXT_FORMAT_HTML;
-        },
-
-        is_error_shown() {
-            return this.is_html_format && this.error_message !== "";
         },
 
         is_help_shown() {
@@ -184,10 +173,6 @@ export default {
                 }
             });
 
-            const cancelEvent = event => event.cancel();
-            this.editor.on("notificationShow", cancelEvent);
-            this.editor.on("notificationUpdate", cancelEvent);
-
             this.setupImageUpload();
         },
 
@@ -206,20 +191,15 @@ export default {
                 return;
             }
 
-            const onStartCallback = () => {
-                this.error_message = "";
-                setIsUploadingInCKEditor();
-            };
+            const onStartCallback = setIsUploadingInCKEditor;
             const onErrorCallback = error => {
-                // We use an error message here because CKEditor's notification pop-up
-                // appears behind the artifact modal, due to its very large z-index value
                 if (error instanceof MaxSizeUploadExceededError) {
-                    this.error_message = sprintf(
+                    error.loader.message = sprintf(
                         this.$gettext("You are not allowed to upload files bigger than %s."),
                         prettyKibibytes(error.max_size_upload)
                     );
                 } else if (error instanceof UploadError) {
-                    this.error_message = this.$gettext("Unable to upload the file");
+                    error.loader.message = this.$gettext("Unable to upload the file");
                 }
                 setIsNotUploadingInCKEditor();
             };
@@ -244,7 +224,9 @@ export default {
                 if (isThereAnImageWithDataURI(event.data.dataValue)) {
                     event.data.dataValue = "";
                     event.cancel();
-                    this.error_message = this.$gettext("You are not allowed to paste images here");
+                    this.editor.showNotification(
+                        this.$gettext("You are not allowed to paste images here")
+                    );
                 }
             });
         }
