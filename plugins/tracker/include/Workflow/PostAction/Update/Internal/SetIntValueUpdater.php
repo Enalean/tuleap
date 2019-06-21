@@ -53,16 +53,11 @@ class SetIntValueUpdater implements PostActionUpdater
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetIntValueActions($this->validator, $transition->getWorkflow()->getTracker());
-        $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
-        $diff                    = $actions->compareSetIntValueActionsTo($existing_ids_collection);
 
-        $this->repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
+        $this->repository->deleteAllByTransition($transition);
 
-        foreach ($diff->getAddedActions() as $added_action) {
-            $this->repository->create($transition, $added_action);
-        }
-        foreach ($diff->getUpdatedActions() as $updated_action) {
-            $this->repository->update($updated_action);
+        foreach ($actions->getSetIntValuePostActions() as $action) {
+            $this->repository->create($transition, $action);
         }
     }
 }

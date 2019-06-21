@@ -154,17 +154,6 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
-     * Compare only Set Int Value actions against a list of action ids:
-     * - Actions without id are marked as added
-     * - Actions whose id is in given list are marked as updated
-     * @throws UnknownPostActionIdsException
-     */
-    public function compareSetIntValueActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
-    {
-        return $this->compare($our_ids, $this->set_int_value_actions);
-    }
-
-    /**
      * Compare only Set Float Value actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
@@ -226,5 +215,10 @@ class PostActionCollection implements PostActionVisitor
     public function getSetDateValuePostActions() : array
     {
         return $this->set_date_value_actions;
+    }
+
+    public function getSetIntValuePostActions() : array
+    {
+        return $this->set_int_value_actions;
     }
 }
