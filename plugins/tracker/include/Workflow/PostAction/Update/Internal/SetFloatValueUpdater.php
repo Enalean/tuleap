@@ -50,16 +50,10 @@ class SetFloatValueUpdater implements PostActionUpdater
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $actions->validateSetFloatValueActions($this->validator, $transition->getWorkflow()->getTracker());
-        $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
-        $diff                    = $actions->compareSetFloatValueActionsTo($existing_ids_collection);
+        $this->repository->deleteAllByTransition($transition);
 
-        $this->repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
-
-        foreach ($diff->getAddedActions() as $added_action) {
-            $this->repository->create($transition, $added_action);
-        }
-        foreach ($diff->getUpdatedActions() as $updated_action) {
-            $this->repository->update($updated_action);
+        foreach ($actions->getSetFloatValuePostActions() as $action) {
+            $this->repository->create($transition, $action);
         }
     }
 }

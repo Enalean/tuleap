@@ -81,72 +81,17 @@ class SetFloatValueRepository
         });
     }
 
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function update(SetFloatValue $set_float_value): void
+    public function deleteAllByTransition(Transition $transition)
     {
-        $success = $this->set_float_value_dao->updatePostAction(
-            $set_float_value->getId(),
-            $set_float_value->getFieldId(),
-            $set_float_value->getValue()
-        );
+        $success = $this->set_float_value_dao->deletePostActionsByTransitionId($transition->getId());
+
         if ($success === false) {
             throw new DataAccessQueryException(
                 sprintf(
-                    "Cannot update Set Float Value post action with id '%u', field id '%u', and value '%u'",
-                    $set_float_value->getId(),
-                    $set_float_value->getFieldId(),
-                    $set_float_value->getValue()
-                )
-            );
-        }
-    }
-
-    /**
-     * @param SetFloatValue[] $set_float_values
-     * @throws DataAccessQueryException
-     */
-    public function deleteAllByTransitionIfNotIn(Transition $transition, array $set_float_values)
-    {
-        $ids_to_skip = array_map(
-            function (SetFloatValue $action) {
-                return $action->getId();
-            },
-            $set_float_values
-        );
-
-        $success = $this->set_float_value_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
-        if ($success === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot delete all Set Float Value post actions which ids are not in [%s], and on transition with id '%u'",
-                    implode(", ", $ids_to_skip),
+                    "Cannot delete all Set Float Value post actions for transition '%u'",
                     $transition->getId()
                 )
             );
         }
-    }
-
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function findAllIdsByTransition(Transition $transition): PostActionIdCollection
-    {
-        $rows_or_failure = $this->set_float_value_dao->findAllIdsByTransitionId($transition->getId());
-        if ($rows_or_failure === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot find ids of all Set Float Value post actions on transition with id '%u'",
-                    $transition->getId()
-                )
-            );
-        }
-
-        $ids = [];
-        foreach ($rows_or_failure as $row) {
-            $ids[] = (int)$row['id'];
-        }
-        return new PostActionIdCollection(...$ids);
     }
 }

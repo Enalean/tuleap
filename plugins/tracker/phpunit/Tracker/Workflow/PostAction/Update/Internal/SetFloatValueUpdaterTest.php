@@ -62,10 +62,7 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $this->set_float_value_repository = Mockery::mock(SetFloatValueRepository::class);
         $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->byDefault();
-        $this->set_float_value_repository
-            ->shouldReceive('update')
+            ->shouldReceive('deleteAllByTransition')
             ->byDefault();
 
         $this->tracker = Mockery::mock(\Tracker::class);
@@ -78,7 +75,6 @@ class SetFloatValueUpdaterTest extends TestCase
     public function testUpdateAddsNewSetFloatValueActions()
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new SetFloatValue(null, 43, 1.23);
         $actions      = new PostActionCollection($added_action);
@@ -95,10 +91,9 @@ class SetFloatValueUpdaterTest extends TestCase
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateUpdatesSetFloatValueActionsWhichAlreadyExists()
+    public function testUpdateDeletesAndRecreatesSetFloatValueActionsWhichAlreadyExists()
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new SetFloatValue(1, 43, 1.23);
         $actions        = new PostActionCollection($updated_action);
@@ -108,8 +103,13 @@ class SetFloatValueUpdaterTest extends TestCase
             ->with($this->tracker, $updated_action);
 
         $this->set_float_value_repository
-            ->shouldReceive('update')
-            ->with($updated_action)
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition)
+            ->andReturns();
+
+        $this->set_float_value_repository
+            ->shouldReceive('create')
+            ->with($transition, $updated_action)
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
@@ -119,8 +119,6 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $this->mockFindAllIdsByTransition($transition, [2, 3]);
-
         $action  = new SetFloatValue(2, 43, 1.23);
         $actions = new PostActionCollection($action);
 
@@ -129,21 +127,15 @@ class SetFloatValueUpdaterTest extends TestCase
             ->with($this->tracker, $action);
 
         $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransitionIfNotIn')
-            ->with($transition, [$action])
+            ->shouldReceive('deleteAllByTransition')
+            ->with($transition)
+            ->andReturns();
+
+        $this->set_float_value_repository
+            ->shouldReceive('create')
+            ->with($transition, $action)
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
-    }
-
-    private function mockFindAllIdsByTransition(
-        $transition,
-        array $ids
-    ) {
-        $existing_ids = new PostActionIdCollection(...$ids);
-        $this->set_float_value_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->withArgs([$transition])
-            ->andReturn($existing_ids);
     }
 }

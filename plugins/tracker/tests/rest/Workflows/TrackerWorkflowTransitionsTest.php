@@ -407,6 +407,8 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $forth_post_action = $post_actions[3];
         $this->assertSame("run_job", $forth_post_action["type"]);
+
+        return $transition_id;
     }
 
     /**
@@ -500,5 +502,52 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         );
 
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @depends testPUTTrackerWorkflowTransitionActions
+     */
+    public function testPUTTrackerWorkflowTransitionSetFieldValueFloatAction(int $transition_id)
+    {
+        $used_field_id = $this->getAUsedFieldId(
+            $this->tracker_workflow_transitions_tracker_id,
+            'il_flotte'
+        );
+
+        $json = json_encode([
+            "post_actions" => [
+                [
+                    "type" => "set_field_value",
+                    "field_type" => "float",
+                    "field_id" => $used_field_id,
+                    "value" => 1.2
+                ]
+            ]
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $json
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response_get = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+        );
+
+        $this->assertEquals(200, $response_get->getStatusCode());
+        $response_get_content = $response_get->json();
+        $this->assertCount(1, $response_get_content);
+
+        $this->assertSame("set_field_value", $response_get_content[0]["type"]);
+        $this->assertSame("float", $response_get_content[0]["field_type"]);
+        $this->assertSame(1.2, $response_get_content[0]["value"]);
+        $this->assertSame($used_field_id, $response_get_content[0]["field_id"]);
     }
 }
