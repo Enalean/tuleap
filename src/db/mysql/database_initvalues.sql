@@ -255,14 +255,10 @@ INSERT INTO frs_filetype VALUES ('8002','html');
 INSERT INTO frs_filetype VALUES ('8003','pdf');
 INSERT INTO frs_filetype VALUES ('9999','Other');
 
-INSERT INTO frs_processor VALUES ('1000','i386','10','100');
 INSERT INTO frs_processor VALUES ('1500','x86_64','15','100');
-INSERT INTO frs_processor VALUES ('2000','PPC','20','100');
-INSERT INTO frs_processor VALUES ('3000','MIPS','30','100');
-INSERT INTO frs_processor VALUES ('4000','Sparc','40','100');
-INSERT INTO frs_processor VALUES ('5000','UltraSparc','50','100');
-INSERT INTO frs_processor VALUES ('6000','IA64','60','100');
-INSERT INTO frs_processor VALUES ('7000','Alpha','70','100');
+INSERT INTO frs_processor VALUES ('2000','ARMv7','20','100');
+INSERT INTO frs_processor VALUES ('3000','ARMv8','30','100');
+INSERT INTO frs_processor VALUES ('4000','RISC-V','40','100');
 INSERT INTO frs_processor VALUES ('8000','Any','80','100');
 INSERT INTO frs_processor VALUES ('9999','Other','90','100');
 
