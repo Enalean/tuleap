@@ -29,6 +29,7 @@ use \Planning_MilestoneFactory;
 use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\Milestone\CurrentMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\Milestone\FutureMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -46,8 +47,8 @@ use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
 use AgileDashboard_Milestone_MilestoneDao;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
-use Tuleap\AgileDashboard\REST\QueryToFutureMilestoneRepresentationBuilderConverter;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\AgileDashboard\REST\QueryToPeriodMilestoneRepresentationBuilderConverter;
 
 /**
  * Wrapper for milestone related REST methods
@@ -134,9 +135,19 @@ class ProjectMilestonesResource {
             $this->milestone_factory
         );
 
+        $current_milestone_representation_builder = new CurrentMilestoneRepresentationBuilder(
+            $milestone_representation_builder,
+            $this->milestone_factory
+        );
+
+
+
         $this->query_to_milestone_representation_builder_converter = new QueryToMilestoneRepresentationBuilderConverter(
             $milestone_representation_builder,
-            new QueryToFutureMilestoneRepresentationBuilderConverter($future_milestone_representation_builder),
+            new QueryToPeriodMilestoneRepresentationBuilderConverter(
+                $future_milestone_representation_builder,
+                $current_milestone_representation_builder
+            ),
             new QueryToCriterionStatusConverter()
         );
     }

@@ -22,21 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST;
 
+use Tuleap\AgileDashboard\Milestone\CurrentMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\Milestone\FutureMilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\Milestone\MilestoneRepresentationBuilderInterface;
 
-class QueryToFutureMilestoneRepresentationBuilderConverter
+class QueryToPeriodMilestoneRepresentationBuilderConverter
 {
 
     private const FUTURE = 'future';
+    private const CURRENT = 'current';
     /**
      * @var FutureMilestoneRepresentationBuilder
      */
-    private $builder;
+    private $future_builder;
+    /**
+     * @var CurrentMilestoneRepresentationBuilder
+     */
+    private $current_builder;
 
-    public function __construct(FutureMilestoneRepresentationBuilder $builder)
-    {
-        $this->builder = $builder;
+    public function __construct(
+        FutureMilestoneRepresentationBuilder $future_builder,
+        CurrentMilestoneRepresentationBuilder $current_builder
+    ) {
+        $this->future_builder  = $future_builder;
+        $this->current_builder = $current_builder;
     }
 
     /**
@@ -58,7 +67,11 @@ class QueryToFutureMilestoneRepresentationBuilderConverter
         }
 
         if ($query_object->period === self::FUTURE) {
-            return $this->builder;
+            return $this->future_builder;
+        }
+
+        if ($query_object->period === self::CURRENT) {
+            return $this->current_builder;
         }
 
         throw MalformedQueryParameterException::invalidQueryPeriodParameter();

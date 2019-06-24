@@ -30,7 +30,7 @@ use Tuleap\AgileDashboard\Milestone\StatusMilestoneRepresentationBuilder;
 
 class QueryToMilestoneRepresentationBuilderConverter
 {
-    /** @var QueryToFutureMilestoneRepresentationBuilderConverter */
+    /** @var QueryToPeriodMilestoneRepresentationBuilderConverter */
     private $period_converter;
 
     /** @var QueryToCriterionStatusConverter */
@@ -42,7 +42,7 @@ class QueryToMilestoneRepresentationBuilderConverter
 
     public function __construct(
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
-        QueryToFutureMilestoneRepresentationBuilderConverter $period_converter,
+        QueryToPeriodMilestoneRepresentationBuilderConverter $period_converter,
         QueryToCriterionStatusConverter $status_converter
     ) {
         $this->milestone_representation_builder = $milestone_representation_builder;
