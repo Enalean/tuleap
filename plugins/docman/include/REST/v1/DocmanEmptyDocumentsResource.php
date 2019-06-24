@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
@@ -49,7 +50,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     {
         $this->rest_user_manager = RestUserManager::build();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager = \EventManager::instance();
+        $this->event_manager     = \EventManager::instance();
     }
 
     /**
@@ -77,7 +78,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_Empty::class);
+        $validator_visitor = $this->getValidator($project, $current_user, $item_to_delete);
 
         $item_to_delete->accept($validator_visitor);
 
@@ -105,5 +106,15 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     private function setHeaders(): void
     {
         Header::allowOptionsDelete();
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Empty::class);
     }
 }

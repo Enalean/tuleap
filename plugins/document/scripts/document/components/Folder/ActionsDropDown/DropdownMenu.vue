@@ -95,7 +95,7 @@ import { mapState, mapGetters } from "vuex";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_EMBEDDED, TYPE_FILE } from "../../../constants.js";
 
 export default {
     name: "DropdownMenu",
@@ -123,7 +123,7 @@ export default {
             return this.item.user_can_write && this.item.parent_id;
         },
         is_lock_supported_for_item() {
-            return this.item.type === TYPE_FILE;
+            return this.item.type === TYPE_FILE || this.item.type === TYPE_EMBEDDED;
         }
     },
     methods: {

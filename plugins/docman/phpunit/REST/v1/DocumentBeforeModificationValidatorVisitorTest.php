@@ -28,11 +28,27 @@ use Docman_File;
 use Docman_Folder;
 use Docman_Item;
 use Docman_Link;
+use Docman_PermissionsManager;
 use Docman_Wiki;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 
 class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+    /**
+     * @var Docman_Item|\Mockery\MockInterface
+     */
+    private $item;
+    /**
+     * @var \Mockery\MockInterface|PFUser
+     */
+    private $current_user;
+    /**
+     * @var Docman_PermissionsManager|\Mockery\MockInterface
+     */
+    private $permission_manager;
     /**
      * @var DocumentBeforeModificationValidatorVisitor
      */
@@ -42,7 +58,14 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         parent::setUp();
 
+        $this->permission_manager = \Mockery::mock(Docman_PermissionsManager::class);
+        $this->current_user = \Mockery::mock(PFUser::class);
+        $this->item = \Mockery::mock(Docman_Item::class);
+        $this->item->shouldReceive('getId')->andReturn(1);
         $this->validator_visitor = new DocumentBeforeModificationValidatorVisitor(
+            $this->permission_manager,
+            $this->current_user,
+            $this->item,
             Docman_File::class
         );
     }
@@ -105,7 +128,17 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $file_item = new Docman_File();
 
-        $this->expectNotToPerformAssertions();
+        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+
+        $file_item->accept($this->validator_visitor);
+    }
+
+    public function testItThrowExceptionWhenUserCantWriteFile() : void
+    {
+        $file_item = new Docman_File();
+
+        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(false);
+        $this->expectException(\Tuleap\REST\I18NRestException::class);
 
         $file_item->accept($this->validator_visitor);
     }

@@ -48,7 +48,9 @@ export {
     deleteFolder,
     getItemsReferencingSameWikiPage,
     postLockFile,
-    deleteLockFile
+    deleteLockFile,
+    postLockEmbedded,
+    deleteLockEmbedded
 };
 
 async function getProject(project_id) {
@@ -342,4 +344,20 @@ function deleteLockFile(item) {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_files/${escaped_item_id}/lock`);
+}
+
+function postLockEmbedded(item) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return post(`/api/docman_embedded_files/${escaped_item_id}/lock`, { headers });
+}
+
+function deleteLockEmbedded(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return del(`/api/docman_embedded_files/${escaped_item_id}/lock`);
 }

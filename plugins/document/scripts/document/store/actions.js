@@ -45,7 +45,9 @@ import {
     getItemsReferencingSameWikiPage,
     getParents,
     postLockFile,
-    deleteLockFile
+    deleteLockFile,
+    postLockEmbedded,
+    deleteLockEmbedded
 } from "../api/rest-querier.js";
 
 import {
@@ -577,9 +579,19 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
     }
 };
 
-export const lockFile = async (context, item) => {
+export const lockDocument = async (context, item) => {
     try {
-        await postLockFile(item);
+        switch (item.type) {
+            case TYPE_FILE:
+                await postLockFile(item);
+                break;
+            case TYPE_EMBEDDED:
+                await postLockEmbedded(item);
+                break;
+            default:
+                break;
+        }
+
         const updated_item = await getItem(item.id);
         context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
     } catch (exception) {
@@ -587,9 +599,18 @@ export const lockFile = async (context, item) => {
     }
 };
 
-export const unlockFile = async (context, item) => {
+export const unlockDocument = async (context, item) => {
     try {
-        await deleteLockFile(item);
+        switch (item.type) {
+            case TYPE_FILE:
+                await deleteLockFile(item);
+                break;
+            case TYPE_EMBEDDED:
+                await deleteLockEmbedded(item);
+                break;
+            default:
+                break;
+        }
         const updated_item = await getItem(item.id);
         context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
     } catch (exception) {

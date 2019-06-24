@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -162,8 +162,6 @@ class DocmanFoldersResource extends AuthenticatedResource
         $parent       = $item_request->getItem();
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
-        $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $id);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -451,7 +449,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $item_to_delete      = $item_request->getItem();
         $current_user        = $this->rest_user_manager->getCurrentUser();
         $project             = $item_request->getProject();
-        $validator_visitor   = new DocumentBeforeModificationValidatorVisitor(\Docman_Folder::class);
+        $validator_visitor   =$this->getValidator($project, $current_user, $item_to_delete);
 
         $item_to_delete->accept($validator_visitor);
 
@@ -489,12 +487,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $item_checker->checkItemCanHaveSubitems($item);
     }
 
-    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
-    {
-        return new DocmanFolderPermissionChecker($this->getDocmanPermissionManager($project));
-    }
-
-    private function getDocmanPermissionManager(Project $project): Docman_PermissionsManager
+    private function getPermissionManager(Project $project): Docman_PermissionsManager
     {
         return Docman_PermissionsManager::instance($project->getGroupId());
     }
@@ -502,5 +495,15 @@ class DocmanFoldersResource extends AuthenticatedResource
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
+    }
+
+    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
+    {
+        return new DocmanFolderPermissionChecker($this->getPermissionManager($project));
+    }
+
+    private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Folder::class);
     }
 }

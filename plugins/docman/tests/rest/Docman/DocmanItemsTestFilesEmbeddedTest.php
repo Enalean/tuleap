@@ -701,4 +701,75 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
 
         $this->assertEquals(404, $response->getStatusCode());
     }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostLocksAnEmbeddedFile(array $items): void
+    {
+        $locked_document    = $this->findItemByTitle($items, 'embedded POST L');
+        $locked_document_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_embedded_files/' . $locked_document_id . "/lock")
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $locked_document_id)
+        );
+
+        $document = $response->json();
+        $this->assertEquals($document['lock_info'] ["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testDeleteLockAnEmbeddedFile(array $items): void
+    {
+        $locked_document    = $this->findItemByTitle($items, 'embedded POST L');
+        $locked_document_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $locked_document_id . "/lock")
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $locked_document_id)
+        );
+
+        $document = $response->json();
+        $this->assertEquals($document['lock_info'], null);
+    }
+
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptions(int $id): void
+    {
+        $response = $this->getResponse($this->client->options('docman_embedded_files/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
+
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsLock(int $id): void
+    {
+        $response = $this->getResponse($this->client->options('docman_embedded_files/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
+
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
 }

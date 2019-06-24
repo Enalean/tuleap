@@ -27,7 +27,6 @@ use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
-use EventManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -42,6 +41,7 @@ use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
+use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
@@ -90,7 +90,7 @@ class DocmanFilesResource extends AuthenticatedResource
      * /!\ This route is under construction and will be subject to changes
      * </pre>
      *
-     * @param int $id Id of the file you want lock
+     * @param int $id Id of the file you want to lock
      *
      * @throws I18NRestException 400
      * @throws RestException 401
@@ -104,7 +104,20 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function postLock(int $id): void
     {
-        $this->updateLock($id, true);
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->lockItem($item, $current_user);
     }
 
     /**
@@ -114,7 +127,7 @@ class DocmanFilesResource extends AuthenticatedResource
      * /!\ This route is under construction and will be subject to changes
      * </pre>
      *
-     * @param int  $id Id of the file you want unlock
+     * @param int  $id Id of the file you want to unlock
      *
      * @url    DELETE {id}/lock
      * @access hybrid
@@ -127,7 +140,20 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function deleteLock(int $id): void
     {
-        $this->updateLock($id, false);
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->unlockItem($item, $current_user);
     }
 
     /**
@@ -178,14 +204,12 @@ class DocmanFilesResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
 
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
-        $item->accept($validator, []);
-
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
 
-        $this->checkUserCanWrite($project, $current_user, $item);
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -268,9 +292,9 @@ class DocmanFilesResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
 
-        $item_to_delete->accept($validator_visitor);
+        $validator = $this->getValidator($project, $current_user, $item_to_delete);
+        $item_to_delete->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -338,14 +362,11 @@ class DocmanFilesResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
 
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
-        $item->accept($validator, []);
-
         $current_user = $this->rest_user_manager->getCurrentUser();
-
         $project = $item_request->getProject();
 
-        $this->checkUserCanWrite($project, $current_user, $item);
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -439,69 +460,13 @@ class DocmanFilesResource extends AuthenticatedResource
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             ),
-            Docman_PermissionsManager::instance($project->getGroupId())
+            $this->getPermissionManager($project)
         );
     }
 
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
-    }
-
-    /**
-     * @param \Project     $project
-     * @param \PFUser      $current_user
-     * @param \Docman_Item $item
-     *
-     * @throws I18NRestException
-     */
-    private function checkUserCanWrite(\Project $project, \PFUser $current_user, \Docman_Item $item): void
-    {
-        if (! Docman_PermissionsManager::instance($project->getGroupId())->userCanWrite($current_user, $item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to write this item.')
-            );
-        }
-    }
-
-    /**
-     * @throws I18NRestException
-     * @throws RestException
-     */
-    private function updateLock(int $id, bool $should_lock_item): void
-    {
-        $this->checkAccess();
-        $this->setHeadersForLock();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
-        $project      = $item_request->getProject();
-
-        $this->checkUserCanWrite($project, $current_user, $item);
-
-        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        if (Docman_PermissionsManager::instance($project->getGroupId())->_itemIsLockedForUser($current_user, (int)$item->getId())) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        }
-
-        $lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
-        if ($should_lock_item) {
-            $lock_factory->lock($item, $current_user);
-        } else {
-            $lock_factory->unlock($item, $current_user);
-        }
     }
 
     private function getFileVersionCreator(\Project $project): DocmanFileVersionCreator
@@ -511,7 +476,22 @@ class DocmanFilesResource extends AuthenticatedResource
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
-            Docman_PermissionsManager::instance($project->getID())
+            $this->getPermissionManager($project)
         );
+    }
+
+    private function getRestLockUpdater(\Project $project): RestLockUpdater
+    {
+        return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
+    }
+
+    private function getPermissionManager(\Project $project): Docman_PermissionsManager
+    {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    {
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_File::class);
     }
 }
