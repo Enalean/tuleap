@@ -333,10 +333,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *                          +
      *                          |
      *                          +
-     *             +------------------------+
-     *             |                        |
-     *             +                        +
-     *          wiki AT                   wiki L
+     *             +------------------------+-------------------+
+     *             |                        |                   |
+     *             +                        +                   +
+     *          wiki AT                   wiki L           wiki POST L
      *
      * (L)    => Lock on this item
      * (AT)   => Approval table on this item
@@ -364,6 +364,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             self::REGULAR_USER_ID,
             $folder_wiki_id,
             'wiki L',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_wiki_id,
+            'wiki POST L',
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI
         );
 
