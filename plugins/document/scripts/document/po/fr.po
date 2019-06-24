@@ -204,6 +204,9 @@ msgstr "Attendez une seconde !"
 msgid "Id"
 msgstr "Id"
 
+msgid "It seems action you try to performed can't be done."
+msgstr "Il semble que l'action que vous souhaitez effectuer ne peut pas être réalisée."
+
 msgid "It seems the content of this element can't be loaded."
 msgstr "Le contenu de cet élément n'a pas pu être chargé."
 
@@ -224,6 +227,9 @@ msgstr "Date de dernière mise à jour"
 
 msgid "Link"
 msgstr "Lien"
+
+msgid "Lock"
+msgstr "Vérouiller"
 
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
@@ -419,6 +425,9 @@ msgstr "Titre"
 
 msgid "URL"
 msgstr "URL"
+
+msgid "Unlock"
+msgstr "Déverouiller"
 
 msgid "Upload error"
 msgstr "Erreur de téléversement"

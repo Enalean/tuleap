@@ -20,7 +20,10 @@
 <template>
     <div class="empty-page-text-with-small-text">
         <translate>Oops, there's an issue.</translate>
-        <div class="empty-page-small-text" v-translate>It seems the content of this element can't be loaded.</div>
+        <div class="empty-page-small-text" v-translate v-if="! has_lock_error">
+            It seems the content of this element can't be loaded.
+        </div>
+        <div class="empty-page-small-text" v-translate v-else>It seems action you try to performed can't be done.</div>
         <template v-if="has_any_loading_error">
             <div class="document-folder-error-link">
                 <a v-if="! is_more_shown"
@@ -39,15 +42,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+
 export default {
     name: "ShowErrorDetails",
-    ...mapState("error", [
-        "folder_loading_error",
-        "has_folder_loading_error",
-        "has_document_loading_error",
-        "document_loading_error"
-    ]),
     data() {
         return {
             is_more_shown: false
@@ -58,7 +56,9 @@ export default {
             "folder_loading_error",
             "has_folder_loading_error",
             "has_document_loading_error",
-            "document_loading_error"
+            "document_loading_error",
+            "has_document_lock_error",
+            "document_lock_error"
         ]),
         ...mapGetters("error", ["has_any_loading_error"]),
         error_message() {
@@ -66,7 +66,14 @@ export default {
                 return this.folder_loading_error;
             }
 
+            if (this.has_document_lock_error) {
+                return this.document_lock_error;
+            }
+
             return this.document_loading_error;
+        },
+        has_lock_error() {
+            return this.has_document_lock_error;
         }
     }
 };

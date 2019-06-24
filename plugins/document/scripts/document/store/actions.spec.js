@@ -36,7 +36,9 @@ import {
     createNewWikiVersionFromModal,
     createNewLinkVersionFromModal,
     deleteItem,
-    getWikisReferencingSameWikiPage
+    getWikisReferencingSameWikiPage,
+    lockFile,
+    unlockFile
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -66,7 +68,9 @@ import {
     rewire$deleteFolder,
     rewire$deleteEmptyDocument,
     rewire$getParents,
-    rewire$getItemsReferencingSameWikiPage
+    rewire$getItemsReferencingSameWikiPage,
+    rewire$postLockFile,
+    rewire$deleteLockFile
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1398,6 +1402,86 @@ describe("Store actions", () => {
             const referencers = await getWikisReferencingSameWikiPage(context, target_wiki);
 
             expect(referencers).toEqual(null);
+        });
+    });
+
+    describe("lockFile()", () => {
+        let postLockFile, getItem, context;
+
+        beforeEach(() => {
+            context = { commit: jasmine.createSpy("commit") };
+
+            postLockFile = jasmine.createSpy("postLockFile");
+            rewire$postLockFile(postLockFile);
+
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+        });
+
+        it("it should lock a file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE
+            };
+
+            getItem.and.returnValue(
+                Promise.resolve({
+                    id: 123,
+                    title: "My file",
+                    type: TYPE_FILE,
+                    lock_info: {
+                        user_id: 123
+                    }
+                })
+            );
+
+            await lockFile(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
+                item_to_lock,
+                { user_id: 123 }
+            ]);
+        });
+    });
+
+    describe("unlockFile()", () => {
+        let deleteLockFile, getItem, context;
+
+        beforeEach(() => {
+            context = { commit: jasmine.createSpy("commit") };
+
+            deleteLockFile = jasmine.createSpy("deleteLockFile");
+            rewire$deleteLockFile(deleteLockFile);
+
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+        });
+
+        it("it should lock a file and then update its information", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE
+            };
+
+            getItem.and.returnValue(
+                Promise.resolve({
+                    id: 123,
+                    title: "My file",
+                    type: TYPE_FILE,
+                    lock_info: {
+                        user_id: 123
+                    }
+                })
+            );
+
+            await unlockFile(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith("replaceLockInfoWithNewVersion", [
+                item_to_lock,
+                { user_id: 123 }
+            ]);
         });
     });
 });

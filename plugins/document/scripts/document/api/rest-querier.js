@@ -46,7 +46,9 @@ export {
     deleteWiki,
     deleteEmptyDocument,
     deleteFolder,
-    getItemsReferencingSameWikiPage
+    getItemsReferencingSameWikiPage,
+    postLockFile,
+    deleteLockFile
 };
 
 async function getProject(project_id) {
@@ -324,4 +326,20 @@ async function getItemsReferencingSameWikiPage(page_id) {
     const response = await get(`/api/phpwiki/${escaped_page_id}/items_referencing_wiki_page`);
 
     return response.json();
+}
+
+function postLockFile(item) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return post(`/api/docman_files/${escaped_item_id}/lock`, { headers });
+}
+
+function deleteLockFile(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return del(`/api/docman_files/${escaped_item_id}/lock`);
 }

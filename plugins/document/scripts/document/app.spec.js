@@ -27,6 +27,7 @@ import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
 import "./store/error/error-mutations.spec.js";
+import "./store/error/error-getters.js";
 
 import "./components/Breadcrumb/DocumentBreadcrumb.spec.js";
 
@@ -47,6 +48,8 @@ import "./components/Folder/ActionsDropDown/DropdownButton.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenu.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
+import "./components/Folder/ActionsDropDown/LockItem.spec.js";
+import "./components/Folder/ActionsDropDown/UnlockItem.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
 import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";

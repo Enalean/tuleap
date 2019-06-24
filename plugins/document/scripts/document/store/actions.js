@@ -43,7 +43,9 @@ import {
     deleteEmptyDocument,
     deleteFolder,
     getItemsReferencingSameWikiPage,
-    getParents
+    getParents,
+    postLockFile,
+    deleteLockFile
 } from "../api/rest-querier.js";
 
 import {
@@ -51,7 +53,8 @@ import {
     handleErrors,
     handleErrorsForModal,
     handleErrorsForDeletionModal,
-    handleErrorsForDocument
+    handleErrorsForDocument,
+    handleErrorsForLock
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -571,5 +574,25 @@ export const getWikisReferencingSameWikiPage = async (context, item) => {
         );
     } catch (exception) {
         return USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE;
+    }
+};
+
+export const lockFile = async (context, item) => {
+    try {
+        await postLockFile(item);
+        const updated_item = await getItem(item.id);
+        context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
+    } catch (exception) {
+        return handleErrorsForLock(context, exception);
+    }
+};
+
+export const unlockFile = async (context, item) => {
+    try {
+        await deleteLockFile(item);
+        const updated_item = await getItem(item.id);
+        context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
+    } catch (exception) {
+        return handleErrorsForLock(context, exception);
     }
 };

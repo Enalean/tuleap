@@ -38,6 +38,15 @@ export async function handleErrors(context, exception) {
     }
 }
 
+export async function handleErrorsForLock(context, exception) {
+    try {
+        const json = await exception.response.json();
+        context.commit("error/setLockError", getErrorMessage(json));
+    } catch (error) {
+        context.commit("error/setLockError", "Internal server error");
+    }
+}
+
 export async function handleErrorsForDocument(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {

@@ -212,4 +212,74 @@ describe("DropdownMenu", () => {
 
         expect(wrapper.contains("[data-test=docman-dropdown-approval-tables]")).toBeTruthy();
     });
+
+    describe("Lock/Unlock options", () => {
+        it(`Given item type is a file not locked
+        When we display the menu
+        Then lock button should be displayed`, () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    user_can_write: true,
+                    lock_info: null
+                }
+            });
+
+            expect(wrapper.contains("[data-test=dropdown-menu-lock-item]")).toBeTruthy();
+        });
+
+        it(`Given item type is locked
+        When we display the menu
+        Then lock button should be displayed`, () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    user_can_write: true,
+                    lock_info: {
+                        owner_id: 102
+                    }
+                }
+            });
+
+            expect(wrapper.contains("[data-test=dropdown-menu-unlock-item]")).toBeTruthy();
+        });
+
+        it(`Given dropdown is in tree mode
+        When we display the menu
+        Then lock do not add an additional separator`, () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    user_can_write: true,
+                    lock_info: null
+                },
+                hideItemTitle: false
+            });
+
+            expect(wrapper.contains("[data-test=docman-lock-separator]")).toBeFalsy();
+        });
+
+        it(`Given dropdown is in overview mode
+        When we display the menu
+        Then lock add an additional separator`, () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    user_can_write: true,
+                    lock_info: null
+                },
+                hideItemTitle: true
+            });
+
+            expect(wrapper.contains("[data-test=docman-lock-separator]")).toBeTruthy();
+        });
+    });
 });

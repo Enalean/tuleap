@@ -23,7 +23,12 @@ import localVue from "../../../helpers/local-vue.js";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
 
 describe("ShowErrorDetails", () => {
-    let show_error_details_factory, state, folder_loading_error, document_loading_error, store;
+    let show_error_details_factory,
+        state,
+        folder_loading_error,
+        document_loading_error,
+        store,
+        document_lock_error;
 
     describe("folder has a loading error", () => {
         beforeEach(() => {
@@ -120,6 +125,65 @@ describe("ShowErrorDetails", () => {
             wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.find("[data-test=show-more-error-message]").element.innerHTML).toBe(
                 document_loading_error
+            );
+        });
+    });
+
+    describe("item has a lock error", () => {
+        beforeEach(() => {
+            document_lock_error = "Error during lock document.";
+
+            state = {
+                error: {
+                    has_document_lock_error: true,
+                    document_lock_error
+                }
+            };
+            const store_options = {
+                state,
+                getters: {
+                    "error/has_any_loading_error": true
+                }
+            };
+
+            store = createStoreMock(store_options);
+
+            show_error_details_factory = (props = {}) => {
+                return shallowMount(ShowErrorDetails, {
+                    localVue,
+                    propsData: { ...props },
+                    mocks: { $store: store }
+                });
+            };
+        });
+        it(`Given route fails with an error with content and is_more_shown is true
+            When we display the error
+            Then the original error message is displayed in a info`, () => {
+            const wrapper = show_error_details_factory();
+            expect(
+                wrapper.find("[data-test=error-details-show-more-button]").exists()
+            ).toBeTruthy();
+            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
+            expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
+        });
+
+        it(`Given route fails with an error with content and is_more_shown is false
+            When we display the error
+            Then a button enables use to see the full error message`, () => {
+            const wrapper = show_error_details_factory();
+            expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeFalsy();
+            expect(
+                wrapper.find("[data-test=error-details-show-more-button]").exists()
+            ).toBeTruthy();
+        });
+
+        it(`Given error concerns a lock and is_more_shown is true
+            When we display the error
+            Then the message displayed is the folder one`, () => {
+            const wrapper = show_error_details_factory();
+            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
+            expect(wrapper.find("[data-test=show-more-error-message]").element.innerHTML).toBe(
+                document_lock_error
             );
         });
     });
