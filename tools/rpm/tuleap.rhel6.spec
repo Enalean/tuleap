@@ -269,7 +269,7 @@ Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-docman
 Obsoletes: php-sabredav
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
