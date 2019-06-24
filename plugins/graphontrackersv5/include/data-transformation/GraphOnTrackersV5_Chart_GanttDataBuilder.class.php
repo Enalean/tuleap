@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DataBuilderV5.class.php');
-require_once('ChartDataBuilderV5.class.php');
-require_once(TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
-
 class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
 
     /**
@@ -59,67 +55,70 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
         $field_percentage = $this->chart->getField_percentage() ? $ff->getFormElementById($this->chart->getField_percentage()) : null;
         $field_righttext  = $this->chart->getField_righttext()  ? $ff->getFormElementById($this->chart->getField_righttext())  : null;
         $field_summary    = $this->chart->getSummary()          ? $ff->getFormElementById($this->chart->getSummary())          : null;
-        $af = Tracker_ArtifactFactory::instance();
-        $changesets = explode(',', $this->artifacts['last_changeset_id']);
-        foreach(explode(',', $this->artifacts['id']) as $i => $aid) {
-            if ($artifact = $af->getArtifactByid($aid)) {
-                if ($changeset = $artifact->getChangeset($changesets[$i])) {
-                    $data = array(
-                        'id'       => $aid,
-                        'summary'  => '#'. $aid,
-                        'start'    => 0,
-                        'due'      => 0,
-                        'finish'   => 0,
-                        'progress' => 0,
-                        'right'    => '',
-                        'hint'     => '#'. $aid,
-                        'links'    => TRACKER_BASE_URL.'/?aid='. $aid,
-                    );
-
-                    if ($field_start) {
-                        $data['start'] = $field_start->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($field_due) {
-                        $data['due'] = $field_due->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($field_finish) {
-                        $data['finish'] = $field_finish->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($field_percentage) {
-                        $data['progress'] = (int) $field_percentage->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($field_righttext) {
-                        $data['right'] = $field_righttext->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($field_summary) {
-                        $data['hint'] = $data['summary'] = $field_summary->fetchRawValueFromChangeset($changeset);
-                    }
-
-                    if ($data['progress'] < 0) {
-                        $data['progress'] = 0;
-                    } else if ($data['progress'] > 100) {
-                        $data['progress'] = 1;
-                    } else {
-                        $data['progress'] = $data['progress'] / 100;
-                    }
-                    $engine->data[] = $data;
-                }
+        $af        = Tracker_ArtifactFactory::instance();
+        $artifacts = $af->getArtifactsByArtifactIdList(explode(',', $this->artifacts['id']));
+        foreach ($artifacts as $artifact) {
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset === null) {
+                continue;
             }
+            $aid  = $artifact->getId();
+            $data = [
+                'id'       => $aid,
+                'summary'  => '#'. $aid,
+                'start'    => 0,
+                'due'      => 0,
+                'finish'   => 0,
+                'progress' => 0,
+                'right'    => '',
+                'hint'     => '#'. $aid,
+                'links'    => TRACKER_BASE_URL.'/?aid='. $aid,
+            ];
+
+            if ($field_start) {
+                $data['start'] = $field_start->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($field_due) {
+                $data['due'] = $field_due->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($field_finish) {
+                $data['finish'] = $field_finish->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($field_percentage) {
+                $data['progress'] = (int) $field_percentage->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($field_righttext) {
+                $data['right'] = $field_righttext->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($field_summary) {
+                $data['hint'] = $data['summary'] = $field_summary->fetchRawValueFromChangeset($last_changeset);
+            }
+
+            if ($data['progress'] < 0) {
+                $data['progress'] = 0;
+            } else if ($data['progress'] > 100) {
+                $data['progress'] = 1;
+            } else {
+                $data['progress'] = $data['progress'] / 100;
+            }
+            $engine->data[] = $data;
         }
-        usort($engine->data, array($this, 'sortByDate'));
+
+        usort(
+            $engine->data,
+            function (array $a, array $b) {
+                $a_date = $this->getSuitableDateForSorting($a);
+                $b_date = $this->getSuitableDateForSorting($b);
+
+                return strcmp($a_date, $b_date);
+            }
+        );
         return $engine->data;
-    }
-
-    private function sortByDate($a, $b) {
-        $a_date = $this->getSuitableDateForSorting($a);
-        $b_date = $this->getSuitableDateForSorting($b);
-
-        return strcmp($a_date, $b_date);
     }
 
     private function getSuitableDateForSorting($artifact_data) {
@@ -131,4 +130,3 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
         return $date;
     }
 }
-?>
