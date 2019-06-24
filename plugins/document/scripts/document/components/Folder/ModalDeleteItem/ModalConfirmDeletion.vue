@@ -37,7 +37,7 @@
                 When you delete a folder, all its content is also deleted. Please think wisely!
             </div>
             <delete-associated-wiki-page-checkbox
-                v-if="canWikiChecboxBeShown"
+                v-if="can_wiki_checkbox_be_shown"
                 v-model="additional_options"
                 v-bind:item="item"
                 v-bind:wiki-page-referencers="wiki_page_referencers"
@@ -82,7 +82,11 @@ export default {
             import("./AdditionalCheckboxes/DeleteAssociatedWikiPageCheckbox.vue")
     },
     props: {
-        item: Object
+        item: Object,
+        shouldRedirectToParentAfterDeletion: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
@@ -114,11 +118,17 @@ export default {
         is_an_action_on_going() {
             return this.is_item_being_deleted || this.wiki_page_referencers_loading;
         },
-        canWikiChecboxBeShown() {
+        can_wiki_checkbox_be_shown() {
             return (
                 this.is_item_a_wiki(this.item) &&
                 !this.wiki_page_referencers_loading &&
                 this.wiki_page_referencers !== null
+            );
+        },
+        should_redirect_to_parent_folder() {
+            return (
+                (this.is_item_a_folder(this.item) && this.item.id === this.current_folder.id) ||
+                this.shouldRedirectToParentAfterDeletion
             );
         }
     },
@@ -140,10 +150,7 @@ export default {
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
-                if (
-                    this.is_item_a_folder(this.item) &&
-                    deleted_item.id === this.current_folder.id
-                ) {
+                if (this.should_redirect_to_parent_folder) {
                     this.$router.replace(
                         { name: "folder", params: { item_id: deleted_item.parent_id } },
                         this.$store.commit("showPostDeletionNotification")
