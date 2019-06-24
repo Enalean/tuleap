@@ -66,7 +66,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     padding: 0 0 0 $tlp-title-spacing;
 }
 
-.release-icon {
+.project-release-icon {
     display: flex;
     position: absolute;
     z-index: 2;
@@ -92,4 +92,14 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.project-release.closed {
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-release {
+    position: relative;
+    margin: 0 0 $tlp-double-spacing;
+    padding: 0 0 0 35px;
 }

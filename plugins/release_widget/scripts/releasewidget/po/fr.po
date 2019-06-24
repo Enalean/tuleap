@@ -21,3 +21,9 @@ msgstr ""
 
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
+
+msgid "There is nothing here!"
+msgstr "Il n'y a rien ici !"
+
+msgid "What's hot"
+msgstr "En cours"
