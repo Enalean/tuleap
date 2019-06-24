@@ -390,15 +390,18 @@ class Tracker_ArtifactFactory {
         $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
         $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
 
+        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
+
         $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
             new FieldsToBeSavedInSpecificOrderRetriever($formelement_factory),
             new Tracker_Artifact_ChangesetDao(),
             $this,
             EventManager::instance(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory)
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            $logger
         );
-        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder);
+        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder, $logger);
 
         if ($user->isAnonymous()) {
             $user->setEmail($email);

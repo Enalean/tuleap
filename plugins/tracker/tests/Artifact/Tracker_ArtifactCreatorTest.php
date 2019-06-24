@@ -74,7 +74,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
             $this->artifact_factory,
             $this->fields_validator,
             $this->changeset_creator,
-            $this->visit_recorder
+            $this->visit_recorder,
+            new Log_NoopLogger()
         );
     }
 

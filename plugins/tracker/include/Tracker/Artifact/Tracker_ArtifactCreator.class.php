@@ -42,18 +42,24 @@ class Tracker_ArtifactCreator //phpcs:ignore
      * @var VisitRecorder
      */
     private $visit_recorder;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
-        VisitRecorder $visit_recorder
+        VisitRecorder $visit_recorder,
+        Logger $logger
     ) {
         $this->artifact_dao      = $artifact_factory->getDao();
         $this->artifact_factory  = $artifact_factory;
         $this->fields_validator  = $fields_validator;
         $this->changeset_creator = $changeset_creator;
         $this->visit_recorder    = $visit_recorder;
+        $this->logger            = $logger;
     }
 
     /**
@@ -145,6 +151,9 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
         if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
+            $this->logger->debug(
+                sprintf('Creation of artifact in tracker #%d failed: fields are not valid', $tracker->getId())
+            );
             return false;
         }
 
@@ -161,6 +170,9 @@ class Tracker_ArtifactCreator //phpcs:ignore
             $send_notification,
             $url_mapping
         )) {
+            $this->logger->debug(
+                sprintf('Reverting the creation of artifact in tracker #%d failed: changeset creation failed', $tracker->getId())
+            );
             $this->revertBareArtifactInsertion($artifact);
             return false;
         }
@@ -191,6 +203,9 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $use_artifact_permissions = 0;
         $id = $this->artifact_dao->create($tracker->id, $user->getId(), $submitted_on, $use_artifact_permissions);
         if (!$id) {
+            $this->logger->error(
+                sprintf('Insert of an artifact in tracker #%d failed', $tracker->getId())
+            );
             return false;
         }
         ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_CREATED);

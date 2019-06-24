@@ -31,6 +31,10 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 {
     /** @var Tracker_Artifact_ChangesetDao */
     protected $changeset_dao;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -38,7 +42,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_Artifact_ChangesetDao $changeset_dao,
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
-        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
+        Logger $logger
     ) {
         parent::__construct(
             $fields_validator,
@@ -49,6 +54,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         );
 
         $this->changeset_dao = $changeset_dao;
+        $this->logger        = $logger;
     }
 
     /**
@@ -68,17 +74,35 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         CreatedFileURLMapping $url_mapping
     ): ?int {
         if (! $this->doesRequestAppearToBeValid($artifact, $fields_data, $submitter)) {
+            $this->logger->debug(
+                sprintf(
+                    'Creation of the first changeset of artifact #%d failed: request does not appear to be valid',
+                    $artifact->getId()
+                )
+            );
             return null;
         }
 
         $this->initializeAFakeChangesetSoThatListAndWorkflowEncounterAnEmptyState($artifact);
 
         if (! $this->askWorkflowToUpdateTheRequestAndCheckGlobalRules($artifact, $fields_data, $submitter)) {
+            $this->logger->debug(
+                sprintf(
+                    'Creation of the first changeset of artifact #%d failed: workflow/global rules rejected it',
+                    $artifact->getId()
+                )
+            );
             return null;
         }
 
         $changeset_id = $this->createChangesetId($artifact, $submitter, $submitted_on);
         if (! $changeset_id) {
+            $this->logger->debug(
+                sprintf(
+                    'Creation of the first changeset of artifact #%d failed: DB failure',
+                    $artifact->getId()
+                )
+            );
             return null;
         }
 
@@ -165,8 +189,14 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
             $workflow->checkGlobalRules($augmented_data);
             return true;
         } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
+            $this->logger->debug(
+                sprintf('Update of artifact #%d does not respect the global rules', $artifact->getId())
+            );
             return false;
         } catch (Tracker_Workflow_Transition_InvalidConditionForTransitionException $e) {
+            $this->logger->debug(
+                sprintf('Update of artifact #%d does not respect the transition rules', $artifact->getId())
+            );
             return false;
         }
     }

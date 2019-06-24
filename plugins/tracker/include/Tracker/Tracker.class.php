@@ -3346,9 +3346,11 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                 $changeset_dao,
                 $this->getTrackerArtifactFactory(),
                 EventManager::instance(),
-                new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+                $logger
             ),
-            $this->getVisitRecorder()
+            $this->getVisitRecorder(),
+            $logger
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(

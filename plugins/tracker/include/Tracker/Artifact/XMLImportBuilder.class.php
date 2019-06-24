@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,9 +55,11 @@ class Tracker_Artifact_XMLImportBuilder {
                 $changeset_dao,
                 $artifact_factory,
                 EventManager::instance(),
-                new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory)
+                new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+                $logger
             ),
-            $visit_recorder
+            $visit_recorder,
+            $logger
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
