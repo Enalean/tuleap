@@ -88,4 +88,9 @@ class ProjectReleaseWidget extends Widget
 
         return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
+
+    public function getCategory()
+    {
+        return dgettext('tuleap-release_widget', 'Agile dashboard');
+    }
 }

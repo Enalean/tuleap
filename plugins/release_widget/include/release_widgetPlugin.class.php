@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ReleaseWidget\Widget\ProjectReleaseWidget;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
@@ -66,8 +67,19 @@ class release_widgetPlugin extends Plugin // phpcs:ignore
      */
     public function widgetInstance(GetWidget $get_widget_event)
     {
+        $project = HTTPRequest::instance()->getProject();
+
+        if (! PluginManager::instance()->getPluginByName('agiledashboard')->isAllowed($project->getID())) {
+            return;
+        }
+
         if ($get_widget_event->getName() === ProjectReleaseWidget::NAME) {
             $get_widget_event->setWidget(new ProjectReleaseWidget());
         }
+    }
+
+    public function getDependencies()
+    {
+        return ['agiledashboard'];
     }
 }
