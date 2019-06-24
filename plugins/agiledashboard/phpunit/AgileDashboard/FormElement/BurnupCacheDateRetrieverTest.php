@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,16 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
-require_once __DIR__ . '/../../../bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class BurnupCacheDateRetrieverTest extends \TuleapTestCase
+require_once __DIR__ . '/../../bootstrap.php';
+
+class BurnupCacheDateRetrieverTest extends TestCase
 {
-    public function itGetsDaysToCacheWhenPeriodIsOngoing()
+    use MockeryPHPUnitIntegration;
+
+    public function testItGetsDaysToCacheWhenPeriodIsOngoing()
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
@@ -38,10 +43,10 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '19-12-2017 23:59:59')->getTimestamp()
         );
 
-        $this->assertEqual($days_to_cache, $expected_days);
+        $this->assertSame($days_to_cache, $expected_days);
     }
 
-    public function itGetsDaysToCacheWhenPeriodHasEnded()
+    public function testItGetsDaysToCacheWhenPeriodHasEnded()
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '18-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '26-12-2017');
@@ -56,10 +61,10 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '20-12-2017 23:59:59')->getTimestamp()
         );
 
-        $this->assertEqual($days_to_cache, $expected_days);
+        $this->assertSame($days_to_cache, $expected_days);
     }
 
-    public function itGetsDayToCacheWhenPeriodHasNotYetStarted()
+    public function testItGetsDayToCacheWhenPeriodHasNotYetStarted()
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '26-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '20-12-2017');
@@ -70,10 +75,10 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
 
         $expected_days = array();
 
-        $this->assertEqual($days_to_cache, $expected_days);
+        $this->assertSame($days_to_cache, $expected_days);
     }
 
-    public function itGetsDayToCacheWhenPeriodHasAWeekEnd()
+    public function testItGetsDayToCacheWhenPeriodHasAWeekEnd()
     {
         $start_date = \DateTime::createFromFormat('d-m-Y H:i', '21-12-2017 00:00');
         $yesterday  = \DateTime::createFromFormat('d-m-Y', '27-12-2017');
@@ -89,6 +94,6 @@ class BurnupCacheDateRetrieverTest extends \TuleapTestCase
             \DateTime::createFromFormat('d-m-Y H:i:s', '26-12-2017 23:59:59')->getTimestamp()
         );
 
-        $this->assertEqual($days_to_cache, $expected_days);
+        $this->assertSame($days_to_cache, $expected_days);
     }
 }
