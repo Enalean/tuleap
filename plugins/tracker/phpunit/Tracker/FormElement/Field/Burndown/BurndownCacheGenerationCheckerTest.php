@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TimePeriodWithoutWeekEnd;
 use Tracker_FormElement_Field_ComputedDao;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -113,15 +114,16 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
 
-        $start_date = 1543404090;
-        $duration   = 10;
+        $start_date  = 1543404090;
+        $duration    = 10;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $capacity   = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $start_date,
-                $duration,
+                $time_period,
                 $capacity
             )
         );
@@ -140,15 +142,16 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
 
-        $start_date = 1543404090;
-        $duration   = 10;
+        $start_date  = 1543404090;
+        $duration    = 10;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $capacity   = 5;
         $this->assertFalse(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $start_date,
-                $duration,
+                $time_period,
                 $capacity
             )
         );
@@ -173,15 +176,16 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->once();
 
-        $start_date = 1543404090;
-        $duration   = 10;
+        $start_date  = 1543404090;
+        $duration    = 10;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $capacity   = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $start_date,
-                $duration,
+                $time_period,
                 $capacity
             )
         );
@@ -205,15 +209,16 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
 
-        $start_date = 1543404090;
-        $duration   = 10;
+        $start_date  = 1543404090;
+        $duration    = 10;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $capacity   = 5;
         $this->assertTrue(
             $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
                 $this->artifact,
                 $this->user,
-                $start_date,
-                $duration,
+                $time_period,
                 $capacity
             )
         );

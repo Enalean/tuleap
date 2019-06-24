@@ -68,8 +68,7 @@ class BurndownCommonDataBuilder
     public function getBurndownCalculationStatus(
         Tracker_Artifact $artifact,
         PFUser $user,
-        $start_date,
-        $duration,
+        TimePeriodWithoutWeekEnd $time_period,
         $capacity,
         $user_timezone
     ) {
@@ -80,16 +79,15 @@ class BurndownCommonDataBuilder
         date_default_timezone_set($server_timezone);
 
         $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . $start_date);
-        $this->logger->debug("Duration: " . $duration);
+        $this->logger->debug("Original start date: " . $time_period->getStartDate());
+        $this->logger->debug("Duration: " . $time_period->getDuration());
         $this->logger->debug("User Timezone: " . $user_timezone);
         $this->logger->debug("Server timezone: " . $server_timezone);
 
         return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity
         );
     }
@@ -108,17 +106,12 @@ class BurndownCommonDataBuilder
         return $capacity;
     }
 
-    /**
-     * @param $start_date
-     * @param $duration
-     * @return TimePeriodWithoutWeekEnd
-     */
-    public function getTimePeriod($start_date, $duration)
+    public function getTimePeriod(TimePeriodWithoutWeekEnd $time_period) : TimePeriodWithoutWeekEnd
     {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
+        if ($time_period->getStartDate() === null) {
+            return new TimePeriodWithoutWeekEnd($_SERVER['REQUEST_TIME'], $time_period->getDuration());
         }
 
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return $time_period;
     }
 }

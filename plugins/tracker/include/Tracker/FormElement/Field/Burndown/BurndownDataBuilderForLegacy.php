@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,7 @@ class BurndownDataBuilderForLegacy
     /**
      * @var BurndownRemainingEffortAdderForLegacy
      */
-    private $reminaing_effort_adder;
+    private $remaining_effort_adder;
 
     public function __construct(
         Logger $logger,
@@ -63,10 +63,10 @@ class BurndownDataBuilderForLegacy
         $this->field_retriever        = $field_retriever;
         $this->value_retriever        = $value_retriever;
         $this->cache_checker          = $cache_checker;
-        $this->reminaing_effort_adder = $remaining_effort_adder;
+        $this->remaining_effort_adder = $remaining_effort_adder;
     }
 
-    public function build(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
+    public function build(Tracker_Artifact $artifact, PFUser $user, TimePeriodWithoutWeekEnd $time_period)
     {
         $capacity      = $this->getCapacity($artifact, $user);
         $user_timezone = TimezoneRetriever::getUserTimezone($user);
@@ -74,8 +74,7 @@ class BurndownDataBuilderForLegacy
         $is_burndown_under_calculation = $this->getBurndownCalculationStatus(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity,
             $user_timezone
         );
@@ -83,8 +82,7 @@ class BurndownDataBuilderForLegacy
         $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezone(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity,
             $is_burndown_under_calculation
         );
@@ -112,8 +110,7 @@ class BurndownDataBuilderForLegacy
     private function getBurndownCalculationStatus(
         Tracker_Artifact $artifact,
         PFUser $user,
-        $start_date,
-        $duration,
+        TimePeriodWithoutWeekEnd $time_period,
         $capacity,
         $user_timezone
     ) {
@@ -124,16 +121,15 @@ class BurndownDataBuilderForLegacy
         date_default_timezone_set($server_timezone);
 
         $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . $start_date);
-        $this->logger->debug("Duration: " . $duration);
+        $this->logger->debug("Original start date: " . $time_period->getStartDate());
+        $this->logger->debug("Duration: " . $time_period->getDuration());
         $this->logger->debug("User Timezone: " . $user_timezone);
         $this->logger->debug("Server timezone: " . $server_timezone);
 
         return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
             $artifact,
             $user,
-            $start_date,
-            $duration,
+            $time_period,
             $capacity
         );
     }
@@ -141,18 +137,16 @@ class BurndownDataBuilderForLegacy
     private function addBurndownRemainingEffortDotsBasedOnServerTimezone(
         Tracker_Artifact $artifact,
         PFUser $user,
-        $start_date,
-        $duration,
+        TimePeriodWithoutWeekEnd $time_period,
         $capacity,
         $is_burndown_under_calculation
     ) {
-        $user_time_period = $this->getTimePeriod($start_date, $duration);
+        $user_time_period = $this->getTimePeriod($time_period);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {
-            $this->reminaing_effort_adder->addRemainingEffortDataForLegacy(
+            $this->remaining_effort_adder->addRemainingEffortDataForLegacy(
                 $user_burndown_data,
-                $user_time_period,
                 $artifact,
                 $user
             );
@@ -163,17 +157,12 @@ class BurndownDataBuilderForLegacy
         return $user_burndown_data;
     }
 
-    /**
-     * @param $start_date
-     * @param $duration
-     * @return TimePeriodWithoutWeekEnd
-     */
-    private function getTimePeriod($start_date, $duration)
+    private function getTimePeriod(TimePeriodWithoutWeekEnd $time_period) : TimePeriodWithoutWeekEnd
     {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
+        if ($time_period->getStartDate() === null) {
+            return new TimePeriodWithoutWeekEnd($_SERVER['REQUEST_TIME'], $time_period->getDuration());
         }
 
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return $time_period;
     }
 }

@@ -384,20 +384,17 @@ class Planning_ArtifactMilestone implements Planning_Milestone
             return null;
         }
 
-        $start_date = $this->getStartDate();
-        $duration   = $this->getDuration();
-
-        if ($start_date === null || $duration === null) {
+        if ($this->time_period === null) {
             return null;
         }
 
-        $burndown_field = $this->getArtifact()->getABurndownField($user);
+        $milestone_artifact = $this->getArtifact();
+        $burndown_field     = $milestone_artifact->getABurndownField($user);
 
         return $burndown_field->getBurndownData(
-            $this->getArtifact(),
+            $milestone_artifact,
             $user,
-            $start_date,
-            $duration
+            $this->time_period
         );
     }
 

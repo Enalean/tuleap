@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,10 +24,12 @@ use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use TimePeriodWithoutWeekEnd;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
+use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 class BurndownDataBuilderForLegacyTest extends TestCase
 {
@@ -81,7 +83,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
             $field_retriever,
             Mockery::mock(ChartConfigurationValueRetriever::class),
             $cache_checker,
-            new BurndownRemainingEffortAdderForLegacy($field_retriever)
+            new BurndownRemainingEffortAdderForLegacy($field_retriever, new UserWithReadAllPermissionBuilder())
         );
 
         $this->artifact = Mockery::mock(\Tracker_Artifact::class);
@@ -108,9 +110,12 @@ class BurndownDataBuilderForLegacyTest extends TestCase
     {
         $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
 
-        $start_date = strtotime('2018-11-01');
-        $duration   = 5;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $start_date  = strtotime('2018-11-01');
+        $duration    = 5;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
+
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
         $shifted_start_date = 1541026800;
         $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
@@ -120,10 +125,11 @@ class BurndownDataBuilderForLegacyTest extends TestCase
     {
         $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
 
-        $start_date = strtotime('2018-11-01');
-        $duration   = 5;
+        $start_date  = strtotime('2018-11-01');
+        $duration    = 5;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
         $shifted_start_date = 1541026800;
         $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
@@ -133,12 +139,14 @@ class BurndownDataBuilderForLegacyTest extends TestCase
     {
         $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
 
-        $start_date = strtotime('2018-11-01');
+        $start_date  = strtotime('2018-11-01');
+        $duration    = 2;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');
 
-        $duration   = 2;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
@@ -149,12 +157,14 @@ class BurndownDataBuilderForLegacyTest extends TestCase
     {
         $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
 
-        $start_date = strtotime('2018-11-01');
+        $start_date  = strtotime('2018-11-01');
+        $duration    = 2;
+        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');
 
-        $duration   = 2;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));

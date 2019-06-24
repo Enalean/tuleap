@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
-use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
 require_once('bootstrap.php');
 
@@ -501,7 +499,9 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $field = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
         stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
 
-        $data = $this->field->getBurndownData($this->sprint, $this->current_user, time(), $this->duration);
+        $time_period = new TimePeriodWithoutWeekEnd(time(), $this->duration);
+
+        $data = $this->field->getBurndownData($this->sprint, $this->current_user, $time_period);
         $this->assertEqual($data->getRemainingEffort(), array(0 => null));
     }
 
@@ -922,7 +922,9 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
 
         stub($this->sprint)->getTracker()->returns($this->tracker);
 
-        $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
+        $time_period = new TimePeriodWithoutWeekEnd($this->timestamp, $this->duration);
+
+        $this->field->getBurndownData($this->sprint, $this->current_user, $time_period);
 
         expect($this->event_manager)->createEvent()->never();
     }
@@ -959,7 +961,10 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase 
         stub($this->field)->isCacheBurndownAlreadyAsked()->returns(false);
 
         $this->expectException('Tracker_FormElement_Chart_Field_Exception');
-        $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
+
+        $time_period = new TimePeriodWithoutWeekEnd($this->timestamp, $this->duration);
+
+        $this->field->getBurndownData($this->sprint, $this->current_user, $time_period);
 
         expect($this->event_manager)->createEvent()->never();
     }

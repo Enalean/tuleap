@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -98,30 +98,27 @@ class BurndownCacheGenerationChecker
     public function isBurndownUnderCalculationBasedOnServerTimezone(
         Tracker_Artifact $artifact,
         PFUser $user,
-        $start_date,
-        $duration,
+        TimePeriodWithoutWeekEnd $time_period,
         $capacity
     ) {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
-        }
-
-        $start = new  DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
+        $start = $this->getTimePeriodStartDateAtMidnight($time_period);
 
         $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
 
-        $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
-        $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
+        $time_period_with_start_date_from_midnight = new TimePeriodWithoutWeekEnd(
+            $start->getTimestamp(),
+            $time_period->getDuration()
+        );
+
+        $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period_with_start_date_from_midnight, $capacity);
 
         $this->remaining_effort_adder->addRemainingEffortDataForREST($server_burndown_data, $artifact, $user);
-        if ($this->isCacheCompleteForBurndown($time_period, $artifact, $user) === false
+        if ($this->isCacheCompleteForBurndown($time_period_with_start_date_from_midnight, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->cache_generator->forceBurndownCacheGeneration($artifact->getId());
             $server_burndown_data->setIsBeingCalculated(true);
-        } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
+        } elseif ($this->isCacheBurndownAlreadyAsked($artifact)) {
             $server_burndown_data->setIsBeingCalculated(true);
         }
 
@@ -144,5 +141,20 @@ class BurndownCacheGenerationChecker
         }
 
         return true;
+    }
+
+    private function getTimePeriodStartDateAtMidnight(TimePeriodWithoutWeekEnd $time_period): DateTime
+    {
+        $start_date = $time_period->getStartDate();
+
+        if ($start_date === null) {
+            $start_date = $_SERVER['REQUEST_TIME'];
+        }
+
+        $start = new DateTime();
+        $start->setTimestamp($start_date);
+        $start->setTime(0, 0, 0);
+
+        return $start;
     }
 }
