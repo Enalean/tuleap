@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -125,7 +125,6 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
         $secret_key  = $configuration->getSecretKey();
         $challenge   = $request->get('g-recaptcha-response');
-        $http_client = new Http_Client();
 
         $recaptcha_client = new \Tuleap\Captcha\Client(
             $secret_key,
