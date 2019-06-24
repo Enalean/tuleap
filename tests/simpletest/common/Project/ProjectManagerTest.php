@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\ProjectAccessChecker;
+
 Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao', '_getUserManager'));
 Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion2', array('getProject', 'getProjectByUnixName', 'checkRestrictedAccess'));
 Mock::generate('Project');
@@ -270,7 +272,7 @@ class ProjectManager_GetValidProjectTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->dao = mock('ProjectDao');
-        $this->project_manager = ProjectManager::testInstance($this->dao);
+        $this->project_manager = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $this->dao);
     }
 
     public function itFindsTheProjectWithItsID() {

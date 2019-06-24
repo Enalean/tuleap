@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,7 @@ use ProjectManager;
 use SimpleXMLElement;
 use SystemEventManager;
 use Tuleap\HudsonGit\Logger;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\SVN\AccessControl\AccessFileHistory;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
@@ -218,7 +219,7 @@ class XMLImporterTest extends TuleapTestCase
         $this->pmdao              = safe_mock('ProjectDao');
         $this->evdao              = safe_mock('SystemEventDao');
         $this->evfdao             = safe_mock('SystemEventsFollowersDao');
-        $this->pm                 = ProjectManager::testInstance($this->pmdao);
+        $this->pm                 = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $this->pmdao);
         $this->repodao            = safe_mock('Tuleap\SVN\Dao');
         $this->sysevmgr           = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao              = safe_mock('UGroupDao');
