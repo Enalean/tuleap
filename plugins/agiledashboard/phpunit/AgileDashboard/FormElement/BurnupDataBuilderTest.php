@@ -72,15 +72,12 @@ class BurnupDataBuilderTest extends TestCase
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
 
-        $this->chart_configuration_value_retriever->shouldReceive('getStartDate')
-            ->with($artifact, $user)
-            ->once()
-            ->andReturn(1560760543);
+        $time_period = new \TimePeriodWithoutWeekEnd(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getDuration')
+        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn(3);
+            ->andReturn($time_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
@@ -129,15 +126,12 @@ class BurnupDataBuilderTest extends TestCase
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
 
-        $this->chart_configuration_value_retriever->shouldReceive('getStartDate')
-            ->with($artifact, $user)
-            ->once()
-            ->andReturn(1560760543);
+        $time_period = new \TimePeriodWithoutWeekEnd(1560760543, 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getDuration')
+        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn(3);
+            ->andReturn($time_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
@@ -162,15 +156,12 @@ class BurnupDataBuilderTest extends TestCase
         $start_date = new \DateTime();
         $start_date->setTime(0, 0, 0);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getStartDate')
-            ->with($artifact, $user)
-            ->once()
-            ->andReturn($start_date->getTimestamp());
+        $time_period = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 3);
 
-        $this->chart_configuration_value_retriever->shouldReceive('getDuration')
+        $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)
             ->once()
-            ->andReturn(3);
+            ->andReturn($time_period);
 
         $this->burnup_cache_checker->shouldReceive('isBurnupUnderCalculation')
             ->with($artifact, Mockery::any(), $user)
