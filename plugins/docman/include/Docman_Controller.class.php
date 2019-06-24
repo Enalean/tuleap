@@ -64,7 +64,11 @@ class Docman_Controller extends Controler {
     /**
      * @var Docman_NotificationsManager_Subscribers
      */
-    public $notificationsManager_Subscribers;
+    public  $notificationsManager_Subscribers;
+    /**
+     * @var string
+     */
+    public $pluginPath;
 
     public function __construct($plugin, $pluginPath, $themePath, $request)
     {
@@ -233,12 +237,7 @@ class Docman_Controller extends Controler {
     public function getDefaultUrl()
     {
         $_gid = $this->getGroupId();
-        return $this->pluginPath.'/?group_id='.$_gid;
-    }
-
-    function getAdminUrl() {
-        $_gid = $this->getGroupId();
-        return $this->pluginPath.'/admin/?group_id='.$_gid;
+        return $this->pluginPath.'/?group_id='.urlencode((string) $_gid);
     }
 
     function getThemePath() {
