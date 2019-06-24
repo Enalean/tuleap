@@ -113,6 +113,19 @@ describe("TuleapArtifactModalController", () => {
                     title: {
                         content: ""
                     },
+                    ordered_fields: [
+                        {
+                            label: "field01"
+                        },
+                        {
+                            label: "fieldset01",
+                            is_hidden: true
+                        },
+                        {
+                            label: "fieldset02",
+                            is_hidden: false
+                        }
+                    ],
                     color: "inca_silver"
                 },
                 TuleapArtifactModalValidateService,
@@ -544,6 +557,22 @@ describe("TuleapArtifactModalController", () => {
                 const result = ArtifactModalController.formatColor(color);
 
                 expect(result).toBe("lake-placid-blue");
+            });
+        });
+
+        describe("extractHiddenFieldsets()", () => {
+            it("Given the modal is in creation mode, when I open it then there are no hidden fieldsets defined", () => {
+                isInCreationMode.and.returnValue(true);
+                ArtifactModalController = $controller(BaseModalController, controller_params);
+                ArtifactModalController.$onInit();
+
+                expect(ArtifactModalController.hidden_fieldsets).toEqual([]);
+            });
+
+            it("Given the modal is not in creation mode, when I open it then there are hidden fieldsets defined", () => {
+                expect(ArtifactModalController.hidden_fieldsets).toEqual([
+                    { label: "fieldset01", is_hidden: true }
+                ]);
             });
         });
     });

@@ -31,7 +31,6 @@ import {
     setIsNotUploadingInCKEditor
 } from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
-import _ from "lodash";
 
 export default ArtifactModalController;
 
@@ -325,7 +324,11 @@ function ArtifactModalController(
     }
 
     function extractHiddenFieldsets(fields) {
-        return _.reject(fields, { is_hidden: false });
+        if (isInCreationMode() === true) {
+            return [];
+        }
+
+        return fields.filter(field => field.is_hidden);
     }
 
     function hasHiddenFieldsets() {
