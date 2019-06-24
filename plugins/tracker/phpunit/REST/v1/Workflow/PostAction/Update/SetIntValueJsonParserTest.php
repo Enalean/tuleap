@@ -88,7 +88,7 @@ class SetIntValueJsonParserTest extends TestCase
                 "value" => 1
             ]
         );
-        $expected_action = new SetIntValue(2, 43, 1);
+        $expected_action = new SetIntValue(null, 43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 

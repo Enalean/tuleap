@@ -82,72 +82,17 @@ class SetIntValueRepository
         });
     }
 
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function update(SetIntValue $set_int_value): void
+    public function deleteAllByTransition(Transition $transition)
     {
-        $success = $this->set_int_value_dao->updatePostAction(
-            $set_int_value->getId(),
-            $set_int_value->getFieldId(),
-            $set_int_value->getValue()
-        );
+        $success = $this->set_int_value_dao->deletePostActionsByTransitionId($transition->getId());
+
         if ($success === false) {
             throw new DataAccessQueryException(
                 sprintf(
-                    "Cannot update Set Int Value post action with id '%u', field id '%u', and value '%u'",
-                    $set_int_value->getId(),
-                    $set_int_value->getFieldId(),
-                    $set_int_value->getValue()
-                )
-            );
-        }
-    }
-
-    /**
-     * @param SetIntValue[] $set_int_values
-     * @throws DataAccessQueryException
-     */
-    public function deleteAllByTransitionIfNotIn(Transition $transition, array $set_int_values)
-    {
-        $ids_to_skip = array_map(
-            function (SetIntValue $action) {
-                return $action->getId();
-            },
-            $set_int_values
-        );
-
-        $success = $this->set_int_value_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
-        if ($success === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot delete all Set Int Value post actions which ids are not in [%s], and on transition with id '%u'",
-                    implode(", ", $ids_to_skip),
+                    "Cannot delete all Set Int Value post actions for transition '%u'",
                     $transition->getId()
                 )
             );
         }
-    }
-
-    /**
-     * @throws DataAccessQueryException
-     */
-    public function findAllIdsByTransition(Transition $transition): PostActionIdCollection
-    {
-        $rows_or_failure = $this->set_int_value_dao->findAllIdsByTransitionId($transition->getId());
-        if ($rows_or_failure === false) {
-            throw new DataAccessQueryException(
-                sprintf(
-                    "Cannot find ids of all Set Int Value post actions on transition with id '%u'",
-                    $transition->getId()
-                )
-            );
-        }
-
-        $ids = [];
-        foreach ($rows_or_failure as $row) {
-            $ids[] = (int)$row['id'];
-        }
-        return new PostActionIdCollection(...$ids);
     }
 }
