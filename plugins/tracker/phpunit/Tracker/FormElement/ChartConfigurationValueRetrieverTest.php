@@ -20,10 +20,12 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -117,63 +119,9 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(
             $this->field_retriever,
+            Mockery::mock(TimeframeBuilder::class),
             \Mockery::mock(\Logger::class)
         );
-    }
-
-    public function testItReturnsTimePeriodDataWhenStartDateAndDurationAreSet()
-    {
-        $this->field_retriever->shouldReceive('getStartDateField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->start_date_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->start_date_field)
-            ->andReturn($this->start_date_value);
-
-        $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
-
-        $this->field_retriever->shouldReceive('getDurationField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->duration_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->duration_field)
-            ->andReturn($this->duration_value);
-
-        $this->duration_value->shouldReceive('getValue')->andReturn($this->duration);
-
-        $time_period = $this->configuration_value_retriever->getTimePeriod(
-            $this->artifact_sprint,
-            $this->user
-        );
-
-        $this->assertSame(
-            $time_period->getStartDate(),
-            $this->start_date
-        );
-
-        $this->assertSame(
-            $time_period->getDuration(),
-            $this->duration
-        );
-    }
-
-    public function testItThrowsAnExceptionWhenStartDateIsEmpty()
-    {
-        $this->field_retriever->shouldReceive('getStartDateField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->start_date_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->start_date_field)
-            ->andReturn($this->start_date_value);
-
-        $this->start_date_value->shouldReceive('getTimestamp')->andReturnNull();
-
-        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
-
-        $this->configuration_value_retriever->getTimePeriod($this->artifact_sprint, $this->user);
     }
 
     public function testItReturnsNullWhenCapacityIsEmpty()
@@ -202,66 +150,6 @@ class ChartConfigurationValueRetrieverTest extends TestCase
         $this->assertSame(
             $this->configuration_value_retriever->getCapacity($this->artifact_sprint, $this->user),
             $this->capacity
-        );
-    }
-
-    public function testItThrowsAnExceptionWhenDurationIsMinorThanZero()
-    {
-        $this->field_retriever->shouldReceive('getStartDateField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->start_date_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->start_date_field)
-            ->andReturn($this->start_date_value);
-
-        $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
-
-        $this->field_retriever->shouldReceive('getDurationField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->duration_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->duration_field)
-            ->andReturn($this->duration_value);
-
-        $this->duration_value->shouldReceive('getValue')->andReturn(0);
-
-        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
-
-        $this->configuration_value_retriever->getTimePeriod(
-            $this->artifact_sprint,
-            $this->user
-        );
-    }
-
-    public function testItThrowsAnExceptionWhenDurationIsEqualToOne()
-    {
-        $this->field_retriever->shouldReceive('getStartDateField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->start_date_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->start_date_field)
-            ->andReturn($this->start_date_value);
-
-        $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
-
-        $this->field_retriever->shouldReceive('getDurationField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->duration_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->duration_field)
-            ->andReturn($this->duration_value);
-
-        $this->duration_value->shouldReceive('getValue')->andReturn(1);
-
-        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
-
-        $this->configuration_value_retriever->getTimePeriod(
-            $this->artifact_sprint,
-            $this->user
         );
     }
 }

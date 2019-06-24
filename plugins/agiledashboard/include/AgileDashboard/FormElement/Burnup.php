@@ -34,6 +34,7 @@ use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
@@ -49,6 +50,7 @@ use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
 class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
@@ -430,6 +432,9 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            ),
             $this->getLogger()
         );
     }

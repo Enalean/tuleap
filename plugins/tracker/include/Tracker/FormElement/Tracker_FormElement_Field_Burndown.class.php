@@ -313,7 +313,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             }
         } else {
             throw new Tracker_FormElement_Chart_Field_Exception(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
+                dgettext('tuleap-tracker', 'You are not allowed to access this field.')
             );
         }
     }
@@ -351,19 +351,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getTimePeriodForRESTRepresentation(Tracker_Artifact $artifact, PFUser $user)
     {
-        try{
-            $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
-        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
-            $start_date = null;
-        }
+        $builder = new TimeframeBuilder($this->getFormElementFactory());
 
-        try{
-            $duration = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
-        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
-            $duration = null;
-        }
-
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return $builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
     }
 
     protected function getLogger()
@@ -438,7 +428,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
+            $output .= '<img src="'.HTTPRequest::instance()->getServerUrl().$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
             $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
         }
         return $output;
@@ -659,7 +649,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function getBurndownConfigurationValueRetriever()
     {
         return new ChartConfigurationValueRetriever(
-            $this->getBurdownConfigurationFieldRetriever(), $this->getLogger()
+            $this->getBurdownConfigurationFieldRetriever(),
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            ),
+            $this->getLogger()
         );
     }
 
