@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,13 @@
 .sidebar {
     display: flex;
     position: fixed;
+    z-index: 1000;
     top: $navbar-height;
     left: 0;
     flex-direction: column;
     width: $sidebar-expanded-width;
     height: calc(100vh - #{$navbar-height});
     background: $tlp-theme-sidebar-background-color;
-    z-index: 10000;
 }
 
 .sidebar-collapser-icon::before {

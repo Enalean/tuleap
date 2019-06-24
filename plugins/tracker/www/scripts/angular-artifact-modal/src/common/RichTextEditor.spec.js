@@ -81,7 +81,7 @@ describe(`RichTextEditor`, () => {
         isThereAnImageWithDataURI = jasmine.createSpy("isThereAnImageWithDataURI");
         rewire$isThereAnImageWithDataURI(isThereAnImageWithDataURI);
 
-        editor = jasmine.createSpyObj("editor", ["on", "destroy"]);
+        editor = jasmine.createSpyObj("editor", ["on", "destroy", "showNotification"]);
         CKEDITOR.replace = jasmine.createSpy("CKEditor.replace").and.returnValue(editor);
         disabled = false;
         format = "text";
@@ -156,52 +156,6 @@ describe(`RichTextEditor`, () => {
                 );
                 expect(wrapper.emitted().input[0]).toEqual(["noniodized"]);
             });
-
-            it(`and when the editor dispatched the "notificationShow" event,
-                then it will ignore it because it would show behind the modal
-                due to z-index`, () => {
-                let triggerNotificationShow;
-                editor.on.and.callFake((event_name, handler) => {
-                    if (event_name === "instanceReady") {
-                        return handler();
-                    }
-                    if (event_name === "notificationShow") {
-                        triggerNotificationShow = handler;
-                    }
-                });
-
-                const event = {
-                    cancel: jasmine.createSpy("event.cancel")
-                };
-
-                getInstance();
-                triggerNotificationShow(event);
-
-                expect(event.cancel).toHaveBeenCalled();
-            });
-
-            it(`and when the editor dispatched the "notificationUpdate" event
-                then it will ignore it because it would show behind the modal
-                due to z-index`, () => {
-                let triggerNotificationUpdate;
-                editor.on.and.callFake((event_name, handler) => {
-                    if (event_name === "instanceReady") {
-                        return handler();
-                    }
-                    if (event_name === "notificationUpdate") {
-                        triggerNotificationUpdate = handler;
-                    }
-                });
-
-                const event = {
-                    cancel: jasmine.createSpy("event.cancel")
-                };
-
-                getInstance();
-                triggerNotificationUpdate(event);
-
-                expect(event.cancel).toHaveBeenCalled();
-            });
         });
 
         describe(`beforeDestroy()`, () => {
@@ -245,7 +199,7 @@ describe(`RichTextEditor`, () => {
                 });
                 isThereAnImageWithDataURI.and.returnValue(true);
 
-                const wrapper = getInstance();
+                getInstance();
                 const event = {
                     cancel: jasmine.createSpy("event.cancel"),
                     data: { dataValue: `<p></p>` }
@@ -253,8 +207,7 @@ describe(`RichTextEditor`, () => {
                 triggerPaste(event);
 
                 expect(event.cancel).toHaveBeenCalled();
-                const error = wrapper.find("[data-test=error]");
-                expect(error.isVisible()).toBe(true);
+                expect(editor.showNotification).toHaveBeenCalled();
             });
 
             it(`does not set up image upload`, () => {
@@ -317,9 +270,6 @@ describe(`RichTextEditor`, () => {
 
                     it(`disables form submits`, () =>
                         expect(setIsUploadingInCKEditor).toHaveBeenCalled());
-
-                    it(`resets the error message`, () =>
-                        expect(wrapper.vm.error_message).toEqual(""));
                 });
 
                 describe(`when the upload succeeds`, () => {
@@ -365,16 +315,14 @@ describe(`RichTextEditor`, () => {
                         const error = new MaxSizeUploadExceededError(3000, {});
                         triggerError(error);
 
-                        const error_message = wrapper.find("[data-test=error]");
-                        expect(error_message.isVisible()).toBe(true);
+                        expect(error.loader.message).toBeDefined();
                     });
 
                     it(`and the upload failed, then it shows an error message`, () => {
                         const error = new UploadError({});
                         triggerError(error);
 
-                        const error_message = wrapper.find("[data-test=error]");
-                        expect(error_message.isVisible()).toBe(true);
+                        expect(error.loader.message).toBeDefined();
                     });
                 });
             });

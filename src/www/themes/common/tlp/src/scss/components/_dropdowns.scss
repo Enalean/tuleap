@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 .tlp-dropdown-menu {
     display: flex;
     position: absolute;
-    z-index: 10000;
+    z-index: 1000;
     flex-direction: column;
     margin: $tlp-dropdown-arrow-size 0 0;
     padding: $tlp-half-spacing 0;
@@ -234,11 +234,12 @@ $flatpickr-animation: 100ms ease-in-out showFlatPickr;
     }
 }
 
-// scss-lint:disable QualifyingElement
+/* stylelint-disable selector-no-qualifying-type */
 div.flatpickr-wrapper.inline div.flatpickr-calendar,
 div.flatpickr-wrapper.open div.flatpickr-calendar {
-    z-index: 100051;
+    z-index: 2002;
 }
+/* stylelint-enable */
 
 // scss-lint:disable PseudoElement
 // scss-lint:disable QualifyingElement

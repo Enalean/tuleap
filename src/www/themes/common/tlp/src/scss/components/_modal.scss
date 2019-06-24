@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ $tlp-modal-transition: 100ms ease-out;
 .tlp-modal {
     display: none;
     position: fixed;
-    z-index: 100050;
+    z-index: 2001;
     top: 0;
     right: 0;
     left: 0;
@@ -38,7 +38,7 @@ $tlp-modal-transition: 100ms ease-out;
         box-shadow $tlp-modal-transition;
     border: 0;
     opacity: 0;
-    box-shadow: 0;
+    box-shadow: unset;
     text-align: left;
     white-space: normal;
 
@@ -201,7 +201,7 @@ $tlp-modal-transition: 100ms ease-out;
 
 #tlp-modal-backdrop {
     position: fixed;
-    z-index: 100001;
+    z-index: 2000;
     top: 0;
     right: 0;
     bottom: 0;
