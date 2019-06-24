@@ -155,12 +155,12 @@ class TransitionReplicatorTest extends TestCase
             ->with($to_transition, ['191', '154_3'], $not_empty_ids, $is_comment_required);
         $this->post_actions_updater
             ->shouldReceive('updateByTransition', $to_transition, new PostActionCollection(
-                new CIBuildValue(null, 'https://example.com'),
-                new SetDateValue(null, 197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
-                new SetFloatValue(null, 201, 48.97),
-                new SetIntValue(null, 247, -128),
-                new FrozenFieldsValue(null, [999]),
-                new HiddenFieldsetsValue(null, [648, 701])
+                new CIBuildValue('https://example.com'),
+                new SetDateValue(197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
+                new SetFloatValue(201, 48.97),
+                new SetIntValue(247, -128),
+                new FrozenFieldsValue([999]),
+                new HiddenFieldsetsValue([648, 701])
             ));
 
         $this->transition_replicator->replicate($from_transition, $to_transition);

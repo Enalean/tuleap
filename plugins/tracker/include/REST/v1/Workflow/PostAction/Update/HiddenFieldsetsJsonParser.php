@@ -46,13 +46,6 @@ class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
             throw new IncompatibleWorkflowModeException(self::POSTACTION_TYPE);
         }
 
-        if (isset($json['id']) && !is_int($json['id'])) {
-            throw new I18NRestException(
-                400,
-                dgettext('tuleap-tracker', "Bad id attribute format: int expected.")
-            );
-        }
-
         if (! isset($json['fieldset_ids'])) {
             throw new I18NRestException(
                 400,
@@ -83,6 +76,6 @@ class HiddenFieldsetsJsonParser implements PostActionUpdateJsonParser
             }
         }
 
-        return new HiddenFieldsetsValue(null, $json['fieldset_ids']);
+        return new HiddenFieldsetsValue($json['fieldset_ids']);
     }
 }

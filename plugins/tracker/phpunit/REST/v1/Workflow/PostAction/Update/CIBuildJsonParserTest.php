@@ -74,7 +74,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
     }
 
     public function testParseWhenIdNotProvided()
@@ -89,7 +89,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
     }
 
     public function testParseReturnsNewCIBuildWithoutIdWhenWorkflowIsNotAdvanced()
@@ -105,24 +105,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
-    }
-
-    public function testParseThrowsWhenIdIsNotInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-        $this->parser->parse(
-            $workflow,
-            [
-                "id" => "not int",
-                "type" => "run_job",
-                "job_url" => "http://example.test",
-            ]
-        );
+        $this->assertEquals(new CIBuildValue("http://example.test"), $ci_build);
     }
 
     public function testParseThrowsWhenNoJobUrlProvided()

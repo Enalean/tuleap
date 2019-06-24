@@ -63,7 +63,7 @@ class CIBuildRepositoryTest extends TestCase
             ->andReturn(9);
 
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $ci_build   = new CIBuildValue(9, 'http://added-ci-url.test');
+        $ci_build   = new CIBuildValue('http://added-ci-url.test');
 
         $this->ci_build_repository->create($transition, $ci_build);
     }
@@ -74,7 +74,7 @@ class CIBuildRepositoryTest extends TestCase
             ->andReturn(false);
 
         $transition = TransitionFactory::buildATransition();
-        $ci_build   = new CIBuildValue(null, 'http://example.test');
+        $ci_build   = new CIBuildValue('http://example.test');
 
         $this->expectException(DataAccessQueryException::class);
 

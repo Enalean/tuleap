@@ -35,12 +35,6 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
 
     public function parse(Workflow $workflow, array $json): PostAction
     {
-        if (isset($json['id']) && !is_int($json['id'])) {
-            throw new I18NRestException(
-                400,
-                dgettext('tuleap-tracker', "Bad id attribute format: int expected.")
-            );
-        }
         if (!isset($json['job_url'])) {
             throw new I18NRestException(
                 400,
@@ -54,9 +48,6 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
             );
         }
 
-        return new CIBuildValue(
-            null,
-            $json['job_url']
-        );
+        return new CIBuildValue($json['job_url']);
     }
 }

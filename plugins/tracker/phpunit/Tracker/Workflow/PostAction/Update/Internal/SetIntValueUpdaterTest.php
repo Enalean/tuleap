@@ -74,7 +74,7 @@ class SetIntValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $added_action = new SetIntValue(null, 43, 1);
+        $added_action = new SetIntValue(43, 1);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
@@ -98,7 +98,7 @@ class SetIntValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $updated_action = new SetIntValue(1, 43, 1);
+        $updated_action = new SetIntValue(43, 1);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
@@ -122,7 +122,7 @@ class SetIntValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $action  = new SetIntValue(2, 43, 1);
+        $action  = new SetIntValue(43, 1);
         $actions = new PostActionCollection($action);
 
         $this->validator

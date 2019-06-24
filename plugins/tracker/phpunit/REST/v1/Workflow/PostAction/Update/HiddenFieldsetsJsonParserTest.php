@@ -71,7 +71,7 @@ class HiddenFieldsetsJsonParserTest extends TestCase
                 "fieldset_ids" => [43],
             ]
         );
-        $expected_action = new HiddenFieldsetsValue(null, [43]);
+        $expected_action = new HiddenFieldsetsValue([43]);
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
     }
 
@@ -87,26 +87,8 @@ class HiddenFieldsetsJsonParserTest extends TestCase
                 "fieldset_ids" => [43],
             ]
         );
-        $expected_action = new HiddenFieldsetsValue(null, [43]);
+        $expected_action = new HiddenFieldsetsValue([43]);
         $this->assertEquals($expected_action, $hidden_fieldsets_value);
-    }
-
-    public function testParseThrowsAnExceptionWhenIdIsNotInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                "id" => 'not_an_int',
-                "type" => "hidden_fieldsets",
-                "fieldset_ids" => [43],
-            ]
-        );
     }
 
     public function testParseThrowsAnExceptionWhenNoFieldsetIdsProvided()

@@ -64,7 +64,6 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\HiddenFieldsetsValueValid
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
@@ -495,7 +494,6 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
-        $ids_validator        = new PostActionIdValidator();
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $transaction_executor = $this->getTransactionExecutor();
@@ -505,28 +503,28 @@ class TransitionsResource extends AuthenticatedResource
                 new CIBuildValueRepository(
                     $this->getCIBuildDao()
                 ),
-                new CIBuildValueValidator($ids_validator)
+                new CIBuildValueValidator()
             ),
             new SetDateValueUpdater(
                 new SetDateValueRepository(
                     $this->getFieldDateDao(),
                     $transaction_executor
                 ),
-                new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                new SetDateValueValidator($field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
                 new SetintValueRepository(
                     $this->getFieldIntDao(),
                     $transaction_executor
                 ),
-                new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                new SetIntValueValidator($field_ids_validator, $form_element_factory)
             ),
             new SetFloatValueUpdater(
                 new SetFloatValueRepository(
                     $this->getFieldFloatDao(),
                     $transaction_executor
                 ),
-                new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                new SetFloatValueValidator($field_ids_validator, $form_element_factory)
             ),
             new FrozenFieldsValueUpdater(
                 new FrozenFieldsValueRepository(

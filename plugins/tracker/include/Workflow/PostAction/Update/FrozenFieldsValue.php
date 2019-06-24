@@ -26,24 +26,13 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 final class FrozenFieldsValue implements PostAction
 {
     /**
-     * @var int|null
-     */
-    private $id;
-
-    /**
      * @var array
      */
     private $field_ids;
 
-    public function __construct(?int $id, array $field_ids)
+    public function __construct(array $field_ids)
     {
-        $this->id        = $id;
         $this->field_ids = $field_ids;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

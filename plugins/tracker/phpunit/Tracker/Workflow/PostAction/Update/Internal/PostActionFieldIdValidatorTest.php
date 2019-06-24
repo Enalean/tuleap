@@ -40,8 +40,8 @@ class PostActionFieldIdValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $first_date_value  = new SetDateValue(null, 1, 0);
-        $second_date_value = new SetDateValue(null, 2, 0);
+        $first_date_value  = new SetDateValue(1, 0);
+        $second_date_value = new SetDateValue(2, 0);
 
         $this->field_ids_validator->validate($first_date_value, $second_date_value);
         $this->expectNotToPerformAssertions();
@@ -49,8 +49,8 @@ class PostActionFieldIdValidatorTest extends TestCase
 
     public function testValidateThrowsWhenDuplicateFieldIds()
     {
-        $first_identical_field_id  = new SetDateValue(null, 3, 0);
-        $second_identical_field_id = new SetDateValue(null, 3, 1);
+        $first_identical_field_id  = new SetDateValue(3, 0);
+        $second_identical_field_id = new SetDateValue(3, 1);
 
         $this->expectException(DuplicateFieldIdException::class);
 

@@ -87,7 +87,7 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1.23
             ]
         );
-        $expected_action = new SetFloatValue(null, 43, 1.23);
+        $expected_action = new SetFloatValue(43, 1.23);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -106,7 +106,7 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1
             ]
         );
-        $expected_action = new SetFloatValue(null, 43, 1);
+        $expected_action = new SetFloatValue(43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -124,7 +124,7 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1
             ]
         );
-        $expected_action = new SetFloatValue(null, 43, 1);
+        $expected_action = new SetFloatValue(43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -143,27 +143,8 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1
             ]
         );
-        $expected_action = new SetFloatValue(null, 43, 1);
+        $expected_action = new SetFloatValue(43, 1);
         $this->assertEquals($expected_action, $set_date_value);
-    }
-
-    public function testParseThrowsWhenIdIsNotInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-        $this->parser->parse(
-            $workflow,
-            [
-                "id" => "not int",
-                "type" => "set_field_value",
-                "field_type" => "float",
-                "field_id" => 43,
-                "value" => 1
-            ]
-        );
     }
 
     public function testParseThrowsWhenNoFieldIdProvided()

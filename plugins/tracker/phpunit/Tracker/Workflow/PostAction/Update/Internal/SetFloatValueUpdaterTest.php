@@ -76,7 +76,7 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $added_action = new SetFloatValue(null, 43, 1.23);
+        $added_action = new SetFloatValue(43, 1.23);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
@@ -95,7 +95,7 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $updated_action = new SetFloatValue(1, 43, 1.23);
+        $updated_action = new SetFloatValue(43, 1.23);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
@@ -119,7 +119,7 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $action  = new SetFloatValue(2, 43, 1.23);
+        $action  = new SetFloatValue(43, 1.23);
         $actions = new PostActionCollection($action);
 
         $this->validator
