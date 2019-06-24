@@ -56,7 +56,8 @@ const webpack_config_for_ckeditor = {
             {
                 from: path.resolve(__dirname, "node_modules/ckeditor"),
                 to: path.resolve(__dirname, `../assets/ckeditor-${ckeditor_version}/`),
-                toType: "dir"
+                toType: "dir",
+                ignore: ["**/samples/**", "**/.github/**", "**/*.!(js|css|png)"]
             }
         ])
     ]
