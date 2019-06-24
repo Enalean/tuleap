@@ -1169,6 +1169,7 @@ class GitActions extends PluginActions
 
         $selected_group_ids = $this->removeUndesiredUgroupsFromRequest($selected_group_ids);
 
+        /** @psalm-suppress DeprecatedFunction */
         list ($return_code, $feedback) = permission_process_selection_form(
             $project->getId(),
             Git::PERM_ADMIN,

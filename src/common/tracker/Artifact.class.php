@@ -1093,6 +1093,7 @@ class Artifact {
     function setPermissions($use_artifact_permissions, $ugroups) {
         if ($this->ArtifactType->userIsAdmin()) {
             if ($use_artifact_permissions) {
+                /** @psalm-suppress DeprecatedFunction */
                 $result = permission_process_selection_form($this->ArtifactType->getGroupID(), 'TRACKER_ARTIFACT_ACCESS', $this->getId(), $ugroups);
                 if (!$result[0]) {
                     return $GLOBALS['Response']->addFeedback('error', $result[1]);

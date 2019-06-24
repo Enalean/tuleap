@@ -679,10 +679,11 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             foreach ($to_list as $to) {
                 $mail->setBcc($to);
             }
-	        $url1 = get_server_url()."/forum/monitor.php?forum_id=".$forum_id;
-	        $url2 = get_server_url()."/forum/monitor_thread.php?forum_id=".$forum_id;
+            $server_url = HTTPRequest::instance()->getServerUrl();
+	        $url1 = $server_url."/forum/monitor.php?forum_id=".$forum_id;
+	        $url2 = $server_url."/forum/monitor_thread.php?forum_id=".$forum_id;
 	        $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
-			    "\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
+			    "\n".$server_url."/forum/message.php?msg_id=".$msg_id.
 		        "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .' ('.db_result($result,0, 'realname').')' .
 			    "\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			    "\n\n______________________________________________________________________".

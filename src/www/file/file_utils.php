@@ -394,7 +394,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     foreach ($type_name as $key => $name) {
         $type_name[$key] = $hp->purify($name, CODENDI_PURIFIER_JS_QUOTE);
     }
-    $url_news = get_server_url() . "/file/showfiles.php?group_id=" . $group_id;
+    $url_news = "/file/showfiles.php?group_id=" . $group_id;
     echo '<script type="text/javascript">';
     echo "var processor_id = ['" . implode("', '", $processor_id) . "'];";
     echo "var processor_name = ['" . implode("', '", $processor_name) . "'];";
