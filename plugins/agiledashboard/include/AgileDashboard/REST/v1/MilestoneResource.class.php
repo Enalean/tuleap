@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,6 +62,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
 
@@ -140,7 +141,10 @@ class MilestoneResource extends AuthenticatedResource {
             $status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            $scrum_for_mono_milestone_checker
+            $scrum_for_mono_milestone_checker,
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(

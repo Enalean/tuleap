@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Period\PeriodFuture;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -71,6 +72,11 @@ class Planning_MilestoneFactory
     private $scrum_mono_milestone_checker;
 
     /**
+     * @var TimeframeBuilder
+     */
+    private $timeframe_builder;
+
+    /**
      * Instanciates a new milestone factory.
      *
      * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
@@ -85,9 +91,9 @@ class Planning_MilestoneFactory
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        TimeframeBuilder $timeframe_builder
     ) {
-
         $this->planning_factory             = $planning_factory;
         $this->artifact_factory             = $artifact_factory;
         $this->formelement_factory          = $formelement_factory;
@@ -96,6 +102,7 @@ class Planning_MilestoneFactory
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->timeframe_builder = $timeframe_builder;
     }
 
     /**
@@ -237,25 +244,6 @@ class Planning_MilestoneFactory
         $milestone->setRemainingEffort($this->getComputedFieldValue($user, $artifact, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
 
         return $milestone;
-    }
-
-    private function getTimestamp(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
-        $field = $this->formelement_factory->getDateFieldByNameForUser(
-            $milestone_artifact->getTracker(),
-            $user,
-            $field_name
-        );
-
-        if (! $field) {
-            return 0;
-        }
-
-        $value = $field->getLastChangesetValue($milestone_artifact);
-        if (! $value) {
-            return 0;
-        }
-
-        return $value->getTimestamp();
     }
 
     protected function getComputedFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
@@ -936,18 +924,19 @@ class Planning_MilestoneFactory
         return ! $milestone_artifact->isOpen();
     }
 
+    /**
+     * @return TimePeriodWithoutWeekEnd
+     */
     private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user)
     {
-        $start_date  = $this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME);
-        $duration    = $this->getComputedFieldValue($user, $milestone_artifact, Planning_Milestone::DURATION_FIELD_NAME);
-
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifact($milestone_artifact, $user);
     }
 
-    private function milestoneHasStartDate(Tracker_Artifact $milestone_artifact, PFUser $user) {
-        $start_date  = $this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME);
+    private function milestoneHasStartDate(Tracker_Artifact $milestone_artifact, PFUser $user)
+    {
+        $time_period = $this->getMilestoneTimePeriod($milestone_artifact, $user);
 
-        return (bool) $start_date;
+        return (bool) $time_period->getStartDate() > 0;
     }
 
     /**

@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\BacklogRequiredTrackerCollectionFormatter;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
@@ -270,6 +271,9 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 new ScrumForMonoMilestoneChecker(
                     new ScrumForMonoMilestoneDao(),
                     PlanningFactory::build()
+                ),
+                new TimeframeBuilder(
+                    Tracker_FormElementFactory::instance()
                 )
             )
         );

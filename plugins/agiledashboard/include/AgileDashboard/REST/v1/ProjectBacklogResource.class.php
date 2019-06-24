@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,6 +51,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
 /**
@@ -121,7 +122,10 @@ class ProjectBacklogResource
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(

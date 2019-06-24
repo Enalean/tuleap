@@ -77,6 +77,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetri
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
@@ -719,7 +720,10 @@ class AgileDashboardPlugin extends Plugin
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            $this->getMonoMilestoneChecker()
+            $this->getMonoMilestoneChecker(),
+            new TimeframeBuilder(
+                $this->getFormElementFactory()
+            )
         );
     }
 

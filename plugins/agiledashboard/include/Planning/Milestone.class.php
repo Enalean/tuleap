@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,6 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
 {
     public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     public const CAPACITY_FIELD_NAME         = 'capacity';
-    public const START_DATE_FIELD_NAME       = 'start_date';
     public const DURATION_FIELD_NAME         = 'duration';
 
     /**

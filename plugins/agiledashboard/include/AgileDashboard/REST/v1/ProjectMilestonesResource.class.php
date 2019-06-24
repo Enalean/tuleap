@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 – 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 – Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,6 +47,7 @@ use EventManager;
 use AgileDashboard_Milestone_MilestoneDao;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\QueryToFutureMilestoneRepresentationBuilderConverter;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
  * Wrapper for milestone related REST methods
@@ -104,7 +105,10 @@ class ProjectMilestonesResource {
             $this->status_counter,
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
+            new TimeframeBuilder(
+                Tracker_FormElementFactory::instance()
+            )
         );
 
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(

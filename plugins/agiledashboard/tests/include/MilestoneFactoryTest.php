@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+
 require_once __DIR__ . '/../bootstrap.php';
 
 abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
@@ -77,6 +79,8 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->planning_permissions_manager = \Mockery::spy(\PlanningPermissionsManager::class);
         $this->dao                          = \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class);
         $this->mono_milestone_checker       = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
+        $this->timeframe_builder            = \Mockery::mock(TimeframeBuilder::class);
+
         $this->milestone_factory            = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
@@ -85,7 +89,8 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
             $this->status_counter,
             $this->planning_permissions_manager,
             $this->dao,
-            $this->mono_milestone_checker
+            $this->mono_milestone_checker,
+            $this->timeframe_builder
         );
 
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
@@ -97,9 +102,11 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
     }
 }
 
-class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFactory_GetMilestoneBaseTest
+{
 
-    public function itCanRetrieveSubMilestonesOfAGivenMilestone() {
+    public function itCanRetrieveSubMilestonesOfAGivenMilestone()
+    {
         $sprints_tracker   = \Mockery::spy(\Tracker::class);
         $hackfests_tracker = \Mockery::spy(\Tracker::class);
 
@@ -123,6 +130,21 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         stub($this->planning_factory)->getPlanningByPlanningTracker($sprints_tracker)->returns($sprint_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($hackfests_tracker)->returns($hackfest_planning);
 
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($sprint_1, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($sprint_2, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($hackfest_2012, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
         $milestone      = aMilestone()->withArtifact($release_1_0)->build();
         $sub_milestones = $this->milestone_factory->getSubMilestones($this->user, $milestone);
 
@@ -135,10 +157,21 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->assertEqual($sub_milestones[2]->getArtifact(), $hackfest_2012);
     }
 
-    public function itBuildsBareMilestoneFromAnArtifact() {
+    public function itBuildsBareMilestoneFromAnArtifact()
+    {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
 
-        $milestone = $this->milestone_factory->getBareMilestone($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($this->artifact, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
+        $milestone = $this->milestone_factory->getBareMilestone(
+            $this->user,
+            $this->project,
+            $this->planning_id,
+            $this->artifact_id
+        );
 
         $this->assertEqual($milestone->getArtifact(), $this->artifact);
     }
@@ -314,7 +347,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            \Mockery::mock(TimeframeBuilder::class)
         ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -338,7 +372,8 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            \Mockery::mock(TimeframeBuilder::class)
         );
         $planning_items_tree = $factory->getPlannedArtifacts(\Mockery::spy(\PFUser::class), $root_artifact);
 
@@ -374,7 +409,8 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            \Mockery::mock(TimeframeBuilder::class)
         );
     }
 
@@ -414,7 +450,8 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            \Mockery::mock(TimeframeBuilder::class)
         ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -523,7 +560,8 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
             mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            \Mockery::mock(TimeframeBuilder::class)
         ))
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -557,7 +595,8 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
     }
 }
 
-class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
+class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase
+{
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
     private $planning_factory;
@@ -566,12 +605,15 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     private $user;
     private $tracker;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->timeframe_builder = \Mockery::mock(TimeframeBuilder::class);
+
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
@@ -580,7 +622,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            $this->timeframe_builder
         );
 
         $planning = \Mockery::spy(\Planning::class);
@@ -609,7 +652,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $this->assertArrayEmpty($milestones);
     }
 
-    public function itReturnsMilestonePerArtifact() {
+    public function itReturnsMilestonePerArtifact()
+    {
         $artifact_1 = mockery_stub(\Tracker_Artifact::class)->getLastChangeset()->returns(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         stub($artifact_1)->userCanView()->returns(true);
         stub($artifact_1)->getTracker()->returns($this->tracker);
@@ -625,6 +669,16 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
             $artifact_2
         );
 
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_1, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_2, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
 
@@ -639,7 +693,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $this->assertEqual($milestone_2->getArtifact(), $artifact_2);
     }
 
-    public function itSkipsArtifactsWithoutChangeset() {
+    public function itSkipsArtifactsWithoutChangeset()
+    {
         // Some artifacts have no changeset on Tuleap.net (because of anonymous that can create
         // artifacts but artifact creation fails because they have to write access to fields
         // the artifact creation is stopped half the way hence without changeset
@@ -656,6 +711,11 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
             $artifact_2
         );
 
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact_2, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
 
@@ -669,19 +729,23 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     }
 }
 
-class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
+class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase
+{
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
     private $planning_factory;
     private $artifact_factory;
     private $user;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
         $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->timeframe_builder = \Mockery::mock(TimeframeBuilder::class);
+
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
@@ -690,7 +754,8 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
+            $this->timeframe_builder
         );
         $this->user = aUser()->build();
         $this->artifact_id = 112;
@@ -702,7 +767,8 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsAMilestone() {
+    public function itReturnsAMilestone()
+    {
         $planning_tracker = aTracker()->withId(12)->withProject(\Mockery::spy(\Project::class))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($planning_tracker)->returns(aPlanning()->withId(4)->build());
 
@@ -711,6 +777,11 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
         $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
+            ->with($artifact, $this->user)
+            ->once()
+            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
         $this->assertEqual($milestone->getArtifact(), $artifact);
