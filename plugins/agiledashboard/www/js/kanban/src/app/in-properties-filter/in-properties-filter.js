@@ -1,4 +1,4 @@
-import { escape } from "lodash";
+import { escape, clone } from "lodash";
 
 export default InPropertiesFilter;
 
@@ -11,7 +11,7 @@ function InPropertiesFilter($filter) {
 
     return function(list, terms) {
         if (!terms || terms === "") {
-            return _.clone(list);
+            return clone(list);
         }
 
         var properties = ["id", "label"],

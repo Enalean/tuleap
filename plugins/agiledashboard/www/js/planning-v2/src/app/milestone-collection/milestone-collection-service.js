@@ -1,12 +1,10 @@
-import _ from "lodash";
-
 export default MilestoneCollectionService;
 
 MilestoneCollectionService.$inject = ["MilestoneService", "BacklogItemCollectionService"];
 
 function MilestoneCollectionService(MilestoneService, BacklogItemCollectionService) {
     var self = this;
-    _.extend(self, {
+    Object.assign(self, {
         milestones: {
             content: [],
             loading: false,
@@ -22,9 +20,7 @@ function MilestoneCollectionService(MilestoneService, BacklogItemCollectionServi
     });
 
     function getMilestone(milestone_id) {
-        return _.find(self.milestones.content, function(milestone) {
-            return milestone.id === milestone_id;
-        });
+        return self.milestones.content.find(({ id }) => id === milestone_id);
     }
 
     function refreshMilestone(milestone_id) {

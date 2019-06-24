@@ -1,3 +1,4 @@
+import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
 import "tlp-mocks";
@@ -22,22 +23,23 @@ describe("PlanningController - ", () => {
         ItemAnimatorService;
 
     const milestone = {
-            id: 592,
-            resources: {
-                backlog: {
-                    accept: {
-                        trackers: [{ id: 99, label: "story" }]
-                    }
-                },
-                content: {
-                    accept: {
-                        trackers: [{ id: 99, label: "story" }]
-                    }
+        id: 592,
+        resources: {
+            backlog: {
+                accept: {
+                    trackers: [{ id: 99, label: "story" }]
                 }
             },
-            sub_milestone_type: { id: 66, label: "sprints" }
+            content: {
+                accept: {
+                    trackers: [{ id: 99, label: "story" }]
+                }
+            }
         },
-        initial_milestones = [
+        sub_milestone_type: { id: 66, label: "sprints" }
+    };
+    const initial_milestones = {
+        milestones_representations: [
             {
                 resources: {
                     backlog: {
@@ -52,7 +54,8 @@ describe("PlanningController - ", () => {
                     }
                 }
             }
-        ];
+        ]
+    };
 
     beforeEach(() => {
         angular.mock.module(planning_module);
@@ -238,16 +241,19 @@ describe("PlanningController - ", () => {
             });
         });
 
-        it("Load injected milestones", inject(() => {
-            SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
-            spyOn(PlanningController, "loadInitialMilestones").and.callThrough();
+        it(
+            "Load injected milestones",
+            angular.mock.inject(() => {
+                SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
+                spyOn(PlanningController, "loadInitialMilestones").and.callThrough();
 
-            PlanningController.$onInit();
+                PlanningController.$onInit();
 
-            expect(PlanningController.loadInitialMilestones).toHaveBeenCalledWith(
-                initial_milestones
-            );
-        }));
+                expect(PlanningController.loadInitialMilestones).toHaveBeenCalledWith(
+                    initial_milestones
+                );
+            })
+        );
 
         it("Load injected view mode", () => {
             SharedPropertiesService.getViewMode.and.returnValue("detailed-view");

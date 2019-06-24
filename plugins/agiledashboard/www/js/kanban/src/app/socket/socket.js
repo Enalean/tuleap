@@ -1,3 +1,4 @@
+import angular from "angular";
 import "angular-socket-io"; // provides btford.socket-io
 import "angular-locker";
 import jwt from "../jwt/jwt.js";

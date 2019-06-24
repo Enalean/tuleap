@@ -34,12 +34,10 @@ function ProjectService(Restangular) {
                     direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: milestone_id
+                }))
             });
     }
 
@@ -48,12 +46,10 @@ function ProjectService(Restangular) {
             .one("projects", project_id)
             .all("backlog")
             .patch({
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: milestone_id
+                }))
             });
     }
 
@@ -97,13 +93,10 @@ function ProjectService(Restangular) {
         const accepted_types = {
             content: allowed_trackers,
             parent_trackers,
-            toString: function() {
-                var accept = [];
-                _.forEach(this.content, function(allowed_tracker) {
-                    accept.push("trackerId" + allowed_tracker.id);
-                });
-
-                return accept.join("|");
+            toString() {
+                return this.content
+                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .join("|");
             }
         };
 

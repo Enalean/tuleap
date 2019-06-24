@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { remove } from "lodash";
 
 export default ColumnCollectionService;
 
@@ -6,7 +6,7 @@ ColumnCollectionService.$inject = ["SharedPropertiesService"];
 
 function ColumnCollectionService(SharedPropertiesService) {
     var self = this;
-    _.extend(self, {
+    Object.assign(self, {
         cancelWipEditionOnAllColumns: cancelWipEditionOnAllColumns,
         getColumn: getColumn,
         getBoardColumn: getBoardColumn,
@@ -31,11 +31,11 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function getColumnIndex(column_id) {
-        return _.findIndex(getColumns(), { id: column_id });
+        return getColumns().findIndex(({ id }) => id === column_id);
     }
 
-    function getBoardColumn(id) {
-        return _.find(SharedPropertiesService.getKanban().columns, { id: id });
+    function getBoardColumn(column_id) {
+        return SharedPropertiesService.getKanban().columns.find(({ id }) => id === column_id);
     }
 
     function getColumns() {
@@ -43,8 +43,8 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function reorderColumns(columns_ids) {
-        var columns = SharedPropertiesService.getKanban().columns;
-        _.forEach(columns, function(column_to_replace, index) {
+        const columns = SharedPropertiesService.getKanban().columns;
+        columns.forEach((column_to_replace, index) => {
             if (!columns_ids[index]) {
                 return;
             }
@@ -60,7 +60,7 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function cancelWipEditionOnAllColumns() {
-        _.forEach(SharedPropertiesService.getKanban().columns, function(column) {
+        SharedPropertiesService.getKanban().columns.forEach(column => {
             column.wip_in_edit = false;
         });
     }
@@ -77,7 +77,7 @@ function ColumnCollectionService(SharedPropertiesService) {
         var column_to_remove = getColumn(column_id);
 
         if (column_to_remove) {
-            _.remove(getColumns(), { id: column_id });
+            remove(getColumns(), { id: column_id });
         }
     }
 
@@ -95,15 +95,14 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function findItemById(item_id) {
-        var item;
+        let item;
 
-        _.find(getColumns(), function(column) {
+        for (const column of getColumns()) {
             item = findItemInColumnById(item_id, column);
-
             if (item) {
                 return item;
             }
-        });
+        }
 
         if (!item) {
             item = findItemInColumnById(item_id, getColumn("backlog"));
@@ -121,6 +120,6 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function findItemInColumnById(item_id, column) {
-        return _.find(column.content, { id: item_id });
+        return column.content.find(({ id }) => id === item_id);
     }
 }

@@ -1,4 +1,4 @@
-import kanban_module from "./app.js";
+import "./app.js";
 import angular from "angular";
 import "angular-mocks";
 

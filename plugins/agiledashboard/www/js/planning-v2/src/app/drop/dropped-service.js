@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export default DroppedService;
 
 DroppedService.$inject = [
@@ -31,17 +29,14 @@ function DroppedService(
     };
 
     function defineComparedTo(item_list, dragged_item, dropped_items) {
-        var diff_item_list = angular.copy(item_list);
+        const diff_item_list = item_list.filter(
+            item =>
+                !dropped_items.some(dropped_item => dropped_item.id === item.id) ||
+                dragged_item.id === item.id
+        );
         var compared_to = {};
-        var index = 0;
 
-        _.remove(diff_item_list, function(item) {
-            return _.some(dropped_items, item) && dragged_item.id !== item.id;
-        });
-
-        index = _.findIndex(diff_item_list, function(item) {
-            return dragged_item.id === item.id;
-        });
+        const index = diff_item_list.findIndex(item => dragged_item.id === item.id);
 
         if (diff_item_list.length === 1) {
             return null;
@@ -87,13 +82,7 @@ function DroppedService(
     }
 
     function removeAllGivenItemInList(list, items) {
-        var list_copy = angular.copy(list);
-
-        _.remove(list_copy, function(item) {
-            return _.some(items, item);
-        });
-
-        return list_copy;
+        return list.filter(list_item => !items.some(item => item.id === list_item.id));
     }
 
     function reorderBacklog(dropped_item_ids, compared_to, backlog) {

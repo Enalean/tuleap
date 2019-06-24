@@ -8,9 +8,7 @@ describe("KanbanColumnService -", () => {
     beforeEach(() => {
         angular.mock.module(kanban_module, function($provide) {
             $provide.decorator("$filter", function() {
-                return jasmine.createSpy("$filter").and.callFake(function() {
-                    return function() {};
-                });
+                return jasmine.createSpy("$filter").and.callFake(() => () => []);
             });
 
             $provide.decorator("KanbanFilterValue", function() {

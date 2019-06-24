@@ -417,9 +417,9 @@ export default function(options = {}) {
             .style("text-decoration", function(d) {
                 if (d.activated) {
                     return "none";
-                } else {
-                    return "line-through";
                 }
+
+                return "line-through";
             });
 
         legend
@@ -521,9 +521,8 @@ export default function(options = {}) {
             .attr("class", function(d, i) {
                 if (i > 0) {
                     return "tick grid";
-                } else {
-                    return "tick";
                 }
+                return "tick";
             });
     };
 

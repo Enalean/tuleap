@@ -4,7 +4,7 @@ import "angular-mocks";
 import rest_module from "./backlog-item-rest.js";
 
 describe("BacklogItemService", function() {
-    var $q, mockBackend, BacklogItemService, BacklogItemFactory, deferred;
+    var mockBackend, BacklogItemService, BacklogItemFactory;
 
     beforeEach(function() {
         BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", ["augment"]);
@@ -13,15 +13,12 @@ describe("BacklogItemService", function() {
             $provide.value("BacklogItemFactory", BacklogItemFactory);
         });
 
-        angular.mock.inject(function(_$q_, _BacklogItemService_, $httpBackend) {
-            $q = _$q_;
+        angular.mock.inject(function(_BacklogItemService_, $httpBackend) {
             BacklogItemService = _BacklogItemService_;
             mockBackend = $httpBackend;
         });
 
         installPromiseMatchers();
-
-        deferred = $q.defer();
     });
 
     afterEach(function() {

@@ -1,3 +1,4 @@
+import angular from "angular";
 import { createCumulativeChart } from "cumulative-flow-diagram";
 
 export default Graph;

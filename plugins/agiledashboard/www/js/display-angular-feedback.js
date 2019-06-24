@@ -21,7 +21,7 @@
     $(document).ready(function() {
         var key = "tuleap_feedback";
         if (sessionStorage[key]) {
-            codendi.feedback.log("info", sessionStorage[key]);
+            window.codendi.feedback.log("info", sessionStorage[key]);
             delete sessionStorage[key];
         }
     });

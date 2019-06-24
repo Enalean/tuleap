@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export default BacklogItemFactory;
 
 BacklogItemFactory.$inject = [];
@@ -35,13 +33,10 @@ function BacklogItemFactory() {
 
         backlog_item.accepted_types = {
             content: allowed_trackers,
-            toString: function() {
-                var accept = [];
-                _.forEach(this.content, function(allowed_tracker) {
-                    accept.push("trackerId" + allowed_tracker.id);
-                });
-
-                return accept.join("|");
+            toString() {
+                return this.content
+                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .join("|");
             }
         };
 

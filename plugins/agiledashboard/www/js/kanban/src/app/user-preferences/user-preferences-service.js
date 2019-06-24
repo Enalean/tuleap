@@ -1,8 +1,8 @@
 export default UserPreferencesService;
 
-UserPreferencesService.$inject = ["Restangular", "$q"];
+UserPreferencesService.$inject = ["Restangular"];
 
-function UserPreferencesService(Restangular, $q) {
+function UserPreferencesService(Restangular) {
     return {
         setPreference: setPreference
     };

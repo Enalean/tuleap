@@ -11,6 +11,10 @@ const webpack_config_for_charts = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tuleap: "tuleap",
+        jquery: "jQuery"
+    },
     resolve: {
         alias: {
             "charts-builders": path.resolve(

@@ -14,7 +14,7 @@ function WipPopover($timeout) {
             column: "=",
             setWipLimit: "&setWipLimit"
         },
-        link: function(scope, element, attrs) {
+        link: function(scope) {
             $timeout(function() {
                 createDropdown(
                     document.getElementById("kanban-column-header-wip-limit-" + scope.column.id)

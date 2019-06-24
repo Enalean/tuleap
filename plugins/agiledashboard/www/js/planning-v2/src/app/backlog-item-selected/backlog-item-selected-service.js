@@ -1,3 +1,4 @@
+import angular from "angular";
 import _ from "lodash";
 
 export default BacklogItemSelectedService;
@@ -43,7 +44,7 @@ function BacklogItemSelectedService() {
     }
 
     function getFirstSelectedItem() {
-        return _.first(getCompactedSelectedBacklogItem());
+        return getCompactedSelectedBacklogItem()[0];
     }
 
     function areThereMultipleSelectedBaklogItems() {
@@ -51,19 +52,16 @@ function BacklogItemSelectedService() {
     }
 
     function isDraggedBacklogItemSelected(dragged_backlog_item_id) {
-        var found = false;
-
-        if (_.find(getCompactedSelectedBacklogItem(), { id: dragged_backlog_item_id })) {
-            found = true;
-        }
-
-        return found;
+        const item = getCompactedSelectedBacklogItem().find(
+            ({ id }) => id === dragged_backlog_item_id
+        );
+        return typeof item !== "undefined";
     }
 
     function multipleBacklogItemsAreDragged(dragged_element) {
         var dragged_backlog_item_id = angular.element(dragged_element).data("item-id");
 
-        _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
+        getCompactedSelectedBacklogItem().forEach(backlog_item => {
             backlog_item.hidden = true;
 
             if (backlog_item.id === dragged_backlog_item_id) {
@@ -75,7 +73,7 @@ function BacklogItemSelectedService() {
     }
 
     function deselectAllBacklogItems() {
-        _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
+        getCompactedSelectedBacklogItem().forEach(backlog_item => {
             backlog_item.hidden = false;
             backlog_item.selected = false;
             backlog_item.multiple = false;
@@ -85,7 +83,7 @@ function BacklogItemSelectedService() {
     }
 
     function reselectBacklogItems() {
-        _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
+        getCompactedSelectedBacklogItem().forEach(backlog_item => {
             if (backlog_item.selected && backlog_item.hidden) {
                 backlog_item.hidden = false;
             } else if (backlog_item.multiple) {

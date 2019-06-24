@@ -1,5 +1,5 @@
 import "../in-properties-filter/in-properties-filter.js";
-import _ from "lodash";
+import { remove } from "lodash";
 
 export default KanbanColumnService;
 
@@ -82,12 +82,12 @@ function KanbanColumnService(
     }
 
     function findItemInColumnById(item_id, column) {
-        return _.find(column.content, { id: item_id });
+        return column.content.find(({ id }) => id === item_id);
     }
 
     function removeItem(item, column) {
         if (column.fully_loaded) {
-            _.remove(column.content, { id: item.id });
+            remove(column.content, { id: item.id });
             if (column.is_open) {
                 removeItemFromFilteredContent(item, column);
             }
@@ -97,7 +97,7 @@ function KanbanColumnService(
     }
 
     function removeItemFromFilteredContent(item, column) {
-        _.remove(column.filtered_content, { id: item.id });
+        remove(column.filtered_content, { id: item.id });
     }
 
     function addItem(item, column, compared_to) {
@@ -152,10 +152,8 @@ function KanbanColumnService(
 
     function addItemInCollectionComparedToAnotherItem(item, collection, compared_to) {
         var compared_to_index = -1;
-        if (!_.isNull(compared_to)) {
-            compared_to_index = _.findIndex(collection, {
-                id: compared_to.item_id
-            });
+        if (compared_to !== null) {
+            compared_to_index = collection.findIndex(({ id }) => id === compared_to.item_id);
         }
 
         if (compared_to_index !== -1) {
@@ -184,7 +182,7 @@ function KanbanColumnService(
         var filtered_items = $filter("InPropertiesFilter")(column.content, KanbanFilterValue.terms);
 
         emptyArray(column.filtered_content);
-        _.forEach(filtered_items, function(item) {
+        filtered_items.forEach(item => {
             column.filtered_content.push(item);
         });
     }

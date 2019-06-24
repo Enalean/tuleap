@@ -178,7 +178,6 @@ function BacklogController(
         return self.fetchBacklogItems(limit, offset).then(function(total) {
             if (offset + limit > total) {
                 self.backlog_items.fully_loaded = true;
-                return;
             } else {
                 return fetchAllBacklogItems(limit, offset + limit);
             }
