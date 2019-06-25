@@ -52,7 +52,9 @@ export {
     postLockEmbedded,
     deleteLockEmbedded,
     postLockWiki,
-    deleteLockWiki
+    deleteLockWiki,
+    postLockLink,
+    deleteLockLink
 };
 
 async function getProject(project_id) {
@@ -378,4 +380,20 @@ function deleteLockWiki(item) {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_wikis/${escaped_item_id}/lock`);
+}
+
+function postLockLink(item) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return post(`/api/docman_links/${escaped_item_id}/lock`, { headers });
+}
+
+function deleteLockLink(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+
+    return del(`/api/docman_links/${escaped_item_id}/lock`);
 }

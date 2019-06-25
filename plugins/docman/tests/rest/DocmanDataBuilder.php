@@ -408,10 +408,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *                                            +
      *                                            |
      *                                            +
-     *                  +------------+------------+--------------+-----------+----------+
-     *                  |            |            |              |           |          |
-     *                  +            +            +              +           +          +
-     *          link AT C        link AT R    link AT E   link DIS AT    link NO AT   link L
+     *                  +------------+------------+--------------+-----------+----------+-------------+
+     *                  |            |            |              |           |          |             |
+     *                  +            +            +              +           +          +             +
+     *          link AT C        link AT R    link AT E   link DIS AT    link NO AT   link L       link POST L
      *
      * (L)    => Lock on this item
      * (AT)   => Approval table on this item
@@ -483,6 +483,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             self::REGULAR_USER_ID,
             $folder_link_id,
             'link L',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
+        $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_link_id,
+            'link POST L',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
 
