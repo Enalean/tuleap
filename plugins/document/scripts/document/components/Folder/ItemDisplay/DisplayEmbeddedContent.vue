@@ -42,6 +42,12 @@
             v-bind:item="embedded_file"
             v-on:hidden="hideModal()"
         />
+        <confirm-deletion-modal
+            v-if="show_confirm_deletion_modal"
+            v-bind:item="embedded_file"
+            v-on:delete-modal-closed="hideDeleteItemModal"
+            v-bind:should-redirect-to-parent-after-deletion="true"
+        />
     </div>
 </template>
 
@@ -51,6 +57,7 @@ import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
+
 export default {
     name: "DisplayEmbeddedContent",
     components: {
@@ -60,14 +67,17 @@ export default {
         DropdownMenu,
         DropdownButton,
         "create-new-embedded-file-version-modal": () =>
-            import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue")
+            import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"),
+        "confirm-deletion-modal": () =>
+            import(/* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue")
     },
     props: {
         embedded_file: Object
     },
     data() {
         return {
-            is_modal_shown: false
+            is_modal_shown: false,
+            show_confirm_deletion_modal: false
         };
     },
     computed: {
@@ -88,10 +98,17 @@ export default {
             this.showCreateNewItemVersionModal
         );
 
+        document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
+
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener(
                 "show-create-new-item-version-modal",
                 this.showCreateNewItemVersionModal
+            );
+
+            document.removeEventListener(
+                "show-confirm-item-deletion-modal",
+                this.showDeleteItemModal
             );
         });
     },
@@ -101,6 +118,12 @@ export default {
         },
         hideModal() {
             this.is_modal_shown = false;
+        },
+        showDeleteItemModal() {
+            this.show_confirm_deletion_modal = true;
+        },
+        hideDeleteItemModal() {
+            this.show_confirm_deletion_modal = false;
         }
     }
 };

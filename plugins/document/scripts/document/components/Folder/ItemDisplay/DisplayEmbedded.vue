@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <display-embedded-content v-bind:embedded_file="embedded_file" v-if="has_loading_without_error" data-test="embedded_content"/>
+    <display-embedded-content v-bind:embedded_file="embedded_file" v-if="has_loaded_without_error" data-test="embedded_content"/>
     <display-embedded-spinner v-else-if="is_loading" data-test="embedded_spinner"/>
 </template>
 
@@ -38,7 +38,7 @@ export default {
     },
     computed: {
         ...mapGetters("error", ["does_document_have_any_error"]),
-        has_loading_without_error() {
+        has_loaded_without_error() {
             return !this.does_document_have_any_error && !this.is_loading;
         }
     },

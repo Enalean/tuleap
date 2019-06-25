@@ -25,6 +25,7 @@
         <item-permission-error v-if="has_document_permission_error"/>
         <router-view/>
         <switch-to-old-u-i v-if="user_id !== 0"/>
+        <post-item-deletion-notification/>
     </div>
 </template>
 <script>
@@ -34,6 +35,7 @@ import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
+import PostItemDeletionNotification from "./Folder/ModalDeleteItem/PostItemDeletionNotification.vue";
 
 export default {
     name: "App",
@@ -42,7 +44,8 @@ export default {
         PermissionError,
         LoadingError,
         SwitchToOldUI,
-        ItemPermissionError
+        ItemPermissionError,
+        PostItemDeletionNotification
     },
     props: {
         user_id: Number,

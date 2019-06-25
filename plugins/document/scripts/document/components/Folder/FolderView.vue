@@ -25,7 +25,6 @@
         <folder-header/>
         <drag-n-drop-handler v-if="! is_loading_folder"/>
         <under-the-fold-notification v-if="! is_loading_folder"/>
-        <post-item-deletion-notification/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <empty-folder-for-writers v-else-if="is_folder_empty && current_folder && current_folder.user_can_write"/>
         <empty-folder-for-readers v-else-if="is_folder_empty && current_folder && ! current_folder.user_can_write"/>
@@ -42,7 +41,6 @@ import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
 import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 import DragNDropHandler from "./DragNDrop/DragNDropHandler.vue";
 import UnderTheFoldNotification from "./ModalNewItem/UnderTheFoldNotification.vue";
-import PostItemDeletionNotification from "./ModalDeleteItem/PostItemDeletionNotification.vue";
 
 export default {
     name: "FolderView",
@@ -53,16 +51,10 @@ export default {
         EmptyFolderForReaders,
         FolderLoadingScreen,
         FolderContent,
-        UnderTheFoldNotification,
-        PostItemDeletionNotification
+        UnderTheFoldNotification
     },
     computed: {
-        ...mapState([
-            "is_loading_folder",
-            "current_folder",
-            "is_under_construction",
-            "show_post_deletion_notification"
-        ]),
+        ...mapState(["is_loading_folder", "current_folder", "is_under_construction"]),
         ...mapGetters(["is_folder_empty"]),
         under_construction_modal() {
             if (!this.is_under_construction) {
