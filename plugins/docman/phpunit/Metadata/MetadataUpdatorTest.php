@@ -25,7 +25,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\REST\v1\Files\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 
 class MetadataUpdatorTest extends TestCase

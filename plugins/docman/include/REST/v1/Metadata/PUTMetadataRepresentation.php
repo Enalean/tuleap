@@ -21,10 +21,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Files;
+namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class PUTMetadataRepresentation
 {

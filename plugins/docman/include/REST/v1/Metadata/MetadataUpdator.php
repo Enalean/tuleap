@@ -26,7 +26,6 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 use PFUser;
 use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\REST\v1\Files\PUTMetadataRepresentation;
 
 class MetadataUpdator
 {
