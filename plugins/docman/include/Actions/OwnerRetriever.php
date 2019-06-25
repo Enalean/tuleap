@@ -50,7 +50,7 @@ class OwnerRetriever
     {
         $candidate_owner = $this->user_manager->findUser($candidate_owner);
 
-        return $this->checkUser($candidate_owner)->getId();
+        return (int)$this->checkUser($candidate_owner)->getId();
     }
 
     /**
