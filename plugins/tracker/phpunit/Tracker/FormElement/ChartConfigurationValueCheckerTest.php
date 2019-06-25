@@ -196,6 +196,17 @@ class ChartConfigurationValueCheckerTest extends TestCase
         );
     }
 
+    public function testItReturnsConfigurationIsNotCorrectlySetWhenExceptionIsThrownAtTimePeriodCreation()
+    {
+        $this->configuration_value_retriever->shouldReceive('getTimePeriod')
+            ->with($this->artifact, $this->user)
+            ->andThrow(Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->assertFalse(
+            $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
+        );
+    }
+
     public function testItReturnsConfigurationIsCorrectlySetWhenBurndownHasAStartDateAndADuration()
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
