@@ -43,6 +43,30 @@ class DocmanItemsTestEmptyDocumentsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
+    public function testGetDocumentItemsForAdminUser($root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+
+        $folder_1 = $this->findItemByTitle($folder, 'folder 1');
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_1['id'] . '/docman_items')
+        );
+        $items   = $response->json();
+
+        $this->assertGreaterThan(0, count($items));
+
+        return $items;
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testGetTrashFolderContent(int $root_id): array
     {
         $response = $this->getResponseByName(
@@ -151,5 +175,75 @@ class DocmanItemsTestEmptyDocumentsTest extends DocmanBase
         );
 
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostLocksAnEmpty(array $items): void
+    {
+        $locked_document    = $this->findItemByTitle($items, 'Empty POST L');
+        $locked_document_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_empty_documents/' . $locked_document_id . "/lock")
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $locked_document_id)
+        );
+
+        $document = $response->json();
+        $this->assertEquals($document['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testDeleteLockAnEmpty(array $items): void
+    {
+        $locked_document    = $this->findItemByTitle($items, 'Empty POST L');
+        $locked_document_id = $locked_document['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_empty_documents/' . $locked_document_id . "/lock")
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $locked_document_id)
+        );
+
+        $document = $response->json();
+        $this->assertEquals($document['lock_info'], null);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptions(int $id): void
+    {
+        $response = $this->getResponse($this->client->options('docman_empty_documents/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
+
+        $this->assertEquals(['OPTIONS', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOptionsLock(int $id): void
+    {
+        $response = $this->getResponse($this->client->options('docman_empty_documents/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
+
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }

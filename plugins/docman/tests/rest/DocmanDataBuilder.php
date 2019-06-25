@@ -179,6 +179,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'MyWikiPage'
         );
 
+        $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'Empty POST L',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        );
+
         $this->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($empty_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($file_id, \ProjectUGroup::PROJECT_MEMBERS);
