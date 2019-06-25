@@ -51,7 +51,9 @@ import {
     postLockWiki,
     deleteLockWiki,
     postLockLink,
-    deleteLockLink
+    deleteLockLink,
+    postLockEmpty,
+    deleteLockEmpty
 } from "../api/rest-querier.js";
 
 import {
@@ -598,6 +600,9 @@ export const lockDocument = async (context, item) => {
             case TYPE_LINK:
                 await postLockLink(item);
                 break;
+            case TYPE_EMPTY:
+                await postLockEmpty(item);
+                break;
             default:
                 break;
         }
@@ -623,6 +628,9 @@ export const unlockDocument = async (context, item) => {
                 break;
             case TYPE_LINK:
                 await deleteLockLink(item);
+                break;
+            case TYPE_EMPTY:
+                await deleteLockEmpty(item);
                 break;
             default:
                 break;

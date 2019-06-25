@@ -22,10 +22,13 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_LockFactory;
+use Docman_Log;
 use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -51,6 +54,14 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         $this->rest_user_manager = RestUserManager::build();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
         $this->event_manager     = \EventManager::instance();
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsDocumentItems($id)
+    {
+        $this->setHeaders();
     }
 
     /**
@@ -96,6 +107,97 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         }
 
         $this->event_manager->processEvent('send_notifications', []);
+    }
+
+    /**
+     * Lock a specific empty document
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int $id Id of the empty document you want to lock
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     *
+     * @url    POST {id}/lock
+     * @access hybrid
+     * @status 201
+     *
+     */
+    public function postLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->lockItem($item, $current_user);
+    }
+
+    /**
+     * Unlock an already locked empty document
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int  $id Id of the empty document you want to unlock
+     *
+     * @url    DELETE {id}/lock
+     * @access hybrid
+     * @status 200
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     */
+    public function deleteLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->unlockItem($item, $current_user);
+    }
+
+    /**
+     * @url OPTIONS {id}/lock
+     */
+    public function optionsIdLock(int $id): void
+    {
+        $this->setHeadersForLock();
+    }
+
+    private function setHeadersForLock(): void
+    {
+        Header::allowOptionsPostDelete();
+    }
+
+    private function getRestLockUpdater(\Project $project): RestLockUpdater
+    {
+        return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
     }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
