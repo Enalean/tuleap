@@ -84,6 +84,7 @@ import "./components/Folder/Metadata/StatusMetadata.spec";
 import "./components/Folder/Metadata/ObsolescenceDateMetadata.spec.js";
 
 import "./components/User/UserBadge.spec.js";
+import "./components/User/UserName.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";

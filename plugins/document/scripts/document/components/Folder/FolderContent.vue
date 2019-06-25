@@ -52,7 +52,7 @@
         </section>
         <div v-if="toggle_quick_look && currently_previewed_item" class="document-folder-right-container">
             <section class="tlp-pane document-quick-look-pane" v-bind:class="quick_look_dropzone_class" v-bind:data-item-id="item_id">
-                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="currently_previewed_item"/>
+                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook"/>
             </section>
         </div>
     </div>

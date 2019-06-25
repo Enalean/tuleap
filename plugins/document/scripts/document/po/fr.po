@@ -205,7 +205,9 @@ msgid "Id"
 msgstr "Id"
 
 msgid "It seems action you try to performed can't be done."
-msgstr "Il semble que l'action que vous souhaitez effectuer ne peut pas être réalisée."
+msgstr ""
+"Il semble que l'action que vous souhaitez effectuer ne peut pas être "
+"réalisée."
 
 msgid "It seems the content of this element can't be loaded."
 msgstr "Le contenu de cet élément n'a pas pu être chargé."
@@ -408,8 +410,8 @@ msgstr[1] ""
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
-msgid "This document is currently locked."
-msgstr "Ce document est actuellement verrouillé."
+msgid "This document is currently locked by"
+msgstr "Ce document est actuellement verrouillé par"
 
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"

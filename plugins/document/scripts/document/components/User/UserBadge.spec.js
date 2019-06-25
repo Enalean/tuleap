@@ -21,20 +21,14 @@ import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
 
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("UserBadge", () => {
     let user_badge_factory;
     beforeEach(() => {
-        const store_options = {};
-
-        const store = createStoreMock(store_options);
-
         user_badge_factory = (props = {}) => {
             return shallowMount(UserBadge, {
                 localVue,
-                propsData: { ...props },
-                mocks: { $store: store }
+                propsData: { ...props }
             });
         };
     });
@@ -67,35 +61,5 @@ describe("UserBadge", () => {
         });
 
         expect(wrapper.find("[data-test=document-user-avatar]").exists()).toBeFalsy();
-    });
-
-    it(`Given user is connected
-        When we display the user badge
-        Then we should be able to click on its name`, () => {
-        const wrapper = user_badge_factory({
-            user: {
-                id: 1,
-                has_avatar: false,
-                user_url: "https://example.com/avatar",
-                is_anonymous: false
-            }
-        });
-
-        expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeTruthy();
-    });
-
-    it(`Given user is annonymous
-        When we display the user badge
-        Then we should be able to click on its name`, () => {
-        const wrapper = user_badge_factory({
-            user: {
-                id: 1,
-                has_avatar: false,
-                user_url: "https://example.com/avatar",
-                is_anonymous: true
-            }
-        });
-
-        expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeFalsy();
     });
 });
