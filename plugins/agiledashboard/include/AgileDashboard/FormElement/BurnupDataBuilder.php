@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class BurnupDataBuilder
     /**
      * @var ChartConfigurationValueRetriever
      */
-    private $field_retriever;
+    private $chart_configuration_value_retriever;
     /**
      * @var BurnupCacheDao
      */
@@ -54,15 +54,15 @@ class BurnupDataBuilder
     public function __construct(
         Logger $logger,
         BurnupCacheChecker $cache_checker,
-        ChartConfigurationValueRetriever $field_retriever,
+        ChartConfigurationValueRetriever $chart_configuration_value_retriever,
         BurnupCacheDao $burnup_cache_dao,
         BurnupCalculator $burnup_calculator
     ) {
-        $this->logger            = $logger;
-        $this->cache_checker     = $cache_checker;
-        $this->field_retriever   = $field_retriever;
-        $this->burnup_cache_dao  = $burnup_cache_dao;
-        $this->burnup_calculator = $burnup_calculator;
+        $this->logger                              = $logger;
+        $this->cache_checker                       = $cache_checker;
+        $this->chart_configuration_value_retriever = $chart_configuration_value_retriever;
+        $this->burnup_cache_dao                    = $burnup_cache_dao;
+        $this->burnup_calculator                   = $burnup_calculator;
     }
 
     /**
@@ -70,9 +70,7 @@ class BurnupDataBuilder
      */
     public function buildBurnupData(Tracker_Artifact $artifact, \PFUser $user)
     {
-        $start_date  = $this->field_retriever->getStartDate($artifact, $user);
-        $duration    = $this->field_retriever->getDuration($artifact, $user);
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = $this->chart_configuration_value_retriever->getTimePeriod($artifact, $user);
 
         return $this->getBurnupData(
             $artifact,

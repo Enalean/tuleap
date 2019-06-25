@@ -72,7 +72,7 @@ class ChartConfigurationValueRetriever
     public function getTimePeriod(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
         $start_date = $this->getStartDate($artifact, $user);
-        $duration = $this->getDuration($artifact, $user);
+        $duration   = $this->getDuration($artifact, $user);
 
         return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
@@ -82,7 +82,7 @@ class ChartConfigurationValueRetriever
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getDuration(Tracker_Artifact $artifact, PFUser $user)
+    private function getDuration(Tracker_Artifact $artifact, PFUser $user)
     {
         $field          = $this->configuration_field_retriever->getDurationField($artifact, $user);
         $duration_value = $artifact->getValue($field);
@@ -119,7 +119,7 @@ class ChartConfigurationValueRetriever
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getStartDate(Tracker_Artifact $artifact, PFUser $user)
+    private function getStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
         $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
         $start_date_value = $artifact->getValue($start_date_field);

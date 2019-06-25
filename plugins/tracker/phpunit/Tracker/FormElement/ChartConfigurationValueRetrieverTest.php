@@ -121,7 +121,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
         );
     }
 
-    public function testItReturnsTimestampWhenStartDateIsSet()
+    public function testItReturnsTimePeriodDataWhenStartDateAndDurationAreSet()
     {
         $this->field_retriever->shouldReceive('getStartDateField')
             ->with($this->artifact_sprint, $this->user)
@@ -133,9 +133,29 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
 
+        $this->field_retriever->shouldReceive('getDurationField')
+            ->with($this->artifact_sprint, $this->user)
+            ->andReturn($this->duration_field);
+
+        $this->artifact_sprint->shouldReceive('getValue')
+            ->with($this->duration_field)
+            ->andReturn($this->duration_value);
+
+        $this->duration_value->shouldReceive('getValue')->andReturn($this->duration);
+
+        $time_period = $this->configuration_value_retriever->getTimePeriod(
+            $this->artifact_sprint,
+            $this->user
+        );
+
         $this->assertSame(
-            $this->configuration_value_retriever->getStartDate($this->artifact_sprint, $this->user),
+            $time_period->getStartDate(),
             $this->start_date
+        );
+
+        $this->assertSame(
+            $time_period->getDuration(),
+            $this->duration
         );
     }
 
@@ -153,7 +173,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->configuration_value_retriever->getStartDate($this->artifact_sprint, $this->user);
+        $this->configuration_value_retriever->getTimePeriod($this->artifact_sprint, $this->user);
     }
 
     public function testItReturnsNullWhenCapacityIsEmpty()
@@ -185,26 +205,18 @@ class ChartConfigurationValueRetrieverTest extends TestCase
         );
     }
 
-    public function testItReturnsValueWhenDurationIsSet()
-    {
-        $this->field_retriever->shouldReceive('getDurationField')
-            ->with($this->artifact_sprint, $this->user)
-            ->andReturn($this->duration_field);
-
-        $this->artifact_sprint->shouldReceive('getValue')
-            ->with($this->duration_field)
-            ->andReturn($this->duration_value);
-
-        $this->duration_value->shouldReceive('getValue')->andReturn($this->duration);
-
-        $this->assertSame(
-            $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user),
-            $this->duration
-        );
-    }
-
     public function testItThrowsAnExceptionWhenDurationIsMinorThanZero()
     {
+        $this->field_retriever->shouldReceive('getStartDateField')
+            ->with($this->artifact_sprint, $this->user)
+            ->andReturn($this->start_date_field);
+
+        $this->artifact_sprint->shouldReceive('getValue')
+            ->with($this->start_date_field)
+            ->andReturn($this->start_date_value);
+
+        $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
+
         $this->field_retriever->shouldReceive('getDurationField')
             ->with($this->artifact_sprint, $this->user)
             ->andReturn($this->duration_field);
@@ -217,11 +229,24 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user);
+        $this->configuration_value_retriever->getTimePeriod(
+            $this->artifact_sprint,
+            $this->user
+        );
     }
 
     public function testItThrowsAnExceptionWhenDurationIsEqualToOne()
     {
+        $this->field_retriever->shouldReceive('getStartDateField')
+            ->with($this->artifact_sprint, $this->user)
+            ->andReturn($this->start_date_field);
+
+        $this->artifact_sprint->shouldReceive('getValue')
+            ->with($this->start_date_field)
+            ->andReturn($this->start_date_value);
+
+        $this->start_date_value->shouldReceive('getTimestamp')->andReturn($this->start_date);
+
         $this->field_retriever->shouldReceive('getDurationField')
             ->with($this->artifact_sprint, $this->user)
             ->andReturn($this->duration_field);
@@ -234,6 +259,9 @@ class ChartConfigurationValueRetrieverTest extends TestCase
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
 
-        $this->configuration_value_retriever->getDuration($this->artifact_sprint, $this->user);
+        $this->configuration_value_retriever->getTimePeriod(
+            $this->artifact_sprint,
+            $this->user
+        );
     }
 }
