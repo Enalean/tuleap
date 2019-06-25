@@ -47,7 +47,9 @@ import {
     postLockFile,
     deleteLockFile,
     postLockEmbedded,
-    deleteLockEmbedded
+    deleteLockEmbedded,
+    postLockWiki,
+    deleteLockWiki
 } from "../api/rest-querier.js";
 
 import {
@@ -588,6 +590,9 @@ export const lockDocument = async (context, item) => {
             case TYPE_EMBEDDED:
                 await postLockEmbedded(item);
                 break;
+            case TYPE_WIKI:
+                await postLockWiki(item);
+                break;
             default:
                 break;
         }
@@ -607,6 +612,9 @@ export const unlockDocument = async (context, item) => {
                 break;
             case TYPE_EMBEDDED:
                 await deleteLockEmbedded(item);
+                break;
+            case TYPE_WIKI:
+                await deleteLockWiki(item);
                 break;
             default:
                 break;
