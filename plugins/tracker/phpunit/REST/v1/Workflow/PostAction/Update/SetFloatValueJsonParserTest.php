@@ -87,7 +87,7 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1.23
             ]
         );
-        $expected_action = new SetFloatValue(2, 43, 1.23);
+        $expected_action = new SetFloatValue(null, 43, 1.23);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -106,7 +106,7 @@ class SetFloatValueJsonParserTest extends TestCase
                 "value" => 1
             ]
         );
-        $expected_action = new SetFloatValue(2, 43, 1);
+        $expected_action = new SetFloatValue(null, 43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
