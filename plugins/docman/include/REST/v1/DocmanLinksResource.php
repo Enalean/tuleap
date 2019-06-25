@@ -23,9 +23,12 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_LinkVersionFactory;
+use Docman_LockFactory;
+use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
+use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -38,6 +41,7 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
+use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
@@ -239,6 +243,98 @@ class DocmanLinksResource extends AuthenticatedResource
             $this->getPermissionManager($project)
         );
     }
+
+    /**
+     * Lock a specific link
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int $id Id of the link you want to lock
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     *
+     * @url    POST {id}/lock
+     * @access hybrid
+     * @status 201
+     *
+     */
+    public function postLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->lockItem($item, $current_user);
+    }
+
+    /**
+     * Unlock an already locked link
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @param int  $id Id of the link you want to unlock
+     *
+     * @url    DELETE {id}/lock
+     * @access hybrid
+     * @status 200
+     *
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws RestException 404
+     */
+    public function deleteLock(int $id): void
+    {
+        $this->checkAccess();
+        $this->setHeadersForLock();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+        $project      = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $updator = $this->getRestLockUpdater($project);
+        $updator->unlockItem($item, $current_user);
+    }
+
+    /**
+     * @url OPTIONS {id}/lock
+     */
+    public function optionsIdLock(int $id): void
+    {
+        $this->setHeadersForLock();
+    }
+
+    private function setHeadersForLock(): void
+    {
+        Header::allowOptionsPostDelete();
+    }
+
+    private function getRestLockUpdater(\Project $project): RestLockUpdater
+    {
+        return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
+    }
+
 
     private function getPermissionManager(\Project $project): Docman_PermissionsManager
     {
