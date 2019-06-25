@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,8 +35,7 @@ date_default_timezone_set('Europe/Paris');
 $basedir      = dirname(dirname(__DIR__));
 $src_path     = $basedir.'/src';
 $include_path = $basedir.'/src/www/include';
-$pear         = '/usr/share/pear';
-ini_set('include_path', implode(':', [$src_path, $include_path, $pear]));
+ini_set('include_path', implode(':', [$src_path, $include_path]));
 
 exec('service mysqld start');
 

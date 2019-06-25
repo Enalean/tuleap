@@ -10,7 +10,7 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 %define APP_LOG_DIR /var/log/%{APP_NAME}
-%define APP_PHP_INCLUDE_PATH /usr/share/pear:%{APP_DIR}/src/www/include:%{APP_DIR}/src:.
+%define APP_PHP_INCLUDE_PATH %{APP_DIR}/src/www/include:%{APP_DIR}/src:.
 
 # Compatibility
 %define OLD_APP_NAME codendi
@@ -46,10 +46,10 @@ AutoReqProv: no
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: php72-php-mysqlnd, php72-php-pdo, php72-php-xml, php72-php-mbstring, php72-php-gd
-Requires: php72-php-soap, php72-php-pear, php72-php-intl, php72-php-process, php72-php-cli
+Requires: php72-php-soap, php72-php-intl, php72-php-process, php72-php-cli
 Requires: php72-php-bcmath, php72-php-fpm, php72-php-opcache, php72-php-json, php72-php-pecl-zip, php72-php-pecl-redis, php72-php-sodium
 Requires: php73-php-mysqlnd, php73-php-pdo, php73-php-xml, php73-php-mbstring, php73-php-gd
-Requires: php73-php-soap, php73-php-pear, php73-php-intl, php73-php-process, php73-php-cli
+Requires: php73-php-soap, php73-php-intl, php73-php-process, php73-php-cli
 Requires: php73-php-bcmath, php73-php-fpm, php73-php-opcache, php73-php-json, php73-php-pecl-zip, php73-php-pecl-redis, php73-php-sodium
 
 Requires: curl

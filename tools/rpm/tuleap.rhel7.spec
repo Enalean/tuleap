@@ -9,7 +9,7 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 %define APP_LOG_DIR /var/log/%{APP_NAME}
-%define APP_PHP_INCLUDE_PATH /usr/share/pear:%{APP_DIR}/src/www/include:%{APP_DIR}/src:.
+%define APP_PHP_INCLUDE_PATH %{APP_DIR}/src/www/include:%{APP_DIR}/src:.
 
 %define app_group        codendiadm
 %define app_user         codendiadm
@@ -35,8 +35,8 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php72-php, php72-php-mysql, php72-php-xml, php72-php-json, php72-php-mbstring, php72-php-gd, php72-php-soap, php72-php-pear, php72-php-intl, php72-php-process, php72-php-opcache, php72-php-fpm, php72-php-pecl-redis, php72-php-sodium, rh-mysql57-mysql
-Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap, php73-php-pear, php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium, rh-mysql57-mysql
+Requires: php72-php, php72-php-mysql, php72-php-xml, php72-php-json, php72-php-mbstring, php72-php-gd, php72-php-soap, php72-php-intl, php72-php-process, php72-php-opcache, php72-php-fpm, php72-php-pecl-redis, php72-php-sodium, rh-mysql57-mysql
+Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap, php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium, rh-mysql57-mysql
 
 Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 
