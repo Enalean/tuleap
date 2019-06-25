@@ -226,10 +226,10 @@ describe("rest-querier", () => {
                 filesize: 123
             };
 
-            mockFetchSuccess(tlp.patch, JSON.stringify({ id: 10 }));
+            mockFetchSuccess(tlp.post, JSON.stringify({ id: 10 }));
 
             await createNewVersion(item, "my document title", "", dropped_file);
-            expect(tlp.patch).toHaveBeenCalled();
+            expect(tlp.post).toHaveBeenCalled();
         });
     });
 
