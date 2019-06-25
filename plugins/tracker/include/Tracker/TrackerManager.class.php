@@ -550,7 +550,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
         echo '<select name="group_id_template" size="15" id="tracker_new_project_list" autocomplete="off">';
 
+        echo '<optgroup label="'. _('Project templates') .'">';
         echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_default').'</option>';
+        foreach (ProjectManager::instance()->getSiteTemplates() as $template) {
+            if ((int) $template->getID() === Project::ADMIN_PROJECT_ID) {
+                continue;
+            }
+            echo '<option value="'. (int) $template->getID() .'">'. $hp->purify($template->getUnconvertedPublicName()) .'</option>';
+        }
+        echo '</optgroup>';
 
         echo '<optgroup label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_my').'">';
         $project_selected = false;

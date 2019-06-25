@@ -68,7 +68,6 @@ class AdminSidebarPresenter
         $all_projects_count,
         $pending_projects_count,
         $pending_news_count,
-        $additional_tracker_entries,
         $plugins
     ) {
         $this->all_users_count              = $all_users_count;
@@ -78,7 +77,6 @@ class AdminSidebarPresenter
         $this->all_projects_count           = $all_projects_count;
         $this->pending_projects_count       = $pending_projects_count;
         $this->pending_news_count           = $pending_news_count;
-        $this->additional_tracker_entries   = $additional_tracker_entries;
         $this->plugins                      = $plugins;
 
         $this->users_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'users_section_title');

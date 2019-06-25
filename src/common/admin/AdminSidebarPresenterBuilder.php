@@ -61,7 +61,6 @@ class AdminSidebarPresenterBuilder
             $this->allProjectsCount(),
             $this->pendingProjectsCount(),
             $this->pendingNewsCount(),
-            $this->getAdditionalTrackerEntries(),
             $this->getPlugins()
         );
     }
@@ -122,19 +121,5 @@ class AdminSidebarPresenterBuilder
     private function pendingNewsCount()
     {
         return $this->news_manager->countPendingNews();
-    }
-
-    private function getAdditionalTrackerEntries()
-    {
-        $additional_tracker_entries = array();
-
-        $this->event_manager->processEvent(
-            Event::SITE_ADMIN_CONFIGURATION_TRACKER,
-            array(
-                'additional_entries' => &$additional_tracker_entries
-            )
-        );
-
-        return $additional_tracker_entries;
     }
 }
