@@ -131,72 +131,29 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($embedded['wiki_properties'], null);
         $this->assertEquals($wiki['wiki_properties']['page_name'], 'MyWikiPage');
 
-        $this->assertEquals(
-            $folder['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for folder_2",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($folder['metadata'], 'Custom metadata'),
+            "custom value for folder_2"
         );
-
-        $this->assertEquals(
-            $empty['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for item_A",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($empty['metadata'], 'Custom metadata'),
+            "custom value for item_A"
         );
-        $this->assertEquals(
-            $file['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for item_C",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($file['metadata'], 'Custom metadata'),
+            "custom value for item_C"
         );
-        $this->assertEquals(
-            $link['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for item_E",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($link['metadata'], 'Custom metadata'),
+            "custom value for item_E"
         );
-        $this->assertEquals(
-            $embedded['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for item_F",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($embedded['metadata'], 'Custom metadata'),
+            "custom value for item_F"
         );
-        $this->assertEquals(
-            $wiki['metadata'][0],
-            [
-                "name"                      => "Custom metadata",
-                "type"                      => "string",
-                "value"                     => "custom value for item_G",
-                "list_value"                => null,
-                "is_required"               => true,
-                "is_multiple_value_allowed" => false
-            ]
+        $this->assertMetadataIsProperlySet(
+            $this->findMetadataByName($wiki['metadata'], 'Custom metadata'),
+            "custom value for item_G"
         );
 
         return $items;
@@ -293,5 +250,28 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertTrue($item['has_approval_table']);
         $this->assertFalse($item['is_approval_table_enabled']);
         $this->assertNull($item['approval_table']);
+    }
+
+    private function assertMetadataIsProperlySet(array $metadata, string $title): void
+    {
+        $this->assertEquals($metadata['name'], 'Custom metadata');
+        $this->assertEquals($metadata['type'], 'string');
+        $this->assertEquals($metadata['value'], $title);
+        $this->assertEquals($metadata['list_value'], null);
+        $this->assertEquals($metadata['is_required'], true);
+        $this->assertEquals($metadata['is_multiple_value_allowed'], false);
+        $this->assertEquals($metadata['short_name'], 'field_1');
+    }
+
+    /**
+     * @return array | null Found item. null otherwise.
+     */
+    public function findMetadataByName(array $metadata, string $name): ?array
+    {
+        $index = array_search($name, array_column($metadata, 'name'));
+        if ($index === false) {
+            return null;
+        }
+        return $metadata[$index];
     }
 }

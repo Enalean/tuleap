@@ -179,23 +179,6 @@ class Docman_MetadataFactory {
     }
 
     /**
-     * Build a list of modifiable metadata used in the project.
-     */
-    private function getUsedModifiableMetadataList() : array {
-        $metadata_list = array();
-        foreach($this->modifiableMetadata as $metadata_label) {
-            $metadata = $this->getHardCodedMetadataFromLabel($metadata_label);
-            $this->appendHardCodedMetadataParams($metadata);
-
-            if($metadata->isUsed()) {
-                $metadata_list[] = $metadata;
-            }
-        }
-
-        return $metadata_list;
-    }
-
-    /**
      * Get an array of metadata label for all inheritable metadata.
      *
      * - All Real metadata are inheritable.
@@ -282,18 +265,6 @@ class Docman_MetadataFactory {
         // Static metadata
         $hardcoded_metadata = $this->getHardCodedMetadataList(true);
         $this->appendHardcodedMetadataToItem($item, $hardcoded_metadata);
-
-        $this->appendDynamicMetadataToItem($item);
-    }
-
-    /**
-     * Appends used dynamic and modifiable metadata (with their value) to the given item.
-     */
-    public function appendItemMetadataListWithoutBasicProperties(Docman_Item $item)
-    {
-        $modifiable_metadata = $this->getUsedModifiableMetadataList();
-
-        $this->appendHardcodedMetadataToItem($item, $modifiable_metadata);
 
         $this->appendDynamicMetadataToItem($item);
     }

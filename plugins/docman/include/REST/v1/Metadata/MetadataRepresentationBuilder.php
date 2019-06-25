@@ -43,7 +43,7 @@ class MetadataRepresentationBuilder
      */
     public function build(\Docman_Item $item) : array
     {
-        $this->factory->appendItemMetadataListWithoutBasicProperties($item);
+        $this->factory->appendItemMetadataList($item);
 
         $metadata_representations = [];
 
@@ -71,9 +71,10 @@ class MetadataRepresentationBuilder
                 $metadata->getName(),
                 $this->getMetadataType((int)$metadata->getType()),
                 $metadata->isMultipleValuesAllowed(),
-                (string) $value,
+                $value,
                 $list_value,
-                $metadata->isRequired()
+                $metadata->isRequired(),
+                $metadata->getLabel()
             );
         }
 

@@ -136,7 +136,8 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             false,
             $timestamp,
             [],
-            false
+            false,
+            "metadata"
         );
         $this->metadata_representation_builder->shouldReceive('build')->andReturn([$metadata_representation]);
 

@@ -174,7 +174,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     false,
                     'value',
                     [],
-                    true
+                    true,
+                    "name"
                 )
             ],
             false,
@@ -218,7 +219,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     false,
                     'value',
                     [],
-                    true
+                    true,
+                    'name'
                 )
             ],
             false,
@@ -309,7 +311,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     false,
                     'value',
                     [],
-                    true
+                    true,
+                    "name"
                 )
             ],
             false,
@@ -330,7 +333,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     false,
                     'value',
                     [],
-                    true
+                    true,
+                    'name'
                 )
             ],
             false,
