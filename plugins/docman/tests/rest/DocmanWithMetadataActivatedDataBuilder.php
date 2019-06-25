@@ -77,7 +77,14 @@ class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
      *                                        Folder HM
      *                                            +
      *                                            |
+     *                     +----------------------+-------------------+
+     *                     |                      |                   |
+     *                     +                      +                   +
+     *                  PUT F            PUT F OD          PUT F S
      *
+     * F OD => The file will be updated with Obsolescence Date metadata
+     * F S => The file will be updated with Status metadata
+     * F => The file will be updated with all hardcoded metadata metadata
      */
     private function createFolderWithHardcodedMetadataItems(\Docman_Item $docman_root): void
     {
@@ -87,7 +94,29 @@ class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
             'Folder HM',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
+
         $this->addWritePermissionOnItem($folder_with_hardcoded_metadata_items_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_with_hardcoded_metadata_items_id,
+            'PUT F S',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_with_hardcoded_metadata_items_id,
+            'PUT F OD',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_with_hardcoded_metadata_items_id,
+            'PUT F',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
     }
 
     private function setMetadataUsageByLabel(string $label): void

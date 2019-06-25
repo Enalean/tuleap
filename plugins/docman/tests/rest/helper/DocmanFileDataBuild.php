@@ -34,10 +34,12 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      *                                   +
      *                                   |
      *                                   +
-     *                  +----------------+---------------+--------------------+
-     *                  |                |               |                    |
-     *                  +                +               +                    +
-     *              PATCH File       DELETE File     POST File Version    LOCK File
+     *      +-----------+----------------+---------------+--------------------+
+     *      |           |                |               |                    |
+     *      +           +                +               +                    +
+     *   PUT HM File    PATCH File    DELETE File  POST File Version   LOCK File
+     *
+     * HM => Hardcoded Metadata
      *
      */
     public function createFolderFileWithContent($docman_root): void
@@ -52,12 +54,67 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
         );
         $this->addWritePermissionOnItem($folder_file_id, \ProjectUGroup::PROJECT_MEMBERS);
 
+        $this->createPutFolder($folder_file_id);
         $this->createPatchFolder($folder_file_id);
         $this->createDeleteFolder($folder_file_id);
         $this->createPostVersionFolder($folder_file_id);
         $this->createLockFolder($folder_file_id);
     }
 
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        PUT HM File
+     *                           +
+     *                           |
+     *                           +
+     *                  +--------+-------+-------------+-----------+
+     *                  |                |             |           |
+     *                  +                +             +           +
+     *             PUT F OD         PUT F Status     PUT F      PUT F O
+     *
+     * F OD => The file will be updated with a new obsolescence date metadata
+     * F Status => The File will be updated with a new status metadata
+     * F O => The file will be updated with a new unexcisting owner
+     */
+    private function createPutFolder(int $folder_id): void
+    {
+        $folder_put_id = $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PUT HM File',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->addWritePermissionOnItem($folder_put_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT F OD',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT F Status',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT F',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT F O',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+    }
 
     /**
      * To help understand tests structure, below a representation of folder hierarchy

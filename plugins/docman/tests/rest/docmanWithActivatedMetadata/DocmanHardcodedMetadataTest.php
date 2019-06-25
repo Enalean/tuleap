@@ -54,10 +54,14 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         );
         $folders  = $response->json();
 
-        $this->assertEquals(count($folders), 1);
+        $this->assertNotNull($folders);
         $this->assertEquals($folders[0]['user_can_write'], true);
 
-        return $folders;
+        $hm_folder         = $this->findItemByTitle($folders, 'Folder HM');
+        $hm_folder_id      = $hm_folder['id'];
+        $hm_folder_content = $this->loadRootFolderContent($hm_folder_id);
+
+        return array_merge($folders, $hm_folder_content);
     }
 
     /**
@@ -1602,6 +1606,193 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPutFileHardcodedMetadataWithAllHardcodedMetadata(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'PUT F');
+        $file_to_update_id = $file_to_update['id'];
+
+        $this->assertEquals('PUT F', $file_to_update['title']);
+        $this->assertEquals('', $file_to_update['description']);
+        $this->assertEquals(102, $file_to_update['owner']['id']);
+
+        $date_before_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $file_to_update['last_update_date']
+        );
+        $date_before_update_timestamp = $date_before_update->getTimestamp();
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $put_resource = [
+            'id'                => $file_to_update_id,
+            'title'             => 'PUT File with new title',
+            'description'       => 'Whoo ! Whoo !',
+            'owner_id'          => 101,
+            'status'            => 'approved',
+            'obsolescence_date' => $formatted_date
+        ];
+
+        $updated_metadata_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource)
+        );
+
+        $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
+
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($new_version_response->getStatusCode(), 200);
+
+        $new_version = $new_version_response->json();
+
+        $date_after_update           = \DateTimeImmutable::createFromFormat(
+            \DateTime::ATOM,
+            $new_version['last_update_date']
+        );
+        $date_after_update_timestamp = $date_after_update->getTimestamp();
+        $this->assertGreaterThanOrEqual($date_before_update_timestamp, $date_after_update_timestamp);
+
+        $this->assertEquals('PUT File with new title', $new_version['title']);
+        $this->assertEquals('Whoo ! Whoo !', $new_version['description']);
+        $this->assertEquals(101, $new_version['owner']['id']);
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $new_version['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ATOM,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertEquals($obsolescence_date->getTimestamp(), $date->modify('+1 day')->getTimestamp());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPutFileHardcodedMetadataThrows400WhenBadDateFormatForObsolescenceDate(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'PUT F OD');
+        $file_to_update_id = $file_to_update['id'];
+
+        $this->assertEquals('', $file_to_update['description']);
+        $this->assertEquals(102, $file_to_update['owner']['id']);
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $put_resource = [
+            'id'                => $file_to_update_id,
+            'title'             => 'PUT F',
+            'description'       => 'Whoo ! Whoo !',
+            'owner_id'          => 101,
+            'obsolescence_date' => '2020-51-1515410',
+            'status'            => 'none'
+        ];
+
+        $updated_metadata_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $updated_metadata_file_response->getStatusCode());
+        $this->assertStringContainsString(
+            'format is incorrect',
+            $updated_metadata_file_response->json()['error']['i18n_error_message']
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($new_version_response->getStatusCode(), 200);
+
+        $new_version = $new_version_response->json();
+
+        $this->assertEquals('', $new_version['description']);
+        $this->assertEquals(102, $new_version['owner']['id']);
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $new_version['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+
+        $this->assertEquals($obsolescence_date_string, '0');
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPutFileHardcodedMetadataThrows400WhenBadStatus(array $items): void
+    {
+        $file_to_update    = $this->findItemByTitle($items, 'PUT F S');
+        $file_to_update_id = $file_to_update['id'];
+
+        $this->assertEquals('PUT F S', $file_to_update['title']);
+        $this->assertEquals('', $file_to_update['description']);
+        $this->assertEquals(102, $file_to_update['owner']['id']);
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $put_resource = [
+            'id'                => $file_to_update_id,
+            'title'             => 'PUT File with new title',
+            'description'       => 'Whoo ! Whoo !',
+            'owner_id'          => 101,
+            'status'            => 'yoloStatus',
+            'obsolescence_date' => $formatted_date
+        ];
+
+        $updated_metadata_file_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put('docman_files/' . $file_to_update_id . '/metadata', $headers, $put_resource)
+        );
+        $this->assertEquals(400, $updated_metadata_file_response->getStatusCode());
+        $this->assertStringContainsString(
+            'Invalid value',
+            $updated_metadata_file_response->json()['error']['message']
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_update_id)
+        );
+
+        $this->assertEquals($new_version_response->getStatusCode(), 200);
+
+        $new_version = $new_version_response->json();
+
+        $this->assertEquals('', $new_version['description']);
+        $this->assertEquals(102, $new_version['owner']['id']);
+
+        $status_metadata = $this->getMetadataByName(
+            $new_version['metadata'],
+            'Status'
+        );
+
+        $this->assertEquals($status_metadata['list_value'][0]['name'], 'None');
+    }
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.
@@ -1622,5 +1813,17 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
             return null;
         }
         return $metadata[$index];
+    }
+
+    private function loadRootFolderContent(int $root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+        $this->assertEquals(200, $response->getStatusCode());
+
+        return $folder;
     }
 }
