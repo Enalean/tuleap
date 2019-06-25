@@ -93,14 +93,24 @@ class PluginLoader
         return new SerializedPluginProxy($cache);
     }
 
-    private function storeInCache(SerializedPluginProxy $proxy)
+    private function storeInCache(SerializedPluginProxy $proxy) : void
     {
+        self::invalidateCache();
         $this->serializeInFile(self::getHooksCacheFile(), $proxy->getSerializablePluginCache());
     }
 
-    private function serializeInFile($path, $var)
+    private function serializeInFile(string $path, EventPluginCache $var) : void
     {
-        file_put_contents($path, '<?php'.PHP_EOL.'return '.VarExporter::export($var).';');
+        $resource = fopen($path, 'wb');
+        if ($resource === false) {
+            return;
+        }
+        if (flock($resource, LOCK_EX | LOCK_NB)) {
+            fwrite($resource, '<?php'.PHP_EOL.'return '.VarExporter::export($var).';');
+            fflush($resource);
+            flock($resource, LOCK_UN);
+        }
+        fclose($resource);
     }
 
     private function getHooksOfAvailablePlugins()
