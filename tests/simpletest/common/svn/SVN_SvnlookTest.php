@@ -63,7 +63,7 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
 
         $expected = array('/', 'tags/', 'tags/2.0/', 'tags/1.0/');
 
-        $this->assertEqual($expected, $tree);
+        $this->assertEqual(sort($expected), sort($tree));
     }
 
     public function itGetsHistoryOfAPath() {

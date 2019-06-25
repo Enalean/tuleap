@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,18 @@ class User_SSHKeyValidatorTest extends TuleapTestCase {
 
     /** @var PFUser*/
     protected $user;
+    /**
+     * @var string
+     */
+    protected $key1;
+    /**
+     * @var string
+     */
+    protected $key2;
+    /**
+     * @var User_SSHKeyValidator
+     */
+    protected $validator;
 
     public function setUp() {
         parent::setUp();
@@ -70,6 +82,17 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         );
 
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
+
+        $this->assertCount($this->validator->validateAllKeys($keys), 0);
+    }
+
+    public function itRaisesAWarningWhenThePublicKeyContentIsNotValid() : void
+    {
+        stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
+
+        $keys = [
+            'ssh-rsa BBBBB3NzaC1yc2EAAAABIwAAAQEAo2Z2ru57hk2p9wMkM66IxYV1HFKEJvWjWi7Otug/G14LWwO1VU5wNBJgJEfaAoL7ccRpWYpRKLAZdAPYq8nOVFsTU0X4z4mtIo8L1mlw+qXZ3KW77/QJ7sNbCZe6vpNcKg0+DX0e4n0h6R+lXIwi/ISM6wXPQU3uUKVRbcykC9YwEnQokFXXHRqeBzPjyRFval4SRMHAdcs2pjZtu5Et0pObR+Lrs532NE1tvDUrPbU1Oy+9w7bbcvbfjKeYX7FgdXmlYDYLcAfZG4wCHBBYbp5HNXTxhwv4wHq7Z20tEN4qqBnehCGPOpBIgbfBTdN9NftloRYrVPNAxKXhPd/VRQ=='
+        ];
 
         $this->assertCount($this->validator->validateAllKeys($keys), 0);
     }

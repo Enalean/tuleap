@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,43 +15,72 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
-class StandardPasswordHandlerTest extends TuleapTestCase {
-    public const HASHED_WORD = 'Tuleap';
-    public const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
-    public const SHA512_HASH = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
-    public const BCRYPT_HASH = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
+namespace Tuleap\User;
+
+use PHPUnit\Framework\TestCase;
+use StandardPasswordHandler;
+
+final class StandardPasswordHandlerTest extends TestCase
+{
+    private const HASHED_WORD = 'Tuleap';
+    private const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
+    private const SHA512_HASH = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
+    private const BCRYPT_HASH = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
 
     /**
      * @var StandardPasswordHandler
      */
     private $password_handler;
 
-    public function setUp() {
-        parent::setUp();
+    public function setUp() : void
+    {
         $this->password_handler = new StandardPasswordHandler();
     }
 
-    public function itVerifyPassword() {
+    /**
+     * @test
+     */
+    public function itVerifyPassword() : void
+    {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::BCRYPT_HASH);
         $this->assertTrue($check_password);
     }
 
-    public function itVerifyPasswordSaltedMD5() {
+    /**
+     * @test
+     */
+    public function itVerifyPasswordSaltedMD5() : void
+    {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::MD5_HASH);
         $this->assertTrue($check_password);
     }
 
-    public function itVerifyPasswordSaltedSHA512() {
+    /**
+     * @test
+     */
+    public function itVerifyPasswordSaltedSHA512() : void
+    {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::SHA512_HASH);
         $this->assertTrue($check_password);
     }
 
-    public function itCheckIfRehashingIsNeeded() {
+    /**
+     * @test
+     */
+    public function itCheckIfRehashingIsNeeded() : void
+    {
+        /**
+         * PHP 7.4 alpha 1 bug
+         * @see https://bugs.php.net/bug.php?id=78208
+         */
+        if (PHP_VERSION_ID >= 70400) {
+            $this->markTestSkipped();
+        }
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
         $this->assertTrue($rehash_needed);
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::SHA512_HASH);

@@ -102,9 +102,9 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
      * @param String $file
      */
     protected function mysqlLoadFile($file) {
-        $mysql_cmd = 'mysql -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
-        $cmd = $mysql_cmd.' < '.$this->src_dir.'/'.$file;
-        system($cmd);
+        $mysql_cmd = 'mysql -u'.escapeshellarg($GLOBALS['sys_dbuser']).' -p'.escapeshellarg($GLOBALS['sys_dbpasswd']).' '.escapeshellarg($GLOBALS['sys_dbname']);
+        $cmd = $mysql_cmd.' < '.escapeshellarg($this->src_dir.'/'.$file);
+        system('bash --login -c ' .escapeshellarg($cmd));
     }
 
     private function loadConfiguration() {
