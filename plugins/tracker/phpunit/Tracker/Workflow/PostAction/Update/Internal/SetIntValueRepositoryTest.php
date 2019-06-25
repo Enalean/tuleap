@@ -71,7 +71,7 @@ class SetIntValueRepositoryTest extends TestCase
             ->with(9, 43, 1);
 
         $transition    = TransitionFactory::buildATransitionWithId(1);
-        $set_int_value = new SetIntValue(null, 43, 1);
+        $set_int_value = new SetIntValue(43, 1);
 
         $this->set_int_value_repository->create($transition, $set_int_value);
     }
@@ -82,7 +82,7 @@ class SetIntValueRepositoryTest extends TestCase
             ->andReturn(false);
 
         $transition    = TransitionFactory::buildATransition();
-        $set_int_value = new SetIntValue(null, 43, 1);
+        $set_int_value = new SetIntValue(43, 1);
 
         $this->expectException(DataAccessQueryException::class);
 

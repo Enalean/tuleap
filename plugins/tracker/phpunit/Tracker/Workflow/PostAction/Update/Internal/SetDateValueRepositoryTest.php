@@ -70,7 +70,7 @@ class SetDateValueRepositoryTest extends TestCase
             ->with(9, 43, 1);
 
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $set_date_value = new SetDateValue(null, 43, 1);
+        $set_date_value = new SetDateValue(43, 1);
 
         $this->set_date_value_repository->create($transition, $set_date_value);
     }
@@ -81,7 +81,7 @@ class SetDateValueRepositoryTest extends TestCase
             ->andReturn(false);
 
         $transition = TransitionFactory::buildATransition();
-        $set_date_value = new SetDateValue(null, 43, 1);
+        $set_date_value = new SetDateValue(43, 1);
 
         $this->expectException(DataAccessQueryException::class);
 

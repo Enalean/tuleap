@@ -27,10 +27,6 @@ use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 class SetFloatValueValidator
 {
     /**
-     * @var PostActionIdValidator
-     */
-    private $ids_validator;
-    /**
      * @var PostActionFieldIdValidator
      */
     private $field_ids_validator;
@@ -40,11 +36,9 @@ class SetFloatValueValidator
     private $form_element_factory;
 
     public function __construct(
-        PostActionIdValidator $ids_validator,
         PostActionFieldIdValidator $field_ids_validator,
         \Tracker_FormElementFactory $form_element_factory
     ) {
-        $this->ids_validator        = $ids_validator;
         $this->field_ids_validator  = $field_ids_validator;
         $this->form_element_factory = $form_element_factory;
     }
@@ -54,17 +48,6 @@ class SetFloatValueValidator
      */
     public function validate(\Tracker $tracker, SetFloatValue ...$set_float_values): void
     {
-        try {
-            $this->ids_validator->validate(...$set_float_values);
-        } catch (DuplicatePostActionException $e) {
-            throw new InvalidPostActionException(
-                dgettext(
-                    'tuleap-tracker',
-                    "There should not be duplicate ids for 'set_field_value' actions with type 'float'."
-                )
-            );
-        }
-
         try {
             $this->field_ids_validator->validate(...$set_float_values);
         } catch (DuplicateFieldIdException $e) {

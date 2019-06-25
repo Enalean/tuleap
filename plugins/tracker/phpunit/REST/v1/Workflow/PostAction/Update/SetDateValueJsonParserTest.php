@@ -88,7 +88,7 @@ class SetDateValueJsonParserTest extends TestCase
                 "value" => ""
             ]
         );
-        $expected_action = new SetDateValue(null, 43, Transition_PostAction_Field_Date::CLEAR_DATE);
+        $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -106,7 +106,7 @@ class SetDateValueJsonParserTest extends TestCase
                 "value" => "current"
             ]
         );
-        $expected_action = new SetDateValue(null, 43, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
+        $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
@@ -125,27 +125,8 @@ class SetDateValueJsonParserTest extends TestCase
                 "value" => ""
             ]
         );
-        $expected_action = new SetDateValue(null, 43, Transition_PostAction_Field_Date::CLEAR_DATE);
+        $expected_action = new SetDateValue(43, Transition_PostAction_Field_Date::CLEAR_DATE);
         $this->assertEquals($expected_action, $set_date_value);
-    }
-
-    public function testParseThrowsWhenIdIsNotInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(true);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-        $this->parser->parse(
-            $workflow,
-            [
-                "id" => "not int",
-                "type" => "set_field_value",
-                "field_type" => "date",
-                "field_id" => 43,
-                "value" => "current"
-            ]
-        );
     }
 
     public function testParseThrowsWhenNoFieldIdProvided()

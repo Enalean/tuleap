@@ -26,11 +26,6 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 final class SetIntValue implements SetFieldValue
 {
     /**
-     * @var int|null $id
-     */
-    private $id;
-
-    /**
      * @var int $field_id
      */
     private $field_id;
@@ -40,16 +35,10 @@ final class SetIntValue implements SetFieldValue
      */
     private $value;
 
-    public function __construct(?int $id, int $field_id, int $value)
+    public function __construct(int $field_id, int $value)
     {
-        $this->id       = $id;
         $this->field_id = $field_id;
         $this->value    = $value;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getFieldId(): int

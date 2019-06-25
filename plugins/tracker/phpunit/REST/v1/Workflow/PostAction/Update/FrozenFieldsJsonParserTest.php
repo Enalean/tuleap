@@ -70,7 +70,7 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFieldsValue(null, [43]);
+        $expected_action = new FrozenFieldsValue([43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 
@@ -86,26 +86,8 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFieldsValue(null, [43]);
+        $expected_action = new FrozenFieldsValue([43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
-    }
-
-    public function testParseThrowsAnExceptionWhenIdIsNotInt()
-    {
-        $workflow = Mockery::mock(Workflow::class);
-        $workflow->shouldReceive('isAdvanced')->andReturn(false);
-
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->parser->parse(
-            $workflow,
-            [
-                "id" => 'not_an_int',
-                "type" => "frozen_fields",
-                "field_ids" => [43],
-            ]
-        );
     }
 
     public function testParseThrowsAnExceptionWhenNoFieldIdsProvided()

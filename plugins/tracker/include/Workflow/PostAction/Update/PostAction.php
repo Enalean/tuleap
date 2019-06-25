@@ -25,7 +25,5 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 
 interface PostAction
 {
-    public function getId(): ?int;
-
     public function accept(PostActionVisitor $visitor);
 }

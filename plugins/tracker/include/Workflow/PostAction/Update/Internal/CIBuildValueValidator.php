@@ -27,27 +27,10 @@ use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 class CIBuildValueValidator
 {
     /**
-     * @var PostActionIdValidator
-     */
-    private $ids_validator;
-
-    public function __construct(PostActionIdValidator $ids_validator)
-    {
-        $this->ids_validator = $ids_validator;
-    }
-
-    /**
      * @throws InvalidPostActionException
      */
     public function validate(CIBuildValue ...$ci_builds): void
     {
-        try {
-            $this->ids_validator->validate(...$ci_builds);
-        } catch (DuplicatePostActionException $e) {
-            throw new InvalidPostActionException(
-                dgettext('tuleap-tracker', "There should not be duplicate 'run_job' ids.")
-            );
-        }
         foreach ($ci_builds as $ci_build) {
             $this->validateCIBuild($ci_build);
         }

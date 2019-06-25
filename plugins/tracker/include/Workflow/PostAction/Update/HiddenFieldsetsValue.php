@@ -26,24 +26,13 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 final class HiddenFieldsetsValue implements PostAction
 {
     /**
-     * @var int|null
-     */
-    private $id;
-
-    /**
      * @var array
      */
     private $fieldset_ids;
 
-    public function __construct(?int $id, array $fieldset_ids)
+    public function __construct(array $fieldset_ids)
     {
-        $this->id           = $id;
         $this->fieldset_ids = $fieldset_ids;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

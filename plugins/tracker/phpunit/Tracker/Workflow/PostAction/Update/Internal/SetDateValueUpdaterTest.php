@@ -69,7 +69,7 @@ class SetDateValueUpdaterTest extends TestCase
     public function testUpdateAddsNewSetDateValueActions()
     {
         $transition   = TransitionFactory::buildATransitionWithTracker($this->tracker);
-        $added_action = new SetDateValue(null, 43, 1);
+        $added_action = new SetDateValue(43, 1);
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
@@ -88,7 +88,7 @@ class SetDateValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $updated_action = new SetDateValue(1, 43, 1);
+        $updated_action = new SetDateValue(43, 1);
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
@@ -112,7 +112,7 @@ class SetDateValueUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
-        $action  = new SetDateValue(2, 43, 1);
+        $action  = new SetDateValue(43, 1);
         $actions = new PostActionCollection($action);
 
         $this->validator

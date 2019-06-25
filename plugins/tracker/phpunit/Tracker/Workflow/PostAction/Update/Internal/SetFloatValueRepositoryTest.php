@@ -71,7 +71,7 @@ class SetFloatValueRepositoryTest extends TestCase
             ->with(9, 43, 1.23);
 
         $transition      = TransitionFactory::buildATransitionWithId(1);
-        $set_float_value = new SetFloatValue(null, 43, 1.23);
+        $set_float_value = new SetFloatValue(43, 1.23);
 
         $this->set_float_value_repository->create($transition, $set_float_value);
     }
@@ -82,7 +82,7 @@ class SetFloatValueRepositoryTest extends TestCase
             ->andReturn(false);
 
         $transition      = TransitionFactory::buildATransition();
-        $set_float_value = new SetFloatValue(null, 43, 1.23);
+        $set_float_value = new SetFloatValue(43, 1.23);
 
         $this->expectException(DataAccessQueryException::class);
 

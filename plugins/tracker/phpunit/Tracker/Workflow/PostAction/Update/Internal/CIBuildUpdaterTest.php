@@ -74,7 +74,7 @@ class CIBuildUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransition();
 
-        $added_action = new CIBuildValue(null, 'http://example.test');
+        $added_action = new CIBuildValue('http://example.test');
         $actions      = new PostActionCollection($added_action);
 
         $this->validator
@@ -92,7 +92,7 @@ class CIBuildUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransition();
 
-        $updated_action = new CIBuildValue(null, 'http://example.test');
+        $updated_action = new CIBuildValue('http://example.test');
         $actions        = new PostActionCollection($updated_action);
 
         $this->validator
@@ -114,7 +114,7 @@ class CIBuildUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransition();
 
-        $action  = new CIBuildValue(null, 'http://example.test');
+        $action  = new CIBuildValue('http://example.test');
         $actions = new PostActionCollection($action);
 
         $this->validator

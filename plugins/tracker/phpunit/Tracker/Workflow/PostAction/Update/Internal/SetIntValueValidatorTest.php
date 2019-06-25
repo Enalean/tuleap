@@ -33,8 +33,6 @@ class SetIntValueValidatorTest extends TestCase
 
     /** @var SetIntValueValidator */
     private $set_int_value_validator;
-    /** @var PostActionIdValidator | Mockery\MockInterface */
-    private $ids_validator;
     /** @var PostActionFieldIdValidator | Mockery\MockInterface */
     private $field_id_validator;
     /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
@@ -42,14 +40,11 @@ class SetIntValueValidatorTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->ids_validator = Mockery::mock(PostActionIdValidator::class);
-        $this->ids_validator->shouldReceive('validate')->byDefault();
         $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
         $this->field_id_validator->shouldReceive('validate')->byDefault();
 
         $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->set_int_value_validator = new SetIntValueValidator(
-            $this->ids_validator,
             $this->field_id_validator,
             $this->form_element_factory
         );
@@ -69,8 +64,8 @@ class SetIntValueValidatorTest extends TestCase
             ->shouldReceive('getUsedIntFields')
             ->andReturn([$integer_field, $other_int_field]);
 
-        $first_int_value  = new SetIntValue(null, 1, 12);
-        $second_int_value = new SetIntValue(null, 2, 42);
+        $first_int_value  = new SetIntValue(1, 12);
+        $second_int_value = new SetIntValue(2, 42);
 
         $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
@@ -79,35 +74,15 @@ class SetIntValueValidatorTest extends TestCase
         );
     }
 
-    public function testValidateWrapsDuplicatePostActionException()
-    {
-        $this->set_int_value_validator = new SetIntValueValidator(
-            new PostActionIdValidator(),
-            $this->field_id_validator,
-            $this->form_element_factory
-        );
-
-        $first_same_id  = new SetIntValue(2, 1, 12);
-        $second_same_id = new SetIntValue(2, 2, 42);
-
-        $this->expectException(InvalidPostActionException::class);
-        $this->set_int_value_validator->validate(
-            Mockery::mock(\Tracker::class),
-            $first_same_id,
-            $second_same_id
-        );
-    }
-
     public function testValidateWrapsDuplicateFieldIdException()
     {
         $this->set_int_value_validator = new SetIntValueValidator(
-            $this->ids_validator,
             new PostActionFieldIdValidator(),
             $this->form_element_factory
         );
 
-        $first_same_field_id  = new SetIntValue(null, 1, 79);
-        $second_same_field_id = new SetIntValue(null, 1, 2);
+        $first_same_field_id  = new SetIntValue(1, 79);
+        $second_same_field_id = new SetIntValue(1, 2);
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_int_value_validator->validate(
@@ -127,7 +102,7 @@ class SetIntValueValidatorTest extends TestCase
             ->shouldReceive('getUsedIntFields')
             ->andReturn([$integer_field]);
 
-        $invalid_field_id = new SetIntValue(null, 8, 0);
+        $invalid_field_id = new SetIntValue(8, 0);
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_int_value_validator->validate(

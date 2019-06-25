@@ -27,24 +27,13 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 final class CIBuildValue implements PostAction
 {
     /**
-     * @var int|null
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $job_url;
 
-    public function __construct(?int $id, string $job_url)
+    public function __construct(string $job_url)
     {
-        $this->id      = $id;
         $this->job_url = $job_url;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getJobUrl(): string

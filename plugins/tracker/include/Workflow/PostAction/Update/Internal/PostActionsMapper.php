@@ -43,7 +43,7 @@ class PostActionsMapper
         $update_ci_builds = [];
         foreach ($ci_builds as $ci_build) {
             // We set $id to null so that all post actions are re-created from scratch in the $to transition
-            $update_ci_builds[] = new CIBuildValue(null, $ci_build->getJobUrl());
+            $update_ci_builds[] = new CIBuildValue($ci_build->getJobUrl());
         }
         return $update_ci_builds;
     }
@@ -59,7 +59,6 @@ class PostActionsMapper
         foreach ($field_dates as $field_date) {
             // We set $id to null so that all post actions are re-created from scratch in the $to transition
             $update_date_values[] = new SetDateValue(
-                null,
                 (int) $field_date->getFieldId(),
                 $field_date->getValueType()
             );
@@ -78,7 +77,6 @@ class PostActionsMapper
         foreach ($field_floats as $field_float) {
             // We set $id to null so that all post actions are re-created from scratch in the $to transition
             $update_float_values[] = new SetFloatValue(
-                null,
                 (int) $field_float->getFieldId(),
                 $field_float->getValue()
             );
@@ -97,7 +95,6 @@ class PostActionsMapper
         foreach ($field_ints as $field_int) {
             // We set $id to null so that all post actions are re-created from scratch in the $to transition
             $update_int_values[] = new SetIntValue(
-                null,
                 (int) $field_int->getFieldId(),
                 $field_int->getValue()
             );
@@ -115,7 +112,6 @@ class PostActionsMapper
         $update_frozen_fields_value = [];
         // We set $id to null so that all post actions are re-created from scratch in the $to transition
         $update_frozen_fields_value[] = new FrozenFieldsValue(
-            null,
             $frozen_fields->getFieldIds()
         );
 
@@ -138,7 +134,6 @@ class PostActionsMapper
 
         // We set $id to null so that all post actions are re-created from scratch in the $to transition
         $update_hidden_fieldsets_value[] = new HiddenFieldsetsValue(
-            null,
             $fieldset_ids
         );
 

@@ -60,7 +60,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
             ->shouldReceive('getUsedFieldsets')
             ->andReturn([$fieldset_01, $fieldset_02]);
 
-        $hidden_fieldsets_values = new HiddenFieldsetsValue(null, [648, 701]);
+        $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 701]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -82,7 +82,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
             ->shouldReceive('getUsedFieldsets')
             ->andReturn([]);
 
-        $hidden_fieldsets_values = new HiddenFieldsetsValue(null, [648, 648, 701]);
+        $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 648, 701]);
 
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -107,7 +107,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
             ->shouldReceive('getUsedFieldsets')
             ->andReturn([$fieldset_01, $fieldset_02]);
 
-        $hidden_fieldsets_values = new HiddenFieldsetsValue(null, [648, 702]);
+        $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 702]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);

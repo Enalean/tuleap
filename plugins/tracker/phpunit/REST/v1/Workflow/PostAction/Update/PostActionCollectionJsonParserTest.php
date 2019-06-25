@@ -66,7 +66,7 @@ class PostActionCollectionJsonParserTest extends TestCase
         $this->action_parser
             ->shouldReceive('accept')
             ->andReturn(true);
-        $ci_build = new CIBuildValue(1, "http://example.test");
+        $ci_build = new CIBuildValue("http://example.test");
         $this->action_parser
             ->shouldReceive('parse')
             ->andReturn($ci_build);

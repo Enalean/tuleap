@@ -59,8 +59,8 @@ class PostActionsMapperTest extends TestCase
 
         $this->assertEquals(
             [
-                new CIBuildValue(null, 'https://example.com/1'),
-                new CIBuildValue(null, 'https://example.com/2')
+                new CIBuildValue('https://example.com/1'),
+                new CIBuildValue('https://example.com/2')
             ],
             $result
         );
@@ -80,8 +80,8 @@ class PostActionsMapperTest extends TestCase
         $result = $this->mapper->convertToSetDateValueWithNullId($first_date, $second_date);
         $this->assertEquals(
             [
-                new SetDateValue(null, 104, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
-                new SetDateValue(null, 108, \Transition_PostAction_Field_Date::CLEAR_DATE)
+                new SetDateValue(104, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
+                new SetDateValue(108, \Transition_PostAction_Field_Date::CLEAR_DATE)
             ],
             $result
         );
@@ -101,8 +101,8 @@ class PostActionsMapperTest extends TestCase
         $result = $this->mapper->convertToSetFloatValueWithNullId($first_float, $second_float);
         $this->assertEquals(
             [
-                new SetFloatValue(null, 104, 186.43),
-                new SetFloatValue(null, 108, -83)
+                new SetFloatValue(104, 186.43),
+                new SetFloatValue(108, -83)
             ],
             $result
         );
@@ -122,8 +122,8 @@ class PostActionsMapperTest extends TestCase
         $result = $this->mapper->convertToSetIntValueWithNullId($first_int, $second_int);
         $this->assertEquals(
             [
-                new SetIntValue(null, 104, 42),
-                new SetIntValue(null, 108, -18)
+                new SetIntValue(104, 42),
+                new SetIntValue(108, -18)
             ],
             $result
         );
@@ -137,7 +137,7 @@ class PostActionsMapperTest extends TestCase
         $result = $this->mapper->convertToFrozenFieldValueWithNullId($frozen_fields);
         $this->assertEquals(
             [
-                new FrozenFieldsValue(null, [999]),
+                new FrozenFieldsValue([999]),
             ],
             $result
         );
@@ -160,7 +160,7 @@ class PostActionsMapperTest extends TestCase
         $result = $this->mapper->convertToHiddenFieldsetsValueWithNullId($hidden_fieldsets);
         $this->assertEquals(
             [
-                new HiddenFieldsetsValue(null, [648, 701]),
+                new HiddenFieldsetsValue([648, 701]),
             ],
             $result
         );

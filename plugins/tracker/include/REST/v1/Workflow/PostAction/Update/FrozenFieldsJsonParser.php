@@ -45,13 +45,6 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
             throw new IncompatibleWorkflowModeException(self::POSTACTION_TYPE);
         }
 
-        if (isset($json['id']) && !is_int($json['id'])) {
-            throw new I18NRestException(
-                400,
-                dgettext('tuleap-tracker', "Bad id attribute format: int expected.")
-            );
-        }
-
         if (! isset($json['field_ids'])) {
             throw new I18NRestException(
                 400,
@@ -82,6 +75,6 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
             }
         }
 
-        return new FrozenFieldsValue(null, $json['field_ids']);
+        return new FrozenFieldsValue($json['field_ids']);
     }
 }
