@@ -39,7 +39,7 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalA
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Files\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
