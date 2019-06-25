@@ -36,45 +36,69 @@ $event_manager  = EventManager::instance();
 $user_manager   = UserManager::instance();
 $backend_logger = BackendLogger::getDefaultLogger();
 
+$event_manager         = EventManager::instance();
+$backend_logger        = BackendLogger::getDefaultLogger();
+$CLI_command_collector = new CLICommandsCollector();
+
+$CLI_command_collector->addCommand(
+    ConfigGetCommand::NAME,
+    static function(): ConfigGetCommand {
+        return new ConfigGetCommand();
+    }
+);
+$CLI_command_collector->addCommand(
+    ConfigSetCommand::NAME,
+    static function() use ($event_manager) : ConfigSetCommand  {
+        return new ConfigSetCommand(
+            new ConfigDao(),
+            $event_manager
+        );
+    }
+);
+$CLI_command_collector->addCommand(
+    UserPasswordCommand::NAME,
+    static function() : UserPasswordCommand  {
+        return new UserPasswordCommand(
+            UserManager::instance(),
+            PasswordSanityChecker::build()
+        );
+    }
+);
+$CLI_command_collector->addCommand(
+    ImportProjectXMLCommand::NAME,
+    static function() : ImportProjectXMLCommand  {
+        return new ImportProjectXMLCommand();
+    }
+);
+$CLI_command_collector->addCommand(
+    ProcessSystemEventsCommand::NAME,
+    static function() use ($backend_logger, $event_manager) : ProcessSystemEventsCommand  {
+        return new ProcessSystemEventsCommand(
+            new SystemEventProcessor_Factory($backend_logger, SystemEventManager::instance(), $event_manager),
+            new SystemEventProcessManager(),
+            DBFactory::getMainTuleapDBConnection()
+        );
+    }
+);
+$CLI_command_collector->addCommand(
+    QueueSystemCheckCommand::NAME,
+    static function() use ($event_manager) : QueueSystemCheckCommand  {
+        return new QueueSystemCheckCommand($event_manager, DBFactory::getMainTuleapDBConnection());
+    }
+);
+$CLI_command_collector->addCommand(
+    LaunchEveryMinuteJobCommand::NAME,
+    static function() use ($event_manager, $backend_logger) : LaunchEveryMinuteJobCommand  {
+        return new LaunchEveryMinuteJobCommand(
+            $event_manager,
+            $backend_logger,
+            DBFactory::getMainTuleapDBConnection()
+        );
+    }
+);
+
+$event_manager->dispatch($CLI_command_collector);
+
 $application = new Application();
-$application->add(
-    new UserPasswordCommand(
-        UserManager::instance(),
-        PasswordSanityChecker::build()
-    )
-);
-$application->add(
-    new ConfigGetCommand()
-);
-$application->add(
-    new ConfigSetCommand(
-        new ConfigDao(),
-        $event_manager
-    )
-);
-$application->add(
-    new ImportProjectXMLCommand()
-);
-$main_db_connection = DBFactory::getMainTuleapDBConnection();
-$application->add(
-    new ProcessSystemEventsCommand(
-        new SystemEventProcessor_Factory($backend_logger, SystemEventManager::instance(), $event_manager),
-        new SystemEventProcessManager(),
-        $main_db_connection
-    )
-);
-$application->add(
-    new QueueSystemCheckCommand($event_manager, $main_db_connection)
-);
-$application->add(
-    new LaunchEveryMinuteJobCommand(
-        $event_manager,
-        $backend_logger,
-        $main_db_connection
-    )
-);
-
-$CLI_command_collector = new CLICommandsCollector($application);
-$event_manager->processEvent($CLI_command_collector);
-
+$CLI_command_collector->loadCommands($application);
 $application->run();

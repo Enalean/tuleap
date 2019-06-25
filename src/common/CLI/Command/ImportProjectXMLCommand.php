@@ -68,16 +68,13 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 class ImportProjectXMLCommand extends Command
 {
-
-    public const AUTHORIZED_CONFIGURATION_AUTOMAP =
-        [
-            "no-email"
-        ];
+    public const NAME                              = 'import-project-xml';
+    private const AUTHORIZED_CONFIGURATION_AUTOMAP = ['no-email'];
 
 
     public function __construct()
     {
-        parent::__construct("import-project-xml");
+        parent::__construct(self::NAME);
     }
 
     protected function configure()

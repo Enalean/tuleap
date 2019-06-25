@@ -31,6 +31,8 @@ use TrackerFactory;
 
 class TrackerForceNotificationsLevelCommand extends Command
 {
+    public const NAME = 'tracker:force-notifications-level';
+
     /**
      * @var NotificationsForceUsageUpdater
      */
@@ -44,7 +46,7 @@ class TrackerForceNotificationsLevelCommand extends Command
      */
     private $project_manager;
 
-    public const AUTHORIZED_CONFIGURATION_LEVEL
+    private const AUTHORIZED_CONFIGURATION_LEVEL
         = [
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT_LABEL,
             Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL,
@@ -66,7 +68,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         TrackerFactory $tracker_factory,
         \TrackerDao $tracker_dao
     ) {
-        parent::__construct('tracker:force-notifications-level');
+        parent::__construct(self::NAME);
         $this->force_usage_updater          = $force_usage_updater;
         $this->project_manager              = $project_manager;
         $this->notification_level_extractor = $notification_level_extractor;

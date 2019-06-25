@@ -42,6 +42,7 @@ use Tuleap\Git\GitGodObjectWrapper;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
+use Tuleap\Git\Gitolite\RegenerateConfigurationCommand;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
 use Tuleap\Git\Gitolite\SSHKey\DumperFactory;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
@@ -104,6 +105,7 @@ use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Repository\GitPHPProjectRetriever;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
+use Tuleap\Git\Repository\RepositoriesWithObjectsOverTheLimitCommand;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Repository\Settings\CITokenController;
 use Tuleap\Git\Repository\Settings\CITokenRouter;
@@ -2798,16 +2800,22 @@ class GitPlugin extends Plugin
     public function collectCLICommands(CLICommandsCollector $commands_collector) : void
     {
         $commands_collector->addCommand(
-            new \Tuleap\Git\Gitolite\RegenerateConfigurationCommand(
-                ProjectManager::instance(),
-                $this->getGitSystemEventManager()
-            )
+            RegenerateConfigurationCommand::NAME,
+            function() : RegenerateConfigurationCommand {
+                return new RegenerateConfigurationCommand(
+                    ProjectManager::instance(),
+                    $this->getGitSystemEventManager()
+                );
+            }
         );
         $commands_collector->addCommand(
-            new \Tuleap\Git\Repository\RepositoriesWithObjectsOverTheLimitCommand(
-                $this->getRepositoryFactory(),
-                new GitRepositoryObjectsSizeRetriever()
-            )
+            RepositoriesWithObjectsOverTheLimitCommand::NAME,
+            function() : RepositoriesWithObjectsOverTheLimitCommand {
+                return new RepositoriesWithObjectsOverTheLimitCommand(
+                    $this->getRepositoryFactory(),
+                    new GitRepositoryObjectsSizeRetriever()
+                );
+            }
         );
     }
 }

@@ -34,7 +34,7 @@ use Tuleap\DB\DBFactory;
 
 final class QueueSystemCheckCommand extends Command
 {
-    private const NAME = 'queue-system-check';
+    public const NAME = 'queue-system-check';
 
     /**
      * @var EventManager
