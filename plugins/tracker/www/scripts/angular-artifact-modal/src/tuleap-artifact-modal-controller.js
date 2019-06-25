@@ -70,8 +70,7 @@ function ArtifactModalController(
         ordered_fields: modal_model.ordered_fields,
         parent: null,
         parent_artifact_id: modal_model.parent_artifact_id,
-        title:
-            modal_model.title.content !== undefined ? modal_model.title.content : modal_model.title,
+        title: getTitle(),
         tracker: modal_model.tracker,
         values: modal_model.values,
         followups_comments: {
@@ -119,6 +118,16 @@ function ArtifactModalController(
         $timeout(function() {
             loadTooltips();
         }, 0);
+    }
+
+    function getTitle() {
+        if (modal_model.title === null) {
+            return "";
+        }
+
+        const is_title_a_text_field = typeof modal_model.title.content !== "undefined";
+
+        return is_title_a_text_field ? modal_model.title.content : modal_model.title;
     }
 
     function isFollowupCommentFormDisplayed() {

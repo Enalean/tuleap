@@ -207,6 +207,16 @@ describe("TuleapArtifactModalController", () => {
                 );
             });
 
+            it(`Given no title semantic, when I load the controller,
+                then the title will be an empty string`, () => {
+                controller_params.modal_model.title = null;
+
+                ArtifactModalController = $controller(BaseModalController, controller_params);
+                ArtifactModalController.$onInit();
+
+                expect(ArtifactModalController.title).toEqual("");
+            });
+
             it(`when I close the modal, then it will reset the isUploadingInCKEditor state`, () => {
                 let triggerHidden;
                 controller_params.modal_instance.tlp_modal.addEventListener.and.callFake(
