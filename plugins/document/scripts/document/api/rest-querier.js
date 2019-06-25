@@ -134,7 +134,7 @@ async function createNewVersion(
     should_lock_file,
     approval_table_action
 ) {
-    const response = await patch(`/api/docman_files/${encodeURIComponent(item.id)}`, {
+    const response = await post(`/api/docman_files/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json"
         },
