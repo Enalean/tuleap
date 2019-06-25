@@ -37,7 +37,7 @@ $src_path     = $basedir.'/src';
 $include_path = $basedir.'/src/www/include';
 ini_set('include_path', implode(':', [$src_path, $include_path]));
 
-exec('service mysqld start');
+exec('start-mysqld.sh');
 
 require_once __DIR__.'/../../src/etc/local.inc.dist';
 
