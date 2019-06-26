@@ -99,9 +99,6 @@ msgstr "%1$s n'est pas un dépôt git"
 msgid "%1$s is outside of the projectroot"
 msgstr "%1$s est en dehors de la racine du projet"
 
-msgid "Atom"
-msgstr "Atom"
-
 # Used to label the author of the commit, and as a field to search
 # The author is the person who wrote the changes in the commit
 msgid "Author"
@@ -172,11 +169,6 @@ msgstr "Fichiers"
 msgid "Go to diff"
 msgstr "Aller au diff"
 
-# Used as a link to the HEAD of a project for a log or file
-# (note: HEAD is standard git terminology)
-msgid "HEAD"
-msgstr "HEAD"
-
 msgid "Hash"
 msgstr "Hash"
 
@@ -241,11 +233,6 @@ msgstr "Précédent"
 # Error message when user tries to do an action that requires a project but a project isn't specified
 msgid "Project is required"
 msgstr "Il faut spécifier un projet"
-
-# Caption for the rss button for a project
-# rss is a standard web feed format
-msgid "RSS"
-msgstr "RSS"
 
 msgid "Reference"
 msgstr "Référence"
@@ -316,14 +303,6 @@ msgid_plural "You must enter search text of at least %1$d characters"
 msgstr[0] "Votre recherche doit comporter au moins %1$d caractère"
 msgstr[1] "Votre recherche doit comporter au moins %1$d caractères"
 
-msgid "atom"
-msgstr "atom"
-
-# Used to label the author of the commit, and as a field to search
-# The author is the person who wrote the changes in the commit
-msgid "author"
-msgstr "auteur"
-
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 msgid "blame"
 msgstr "annoter"
@@ -344,19 +323,6 @@ msgstr "révision"
 msgid "commitdiff"
 msgstr "diff révision"
 
-# Used to label the committer of the commit, and as a field to search
-# The committer is the person who put the commit into this project
-msgid "committer"
-msgstr "réviseur"
-
-# Link to deselect the currently selected diff
-msgid "deselect"
-msgstr "rétablir"
-
-# Link beside commits - diffs this commit against the currently selected commit
-msgid "diff with selected"
-msgstr "diff avec marqué"
-
 # A type of filesystem object stored in a project
 msgid "directory"
 msgstr "Dossier"
@@ -364,14 +330,6 @@ msgstr "Dossier"
 # Used as a search type, to search the contents of files in the project
 msgid "file"
 msgstr "fichier"
-
-# Used as a link to the first page in a list of results
-msgid "first"
-msgstr "début"
-
-# Used as link to and title for page showing all heads in a project
-msgid "heads"
-msgstr "heads"
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
 msgid "history"
@@ -381,42 +339,13 @@ msgstr "historique"
 msgid "log"
 msgstr "journal"
 
-# Used as a link to the next page in a list of results
-msgid "next"
-msgstr "suiv"
-
-# Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
-msgid "object"
-msgstr "objet"
-
-# Used as a link to a plaintext version of a page
-msgid "plain"
-msgstr "brut"
-
-# Used as a link to the previous page in a list of results
-msgid "prev"
-msgstr "préc"
-
 # Used to represent a modification time of right now
 msgid "right now"
 msgstr "à l'instant"
 
-# Used as the title of the rss controller
-# rss is a standard web feed format
-msgid "rss"
-msgstr "rss"
-
 # Used as title for search page, and also is the label for the search box
 msgid "search"
 msgstr "rechercher"
-
-# Link beside commits - selects this commit to be used in a diff
-msgid "select for diff"
-msgstr "marquer pour diff"
-
-# Label for the selected commit, when selecting commits to diff
-msgid "selected"
-msgstr "marqué"
 
 # Used as link to download a copy of the files in a given commit
 msgid "snapshot"
@@ -425,14 +354,6 @@ msgstr "aperçu"
 # A type of filesystem object stored in a project
 msgid "symlink"
 msgstr "Lien symbolique"
-
-# Used as link to and title for page displaying detailed info about a tag
-msgid "tag"
-msgstr "étiquette"
-
-# Used as link to and title for page showing all tags in a project
-msgid "tags"
-msgstr "étiquettes"
 
 # Used as title for and link to a list of files in a directory, which git calls a 'tree'
 msgid "tree"

@@ -75,15 +75,6 @@ class Controller
             case 'snapshot':
                 $controller = new Controller_Snapshot();
                 break;
-            case 'tag':
-                $controller = new Controller_Tag();
-                break;
-            case 'tags':
-                $controller = new Controller_Tags();
-                break;
-            case 'heads':
-                $controller = new Controller_Heads();
-                break;
             case 'blame':
                 $controller = new Controller_Blame();
                 break;
@@ -92,15 +83,6 @@ class Controller
                 $controller = new Controller_Blob();
                 if ($action === 'blob_plain') {
                     $controller->SetParam('plain', true);
-                }
-                break;
-            case 'atom':
-            case 'rss':
-                $controller = new Controller_Feed();
-                if ($action == 'rss') {
-                    $controller->SetParam('format', Controller_Feed::FEED_FORMAT_RSS);
-                } elseif ($action == 'atom') {
-                    $controller->SetParam('format', Controller_Feed::FEED_FORMAT_ATOM);
                 }
                 break;
             case 'commit':

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,9 +53,6 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
                     )
           )
           $%x';
-
-    /** @var string */
-    private $standard_index_pattern = '%^/plugins/git/\?group_id=(?P<project_id>\d+)$%x';
 
     /** @var string */
     private $uri;
@@ -231,8 +228,6 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $action_type = $request->get('a');
         return $request->get('noheader') == 1 ||
             $action_type === 'snapshot' ||
-            $action_type === 'atom' ||
-            $action_type === 'rss' ||
             $action_type === 'commitdiff_plain' ||
             $action_type === 'blob_plain';
     }
