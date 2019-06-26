@@ -35,7 +35,6 @@ use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
 use Tuleap\BotMattermostAgileDashboard\Presenter\StandUpSummaryPresenter;
 use Tuleap\TimezoneRetriever;
 
-
 class StandUpNotificationBuilder
 {
     private $milestone_factory;

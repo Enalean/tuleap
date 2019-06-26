@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
-
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
