@@ -92,25 +92,28 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
     }
 
     /**
-     * @param Array $user_ids
-     * @return Array of PFUser
+     * @param array $user_ids
+     * @return \PFUser[]
      * */
     private function getUsersFromIds(array $user_ids)
     {
         $users = array();
         foreach ($user_ids as $id) {
-            $users[] = $this->getUserFromId($id);
+            $user = $this->getUserFromId($id);
+            if ($user !== null) {
+                $users[] = $user;
+            }
         }
         return $users;
     }
 
-    /**
-     * @return PFUser
-     * */
-    private function getUserFromId($id)
+    private function getUserFromId($id) : ?\PFUser
     {
-        $user = $this->ldap_user_manager->getLdapFromUserId($id);
-        return $this->ldap_user_manager->getUserFromLdap($user);
+        $user_lr = $this->ldap_user_manager->getLdapFromUserId($id);
+        if ($user_lr && (($user = $this->ldap_user_manager->getUserFromLdap($user_lr)) !== false)) {
+            return $user;
+        }
+        return null;
     }
 
     /**
