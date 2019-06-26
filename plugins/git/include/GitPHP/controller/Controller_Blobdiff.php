@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
  *
  * This file is a part of Tuleap.
@@ -22,7 +22,6 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\CommitPresenter;
-use GitPHP\Commit\FileDiffPresenter;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
@@ -30,8 +29,6 @@ use UserManager;
 
 class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     /**
      * __construct
      *
@@ -58,18 +55,11 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-            return 'blobdiffplain.tpl';
-        }
-        if ($this->isTuleapBeauGitActivated() && ! isset($this->params['sidebyside'])) {
+        if (! isset($this->params['sidebyside'])) {
             return 'tuleap/blob-diff.tpl';
         }
 
-        if ($this->isTuleapBeauGitActivated() && isset($this->params['sidebyside'])) {
-            return 'tuleap/blob-diff-side-by-side.tpl';
-        }
-
-        return 'blobdiff.tpl';
+        return 'tuleap/blob-diff-side-by-side.tpl';
     }
 
     /**
@@ -153,20 +143,18 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
         $tree = $commit->GetTree();
         $this->tpl->assign('tree', $tree);
 
-        if ($this->isTuleapBeauGitActivated()) {
-            $blob->SetCommit($commit);
-            $treediff = $commit->DiffToParent();
-            $treediff->SetRenames(true);
-            $commit_metadata_retriever = new CommitMetadataRetriever(
-                new CommitStatusRetriever(new CommitStatusDAO()),
-                UserManager::instance()
-            );
-            $commit_metadata = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
-                $this->getTuleapGitRepository(),
-                $commit
-            );
-            $commit_presenter = new CommitPresenter($commit, $commit_metadata[0], $treediff);
-            $this->tpl->assign('commit_presenter', $commit_presenter);
-        }
+        $blob->SetCommit($commit);
+        $treediff = $commit->DiffToParent();
+        $treediff->SetRenames(true);
+        $commit_metadata_retriever = new CommitMetadataRetriever(
+            new CommitStatusRetriever(new CommitStatusDAO()),
+            UserManager::instance()
+        );
+        $commit_metadata = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
+            $this->getTuleapGitRepository(),
+            $commit
+        );
+        $commit_presenter = new CommitPresenter($commit, $commit_metadata[0], $treediff);
+        $this->tpl->assign('commit_presenter', $commit_presenter);
     }
 }

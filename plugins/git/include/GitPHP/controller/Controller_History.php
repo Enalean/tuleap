@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *
  * This file is a part of Tuleap.
@@ -33,8 +33,6 @@ use UserManager;
  */
 class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     /**
      * __construct
      *
@@ -61,11 +59,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if ($this->isTuleapBeauGitActivated()) {
-            return 'tuleap/history.tpl';
-        }
-
-        return 'history.tpl';
+        return 'tuleap/history.tpl';
     }
 
     /**

@@ -435,34 +435,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($presenter->can_display_selector);
     }
 
-    public function testSelectorIsNotDisplayedIfCurrentProjectIsUsingOldInterface()
-    {
-        ForgeConfig::set('sys_project_whitelist_that_should_use_deprecated_git_interface', "42");
-        $this->setRequest(['a' => 'tree']);
-
-        $this->repository->allows()->isCreated()->andReturns(true);
-        $this->gitphp_project_retriever->allows()
-            ->getFromRepository()
-            ->with($this->repository)
-            ->andReturns($this->gitphp_project);
-
-        $commit = Mockery::mock(Commit::class);
-        $commit->allows()->GetHeads()->andReturn([]);
-        $commit->allows()->GetTags()->andReturn([]);
-        $commit->allows()->GetHash()->andReturn('a1b2c3d4e5f6');
-        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
-
-        $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
-
-        $presenter = $this->builder->build($this->request, $this->repository);
-
-        $this->assertFalse($presenter->can_display_selector);
-    }
-
-    /**
+     /**
      * @dataProvider provideActionsThatShouldNotDisplayTheSelector
      */
     public function testSelectorIsNotDisplayedIfWeAreOnACommitView($action)

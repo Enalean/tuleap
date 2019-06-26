@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *
  * This file is a part of Tuleap.
@@ -27,8 +27,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     /**
      * __construct
      *
@@ -55,10 +53,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if ($this->isTuleapBeauGitActivated()) {
-            return 'tuleap/message.tpl';
-        }
-        return 'message.tpl';
+        return 'tuleap/message.tpl';
     }
 
     /**
