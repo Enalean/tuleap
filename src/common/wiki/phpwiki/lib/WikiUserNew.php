@@ -1732,7 +1732,13 @@ class UserPreferences
     // For now convert just array of objects => array of values
     // Todo: the specialized subobjects must override this.
     function store() {
-        return $this->pack([]);
+        $prefs = [];
+        foreach ($this->_prefs as $name => $object) {
+            if ($value = $object->getraw($name)) {
+                $prefs[$name] = $value;
+            }
+        }
+        return $this->pack($prefs);
     }
 
     // packed string or array of values => array of values
