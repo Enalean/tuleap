@@ -72,8 +72,8 @@ class PermissionsExporter
 
     private function removeUpdatePermissionFromField(array $permissions) : array
     {
-        return array_filter($permissions, static function (string $permission) : bool {
+        return array_values(array_filter($permissions, static function (string $permission) : bool {
             return in_array($permission, PermissionsExporter::READ_ONLY_PRESERVED_PERMISSIONS);
-        });
+        }));
     }
 }
