@@ -92,7 +92,7 @@ class PermissionsExporterTest extends TestCase
         $this->assertCount(0, array_diff($initial_permissions, $computed_permissions));
     }
 
-    public function testItShouldRemoveTheUpdatePermissionIfFieldIsReadOnly()
+    public function testItShouldRemoveTheUpdatePermissionIfFieldIsFrozen()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
         $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
@@ -116,5 +116,32 @@ class PermissionsExporterTest extends TestCase
         $this->assertEquals(1, count($computed_permissions));
         $this->assertContains(Tracker_FormElement::REST_PERMISSION_READ, $computed_permissions);
         $this->assertNotContains(Tracker_FormElement::REST_PERMISSION_UPDATE, $computed_permissions);
+    }
+
+    public function testItShouldOutputAnArrayThatDoesNotBecomeAJSONObject()
+    {
+        $initial_permissions = [
+            Tracker_FormElement::REST_PERMISSION_READ,
+            Tracker_FormElement::REST_PERMISSION_UPDATE,
+            Tracker_FormElement::REST_PERMISSION_SUBMIT
+        ];
+        $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $form_element
+            ->shouldReceive('exportCurrentUserPermissionsToREST')
+            ->andReturn($initial_permissions);
+
+        $user     = \Mockery::mock(\PFUser::class);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+
+        $this->frozen_field_detector->shouldReceive('isFieldFrozen')->andReturnTrue();
+
+        $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
+            $user,
+            $form_element,
+            $artifact
+        );
+
+        $expected_json = '["read","submit"]';
+        $this->assertSame($expected_json, json_encode($computed_permissions));
     }
 }
