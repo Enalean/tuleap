@@ -37,6 +37,7 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLeg
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
@@ -334,8 +335,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         $artifact = $changeset->getArtifact();
 
-        $time_period = $this->getBurndownConfigurationValueRetriever()->getTimePeriod($artifact, $user);
-
         $artifact_field_value_representation = new ArtifactFieldValueRepresentation();
         $artifact_field_value_representation->build(
             $this->getId(),
@@ -343,11 +342,28 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $this->getBurndownDataForREST(
                 $artifact,
                 $user,
-                $time_period
+                $this->getTimePeriodForRESTRepresentation($artifact, $user)
             )->getRESTRepresentation()
         );
 
         return $artifact_field_value_representation;
+    }
+
+    private function getTimePeriodForRESTRepresentation(Tracker_Artifact $artifact, PFUser $user)
+    {
+        try{
+            $start_date = $this->getBurndownConfigurationValueRetriever()->getStartDate($artifact, $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
+            $start_date = null;
+        }
+
+        try{
+            $duration = $this->getBurndownConfigurationValueRetriever()->getDuration($artifact, $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $ex) {
+            $duration = null;
+        }
+
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
 
     protected function getLogger()
