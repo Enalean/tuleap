@@ -84,6 +84,21 @@ final class PluginLoaderTest extends TestCase
         $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
+    public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning() : void
+    {
+        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
+
+        $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
+
+        touch($this->hooks_cache_file_path);
+        chmod($this->hooks_cache_file_path, 0400);
+
+        $plugin_loader->loadPlugins();
+
+        $unserialized_hooks_cache = include $this->hooks_cache_file_path;
+        $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
+    }
+
     public function testHooksFileCacheWithGarbageDataIsOverwritten() : void
     {
         $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
