@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
 var tuleap = tuleap || {};
 
 (function($) {
@@ -41,6 +42,7 @@ var tuleap = tuleap || {};
         }
 
         return (
+            /*eslint-disable no-multi-str */
             '<div class="avatar autocompleter-avatar"> \
                 ' +
             (user.has_avatar ? '<img src="' + tuleap.escaper.html(user.avatar_url) + '">' : "") +
@@ -48,6 +50,7 @@ var tuleap = tuleap || {};
             </div> \
             " +
             tuleap.escaper.html(user.text)
+            /*eslint-enable no-multi-str */
         );
     }
 
@@ -93,7 +96,7 @@ var tuleap = tuleap || {};
                 url: "/user/autocomplete.php",
                 dataType: "json",
                 quietMillis: 250,
-                data: function(term, page) {
+                data: function(term) {
                     return {
                         return_type: "json_for_select_2",
                         "with-groups-of-user-in-project-id": input.dataset.projectId,
@@ -101,7 +104,7 @@ var tuleap = tuleap || {};
                         name: term
                     };
                 },
-                results: function(data, page) {
+                results: function(data) {
                     return {
                         results: data.results
                     };

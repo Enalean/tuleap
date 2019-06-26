@@ -137,7 +137,9 @@ const webpack_config_for_burning_parrot_code = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        tuleap: "tuleap",
+        ckeditor: "CKEDITOR"
     },
     module: {
         rules: [

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,8 +47,8 @@ function bindCloseOnClickOutsideDropdown() {
         const target = event.target;
 
         if (
-            !findClosest(target, nav_dropdown_content_classname) &&
-            !findClosest(target, nav_dropdown_link_classname)
+            findClosest(target, nav_dropdown_content_classname) === null &&
+            findClosest(target, nav_dropdown_link_classname) === null
         ) {
             hideAllDropdowns();
         }
@@ -59,10 +59,8 @@ function bindCloseOnEscape() {
     document.addEventListener("keyup", event => {
         const target = event.target;
 
-        if (
-            target.tagName.toLowerCase() === "input" &&
-            findAncestor(target, nav_dropdown_content_classname)
-        ) {
+        const dropdown_content = target.closest("." + nav_dropdown_content_classname);
+        if (target.tagName.toLowerCase() === "input" && dropdown_content !== null) {
             return;
         }
 
@@ -114,12 +112,7 @@ function findClosest(element, classname) {
         return element;
     }
 
-    return findAncestor(element, classname);
-}
-
-function findAncestor(element, classname) {
-    while ((element = element.parentElement) && !hasClassNamed(element, classname)) {}
-    return element;
+    return element.closest("." + classname);
 }
 
 function hasClassNamed(element, classname) {

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
 (function($) {
     $(document).ready(function() {
         var templates = $(".one_step_project_choose_template > label.radio > input[type=radio]");

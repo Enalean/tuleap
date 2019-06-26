@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     filter.init(input_filter, list_element_selector);
 
-    $(".projects-nav").click(function(event) {
+    $(".projects-nav").click(function() {
         if (!$(this).hasClass("open")) {
             input_filter.focus();
             initCustomScrollbar();

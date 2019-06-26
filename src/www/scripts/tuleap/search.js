@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly */
 var tuleap = tuleap || {};
 
 !(function($) {
@@ -40,7 +41,7 @@ var tuleap = tuleap || {};
         enableSearchMoreResults: function() {
             $("#search-more-button").unbind("click");
             $("#search-more-button").click(function() {
-                tuleap.search.offset += parseInt($("input[name=number_of_page_results]").val());
+                tuleap.search.offset += parseInt($("input[name=number_of_page_results]").val(), 10);
                 searchFromSidebar(tuleap.search.type_of_search, true);
             });
         },

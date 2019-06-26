@@ -33,11 +33,11 @@ function init() {
 function getModalContent(button, button_id) {
     var modal_id = button.dataset.targetModalId;
     if (!modal_id) {
-        throw "Missing data-target-modal-id attribute for button " + button_id;
+        throw new Error("Missing data-target-modal-id attribute for button " + button_id);
     }
     var modal_content = document.getElementById(modal_id);
     if (!modal_content) {
-        throw "Cannot find the modal " + modal_id;
+        throw new Error("Cannot find the modal " + modal_id);
     }
     return modal_content;
 }
@@ -171,7 +171,7 @@ function initializeWidgets(table, data) {
     });
     const widgets_element = table.querySelectorAll(".dashboard-add-widget-list-table-widget");
     [].forEach.call(widgets_element, function(widget_element) {
-        widget_element.addEventListener("click", function(event) {
+        widget_element.addEventListener("click", function() {
             displayWidgetSettings(table, widget_element, data_widgets);
         });
     });

@@ -15,6 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tuleap:readonly Tour:readonly jQuery:readonly */
 /**
  * Handle Tuleap tours
  */

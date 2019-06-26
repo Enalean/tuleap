@@ -30,7 +30,7 @@ function init() {
         isContainer: function(el) {
             return el.classList.contains("dragula-container");
         },
-        moves: function(el, source, handle, sibling) {
+        moves: function(el, source, handle) {
             return getDataSet(handle).draggable === "true";
         }
     });

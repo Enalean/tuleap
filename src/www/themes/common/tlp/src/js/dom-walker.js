@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { findClosestElement };
-
-function findAncestorElement(element, ancestor) {
-    while ((element = element.parentElement) && element != ancestor) {}
-    return element;
-}
-
-function findClosestElement(element, ancestor) {
-    if (element == ancestor) {
-        return element;
-    }
-
-    return findAncestorElement(element, ancestor);
+export function findClosestElement(element, ancestor) {
+    let current = element;
+    do {
+        if (!document.documentElement.contains(element)) {
+            return null;
+        }
+        if (current.isSameNode(ancestor)) {
+            return current;
+        }
+        current = current.parentElement;
+    } while (current !== null && current.nodeType === Node.ELEMENT_NODE);
+    return null;
 }

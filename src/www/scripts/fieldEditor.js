@@ -22,11 +22,21 @@
  *
  */
 
+/* global Class:readonly $:readonly Insertion:readonly Ajax:readonly codendi:readonly $F:readonly */
+
 // Define namespace to prevent clashes
-if (!com) var com = {};
-if (!com.xerox) com.xerox = {};
-if (!com.xerox.codendi) com.xerox.codendi = {};
-if (!com.xerox.codendi.tracker) com.xerox.codendi.tracker = {};
+if (!com) {
+    var com = {};
+}
+if (!com.xerox) {
+    com.xerox = {};
+}
+if (!com.xerox.codendi) {
+    com.xerox.codendi = {};
+}
+if (!com.xerox.codendi.tracker) {
+    com.xerox.codendi.tracker = {};
+}
 
 com.xerox.codendi.FieldEditor = Class.create();
 Object.extend(com.xerox.codendi.FieldEditor.prototype, {
@@ -98,7 +108,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
             parameters: {
                 text: $F(this.element)
             },
-            onComplete: function(transport) {
+            onComplete: function() {
                 Element.show(this.preview);
                 Element.hide(this.element);
                 this.edit_cancel.innerHTML = "[" + this.options.edit + "]";

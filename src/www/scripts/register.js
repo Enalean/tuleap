@@ -15,6 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 var tuleap = tuleap || {};
 
 (function($) {
@@ -30,7 +32,7 @@ var tuleap = tuleap || {};
                         content: helper.html()
                     });
 
-                    $(this).on("shown.bs.popover", function(e) {
+                    $(this).on("shown.bs.popover", function() {
                         $(this)
                             .data("popover")
                             .$tip.find(".popover-content")

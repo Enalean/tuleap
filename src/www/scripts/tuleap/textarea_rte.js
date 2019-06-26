@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global Class:readonly Builder:readonly $:readonly */
 var tuleap = window.tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 

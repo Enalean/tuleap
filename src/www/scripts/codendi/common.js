@@ -17,6 +17,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global ProtoCheck:readonly Prototype:readonly Ajax:readonly $$:readonly */
 function help_window(helpurl) {
     var HelpWin = window.open(
         helpurl,
@@ -25,6 +26,7 @@ function help_window(helpurl) {
     );
     HelpWin.focus();
 }
+window.help_window = help_window;
 
 var codendi = codendi || {};
 
@@ -46,9 +48,9 @@ document.observe("dom:loaded", function() {
             .collect(function(tr) {
                 return tr.childElements()[idx];
             });
-        cell.observe("mouseover", function(evt) {
+        cell.observe("mouseover", function() {
             col.invoke("addClassName", "matrix_highlight_col");
-        }).observe("mouseout", function(evt) {
+        }).observe("mouseout", function() {
             col.invoke("removeClassName", "matrix_highlight_col");
         });
     });

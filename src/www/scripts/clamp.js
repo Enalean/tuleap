@@ -9,9 +9,10 @@
     window.$clamp = function(c, d) {
         function s(a, b) {
             n.getComputedStyle ||
-                (n.getComputedStyle = function(a, b) {
+                (n.getComputedStyle = function(a) {
                     this.el = a;
                     this.getPropertyValue = function(b) {
+                        //eslint-disable-next-line no-useless-escape
                         var c = /(\-([a-z]){1})/g;
                         "float" == b && (b = "styleFloat");
                         c.test(b) &&
@@ -34,19 +35,21 @@
         }
         function u(a) {
             var b = s(a, "line-height");
-            "normal" == b && (b = 1.2 * parseInt(s(a, "font-size")));
-            return parseInt(b);
+            "normal" == b && (b = 1.2 * parseInt(s(a, "font-size"), 10));
+            return parseInt(b, 10);
         }
         function l(a) {
-            if (a.lastChild.children && 0 < a.lastChild.children.length)
+            if (a.lastChild.children && 0 < a.lastChild.children.length) {
                 return l(Array.prototype.slice.call(a.children).pop());
+            }
             if (
                 a.lastChild &&
                 a.lastChild.nodeValue &&
                 "" != a.lastChild.nodeValue &&
                 a.lastChild.nodeValue != b.truncationChar
-            )
+            ) {
                 return a.lastChild;
+            }
             a.lastChild.parentNode.removeChild(a.lastChild);
             return l(c);
         }
@@ -59,21 +62,28 @@
                     ((a.nodeValue = a.nodeValue.replace(b.truncationChar, "")),
                     (c.innerHTML = a.nodeValue + " " + m.innerHTML + b.truncationChar));
                 if (f) {
-                    if (c.clientHeight <= d)
-                        if (0 <= k.length && "" != h) r(a, f.join(h) + h + q), (f = null);
-                        else return c.innerHTML;
-                } else
+                    if (c.clientHeight <= d) {
+                        if (0 <= k.length && "" != h) {
+                            r(a, f.join(h) + h + q), (f = null); //eslint-disable-line no-sequences
+                        } else {
+                            return c.innerHTML;
+                        }
+                    }
+                } else {
                     "" == h &&
                         (r(a, ""),
                         (a = l(c)),
                         (k = b.splitOnChars.slice(0)),
                         (h = k[0]),
                         (q = f = null));
-                if (b.animate)
+                }
+                if (b.animate) {
                     setTimeout(function() {
                         p(a, d);
                     }, !0 === b.animate ? 10 : b.animate);
-                else return p(a, d);
+                } else {
+                    return p(a, d);
+                }
             }
         }
         function r(a, c) {
@@ -83,7 +93,7 @@
         var n = window,
             b = {
                 clamp: d.clamp || 2,
-                useNativeClamp: "undefined" != typeof d.useNativeClamp ? d.useNativeClamp : !0,
+                useNativeClamp: "undefined" !== typeof d.useNativeClamp ? d.useNativeClamp : !0,
                 splitOnChars: d.splitOnChars || [".", "-", "\u2013", "\u2014", " "],
                 animate: d.animate || !1,
                 truncationChar: d.truncationChar || "\u2026",
@@ -91,7 +101,7 @@
             },
             e = c.style,
             y = c.innerHTML,
-            z = "undefined" != typeof c.style.webkitLineClamp,
+            z = "undefined" !== typeof c.style.webkitLineClamp,
             g = b.clamp,
             v = g.indexOf && (-1 < g.indexOf("px") || -1 < g.indexOf("em")),
             m;
@@ -101,7 +111,7 @@
             h = k[0],
             f,
             q;
-        "auto" == g ? (g = t()) : v && (g = t(parseInt(g)));
+        "auto" == g ? (g = t()) : v && (g = t(parseInt(g, 10)));
         var w;
         z && b.useNativeClamp
             ? ((e.overflow = "hidden"),

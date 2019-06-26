@@ -15,6 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 (function($) {
     $(document).ready(function() {
         setIsAtTop();

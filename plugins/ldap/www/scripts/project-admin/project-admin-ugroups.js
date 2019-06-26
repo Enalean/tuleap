@@ -75,6 +75,6 @@ function initLdapGroupsAutocompleter() {
 
         const response = await get(base_url, { params });
 
-        return await response.json();
+        return response.json();
     }
 }

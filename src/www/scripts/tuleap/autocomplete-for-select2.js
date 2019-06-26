@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global require:readonly module:readonly */
+
 var select2;
 var escaper;
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
@@ -95,6 +97,7 @@ function autocomplete_users_for_select2(element, options) {
             return escaper.html(user.text);
         }
 
+        /* eslint-disable no-multi-str */
         var markup =
             '<div class="select2-result-user"> \
             <div class="tlp-avatar select2-result-user__avatar"> \
@@ -106,6 +109,7 @@ function autocomplete_users_for_select2(element, options) {
             escaper.html(user.text) +
             " \
         </div>";
+        /* eslint-enable no-multi-str */
 
         return markup;
     }

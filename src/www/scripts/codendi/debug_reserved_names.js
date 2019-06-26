@@ -1,3 +1,4 @@
+/* global $$:readonly $H:readonly $break:readonly */
 // http://jibbering.com/faq/names/
 // http://thinkweb2.com/projects/prototype/domlint-resolving-name-conflicts/
 document.observe("dom:loaded", function() {
@@ -90,6 +91,7 @@ document.observe("dom:loaded", function() {
                     border: "5px dotted red"
                 });
                 if (
+                    //eslint-disable-next-line no-alert
                     !confirm(
                         'An <input> has the attribute name="' +
                             element.name +

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -124,14 +124,9 @@ function getDropdownElement(element) {
     if (element.classList.contains(nav_dropdow_selector_name)) {
         dropdown_element = element.querySelector(dropdown_selector);
     } else {
-        dropdown_element = findAncestor(element, nav_dropdow_selector_name).querySelector(
-            dropdown_selector
-        );
+        dropdown_element = element
+            .closest("." + nav_dropdow_selector_name)
+            .querySelector(dropdown_selector);
     }
     return dropdown_element;
-}
-
-function findAncestor(element, cls) {
-    while ((element = element.parentElement) && !element.classList.contains(cls)) {}
-    return element;
 }

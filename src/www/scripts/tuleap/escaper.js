@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global module:readonly */
+
 var escaper = {
     entityMap: {
         "&": "&amp;",
@@ -27,7 +29,7 @@ var escaper = {
         "/": "&#x2F;"
     },
     html: function(text) {
-        return String(text).replace(/[&<>"'\/]/g, function fromEntityMap(s) {
+        return String(text).replace(/[&<>"'/]/g, function fromEntityMap(s) {
             return escaper.entityMap[s];
         });
     }

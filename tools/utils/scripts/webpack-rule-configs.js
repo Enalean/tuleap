@@ -171,7 +171,7 @@ const rule_scss_loader = {
         {
             loader: "css-loader",
             options: {
-                url: (url, resourcePath) => {
+                url: url => {
                     // Organization logos might be customized by administrators, let's exclude them for now
                     return (
                         url.endsWith("organization_logo.png") ||

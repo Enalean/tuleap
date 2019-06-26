@@ -22,6 +22,10 @@ import {
     getUploadImageOptions,
     initiateUploadImage
 } from "../tuleap/ckeditor/get-upload-image-options.js";
+import CKEDITOR from "ckeditor";
+import tuleap from "tuleap";
+
+/* global Prototype:readonly Class:readonly $:readonly */
 
 var codendi = window.codendi || {};
 
@@ -168,7 +172,7 @@ codendi.RTE = Class.create({
             }
         });
 
-        this.rte.on("instanceReady", function(evt) {
+        this.rte.on("instanceReady", function() {
             this.document.getBody().$.contentEditable = true;
             tuleap.mention.init(this.document.getBody().$);
         });
@@ -221,7 +225,9 @@ codendi.RTE = Class.create({
     destroy: function() {
         try {
             this.rte.destroy(false);
-        } catch (e) {}
+        } catch (e) {
+            // ignore
+        }
         this.rte = null;
     },
     getContent: function() {

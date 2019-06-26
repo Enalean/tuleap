@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/* global codendi:readonly $:readonly $$:readonly Ajax:readonly */
 /**
  * Hide references from the current item to other items
  */
@@ -79,8 +80,10 @@ function show_references_to() {
         );
     }
 }
+window.show_references_to = show_references_to;
 
 function delete_ref(id, message) {
+    //eslint-disable-next-line no-alert
     if (confirm(message)) {
         var opt = {
             method: "get",
@@ -118,6 +121,7 @@ function delete_ref(id, message) {
     }
     return false;
 }
+window.delete_ref = delete_ref;
 
 document.observe("dom:loaded", function() {
     //hide reference to item to clean the ui
@@ -131,7 +135,7 @@ document.observe("dom:loaded", function() {
             var a = l.down(".delete_ref");
             var img = a.down("img");
             img.src = img.src.replace("cross.png", "cross-disabled.png");
-            img.observe("mouseover", function(evt) {
+            img.observe("mouseover", function() {
                 img.src = img.src.replace("cross-disabled.png", "cross.png");
             });
             img.observe("mouseout", function() {

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global CKEDITOR:readonly tlp:readonly tuleap:readonly */
+
 document.addEventListener("DOMContentLoaded", function() {
     var massmail_project_member_links = document.querySelectorAll(".massmail-project-member-link");
 
