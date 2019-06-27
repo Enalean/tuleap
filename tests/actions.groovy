@@ -26,7 +26,7 @@ def runPHPUnitTests(String version) {
 
 def runKarmaTests(String name, String path) {
     sh """
-    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json \$DOCKER_REGISTRY/enalean/tuleap-test-karma:latest --path ${path})"
+    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json --network none \$DOCKER_REGISTRY/enalean/tuleap-test-karma:latest --path ${path})"
     docker start --attach "\$cid" || true
     mkdir -p 'results/karma'
     docker cp "\$cid":/output/test-results.xml results/karma/test-${name}-results.xml || true
@@ -37,13 +37,13 @@ def runKarmaTests(String name, String path) {
 def runRESTTests(String version) {
     sh """
     mkdir -p results/api-rest/${version}
-    docker run --rm -v \$WORKSPACE/sources:/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp -v \$WORKSPACE/results/api-rest/${version}:/output \$DOCKER_REGISTRY/enalean/tuleap-test-rest:${version}
+    docker run --rm -v \$WORKSPACE/sources:/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp -v \$WORKSPACE/results/api-rest/${version}:/output --network none \$DOCKER_REGISTRY/enalean/tuleap-test-rest:${version}
     """
 }
 
 def runSOAPTests(String name, String imageVersion) {
     sh """
-    cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${imageVersion})"
+    cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro --network none \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${imageVersion})"
     docker start --attach "\$cid" || true
     mkdir -p 'results/api-soap/${name}/'
     docker cp "\$cid":/output/soap_tests.xml results/api-soap/${name}/soap_tests.xml || true
@@ -84,7 +84,7 @@ def runPsalm(String configPath, String filesToAnalyze) {
 
 def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
     sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources php:7.3-cli-alpine \
+    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none php:7.3-cli-alpine \
         ${phpcsPath} --extensions=php --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
     """
 }
