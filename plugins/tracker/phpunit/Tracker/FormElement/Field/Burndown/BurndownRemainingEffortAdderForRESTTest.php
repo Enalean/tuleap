@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Field_ComputedDao;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
-class BurndownRemainingEffortAdderTest extends TestCase
+class BurndownRemainingEffortAdderForRESTTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
@@ -82,31 +82,62 @@ class BurndownRemainingEffortAdderTest extends TestCase
 
     public function testItDoesNotDoAnyAdditionWhenBurndownDoesNotHaveARemainingEffortField()
     {
-        $time_period   = Mockery::mock(TimePeriodWithoutWeekEnd::class);
-        $burndown_data = Mockery::mock(Tracker_Chart_Data_Burndown::class);
+        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class);
+        $capacity    = 10;
+
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn(null);
         $time_period->shouldReceive('getStartDate')->never();
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
+
+        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
     }
 
     public function testItDoesNotDoAnyAdditionWhenStartDateIsInFuture()
     {
-        $burndown_data = Mockery::mock(Tracker_Chart_Data_Burndown::class);
+        $date_in_future = strtotime('+1 month');
+        $capacity       = 5;
+        $duration       = 20;
+        $time_period    = new TimePeriodWithoutWeekEnd($date_in_future, $duration);
+
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $remaining_effort_field->shouldReceive('getId')->andReturn(1);
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
 
-        $date_in_future = strtotime('+1 month');
-        $time_period = new TimePeriodWithoutWeekEnd($date_in_future, 5);
-        $burndown_data->shouldReceive("getTimePeriod")->andReturn($time_period);
-
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
         $remaining_effort_field->shouldReceive("getComputedValue")->never();
 
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
+
+        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
+    }
+
+    public function testItDoesNotDoAnyAdditionWhenNoChachedDays()
+    {
+        $field_id               = 1;
+        $duration               = 5;
+        $old_start_date         = strtotime('-3 month');
+        $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
+
+        $time_period   = new TimePeriodWithoutWeekEnd($old_start_date, 5);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
+
+        $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
+
+        $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
+
+        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+
+        $remaining_effort_field->shouldReceive('getCachedValue')->never();
+        $remaining_effort_field->shouldReceive('getComputedValue')->never();
+
+        $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
+
+        $this->assertEmpty($burndown_data->getRemainingEffortsAtDate());
     }
 
     public function testItAddCachedValuesForAlreadyPastDays()
@@ -171,9 +202,9 @@ class BurndownRemainingEffortAdderTest extends TestCase
         $remaining_effort_field->shouldReceive('getCachedValue');
         $remaining_effort_field->shouldReceive('getComputedValue')->never();
 
-        $this->assertEquals(count($burndown_data->getRemainingEffort()), 6);
-
         $this->adder->addRemainingEffortDataForREST($burndown_data, $this->artifact, $this->user);
+
+        $this->assertEquals(count($burndown_data->getRemainingEffort()), 6);
     }
 
     public function testItAddTodayComputedValueForTheCurrentDay()
