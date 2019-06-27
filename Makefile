@@ -101,16 +101,16 @@ generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests_rest_72: ## Run all REST tests with PHP FPM 7.2
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql57
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-rest:c6-php72-mysql57
 
 tests_rest_73: ## Run all REST tests with PHP FPM 7.3
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php73-mysql57
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-rest:c6-php73-mysql57
 
 tests_soap_72: ## Run all SOAP tests in PHP 7.2
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:4
 
 tests_soap_73: ## Run all SOAP tests in PHP 7.3
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:5
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:5
 
 tests_cypress: ## Run Cypress tests
 	@tests/e2e/full/wrap.sh
@@ -122,7 +122,7 @@ tests_cypress_distlp: ## Run Cypress distlp tests
 	@tests/e2e/distlp/wrap.sh
 
 tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php72 bash"
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp --network none -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php72 bash"
 
 phpunit-ci-run:
 	$(PHP) -d pcov.directory=. src/vendor/bin/phpunit \
@@ -141,59 +141,59 @@ run-as-owner:
 
 phpunit-ci-72:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-72
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-72:/tmp/results --network none enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
 
 phpunit-docker-72: ## Run PHPUnit tests in Docker container with PHP 7.2. Use FILES parameter to run specific tests.
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit FILES=$(FILES)"
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit-ci-73:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-73
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-73:/tmp/results enalean/tuleap-test-phpunit:c7-php73 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php73/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-73:/tmp/results --network none enalean/tuleap-test-phpunit:c7-php73 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php73/root/usr/bin/php run-as-owner
 
 phpunit-docker-73: ## Run PHPUnit tests in Docker container with PHP 7.3. Use FILES parameter to run specific tests.
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c7-php73 scl enable php73 "make -C /tuleap phpunit FILES=$(FILES)"
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php73 scl enable php73 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit-ci-74:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-74
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-74:/tmp/results enalean/tuleap-test-phpunit:c7-php74 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php74/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-74:/tmp/results enalean/tuleap-test-phpunit:c7-php74 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php74/root/usr/bin/php run-as-owner
 
 phpunit-docker-74: ## Run PHPUnit tests in Docker container with PHP 7.4. Use FILES parameter to run specific tests.
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c7-php74 scl enable php74 "make -C /tuleap phpunit FILES=$(FILES)"
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php74 scl enable php74 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result $(FILES)
 
 simpletest-72-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-72
-	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-72:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-72:/output:rw --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
 
 simpletest-72: ## Run SimpleTest with PHP 7.2
-	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
 
 simpletest-72-file: ## Run SimpleTest with PHP 7.2 on a given file or directory with FILE variable
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
 simpletest-73-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-73
-	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-73:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-73:/output:rw --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
 
 simpletest-73: ## Run SimpleTest with PHP 7.3
-	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
 
 simpletest-73-file: ## Run SimpleTest with PHP 7.3 on a given file or directory with FILE variable
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
 	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)

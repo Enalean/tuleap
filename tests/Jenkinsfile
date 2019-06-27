@@ -145,6 +145,7 @@ pipeline {
                                 dockerfile {
                                     dir 'sources/tests/psalm/'
                                     reuseNode true
+                                    args '--network none'
                                 }
                             }
                             steps {
