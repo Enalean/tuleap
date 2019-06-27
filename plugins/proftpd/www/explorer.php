@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -31,5 +31,5 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
     $request = new HTTPRequest(array('controller' => 'explorer'));
     $p->process($request);
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }

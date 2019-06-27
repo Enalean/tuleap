@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -61,7 +61,7 @@ class Tracker_Migration_MailLogger implements Logger {
         $mail        = new Codendi_Mail();
         $breadcrumbs = array();
 
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. HTTPRequest::instance()->getServerUrl() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());

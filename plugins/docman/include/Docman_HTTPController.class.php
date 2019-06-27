@@ -108,7 +108,7 @@ class Docman_HTTPController extends Docman_Controller {
             $obsoDate = DateHelper::formatForLanguage($GLOBALS['Language'], $item->getObsolescenceDate(), true);
 
             // Urls
-            $baseUrl = get_server_url().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
+            $baseUrl = HTTPRequest::instance()->getServerUrl().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
             $directUrl = $baseUrl .'&action=show';
             $detailUrl = $baseUrl .'&action=details';
             

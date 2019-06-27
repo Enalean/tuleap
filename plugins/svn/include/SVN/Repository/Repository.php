@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\SVN\Repository;
 
 use ForgeConfig;
+use HTTPRequest;
 use Project;
 
 class Repository
@@ -105,7 +106,7 @@ class Repository
     public function getSvnDomain()
     {
         // Domain name must be lowercase (issue with some SVN clients)
-        return strtolower(get_server_url());
+        return strtolower(HTTPRequest::instance()->getServerUrl());
     }
 
     public function canBeDeleted()

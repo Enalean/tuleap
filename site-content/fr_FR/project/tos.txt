@@ -21,7 +21,7 @@ conditions générales d'utilisation (CGU) qui peuvent être mises à jour
 comme indiqué ci-dessous. Chaque utilisateur peut à tout moment
 consulter la dernière version des CGU sur&nbsp;:
 
-<a href="/tos/tos.php"><?php print get_server_url(); ?>/tos/tos.php</a>.
+<a href="/tos/tos.php"><?php print \HTTPRequest::instance()->getServerUrl(); ?>/tos/tos.php</a>.
 
 De plus, l'utilisation d'un service en particulier peut faire l'objet
 de règles particulières ("Règles spécifiques à un service") publiées

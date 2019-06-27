@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All rights reserved
+ * Copyright (c) Enalean, 2013-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,7 @@ class Tracker_ArtifactChildPresenter {
         Tracker_Semantic_Status $semantic,
         NatureIsChildLinkRetriever $retriever
     ) {
-        $base_url = get_server_url();
+        $base_url = HTTPRequest::instance()->getServerUrl();
 
         $this->xref         = $artifact->getXRef();
         $this->title        = $artifact->getTitle();

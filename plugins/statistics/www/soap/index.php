@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ $p = $pluginManager->getPluginByName('statistics');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->processSOAP($request);
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }
 
 ?>

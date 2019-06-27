@@ -4,7 +4,7 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -2508,7 +2508,9 @@ class Artifact {
     function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
         global $art_field_fact,$art_fieldset_fact,$Language;
 
-        $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+        $server_url = HTTPRequest::instance()->getServerUrl();
+
+        $artifact_href = $server_url."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
         $used_fields = $art_field_fact->getAllUsedFields();
         $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
         $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
@@ -2628,14 +2630,14 @@ class Artifact {
         }
         // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.
-        $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
+        $body = preg_replace('%<a href="/%', '<a href="'.$server_url.'/', $body);
         
         // Mail is ready, we can create it
         if ($ok) {
             $project = ProjectManager::instance()->getProject($group_id);
             $breadcrumbs = array();
-            $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $project->getPublicName() .'</a>';
-            $breadcrumbs[] = '<a href="'. get_server_url() .'/tracker/?group_id='. (int)$group_id .'&amp;atid='. (int)$group_artifact_id .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) .'</a>';
+            $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $project->getPublicName() .'</a>';
+            $breadcrumbs[] = '<a href="'. $server_url .'/tracker/?group_id='. (int)$group_id .'&amp;atid='. (int)$group_artifact_id .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) .'</a>';
             $breadcrumbs[] = '<a href="'. $artifact_href .'" />'. $hp->purify($this->ArtifactType->getItemName().' #'.$this->getID()) .'</a>';
             
             $mail = new Codendi_Mail();
@@ -2705,7 +2707,7 @@ class Artifact {
         $fmt_len = 40;
         $fmt_left = sprintf("%%-%ds ", $fmt_len-1);
         $fmt_right = "%s";
-        $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+        $artifact_href = HTTPRequest::instance()->getServerUrl()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
         $used_fields = $art_field_fact->getAllUsedFields();
          $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
          $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
@@ -3598,7 +3600,7 @@ class Artifact {
         }
         
         // Determine which protocl to use for embedded URL in ASCII format
-        $server=get_server_url();
+        $server = HTTPRequest::instance()->getServerUrl();
         
         // Loop throuh the attached files and format them
         for ($i=0; $i < $rows; $i++) {

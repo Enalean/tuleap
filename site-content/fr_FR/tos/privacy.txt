@@ -208,8 +208,8 @@ information.
 
 <p>
 To update the privacy policy, we will both post the changed version and its
-effective date at <a href="<?php print get_server_url(); ?>/tos/privacy.php">
-<?php print get_server_url(); ?>/tos/privacy.php</a>.  Concurrently with
+effective date at <a href="/tos/privacy.php">
+<?php print \HTTPRequest::instance()->getServerUrl(); ?>/tos/privacy.php</a>.  Concurrently with
 any change to the core privacy policy, we will email notice of the change to
 known users at least 15 days (or such shorter or longer time as mandated by
 law or any judicial or government body ) in advance.

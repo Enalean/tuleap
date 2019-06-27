@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -53,7 +54,10 @@ class ReferenceInstance {
     /**
      @return string full link (with http://servername...) if needed.
     */
-    function getFullGotoLink() { return get_server_url().$this->gotoLink;}
+    function getFullGotoLink()
+    {
+        return HTTPRequest::instance()->getServerUrl().$this->gotoLink;
+    }
 
     /**
      * Compute GotoLink according to the extracted match.

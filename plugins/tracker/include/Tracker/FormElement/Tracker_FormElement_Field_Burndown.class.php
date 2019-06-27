@@ -438,7 +438,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $purifier = Codendi_HTMLPurifier::instance();
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
+            $output .= '<img src="'.HTTPRequest::instance()->getServerUrl().$this->getBurndownImageUrl($artifact).'" alt="'.$purifier->purify($this->getLabel()).'" width="640" height="480" />';
             $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
         }
         return $output;

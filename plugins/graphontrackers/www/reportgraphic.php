@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -58,6 +58,6 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
         }
     }
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }
 ?>

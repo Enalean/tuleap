@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class DocmanV1_XMLExport {
 
     public function createDomDocument() {
         $implementation    = new DOMImplementation();
-        $dtd               = $implementation->createDocumentType('docman', '', get_server_url().'/plugins/docman/docman-1.0.dtd');
+        $dtd               = $implementation->createDocumentType('docman', '', HTTPRequest::instance()->getServerUrl().'/plugins/docman/docman-1.0.dtd');
         $doc               = $implementation->createDocument('', '', $dtd);
         $doc->encoding     = 'UTF-8';
         $doc->standalone   = 'no';

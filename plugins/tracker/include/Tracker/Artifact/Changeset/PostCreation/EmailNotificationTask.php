@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use ConfigNotificationAssignedTo;
 use ForgeConfig;
+use HTTPRequest;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tuleap\Mail\MailLogger;
@@ -448,7 +449,7 @@ final class EmailNotificationTask implements PostCreationTask
                     </tr>';
             }
 
-            $artifact_link = get_server_url().'/plugins/tracker/?aid='.(int)$art->getId();
+            $artifact_link = HTTPRequest::instance()->getServerUrl() .'/plugins/tracker/?aid='.(int)$art->getId();
 
             $output .=
                 '<tr>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Dave Kibble, 2006.
@@ -28,5 +28,5 @@ $p = $plugin_manager->getPluginByName('projectlinks');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->adminPage();
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }
