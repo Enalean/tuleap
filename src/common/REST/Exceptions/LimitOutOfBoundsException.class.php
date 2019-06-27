@@ -19,7 +19,7 @@
 
 namespace Tuleap\REST\Exceptions;
 
-use \Luracast\Restler\RestException;
+use Luracast\Restler\RestException;
 
 class LimitOutOfBoundsException extends RestException {
 

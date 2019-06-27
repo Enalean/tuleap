@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-
 use Valid_HTTPSURI;
 use Valid_String;
 

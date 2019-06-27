@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \Tuleap\LDAP\GroupSyncNotificationsManager;
+use Tuleap\LDAP\GroupSyncNotificationsManager;
 use Tuleap\LDAP\LDAPSetOfUserIDsForDiff;
 use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 

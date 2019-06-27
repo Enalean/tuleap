@@ -20,19 +20,19 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use \Luracast\Restler\RestException;
+use Luracast\Restler\RestException;
 use Tracker_FileInfo;
 use Tracker_FileInfo_InvalidFileInfoException;
 use Tracker_FileInfo_UnauthorisedException;
-use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
-use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
-use \Tuleap\REST\Header;
-use \UserManager;
-use \PFUser;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \Tracker_FileInfoFactory;
-use \Tracker_FileInfoDao;
+use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
+use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use Tuleap\REST\Header;
+use UserManager;
+use PFUser;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use Tracker_FileInfoFactory;
+use Tracker_FileInfoDao;
 
 class ArtifactFilesResource
 {

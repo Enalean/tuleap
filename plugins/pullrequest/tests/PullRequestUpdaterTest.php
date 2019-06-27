@@ -21,9 +21,9 @@
 namespace Tuleap\PullRequest;
 
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
-use \TuleapDbTestCase;
-use \GitRepository;
-use \ForgeConfig;
+use TuleapDbTestCase;
+use GitRepository;
+use ForgeConfig;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
 
 require_once 'bootstrap.php';

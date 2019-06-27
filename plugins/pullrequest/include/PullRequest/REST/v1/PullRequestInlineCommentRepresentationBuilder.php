@@ -20,9 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use \Tuleap\PullRequest\InlineComment\Dao;
-use \Tuleap\PullRequest\PullRequest;
-use \UserManager;
+use Tuleap\PullRequest\InlineComment\Dao;
+use Tuleap\PullRequest\PullRequest;
+use UserManager;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestInlineCommentRepresentationBuilder

@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tracker;
-use \Luracast\Restler\RestException;
+use Luracast\Restler\RestException;
 use Tracker_Artifact;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;

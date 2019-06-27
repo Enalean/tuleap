@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
-use \Tracker;
+use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 
 class CompleteTrackerRepresentation implements TrackerRepresentation

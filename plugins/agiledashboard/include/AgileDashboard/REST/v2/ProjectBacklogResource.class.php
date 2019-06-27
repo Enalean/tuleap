@@ -20,30 +20,30 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
-use \PFUser;
+use PFUser;
 use Planning_NoPlanningsException;
 use Planning_VirtualTopMilestone;
-use \Project;
-use \PlanningFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \TrackerFactory;
-use \Planning_MilestoneFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use \AgileDashboard_BacklogItemDao;
-use \AgileDashboard_Milestone_MilestoneStatusCounter;
-use \Tracker_ArtifactDao;
-use \Luracast\Restler\RestException;
+use Project;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use TrackerFactory;
+use Planning_MilestoneFactory;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Tracker_ArtifactDao;
+use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use \Tuleap\REST\Header;
-use \PlanningPermissionsManager;
+use Tuleap\REST\Header;
+use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 

@@ -20,7 +20,6 @@
 
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
-
 class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Action_Transitions {
      /** @var TransitionFactory */
     private $transition_factory;

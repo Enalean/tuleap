@@ -21,7 +21,6 @@
 namespace Tuleap\Upload;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\Upload\FileBeingUploadedInformation;
 
 class UploadPathAllocatorTest extends TestCase
 {

@@ -19,10 +19,9 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use \Tuleap\REST\JsonCast;
-use \Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Tracker_Artifact;
+use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tracker_Artifact;
 
 class ArtifactReference {
 

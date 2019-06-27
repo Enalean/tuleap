@@ -21,7 +21,6 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-
 /**
 * Chart
 *

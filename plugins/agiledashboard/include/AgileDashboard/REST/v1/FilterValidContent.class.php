@@ -21,9 +21,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tracker_ArtifactFactory;
-use \Planning_Milestone;
-use \PFUser;
+use Tracker_ArtifactFactory;
+use Planning_Milestone;
+use PFUser;
 use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
 
 class FilterValidContent implements IFilterValidElementsToUnkink

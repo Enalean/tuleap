@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
-
 use ForgeConfig;
 
 class Presenter

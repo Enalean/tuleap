@@ -23,7 +23,6 @@ namespace Tuleap\Git\Permissions;
 
 use GitPermissionsManager;
 use GitRepository;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Git;
 use Project;
 

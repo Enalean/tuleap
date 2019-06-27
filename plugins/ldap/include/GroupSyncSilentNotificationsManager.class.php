@@ -24,7 +24,6 @@
 
 namespace Tuleap\LDAP;
 
-use Tuleap\LDAP\GroupSyncEmailPresenter;
 use ForgeConfig;
 
 /**

@@ -23,7 +23,6 @@ namespace Tuleap\PhpWiki\REST\v1;
 
 use Tuleap\PHPWiki\WikiPage;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
-use Tuleap\PhpWiki\REST\v1\PhpWikiPageVersionRepresentation;
 use WikiVersionDao;
 use WikiPageVersionFactory;
 

@@ -35,7 +35,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
 class InvalidComparisonCollectorVisitor implements Visitor
 {

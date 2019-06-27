@@ -19,7 +19,7 @@
 
 namespace Tuleap\REST;
 
-use \Luracast\Restler\iAuthenticate;
+use Luracast\Restler\iAuthenticate;
 
 class TuleapRESTAuthentication implements iAuthenticate
 {

@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart

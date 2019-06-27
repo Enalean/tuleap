@@ -21,8 +21,8 @@
 
 namespace Tuleap\Git\CIToken;
 
-use \GitRepository;
-use \RandomNumberGenerator;
+use GitRepository;
+use RandomNumberGenerator;
 
 class Manager
 {

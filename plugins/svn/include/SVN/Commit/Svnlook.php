@@ -25,8 +25,6 @@
 namespace Tuleap\SVN\Commit;
 
 use System_Command;
-
-
 use Tuleap\SVN\Repository\Repository;
 
 class Svnlook

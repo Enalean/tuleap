@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
-
 use RandomNumberGenerator;
 
 class UnlinkedAccountManager {

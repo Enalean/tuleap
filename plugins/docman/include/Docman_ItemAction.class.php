@@ -21,7 +21,6 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-
 /**
  * ItemAction is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application

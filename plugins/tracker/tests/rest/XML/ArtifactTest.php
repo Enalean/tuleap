@@ -22,7 +22,7 @@ namespace Tracker;
 
 use SimpleXMLElement;
 use RestBase;
-use \Guzzle\Http\Client;
+use Guzzle\Http\Client;
 
 require_once __DIR__ .'/../bootstrap.php';
 

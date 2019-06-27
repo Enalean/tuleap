@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
-use \Luracast\Restler\Restler;
+use Luracast\Restler\Restler;
 use Project;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;

@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 require_once 'bootstrap.php';

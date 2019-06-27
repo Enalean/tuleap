@@ -22,10 +22,10 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tracker_FormElement_Field_ArtifactLink;
-use \Tracker_FormElementFactory;
-use \Tracker_ArtifactFactory;
-use \Planning_Milestone;
-use \PFUser;
+use Tracker_FormElementFactory;
+use Tracker_ArtifactFactory;
+use Planning_Milestone;
+use PFUser;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class MilestoneContentUpdater {

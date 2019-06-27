@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\Templating\TemplateCache;
 
 require_once('pre.php');

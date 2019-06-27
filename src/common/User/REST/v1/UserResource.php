@@ -33,7 +33,7 @@ use Tuleap\Widget\Event\UserTimeRetriever;
 use UserManager;
 use UGroupLiteralizer;
 use PaginatedUserCollection;
-use Tuleap\User\REST\UserRepresentation as UserRepresentation;
+use Tuleap\User\REST\UserRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;

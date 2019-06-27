@@ -20,9 +20,9 @@
 
 namespace Tuleap\ProFTPd\Admin;
 
-use \Backend;
-use \RecursiveIteratorIterator;
-use \RecursiveDirectoryIterator;
+use Backend;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 class ACLUpdater {
     public const PARENT_DIR  = '..';

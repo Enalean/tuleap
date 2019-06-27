@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use \Tuleap\PullRequest\UniDiffLine;
+use Tuleap\PullRequest\UniDiffLine;
 
 class PullRequestLineUniDiffRepresentation
 {

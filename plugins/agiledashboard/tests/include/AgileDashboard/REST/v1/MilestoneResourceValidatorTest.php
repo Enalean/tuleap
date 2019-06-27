@@ -20,12 +20,12 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \TuleapTestCase;
-use \Planning_Milestone;
-use \PFUser;
-use \AgileDashboard_Milestone_Backlog_Backlog;
-use \AgileDashboard_BacklogItemPresenter;
-use \AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
+use TuleapTestCase;
+use Planning_Milestone;
+use PFUser;
+use AgileDashboard_Milestone_Backlog_Backlog;
+use AgileDashboard_BacklogItemPresenter;
+use AgileDashboard_Milestone_Backlog_BacklogItemPresenterCollection;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 

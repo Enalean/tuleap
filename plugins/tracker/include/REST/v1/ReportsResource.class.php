@@ -21,21 +21,21 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Artifact;
-use \Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
-use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
-use \Luracast\Restler\RestException;
+use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use Luracast\Restler\RestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
-use \Tuleap\Tracker\REST\ReportRepresentation;
-use \Tracker_ReportFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \UserManager;
-use \PFUser;
-use \Tuleap\REST\Header;
-use \Tracker_URLVerification;
+use Tuleap\Tracker\REST\ReportRepresentation;
+use Tracker_ReportFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use UserManager;
+use PFUser;
+use Tuleap\REST\Header;
+use Tracker_URLVerification;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 /**

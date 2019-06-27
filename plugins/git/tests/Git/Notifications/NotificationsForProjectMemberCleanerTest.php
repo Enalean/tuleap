@@ -21,7 +21,6 @@
 namespace Tuleap\Git\Notifications;
 
 use TuleapTestCase;
-use Tuleap\Git\Notifications\UsersToNotifyDao;
 
 class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
 {

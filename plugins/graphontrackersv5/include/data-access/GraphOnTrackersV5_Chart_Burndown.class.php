@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 require_once('GraphOnTrackersV5_Chart.class.php');

@@ -20,8 +20,6 @@
 
 namespace Tuleap\CrossTracker\REST\v1;
 
-use Tuleap\CrossTracker\REST\v1\CrossTrackerArtifactReportRepresentation;
-use Tuleap\CrossTracker\REST\v1\PaginatedCollectionOfCrossTrackerArtifacts;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 class ArtifactRepresentationFactory

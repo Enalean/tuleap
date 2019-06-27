@@ -20,8 +20,6 @@
 
 namespace Tuleap\reference;
 
-use Tuleap\reference\ReferenceValidator;
-use Tuleap\reference\ReservedKeywordsRetriever;
 use TuleapTestCase;
 
 require_once('common/reference/ReferenceValidator.php');

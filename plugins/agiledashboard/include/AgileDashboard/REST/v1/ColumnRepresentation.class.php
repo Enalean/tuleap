@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use \Tuleap\REST\JsonCast;
+use Tuleap\REST\JsonCast;
 
 class AgileDashboard_ColumnRepresentation {
 

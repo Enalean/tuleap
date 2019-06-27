@@ -19,8 +19,8 @@
 
 namespace Tuleap\REST;
 
-use \Luracast\Restler\iAuthenticate;
-use \Luracast\Restler\InvalidAuthCredentials;
+use Luracast\Restler\iAuthenticate;
+use Luracast\Restler\InvalidAuthCredentials;
 
 class BasicAuthentication implements iAuthenticate
 {

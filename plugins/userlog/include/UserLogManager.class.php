@@ -27,7 +27,6 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogPresenter;
 
-
 class UserLogManager {
     /**
      * @var AdminPageRenderer

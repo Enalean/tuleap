@@ -19,13 +19,13 @@
  */
 namespace Tuleap\Cardwall\REST\v1;
 
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\Header;
-use \Planning_Milestone;
-use \Cardwall_OnTop_ConfigFactory;
-use \Tracker_ArtifactFactory;
-use \Cardwall_RawBoardBuilder;
-use \UserManager;
+use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
+use Planning_Milestone;
+use Cardwall_OnTop_ConfigFactory;
+use Tracker_ArtifactFactory;
+use Cardwall_RawBoardBuilder;
+use UserManager;
 
 class MilestonesCardwallResource {
     /** @var Cardwall_OnTop_ConfigFactory */

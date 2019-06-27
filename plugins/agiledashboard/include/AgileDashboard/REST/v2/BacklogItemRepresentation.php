@@ -19,10 +19,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
-use \Tuleap\REST\JsonCast;
-use \Tuleap\Project\REST\ProjectReference;
-use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use \Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\REST\JsonCast;
+use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\TrackerReference;
 
 class BacklogItemRepresentation {
 

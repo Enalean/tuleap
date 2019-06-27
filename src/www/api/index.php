@@ -17,14 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\REST\BasicAuthentication;
-use Tuleap\REST\TuleapRESTAuthentication;
-
 define('IS_SCRIPT', true);
-
 require_once 'pre.php';
 require_once 'www/project/admin/permissions.php';
 
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\TuleapRESTAuthentication;
 use Tuleap\REST\GateKeeper;
 use Luracast\Restler\Restler;
 use Luracast\Restler\Explorer\v2\Explorer;

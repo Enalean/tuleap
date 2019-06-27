@@ -18,7 +18,7 @@
 
 namespace Tuleap\Tracker\FormElement\View\Admin\Field;
 
-use \Tracker_FormElement_View_Admin_Field;
+use Tracker_FormElement_View_Admin_Field;
 
 class Computed extends Tracker_FormElement_View_Admin_Field
 {

@@ -21,7 +21,7 @@
 
 namespace Tuleap\SVN\Logs;
 
-use \DateTime;
+use DateTime;
 
 class LogCache
 {

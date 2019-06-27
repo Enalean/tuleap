@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// This is an on going work to help developers to build more expressive tests
-// please add the functions/methods below when needed.
-// For further information about the Test Data Builder pattern
-// @see http://nat.truemesh.com/archives/000727.html
+/* This is an on going work to help developers to build more expressive tests
+ * please add the functions/methods below when needed.
+ * For further information about the Test Data Builder pattern
+ * @see http://nat.truemesh.com/archives/000727.html
+ */
 
 use Tuleap\Tracker\TrackerColor;
 

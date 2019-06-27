@@ -26,7 +26,6 @@ namespace Tuleap\SVN\Repository;
 
 use Logger;
 use Tuleap\SVN\Dao;
-use Tuleap\SVN\Repository\Repository;
 
 class Destructor
 {

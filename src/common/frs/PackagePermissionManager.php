@@ -24,7 +24,6 @@ use FRSPackage;
 use FRSPackageFactory;
 use PFUser;
 use Project;
-use Tuleap\FRS\FRSPermissionManager;
 
 class PackagePermissionManager
 {

@@ -25,7 +25,6 @@ use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManage
 use Tuleap\Project\UserRemover;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
-
 /**
 * System Event classes
 *

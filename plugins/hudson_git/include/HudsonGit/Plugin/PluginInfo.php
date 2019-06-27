@@ -20,7 +20,6 @@
 
 namespace Tuleap\HudsonGit\Plugin;
 
-use Tuleap\HudsonGit\Plugin\PluginDescriptor;
 use Plugin;
 
 class PluginInfo extends \PluginInfo {

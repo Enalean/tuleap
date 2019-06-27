@@ -25,8 +25,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
-use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
-use Tuleap\GitLFS\HTTP\LSFAPIHTTPAuthorization;
 use Tuleap\Request\NotFoundException;
 
 class LFSAPIHTTPAccessControlTest extends TestCase

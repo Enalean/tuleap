@@ -19,9 +19,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
-use \AgileDashboard_Milestone_Backlog_IBacklogItem;
-use \UserManager;
-use \EventManager;
+use AgileDashboard_Milestone_Backlog_IBacklogItem;
+use UserManager;
+use EventManager;
 
 class BacklogItemRepresentationFactory {
 

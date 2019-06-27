@@ -21,7 +21,6 @@
 namespace Tuleap\ReferenceAliasGit;
 
 use GitRepositoryFactory;
-use Tuleap\ReferenceAliasGit\ReferencesImporter;
 use ReferenceInstance;
 use ProjectManager;
 

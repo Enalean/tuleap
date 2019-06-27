@@ -20,8 +20,8 @@
 
 namespace Test\Rest\Tracker;
 
-use \Guzzle\Http\Client;
-use \Test\Rest\RequestWrapper;
+use Guzzle\Http\Client;
+use Test\Rest\RequestWrapper;
 
 class TrackerFactory
 {

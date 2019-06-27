@@ -20,11 +20,11 @@
 
 namespace Tuleap\PullRequest;
 
-use \GitRepository;
+use GitRepository;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
-use \Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use PFUser;
 use GitRepositoryFactory;
