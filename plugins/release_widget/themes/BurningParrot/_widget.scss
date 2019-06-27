@@ -36,19 +36,19 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .dashboard-widget-content.dashboard-widget-content-release {
-    margin: 0 $tlp-spacing $tlp-spacing 0;
+    margin: 0 $tlp-spacing $tlp-spacing $tlp-spacing;
 }
 
 .project-release-widget-content {
     position: relative;
-    padding: $tlp-spacing 0 $tlp-spacing $tlp-spacing;
+    padding: $tlp-spacing 0 $tlp-spacing 0;
 
     &::before {
         content: '';
         position: absolute;
         z-index: 1;
         top: 0;
-        left: $tlp-title-spacing;
+        left: $tlp-half-spacing;
         width: 4px;
         height: 100%;
         background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
@@ -85,7 +85,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-other-releases {
     position: relative;
     margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 $tlp-title-spacing;
+    padding: 0 0 0 35px;
 }
 
 .project-other-releases .project-release-icon {
@@ -118,6 +118,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     align-items: baseline;
     margin: 0 0 $tlp-spacing;
     padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    background: linear-gradient(to right, #ffffff 0%, #fafafa 50%);
     cursor: pointer;
 }
 
@@ -167,4 +168,44 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.project-release-infos {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 $tlp-spacing $tlp-half-spacing 0;
+}
+
+.project-release-infos .project-release-info {
+    position: relative;
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    cursor: default;
+}
+
+.project-release-infos .toggle-sprints {
+    position: relative;
+    cursor: pointer;
+}
+
+.project-release-infos .toggle-sprints::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 5px;
+    left: -31px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+}
+
+.project-release-infos .toggle-sprints::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 11px;
+    left: -$tlp-spacing;
+    width: $tlp-spacing;
+    height: 2px;
+    background: $tlp-theme-color;
 }

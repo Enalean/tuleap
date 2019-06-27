@@ -44,5 +44,9 @@ export default {
 
     setCurrentMilestones(state, milestones) {
         state.current_milestones = milestones;
+    },
+
+    setNbSprints(state, total) {
+        state.nb_sprints = total;
     }
 };

@@ -20,14 +20,17 @@
 import {
     getNbOfBacklogItems,
     getNbOfUpcomingReleases,
-    getCurrentMilestones
+    getCurrentMilestones,
+    getNbOfSprints
 } from "./rest-querier.js";
+
 import { mockFetchSuccess, tlp } from "tlp-mocks";
 
 describe("getProject() -", () => {
     const pagination_limit = 2,
         pagination_offset = 0,
-        project_id = 102;
+        project_id = 102,
+        milestone_id = 102;
 
     it("the REST API will be queried and the project's backlog returned", async () => {
         mockFetchSuccess(tlp.get, {
@@ -130,5 +133,33 @@ describe("getProject() -", () => {
         });
 
         expect(result).toEqual(milestones);
+    });
+
+    it("the REST API will be queried and the total of sprints of a milestone returned", async () => {
+        mockFetchSuccess(tlp.get, {
+            headers: {
+                get: header_name => {
+                    const headers = {
+                        "X-PAGINATION-SIZE": 2
+                    };
+
+                    return headers[header_name];
+                }
+            }
+        });
+
+        const result = await getNbOfSprints(milestone_id, {
+            pagination_limit,
+            pagination_offset
+        });
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/milestones/" + milestone_id + "/milestones", {
+            params: {
+                pagination_limit,
+                pagination_offset
+            }
+        });
+
+        expect(result).toEqual(2);
     });
 });

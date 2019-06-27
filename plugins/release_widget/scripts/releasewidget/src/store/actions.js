@@ -20,6 +20,7 @@
 import {
     getCurrentMilestones as getAllCurrentMilestones,
     getNbOfBacklogItems as getBacklogs,
+    getNbOfSprints as getSprints,
     getNbOfUpcomingReleases as getReleases
 } from "../api/rest-querier.js";
 
@@ -54,7 +55,15 @@ export async function getMilestones(context) {
     }
 }
 
-async function handleErrorMessage(context, rest_error) {
+export async function getNumberOfSprints(context, milestone_id) {
+    try {
+        return await getSprints(milestone_id, context.state);
+    } catch (error) {
+        await handleErrorMessage(context, error);
+    }
+}
+
+export async function handleErrorMessage(context, rest_error) {
     try {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);
