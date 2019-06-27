@@ -228,7 +228,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("provide an option", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("has an approval table", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -255,7 +255,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("without approval", $response->json()["error"]['i18n_error_message']);
+        $this->assertStringContainsString("does not have an approval table", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -1218,7 +1218,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(400, $new_version_response->getStatusCode());
         $this->assertStringContainsString(
-            "already has an approval table",
+            "does not have an approval table",
             $new_version_response->json()["error"]['i18n_error_message']
         );
     }

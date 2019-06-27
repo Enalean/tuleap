@@ -23,9 +23,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
-
 class ApprovalTableUpdateActionChecker
 {
 
@@ -40,23 +37,19 @@ class ApprovalTableUpdateActionChecker
     }
 
     /**
-     * @throws ItemHasApprovalTableButNoApprovalActionException
+     * @throws ApprovalTableException
      * @throws ItemHasNoApprovalTableButHasApprovalActionException
      */
     public function checkApprovalTableForItem(
         ?string $approval_table_action,
         \Docman_Item $item
     ): void {
-        if ($this->docman_approval_table_retriever->hasApprovalTable($item)
-            && ($approval_table_action === null)
-        ) {
-            throw new ItemHasApprovalTableButNoApprovalActionException($item->getTitle());
+        if ($approval_table_action === null && $this->docman_approval_table_retriever->hasApprovalTable($item)) {
+            throw ApprovalTableException::approvalTableActionIsMandatory((string)$item->getTitle());
         }
 
-        if (!$this->docman_approval_table_retriever->hasApprovalTable($item)
-            && $approval_table_action !== null
-        ) {
-            throw new ItemHasNoApprovalTableButHasApprovalActionException($item->getTitle());
+        if ($approval_table_action !== null && ! $this->docman_approval_table_retriever->hasApprovalTable($item)) {
+            throw ApprovalTableException::approvalTableActionShouldNotBeProvided((string)$item->getTitle());
         }
     }
 

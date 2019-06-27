@@ -26,8 +26,6 @@ namespace Tuleap\Docman\ApprovalTable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 
 class ApprovalTableUpdateActionCheckerTest extends TestCase
@@ -69,7 +67,8 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
 
-        $this->expectException(ItemHasApprovalTableButNoApprovalActionException::class);
+        $this->expectException(ApprovalTableException::class);
+        $this->expectExceptionMessage('approval_table_action is required');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
@@ -84,7 +83,8 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(false);
 
-        $this->expectException(ItemHasNoApprovalTableButHasApprovalActionException::class);
+        $this->expectException(ApprovalTableException::class);
+        $this->expectExceptionMessage('approval_table_action should not be provided');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
