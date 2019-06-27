@@ -19,14 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-# Used to indicate the number of files changed in a commit
-# Comes before a list of files
-# %1: the number of files
-msgid "%1 file changed:"
-msgid_plural "%1 files changed:"
-msgstr[0] "%1 fichier modifié :"
-msgstr[1] "%1 fichiers modifiés :"
-
 # Used to represent an age in days
 # %1$d: the number of days
 #, php-format
@@ -106,17 +98,6 @@ msgstr "%1$s n'est pas un dépôt git"
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr "%1$s est en dehors de la racine du projet"
-
-# Used when diffing a file, to indicate that it's been deleted
-msgid "(deleted)"
-msgstr "(supprimé)"
-
-# Used when diffing a file, to indicate that it's a new file
-msgid "(new)"
-msgstr "(ajouté)"
-
-msgid "(show all)"
-msgstr "(montrer tout)"
 
 msgid "Atom"
 msgstr "Atom"
@@ -240,12 +221,6 @@ msgstr "Pas de révisions"
 msgid "No matches for \"%1\""
 msgstr "Pas de résultats pour \"%1\""
 
-# Error message when a user's search didn't produce any results
-# %1$s: the user's search string
-#, php-format
-msgid "No matches for \"%1$s\""
-msgstr "Pas de résultats pour \"%1$s\""
-
 # Error message when a temporary directory isn't specified in the config
 msgid "No tmpdir defined"
 msgstr "Aucun dossier temporaire spécifié"
@@ -361,45 +336,6 @@ msgstr "blob"
 msgid "blobdiff"
 msgstr "diff blob"
 
-# Used to indicate a file mode changed
-msgid "changed"
-msgstr "modifié"
-
-# Used to indicate a file type changed
-# %1: the original file type
-# %2: the new file type
-msgid "changed from %1 to %2"
-msgstr "modifié de %1 à %2"
-
-# Used to indicate a file type changed, with only new file mode
-# (when old file type wasn't a normal file)
-# %1: the original file type
-# %2: the new file type
-# %3: the original file mode
-# %4: the new file mode
-msgid "changed from %1 to %2 mode: %3"
-msgstr "modifié de %1 à %2 mode : %3"
-
-# Used to indicate a file type changed, including original and new file modes
-# (when both original and new files are regular files)
-# %1: the original file type
-# %2: the new file type
-# %3: the original file mode
-# %4: the new file mode
-msgid "changed from %1 to %2 mode: %3 -> %4"
-msgstr "modifié de %1 à %2 mode : %3 -> %4"
-
-# Used to indicate a file mode changed
-# %1: the new file mode
-msgid "changed mode: %1"
-msgstr "mode modifié : %1"
-
-# Used to indicate a file mode changed
-# %1: the original file mode
-# %2: the new file mode
-msgid "changed mode: %1 -> %2"
-msgstr "mode modifié : %1 -> %2"
-
 # Used as link to and title for page displaying info about a single commit in the project
 msgid "commit"
 msgstr "révision"
@@ -413,22 +349,9 @@ msgstr "diff révision"
 msgid "committer"
 msgstr "réviseur"
 
-# Used to indicate an object was deleted
-# %1: the type of object
-msgid "deleted %1"
-msgstr "%1 supprimé"
-
 # Link to deselect the currently selected diff
 msgid "deselect"
 msgstr "rétablir"
-
-# Used as link to diff this file version with the previous version
-msgid "diff"
-msgstr "diff"
-
-# Used as link to diff this file version with the current file
-msgid "diff to current"
-msgstr "diff avec l'actuel"
 
 # Link beside commits - diffs this commit against the currently selected commit
 msgid "diff with selected"
@@ -458,32 +381,6 @@ msgstr "historique"
 msgid "log"
 msgstr "journal"
 
-# Used to indicate a file was moved
-# This string should be HTML safe
-# %1: the old file
-# %2: the similarity as a percent number
-msgid "moved from %1 with %2%% similarity"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance"
-
-# Used to indicate a file was moved and the file mode changed
-# This string should be HTML safe
-# %1: the old file
-# %2: the similarity as a percent number
-# %3: the new file mode
-msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance, mode : %3"
-
-# Used to indicate a new object was added
-# %1: the type of object
-msgid "new %1"
-msgstr "%1 ajouté"
-
-# Used to indicate a new object was added with an access mode
-# %1: the type of object
-# %2: the mode
-msgid "new %1 with mode %2"
-msgstr "%1 ajouté avec le mode %2"
-
 # Used as a link to the next page in a list of results
 msgid "next"
 msgstr "suiv"
@@ -491,11 +388,6 @@ msgstr "suiv"
 # Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
 msgid "object"
 msgstr "objet"
-
-# Used to label the parent of this commit
-# The parent is the commit preceding this one in the project history
-msgid "parent"
-msgstr "parent"
 
 # Used as a link to a plaintext version of a page
 msgid "plain"
@@ -526,9 +418,6 @@ msgstr "marquer pour diff"
 msgid "selected"
 msgstr "marqué"
 
-msgid "side by side"
-msgstr "côte à côte"
-
 # Used as link to download a copy of the files in a given commit
 msgid "snapshot"
 msgstr "aperçu"
@@ -548,9 +437,6 @@ msgstr "étiquettes"
 # Used as title for and link to a list of files in a directory, which git calls a 'tree'
 msgid "tree"
 msgstr "arbre"
-
-msgid "unified"
-msgstr "unifié"
 
 # Used when an object is stored in a project but git doesn't know what type it is
 msgid "unknown"

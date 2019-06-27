@@ -158,8 +158,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class GitPlugin extends Plugin
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     /**
      *
      * @var Logger
@@ -2669,11 +2667,9 @@ class GitPlugin extends Plugin
     protected function getGitRepositoryHeaderDisplayer() {
         $selected_tab = RepositoryHeaderPresenterBuilder::TAB_FILES;
 
-        if ($this->isTuleapBeauGitActivated()) {
-            $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'blobdiff', 'search'];
-            if (in_array(HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
-                $selected_tab = RepositoryHeaderPresenterBuilder::TAB_COMMITS;
-            }
+        $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'blobdiff', 'search'];
+        if (in_array(HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
+            $selected_tab = RepositoryHeaderPresenterBuilder::TAB_COMMITS;
         }
 
         $header_displayed_builder = new GitRepositoryHeaderDisplayerBuilder();

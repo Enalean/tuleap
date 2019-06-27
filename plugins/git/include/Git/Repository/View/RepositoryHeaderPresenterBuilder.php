@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,8 +33,6 @@ use PFUser;
 
 class RepositoryHeaderPresenterBuilder
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     public const TAB_FILES   = 'tab-files';
     public const TAB_COMMITS = 'tab-commits';
 
@@ -191,10 +189,7 @@ class RepositoryHeaderPresenterBuilder
 
     private function buildTabsPresenter(GitRepository $repository)
     {
-        $tabs = [$this->getFilesTab($repository)];
-        if ($this->isTuleapBeauGitActivated()) {
-            $tabs[] = $this->getCommitsTab($repository);
-        }
+        $tabs = [$this->getFilesTab($repository), $this->getCommitsTab($repository)];
 
         $external_tabs = $this->getExternalsTabs($repository);
         if (count($external_tabs) > 0) {

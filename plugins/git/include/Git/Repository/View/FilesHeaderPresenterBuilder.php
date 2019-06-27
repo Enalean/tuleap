@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,8 +30,6 @@ use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilder
 {
-    use \Tuleap\Git\Repository\View\FeatureFlag;
-
     /**
      * @var CommitForCurrentTreeRetriever
      */
@@ -76,9 +74,6 @@ class FilesHeaderPresenterBuilder
             '',
             []
         );
-        if (! $this->isTuleapBeauGitActivated()) {
-            return $cannot_be_displayed_presenter;
-        }
 
         if (! $repository->isCreated()) {
             return $cannot_be_displayed_presenter;
