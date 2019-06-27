@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\REST\UserRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement_Field_List_BindValue {
     protected $id;
@@ -138,8 +139,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field $field) {
-        $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
-        $user_representation       = new $class_user_representation;
+        $user_representation = new UserRepresentation();
 
         if ($this->getId() == 100) {
             $user = new PFUser();
@@ -157,8 +157,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $user->setEmail($changeset->getEmail());
         $user->setRealName($changeset->getEmail());
 
-        $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
-        $user_representation       = new $class_user_representation;
+        $user_representation = new UserRepresentation();
 
         $user_representation->build($user);
         return $user_representation;

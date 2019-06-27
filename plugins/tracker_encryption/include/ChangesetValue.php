@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,7 @@ use Tracker_Artifact_ChangesetValueVisitor;
 use Tracker_FormElementFactory;
 use Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter;
 use Tuleap;
+use Tuleap\Tracker\REST\Artifact\EncryptedRepresentation;
 
 class ChangesetValue extends Tracker_Artifact_ChangesetValue
 {
@@ -124,9 +125,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
 
     protected function getFullRESTRepresentation($value)
     {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\EncryptedRepresentation';
-
-        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation = new EncryptedRepresentation();
         $artifact_field_value_full_representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

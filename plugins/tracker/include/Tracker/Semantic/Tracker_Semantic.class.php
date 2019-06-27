@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016-Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\REST\SemanticRepresentation;
 
 abstract class Tracker_Semantic {
 
@@ -175,11 +177,9 @@ abstract class Tracker_Semantic {
             return false;
         }
 
-        $classname_with_namespace = 'Tuleap\Tracker\REST\SemanticRepresentation';
-        $semantic_representation = new $classname_with_namespace;
+        $semantic_representation = new SemanticRepresentation();
         $semantic_representation->build($field->getId());
 
         return $semantic_representation;
     }
 }
-?>

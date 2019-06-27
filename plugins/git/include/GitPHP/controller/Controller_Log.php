@@ -33,14 +33,6 @@ use UserManager;
  */
 class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
 {
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         parent::__construct();

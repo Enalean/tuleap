@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
 
 /**
  * Manage values in changeset for fields
@@ -170,9 +173,7 @@ abstract class Tracker_Artifact_ChangesetValue
     }
 
     protected function getRESTRepresentation($value) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
-
-        $artifact_field_value_representation = new $classname_with_namespace;
+        $artifact_field_value_representation = new ArtifactFieldValueRepresentation();
         $artifact_field_value_representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
@@ -183,9 +184,7 @@ abstract class Tracker_Artifact_ChangesetValue
     }
 
     protected function getFullRESTRepresentation($value) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
-
-        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

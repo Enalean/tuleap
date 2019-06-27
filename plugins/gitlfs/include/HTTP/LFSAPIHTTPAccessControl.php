@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class LFSAPIHTTPAccessControl
      * @throws NotFoundException
      * @return bool
      */
-    public function canAccess(GitRepository $repository, GitLfsHTTPOperation $lfs_request, ?PFuser $user)
+    public function canAccess(GitRepository $repository, GitLfsHTTPOperation $lfs_request, ?PFUser $user)
     {
         if ($user === null) {
             return true;

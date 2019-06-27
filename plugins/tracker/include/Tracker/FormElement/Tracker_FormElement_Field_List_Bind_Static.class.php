@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
@@ -922,8 +923,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
-        $class_static_value_representation = '\\Tuleap\\Tracker\\REST\\FieldListStaticValueRepresentation';
-        $representation                  = new $class_static_value_representation;
+        $representation = new FieldListStaticValueRepresentation();
         $representation->build($value);
 
         return $representation;

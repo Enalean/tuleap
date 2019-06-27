@@ -27,14 +27,6 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
 {
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         try {

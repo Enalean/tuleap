@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
 
 /**
  * Manage values in changeset for string fields
@@ -202,8 +204,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     }
 
     public function getFullRESTValue(PFUser $user) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation';
-        $artifact_field_value_list_representation = new $classname_with_namespace;
+        $artifact_field_value_list_representation = new ArtifactFieldValueListFullRepresentation();
         $artifact_field_value_list_representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

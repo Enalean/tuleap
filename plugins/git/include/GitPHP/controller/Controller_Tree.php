@@ -28,14 +28,6 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
     public const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         parent::__construct();

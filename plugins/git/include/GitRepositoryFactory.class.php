@@ -113,7 +113,7 @@ class GitRepositoryFactory
 
     /**
      * @param Project $project
-     * @param PFuser $user
+     * @param PFUser $user
      * @param string $scope
      * @param int $owner_id
      * @param string $order_by
@@ -124,7 +124,7 @@ class GitRepositoryFactory
      */
     public function getPaginatedRepositoriesUserCanSee(
         Project $project,
-        PFuser $user,
+        PFUser $user,
         $scope,
         $owner_id,
         $order_by,

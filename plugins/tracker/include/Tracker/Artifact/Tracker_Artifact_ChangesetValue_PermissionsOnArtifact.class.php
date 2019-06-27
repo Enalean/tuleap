@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresentation;
 
 /**
  * Manage values in changeset for date fields
@@ -75,8 +79,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     }
 
     public function getRESTValue(PFUser $user) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresentation';
-        $representation = new $classname_with_namespace;
+        $representation = new ArtifactFieldValuePermissionsOnArtifactRepresentation();
         $representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
@@ -95,13 +98,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     protected function getUserGroupRESTId($user_group_id) {
         $project_id = $this->getField()->getTracker()->getProject()->getID();
 
-        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        return call_user_func_array($representation_class.'::getRESTIdForProject', array($project_id, $user_group_id));
+        return UserGroupRepresentation::getRESTIdForProject($project_id, $user_group_id);
     }
 
     public function getFullRESTValue(PFUser $user) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactFullRepresentation';
-        $representation = new $classname_with_namespace;
+        $representation = new ArtifactFieldValuePermissionsOnArtifactFullRepresentation();
         $representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),

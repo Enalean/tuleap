@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 /**
  * Manage values in changeset for 'artifact link' fields
@@ -157,8 +159,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         $outgoing_links = $this->getAllOutgoingArtifactIdsUserCanSee($user);
         $incoming_links = $this->getAllIncomingArtifactIdsUserCanSee($user);
 
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation';
-        $artifact_links_representation = new $classname_with_namespace;
+        $artifact_links_representation = new ArtifactFieldValueArtifactLinksFullRepresentation();
         $artifact_links_representation->build(
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
@@ -192,8 +193,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
 
     private function buildArtifactReference($artifact_id) {
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReference';
-        $artifact_reference       = new $classname_with_namespace;
+        $artifact_reference       = new ArtifactReference();
         $artifact_reference->build($tracker_artifact_factory->getArtifactById($artifact_id));
 
         return $artifact_reference;

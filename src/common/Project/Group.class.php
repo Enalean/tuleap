@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -283,7 +283,7 @@ class Group {
         /**
          * This method relies on global state so kittens die everytime you use it
          *
-         * @deprecated use PFuser::isAdmin() instead
+         * @deprecated use PFUser::isAdmin() instead
          * @return bool
          */
     public function userIsAdmin()

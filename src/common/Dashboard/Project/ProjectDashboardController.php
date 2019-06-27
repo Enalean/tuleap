@@ -25,7 +25,7 @@ use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HttpRequest;
+use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;

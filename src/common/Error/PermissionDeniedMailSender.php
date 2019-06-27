@@ -25,7 +25,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use UnexpectedValueException;
-use Url;
+use URL;
 use Valid_Text;
 
 abstract class PermissionDeniedMailSender extends Error_PermissionDenied implements DispatchableWithRequest
@@ -39,7 +39,7 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
      */
     private $token;
 
-    public function __construct(PlaceHolderBuilder $place_holder_builder, \CSRFSynchronizerToken $token, ?Url $url = null)
+    public function __construct(PlaceHolderBuilder $place_holder_builder, \CSRFSynchronizerToken $token, ?URL $url = null)
     {
         parent::__construct($url);
         $this->place_holder_builder = $place_holder_builder;

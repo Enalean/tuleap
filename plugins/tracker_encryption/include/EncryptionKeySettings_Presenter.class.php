@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,7 +65,7 @@ class Tracker_EncryptionKeySettings_Presenter
     }
 
     /**
-     * @return tracker key formatted in one line
+     * @return string tracker key formatted in one line
      */
     public function get_tracker_key()
     {
