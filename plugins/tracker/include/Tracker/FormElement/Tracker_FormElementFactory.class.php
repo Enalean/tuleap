@@ -625,7 +625,7 @@ class Tracker_FormElementFactory {
     /**
      * It retrieves simple value fields that can potentially contain numeric values
      * @param Tracker $tracker
-     * @return array All numeric or computed formElements used by the tracker
+     * @return Tracker_FormElement_Field[] All numeric or computed formElements used by the tracker
      */
     public function getUsedPotentiallyContainingNumericValueFields(Tracker $tracker) {
         return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed', 'sb', 'rb'));
