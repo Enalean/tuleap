@@ -36,5 +36,6 @@ class RepositoryRepresentation extends SvnRepositoryRepresentationBase
         $this->project = $project_representation;
         $this->uri     = self::ROUTE . '/' . $this->id;
         $this->name    = $repository->getName();
+        $this->svn_url = $repository->getSvnUrl();
     }
 }

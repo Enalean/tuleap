@@ -32,6 +32,8 @@ class TestBase extends RestBase
     public const UGROUP_NAME_1 = 'svn_ugroup_1';
     public const UGROUP_NAME_2 = 'svn_ugroup_2';
 
+    protected $svn_domain = 'https://localhost';
+
     /**
      * @var array
      */
@@ -120,5 +122,9 @@ class TestBase extends RestBase
             "short_name" => self::UGROUP_NAME_2,
             "key"        =>  self::UGROUP_NAME_2
         );
+
+        if (isset($_ENV['TULEAP_HOST'])) {
+            $this->svn_domain  = $_ENV['TULEAP_HOST'];
+        }
     }
 }
