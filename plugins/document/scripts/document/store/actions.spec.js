@@ -1391,7 +1391,18 @@ describe("Store actions", () => {
         });
 
         it("it should return null if there is a rest exception", async () => {
-            getParents.and.returnValue(Promise.reject());
+            const wiki_1 = {
+                item_name: "wiki 1",
+                item_id: 1
+            };
+
+            const wiki_2 = {
+                item_name: "wiki 2",
+                item_id: 2
+            };
+
+            getItemsReferencingSameWikiPage.and.returnValue([wiki_1, wiki_2]);
+            getParents.and.returnValue(Promise.reject(500));
 
             const target_wiki = {
                 title: "wiki 3",
