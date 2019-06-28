@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,10 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { modal } from "tlp";
+
 document.addEventListener("DOMContentLoaded", function() {
     var add_reference = document.querySelector("#bugzilla-add-reference"),
         add_reference_bugzilla = document.querySelector("#bugzilla-add-reference-modal");
-    modal_add_reference = tlp.modal(add_reference_bugzilla, { keyboard: true });
+    const modal_add_reference = modal(add_reference_bugzilla, { keyboard: true });
 
     add_reference.addEventListener("click", function() {
         modal_add_reference.toggle();
@@ -30,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var dom_bugzilla_modal_edit = document.getElementById(
             bugzilla_modals_edit_button.getAttribute("data-edit-modal-id")
         );
-        var tlp_bugzilla_modal_edit = tlp.modal(dom_bugzilla_modal_edit);
+        var tlp_bugzilla_modal_edit = modal(dom_bugzilla_modal_edit);
 
         bugzilla_modals_edit_button.addEventListener("click", function() {
             tlp_bugzilla_modal_edit.toggle();
@@ -42,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var dom_bugzilla_modal_delete = document.getElementById(
             bugzilla_modals_delete_button.getAttribute("data-delete-modal-id")
         );
-        var tlp_bugzilla_modal_delete = tlp.modal(dom_bugzilla_modal_delete);
+        var tlp_bugzilla_modal_delete = modal(dom_bugzilla_modal_delete);
 
         bugzilla_modals_delete_button.addEventListener("click", function() {
             tlp_bugzilla_modal_delete.toggle();

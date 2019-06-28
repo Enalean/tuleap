@@ -478,6 +478,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
 
 # Link to local config for logo and themes images
@@ -1116,6 +1118,7 @@ fi
 %files plugin-bugzilla-reference
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/bugzilla_reference
+%{APP_DIR}/src/www/assets/bugzilla_reference
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files plugin-create-test-env

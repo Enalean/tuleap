@@ -33,6 +33,7 @@ use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 use Tuleap\Request\CollectRoutesEvent;
@@ -50,9 +51,6 @@ class bugzilla_referencePlugin extends Plugin
         bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR . '/site-content');
 
         $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
@@ -80,13 +78,6 @@ class bugzilla_referencePlugin extends Plugin
             'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
             'href'  => BUGZILLA_REFERENCE_BASE_URL . '/admin/'
         );
-    }
-
-    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], BUGZILLA_REFERENCE_BASE_URL . '/admin/') === 0) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
     }
 
     public function routeAdmin() : DispatchableWithRequest
@@ -117,21 +108,6 @@ class bugzilla_referencePlugin extends Plugin
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/admin/[index.php]', $this->getRouteHandler('routeAdmin'));
         });
-    }
-
-    public function burning_parrot_get_javascript_files(array $params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = BUGZILLA_REFERENCE_BASE_URL . '/scripts/bugzilla-reference.js';
-        }
-    }
-
-    public function burning_parrot_get_stylesheets(array $params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/bugzilla_reference') === 0) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() . '/css/style-' . $variant->getName() . '.css';
-        }
     }
 
     public function get_plugins_available_keywords_references(array $params)

@@ -1,31 +1,4 @@
 {
   "name": "bugzilla_reference",
-  "themes": {
-    "BurningParrot": {
-      "files": [
-        "www/themes/BurningParrot/css/style-blue.scss",
-        "www/themes/BurningParrot/css/style-blue-condensed.scss",
-        "www/themes/BurningParrot/css/style-green.scss",
-        "www/themes/BurningParrot/css/style-green-condensed.scss",
-        "www/themes/BurningParrot/css/style-grey.scss",
-        "www/themes/BurningParrot/css/style-grey-condensed.scss",
-        "www/themes/BurningParrot/css/style-orange.scss",
-        "www/themes/BurningParrot/css/style-orange-condensed.scss",
-        "www/themes/BurningParrot/css/style-purple.scss",
-        "www/themes/BurningParrot/css/style-purple-condensed.scss",
-        "www/themes/BurningParrot/css/style-red.scss",
-        "www/themes/BurningParrot/css/style-red-condensed.scss"
-      ],
-      "includes": [
-        "../../src/www/themes/common/tlp/src/scss"
-      ],
-      "watched_includes": [
-        "www/themes/BurningParrot/css/**/_*.scss"
-      ],
-      "target_dir": "www/themes/BurningParrot/css"
-    }
-  },
-  "javascript": [
-    "www/scripts/bugzilla-reference.js"
-  ]
+  "components": ["./"]
 }
