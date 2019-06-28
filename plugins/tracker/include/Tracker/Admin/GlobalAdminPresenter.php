@@ -91,10 +91,12 @@ class GlobalAdminPresenter
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
 
-        $this->form_url = TRACKER_BASE_URL . '/?' . http_build_query(array(
-            'func'     => 'edit-global-admin',
-            'group_id' => $project->getID()
-        ));
+        $base_url = GlobalAdminController::getTrackerGlobalAdministrationURL($project);
+        $this->form_url = $base_url . '?' . http_build_query(
+            [
+                'func' => 'edit-global-admin'
+            ]
+        );
 
         $this->csrf_token                      = $csrf_token;
         $this->are_artifact_link_types_enabled = $are_artifact_link_types_enabled;
@@ -106,10 +108,11 @@ class GlobalAdminPresenter
         $this->switch_button_label = dgettext('tuleap-tracker', 'Use');
         $this->artifact_link_types = $artifact_link_types;
 
-        $this->form_type_url = TRACKER_BASE_URL . '/?' . http_build_query(array(
-            'func'     => 'use-artifact-link-type',
-            'group_id' => $project->getID()
-        ));
+        $this->form_type_url = $base_url . '?' . http_build_query(
+            [
+                'func' => 'use-artifact-link-type'
+            ]
+        );
 
         $this->warning_message = dgettext(
             'tuleap-tracker',
