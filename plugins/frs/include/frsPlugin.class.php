@@ -145,7 +145,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addRoute(
-            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/frs/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
         );

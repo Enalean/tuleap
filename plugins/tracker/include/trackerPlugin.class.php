@@ -1851,7 +1851,7 @@ class trackerPlugin extends Plugin {
         });
 
         $event->getRouteCollector()->addRoute(
-            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'],
             '/uploads/tracker/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
         );

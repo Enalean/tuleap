@@ -1420,8 +1420,8 @@ class DocmanPlugin extends Plugin
     {
         $route_collector = $event->getRouteCollector();
 
-        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
-        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
+        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
+        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE', 'POST', 'PUT'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
 
         $route_collector->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
         $route_collector->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
