@@ -12,7 +12,7 @@
     "pretty-bytes-es5": "^5.1.9",
     "pretty-kibibytes": "^4.0.4",
     "tus-js-client": "^1.5.2",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-dompurify-html": "^1.2.1",
     "vue-gettext": "^2.1.0",
     "vue-router": "^3.0.1",
