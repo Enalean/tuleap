@@ -7,7 +7,7 @@
   "private": true,
   "dependencies": {
     "mustache": "^2.3.0",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-dompurify-html": "^1.2.1",
     "vue-gettext": "^2.1.0"
   },
