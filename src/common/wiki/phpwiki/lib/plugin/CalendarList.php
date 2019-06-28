@@ -23,16 +23,16 @@ rcs_id('$Id: CalendarList.php,v 1.9 2006/05/14 17:40:31 rurban Exp $');
  */
 
 // if not defined in config.ini
-if (!defined('PLUGIN_CALENDARLIST_ORDER'))	
-  define('PLUGIN_CALENDARLIST_ORDER',	'normal');
+if (!defined('PLUGIN_CALENDARLIST_ORDER'))    
+  define('PLUGIN_CALENDARLIST_ORDER',    'normal');
 if (!defined('PLUGIN_CALENDARLIST_NEXT_N_DAYS'))
   define('PLUGIN_CALENDARLIST_NEXT_N_DAYS','');
-if (!defined('PLUGIN_CALENDARLIST_NEXT_N'))	
-  define('PLUGIN_CALENDARLIST_NEXT_N',	 '');
+if (!defined('PLUGIN_CALENDARLIST_NEXT_N'))    
+  define('PLUGIN_CALENDARLIST_NEXT_N',     '');
 if (!defined('PLUGIN_CALENDARLIST_LAST_N_DAYS'))
   define('PLUGIN_CALENDARLIST_LAST_N_DAYS','');
-if (!defined('PLUGIN_CALENDARLIST_LAST_N'))	
-  define('PLUGIN_CALENDARLIST_LAST_N',	 '');
+if (!defined('PLUGIN_CALENDARLIST_LAST_N'))    
+  define('PLUGIN_CALENDARLIST_LAST_N',     '');
 
 /**
  * This is a list of calendar appointments. 
@@ -59,16 +59,16 @@ extends WikiPlugin
     function getDefaultArguments() {
         return array('prefix'       => '[pagename]',
                      'date_format'  => '%Y-%m-%d',
-                     'order' 	    => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
+                     'order'         => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
                      'year'         => '',
                      'month'        => '',
                      'month_offset' => 0,
                      //support ranges: next n days/events
-                     'next_n_days'  => PLUGIN_CALENDARLIST_NEXT_N_DAYS,	// one or the other, not both
-                     'next_n'	    => PLUGIN_CALENDARLIST_NEXT_N,
+                     'next_n_days'  => PLUGIN_CALENDARLIST_NEXT_N_DAYS,    // one or the other, not both
+                     'next_n'        => PLUGIN_CALENDARLIST_NEXT_N,
                      // last n days/entries:
-                     'last_n_days'  => PLUGIN_CALENDARLIST_LAST_N_DAYS,	// one or the other, not both
-                     'last_n'	    => PLUGIN_CALENDARLIST_LAST_N,
+                     'last_n_days'  => PLUGIN_CALENDARLIST_LAST_N_DAYS,    // one or the other, not both
+                     'last_n'        => PLUGIN_CALENDARLIST_LAST_N,
 
                      'month_format' => '%B, %Y',
                      'wday_format'  => '%a',
@@ -86,28 +86,28 @@ extends WikiPlugin
         if (isset($this->_links)) 
             return $this->_links;
         else {
-            global $request;	
+            global $request;    
             $this->run($request->_dbi, $argstr, $request, $basepage);
             return $this->_links;
         }
     }
 
     function _count_events($dbi, $n = 7, $direction = 1) {
-        //	This is used by the last_n/next_n options to determine the date that
-        //	accounts for the number of N events in the past/future.
-        //	RETURNS: date of N-th event or the last item found
-        $args = &$this->args;				// gather the args array
-        $timeTMP = time();				// start with today's date
-        $t = $timeTMP;					// init the control date variable to now
+        //    This is used by the last_n/next_n options to determine the date that
+        //    accounts for the number of N events in the past/future.
+        //    RETURNS: date of N-th event or the last item found
+        $args = &$this->args;                // gather the args array
+        $timeTMP = time();                // start with today's date
+        $t = $timeTMP;                    // init the control date variable to now
         
-        for ($i=0; $i<=180; $i++) {			// loop thru 180 days, past or future
+        for ($i=0; $i<=180; $i++) {            // loop thru 180 days, past or future
             $date_string = strftime($args['date_format'], $t);
             $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
             if ($dbi->isWikiPage($page_for_date)) { // if this date has any comments/events
-                $timeTMP = $t;			    //  capture the date of this event for return
-                if ($n-- <= 0) break;		    //  if we reached the limit, return the date
+                $timeTMP = $t;                //  capture the date of this event for return
+                if ($n-- <= 0) break;            //  if we reached the limit, return the date
             }
-            $t += 24 * 3600 * $direction;	    // advance one day back or forward
+            $t += 24 * 3600 * $direction;        // advance one day back or forward
         }
         
         // return the date of the N-th or last, most past/future event in the range
@@ -216,7 +216,7 @@ extends WikiPlugin
         for ($i = $start; ($step > 0) ? $i < $end : $i > $end; $i += $step) {
             $cal->pushContent($this->_date($dbi, $i));
         }
-        //	end of Plugin CalendarList display logic
+        //    end of Plugin CalendarList display logic
         // ***************************************************
 
         return $cal;
@@ -259,8 +259,8 @@ extends WikiPlugin
 //
 // Revision 1.2  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far,
-//	because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed.
-//	(InterWikiSearch, IncludeSiteMap, ...)
+//    because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed.
+//    (InterWikiSearch, IncludeSiteMap, ...)
 //
 // Revision 1.1  2003/11/18 19:06:03  carstenklapp
 // New plugin to be used in conjunction with the Calendar plugin.

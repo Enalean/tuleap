@@ -236,7 +236,7 @@ class Widget_MyArtifacts extends Widget {
 
                     if ($count_aids == 0) {
                       //have to call it to get at least the hide_now even if count_aids is false at this point
-                      $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
+                        $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
                     }
 
                     $group_name   = $trackers_array['group_name'];

@@ -74,9 +74,9 @@ class MailingListDao extends DataAccessObject {
         $sql="UPDATE mail_group_list SET is_public=9 ".
              " WHERE group_list_id=".$listId;
         return $this->update($sql);
-	}
+    }
 
-	/**
+    /**
      * Delete the list
      *
      * @param int $listId Id of the mailing list

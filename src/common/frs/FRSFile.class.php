@@ -31,7 +31,7 @@ class FRSFile {
     public const EVT_DELETE  = 303;
     public const EVT_RESTORE = 304;
 
-	/**
+    /**
      * @var int $file_id the ID of this FRSFile
      */
     var $file_id;
@@ -310,11 +310,11 @@ class FRSFile {
         $this->comment = $comment;
     }
 
-	function initFromArray($array) {
-		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
-		if (isset($array['filename']))      $this->setFileName($array['filename']);
+    function initFromArray($array) {
+        if (isset($array['file_id']))       $this->setFileID($array['file_id']);
+        if (isset($array['filename']))      $this->setFileName($array['filename']);
         if (isset($array['filepath']))      $this->setFilePath($array['filepath']);
-		if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
+        if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
         if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
         if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
         if (isset($array['release_time']))  $this->setReleaseTime($array['release_time']);
@@ -387,7 +387,7 @@ class FRSFile {
      * @return Project the group the file belongs to
      */
     function getGroup() {
-	if(empty($this->group)) {
+        if(empty($this->group)) {
             $pm = ProjectManager::instance();
             // retrieve the release the file belongs to
             $release_id = $this->getReleaseID();
@@ -395,7 +395,7 @@ class FRSFile {
             $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
             $group_id = $release->getGroupID();
             $this->group = $pm->getProject($group_id);
-	}
+        }
         return $this->group;
     }
 
@@ -403,7 +403,7 @@ class FRSFile {
      * Set the Group (the project) of this File
      */
     function setGroup(Group $group) {
-	$this->group = $group;
+        $this->group = $group;
     }
 
     /**

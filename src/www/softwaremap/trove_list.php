@@ -120,7 +120,7 @@ AND trove_cat_root = ". $form_cat;
 // here we print list of root level categories, and use open folder for current
 $root_categories = array();
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
-	.'parent=0 ORDER BY fullname');
+    .'parent=0 ORDER BY fullname');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
     $root_categories[] = array(
         'id'       => $row_rootcat['trove_cat_id'],
@@ -165,23 +165,23 @@ if ($special_cat === 'none') {
 else {
 // now do limiting query
 
-$query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
-	. "groups.group_name, "
-	. "groups.unix_group_name, "
-	. "groups.status, "
-	. "groups.register_time, "
-	. "groups.short_description, "
-	. "project_metric.percentile, "
-	. "project_metric.ranking "
-	. "FROM groups "
-	. "LEFT JOIN project_metric USING (group_id) "
-	. ", trove_group_link "
-	. "WHERE trove_group_link.group_id=groups.group_id AND "
-	. "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
+    $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
+    . "groups.group_name, "
+    . "groups.unix_group_name, "
+    . "groups.status, "
+    . "groups.register_time, "
+    . "groups.short_description, "
+    . "project_metric.percentile, "
+    . "project_metric.ranking "
+    . "FROM groups "
+    . "LEFT JOIN project_metric USING (group_id) "
+    . ", trove_group_link "
+    . "WHERE trove_group_link.group_id=groups.group_id AND "
+    . "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
         . "(groups.type=1) AND "
-	. "(groups.status='A') AND "
-	. "trove_group_link.trove_cat_id=$form_cat "
-	. "GROUP BY groups.group_id ORDER BY groups.group_name ";
+    . "(groups.status='A') AND "
+    . "trove_group_link.trove_cat_id=$form_cat "
+    . "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
 $limit  = $TROVE_BROWSELIMIT;

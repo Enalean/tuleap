@@ -253,5 +253,5 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.summary = F.id";
         $this->update($sql);
     }
- }
- ?>
+}
+?>

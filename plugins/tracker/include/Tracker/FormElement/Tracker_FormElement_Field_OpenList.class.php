@@ -384,16 +384,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $bindvalue_id = null;
             $openvalue_id = null;
             switch ($v{0}) {
-            case self::BIND_PREFIX: // bind value
-                $bindvalue_id = (int)substr($v, 1);
+                case self::BIND_PREFIX: // bind value
+                    $bindvalue_id = (int)substr($v, 1);
                 break;
-            case self::OPEN_PREFIX: // open value
-                $openvalue_id = (int)substr($v, 1);
+                case self::OPEN_PREFIX: // open value
+                    $openvalue_id = (int)substr($v, 1);
                 break;
-            case self::NEW_VALUE_PREFIX: // new open value
-                $openvalue_id = $openvalue_dao->create($this->getId(), substr($v, 1));
+                case self::NEW_VALUE_PREFIX: // new open value
+                    $openvalue_id = $openvalue_dao->create($this->getId(), substr($v, 1));
                 break;
-            default:
+                default:
                 break;
             }
             if ($bindvalue_id || $openvalue_id) {
@@ -425,21 +425,21 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $v = trim($v);
             if ($v) {
                 switch ($v{0}) {
-                case self::BIND_PREFIX: // bind value
-                    if ($bindvalue_id = (int)substr($v, 1)) {
-                        $sanitized[] = $v;
-                    }
+                    case self::BIND_PREFIX: // bind value
+                        if ($bindvalue_id = (int)substr($v, 1)) {
+                            $sanitized[] = $v;
+                        }
                     break;
-                case self::OPEN_PREFIX: // open value
-                    if ($openvalue_id = (int)substr($v, 1)) {
-                        $sanitized[] = $v;
-                    }
+                    case self::OPEN_PREFIX: // open value
+                        if ($openvalue_id = (int)substr($v, 1)) {
+                            $sanitized[] = $v;
+                        }
                     break;
-                case self::NEW_VALUE_PREFIX: // new open value
+                    case self::NEW_VALUE_PREFIX: // new open value
 
-                    $sanitized[] = $v;
+                        $sanitized[] = $v;
                     break;
-                default:
+                    default:
                     break;
                 }
             }
@@ -455,21 +455,21 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $v = trim($v);
             if ($v) {
                 switch ($v{0}) {
-                case self::BIND_PREFIX: // bind value
-                    if ($bindvalue_id = (int)substr($v, 1)) {
-                        $sanitized[] = $this->getBind()->getBindValueById($bindvalue_id);
-                    }
+                    case self::BIND_PREFIX: // bind value
+                        if ($bindvalue_id = (int)substr($v, 1)) {
+                            $sanitized[] = $this->getBind()->getBindValueById($bindvalue_id);
+                        }
                     break;
-                case self::OPEN_PREFIX: // open value
-                    if ($openvalue_id = (int)substr($v, 1)) {
-                        $v = $this->getOpenValueById($openvalue_id);
-                        $sanitized[] = $v;
-                    }
+                    case self::OPEN_PREFIX: // open value
+                        if ($openvalue_id = (int)substr($v, 1)) {
+                            $v = $this->getOpenValueById($openvalue_id);
+                            $sanitized[] = $v;
+                        }
                     break;
-                case self::NEW_VALUE_PREFIX: // new open value
-                    $sanitized[] = new Tracker_FormElement_Field_List_UnsavedValue(substr($v, 1));
+                    case self::NEW_VALUE_PREFIX: // new open value
+                        $sanitized[] = new Tracker_FormElement_Field_List_UnsavedValue(substr($v, 1));
                     break;
-                default:
+                    default:
                     break;
                 }
             }

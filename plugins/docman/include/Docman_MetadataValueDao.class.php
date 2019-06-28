@@ -36,34 +36,34 @@ class Docman_MetadataValueDao extends DataAccessObject {
 
     function _matchSqlType($type, $value, &$field, &$dataType, &$escapedValue) {
         switch($type) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            $field        = 'valueText';
-            $dataType     = '%s';
-            $escapedValue = $this->da->quoteSmart($value);
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                $field        = 'valueText';
+                $dataType     = '%s';
+                $escapedValue = $this->da->quoteSmart($value);
             break;
 
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            $field        = 'valueString';
-            $dataType     = '%s';
-            $escapedValue = $this->da->quoteSmart($value);
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                $field        = 'valueString';
+                $dataType     = '%s';
+                $escapedValue = $this->da->quoteSmart($value);
             break;
 
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $field        = 'valueDate';
-            $dataType     = '%d';
-            $escapedValue = $value;
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $field        = 'valueDate';
+                $dataType     = '%d';
+                $escapedValue = $value;
             break;
 
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $field        = 'valueInt';
-            $dataType     = '%d';
-            $escapedValue = $value;
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                $field        = 'valueInt';
+                $dataType     = '%d';
+                $escapedValue = $value;
             break;
 
-        default:
-            $field        = false;
-            $dataType     = false;
-            $escapedValue = false;
+            default:
+                $field        = false;
+                $dataType     = false;
+                $escapedValue = false;
         }
     }
 

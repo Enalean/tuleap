@@ -47,7 +47,7 @@ class MediawikiAdminController {
         $this->user_group_factory     = new User_ForgeUserGroupFactory($user_dao);
         $this->permissions_normalizer = new PermissionsNormalizer();
         $this->language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
-   }
+    }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
         $this->assertUserIsProjectAdmin($service, $request);

@@ -22,9 +22,9 @@ $GLOBALS['verbose'] = true;
 
 function cron_debug($string) {
         global $verbose;
-        if($verbose) {
-                echo $string."\n";
-        }
+    if($verbose) {
+            echo $string."\n";
+    }
 }
 
 function cron_entry($job,$output) {

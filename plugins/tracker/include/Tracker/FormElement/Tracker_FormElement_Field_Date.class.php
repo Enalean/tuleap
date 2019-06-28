@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return void
      */
-     public function continueGetInstanceFromXML(
+    public function continueGetInstanceFromXML(
          $xml,
          &$xmlMapping,
          User\XML\Import\IFindUserFromXMLReference $user_finder
@@ -276,7 +276,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @param Tracker_ReportCriteria $criteria
      * @return mixed
      */
-   public function getCriteriaValue($criteria) {
+    public function getCriteriaValue($criteria) {
         if ( ! isset($this->criteria_value) ) {
             $this->criteria_value = array();
         }
@@ -863,7 +863,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     private function getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second) {
         if (checkdate($month, $day, $year) && $this->_nbDigits($year) ===  4) {
-           return array($year, $month, $day, $hour, $minute, $second);
+            return array($year, $month, $day, $hour, $minute, $second);
         }
 
         return array();

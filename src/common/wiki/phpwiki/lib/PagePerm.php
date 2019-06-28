@@ -62,15 +62,15 @@ rcs_id('$Id: PagePerm.php,v 1.40 2005/10/29 14:16:58 rurban Exp $');
 */
 
 /* Symbolic special ACL groups. Untranslated to be stored in page metadata*/
-define('ACL_EVERY',	   '_EVERY');
-define('ACL_ANONYMOUS',	   '_ANONYMOUS');
-define('ACL_BOGOUSER',	   '_BOGOUSER');
+define('ACL_EVERY',       '_EVERY');
+define('ACL_ANONYMOUS',       '_ANONYMOUS');
+define('ACL_BOGOUSER',       '_BOGOUSER');
 define('ACL_HASHOMEPAGE',  '_HASHOMEPAGE');
-define('ACL_SIGNED',	   '_SIGNED');
+define('ACL_SIGNED',       '_SIGNED');
 define('ACL_AUTHENTICATED','_AUTHENTICATED');
-define('ACL_ADMIN',	   '_ADMIN');
-define('ACL_OWNER',	   '_OWNER');
-define('ACL_CREATOR',	   '_CREATOR');
+define('ACL_ADMIN',       '_ADMIN');
+define('ACL_OWNER',       '_OWNER');
+define('ACL_CREATOR',       '_CREATOR');
 
 // Return an page permissions array for this page.
 // To provide ui helpers to view and change page permissions:
@@ -90,7 +90,7 @@ function pagePermissions($pagename) {
         return array('page',$perm);
     // or no permissions defined; returned inherited permissions, to be displayed in gray
     } elseif ($pagename == '.') { // stop recursion in pathological case. 
-    	// "." defined, without any acl
+        // "." defined, without any acl
         return array('default', new PagePermission());
     } else {
         return array('inherited', pagePermissions(getParentPage($pagename)));
@@ -106,9 +106,9 @@ function pagePermissionsSimpleFormat($perm_tree, $owner, $group=false) {
         $perm = $perm_tree[1];
     elseif (is_array($perm_tree[1])) {
         $perm_tree = pagePermissionsSimpleFormat($perm_tree[1],$owner,$group);
-	if (isa($perm_tree[1],'pagepermission'))
-	    $perm = $perm_tree[1];
-	elseif (isa($perm_tree,'htmlelement'))
+    if (isa($perm_tree[1],'pagepermission'))
+        $perm = $perm_tree[1];
+    elseif (isa($perm_tree,'htmlelement'))
             return $perm_tree;
     }
     */
@@ -163,41 +163,41 @@ function requiredAuthorityForPage ($action) {
 function action2access ($action) {
     global $request;
     switch ($action) {
-    case 'browse':
-    case 'viewsource':
-    case 'diff':
-    case 'select':
-    case 'search':
+        case 'browse':
+        case 'viewsource':
+        case 'diff':
+        case 'select':
+        case 'search':
         return 'view';
-    case 'zip':
-    case 'ziphtml':
+        case 'zip':
+        case 'ziphtml':
         return 'dump';
-    case 'revert':
-    case 'edit':
+        case 'revert':
+        case 'edit':
         return 'edit';
-    case 'create':
-        $page = $request->getPage();
-        if (!$page->exists())
+        case 'create':
+            $page = $request->getPage();
+            if (!$page->exists())
             return 'create';
-        else
+            else
             return 'view'; 
         break;
-    case 'upload':
-    case 'loadfile': 
-        // probably create/edit but we cannot check all page permissions, can we?
-    case 'remove':
-    case 'lock':
-    case 'unlock':
-    case 'upgrade':
-    case 'chown':
-    case 'setacl':
-    case 'rename':
+        case 'upload':
+        case 'loadfile': 
+            // probably create/edit but we cannot check all page permissions, can we?
+        case 'remove':
+        case 'lock':
+        case 'unlock':
+        case 'upgrade':
+        case 'chown':
+        case 'setacl':
+        case 'rename':
             return 'change';
-    default:
-        //Todo: Plugins should be able to override its access type
-        if (isWikiWord($action))
+        default:
+            //Todo: Plugins should be able to override its access type
+            if (isWikiWord($action))
             return 'view';
-        else
+            else
             return 'change';
         break;
     }
@@ -227,7 +227,7 @@ function _requiredAuthorityForPagename($access, $pagename) {
         if ($pagename == '.') {
             $perm = new PagePermission();
             if ($perm->isAuthorized('change', $request->_user)) {
-            	// warn the user to set ACL of ".", if he has permissions to do so.
+                // warn the user to set ACL of ".", if he has permissions to do so.
                 trigger_error(". (dotpage == rootpage for inheriting pageperm ACLs) exists without any ACL!\n".
                               "Please do ?action=setacl&pagename=.", E_USER_WARNING);
             }
@@ -248,8 +248,8 @@ function _requiredAuthorityForPagename($access, $pagename) {
         $permcache[$pagename][$access] = $authorized;
         return $authorized;
     } elseif ($pagename == '.') {
-    	return false;
-    } else {	
+        return false;
+    } else {    
         return _requiredAuthorityForPagename($access, getParentPage($pagename));
     }
 }
@@ -303,18 +303,18 @@ function getAccessDescription($access) {
 // from php.net docs
 function array_diff_assoc_recursive($array1, $array2) {
     foreach ($array1 as $key => $value) {
-         if (is_array($value)) {
-             if (!is_array($array2[$key])) {
-                 $difference[$key] = $value;
-             } else {
-                 $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
-                 if ($new_diff != false) {
-                     $difference[$key] = $new_diff;
-                 } 
-             }
-         } elseif(!isset($array2[$key]) || $array2[$key] != $value) {
-             $difference[$key] = $value;
-         }
+        if (is_array($value)) {
+            if (!is_array($array2[$key])) {
+                $difference[$key] = $value;
+            } else {
+                $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
+                if ($new_diff != false) {
+                    $difference[$key] = $new_diff;
+                } 
+            }
+        } elseif(!isset($array2[$key]) || $array2[$key] != $value) {
+            $difference[$key] = $value;
+        }
     }
     return !isset($difference) ? 0 : $difference;
 }
@@ -386,7 +386,7 @@ class PagePermission {
             if (ENABLE_USER_NEW)
                 return isa($user,'_BogoUser') or 
                       (isWikiWord($user->_userid) and $user->_level >= WIKIAUTH_BOGO);
-            else return isWikiWord($user->UserName());
+        else return isWikiWord($user->UserName());
         if ($group === ACL_HASHOMEPAGE)
             return $user->hasHomePage();
         if ($group === ACL_SIGNED)
@@ -440,17 +440,17 @@ class PagePermission {
         // view:
         if (!ALLOW_ANON_USER) {
             if (!ALLOW_USER_PASSWORDS) 
-            	$perm['view'] = array(ACL_SIGNED => true);
-            else		
-            	$perm['view'] = array(ACL_AUTHENTICATED => true);
+                $perm['view'] = array(ACL_SIGNED => true);
+            else        
+                $perm['view'] = array(ACL_AUTHENTICATED => true);
             $perm['view'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
         }
         // edit:
         if (!ALLOW_ANON_EDIT) {
             if (!ALLOW_USER_PASSWORDS) 
-            	$perm['edit'] = array(ACL_SIGNED => true);
-            else		
-            	$perm['edit'] = array(ACL_AUTHENTICATED => true);
+                $perm['edit'] = array(ACL_SIGNED => true);
+            else        
+                $perm['edit'] = array(ACL_AUTHENTICATED => true);
             $perm['edit'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
             $perm['create'] = $perm['edit'];
         }

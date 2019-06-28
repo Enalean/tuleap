@@ -92,7 +92,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
                 } else {
                     //permission of this news not yet defined
                     if ($is_private) {
-                      news_insert_permissions($forum_id,$group_id);
+                        news_insert_permissions($forum_id,$group_id);
                     }
                 }
 
@@ -105,38 +105,38 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         }
     }
 
-	news_header(array('title'=>$Language->getText('news_admin_index','title'),
-			  'help'=>'communication.html#news-service'));
+    news_header(array('title'=>$Language->getText('news_admin_index','title'),
+              'help'=>'communication.html#news-service'));
     
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
     echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index','choose_display').'</a>';
 
     $purifier = Codendi_HTMLPurifier::instance();
 
-	if (!$request->get('post_changes') && $request->get('approve')) {
-		/*
-			Show the submit form
-		*/
+    if (!$request->get('post_changes') && $request->get('approve')) {
+     /*
+      Show the submit form
+     */
 
-		$sql="SELECT * FROM news_bytes WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
-		$result=db_query($sql);
-		if (db_numrows($result) < 1) {
-			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
-		}
+        $sql="SELECT * FROM news_bytes WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
+        $result=db_query($sql);
+        if (db_numrows($result) < 1) {
+            exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
+        }
         $username=user_getname(db_result($result,0,'submitted_by'));
-		$forum_id=db_result($result,0,'forum_id');
-		$res = news_read_permissions($forum_id);
-		// check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
-		// with ST DB state
-		if (db_numrows($res) < 1 || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
-		    $check_private="";
-		    $check_public="CHECKED";
-		} else {
-		    $check_private="CHECKED";
-		    $check_public="";
-		}    
+        $forum_id=db_result($result,0,'forum_id');
+        $res = news_read_permissions($forum_id);
+     // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
+     // with ST DB state
+        if (db_numrows($res) < 1 || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
+            $check_private="";
+            $check_public="CHECKED";
+        } else {
+            $check_private="CHECKED";
+            $check_public="";
+        }    
 
-		echo '
+        echo '
         <H3>'.$purifier->purify($Language->getText('news_admin_index','approve_for',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H3>
 		<P>
 		<FORM ACTION="" METHOD="POST">
@@ -163,32 +163,32 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
-	} else {
-		/*
-			Show list of waiting news items
-		*/
+    } else {
+     /*
+      Show list of waiting news items
+     */
 
-		$sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=". db_ei($group_id) ." ORDER BY date DESC";
-		$result=db_query($sql);
-		$rows=db_numrows($result);
-		if ($rows < 1) {
-			echo '
+        $sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=". db_ei($group_id) ." ORDER BY date DESC";
+        $result=db_query($sql);
+        $rows=db_numrows($result);
+        if ($rows < 1) {
+            echo '
                 <H4>'.$purifier->purify($Language->getText('news_admin_index','no_queued_item_found_for',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H1>';
-		} else {
-			echo '
+        } else {
+            echo '
                 <H4>'.$purifier->purify($Language->getText('news_admin_index','new_items',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H4>
 				<P>';
-			for ($i=0; $i<$rows; $i++) {
-				echo '
+            for ($i=0; $i<$rows; $i++) {
+                echo '
 				<A HREF="/news/admin/?approve=1&id='.$purifier->purify(db_result($result,$i,'id')).'&group_id='.
                     $purifier->purify(db_result($result,$i,'group_id')).'">'.
                     $purifier->purify(db_result($result,$i,'summary')).'</A><BR>';
-			}
-		}
+            }
+        }
 
-	}
-	news_footer(array());
+    }
+    news_footer(array());
 
 } else {
-  exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin'));
+    exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin'));
 }

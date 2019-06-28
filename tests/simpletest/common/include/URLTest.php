@@ -184,7 +184,7 @@ class URLTest extends TuleapTestCase {
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'), 1);
     }
     
-   function testNewsBytesDontExist() {
+    function testNewsBytesDontExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
@@ -198,7 +198,7 @@ class URLTest extends TuleapTestCase {
                
     }
     
-   function testNewsBytesExist() {
+    function testNewsBytesExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);

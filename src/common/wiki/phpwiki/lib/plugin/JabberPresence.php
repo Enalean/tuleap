@@ -38,7 +38,7 @@ extends WikiPlugin
     function getDefaultArguments() {
         return array('scripturl' => "http://edgar.netflint.net/status.php",
                      'jid'       => MY_JABBER_ID,
-		     'type'      => 'image',
+        'type'      => 'image',
                      'iconset'   => "gabber");
     }
 
@@ -47,12 +47,12 @@ extends WikiPlugin
         // Any text that is returned will not be further transformed,
         // so use html where necessary.
         if (empty($jid))
-	    $html = HTML();
+        $html = HTML();
         else
-	  $html = HTML::img(array('src' => urlencode($scripturl).
-				  '&jid='.urlencode($jid).
-				  '&type='.urlencode($type).
-				  '&iconset='.($iconset)));
+        $html = HTML::img(array('src' => urlencode($scripturl).
+        '&jid='.urlencode($jid).
+        '&type='.urlencode($type).
+        '&iconset='.($iconset)));
         return $html;
     }
 };

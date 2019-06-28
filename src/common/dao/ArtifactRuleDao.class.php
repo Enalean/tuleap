@@ -40,7 +40,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchById($id) {
         $sql = sprintf("SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE id = %s",
-				$this->da->quoteSmart($id));
+        $this->da->quoteSmart($id));
         return $this->retrieve($sql);
     }
 
@@ -50,7 +50,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchByGroupArtifactId($groupArtifactId) {
         $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE group_artifact_id = %s",
-				$this->da->quoteSmart($groupArtifactId));
+        $this->da->quoteSmart($groupArtifactId));
         return $this->retrieve($sql);
     }
 
@@ -60,7 +60,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchBySourceFieldId($sourceFieldId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_field_id = %s",
-				$this->da->quoteSmart($sourceFieldId));
+        $this->da->quoteSmart($sourceFieldId));
         return $this->retrieve($sql);
     }
 
@@ -70,7 +70,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchBySourceValueId($sourceValueId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_value_id = %s",
-				$this->da->quoteSmart($sourceValueId));
+        $this->da->quoteSmart($sourceValueId));
         return $this->retrieve($sql);
     }
 
@@ -80,7 +80,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchByTargetFieldId($targetFieldId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id FROM artifact_rule WHERE target_field_id = %s",
-				$this->da->quoteSmart($targetFieldId));
+        $this->da->quoteSmart($targetFieldId));
         return $this->retrieve($sql);
     }
 
@@ -90,7 +90,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchByRuleType($ruleType) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, target_value_id FROM artifact_rule WHERE rule_type = %s",
-				$this->da->quoteSmart($ruleType));
+        $this->da->quoteSmart($ruleType));
         return $this->retrieve($sql);
     }
 
@@ -100,7 +100,7 @@ class ArtifactRuleDao extends DataAccessObject {
     */
     function searchByTargetValueId($targetValueId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type FROM artifact_rule WHERE target_value_id = %s",
-				$this->da->quoteSmart($targetValueId));
+        $this->da->quoteSmart($targetValueId));
         return $this->retrieve($sql);
     }
 
@@ -110,13 +110,13 @@ class ArtifactRuleDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id) {
-		$sql = sprintf("INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
-				$this->da->quoteSmart($group_artifact_id),
-				$this->da->quoteSmart($source_field_id),
-				$this->da->quoteSmart($source_value_id),
-				$this->da->quoteSmart($target_field_id),
-				$this->da->quoteSmart($rule_type),
-				$this->da->quoteSmart($target_value_id));
+        $sql = sprintf("INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
+        $this->da->quoteSmart($group_artifact_id),
+        $this->da->quoteSmart($source_field_id),
+        $this->da->quoteSmart($source_value_id),
+        $this->da->quoteSmart($target_field_id),
+        $this->da->quoteSmart($rule_type),
+        $this->da->quoteSmart($target_value_id));
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -145,13 +145,13 @@ class ArtifactRuleDao extends DataAccessObject {
                        "      ON (ar.target_field_id = afvlt.field_id AND ar.group_artifact_id = afvlt.group_artifact_id AND ar.target_value_id = afvlt.value_id) ".
                        " WHERE ar.group_artifact_id = %s ".
                        " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
-				$this->da->quoteSmart($groupArtifactId));
+        $this->da->quoteSmart($groupArtifactId));
         return $this->retrieve($sql);
     }
 
     function deleteById($id) {
         $sql = sprintf("DELETE FROM artifact_rule WHERE id = %s",
-				$this->da->quoteSmart($id));
+        $this->da->quoteSmart($id));
         return $this->update($sql);
     }
     
@@ -166,11 +166,11 @@ class ArtifactRuleDao extends DataAccessObject {
                        '   AND source_value_id   = %s '.
                        '   AND target_field_id   = %s '.
                        '   AND rule_type IN (%s) ',
-				$this->da->quoteSmart($group_artifact_id),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($source_value),
-				$this->da->quoteSmart($target),
-				implode(', ', $quoted_types));
+        $this->da->quoteSmart($group_artifact_id),
+        $this->da->quoteSmart($source),
+        $this->da->quoteSmart($source_value),
+        $this->da->quoteSmart($target),
+        implode(', ', $quoted_types));
         return $this->retrieve($sql);
     }
 
@@ -181,11 +181,11 @@ class ArtifactRuleDao extends DataAccessObject {
                        '   AND source_value_id   = %s '.
                        '   AND target_field_id   = %s '.
                        '   AND rule_type         = %s ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($source_value),
-				$this->da->quoteSmart($target),
-				$this->da->quoteSmart($rule_type));
+        $this->da->quoteSmart($artifact_type),
+        $this->da->quoteSmart($source),
+        $this->da->quoteSmart($source_value),
+        $this->da->quoteSmart($target),
+        $this->da->quoteSmart($rule_type));
         return $this->update($sql);
     }
 
@@ -196,18 +196,18 @@ class ArtifactRuleDao extends DataAccessObject {
                        '   AND target_field_id   = %s '.
                        '   AND target_value_id   = %s '.
                        '   AND rule_type         = %s ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($target),
-				$this->da->quoteSmart($target_value),
-				$this->da->quoteSmart($rule_type));
+        $this->da->quoteSmart($artifact_type),
+        $this->da->quoteSmart($source),
+        $this->da->quoteSmart($target),
+        $this->da->quoteSmart($target_value),
+        $this->da->quoteSmart($rule_type));
         return $this->update($sql);
     }
     
     function deleteRulesByGroupArtifactId($artifact_type) {
         $sql = sprintf('DELETE FROM artifact_rule '.
                        ' WHERE group_artifact_id = %s ',
-				$this->da->quoteSmart($artifact_type));
+        $this->da->quoteSmart($artifact_type));
         return $this->update($sql);
     }
     function deleteByField($artifact_type, $field_id) {
@@ -215,9 +215,9 @@ class ArtifactRuleDao extends DataAccessObject {
                        ' WHERE group_artifact_id = %s '.
                        '   AND (source_field_id  = %s '.
                        '   OR target_field_id    = %s) ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($field_id));
+        $this->da->quoteSmart($artifact_type),
+        $this->da->quoteSmart($field_id),
+        $this->da->quoteSmart($field_id));
         return $this->update($sql);
     }
     function deleteByFieldValue($artifact_type, $field_id, $value_id) {
@@ -232,11 +232,11 @@ class ArtifactRuleDao extends DataAccessObject {
                        '       AND target_value_id = %s '.
                        '     ) '.
                        '   ) ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($value_id),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($value_id));
+        $this->da->quoteSmart($artifact_type),
+        $this->da->quoteSmart($field_id),
+        $this->da->quoteSmart($value_id),
+        $this->da->quoteSmart($field_id),
+        $this->da->quoteSmart($value_id));
         return $this->update($sql);
     }
     function copyRules($from_artifact_type, $to_artifact_type) {

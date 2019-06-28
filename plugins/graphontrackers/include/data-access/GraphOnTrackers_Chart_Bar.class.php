@@ -94,19 +94,19 @@ class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
     }
     
     function userCanVisualize(){
-    	$artifact_field_base=new ArtifactField();
-    	$artifact_field_base->fetchData($GLOBALS['ath']->getID(),$this->field_base);
-    	if($this->field_group){
-	    	$artifact_field_group=new ArtifactField();
-	    	$artifact_field_group->fetchData($GLOBALS['ath']->getID(),$this->field_group);
-    		if(!$artifact_field_group->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    		
-    	if($artifact_field_base->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-	    	return true;
-    	}else{return false;}
+        $artifact_field_base=new ArtifactField();
+        $artifact_field_base->fetchData($GLOBALS['ath']->getID(),$this->field_base);
+        if($this->field_group){
+            $artifact_field_group=new ArtifactField();
+            $artifact_field_group->fetchData($GLOBALS['ath']->getID(),$this->field_group);
+            if(!$artifact_field_group->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+            
+        if($artifact_field_base->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+            return true;
+        }else{return false;}
     }
     
     public function getChartType() {

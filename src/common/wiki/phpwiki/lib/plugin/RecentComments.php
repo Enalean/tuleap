@@ -67,9 +67,9 @@ extends _RecentChanges_HtmlFormatter {
     }
 
     function format_revision ($rev) {
-    	static $doublettes = array();
-    	if (isset($doublettes[$rev->getPageName()])) return;
-    	$doublettes[$rev->getPageName()] = 1;
+        static $doublettes = array();
+        if (isset($doublettes[$rev->getPageName()])) return;
+        $doublettes[$rev->getPageName()] = 1;
         $args = &$this->_args;
         $class = 'rc-' . $this->importance($rev);
         $time = $this->time($rev);
@@ -105,13 +105,13 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
     }
 
     function next () {
-    	if (!empty($this->comments) and $this->_current) {
+        if (!empty($this->comments) and $this->_current) {
             if (isset($this->comments[$this->_current])) {
                 return $this->comments[$this->_current++];
             } else {
-            	$this->_current = 0;
+                $this->_current = 0;
             }
-    	}
+        }
         while (($rev = $this->_revisions->next())) {
             $this->comments = $this->_blog->findBlogs($this->_wikidb, $rev->getPageName(), 'comment');
             if ($this->comments) {
@@ -123,9 +123,9 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
                     return $this->comments[$this->_current++];
                 }
             } else {
-		$this->_current = 0;
+                $this->_current = 0;
             }
-    	}
+        }
         $this->free();
         return false;
     }

@@ -22,7 +22,7 @@ class b201602161822_add_accessfile_reference_in_svn_repository extends ForgeUpgr
         return 'Add accessfile reference to svn repository';
     }
 
-   public function preUp() {
+    public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 

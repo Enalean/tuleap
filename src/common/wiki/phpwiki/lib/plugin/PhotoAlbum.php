@@ -134,15 +134,15 @@ extends WikiPlugin
                          // attrib arg allows multiple attributes: attrib=sort,nowrap,alt
                          // 'sort' sorts alphabetically, 'nowrap' for cells, 'alt' to use
                         // descs instead of filenames in image ALT-tags
-                     'bgcolor'  => '#eae8e8',	// cell bgcolor (lightgrey)
-                     'hlcolor'	=> '#c0c0ff',	// highlight color (lightblue)
-                     'align'	=> 'center',	// alignment of table
-                     'height'   => 'auto',	// image height (auto|75|100%)
-                     'width'    => 'auto',	// image width (auto|75|100%)
+                     'bgcolor'  => '#eae8e8',    // cell bgcolor (lightgrey)
+                     'hlcolor'    => '#c0c0ff',    // highlight color (lightblue)
+                     'align'    => 'center',    // alignment of table
+                     'height'   => 'auto',    // image height (auto|75|100%)
+                     'width'    => 'auto',    // image width (auto|75|100%)
                      // Size of shown photos. Either absolute value (e.g. "50") or
                      // HTML style percentage (e.g. "75%") or "auto" for no special
                      // action.
-                     'cellwidth'=> 'image',	// cell (auto|equal|image|75|100%)
+                     'cellwidth'=> 'image',    // cell (auto|equal|image|75|100%)
                      // Width of cells in table. Either absolute value in pixels, HTML
                      // style percentage, "auto" (no special action), "equal" (where
                      // all columns are equally sized) or "image" (take height and
@@ -255,22 +255,22 @@ display_slides();"));
                             'src_tile' => $value["name_tile"],
                             'border' => "0",
                             'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
-                            		? $value["desc"]
-    		                        : basename($value["name"]));
+                                    ? $value["desc"]
+                                    : basename($value["name"]));
             if (!@empty($value['location'])) 
                 $params = array_merge($params, array("location" => $value['location']));
             // check description
             switch ($showdesc) {
-            case 'none':
-                $value["desc"] = '';
+                case 'none':
+                    $value["desc"] = '';
                 break;
-            case 'name':
-                $value["desc"] = basename($value["name"]);
+                case 'name':
+                    $value["desc"] = basename($value["name"]);
                 break;
-            case 'desc':
+                case 'desc':
                 break;
-            default: // 'both'
-                if (!$value["desc"]) $value["desc"] = basename($value["name"]);
+                default: // 'both'
+                    if (!$value["desc"]) $value["desc"] = basename($value["name"]);
                 break;
             }
     
@@ -456,7 +456,7 @@ display_slides();"));
                                               . $align.': 50px; '
                                               .'vertical-align: top',
                                     'name' => "wikislide".$count);
-                    }
+                }
                 $row->pushContent(
                                   (HTML::td($cell,
                                             $url_image,
@@ -483,7 +483,7 @@ display_slides();"));
                  $p) {
                     if ($mode == 'row')
                         $html->pushcontent(HTML::span($row));
-                    else
+                else
                         $html->pushcontent(HTML::tr($row));
                     unset($row);
                     $row = HTML();
@@ -530,14 +530,14 @@ display_slides();"));
     * @return string Error if fixed location is not allowed
     */
     function fromLocation($src, &$photos) {
-    	/*if (!allow_album_location) {
-    	    return $this->error(_("Fixed album location is not allowed. Please specify parameter src."));
+        /*if (!allow_album_location) {
+            return $this->error(_("Fixed album location is not allowed. Please specify parameter src."));
         }*/
         //FIXME!
         if (! IsSafeURL($src)) {
             return $this->error(_("Bad url in src: remove all of <, >, \""));
         }
-    	$photos[] = array ("name" => $src, //album_location."/$src".album_default_extension,
+        $photos[] = array ("name" => $src, //album_location."/$src".album_default_extension,
                            "desc" => "");
     }
 
@@ -553,7 +553,7 @@ display_slides();"));
         $src_bak = $src;
         //there has a big security hole... as loading config/config.ini !
         if (!preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/',$src)) {
-           return $this->error(_("File extension for csv file has to be '.csv'"));
+            return $this->error(_("File extension for csv file has to be '.csv'"));
         }
         if (! IsSafeURL($src)) {
             return $this->error(_("Bad url in src: remove all of <, >, \""));

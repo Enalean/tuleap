@@ -23,13 +23,13 @@ class Tracker_Artifact_ChangesetFactoryBuilder {
    /**
     * @return Tracker_Artifact_ChangesetFactory
     */
-   public static function build() {
-       return new Tracker_Artifact_ChangesetFactory(
+    public static function build() {
+        return new Tracker_Artifact_ChangesetFactory(
            new Tracker_Artifact_ChangesetDao(),
            new Tracker_Artifact_Changeset_ValueDao(),
            new Tracker_Artifact_Changeset_CommentDao(),
            new Tracker_Artifact_ChangesetJsonFormatter(TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR) . '/templates')),
            Tracker_FormElementFactory::instance()
-       );
-   }
+        );
+    }
 }

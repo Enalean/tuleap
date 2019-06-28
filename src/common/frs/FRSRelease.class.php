@@ -35,7 +35,7 @@ class FRSRelease {
     public const EVT_UPDATE = 202;
     public const EVT_DELETE = 203;
 
-	/**
+    /**
      * @var int $release_id the ID of this FRSRelease
      */
     var $release_id;
@@ -250,8 +250,8 @@ class FRSRelease {
         return $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID());
     }
 
-	function initFromArray($array) {
-		if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
+    function initFromArray($array) {
+        if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
         if (isset($array['name']))            $this->setName($array['name']);
         if (isset($array['notes']))           $this->setNotes($array['notes']);
@@ -277,26 +277,26 @@ class FRSRelease {
     }
 
     /**
-	 * Associative array of data from db.
-	 *
-	 * @var  array   $data_array.
-	 */
-	var $data_array;
-	var $release_files;
+     * Associative array of data from db.
+     *
+     * @var  array   $data_array.
+     */
+    var $data_array;
+    var $release_files;
 
-	/**
-	 *	getFiles - gets all the file objects for files in this release.
-	 *
-	 *	return	array	Array of FRSFile Objects.
-	 */
-	function &getFiles() {
-		if (!is_array($this->release_files) || count($this->release_files) < 1) {
-			$this->release_files=array();
-			$frsff = new FRSFileFactory();
-			$this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
-		}
-		return $this->release_files;
-	}
+    /**
+     *    getFiles - gets all the file objects for files in this release.
+     *
+     *    return    array    Array of FRSFile Objects.
+     */
+    function &getFiles() {
+        if (!is_array($this->release_files) || count($this->release_files) < 1) {
+            $this->release_files=array();
+            $frsff = new FRSFileFactory();
+            $this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
+        }
+        return $this->release_files;
+    }
 
     public function userCanRead($user_id = 0) {
         $release_factory = new FRSReleaseFactory();
@@ -304,7 +304,7 @@ class FRSRelease {
         return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
     }
 
-	/**
+    /**
      * Returns the HTML content for tooltip when hover a reference with the nature release
      * @returns string HTML content for release tooltip
      */

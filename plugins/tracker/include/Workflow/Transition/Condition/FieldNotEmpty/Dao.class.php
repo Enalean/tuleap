@@ -81,7 +81,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE transition_id = $transition_id";
 
-       return $this->update($sql);
+        return $this->update($sql);
     }
 
     /**

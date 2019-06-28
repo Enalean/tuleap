@@ -53,8 +53,8 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     // delete a processor from db
     if ($request->valid(new Valid_UInt('proc_id'))) {
         $proc_id = $request->get('proc_id');
-    file_utils_delete_proc($proc_id);
-}
+        file_utils_delete_proc($proc_id);
+    }
 }
 
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
@@ -153,4 +153,4 @@ echo $return;
 
 file_utils_footer(array());
 
- ?>
+?>

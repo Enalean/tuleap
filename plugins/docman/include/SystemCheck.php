@@ -73,8 +73,8 @@ class Docman_SystemCheck {
     }
 
     private function checkIncFolderAndFileOwnership() {
-       $this->config_checker->checkFolder($this->docman_plugin);
-       $this->config_checker->checkIncFile($this->getIncFile());
+        $this->config_checker->checkFolder($this->docman_plugin);
+        $this->config_checker->checkIncFile($this->getIncFile());
     }
 
     private function getIncFile() {

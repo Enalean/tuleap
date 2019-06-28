@@ -115,30 +115,30 @@ extends WikiPlugin {
         }
         else {
             switch ($previous) {
-            case 'author':
-                $old = $new;
-                while ($old = $page->getRevisionBefore($old)) {
-                    if ($old->get('author') != $new->get('author'))
+                case 'author':
+                    $old = $new;
+                    while ($old = $page->getRevisionBefore($old)) {
+                        if ($old->get('author') != $new->get('author'))
                         break;
-                }
-                $old_version = _("revision by previous author");
-                $others = array('major', 'minor');
+                    }
+                    $old_version = _("revision by previous author");
+                    $others = array('major', 'minor');
                 break;
-            case 'minor':
-                $previous='minor';
-                $old = $page->getRevisionBefore($new);
-                $old_version = _("previous revision");
-                $others = array('major', 'author');
+                case 'minor':
+                    $previous='minor';
+                    $old = $page->getRevisionBefore($new);
+                    $old_version = _("previous revision");
+                    $others = array('major', 'author');
                 break;
-            case 'major':
-            default:
-                $old = $new;
-                while ($old && $old->get('is_minor_edit'))
+                case 'major':
+                default:
+                    $old = $new;
+                    while ($old && $old->get('is_minor_edit'))
                     $old = $page->getRevisionBefore($old);
-                if ($old)
+                    if ($old)
                     $old = $page->getRevisionBefore($old);
-                $old_version = _("predecessor to the previous major change");
-                $others = array('minor', 'author');
+                    $old_version = _("predecessor to the previous major change");
+                    $others = array('minor', 'author');
                 break;
             }
         }

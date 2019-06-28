@@ -278,16 +278,16 @@ extends Docman_FilterDate {
             if($request->exist($this->getFieldOperatorName()) 
                && $request->exist($this->getFieldValueName())) {
                 switch($request->get($this->getFieldOperatorName())) {
-                case '-1': // '<'
-                    $this->setValueEnd($request->get($this->getFieldValueName()));
+                    case '-1': // '<'
+                        $this->setValueEnd($request->get($this->getFieldValueName()));
                     break;
-                case '0': // '='
-                    $this->setValueEnd($request->get($this->getFieldValueName()));
-                    $this->setValueStart($request->get($this->getFieldValueName()));
+                    case '0': // '='
+                        $this->setValueEnd($request->get($this->getFieldValueName()));
+                        $this->setValueStart($request->get($this->getFieldValueName()));
                     break;
-                case '1': // '>'
-                default:
-                    $this->setValueStart($request->get($this->getFieldValueName()));
+                    case '1': // '>'
+                    default:
+                        $this->setValueStart($request->get($this->getFieldValueName()));
                 }
                 $fieldExist = true;
             }

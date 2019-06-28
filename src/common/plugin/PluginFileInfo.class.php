@@ -174,34 +174,34 @@ class PluginFileInfo extends PluginInfo
         $current   = 0;
         foreach ($tokens as $token) {
             switch ($token[0]) {
-            case T_VARIABLE:
-                $variables[$current] = array('name' => substr($token[1], 1), 'value' => '');
+                case T_VARIABLE:
+                    $variables[$current] = array('name' => substr($token[1], 1), 'value' => '');
                 break;
-            case T_STRING:
-            case T_CONSTANT_ENCAPSED_STRING:
-            case T_DNUMBER:
-            case T_LNUMBER:
-            case T_NUM_STRING:
-                if (T_STRING == $token[0] && (!strcasecmp($token[1], "false") || !strcasecmp($token[1], "true"))) {
-                    $val = (bool)strcasecmp($token[1], "false");
-                    if (isset($variables[$current])) {
-                        $variables[$current]['value'] = $val;
+                case T_STRING:
+                case T_CONSTANT_ENCAPSED_STRING:
+                case T_DNUMBER:
+                case T_LNUMBER:
+                case T_NUM_STRING:
+                    if (T_STRING == $token[0] && (!strcasecmp($token[1], "false") || !strcasecmp($token[1], "true"))) {
+                        $val = (bool)strcasecmp($token[1], "false");
+                        if (isset($variables[$current])) {
+                            $variables[$current]['value'] = $val;
+                        }
+                    } else {
+                        if (isset($variables[$current])) {
+                            $variables[$current]['value'] .= $token[1];
+                        }
                     }
-                } else {
+                break;
+                case '*':
                     if (isset($variables[$current])) {
-                        $variables[$current]['value'] .= $token[1];
+                        $variables[$current]['value'] .= $token[0];
                     }
-                }
                 break;
-            case '*':
-                if (isset($variables[$current])) {
-                    $variables[$current]['value'] .= $token[0];
-                }
+                case ';':
+                    $current++;
                 break;
-            case ';':
-                $current++;
-                break;
-            default:
+                default:
                 break;
             }
         }

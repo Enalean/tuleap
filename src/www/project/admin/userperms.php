@@ -31,11 +31,11 @@ use Tuleap\FRS\FRSPermissionFactory;
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
-	exit_no_group();
+    exit_no_group();
 }
 $atf = new ArtifactTypeFactory($group);
 if (!$group || !is_object($group) || $group->isError()) {
-	exit_error($Language->getText('global','error'),$Language->getText('project_admin_index','not_get_atf'));
+    exit_error($Language->getText('global','error'),$Language->getText('project_admin_index','not_get_atf'));
 }
 // Get the artfact type list
 $at_arr = $atf->getArtifactTypes();
@@ -46,7 +46,7 @@ $project=$pm->getProject($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
         echo $Language->getText('project_admin_userperms','unable_load_p')."<br>";
-    	return;
+        return;
 }
 
 // ########################### form submission, make updates
@@ -99,11 +99,11 @@ if ($request->exist('submit')) {
                 'user_id' => $row_dev['user_id'],
             ));
         }
-	}
+    }
 
-        if (count($row_dev) > $nb_errors) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
-        }
+    if (count($row_dev) > $nb_errors) {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
+    }
 }
 
 $vPattern = new Valid_String('search');
@@ -111,7 +111,7 @@ $vPattern->required();
 if($request->valid($vPattern)) {
     $pattern = $request->get('search');
 } else {
-	$pattern = '';
+    $pattern = '';
 }
 
 $offset = $request->getValidated('offset', 'uint', 0);
@@ -195,34 +195,34 @@ $frs_permission_manager = FRSPermissionManager::build();
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
-echo '<FORM action="userperms.php" name= "form_update" method="post">
+    echo '<FORM action="userperms.php" name= "form_update" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 <INPUT type="hidden" name="offset" value="'.$offset.'">';
 
-echo '<TABLE class="table">';
+    echo '<TABLE class="table">';
 
-$head = '<thead><tr>';
-$i = 0;
+    $head = '<thead><tr>';
+    $i = 0;
 
-$should_display_submit_button = false;
+    $should_display_submit_button = false;
 
-$head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
+    $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
 
-if ($project->usesSVN()) {
-    $should_display_submit_button = true;
-    $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
-}
+    if ($project->usesSVN()) {
+        $should_display_submit_button = true;
+        $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
+    }
 
-if ( $project->usesTracker()&&$at_arr ) {
-    $should_display_submit_button = true;
-	for ($j = 0; $j < count($at_arr); $j++) {
-        $head .= '<th>' . $at_arr[$j]->getName() . '</th>';
-	}
-}
+    if ( $project->usesTracker()&&$at_arr ) {
+        $should_display_submit_button = true;
+        for ($j = 0; $j < count($at_arr); $j++) {
+              $head .= '<th>' . $at_arr[$j]->getName() . '</th>';
+        }
+    }
 
-$head .= '</tr></thead><tbody>';
+    $head .= '</tr></thead><tbody>';
 
-echo $head;
+    echo $head;
 
     $i=0;
 
@@ -267,44 +267,44 @@ echo $head;
 
 
 
-echo '</tbody>
+    echo '</tbody>
     </table>';
-if ($num_total_rows && $number_per_page < $num_total_rows) {
-    //Jump to page
-    $nb_of_pages = ceil($num_total_rows / $number_per_page);
-    $current_page = round($offset / $number_per_page);
-    if (isset($pattern) && $pattern != '') {
-    	$search = '&amp;search='.$pattern;
-    } else {
-    	$search = '';
+    if ($num_total_rows && $number_per_page < $num_total_rows) {
+        //Jump to page
+        $nb_of_pages = ceil($num_total_rows / $number_per_page);
+        $current_page = round($offset / $number_per_page);
+        if (isset($pattern) && $pattern != '') {
+            $search = '&amp;search='.$pattern;
+        } else {
+            $search = '';
 
-    }
-    echo '<div style="font-family:Verdana">Page: ';
-    $width = 10;
-    for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
-        if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-            echo '<a href="?'.
+        }
+        echo '<div style="font-family:Verdana">Page: ';
+        $width = 10;
+        for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+            if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                echo '<a href="?'.
                 'group_id='. (int)$group_id .
                 '&amp;offset='. (int)($i * $number_per_page) .
                 $search.
                 '">';
-            if ($i == $current_page) {
-                echo '<b>'. ($i + 1) .'</b>';
-            } else {
-                echo $i + 1;
+                if ($i == $current_page) {
+                    echo '<b>'. ($i + 1) .'</b>';
+                } else {
+                    echo $i + 1;
+                }
+                echo '</a>&nbsp;';
+            } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                echo '...&nbsp;';
             }
-            echo '</a>&nbsp;';
-        } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-            echo '...&nbsp;';
         }
+        echo '</div>';
     }
-    echo '</div>';
-}
 
-if ($should_display_submit_button) {
-    echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">';
-}
-echo '</FORM>';
+    if ($should_display_submit_button) {
+        echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">';
+    }
+    echo '</FORM>';
 }
 
 project_admin_footer(array());

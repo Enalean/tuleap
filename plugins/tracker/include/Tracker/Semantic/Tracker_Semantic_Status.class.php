@@ -500,7 +500,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return void
      */
-     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
             $child = $root->addChild('semantic');
             $child->addAttribute('type', $this->getShortName());
@@ -514,8 +514,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
                     $node_open_values->addChild('open_value')->addAttribute('REF', $ref);
                 }
             }
-         }
-     }
+        }
+    }
 
      /**
      * Is the field used in semantics?

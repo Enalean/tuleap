@@ -507,8 +507,8 @@ extends _RecentChanges_HtmlFormatter
         while ($rev = $changes->next()) {
             // enforce view permission
             if (mayAccessPage('view',$rev->_pagename)) {
-            	if ($link = $this->pageLink($rev)) // some entries may be empty 
-                    				   // (/Blog/.. interim pages)
+                if ($link = $this->pageLink($rev)) // some entries may be empty 
+                                       // (/Blog/.. interim pages)
                     $html->pushContent($sp, $link, HTML::br());
                 if ($first)
                     $this->setValidators($rev);
@@ -766,7 +766,7 @@ extends WikiPlugin
     }
 
     function getArgs ($argstr, $request, $defaults = false) {
-    	if (!$defaults) $defaults = $this->getDefaultArguments();
+        if (!$defaults) $defaults = $this->getDefaultArguments();
         $args = WikiPlugin::getArgs($argstr, $request, $defaults);
 
         $action = $request->getArg('action');

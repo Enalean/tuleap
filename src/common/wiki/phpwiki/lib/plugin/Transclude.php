@@ -51,7 +51,7 @@ extends WikiPlugin
     }
 
     function getDescription() {
-      return _("Include an external web page within the body of a wiki page.");
+        return _("Include an external web page within the body of a wiki page.");
     }
 
     function getVersion() {

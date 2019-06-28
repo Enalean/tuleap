@@ -45,7 +45,7 @@ class LinePlot extends Plot{
     // PUBLIC METHODS
 
     function SetFilled($aFlg=true) {
-		$this->filled = $aFlg;
+        $this->filled = $aFlg;
     }
 
     function SetBarCenter($aFlag=true) {
@@ -73,7 +73,7 @@ class LinePlot extends Plot{
     }
 
     function SetFillColor($aColor,$aFilled=true) {
-    	//$this->color = $aColor;
+        //$this->color = $aColor;
         $this->fill_color=$aColor;
         $this->filled=$aFilled;
     }

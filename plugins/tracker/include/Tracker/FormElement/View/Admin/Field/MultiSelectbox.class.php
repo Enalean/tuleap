@@ -19,7 +19,7 @@
 
 
 class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
-     protected $availableTypes = array('sb', 'rb', 'cb');
+    protected $availableTypes = array('sb', 'rb', 'cb');
 }
 
 ?>

@@ -189,11 +189,11 @@ class GraphOnTrackersPlugin extends Plugin
      * @param params:hook parameters
      */
     public function tracker_after_report($params){
-       if($this->isAllowed($params['group_id'])) {
-           require_once('html-generators/GraphicEngineHtml.class.php');
-           $eng = new graphicEngineHtml($this->atid,user_getid(),$this->getThemePath());
-           $eng->displayReportGraphic($this->report_graphic_id, $params['group_id'], $params['atid'], $params['url']);
-       }
+        if($this->isAllowed($params['group_id'])) {
+            require_once('html-generators/GraphicEngineHtml.class.php');
+            $eng = new graphicEngineHtml($this->atid,user_getid(),$this->getThemePath());
+            $eng->displayReportGraphic($this->report_graphic_id, $params['group_id'], $params['atid'], $params['url']);
+        }
     }
     
     /**

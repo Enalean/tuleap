@@ -49,7 +49,7 @@ extends WikiPlugin
     }
 
     function getDescription() {
-      return _("Layout tables using the old markup style.");
+        return _("Layout tables using the old markup style.");
     }
 
     function getVersion() {
@@ -87,7 +87,7 @@ extends WikiPlugin
         $default_args = array_keys($default);
         foreach ($default_args as $arg) { 
             if ($args[$arg] == '' and $default[$arg] == '')  
-                continue;			// ignore '' arguments
+                continue;            // ignore '' arguments
             if ($arg == 'caption')
                 $caption = $args[$arg];
             else
@@ -102,12 +102,12 @@ extends WikiPlugin
             if (!$line)
                 continue;
             if (strstr($line,"=")) {
-            	$tmp = explode("=",$line);
-            	if (in_array(trim($tmp[0]),$default_args))
+                $tmp = explode("=",$line);
+                if (in_array(trim($tmp[0]),$default_args))
                     continue;
             }
             if ($line[0] != '|') {
-            	// bogus error if argument
+                // bogus error if argument
                 trigger_error(sprintf(_("Line %s does not begin with a '|'."), $line), E_USER_WARNING);
             } else {
                 $table->pushContent($this->_parse_row($line, $basepage));

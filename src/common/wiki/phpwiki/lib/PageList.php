@@ -236,7 +236,7 @@ class _PageList_Column extends _PageList_Column_base {
  */
 class _PageList_Column_custom extends _PageList_Column {
     function __construct($params) {
-    	$this->_pagelist = $params[3];
+        $this->_pagelist = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
     }
 }
@@ -265,8 +265,8 @@ class _PageList_Column_size extends _PageList_Column {
     function _getSortableValue ($page_handle, &$revision_handle) {
         if (!$revision_handle)
             $revision_handle = $page_handle->getCurrentRevision(true);
-    	return (empty($revision_handle->_data['%content'])) 
-    	       ? 0 : strlen($revision_handle->_data['%content']);
+        return (empty($revision_handle->_data['%content'])) 
+               ? 0 : strlen($revision_handle->_data['%content']);
     }
 
     function _getSize($revision_handle) {
@@ -284,7 +284,7 @@ class _PageList_Column_bool extends _PageList_Column {
     }
 
     function _getValue ($page_handle, &$revision_handle) {
-    	//FIXME: check if $this is available in the parent (->need_rev)
+        //FIXME: check if $this is available in the parent (->need_rev)
         $val = _PageList_Column::_getValue($page_handle, $revision_handle);
         return $val ? $this->_textIfTrue : $this->_textIfFalse;
     }
@@ -473,7 +473,7 @@ class _PageList_Column_pagename extends _PageList_Column_base {
     }
 
     function _getSortableValue ($page_handle, &$revision_handle) {
-    	return $page_handle->getName();
+        return $page_handle->getName();
     }
 
     /**
@@ -535,11 +535,11 @@ class PageList {
         $this->_addColumn('pagename');
 
         foreach (array('sortby','limit','paging','count','dosort') as $key) {
-          if (!empty($options) and !empty($options[$key])) {
-            $this->_options[$key] = $options[$key];
-          } else {
-            $this->_options[$key] = $GLOBALS['request']->getArg($key);
-          }
+            if (!empty($options) and !empty($options[$key])) {
+                $this->_options[$key] = $options[$key];
+            } else {
+                $this->_options[$key] = $GLOBALS['request']->getArg($key);
+            }
         }
         $this->_options['sortby'] = $this->sortby($this->_options['sortby'], 'init');
         if ($exclude) {
@@ -561,7 +561,7 @@ class PageList {
                      /* what columns, what pages */
                      'info'     => 'pagename',
                      'exclude'  => '',          // also wildcards, comma-seperated lists 
-                     				// and <!plugin-list !> arrays
+                                     // and <!plugin-list !> arrays
                      /* select pages by meta-data: */
                      'author'   => false, // current user by []
                      'owner'    => false, // current user by []
@@ -569,7 +569,7 @@ class PageList {
 
                      /* for the sort buttons in <th> */
                      'sortby'   => '', // same as for WikiDB::getAllPages 
-                     		       // (unsorted is faster)
+                                    // (unsorted is faster)
 
                      /* PageList pager options:
                       * These options may also be given to _generate(List|Table) later
@@ -577,8 +577,8 @@ class PageList {
                       */
                      'limit'    => 0,       // number of rows (pagesize)
                      'paging'   => 'auto',  // 'auto'   top + bottom rows if applicable
-                     //			    // 'top'    top only if applicable
-                     //			    // 'bottom' bottom only if applicable
+                     //                // 'top'    top only if applicable
+                     //                // 'bottom' bottom only if applicable
                      //                     // 'none'   don't page at all 
                      // (TODO: clarify what if $paging==false ?)
 
@@ -587,7 +587,7 @@ class PageList {
                      'azhead'   => 0,       // 1: group by initials
                                             // 2: provide shortcut links to initials also
                      'comma'    => 0,       // condensed comma-seperated list, 
-                     			    // 1 if without links, 2 if with
+                                     // 1 if without links, 2 if with
                      'commasep' => false,   // Default: ', '
                      'ordered'  => false,   // OL or just UL lists (ignored for comma)
                      );
@@ -610,8 +610,8 @@ class PageList {
 
 
     function getTotal () {
-    	return !empty($this->_options['count'])
-    	       ? (integer) $this->_options['count'] : count($this->_pages);
+        return !empty($this->_options['count'])
+               ? (integer) $this->_options['count'] : count($this->_pages);
     }
 
     function isEmpty () {
@@ -619,7 +619,7 @@ class PageList {
     }
 
     function addPage($page_handle) {
-    	if (!empty($this->_excluded_pages)) {
+        if (!empty($this->_excluded_pages)) {
             if (!in_array((is_string($page_handle) ? $page_handle : $page_handle->getName()),
                           $this->_excluded_pages))
                 $this->_pages[] = $page_handle;
@@ -783,7 +783,7 @@ class PageList {
         if (empty($order))
             if (in_array($column, array('mtime','hits')))
                 $order = '-';
-            else
+        else
                 $order = '+';
         if ($action == 'flip_order') {
             return ($order == '+' ? '-' : '+') . $column;
@@ -1025,10 +1025,10 @@ class PageList {
      * @return  true if column is added, false otherwise
      */
     function _addColumn ($column) {
-    	
+        
         if (isset($this->_columns_seen[$column]))
             return false;       // Already have this one.
-	if (!isset($this->_types[$column]))
+        if (!isset($this->_types[$column]))
             $this->_initAvailableColumns();
         $this->_columns_seen[$column] = true;
 
@@ -1063,8 +1063,8 @@ class PageList {
      * @param $col object   An object derived from _PageList_Column.
      **/
     function addColumnObject($col) {
-    	if (is_array($col)) {// custom column object
-    	    $params = $col;
+        if (is_array($col)) {// custom column object
+            $params = $col;
             $class_name = array_shift($params);
             $params[3] = $this;
             $col = new $class_name($params);
@@ -1132,7 +1132,7 @@ class PageList {
     }
 
     function limit($limit) {
-    	if (is_array($limit)) return $limit;
+        if (is_array($limit)) return $limit;
         if (strstr($limit, ','))
             return preg_split('/,/D', $limit);
         else
@@ -1213,9 +1213,9 @@ class PageList {
             $table->pushContent($this->_jsFlipAll());
         }
         $do_paging = ( isset($this->_options['paging']) 
-        	       and !empty($this->_options['limit']) 
-        	       and $this->getTotal() 
-        	       and $this->_options['paging'] != 'none' );
+                   and !empty($this->_options['limit']) 
+                   and $this->getTotal() 
+                   and $this->_options['paging'] != 'none' );
         $row = HTML::tr();
         $table_summary = array();
         $i = 1; // start with 1!
@@ -1225,7 +1225,7 @@ class PageList {
                  and isset($col->_field) 
                  and $col->_field == 'pagename' 
                  and ($maxlen = $this->maxLen())) {
-               $heading->setAttr('width', $maxlen * 7);
+                $heading->setAttr('width', $maxlen * 7);
             }
             $row->pushContent($heading);
             if (is_string($col->getHeading()))
@@ -1261,7 +1261,7 @@ class PageList {
     }
 
     function _jsFlipAll() {
-      return JavaScript("
+        return JavaScript("
 function flipAll(formObj) {
   var isFirstSet = -1;
   for (var i=0; i < formObj.length; i++) {
@@ -1287,8 +1287,8 @@ function flipAll(formObj) {
         $this->_stack->push($stack);
     }
     function _restoreOptions() {
-    	assert($this->_stack);
-    	$stack = $this->_stack->pop();
+        assert($this->_stack);
+        $stack = $this->_stack->pop();
         $this->_pages = $stack['pages'];
         unset($stack['pages']);
         foreach ($stack as $k => $v) {
@@ -1301,7 +1301,7 @@ function flipAll(formObj) {
     // 'ordered' - OL or UL list (not yet inherited to all plugins)
     // 'comma'  - condensed comma-list only, 1: no links, >1: with links
     function _generateList($caption='') {
-    	if (empty($this->_pages)) return; // stop recursion
+        if (empty($this->_pages)) return; // stop recursion
         $out = HTML();
         if ($caption)
             $out->pushContent(HTML::p($caption));
@@ -1321,7 +1321,7 @@ function flipAll(formObj) {
             }
             // speed up table rendering by defining colgroups
             $out->pushContent(HTML::table(HTML::colgroup(array('span' => $this->_options['cols'],
-            						       'width' => $width)),
+                                           'width' => $width)),
                                           $cols));
             return $out;
         }
@@ -1366,9 +1366,9 @@ function flipAll(formObj) {
         }
 
         $do_paging = ( isset($this->_options['paging']) 
-        	       and !empty($this->_options['limit']) 
-        	       and $this->getTotal() 
-        	       and $this->_options['paging'] != 'none' );
+                   and !empty($this->_options['limit']) 
+                   and $this->getTotal() 
+                   and $this->_options['paging'] != 'none' );
         if ( $do_paging ) {
             $tokens = $this->pagingTokens($this->getTotal(), 
                                            count($this->_columns), 
@@ -1379,8 +1379,8 @@ function flipAll(formObj) {
             }
         }
         if (!empty($this->_options['ordered']))
-	    $list = HTML::ol(array('class' => 'pagelist'));
-	else    
+        $list = HTML::ol(array('class' => 'pagelist'));
+        else    
             $list = HTML::ul(array('class' => 'pagelist'));
         $i = 0;
         //TODO: currently we ignore limit here and hope tha the backend didn't ignore it. (BackLinks)
@@ -1407,15 +1407,15 @@ function flipAll(formObj) {
     // Condense list without a href links: "Page1, Page2, ..." 
     // Alternative $seperator = HTML::Raw(' &middot; ')
     function _generateCommaListAsString() {
-    	if (defined($this->_options['commasep']))
-    	    $seperator = $this->_options['commasep'];
-    	else    
-    	    $seperator = ', ';
-    	$pages = array();
-    	foreach ($this->_pages as $pagenum => $page) {
-    	    if ($s = $this->_renderPageRow($page)) // some pages are not viewable
- 	        $pages[] = is_string($s) ? $s : $s->asString();
-    	}
+        if (defined($this->_options['commasep']))
+            $seperator = $this->_options['commasep'];
+        else    
+            $seperator = ', ';
+        $pages = array();
+        foreach ($this->_pages as $pagenum => $page) {
+            if ($s = $this->_renderPageRow($page)) // some pages are not viewable
+             $pages[] = is_string($s) ? $s : $s->asString();
+        }
         return HTML(join($seperator, $pages));
     }
 
@@ -1424,17 +1424,17 @@ function flipAll(formObj) {
     // Future: 1 = reserved for plain string (see above)
     //         2 and more => HTML link specialization?
     function _generateCommaList($style = false) {
-    	if (defined($this->_options['commasep']))
-    	    $seperator = HTLM::Raw($this->_options['commasep']);
-    	else    
-    	    $seperator = ', ';
-    	$html = HTML();
+        if (defined($this->_options['commasep']))
+            $seperator = HTLM::Raw($this->_options['commasep']);
+        else    
+            $seperator = ', ';
+        $html = HTML();
         $html->pushContent($this->_renderPageRow($this->_pages[0]));
         next($this->_pages);
-    	foreach ($this->_pages as $pagenum => $page) {
-    	    if ($s = $this->_renderPageRow($page)) // some pages are not viewable
+        foreach ($this->_pages as $pagenum => $page) {
+            if ($s = $this->_renderPageRow($page)) // some pages are not viewable
                 $html->pushContent($seperator, $s);
-    	}
+        }
         return $html;
     }
     

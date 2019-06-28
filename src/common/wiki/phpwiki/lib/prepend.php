@@ -92,7 +92,7 @@ class DebugTimer {
 $RUNTIMER = new DebugTimer;
 /*
 if (defined('E_STRICT') and (E_ALL & E_STRICT)) // strict php5?
-    error_reporting(E_ALL & ~E_STRICT); 	// exclude E_STRICT
+    error_reporting(E_ALL & ~E_STRICT);     // exclude E_STRICT
 else
     error_reporting(E_ALL); // php4
 //echo " prepend: ", error_reporting();

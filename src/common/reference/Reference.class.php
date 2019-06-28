@@ -155,7 +155,7 @@ class Reference {
         $this->id=$my_id;
     }
 
-     function setDescription($my_description) {
+    function setDescription($my_description) {
         $this->description=$my_description;
     }
 

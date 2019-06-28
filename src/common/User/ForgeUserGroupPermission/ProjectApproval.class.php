@@ -23,7 +23,7 @@ class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupP
 
     public const ID = 1;
 
-   public function getId()
+    public function getId()
     {
         if (self::ID) {
             return self::ID;

@@ -567,7 +567,7 @@ class XMLDocmanImport {
                             if (count($diff2)) {
                                 $errorMsg .= "\tNot on the archive:\t".implode(', ', $diff2);
                             }
-			    throw new Exception($errorMsg);
+                            throw new Exception($errorMsg);
                         }
                     }
                 } else if ($type === null) {

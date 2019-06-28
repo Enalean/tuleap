@@ -44,62 +44,62 @@ function getBuddies($fromUser, $dbi, $thePage = ""){
 }
 
 function CoAgreement($dbi, $page, $users, $active_userid){
-	//Returns a "yes" 1, "no" -1, or "unsure" 0 for whether 
-	//the group agrees on the page based on their ratings
-	$cur_page = $page;
-	
-	$my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
-	$my_ratings_single = $my_ratings_iter->next();
-	$cur_rating = $my_ratings_single['ratingvalue'];
-	
-	$MIDDLE_RATING = 3;
-	
-	if($cur_rating >= $MIDDLE_RATING){
-		$agreePos = 1;
-	} else {
-		$agreePos = 0;
-	}
-	foreach($users as $buddy){
-		$buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
-		$buddy_rating_array = $buddy_rating_iter->next();
-		$buddy_rating = $buddy_rating_array['ratingvalue'];
-		if($buddy_rating == ""){
-			$agree = 1;
-		}else if($agreePos && $buddy_rating >= $MIDDLE_RATING){
-			$agree = 1;
-		} else if(!$agreePos && $buddy_rating < $MIDDLE_RATING){
-			$agree = 1;
-		} else {
-			$agree = 0;
-			break;
-		}	
-	}
-	if($agree && $agreePos){
-		return 1;
-	} else if($agree && !$agreePos){
-		return -1;
-	} else {
-		return 0;
-	}
+    //Returns a "yes" 1, "no" -1, or "unsure" 0 for whether 
+    //the group agrees on the page based on their ratings
+    $cur_page = $page;
+    
+    $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
+    $my_ratings_single = $my_ratings_iter->next();
+    $cur_rating = $my_ratings_single['ratingvalue'];
+    
+    $MIDDLE_RATING = 3;
+    
+    if($cur_rating >= $MIDDLE_RATING){
+        $agreePos = 1;
+    } else {
+        $agreePos = 0;
+    }
+    foreach($users as $buddy){
+        $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
+        $buddy_rating_array = $buddy_rating_iter->next();
+        $buddy_rating = $buddy_rating_array['ratingvalue'];
+        if($buddy_rating == ""){
+            $agree = 1;
+        }else if($agreePos && $buddy_rating >= $MIDDLE_RATING){
+            $agree = 1;
+        } else if(!$agreePos && $buddy_rating < $MIDDLE_RATING){
+            $agree = 1;
+        } else {
+            $agree = 0;
+            break;
+        }    
+    }
+    if($agree && $agreePos){
+        return 1;
+    } else if($agree && !$agreePos){
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 function MinMisery($dbi, $page, $users, $active_userid){
     //Returns the minimum rating for the page
     //from all the users.
-	
+    
     $cur_page = $page;
-	
+    
     $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
     $cur_rating = $my_ratings_single['ratingvalue'];
-	
+    
     $min = $cur_rating;
     foreach($users as $buddy){
         $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
         $buddy_rating = $buddy_rating_array['ratingvalue'];
         if($buddy_rating != "" && $buddy_rating < $min){
-            $min = $buddy_rating;	
+            $min = $buddy_rating;    
         }
     }
     return $min;
@@ -108,9 +108,9 @@ function MinMisery($dbi, $page, $users, $active_userid){
 function AverageRating($dbi, $page, $users, $active_userid){
     //Returns the average rating for the page
     //from all the users.
-	
+    
     $cur_page = $page;
-	
+    
     $my_ratings_iter = $dbi->get_rating(0, $active_userid, $page);
     $my_ratings_single = $my_ratings_iter->next();
     $cur_rating = $my_ratings_single['ratingvalue'];
@@ -125,9 +125,9 @@ function AverageRating($dbi, $page, $users, $active_userid){
         $buddy_rating_iter = $dbi->get_rating(0, $buddy, $cur_page);
         $buddy_rating_array = $buddy_rating_iter->next();
         $buddy_rating = $buddy_rating_array['ratingvalue'];
-        if($buddy_rating != ""){		
+        if($buddy_rating != ""){        
             $total = $total + $buddy_rating;
-            $count++;	
+            $count++;    
         }
     }
     if($count == 0){

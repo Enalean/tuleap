@@ -147,7 +147,7 @@ class XmlContent
     }
     
     function _quote ($string) {
-    	if (!$string) return $string;
+        if (!$string) return $string;
         if (isset($GLOBALS['charset'])) {
             return htmlspecialchars($string, ENT_COMPAT, $GLOBALS['charset']);
         }
@@ -217,14 +217,14 @@ class XmlElement extends XmlContent
     }
     
     function setAttr ($attr, $value = false) {
-	if (is_array($attr)) {
+        if (is_array($attr)) {
             assert($value === false);
             foreach ($attr as $a => $v) {
                 $this->_attr[strtolower($a)] = $v;
-		//$this->set($a, $v);
+        //$this->set($a, $v);
             }
             return;
-	}
+        }
 
         assert(is_string($attr));
             
@@ -237,42 +237,42 @@ class XmlElement extends XmlContent
             $this->_attr[$attr] = (string) $value;
         }
 
-	if ($attr == 'class')
-	    unset($this->_classes);
+        if ($attr == 'class')
+        unset($this->_classes);
     }
 
     function getAttr ($attr) {
-	if ($attr == 'class')
-	    $this->_setClasses();
+        if ($attr == 'class')
+        $this->_setClasses();
 
-	if (isset($this->_attr[strtolower($attr)]))
-	    return $this->_attr[strtolower($attr)];
-	else
-	    return false;
+        if (isset($this->_attr[strtolower($attr)]))
+        return $this->_attr[strtolower($attr)];
+        else
+        return false;
     }
 
     function _getClasses() {
-	if (!isset($this->_classes)) {
-	    $this->_classes = array();
-	    if (isset($this->_attr['class'])) {
-		$classes = explode(' ', (string) $this->_attr['class']);
-		foreach ($classes as $class) {
-		    $class = trim($class);
-		    if ($class)
-			$this->_classes[$class] = $class;
-		}
-	    }
-	}
-	return $this->_classes;
+        if (!isset($this->_classes)) {
+            $this->_classes = array();
+            if (isset($this->_attr['class'])) {
+                $classes = explode(' ', (string) $this->_attr['class']);
+                foreach ($classes as $class) {
+                    $class = trim($class);
+                    if ($class)
+                    $this->_classes[$class] = $class;
+                }
+            }
+        }
+        return $this->_classes;
     }
 
     function _setClasses() {
-	if (isset($this->_classes)) {
-	    if ($this->_classes)
-		$this->_attr['class'] = join(' ', $this->_classes);
-	    else
-		unset($this->_attr['class']);
-	}
+        if (isset($this->_classes)) {
+            if ($this->_classes)
+            $this->_attr['class'] = join(' ', $this->_classes);
+            else
+            unset($this->_attr['class']);
+        }
     }
 
     /**
@@ -288,12 +288,12 @@ class XmlElement extends XmlContent
      *   If false, the element is removed from the class.
      */
     function setInClass($class, $in_class=true) {
-	$this->_getClasses();
-	$class = trim($class);
-	if ($in_class)
-	    $this->_classes[$class] = $class;
-	else 
-	    unset($this->_classes[$class]);
+        $this->_getClasses();
+        $class = trim($class);
+        if ($in_class)
+        $this->_classes[$class] = $class;
+        else 
+        unset($this->_classes[$class]);
     }
 
     /**
@@ -306,13 +306,13 @@ class XmlElement extends XmlContent
      * @return bool True if the element is a member of $class.
      */
     function inClass($class) {
-	$this->_parseClasses();
-	return isset($this->_classes[trim($class)]);
+        $this->_parseClasses();
+        return isset($this->_classes[trim($class)]);
     }
 
     function startTag() {
         $start = "<" . $this->_tag;
-	$this->_setClasses();
+        $this->_setClasses();
         foreach ($this->_attr as $attr => $val) {
             if (is_bool($val)) {
                 if (!$val)

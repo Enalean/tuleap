@@ -5,7 +5,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
+//    Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
 require_once __DIR__ . '/commit_utils.php';
 
 $request  = HTTPRequest::instance();

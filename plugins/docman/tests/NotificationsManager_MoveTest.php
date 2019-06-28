@@ -108,13 +108,13 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                 // {{{ Listener cannot read new parent
                 // We expect no notification
                 $cr = 0;
-                for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                    for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                        for ($ld = 0 ; $ld <= 1 ; ++$ld) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
-                        }
-                    }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+                for ($ld = 0 ; $ld <= 1 ; ++$ld) {
+                    $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
                 }
+            }
+        }
                 //}}}
                 // {{{ Listener can read new parent
                 // => A readable item is moved from an unreadable parent to a readable one
@@ -126,19 +126,19 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                     // Only old parent is listened (but still unreadable), no notification
                     $this->_runTest($dr, $br, $cr, 1, 0, $ld, 'none');
                         // {{{ new parent is listened, we receive a notification without b because it is still unreadable
-                        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                            $this->_runTest($dr, $br, $cr, $lb, 1, $ld, 'to_wo_b');
-                        }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            $this->_runTest($dr, $br, $cr, $lb, 1, $ld, 'to_wo_b');
+        }
                         //}}}
                     //}}}
 
                     //{{{ If we listen item, we receive a notification about item ("has been moved to c")
                     $ld = 1;
-                    for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                        for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
-                        }
-                    }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+                $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
+            }
+        }
                     //}}}
                 //}}}
             //}}}
@@ -147,31 +147,31 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                 // {{{ Listener cannot read new parent
                 // We have to send notifications only when old parent or item is listened
                 $cr = 0;
-                for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                    for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                        for ($ld = 0 ; $ld <= 1 ; ++$ld) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none');
-                        }
-                    }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+                for ($ld = 0 ; $ld <= 1 ; ++$ld) {
+                    $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none');
                 }
+            }
+        }
                 //}}}
                 // {{{ Listener can read new parent
                 $cr = 1;
                     // {{{ Moved item is listened, notification on item
                     $ld = 1;
-                    for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                        for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
-                        }
-                    }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+                $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
+            }
+        }
                     //}}}
                     //{{{ Moved item is not listened
                     $ld = 0;
                         // {{{ new parent is listened, notification 'to'
                         $lc = 1;
-                        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'to');
-                        }
+        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'to');
+        }
                         //}}}
                         // {{{ new parent is not listened
                         $lc = 0;

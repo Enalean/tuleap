@@ -40,7 +40,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchById($id, $table = 'plugin_docman_version') {
         $sql = sprintf("SELECT item_id, number, user_id, label, changelog, filename, filesize, filetype, path FROM %s WHERE id = %s",
-				$table, $this->da->quoteSmart($id));
+        $table, $this->da->quoteSmart($id));
         return $this->retrieve($sql);
     }
 
@@ -50,7 +50,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByItemId($itemId) {
         $sql = sprintf("SELECT id, number, item_id, user_id, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE item_id = %s ORDER BY number DESC",
-				$this->da->quoteSmart($itemId));
+        $this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
     }
 
@@ -60,7 +60,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByNumber($item_id, $number) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE number = %s AND item_id = %s",
-				$this->da->quoteSmart($number),
+        $this->da->quoteSmart($number),
                 $this->da->quoteSmart($item_id));
         return $this->retrieve($sql);
     }
@@ -71,7 +71,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByUserId($userId) {
         $sql = sprintf("SELECT id, item_id, number, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE user_id = %s",
-				$this->da->quoteSmart($userId));
+        $this->da->quoteSmart($userId));
         return $this->retrieve($sql);
     }
 
@@ -81,7 +81,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByLabel($label) {
         $sql = sprintf("SELECT id, item_id, number, user_id, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE label = %s",
-				$this->da->quoteSmart($label));
+        $this->da->quoteSmart($label));
         return $this->retrieve($sql);
     }
 
@@ -91,7 +91,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByChangelog($changelog) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE changelog = %s",
-				$this->da->quoteSmart($changelog));
+        $this->da->quoteSmart($changelog));
         return $this->retrieve($sql);
     }
 
@@ -101,7 +101,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByDate($date) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, filename, filesize, filetype, path FROM plugin_docman_version WHERE date = %s",
-				$this->da->quoteSmart($date));
+        $this->da->quoteSmart($date));
         return $this->retrieve($sql);
     }
 
@@ -111,7 +111,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByFilename($filename) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, date, filesize, filetype, path FROM plugin_docman_version WHERE filename = %s",
-				$this->da->quoteSmart($filename));
+        $this->da->quoteSmart($filename));
         return $this->retrieve($sql);
     }
 
@@ -121,7 +121,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByFilesize($filesize) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, date, filename, filetype, path FROM plugin_docman_version WHERE filesize = %s",
-				$this->da->quoteSmart($filesize));
+        $this->da->quoteSmart($filesize));
         return $this->retrieve($sql);
     }
 
@@ -131,7 +131,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByFiletype($filetype) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, date, filename, filesize, path FROM plugin_docman_version WHERE filetype = %s",
-				$this->da->quoteSmart($filetype));
+        $this->da->quoteSmart($filetype));
         return $this->retrieve($sql);
     }
 
@@ -141,7 +141,7 @@ class Docman_VersionDao extends DataAccessObject {
     */
     function searchByPath($path) {
         $sql = sprintf("SELECT id, item_id, number, user_id, label, changelog, date, filename, filesize, filetype FROM plugin_docman_version WHERE path = %s",
-				$this->da->quoteSmart($path));
+        $this->da->quoteSmart($path));
         return $this->retrieve($sql);
     }
 
@@ -175,17 +175,17 @@ class Docman_VersionDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($item_id, $number, $user_id, $label, $changelog, $date, $filename, $filesize, $filetype, $path) {
-		$sql = sprintf("INSERT INTO plugin_docman_version (item_id, number, user_id, label, changelog, date, filename, filesize, filetype, path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-				$this->da->quoteSmart($item_id),
-				$this->da->quoteSmart($number),
-				$this->da->quoteSmart($user_id),
-				$this->da->quoteSmart($label, array('force_string' => true)),
-				$this->da->quoteSmart($changelog),
-				$this->da->quoteSmart($date),
-				$this->da->quoteSmart($filename),
-				$this->da->quoteSmart($filesize),
-				$this->da->quoteSmart($filetype),
-				$this->da->quoteSmart($path));
+        $sql = sprintf("INSERT INTO plugin_docman_version (item_id, number, user_id, label, changelog, date, filename, filesize, filetype, path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        $this->da->quoteSmart($item_id),
+        $this->da->quoteSmart($number),
+        $this->da->quoteSmart($user_id),
+        $this->da->quoteSmart($label, array('force_string' => true)),
+        $this->da->quoteSmart($changelog),
+        $this->da->quoteSmart($date),
+        $this->da->quoteSmart($filename),
+        $this->da->quoteSmart($filesize),
+        $this->da->quoteSmart($filetype),
+        $this->da->quoteSmart($path));
         return $this->_createAndReturnId($sql);
     }
     function createFromRow($row) {

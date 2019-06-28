@@ -84,12 +84,12 @@ extends WikiPlugin
             list($offset, $maxcount) = $pagelist->limit($limit);
             $wanted_iter = $dbi->wantedPages($exclude_from, $exclude, $sortby, $limit);
             while ($row = $wanted_iter->next()) {
-            	$wanted = $row['pagename'];
-            	$wantedfrom = $row['wantedfrom'];
-            	// ignore duplicates:
-            	if (empty($pagelist->_wpagelist[$wanted]))
-            	    $pagelist->addPage($wanted);
-            	$pagelist->_wpagelist[$wanted][] = $wantedfrom;
+                $wanted = $row['pagename'];
+                $wantedfrom = $row['wantedfrom'];
+                // ignore duplicates:
+                if (empty($pagelist->_wpagelist[$wanted]))
+                    $pagelist->addPage($wanted);
+                $pagelist->_wpagelist[$wanted][] = $wantedfrom;
             }
             $wanted_iter->free();
             // update limit, but it's still a hack.
@@ -131,7 +131,7 @@ class _PageList_Column_WantedPages_wanted extends _PageList_Column {
         parent::__construct($params[0],$params[1],$params[2]);
     }
     function _getValue(&$page, $revision_handle) {
-    	$html = false;
+        $html = false;
         foreach($this->parentobj->_wpagelist[$page->getName()] as $page) {
             if ($html)
                 $html->pushContent(', ', WikiLink($page));

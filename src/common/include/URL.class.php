@@ -171,7 +171,7 @@ class URL {
         return new NewsBytesDao(CodendiDataAccess::instance());
     }
     
-     function getArtifactDao() {
+    function getArtifactDao() {
         return new ArtifactDao(CodendiDataAccess::instance());
     }
 }

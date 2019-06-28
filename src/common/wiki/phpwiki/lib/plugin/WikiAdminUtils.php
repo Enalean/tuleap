@@ -48,7 +48,7 @@ extends WikiPlugin
 
     function getDefaultArguments() {
         return array('action'           => '',
-                     'label'		=> '',
+                     'label'        => '',
                      );
     }
 
@@ -181,19 +181,19 @@ extends WikiPlugin
 
     function _do_convert_cached_html(&$request, $args) {
         
-	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     }
 
 
     //TODO: We need a seperate plugin for this.
     //      Too many options.
     function _do_access_restrictions(&$request, &$args) {
-    	return _("Sorry. Access Restrictions not yet implemented");
+        return _("Sorry. Access Restrictions not yet implemented");
     }
     
     // pagelist with enable/disable button
     function _do_email_verification(&$request, &$args) {
-	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         $dbi = $request->getDbh();
         $pagelist = new PageList('pagename',0,$args);
         //$args['return_url'] = 'action=email-verification-verified';
@@ -204,12 +204,12 @@ extends WikiPlugin
         $pagelist->_columns[] = $emailVerified;
         //This is the best method to find all users (Db and PersonalPage)
         $current_user = $request->_user;
-	if (empty($args['verify'])) {
+        if (empty($args['verify'])) {
             $group = $request->getGroup();
-	    $allusers = $group->_allUsers();
-	} else {
-	    $allusers = array_keys($args['user']);
-	}
+            $allusers = $group->_allUsers();
+        } else {
+            $allusers = array_keys($args['user']);
+        }
         foreach ($allusers as $username) {
             if (ENABLE_USER_NEW)
                 $user = WikiUser($username);
@@ -217,8 +217,8 @@ extends WikiPlugin
                 $user = new WikiUser($request, $username);
             $prefs = $user->getPreferences();
             if ($prefs->get('email')) {
-            	if (!$prefs->get('userid'))
-            	    $prefs->set('userid',$username);
+                if (!$prefs->get('userid'))
+                    $prefs->set('userid',$username);
                 $group = (int)(count($pagelist->_rows) / $pagelist->_group_rows);
                 $class = ($group % 2) ? 'oddrow' : 'evenrow';
                 $row = HTML::tr(array('class' => $class));
@@ -226,11 +226,11 @@ extends WikiPlugin
                 $row->pushContent($pagelist->_columns[0]->format($pagelist, 
                                                                  $page_handle, $page_handle));
                 $row->pushContent($email->format($pagelist, $prefs, $page_handle));
-		if (!empty($args['verify'])) {
-		    $prefs->_prefs['email']->set('emailVerified', 
+                if (!empty($args['verify'])) {
+                    $prefs->_prefs['email']->set('emailVerified', 
                                                  empty($args['verified'][$username]) ? 0 : 2);
-		    $user->setPreferences($prefs);
-		}
+                    $user->setPreferences($prefs);
+                }
                 $row->pushContent($emailVerified->format($pagelist, $prefs, $args['verify']));
                 $pagelist->_rows[] = $row;
             }
@@ -240,7 +240,7 @@ extends WikiPlugin
             return HTML($pagelist->_generateTable(false));
         } else {
             $args['verify'] = 1;
-	    $args['return_url'] = $request->getURLtoSelf();
+            $args['return_url'] = $request->getURLtoSelf();
             return HTML::form(array('action' => $request->getPostURL(),
                                     'method' => 'post'),
                           HiddenInputs($args, 'wikiadminutils'),
@@ -269,15 +269,15 @@ extends _PageList_Column {
 class _PageList_Column_emailVerified
 extends _PageList_Column {
     function _getValue (&$prefs, $status) {
-    	$name = $prefs->get('userid');
-    	$input = HTML::input(array('type' => 'checkbox',
-    	                           'name' => 'wikiadminutils[verified]['.$name.']',
-    	                           'value' => 1));
-    	if ($prefs->get('emailVerified'))
-    	    $input->setAttr('checked','1');
-	if ($status)
-    	    $input->setAttr('disabled','1');
-    	return HTML($input, HTML::input
+        $name = $prefs->get('userid');
+        $input = HTML::input(array('type' => 'checkbox',
+                                   'name' => 'wikiadminutils[verified]['.$name.']',
+                                   'value' => 1));
+        if ($prefs->get('emailVerified'))
+            $input->setAttr('checked','1');
+        if ($status)
+            $input->setAttr('disabled','1');
+        return HTML($input, HTML::input
                     (array('type' => 'hidden',
                            'name' => 'wikiadminutils[user]['.$name.']',
                            'value' => $name)));

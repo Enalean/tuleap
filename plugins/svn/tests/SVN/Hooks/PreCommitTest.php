@@ -105,7 +105,7 @@ class PreCommitBaseTest extends TuleapTestCase {
         stub($this->repository)->getId()->returns(1);
         stub($this->repository)->getName()->returns($this->repository_name);
         stub($this->repository_manager)->getRepositoryFromSystemPath($this->system_path)->returns($this->repository);
-     }
+    }
 
     public function testCommitToTagIsAllowed() {
         $immutable_tags = stub("Tuleap\SVN\Admin\ImmutableTag")->getPaths()->returns(array());

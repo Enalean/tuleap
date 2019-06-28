@@ -94,7 +94,7 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
             $exists = $page->exists();
         }
         else {
-	    $dbi = $request->_dbi;
+            $dbi = $request->_dbi;
             $exists = $dbi->isWikiPage($wikipage->name);
         }
     }
@@ -217,7 +217,7 @@ class Theme {
 
     function file ($file) {
         return $this->_path . "$this->_theme/$file";
-   } 
+    } 
 
     function _findFile ($file, $missing_okay = false) {
         if (file_exists($this->file($file)))
@@ -254,10 +254,10 @@ class Theme {
     ////////////////////////////////////////////////////////////////
 
     // Note:  Windows' implemetation of strftime does not include certain
-	// format specifiers, such as %e (for date without leading zeros).  In
-	// general, see:
-	// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt_strftime.2c_.wcsftime.asp
-	// As a result, we have to use %d, and strip out leading zeros ourselves.
+    // format specifiers, such as %e (for date without leading zeros).  In
+    // general, see:
+    // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt_strftime.2c_.wcsftime.asp
+    // As a result, we have to use %d, and strip out leading zeros ourselves.
 
     var $_dateFormat = "%B %d, %Y";
     var $_timeFormat = "%I:%M %p";
@@ -415,7 +415,7 @@ class Theme {
         if (is_numeric($request->getPref('timeOffset')))
           $offset = 3600 * $request->getPref('timeOffset');
         else 
-          $offset = 0;  	
+          $offset = 0;      
 
         $now = time() + $offset;
         $today = localtime($now, true);
@@ -440,12 +440,12 @@ class Theme {
     function getOwnerMessage ($page) {
         if (!ENABLE_PAGEPERM or !class_exists("PagePermission"))
             return '';
-    	$dbi = $GLOBALS['request']->_dbi;
+        $dbi = $GLOBALS['request']->_dbi;
         $owner = $page->getOwner();
-    	if ($owner <> ADMIN_USER) {
+        if ($owner <> ADMIN_USER) {
             //display owner user_name according to the user choice: real name, or Codendi login
-    		$owner = UserHelper::instance()->getDisplayNameFromUserName($owner);
-    	}            
+            $owner = UserHelper::instance()->getDisplayNameFromUserName($owner);
+        }            
         if ($owner) {
             /*
             if ( mayAccessPage('change',$page->getName()) )
@@ -533,7 +533,7 @@ class Theme {
 
         if (isa($wikiword, 'WikiPageName'))
              $default_text = $wikiword->shortName;
-         else
+        else
              $default_text = $wikiword;
          
         if (!empty($linktext)) {
@@ -681,7 +681,7 @@ class Theme {
             if (!in_array($path,$this->dumped_images)) 
                 $this->dumped_images[] = $path;
         }
-        return $path;	
+        return $path;    
     }
 
     function setLinkIcon($proto, $image = false) {
@@ -1095,14 +1095,14 @@ class Theme {
     }
 
     function findTemplate ($name) {
-    	if ($tmp = $this->_findFile("templates/$name.tmpl", 1))
+        if ($tmp = $this->_findFile("templates/$name.tmpl", 1))
             return $this->_path . $tmp;
         else {
             $f1 = $this->file("templates/$name.tmpl");
             trigger_error("pwd: ".getcwd(), E_USER_ERROR);
             if (isset($this->_default_theme)) {
-               $f2 = $this->_default_theme->file("templates/$name.tmpl");
-               trigger_error("$f1 nor $f2 found", E_USER_ERROR);
+                $f2 = $this->_default_theme->file("templates/$name.tmpl");
+                trigger_error("$f1 nor $f2 found", E_USER_ERROR);
             } else 
                trigger_error("$f1 not found", E_USER_ERROR);
             return false;

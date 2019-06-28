@@ -116,8 +116,8 @@ class Docman_MetadataComparator {
             // Presence in destination project
             $html .= "<td align=\"center\">";
             switch($rowStyle) {
-            case 'equals':
-                $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+                case 'equals':
+                    $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
                 break;
             }
             $html .= "</td>\n";
@@ -125,16 +125,16 @@ class Docman_MetadataComparator {
             // Differences
             $html .= "<td class=\"docman_md_".$rowStyle."\">";
             switch($rowStyle) {
-            case 'missing':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$rowStyle);
+                case 'missing':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$rowStyle);
             }
             $html .= "</td>\n";
             
             // Action
             $html .= "<td>";
             switch($rowStyle) {
-            case 'missing':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_love', array($purifier->purify($srcLove->getName())));
+                case 'missing':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_love', array($purifier->purify($srcLove->getName())));
             }
             $html .= "</td\n>";
 
@@ -260,9 +260,9 @@ class Docman_MetadataComparator {
             // Presence in destination project
             $html .= "<td align=\"center\">";
             switch($dstMdStatus) {
-            case 'equals':
-            case 'equivalent':
-                $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
+                case 'equals':
+                case 'equivalent':
+                    $html .= '<img src="'.$this->docmanIcons->getThemeIcon('tick.png').'" />';
                 break;
             }
             $html .= "</td>";
@@ -270,10 +270,10 @@ class Docman_MetadataComparator {
             // Differences
             $html .= "<td class=\"docman_md_".$dstMdStatus."\">";
             switch($dstMdStatus) {
-            case 'equivalent':
-            case 'missing':
-            case 'conflict':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$dstMdStatus);
+                case 'equivalent':
+                case 'missing':
+                case 'conflict':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$dstMdStatus);
                 break;
             }
             $html .= "</td>";
@@ -281,25 +281,25 @@ class Docman_MetadataComparator {
             // Action
             $html .= "<td>";
             switch($dstMdStatus) {
-            case 'equals':
-                // Nothing to do
+                case 'equals':
+                    // Nothing to do
                 break;
-            case 'equivalent':
-                $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
-                $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
-                foreach ($diffArray as $diff) {
-                    $diff_purified = $purifier->purify($diff, CODENDI_PURIFIER_FULL);
-                    $diffStr      .= "<li>$diff_purified</li>";
-                }
-                $diffStr .= '</ul>';
+                case 'equivalent':
+                    $diffArray = $this->checkMdDifferences($srcMd, $dstMd, $mdMap['love']);
+                    $diffStr = '<ul style="padding:0;padding-left:1.5em;margin:0;">';
+                    foreach ($diffArray as $diff) {
+                        $diff_purified = $purifier->purify($diff, CODENDI_PURIFIER_FULL);
+                        $diffStr      .= "<li>$diff_purified</li>";
+                    }
+                    $diffStr .= '</ul>';
 
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $this->dstGo->getPublicName(), $diffStr));
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_update_md', array($purified_property_name, $this->dstGo->getPublicName(), $diffStr));
                 break;
-            case 'missing':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($purified_property_name));
+                case 'missing':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($purified_property_name));
                 break;
-            case 'conflict':
-                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_conflict');
+                case 'conflict':
+                    $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_conflict');
                 break;
             }
             $html .= "</td>";

@@ -100,15 +100,15 @@ abstract class GraphOnTrackers_Chart {
      * Display both <img /> and <map /> tags to embed the chart in a html page
      */
     public function display() {
-    	
-    	if($this->userCanVisualize()){
-    		
-    		$e = $this->buildGraph();
-    		if($e){
+        
+        if($this->userCanVisualize()){
+            
+            $e = $this->buildGraph();
+            if($e){
                 $this->displayHTMLImageMapWithoutInterruptingExecutionFlow($e, "map".$this->getId());
-	        	$this->displayImgTag();
-    		}
-    	}
+                $this->displayImgTag();
+            }
+        }
     }
 
     private function displayHTMLImageMapWithoutInterruptingExecutionFlow(GraphOnTrackers_Engine $engine, $image_map)

@@ -119,7 +119,7 @@ function RemovePage (&$request) {
         $link = HTML::a(array('href' => 'javascript:history.go(-2)'), 
                         _("Back to the previous page."));
         $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
-        	     HTML::div($link), HTML::hr());
+                 HTML::div($link), HTML::hr());
     }
 
     GeneratePage($html, _("Remove Page"));

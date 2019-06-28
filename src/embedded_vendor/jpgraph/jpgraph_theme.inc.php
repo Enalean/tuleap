@@ -11,7 +11,7 @@
 
 // include Theme classes
 foreach (glob(dirname(__FILE__) . '/themes/*.php') as $theme_class_script) {
-  require_once($theme_class_script);
+    require_once($theme_class_script);
 }
 
 //===================================================

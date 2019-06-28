@@ -29,7 +29,7 @@ $overwrite_option= getopt('o');
 
 if (isset($debug_option['d'])) {
     $debug = true;
- }
+}
 
 if (isset($overwrite_option['o'])) {
     $overwrite = true;

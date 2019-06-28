@@ -1732,28 +1732,28 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->url_mapping, $this->config);
     }
 
-     public function itCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate() {
+    public function itCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate() {
         stub($this->date_field)->isTimeDisplayed()->returns(true);
 
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($this->artifact);
 
         $this->artifact_creator->shouldReceive('createFirstChangeset')
-            ->once()
-            ->with(
-                 Mockery::any(),
-                 Mockery::any(),
-                 Mockery::on(function ($data) {
-                     return $data[$this->string_field_id] === 'Import artifact in tracker v5' &&
-                         $data[$this->int_field_id] === '5' &&
-                         $data[$this->float_field_id] === '4.5' &&
-                         $data[$this->date_field_id] === '2014-03-20 10:13';
-                 }),
-                 Mockery::any(),
-                 Mockery::any(),
-                 false,
-                 Mockery::any()
-            )
-            ->andReturn($this->artifact);
+           ->once()
+           ->with(
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::on(function ($data) {
+                    return $data[$this->string_field_id] === 'Import artifact in tracker v5' &&
+                        $data[$this->int_field_id] === '5' &&
+                        $data[$this->float_field_id] === '4.5' &&
+                        $data[$this->date_field_id] === '2014-03-20 10:13';
+                }),
+                Mockery::any(),
+                Mockery::any(),
+                false,
+                Mockery::any()
+           )
+           ->andReturn($this->artifact);
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->url_mapping, $this->config);
     }

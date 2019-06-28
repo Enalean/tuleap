@@ -312,11 +312,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                         </TR>
                         <TR class="boxitem">
                                 <TD colspan="'.$cols.'">';
-            if ($echoout) {
-                    print $return;
-            } else {
-                    return $return;
-            }
+        if ($echoout) {
+                print $return;
+        } else {
+                return $return;
+        }
     }
 
     /**
@@ -349,11 +349,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                         </TR>
         </TABLE>
 ';
-            if ($echoout) {
-                    print $return;
-            } else {
-                    return $return;
-            }
+        if ($echoout) {
+                print $return;
+        } else {
+                return $return;
+        }
     }
 
     /**
@@ -648,18 +648,18 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $project=$pm->getProject($group_id);
         if ($project->isTemplate()) {
             switch($service_top_tab) {
-            case 'admin':
-            case 'forum':
-            case 'docman':
-            case 'cvs':
-            case 'svn':
-            case 'file':
-            case 'tracker':
-            case 'wiki':
-            case 'salome':
+                case 'admin':
+                case 'forum':
+                case 'docman':
+                case 'cvs':
+                case 'svn':
+                case 'file':
+                case 'tracker':
+                case 'wiki':
+                case 'salome':
                 break;
-            default:
-                $this->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
+                default:
+                    $this->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
                 break;
             }
         }
@@ -773,8 +773,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 </table>
 </div>
 <!-- themed page footer -->
-<?php
-    $this->generic_footer($params);
+        <?php
+        $this->generic_footer($params);
     }
 
     function menu_entry($link, $title) {

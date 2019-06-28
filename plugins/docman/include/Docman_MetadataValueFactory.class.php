@@ -62,14 +62,14 @@ class Docman_MetadataValueFactory {
     function &createFromType($type) {
         $mdv = null;
         switch($type) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $mdv = new Docman_MetadataValueList();
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                $mdv = new Docman_MetadataValueList();
             break;
 
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $mdv = new Docman_MetadataValueScalar();
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $mdv = new Docman_MetadataValueScalar();
             break;
         }
         $mdv->setType($type);
@@ -114,42 +114,42 @@ class Docman_MetadataValueFactory {
     function create(&$mdv) {
         $dao = $this->getDao();
         switch($mdv->getType()) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $eIter = $mdv->getValue();
-            $eIter->rewind();
-            $ret = true;
-            while($eIter->valid()) {
-                $e = $eIter->current();
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                $eIter = $mdv->getValue();
+                $eIter->rewind();
+                $ret = true;
+                while($eIter->valid()) {
+                    $e = $eIter->current();
 
-                $pret = $dao->create($mdv->getItemId(),
+                    $pret = $dao->create($mdv->getItemId(),
                                      $mdv->getFieldId(),
                                      $mdv->getType(),
                                      $e->getId());
-                if($pret === false) {
-                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
-                    $ret = false;
-                }
+                    if($pret === false) {
+                        //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
+                        $ret = false;
+                    }
 
-                $eIter->next();
-            }
+                    $eIter->next();
+                }
             break;
             
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $ret = $dao->create($mdv->getItemId(),
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $ret = $dao->create($mdv->getItemId(),
                                 $mdv->getFieldId(),
                                 $mdv->getType(),
                                 $mdv->getValue());
-            // extract cross references
-            $reference_manager = ReferenceManager::instance();
-            $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
+                // extract cross references
+                $reference_manager = ReferenceManager::instance();
+                $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
-        default:
-            $this->setError($GLOBALS['Language']->getText('plugin_docman',
+            default:
+                $this->setError($GLOBALS['Language']->getText('plugin_docman',
                                                           'mdv_bo_errbadtype'));
-            $ret = false;
+                $ret = false;
         }
         return $ret;
     }
@@ -192,36 +192,36 @@ class Docman_MetadataValueFactory {
     function update($mdv) {
         $dao = $this->getDao();
         switch($mdv->getType()) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            // First delete all previous values
-            $dao->delete($mdv->getFieldId(), $mdv->getItemId());
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                // First delete all previous values
+                $dao->delete($mdv->getFieldId(), $mdv->getItemId());
             
-            // Now create new one
-            $pret = $this->create($mdv);
-            if($pret === false) {
-                //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
-                $ret = false;
-            } else {
-                $ret = true;
-            }
+                // Now create new one
+                $pret = $this->create($mdv);
+                if($pret === false) {
+                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
+                    $ret = false;
+                } else {
+                    $ret = true;
+                }
             break;
             
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $ret = $dao->updateValue($mdv->getItemId(),
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $ret = $dao->updateValue($mdv->getItemId(),
                                      $mdv->getFieldId(),
                                      $mdv->getType(),
                                      $mdv->getValue());
-            // extract cross references
-            $reference_manager = ReferenceManager::instance();
-            $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
+                // extract cross references
+                $reference_manager = ReferenceManager::instance();
+                $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
-        default:
-            $this->setError($GLOBALS['Language']->getText('plugin_docman',
+            default:
+                $this->setError($GLOBALS['Language']->getText('plugin_docman',
                                                           'mdv_bo_errbadtype'));
-            $ret = false;
+                $ret = false;
         }
 
         return $ret;
@@ -334,26 +334,26 @@ class Docman_MetadataValueFactory {
      */
     function validateInput(&$md, &$value) {
         switch($md->getType()) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            if($md->isMultipleValuesAllowed()) {
-                if(!is_array($value) && !is_numeric($value)) {
-                    //$value = 100; // Set to default
-                    // Maybe a warning ?
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                if($md->isMultipleValuesAllowed()) {
+                    if(!is_array($value) && !is_numeric($value)) {
+                        //$value = 100; // Set to default
+                        // Maybe a warning ?
+                    }
+                } else if (is_array($value) && count($value) > 1) {
+                    $value = $value[0]; // If only one value is allowed, the first is taken
                 }
-            } else if (is_array($value) && count($value) > 1) {
-                $value = $value[0]; // If only one value is allowed, the first is taken
-            }
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value, $d)) {
-                $value = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
-            } else if (!preg_match('/\d+/', $value)) { // Allow timestamps as supplied value
-                $value = 0;
-            }
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value, $d)) {
+                    $value = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
+                } else if (!preg_match('/\d+/', $value)) { // Allow timestamps as supplied value
+                    $value = 0;
+                }
             break;
         }
     }

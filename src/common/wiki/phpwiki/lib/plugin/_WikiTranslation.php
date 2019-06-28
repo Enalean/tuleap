@@ -157,9 +157,9 @@ extends WikiPlugin
                     //'sortby'        => '',
                     //'limit'         => 0,
                     'nolinks'       => false,  // don't display any links 
-                    			       // (for development only)
+                                       // (for development only)
                     'noT'           => false,  // don't display the T link 
-                   			      // (for development only)
+                                     // (for development only)
                     'debug'         => false
                     ));
     }
@@ -172,7 +172,7 @@ extends WikiPlugin
             // in the wrong language
             include (FindFile("locale/de/LC_MESSAGES/phpwiki.php", 0,'reinit'));
             foreach ($locale as $en => $de) {
-            	$locale[$en] = $en;
+                $locale[$en] = $en;
             }
         // gettext module loaded: must load the LC_MESSAGES php hash
         } else {
@@ -272,21 +272,21 @@ extends WikiPlugin
             if (in_array($from_lang, $available_languages))
                 $languages = $available_languages;
             else
-            	$languages = array_merge($available_languages, array($from_lang));
+                $languages = array_merge($available_languages, array($from_lang));
         } elseif (strstr($languages,',')) {
             $languages = explode(',', $languages);
         } else {
             $languages = array($languages);
         }
         if (in_array('zh', $languages) or in_array('ja', $languages)) {
-        	
+            
             // If the current charset != utf-8 the text will not be displayed correctly.
             // But here we cannot change the header anymore. So we can decide to ignore them, 
             // or display them with all the errors.
             //FIXME: do iconv the ob
             if ($GLOBALS['charset'] != 'utf-8' and !defined('NEED_ICONV_TO')) {
-            	define('NEED_ICONV_TO', 'utf-8');
-            	//either the extension or external 
+                define('NEED_ICONV_TO', 'utf-8');
+                //either the extension or external 
                 //$GLOBALS['charset'] = 'utf-8';
             }
         }
@@ -297,20 +297,20 @@ extends WikiPlugin
         if (!empty($page)) {
             $pagename = $page;
             if ($dbi->isWikiPage($pagename)) {
-            	$url = '';
-            	// google can only translate from english and french
-            	if (in_array($from_lang, array('en', 'fr'))) {
+                $url = '';
+                // google can only translate from english and french
+                if (in_array($from_lang, array('en', 'fr'))) {
                     $url = "http://translate.google.com/translate";
                     $url .= "?langpair=" . urlencode($from_lang."|".$to_lang);
                     $url .= "&u=" . urlencode(WikiURL($pagename, false, true));
-            	}
-            	// redirect or transclude?
-	        if ($url) {
-	            return $request->redirect($url);
-	        }
-            	return HTML(fmt("TODO: Google can only translate from english and french. Find a translation service for %s to language %s",
-            	                WikiURL($pagename, false, true),
-            	                $to_lang));
+                }
+                // redirect or transclude?
+                if ($url) {
+                    return $request->redirect($url);
+                }
+                return HTML(fmt("TODO: Google can only translate from english and french. Find a translation service for %s to language %s",
+                                WikiURL($pagename, false, true),
+                                $to_lang));
             } else {
                 return $this->error(fmt("%s is empty",$pagename));
             }
@@ -329,64 +329,64 @@ extends WikiPlugin
             return $pagelist;
         }
         switch ($what) {
-        case 'allpages':
-            $pagelist->addPages( $dbi->getAllPages($include_empty, $sortby, 
+            case 'allpages':
+                $pagelist->addPages( $dbi->getAllPages($include_empty, $sortby, 
                                                    $limit, $exclude) );
             break;
-        case 'pages':
-            // not all pages, only the pgsrc pages
-            if (!is_array($exclude))
+            case 'pages':
+                // not all pages, only the pgsrc pages
+                if (!is_array($exclude))
                 $exclude = $pagelist->explodePageList($exclude, false, $sortby, 
                                                       $limit, $exclude);
-            $path = FindLocalizedFile(WIKI_PGSRC);
-            $pgsrc = new fileSet($path);
-            foreach ($pgsrc->getFiles($exclude, $sortby, $limit) as $pagename) {
-                $pagename = urldecode($pagename);
-                if (substr($pagename,-1,1) == '~') continue;
-	        if (in_array($pagename, $exclude))
-        	    continue;             // exclude page.
-                if ($match != '*' and !glob_match($match, $pagename))
-                    continue;
-                $page_handle = $dbi->getPage($pagename);
-                $pagelist->addPage( $page_handle );
-            }
-            break;
-        case 'wikiwords':
-            if (!isset($this->_locales[$from_lang])) {
-                $this->init_locale($from_lang);
-            }
-            $locale = & $this->_locales[$from_lang];
-            if (is_array($locale)) {
-                $count = 0;
-                foreach ($locale as $from => $to) {
-                    if ($match != '*' and !glob_match($match, $from))
+                $path = FindLocalizedFile(WIKI_PGSRC);
+                $pgsrc = new fileSet($path);
+                foreach ($pgsrc->getFiles($exclude, $sortby, $limit) as $pagename) {
+                    $pagename = urldecode($pagename);
+                    if (substr($pagename,-1,1) == '~') continue;
+                    if (in_array($pagename, $exclude))
+                    continue;             // exclude page.
+                    if ($match != '*' and !glob_match($match, $pagename))
                         continue;
-                    if (isWikiWord($from)) {
-                        $count++;
-                        $pagelist->addPage( $from );
-                        if ($limit and $count > $limit) break;
+                    $page_handle = $dbi->getPage($pagename);
+                    $pagelist->addPage( $page_handle );
+                }
+            break;
+            case 'wikiwords':
+                if (!isset($this->_locales[$from_lang])) {
+                    $this->init_locale($from_lang);
+                }
+                $locale = & $this->_locales[$from_lang];
+                if (is_array($locale)) {
+                    $count = 0;
+                    foreach ($locale as $from => $to) {
+                        if ($match != '*' and !glob_match($match, $from))
+                        continue;
+                        if (isWikiWord($from)) {
+                            $count++;
+                            $pagelist->addPage( $from );
+                            if ($limit and $count > $limit) break;
+                        }
                     }
                 }
-            }
             break;
         // all Button texts, which need a localized .png
         // where to get them from? templates/*.tmpl: Button() 
         // and WikiLink(?,'button')
         // navbar links, actionpages, and admin requests
-        case 'buttons':
-            $buttons = $GLOBALS['AllActionPages'];
-            $fileset = new fileSet(FindFile("themes/MacOSX/buttons/en"),
+            case 'buttons':
+                $buttons = $GLOBALS['AllActionPages'];
+                $fileset = new fileSet(FindFile("themes/MacOSX/buttons/en"),
                                    "*.png");
-            foreach ($fileset->getFiles() as $file) {
-                $b = urldecode(substr($file, 0, -4));
-                if (!in_array($b,$buttons))
-                    $buttons[] = $b;
-            }
-            $count = 0;
-            foreach ($buttons as $button) {
-                $pagelist->addPage( $button );
-                if ($limit and ++$count > $limit) break;
-            }
+                foreach ($fileset->getFiles() as $file) {
+                    $b = urldecode(substr($file, 0, -4));
+                    if (!in_array($b,$buttons))
+                        $buttons[] = $b;
+                }
+                $count = 0;
+                foreach ($buttons as $button) {
+                    $pagelist->addPage( $button );
+                    if ($limit and ++$count > $limit) break;
+                }
             break;
         }
         return $pagelist;
@@ -410,9 +410,9 @@ class _PageList_Column_customlang extends _PageList_Column {
     }
     
     function _getValue($page, &$revision_handle) {
-    	if (is_object($page)) $text = $page->getName();
+        if (is_object($page)) $text = $page->getName();
         else $text = $page;
-    	$trans = $this->_plugin->fast_translate($text, $this->_field, 
+        $trans = $this->_plugin->fast_translate($text, $this->_field, 
                                                 $this->_from_lang);
         // how to markup untranslated words and not existing pages?
         // untranslated: (TODO) link to translation editor

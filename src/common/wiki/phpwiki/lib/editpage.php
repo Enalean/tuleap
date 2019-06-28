@@ -153,8 +153,8 @@ class PageEditor
         } elseif ($saveFailed) {
             $tokens['CONCURRENT_UPDATE_MESSAGE'] = 
                 HTML(HTML::h2(_("Some internal editing error")),
-            	     HTML::p(_("Your are probably trying to edit/create an invalid version of this page.")),
-            	     HTML::p(HTML::em(_("&version=-1 might help."))));
+                     HTML::p(_("Your are probably trying to edit/create an invalid version of this page.")),
+                     HTML::p(HTML::em(_("&version=-1 might help."))));
         }
 
         if ($this->editaction == 'edit_convert')
@@ -257,11 +257,11 @@ class PageEditor
         // Save new revision
         $this->_content = $this->getContent();
         $newrevision = $page->save($this->_content, 
-        			   $this->version == -1 
+                       $this->version == -1 
                                      ? -1 
                                      : $this->_currentVersion + 1, 
                                    // force new?
-        			   $meta);
+                       $meta);
         if (!isa($newrevision, 'WikiDB_PageRevision')) {
             // Save failed.  (Concurrent updates).
             return false;
@@ -356,7 +356,7 @@ class PageEditor
     function getPreview () {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
-	return new TransformedText($this->page, $this->_content, $this->meta);
+        return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
     function getConvertedPreview () {
@@ -364,7 +364,7 @@ class PageEditor
         $this->_content = $this->getContent();
         $this->meta['markup'] = 2.0;
         $this->_content = ConvertOldMarkup($this->_content);
-	return new TransformedText($this->page, $this->_content, $this->meta);
+        return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
     // possibly convert HTMLAREA content back to Wiki markup

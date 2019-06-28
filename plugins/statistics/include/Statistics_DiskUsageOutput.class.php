@@ -66,9 +66,9 @@ class Statistics_DiskUsageOutput {
         if ($retstring == 'auto') {
             $nbDigit = (int)(log(abs($size))/log(10)) + 1;
             switch ($nbDigit) {
-            case 1:  $retstring = '%.2f %s'; break;
-            case 2:  $retstring = '%.1f %s'; break;
-            default: $retstring = '%d %s'; break;
+                case 1:  $retstring = '%.2f %s'; break;
+                case 2:  $retstring = '%.1f %s'; break;
+                default: $retstring = '%d %s'; break;
             }
         }
 

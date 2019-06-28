@@ -52,8 +52,8 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                   's' 		=> false,
-                   'user' 	=> false,
+                   's'         => false,
+                   'user'     => false,
                    /* Columns to include in listing */
                    'info'     => 'pagename,owner,mtime',
                    ));
@@ -93,10 +93,10 @@ extends WikiPlugin_WikiAdminSelect
     
     function run($dbi, $argstr, &$request, $basepage) {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
-	if ($request->getArg('action') != 'browse')
+        if ($request->getArg('action') != 'browse')
             if (!$request->getArg('action') == _("PhpWikiAdministration/Chown"))
                 return $this->disabled("(action != 'browse')");
-	        
+            
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
         if (empty($args['user']))

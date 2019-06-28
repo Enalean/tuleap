@@ -46,95 +46,95 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         return $fs;
     }
 
-	function testForumML_FileStorage() {
-		$fstorage = $this->_getFileStorage($this->_fixture);
-		$this->assertNotNull($fstorage->root);
-		$this->assertIsA($fstorage->root, 'string');
-		$this->assertEqual($fstorage->root,$this->_fixture);
-	}
+    function testForumML_FileStorage() {
+        $fstorage = $this->_getFileStorage($this->_fixture);
+        $this->assertNotNull($fstorage->root);
+        $this->assertIsA($fstorage->root, 'string');
+        $this->assertEqual($fstorage->root,$this->_fixture);
+    }
 
     // case 1: an attachment file whose name has more than 64 characters
-	function test_getPathFileNameWithMoreThan64Char() {
-		$fs1 = $this->_getFileStorage($this->_fixture);
-		$name1 = "a string with more than 64 characters, which is the limit allowed for ForumML attachments";
-		$list1 = "gpig-interest";
-		$date1 = "2007_10_24";
-		$type1 = "store";
+    function test_getPathFileNameWithMoreThan64Char() {
+        $fs1 = $this->_getFileStorage($this->_fixture);
+        $name1 = "a string with more than 64 characters, which is the limit allowed for ForumML attachments";
+        $list1 = "gpig-interest";
+        $date1 = "2007_10_24";
+        $type1 = "store";
 
-		// check returned path
-		$path1 = $fs1->_getPath($name1,$list1,$date1,$type1);
-		$this->assertNotNull($path1);
-		$this->assertIsA($path1, 'string');
+     // check returned path
+        $path1 = $fs1->_getPath($name1,$list1,$date1,$type1);
+        $this->assertNotNull($path1);
+        $this->assertIsA($path1, 'string');
 
-		// check filename length is restricted to 64 characters
-		$path_array1 = explode("/",$path1);
-		$fname1 = $path_array1[count($path_array1) - 1];
-		$this->assertNotEqual($name1,$fname1);
-		$this->assertEqual(strlen($fname1),63);
-		// check other path components
-		$flist1 = $path_array1[count($path_array1) - 3];
-		$this->assertEqual($flist1,$list1);
-		$fdate1 = $path_array1[count($path_array1) - 2];
-		$this->assertEqual($fdate1,$date1);
-		// check regexp
-		$this->assertPattern($this->_namePattern,$name1);
+     // check filename length is restricted to 64 characters
+        $path_array1 = explode("/",$path1);
+        $fname1 = $path_array1[count($path_array1) - 1];
+        $this->assertNotEqual($name1,$fname1);
+        $this->assertEqual(strlen($fname1),63);
+     // check other path components
+        $flist1 = $path_array1[count($path_array1) - 3];
+        $this->assertEqual($flist1,$list1);
+        $fdate1 = $path_array1[count($path_array1) - 2];
+        $this->assertEqual($fdate1,$date1);
+     // check regexp
+        $this->assertPattern($this->_namePattern,$name1);
     }
 
     // case 2: an attachment file whose name has less than 64 characters
     function test_getPathFileNameWithLessThan64Char() {
         $fs1 = $this->_getFileStorage($this->_fixture);
-		$name2 = "filename less than 64 chars";
-		$list1 = "gpig-interest";
-		$date1 = "2007_10_24";
-		$type1 = "store";
+        $name2 = "filename less than 64 chars";
+        $list1 = "gpig-interest";
+        $date1 = "2007_10_24";
+        $type1 = "store";
 
-		$path2 = $fs1->_getPath($name2,$list1,$date1,$type1);
-		$this->assertNotNull($path2);
-		$this->assertIsA($path2, 'string');
-		$path_array2 = explode("/",$path2);
-		$fname2 = $path_array2[count($path_array2) - 1];
-		$this->assertEqual($fname2,"filename_less_than_64_chars");
-		$this->assertNotEqual(strlen($fname2),64);
-		// check path components
-		$flist2 = $path_array2[count($path_array2) - 3];
-		$this->assertEqual($flist2,$list1);
-		$fdate2 = $path_array2[count($path_array2) - 2];
-		$this->assertEqual($fdate2,$date1);
-		// check regexp
-		$this->assertPattern($this->_namePattern,$name2);
+        $path2 = $fs1->_getPath($name2,$list1,$date1,$type1);
+        $this->assertNotNull($path2);
+        $this->assertIsA($path2, 'string');
+        $path_array2 = explode("/",$path2);
+        $fname2 = $path_array2[count($path_array2) - 1];
+        $this->assertEqual($fname2,"filename_less_than_64_chars");
+        $this->assertNotEqual(strlen($fname2),64);
+        // check path components
+        $flist2 = $path_array2[count($path_array2) - 3];
+        $this->assertEqual($flist2,$list1);
+        $fdate2 = $path_array2[count($path_array2) - 2];
+        $this->assertEqual($fdate2,$date1);
+        // check regexp
+        $this->assertPattern($this->_namePattern,$name2);
     }
 
     // case 3: attachment filename with only alphanumeric characters
     function test_getPathFileNameWithAlphaNumCharsOnly() {
         $fs1 = $this->_getFileStorage($this->_fixture);
-		$name3 = "Cx2008-requirements";
-		$list1 = "gpig-interest";
-		$date1 = "2007_10_24";
-		$type1 = "store";
+        $name3 = "Cx2008-requirements";
+        $list1 = "gpig-interest";
+        $date1 = "2007_10_24";
+        $type1 = "store";
 
-		$path3 = $fs1->_getPath($name3,$list1,$date1,$type1);
-		$this->assertNotNull($path3);
-		$this->assertIsA($path3, 'string');
-		$path_array3 = explode("/",$path3);
-		$fname3 = $path_array3[count($path_array3) - 1];
-		$this->assertNoPattern($this->_namePattern,$name3);
+        $path3 = $fs1->_getPath($name3,$list1,$date1,$type1);
+        $this->assertNotNull($path3);
+        $this->assertIsA($path3, 'string');
+        $path_array3 = explode("/",$path3);
+        $fname3 = $path_array3[count($path_array3) - 1];
+        $this->assertNoPattern($this->_namePattern,$name3);
     }
 
     // case 4: attachment filename is an empty string
     function test_getPathFileNameEmpty() {
         $fs1 = $this->_getFileStorage($this->_fixture);
-		$name4 = "";
-		$list1 = "gpig-interest";
-		$date1 = "2007_10_24";
-		$type1 = "store";
+        $name4 = "";
+        $list1 = "gpig-interest";
+        $date1 = "2007_10_24";
+        $type1 = "store";
 
-		$path4 = $fs1->_getPath($name4,$list1,$date1,$type1);
-		$this->assertNotNull($path4);
-		$this->assertIsA($path4, 'string');
-		$path_array4 = explode("/",$path4);
-		$fname4 = $path_array4[count($path_array4) - 1];
-		$this->assertPattern('/^attachment.*/', $fname4);
-	}
+        $path4 = $fs1->_getPath($name4,$list1,$date1,$type1);
+        $this->assertNotNull($path4);
+        $this->assertIsA($path4, 'string');
+        $path_array4 = explode("/",$path4);
+        $fname4 = $path_array4[count($path_array4) - 1];
+        $this->assertPattern('/^attachment.*/', $fname4);
+    }
 
     // case 5: same attachment name submitted 2 times same day for same list
     function testGetPathWithSameFileName() {
@@ -144,8 +144,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
         $fs->setReturnValueAt(1, 'fileExists', true);
 
         $list = "gpig-interest";
-		$date = "2007_10_24";
-		$type = "store";
+        $date = "2007_10_24";
+        $type = "store";
         $name = 'Screenshot.jpg';
 
         // First file stored that day

@@ -17,7 +17,7 @@ class Fortune {
 
         if ( $handle = opendir($dir) ) {
             while (false !== ($file = readdir($handle))) {
-		
+        
                 if ( strpos($file, ".dat") != false) {
                     $len = strlen($file);
                     if (substr($file, $len - 4) == ".dat"){
@@ -25,18 +25,18 @@ class Fortune {
                         $amount += $number;
                         $quotes[$index] = $amount;
                         $files[$index] = $file;
-                        $index++;					
+                        $index++;                    
                     }
-                }			
-		
+                }            
+        
             }
-	
+    
             srand((double)microtime()*1000000);
             $index = rand(0, $amount);
             $i = 0;
-	
+    
             while ($quotes[$i] < $index)  {
-                $i++;	
+                $i++;    
             }
 
             return $this->getRandomQuote($dir . "/" .$files[$i]);
@@ -62,27 +62,27 @@ class Fortune {
             echo "Input must be a file!<br/>";
             return;
         }
-	
+    
         if ( ($fd = fopen($file, "rb")) == false ) {
-            echo "Cannot open $file<br/>";	
+            echo "Cannot open $file<br/>";    
             return;
         }
         fseek($fd, 24 + 4 * $index);
-	
+    
         $phys_index = $this->readLong($fd);
-	
+    
         fclose($fd);
-	
+    
         $quotefile = substr($file, 0, strlen($file) - 4);
 
         if ( ($fd = fopen($quotefile, "rb")) == false ) {
             echo "Cannot find file $quotefile!<br/>";
-        }		
-	
+        }        
+    
         $res = $this->getQuote($fd, $phys_index);
         fclose($fd);
-	
-        return $res;	
+    
+        return $res;    
     }
 
     /*
@@ -94,7 +94,7 @@ class Fortune {
         $index = rand(0, $number - 1);
 
         return $this->getExactQuote($file, $index);
-    }	
+    }    
 
     /*
      Reads a quote from the specified index.
@@ -103,7 +103,7 @@ class Fortune {
         fseek($fd, $index);
         $line=""; $res = "";
         do {
-            $res = $res . $line;		
+            $res = $res . $line;        
             $line = fgets($fd, 1024) . "<br>";
         } while ( ($line[0] != "%") && (!feof($fd)) );
 
@@ -116,7 +116,7 @@ class Fortune {
     function getIndices($fd) {
         fseek($fd, 24, SEEK_SET);
         $i = 0;
-	
+    
         while ( feof($fd) == FALSE ) {
             $res[$i] = readLong($fd);
             $i++;
@@ -153,7 +153,7 @@ class Fortune {
                 $i++;
                 if ($length > $longest)
                     $longest = $length;
-	
+    
                 if ($length < $shortest)
                     $shortest = $length;
 

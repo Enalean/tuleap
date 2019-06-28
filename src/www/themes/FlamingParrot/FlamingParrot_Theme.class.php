@@ -84,7 +84,7 @@ class FlamingParrot_Theme extends Layout {
     public function header(array $params) {
         $title = $GLOBALS['sys_name'];
         if (!empty($params['title'])) {
-           $title = $params['title'] .' - '. $title;
+            $title = $params['title'] .' - '. $title;
         }
 
         $current_user    = UserManager::instance()->getCurrentUser();

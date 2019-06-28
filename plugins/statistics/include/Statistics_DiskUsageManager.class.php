@@ -218,7 +218,7 @@ class Statistics_DiskUsageManager {
                 $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
             return $res;
-         }
+        }
          return false;
 
     }

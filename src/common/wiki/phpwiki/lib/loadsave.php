@@ -67,11 +67,11 @@ function EndLoadDump(&$request)
     $action = $request->getArg('action');
     $label = '';
     switch ($action) {
-    case 'zip':        $label = _("ZIP files of database"); break;
-    case 'upload':     $label = _("Upload File"); break;
-    case 'loadfile':   $label = _("Load File"); break;
-    case 'upgrade':    $label = _("Upgrade"); break;
-    case 'ziphtml':    $label = _("Dump pages as XHTML"); break;
+        case 'zip':        $label = _("ZIP files of database"); break;
+        case 'upload':     $label = _("Upload File"); break;
+        case 'loadfile':   $label = _("Load File"); break;
+        case 'upgrade':    $label = _("Upgrade"); break;
+        case 'ziphtml':    $label = _("Dump pages as XHTML"); break;
     }
     if ($label) $label = str_replace(" ","_",$label);
     if ($action == 'browse') // loading virgin 
@@ -225,8 +225,8 @@ function MakeWikiZip (&$request)
     $timeout = (! $request->getArg('start_debug')) ? 30 : 240;
     
     while ($page = $page_iter->next()) {
-	$request->args = $request_args; // some plugins might change them (esp. on POST)
-        longer_timeout($timeout); 	// Reset watchdog
+        $request->args = $request_args; // some plugins might change them (esp. on POST)
+        longer_timeout($timeout);     // Reset watchdog
 
         $current = $page->getCurrentRevision();
         if ($current->getVersion() == 0)
@@ -312,8 +312,8 @@ function MakeWikiZipHtml (&$request)
     $timeout = (! $request->getArg('start_debug')) ? 20 : 240;
     
     while ($page = $page_iter->next()) {
-	$request->args = $request_args; // some plugins might change them (esp. on POST)
-        longer_timeout($timeout); 	// Reset watchdog
+        $request->args = $request_args; // some plugins might change them (esp. on POST)
+        longer_timeout($timeout);     // Reset watchdog
 
         $current = $page->getCurrentRevision();
         if ($current->getVersion() == 0)
@@ -361,7 +361,7 @@ function MakeWikiZipHtml (&$request)
     $attrib = false;
     // Deal with css and images here.
     if (!empty($WikiTheme->dumped_images) and is_array($WikiTheme->dumped_images)) {
-    	// dirs are created automatically
+        // dirs are created automatically
         //if ($WikiTheme->dumped_images) $zip->addRegularFile("images", "", $attrib);
         foreach ($WikiTheme->dumped_images as $img_file) {
             if (($from = $WikiTheme->_findFile($img_file, true)) and basename($from)) {
@@ -470,8 +470,8 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
 
 
     if (!$current) {
-    	//FIXME: This should not happen! (empty vdata, corrupt cache or db)
-    	$current = $page->getCurrentRevision();
+        //FIXME: This should not happen! (empty vdata, corrupt cache or db)
+        $current = $page->getCurrentRevision();
     }
     if ($current->getVersion() == 0) {
         $mesg->pushContent(' - ', _("New page"));
@@ -509,9 +509,9 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
     }
 
     if (! $skip ) {
-    	// in case of failures print the culprit:
+        // in case of failures print the culprit:
         if (!isa($request,'MockRequest')) {
-    	    PrintXML(HTML::dt(WikiLink($pagename))); flush();
+            PrintXML(HTML::dt(WikiLink($pagename))); flush();
         }
         $new = $page->save($content, WIKIDB_FORCE_CREATE, $versiondata);
         $dbi->touch();
@@ -556,11 +556,11 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
     }
 
     if (!isa($request,'MockRequest')) {
-      if ($skip)
+        if ($skip)
         PrintXML(HTML::dt(HTML::em(WikiLink($pagename))), $mesg);
-      else
+        else
         PrintXML($mesg);
-      flush();
+        flush();
     }
 }
 
@@ -780,7 +780,7 @@ function LoadDir (&$request, $dirname, $files = false, $exclude = false) {
     }
     $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
     foreach ($files as $file) {
-        longer_timeout($timeout); 	// longer timeout per page
+        longer_timeout($timeout);     // longer timeout per page
         if (substr($file,-1,1) != '~')  // refuse to load backup files
             LoadFile($request, "$dirname/$file");
     }
@@ -800,7 +800,7 @@ function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
             flush();
             continue;
         }
-        longer_timeout($timeout); 	// longer timeout per page
+        longer_timeout($timeout);     // longer timeout per page
         LoadFile($request, $fn, $data, $attrib['mtime']);
     }
 }
@@ -909,7 +909,7 @@ function RakeSandboxAtUserRequest (&$request)
     $source = $finder->slashifyPath($source);
     $page = rawurldecode(basename($source));
     StartLoadDump($request, fmt("Loading '%s'",
-    	HTML(dirname($source),
+        HTML(dirname($source),
              dirname($source) ? "/" : "",
              WikiLink($page,'auto'))));
     if ($source !== 'pgsrc/SandBox') {

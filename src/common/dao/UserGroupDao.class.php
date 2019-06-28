@@ -253,8 +253,8 @@ class UserGroupDao extends DataAccessObject {
                 WHERE ugroup_id = $user_group_id";
 
         if(! $this->update($sql)) {
-           $this->rollback();
-           return false;
+            $this->rollback();
+            return false;
         }
 
         $sql = "DELETE FROM ugroup_forge_permission

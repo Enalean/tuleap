@@ -324,11 +324,11 @@ class PluginManager
         if(is_array($projectIds)) {
             foreach($projectIds as $prjId) {
                 switch($action){
-                case 'add':
-                    $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
+                    case 'add':
+                        $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
                     break;
-                case 'del':
-                    $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
+                    case 'del':
+                        $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
                     break;
                 }
 
@@ -338,11 +338,11 @@ class PluginManager
         }
         elseif(is_numeric($projectIds)) {
             switch($action){
-            case 'add':
-                $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
+                case 'add':
+                    $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
                 break;
-            case 'del':
-                $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
+                case 'del':
+                    $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
                 break;
             }
             $successOnce = $success;

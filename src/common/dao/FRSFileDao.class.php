@@ -35,8 +35,8 @@ class FRSFileDao extends DataAccessObject {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(' p.group_id='.$this->da->escapeInt($_group_id).' AND r.release_id = f.release_id' .
-        		              ' AND r.package_id = p.package_id AND f.file_id ='.$this->da->escapeInt($_id),'',
-        		              'ORDER BY post_date DESC LIMIT 1',array('frs_package AS p', 'frs_release AS r'));
+                              ' AND r.package_id = p.package_id AND f.file_id ='.$this->da->escapeInt($_id),'',
+                              'ORDER BY post_date DESC LIMIT 1',array('frs_package AS p', 'frs_release AS r'));
     }
 
     function searchByIdList($idList) {
@@ -63,20 +63,20 @@ class FRSFileDao extends DataAccessObject {
     }
 
 
-   function searchInfoByGroupFileID($group_id, $file_id){
+    function searchInfoByGroupFileID($group_id, $file_id){
         $_group_id = (int) $group_id;
         $_file_id = (int) $file_id;
 
         $sql = sprintf("SELECT f.filename, f.file_id AS file_id, p.group_id AS group_id, " .
-        				"p.package_id, r.release_id "
-              		  ."FROM frs_release AS r, frs_package AS p, frs_file AS f "
-              		  ."WHERE p.group_id= %s "
-			  		  ."AND r.package_id = p.package_id "
-			  		  ."AND f.release_id = r.release_id "
+                        "p.package_id, r.release_id "
+                        ."FROM frs_release AS r, frs_package AS p, frs_file AS f "
+                        ."WHERE p.group_id= %s "
+                        ."AND r.package_id = p.package_id "
+                        ."AND f.release_id = r.release_id "
                       ."AND f.file_id=%s ",
-			  			$this->da->quoteSmart($_group_id),
-			  			$this->da->quoteSmart($_file_id));
-        return $this->retrieve($sql);
+                          $this->da->quoteSmart($_group_id),
+                          $this->da->quoteSmart($_file_id));
+         return $this->retrieve($sql);
     }
 
     /**
@@ -86,12 +86,12 @@ class FRSFileDao extends DataAccessObject {
      * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
      */
     function searchInfoFileByReleaseID($release_id, $only_active_files = 1){
-    	$_release_id = (int) $release_id;
+        $_release_id = (int) $release_id;
 
-    $where_status = "";
-    if ($only_active_files) {
-        $where_status = " AND status='A' ";
-    }
+        $where_status = "";
+        if ($only_active_files) {
+            $where_status = " AND status='A' ";
+        }
 
         $sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size,"
                 . "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor,"
@@ -115,23 +115,23 @@ class FRSFileDao extends DataAccessObject {
     }
 
     function searchFileByName($file_name, $group_id){
-    	$_group_id = (int) $group_id;
-    	return $this->_search(' p.group_id='.$this->da->escapeInt($_group_id).' AND r.release_id = f.release_id' .
-    						  ' AND r.package_id = p.package_id AND filename='.$this->da->quoteSmart($file_name).' AND f.status=\'A\'','',
-							  '', array('frs_package AS p', 'frs_release AS r'));
+        $_group_id = (int) $group_id;
+        return $this->_search(' p.group_id='.$this->da->escapeInt($_group_id).' AND r.release_id = f.release_id' .
+                              ' AND r.package_id = p.package_id AND filename='.$this->da->quoteSmart($file_name).' AND f.status=\'A\'','',
+                              '', array('frs_package AS p', 'frs_release AS r'));
     }
 
     public function searchFileByNameFromRelease($file_name, $release_id)
     {
         $file_name  = $this->da->quoteSmart('%/' . $this->getDa()->escapeLikeValue($file_name));
-    	$release_id = $this->da->quoteSmart($release_id);
-    	$sql = 'SELECT file_id'
-    	    .' from frs_file'
-    	    .' WHERE filename LIKE '.$file_name
-    	    .' AND release_id = '.$release_id
-    	    .' AND status = \'A\'';
+        $release_id = $this->da->quoteSmart($release_id);
+        $sql = 'SELECT file_id'
+            .' from frs_file'
+            .' WHERE filename LIKE '.$file_name
+            .' AND release_id = '.$release_id
+            .' AND status = \'A\'';
 
-    	return $this->retrieve($sql);
+        return $this->retrieve($sql);
     }
 
     /**
@@ -234,7 +234,7 @@ class FRSFileDao extends DataAccessObject {
 
         $argArray = array();
 
-		if($file_name !== null) {
+        if($file_name !== null) {
             $argArray[] = 'file_name='.$this->da->quoteSmart($file_name);
         }
 
@@ -318,9 +318,9 @@ class FRSFileDao extends DataAccessObject {
      * @return boolean true if there is no error, false otherwise
      */
     function logDownload($file, $user_id) {
-       $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
+        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
              ."VALUES ('".$this->da->escapeInt($user_id)."','".$this->da->escapeInt($file->getFileID())."','".$this->da->escapeInt(time())."')";
-       return $this->update($sql);
+        return $this->update($sql);
     }
 
     /**

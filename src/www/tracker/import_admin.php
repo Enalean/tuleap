@@ -21,44 +21,44 @@ if ($group_id && $mode == "admin") {
     $hp = Codendi_HTMLPurifier::instance();
   //   the welcome screen when entering the import facility from admin page
   
-  session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+    session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
   //  get the Group object
-  $pm = ProjectManager::instance();
-  $group = $pm->getProject($group_id);
-  if (!$group || !is_object($group) || $group->isError()) {
-	exit_no_group();
-  }		   
-  $atf = new ArtifactTypeFactory($group);
-  if (!$group || !is_object($group) || $group->isError()) {
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_import_admin','not_get_atf'));
-  }
+    $pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
+    if (!$group || !is_object($group) || $group->isError()) {
+        exit_no_group();
+    }           
+    $atf = new ArtifactTypeFactory($group);
+    if (!$group || !is_object($group) || $group->isError()) {
+        exit_error($Language->getText('global','error'),$Language->getText('tracker_import_admin','not_get_atf'));
+    }
 
 
-  $pg_title = $Language->getText('tracker_import_admin','art_import');
+    $pg_title = $Language->getText('tracker_import_admin','art_import');
 
 
-  project_admin_header(
+    project_admin_header(
       array(
           'title'=>$pg_title,
           'help' => 'tracker.html#tracker-artifact-import',
       ),
       \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
-  );
+    );
 
-  $pm = ProjectManager::instance();
-  $project=$pm->getProject($group_id);
-  if (! $project->usesTracker()) {
-      echo '<P> '.$Language->getText('tracker_import_admin','disabled');
-      project_admin_footer(array());
-  } else {
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
+    if (! $project->usesTracker()) {
+        echo '<P> '.$Language->getText('tracker_import_admin','disabled');
+        project_admin_footer(array());
+    } else {
 
-  // Display the welcome screen
-  echo $Language->getText('tracker_import_admin','welcome');
-		
-  // Show all the fields currently available in the system
-  echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
-  echo '
+    // Display the welcome screen
+        echo $Language->getText('tracker_import_admin','welcome');
+        
+    // Show all the fields currently available in the system
+        echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
+        echo '
   <tr class="boxtable"> 
     <td class="boxtitle">&nbsp;</td>
     <td class="boxtitle"> 
@@ -69,12 +69,12 @@ if ($group_id && $mode == "admin") {
     </td>
  </tr>';
   
-  // Get the artfact type list
-  $at_arr = $atf->getArtifactTypes();
+    // Get the artfact type list
+        $at_arr = $atf->getArtifactTypes();
   
-  if ($at_arr && count($at_arr) >= 1) {
-    for ($j = 0; $j < count($at_arr); $j++) {
-      echo '
+        if ($at_arr && count($at_arr) >= 1) {
+            for ($j = 0; $j < count($at_arr); $j++) {
+                echo '
 		  <tr class="'.util_get_alt_row_color($j).'"> 
 		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></td>
 		    <td align="center">
@@ -84,15 +84,15 @@ if ($group_id && $mode == "admin") {
 		      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&mode=showformat&func=import">'.$Language->getText('tracker_import_admin','show_format').'</a>
 		    </td>
 		  </tr>';
-    }
-  }
+            }
+        }
 
-  echo '</TABLE>';
-  project_admin_footer(array());
-  }
+        echo '</TABLE>';
+        project_admin_footer(array());
+    }
 
 } else {
-  exit_missing_param();
+    exit_missing_param();
 }
 
 ?>

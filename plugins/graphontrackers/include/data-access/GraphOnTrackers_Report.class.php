@@ -248,7 +248,7 @@ class GraphOnTrackers_Report {
             $this->loadCharts();
         }
         for($i=0;$i<sizeof($this->charts);$i++){
-        	$this->deleteChart($this->charts[$i]->getId());
+            $this->deleteChart($this->charts[$i]->getId());
         }
         // then delete the report entry item
         

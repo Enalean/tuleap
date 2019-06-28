@@ -62,6 +62,6 @@ class MustacheRenderer extends TemplateRenderer
      */
     public function renderToString($template_name, $presenter)
     {
-       return $this->template_engine->render($template_name, $presenter);
+        return $this->template_engine->render($template_name, $presenter);
     }
 }

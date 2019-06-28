@@ -69,55 +69,55 @@ extends WikiPlugin
  * @desc
  */
 if (defined('DEBUG') && DEBUG) {
-class PageFormatter_searchableInterWikiMap 
-extends PageFormatter_interwikimap {}
+    class PageFormatter_searchableInterWikiMap 
+    extends PageFormatter_interwikimap {}
 
-class PageType_searchableInterWikiMap
-extends PageType_interwikimap
-{
-    function format($text) {
-	return HTML::div(array('class' => 'wikitext'),
-			 $this->_transform($this->_getHeader($text)),
-			 $this->_formatMap(),
-			 $this->_transform($this->_getFooter($text)));
-    }
+    class PageType_searchableInterWikiMap
+    extends PageType_interwikimap
+    {
+        function format($text) {
+            return HTML::div(array('class' => 'wikitext'),
+            $this->_transform($this->_getHeader($text)),
+            $this->_formatMap(),
+            $this->_transform($this->_getFooter($text)));
+        }
 
-    function _formatMap() {
-        return $this->_arrayToTable ($this->_getMap(), $GLOBALS['request']);
-    }
+        function _formatMap() {
+            return $this->_arrayToTable ($this->_getMap(), $GLOBALS['request']);
+        }
 
-    function _arrayToTable ($array, &$request) {
-        $thead = HTML::thead();
-        $label[0] = _("Wiki Name");
-        $label[1] = _("Search");
-        $thead->pushContent(HTML::tr(HTML::th($label[0]),
+        function _arrayToTable ($array, &$request) {
+            $thead = HTML::thead();
+            $label[0] = _("Wiki Name");
+            $label[1] = _("Search");
+            $thead->pushContent(HTML::tr(HTML::th($label[0]),
                                      HTML::th($label[1])));
 
-        $tbody = HTML::tbody();
-        $dbi = $request->getDbh();
-        if ($array) {
-            foreach ($array as $moniker => $interurl) {
-                $monikertd = HTML::td(array('class' => 'interwiki-moniker'),
+            $tbody = HTML::tbody();
+            $dbi = $request->getDbh();
+            if ($array) {
+                foreach ($array as $moniker => $interurl) {
+                    $monikertd = HTML::td(array('class' => 'interwiki-moniker'),
                                       $dbi->isWikiPage($moniker)
                                       ? WikiLink($moniker)
                                       : $moniker);
 
-                $w = new WikiPluginLoader;
-                $p = $w->getPlugin('ExternalSearch');
-                $argstr = sprintf('url="%s"', addslashes($interurl));
-                $searchtd = HTML::td($p->run($dbi, $argstr, $request, $basepage));
+                    $w = new WikiPluginLoader;
+                    $p = $w->getPlugin('ExternalSearch');
+                    $argstr = sprintf('url="%s"', addslashes($interurl));
+                    $searchtd = HTML::td($p->run($dbi, $argstr, $request, $basepage));
 
-                $tbody->pushContent(HTML::tr($monikertd, $searchtd));
+                    $tbody->pushContent(HTML::tr($monikertd, $searchtd));
+                }
             }
-        }
-        $table = HTML::table();
-        $table->setAttr('class', 'interwiki-map');
-        $table->pushContent($thead);
-        $table->pushContent($tbody);
+            $table = HTML::table();
+            $table->setAttr('class', 'interwiki-map');
+            $table->pushContent($thead);
+            $table->pushContent($tbody);
 
-        return $table;
-    }
-};
+            return $table;
+        }
+    };
 }
 
 

@@ -64,28 +64,28 @@ extends WikiPlugin
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
-    	$args = $this->getArgs($argstr, $request);
+        $args = $this->getArgs($argstr, $request);
         extract($args);
         $header = '';
         $page = $dbi->getPage($pagename);
         switch ($mode) {
-        case 'incoming': // not the hits, but the number of links
-            if (! $noheader )
+            case 'incoming': // not the hits, but the number of links
+                if (! $noheader )
                 $header = sprintf(_("%d best incoming links: "),$limit); 
-            $links = $this->sortedLinks($page->getLinks("reversed"),"reversed",$limit);
+                $links = $this->sortedLinks($page->getLinks("reversed"),"reversed",$limit);
             break;
-        case 'outgoing': // not the hits, but the number of links
-            if (! $noheader )
+            case 'outgoing': // not the hits, but the number of links
+                if (! $noheader )
                 $header = sprintf(_("%d best outgoing links: "),$limit); 
-            $links = $this->sortedLinks($page->getLinks(),false,$limit);
+                $links = $this->sortedLinks($page->getLinks(),false,$limit);
             break;
-        case 'nearby':  // all linksfrom and linksto, sorted by hits 
-            if (! $noheader )
+            case 'nearby':  // all linksfrom and linksto, sorted by hits 
+                if (! $noheader )
                 $header = sprintf(_("%d most popular nearby: "),$limit); 
-            $inlinks = $page->getLinks();
-            $outlinks = $page->getLinks('reversed');
-            // array_merge doesn't sort out duplicate page objects here.
-            $links = $this->sortedLinks(array_merge($inlinks->asArray(),
+                $inlinks = $page->getLinks();
+                $outlinks = $page->getLinks('reversed');
+                // array_merge doesn't sort out duplicate page objects here.
+                $links = $this->sortedLinks(array_merge($inlinks->asArray(),
                                                     $outlinks->asArray()),
                                         false, $limit);
             break;
@@ -111,7 +111,7 @@ extends WikiPlugin
      * @return Array of sorted links
      */
     function sortedLinks($pages, $direction=false, $limit=5) {
-    	$links = array();
+        $links = array();
         if (is_array($pages)) {
             $already = array(); // need special duplicate check
             foreach ($pages as $page) {

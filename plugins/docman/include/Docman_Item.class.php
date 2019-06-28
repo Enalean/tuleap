@@ -254,41 +254,41 @@ class Docman_Item {
         $value = null;
 
         switch($label) {
-        case 'title':
-            $value = $this->getTitle();
+            case 'title':
+                $value = $this->getTitle();
             break;
 
-        case 'description':
-            $value = $this->getDescription();
+            case 'description':
+                $value = $this->getDescription();
             break;
 
-        case 'owner':
-            $value = $this->getOwnerId();
+            case 'owner':
+                $value = $this->getOwnerId();
             break;
 
-        case 'create_date':
-            $value = $this->getCreateDate();
+            case 'create_date':
+                $value = $this->getCreateDate();
             break;
 
-        case 'update_date':
-            $value = $this->getUpdateDate();
+            case 'update_date':
+                $value = $this->getUpdateDate();
             break;
 
-        case 'status':
-            $status      = $this->getStatus();
-            $status_list = array();
-            if ($status !== null) {
-                $status_list[] = Docman_MetadataListOfValuesElementFactory::getStatusList($status);
-            }
-            $value = new ArrayIterator($status_list);
+            case 'status':
+                $status      = $this->getStatus();
+                $status_list = array();
+                if ($status !== null) {
+                    $status_list[] = Docman_MetadataListOfValuesElementFactory::getStatusList($status);
+                }
+                $value = new ArrayIterator($status_list);
             break;
 
-        case 'obsolescence_date':
-            $value = $this->getObsolescenceDate();
+            case 'obsolescence_date':
+                $value = $this->getObsolescenceDate();
             break;
 
-        case 'rank':
-            $value = $this->getRank();
+            case 'rank':
+                $value = $this->getRank();
             break;
         }
 
@@ -312,30 +312,30 @@ class Docman_Item {
      */
     public function updateHardCodedMetadata($metadata) {
         switch($metadata->getLabel()) {
-        case 'title':
-            $this->setTitle($metadata->getValue());
+            case 'title':
+                $this->setTitle($metadata->getValue());
             break;
-        case 'description':
-            $this->setDescription($metadata->getValue());
+            case 'description':
+                $this->setDescription($metadata->getValue());
             break;
-        case 'owner':
-            $this->setOwnerId($metadata->getValue());
+            case 'owner':
+                $this->setOwnerId($metadata->getValue());
             break;
-        case 'create_date':
-            $this->setCreateDate($metadata->getValue());
+            case 'create_date':
+                $this->setCreateDate($metadata->getValue());
             break;
-        case 'update_date':
-            $this->setUpdateDate($metadata->getValue());
+            case 'update_date':
+                $this->setUpdateDate($metadata->getValue());
             break;
-        case 'status':
-            // $metadata->getValue() return an array iterator
-            $this->setStatus($metadata->getValue()->current()->getId());
+            case 'status':
+                // $metadata->getValue() return an array iterator
+                $this->setStatus($metadata->getValue()->current()->getId());
             break;
-        case 'obsolescence_date':
-            $this->setObsolescenceDate($metadata->getValue());
+            case 'obsolescence_date':
+                $this->setObsolescenceDate($metadata->getValue());
             break;
-        case 'rank':
-            $this->setRank($metadata->getValue());
+            case 'rank':
+                $this->setRank($metadata->getValue());
             break;
         }
     }

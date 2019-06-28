@@ -210,17 +210,17 @@ class ReferenceDao extends DataAccessObject {
         // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf("SELECT * FROM reference r,reference_group rg WHERE ".
                "service_short_name != 'plugin_tracker' AND ".
-		       "r.keyword = %s AND ".
-		       "r.id=rg.reference_id AND ".
-		       "rg.group_id=%s AND ".
-		       "r.description = %s AND ".
-		       "r.link = %s AND ".
-		       "r.scope = %s",
+               "r.keyword = %s AND ".
+               "r.id=rg.reference_id AND ".
+               "rg.group_id=%s AND ".
+               "r.description = %s AND ".
+               "r.link = %s AND ".
+               "r.scope = %s",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($group_id),
-		       $this->da->quoteSmart($description),
-		       $this->da->quoteSmart($link),
-		       $this->da->quoteSmart($scope));
+               $this->da->quoteSmart($description),
+               $this->da->quoteSmart($link),
+               $this->da->quoteSmart($scope));
         return $this->retrieve($sql);
     }
 

@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     /**
      * @return array all values of the field
      */
-     public function getAllValues() { return array(); }
+    public function getAllValues() { return array(); }
     /**
      * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values

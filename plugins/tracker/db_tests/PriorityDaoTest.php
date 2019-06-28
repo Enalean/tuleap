@@ -135,7 +135,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->assertOrder(101, 123, 1, 42, 66);
     }
 
-      public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition() {
+    public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition() {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsBefore(array(1, 42, 66), 123);
         $this->assertOrder(101, 1, 42, 66, 123);

@@ -81,7 +81,7 @@ class ThemeVariant {
     private function unsetInvalidThemes() {
         foreach ($this->allowed as $index => $item) {
             if (! in_array($item, FlamingParrot_Theme::getVariants())) {
-               unset($this->allowed[$index]);
+                unset($this->allowed[$index]);
             }
         }
 

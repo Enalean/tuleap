@@ -63,32 +63,32 @@ extends WikiPlugin
                        'size' => $size);
 
         switch ($action) {
-        case 'loadfile':
-            $input['name'] = 'source';
-            if (!$default)
+            case 'loadfile':
+                $input['name'] = 'source';
+                if (!$default)
                 $input['value'] = DEFAULT_DUMP_DIR;
-            if (!$buttontext)
+                if (!$buttontext)
                 $buttontext = _("Load File");
-            $class = false;
+                $class = false;
             break;
-        case 'login':
-            $input['name'] = 'source';
-            if (!$buttontext)
+            case 'login':
+                $input['name'] = 'source';
+                if (!$buttontext)
                 $buttontext = _("Login");
-            $class = 'wikiadmin';
+                $class = 'wikiadmin';
             break;
-        case 'upload':
-            $form->setAttr('enctype', 'multipart/form-data');
-            $form->pushContent(HTML::input(array('name' => 'MAX_FILE_SIZE',
+            case 'upload':
+                $form->setAttr('enctype', 'multipart/form-data');
+                $form->pushContent(HTML::input(array('name' => 'MAX_FILE_SIZE',
                                                  'value' =>  MAX_UPLOAD_SIZE,
                                                  'type'  => 'hidden')));
-            $input['name'] = 'file';
-            $input['type'] = 'file';
-            if (!$buttontext)
-                $buttontext = _("Upload");
-            $class = false; // local OS function, so use native OS button
+                $input['name'] = 'file';
+                $input['type'] = 'file';
+                if (!$buttontext)
+                    $buttontext = _("Upload");
+                $class = false; // local OS function, so use native OS button
             break;
-        default:
+            default:
             return HTML::p(fmt("WikiForm: %s: unknown action", $action));
         }
 

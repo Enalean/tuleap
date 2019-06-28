@@ -77,7 +77,7 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
     /**
      * Test when there are more items in the source tree (reference) than the destination one.
      */
-     function testCompareFolderChildrenMoreSrcThanDst() {
+    function testCompareFolderChildrenMoreSrcThanDst() {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -97,16 +97,16 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
         $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEqual($nodesOk, array(150 => true,
-                                           135 => true));
+                                          135 => true));
         $itemMapping = $itemMappingVisitor->getItemMapping();
         $this->assertEqual($itemMapping, array(150 => 36,
-                                               135 => 40));
-     }
+                                              135 => 40));
+    }
 
     /**
      * Test when there are more items in the destination tree than the source one.
      */
-     function testCompareFolderChildrenMoreDstThanSrc() {
+    function testCompareFolderChildrenMoreDstThanSrc() {
         // Src (reference)
         $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
         $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
@@ -126,11 +126,11 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
         $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEqual($nodesOk, array(150 => true,
-                                           135 => true));
+                                          135 => true));
         $itemMapping = $itemMappingVisitor->getItemMapping();
         $this->assertEqual($itemMapping, array(150 => 36,
-                                               135 => 40));
-       }
+                                              135 => 40));
+    }
 
     /**
      * Test: We want to find the item id mapping for the tree on the left. We

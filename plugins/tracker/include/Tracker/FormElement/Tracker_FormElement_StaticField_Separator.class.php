@@ -69,7 +69,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         if ( ! $label) {
             return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label');
         } else {
-        	return $label;
+            return $label;
         }
     }
     

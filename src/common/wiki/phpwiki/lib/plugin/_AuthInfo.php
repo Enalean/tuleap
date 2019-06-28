@@ -99,18 +99,18 @@ extends WikiPlugin
             $userdata = obj2hash($user, array('_dbi','_request', 'password', 'passwd'));
             $table->pushContent($this->_showhash("User: Object of ".get_class($user), $userdata));
             if (ENABLE_USER_NEW) {
-              $group = $request->getGroup();
-              $groups = $group->getAllGroupsIn();
-              $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
-              unset($groupdata['request']);
-              $table->pushContent($this->_showhash("Group: Object of ".get_class($group), $groupdata));
-              $groups = $group->getAllGroupsIn();
-              $groupdata = array('getAllGroupsIn' => $groups);
-              foreach ($groups as $g) {
-                $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
-                $groupdata["isMember($g)"] = $group->isMember($g);
-              }
-              $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
+                $group = $request->getGroup();
+                $groups = $group->getAllGroupsIn();
+                $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
+                unset($groupdata['request']);
+                $table->pushContent($this->_showhash("Group: Object of ".get_class($group), $groupdata));
+                $groups = $group->getAllGroupsIn();
+                $groupdata = array('getAllGroupsIn' => $groups);
+                foreach ($groups as $g) {
+                    $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
+                    $groupdata["isMember($g)"] = $group->isMember($g);
+                }
+                $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
             }
             $html->pushContent($table);
         }
@@ -118,8 +118,8 @@ extends WikiPlugin
     }
 
     function _showhash ($heading, $hash, $depth = 0) {
-    	static $seen = array();
-    	static $maxdepth = 0;
+        static $seen = array();
+        static $maxdepth = 0;
         $rows = array();
         $maxdepth++;
         if ($maxdepth > 35) return $heading;

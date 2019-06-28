@@ -59,17 +59,17 @@ abstract class Tracker_Semantic {
      *
      * @return Tracker The tracker
      */
-     public function getTracker() {
-         return $this->tracker;
-     }
+    public function getTracker() {
+        return $this->tracker;
+    }
 
     /**
      * @return CSRFSynchronizerToken
      */
-     protected function getCSRFToken()
+    protected function getCSRFToken()
      {
-         return $this->csrf_token;
-     }
+        return $this->csrf_token;
+    }
 
     /**
      * The short name of the semantic: tooltip, title, status, owner, ...

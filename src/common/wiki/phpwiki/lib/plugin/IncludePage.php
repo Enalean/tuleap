@@ -121,7 +121,7 @@ extends WikiPlugin
                     HTML::div(array('class' => 'transclusion'),
                               false, $content));
     }
-	
+    
     /** 
      * handles the arguments: section, sectionhead, lines, words, bytes,
      * for UnfoldSubpages, IncludePage, ...

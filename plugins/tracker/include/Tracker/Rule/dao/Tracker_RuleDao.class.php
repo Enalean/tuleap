@@ -49,7 +49,7 @@ class Tracker_RuleDao extends DataAccessObject {
                         FROM tracker_rule JOIN tracker_rule_list
                         ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                         WHERE tracker_rule.tracker_id = %s",
-				$this->da->quoteSmart($tracker_id));
+        $this->da->quoteSmart($tracker_id));
         return $this->retrieve($sql);
     }
 
@@ -93,7 +93,7 @@ class Tracker_RuleDao extends DataAccessObject {
        //               "      ON (ar.target_field_id = afvlt.field_id AND ar.group_artifact_id = afvlt.group_artifact_id AND ar.target_value_id = afvlt.value_id) ".
        //               " WHERE ar.group_artifact_id = %s ".
        //               " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
-	   //		$this->da->quoteSmart($tracker_id));
+       //        $this->da->quoteSmart($tracker_id));
                $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id ".
                               "FROM tracker_rule JOIN tracker_rule_list
                                ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)" .
@@ -106,11 +106,11 @@ class Tracker_RuleDao extends DataAccessObject {
 
     function deleteById($id) {
         $sql_delete_list = sprintf("DELETE FROM tracker_rule_list WHERE tracker_rule_id = %s",
-				$this->da->quoteSmart($id));
+        $this->da->quoteSmart($id));
         $this->update($sql_delete_list);
 
         $sql = sprintf("DELETE FROM tracker_rule WHERE id = %s",
-				$this->da->quoteSmart($id));
+        $this->da->quoteSmart($id));
         return $this->update($sql);
     }
 

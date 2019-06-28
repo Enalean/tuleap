@@ -35,16 +35,16 @@ class HTML_Element_Selectbox_TrackerFields_Numerics extends HTML_Element_Selectb
         $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);
         $aff = new ArtifactFieldFactory($at);
         foreach ($aff->getAllUsedFields() as $field) {
-        	if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){	
+            if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){    
         
-	            if (($field->isSelectBox() || $field->isInt() || $field->isFloat()) 
-	                && !$field->isUsername() 
-	                && !$field->isStandardField()
-	            ) {
-	                $selected = $this->value == $field->getName();
-	                $this->addOption(new HTML_Element_Option($field->getLabel(), $field->getName(), $selected));
-	            }
-        	}
+                if (($field->isSelectBox() || $field->isInt() || $field->isFloat()) 
+                    && !$field->isUsername() 
+                    && !$field->isStandardField()
+                ) {
+                    $selected = $this->value == $field->getName();
+                    $this->addOption(new HTML_Element_Option($field->getLabel(), $field->getName(), $selected));
+                }
+            }
         }
     }
 }

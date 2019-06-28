@@ -128,8 +128,8 @@ class BackendCVS extends Backend {
             $output_turn_off = $this->system("echo '' > $cvs_dir/CVSROOT/writers", $return_code_turn_off);
 
             if ($return_code_turn_off > 0) {
-               $this->log("Echo in /CVSROOT/writers returns: $output_turn_off", Backend::LOG_ERROR);
-               return false;
+                $this->log("Echo in /CVSROOT/writers returns: $output_turn_off", Backend::LOG_ERROR);
+                return false;
             }
 
             if (! $this->useCVSNT()) {

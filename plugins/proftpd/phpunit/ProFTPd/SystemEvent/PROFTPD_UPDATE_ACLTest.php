@@ -87,12 +87,12 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
              ->expects($this->any())
              ->method('getProjectByUnixName')
              ->will($this->returnCallback(function ($unix_name) use ($group_unix_name, $mixed_case_group_unix_name, $project, $mixed_case_project) {
-                 switch ($unix_name) {
+                switch ($unix_name) {
                     case $group_unix_name:
                         return $project;
                     case strtolower($mixed_case_group_unix_name):
                         return $mixed_case_project;
-                 }
+                }
              }));
 
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
@@ -112,12 +112,12 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
              ->expects($this->any())
              ->method('getUGroupSystemNameFor')
              ->will($this->returnCallback(function ($project, $permission) {
-                 switch ($permission) {
+                switch ($permission) {
                     case PermissionsManager::PERM_READ:
                         return 'gpig-ftp_readers';
                     case PermissionsManager::PERM_WRITE:
                         return 'gpig-ftp_writers';
-                 }
+                }
              }));
 
         $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
@@ -131,12 +131,12 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
              ->expects($this->any())
              ->method('getUGroupSystemNameFor')
              ->will($this->returnCallback(function ($project, $permission) {
-                 switch ($permission) {
+                switch ($permission) {
                     case PermissionsManager::PERM_READ:
                         return 'gpig-ftp_readers';
                     case PermissionsManager::PERM_WRITE:
                         return 'gpig-ftp_writers';
-                 }
+                }
              }));
 
         $this->acl_updater

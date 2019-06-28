@@ -19,17 +19,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
- class MediawikiVersionDao extends DataAccessObject {
+class MediawikiVersionDao extends DataAccessObject {
 
-     public function saveMediawikiVersionForProject($project_id, $version) {
-         $project_id = $this->da->escapeInt($project_id);
-         $version    = $this->da->quoteSmart($version);
+    public function saveMediawikiVersionForProject($project_id, $version) {
+        $project_id = $this->da->escapeInt($project_id);
+        $version    = $this->da->quoteSmart($version);
 
-         $sql = "REPLACE INTO plugin_mediawiki_version (project_id, mw_version)
+        $sql = "REPLACE INTO plugin_mediawiki_version (project_id, mw_version)
                  VALUES ($project_id, $version)";
 
-         return $this->update($sql);
-     }
+        return $this->update($sql);
+    }
 
     public function getVersionForProject($project_id) {
         $project_id = $this->da->escapeInt($project_id);

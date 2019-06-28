@@ -198,9 +198,9 @@ class Widget_ProjectPublicAreas extends Widget {
 
             list($host) = explode(':',$GLOBALS['sys_default_domain']);
             if ($GLOBALS['sys_disable_subdomains']) {
-            	$ftp_subdomain = "";
+                $ftp_subdomain = "";
             } else {
-            	$ftp_subdomain = $project->getUnixName() . ".";
+                $ftp_subdomain = $project->getUnixName() . ".";
             }
             $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
             $html .= '<i class="tuleap-services-ftp tuleap-services-widget"></i>';

@@ -95,21 +95,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         if ( $sort ) {
                 $ff = $this->report->getFormElementFactory();
-                foreach ($sort as $field_id => $properties) {
-                    if ($properties) {
-                        if ($field = $ff->getFormElementById($field_id)) {
-                            if ($field->canBeUsedToSortReport() && $field->userCanRead()) {
-                                $this->_sort[$field_id] = array(
-                                       'renderer_id '=> $this->id,
-                                       'field_id'    => $field_id,
-                                       'is_desc'     => $properties['is_desc'],
-                                       'rank'        => $properties['rank'],
-                                    );
-                                $this->_sort[$field_id]['field'] = $field;
-                            }
+            foreach ($sort as $field_id => $properties) {
+                if ($properties) {
+                    if ($field = $ff->getFormElementById($field_id)) {
+                        if ($field->canBeUsedToSortReport() && $field->userCanRead()) {
+                            $this->_sort[$field_id] = array(
+                                   'renderer_id '=> $this->id,
+                                   'field_id'    => $field_id,
+                                   'is_desc'     => $properties['is_desc'],
+                                   'rank'        => $properties['rank'],
+                                );
+                            $this->_sort[$field_id]['field'] = $field;
                         }
                     }
                 }
+            }
         } else if (!isset($this->report_session) || !$this->report_session->hasChanged()){
 
             if (!is_array($this->_sort)) {
@@ -1431,7 +1431,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function fetchAggregatesExtraColumns($extracolumn, $only_one_column, PFUser $current_user) {
         $html        = '';
         $inner_table = '<table><thead><tr><th></th></tr></thead></table>';
-       if ($extracolumn) {
+        if ($extracolumn) {
             $display_extracolumn = true;
             $classname = 'tracker_report_table_';
             if ($extracolumn === self::EXTRACOLUMN_MASSCHANGE && $this->report->getTracker()->userIsAdmin($current_user)) {
@@ -1860,7 +1860,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 $replaced_rank = $columns[$new_position]['rank'] + 1;   // rank of the element to shift right
                                 foreach ($columns as $id => $properties) {
                                     if ($properties['rank'] >= $replaced_rank && $id != $column_id) {
-                                       $columns[$id]['rank'] += 1;
+                                        $columns[$id]['rank'] += 1;
                                     }
                                 }
                                 $columns[$column_id]['rank'] = $replaced_rank;

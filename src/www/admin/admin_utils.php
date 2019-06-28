@@ -21,15 +21,15 @@
 
 function site_admin_header($params) {
     GLOBAL $HTML, $Language;
-	global $feedback;
-	$HTML->header($params);
-	echo html_feedback_top($feedback);
+    global $feedback;
+    $HTML->header($params);
+    echo html_feedback_top($feedback);
 }
 
 function site_admin_footer($vals=0) {
-	GLOBAL $HTML;
-	echo html_feedback_bottom($GLOBALS['feedback']);
-	$HTML->footer(array());
+    GLOBAL $HTML;
+    echo html_feedback_bottom($GLOBALS['feedback']);
+    $HTML->footer(array());
 }
 
 function site_admin_warnings(Tuleap\Admin\Homepage\NbUsersByStatus $nb_users_by_status) {

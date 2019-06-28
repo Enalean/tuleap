@@ -31,16 +31,16 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     var $artifact_type;
     var $href;
     
-	/**
-	 *  ArtifactRulesManagerHtml() - constructor
-	 *
-	 *  @param $artifact_type object
-	 */
-	function __construct(&$artifact_type_html, $href = '') {
-		parent::__construct();
+    /**
+     *  ArtifactRulesManagerHtml() - constructor
+     *
+     *  @param $artifact_type object
+     */
+    function __construct(&$artifact_type_html, $href = '') {
+        parent::__construct();
         $this->artifact_type = $artifact_type_html;
         $this->href          = $href;
-	}
+    }
     
     function saveRule($source, $source_value, $target, $target_values) {
         parent::saveRule($this->artifact_type->getId(), $source, $source_value, $target, $target_values);
@@ -308,7 +308,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $params = array();
         $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies');
         $params['help']    = 'tracker-v3.html#field-dependencies';
-		$this->artifact_type->adminHeader($params);
+        $this->artifact_type->adminHeader($params);
         $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies_title'));
     }
     

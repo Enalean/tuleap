@@ -28,7 +28,7 @@ require('www/project/export/access_logs_export.php');
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 if ( !$group_id ) {
-	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
+    exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
 }
 $project = ProjectManager::instance()->getProject($group_id);
 
@@ -63,19 +63,19 @@ if (isset($_REQUEST['SUBMIT'])) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=access_logs.csv');
 
-	if ($project->usesFile()) {
-    	export_file_logs($project, $period, $who);
-	}
+    if ($project->usesFile()) {
+        export_file_logs($project, $period, $who);
+    }
     if ($project->usesCVS()) {
-		export_cvs_logs($project, $period, $who);
+        export_cvs_logs($project, $period, $who);
     }
     if ($project->usesSVN()) {
-    	export_svn_logs($project, $period, $who);
+        export_svn_logs($project, $period, $who);
     }
-  	if ($project->usesWiki()) {
-    	export_wiki_pg_logs($project, $period, $who,0);
-    	export_wiki_att_logs($project, $period, $who);
-  	}
+    if ($project->usesWiki()) {
+        export_wiki_pg_logs($project, $period, $who,0);
+        export_wiki_att_logs($project, $period, $who);
+    }
     export_all_plugins_logs($project, $period, $who);
     exit;
 
@@ -130,33 +130,33 @@ print '
 
 switch($view) {
     case "monthly":
-    print '<P>';
-    filedownload_logs_daily( $project, $span*30.5, $who);
-    cvsaccess_logs_daily( $project, $span*30.5, $who);
-    svnaccess_logs_daily( $project, $span*30.5, $who);
-    wiki_logs_daily( $project, $span*30.5, $who);
-    wiki_attachments_logs_daily( $project, $span*30.5, $who);
-    plugins_logs_daily( $project, $span*30.5, $who);
+        print '<P>';
+        filedownload_logs_daily( $project, $span*30.5, $who);
+        cvsaccess_logs_daily( $project, $span*30.5, $who);
+        svnaccess_logs_daily( $project, $span*30.5, $who);
+        wiki_logs_daily( $project, $span*30.5, $who);
+        wiki_attachments_logs_daily( $project, $span*30.5, $who);
+        plugins_logs_daily( $project, $span*30.5, $who);
     break;
 
     case "weekly":
-    print '<P>';
-    filedownload_logs_daily( $project, $span*7, $who);
-    cvsaccess_logs_daily( $project, $span*7, $who);
-    svnaccess_logs_daily( $project, $span*7, $who);
-    wiki_logs_daily( $project, $span*7, $who);
-    wiki_attachments_logs_daily( $project, $span*7, $who);
-    plugins_logs_daily( $project, $span*7, $who);
+        print '<P>';
+        filedownload_logs_daily( $project, $span*7, $who);
+        cvsaccess_logs_daily( $project, $span*7, $who);
+        svnaccess_logs_daily( $project, $span*7, $who);
+        wiki_logs_daily( $project, $span*7, $who);
+        wiki_attachments_logs_daily( $project, $span*7, $who);
+        plugins_logs_daily( $project, $span*7, $who);
     break;
 
     case 'daily':
     default:
-    filedownload_logs_daily( $project, $span, $who);
-    cvsaccess_logs_daily( $project, $span, $who);
-    svnaccess_logs_daily( $project, $span, $who);
-    wiki_logs_daily( $project, $span, $who);
-    wiki_attachments_logs_daily( $project, $span, $who);
-    plugins_logs_daily( $project, $span, $who);
+        filedownload_logs_daily( $project, $span, $who);
+        cvsaccess_logs_daily( $project, $span, $who);
+        svnaccess_logs_daily( $project, $span, $who);
+        wiki_logs_daily( $project, $span, $who);
+        wiki_attachments_logs_daily( $project, $span, $who);
+        plugins_logs_daily( $project, $span, $who);
 }
 
 $purifier = Codendi_HTMLPurifier::instance();

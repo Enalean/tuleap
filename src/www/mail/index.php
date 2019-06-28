@@ -60,12 +60,12 @@ if ($group_id) {
               'help'=>'communication.html#mailing-lists',
                   'pv'   => isset($pv)?$pv:false);
     mail_header($params);
-	
-	if (user_isloggedin() && user_ismember($group_id)) {
-		$public_flag='0,1';
-	} else {
-		$public_flag='1';
-	}
+    
+    if (user_isloggedin() && user_ismember($group_id)) {
+        $public_flag='0,1';
+    } else {
+        $public_flag='1';
+    }
     $request = HTTPRequest::instance();
     if ($request->exist('action')) {
         if ($request->exist('id')) {
@@ -111,15 +111,15 @@ if ($group_id) {
     
         echo '<P>'.$Language->getText('mail_index','mail_list_via_gnu');
     
-            if ($pv) {
-                echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
-            } else {
-                echo "<TABLE width='100%'><TR><TD>";
-                echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
-                echo "</TD>";
-                echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
-                echo "</TR></TABLE>";
-            }
+        if ($pv) {
+            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
+        } else {
+            echo "<TABLE width='100%'><TR><TD>";
+            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
+            echo "</TD>";
+            echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+            echo "</TR></TABLE>";
+        }
     
         /*
             Put the result set (list of mailing lists for this group) into a column with folders

@@ -34,33 +34,33 @@ class Controler {
   /* protected */ var $_viewParams   = array();
   /* protected */ var $_actionParams = array();
 
-  function request() {
-  }
-
-  function viewsManagement() {
-    $className = static::class.'Views';
-    if (! class_exists($className)) {
-        throw new LogicException(sprintf('View class %s does not exist, nothing can be displayed', $className));
+    function request() {
     }
-    $wv = new $className($this, $this->gid, $this->view, $this->_viewParams);
-    return $wv->display($this->view);
-  }
 
-  function actionsManagement() {
-    $className = static::class.'Actions';
-    if (! class_exists($className)) {
-        throw new LogicException(sprintf('Action class %s does not exist, nothing can be processed', $className));
+    function viewsManagement() {
+        $className = static::class.'Views';
+        if (! class_exists($className)) {
+            throw new LogicException(sprintf('View class %s does not exist, nothing can be displayed', $className));
+        }
+        $wv = new $className($this, $this->gid, $this->view, $this->_viewParams);
+        return $wv->display($this->view);
     }
-    $wa = new $className($this, $this->gid);
-    $wa->process($this->action, $this->_actionParams);
-  }
 
-  function process() {
-    $this->request();
+    function actionsManagement() {
+        $className = static::class.'Actions';
+        if (! class_exists($className)) {
+            throw new LogicException(sprintf('Action class %s does not exist, nothing can be processed', $className));
+        }
+        $wa = new $className($this, $this->gid);
+        $wa->process($this->action, $this->_actionParams);
+    }
 
-    if($this->action)
-      $this->actionsManagement();
+    function process() {
+        $this->request();
+
+        if($this->action)
+        $this->actionsManagement();
     
-    return $this->viewsManagement();
-  }
+        return $this->viewsManagement();
+    }
 }

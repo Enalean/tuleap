@@ -34,9 +34,9 @@ class CrossReferenceFactory {
      * Note that we need a valid reference parameter 
      */
     function __construct($entity_id,$entity_type,$entity_group_id) {
-       $this->entity_id=$entity_id;
-       $this->entity_type=$entity_type;
-       $this->entity_gid=$entity_group_id;
+        $this->entity_id=$entity_id;
+        $this->entity_type=$entity_type;
+        $this->entity_gid=$entity_group_id;
     }
     
     /**
@@ -257,18 +257,18 @@ class CrossReferenceFactory {
                             $span.= $ref;
                         }
                         if ($with_links && $can_delete && !$condensed) {
-                           $params = $this->getParams($currRef);
-                           $span .= '<a class="delete_ref" 
+                            $params = $this->getParams($currRef);
+                            $span .= '<a class="delete_ref" 
                                            href="/reference/rmreference.php'. $params .'"
                                            onClick="return delete_ref(\''. $id .'\', \''. $message .'\');">';
-                           $span .= $GLOBALS['HTML']->getImage(
+                            $span .= $GLOBALS['HTML']->getImage(
                                'ic/cross.png', 
                                array( 
                                    'alt'   => $Language->getText('cross_ref_fact_include','delete'),
                                    'title' => $Language->getText('cross_ref_fact_include','delete') 
                                )
-                           );
-                           $span .= '</a>';
+                            );
+                            $span .= '</a>';
                         }
                         $spans[] = $span;
                     }
@@ -352,8 +352,8 @@ class CrossReferenceFactory {
             $source_position = 0;
             foreach ($this->source_refs_datas as $source_refs) {
                 if ($this->target_refs_datas[$i]->isCrossReferenceWith($source_refs)) {
-                   $is_cross = true;
-                   $source_position = $j;
+                    $is_cross = true;
+                    $source_position = $j;
                 }
                 $j++;
             }
@@ -379,7 +379,7 @@ class CrossReferenceFactory {
             // Check if the ref is cross referenced (means referenced by a target)
             foreach ($this->target_refs_datas as $target_refs) {
                 if ($this->source_refs_datas[$i]->isCrossReferenceWith($target_refs)) {
-                   $is_cross = true;
+                    $is_cross = true;
                 }
             }
             if ($is_cross) {

@@ -24,54 +24,54 @@ function html_feedback_top($feedback) {
 }
 
 function html_feedback_bottom($feedback) {
-  echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
+    echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
 function html_a_group($grp) {
-	$pm = ProjectManager::instance();
+    $pm = ProjectManager::instance();
     print '<A /project/?group_id='.$grp.'>' . $pm->getProject($grp)->getPublicName() . '</A>';
 }
 
 function html_blankimage($height,$width) {
-	return html_image('blank.png',array('height'=>$height,'width'=>$width,'alt'=>' '));
+    return html_image('blank.png',array('height'=>$height,'width'=>$width,'alt'=>' '));
 }
 
 function html_image($src,$args,$display=1) {
-	GLOBAL $img_size;
-	$return   = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
+    GLOBAL $img_size;
+    $return   = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
     $purifier = Codendi_HTMLPurifier::instance();
     foreach ($args as $k => $v) {
         $return .= ' '.$purifier->purify($k).'="'.$purifier->purify($v).'"';
     }
 
-	// ## insert a border tag if there isn't one
-	if (!isset($args['border']) || !$args['border']) $return .= (" border=0");
+    // ## insert a border tag if there isn't one
+    if (!isset($args['border']) || !$args['border']) $return .= (" border=0");
 
-	// ## if no height AND no width tag, insert em both
-	if ((!isset($args['height']) || !$args['height']) &&
+    // ## if no height AND no width tag, insert em both
+    if ((!isset($args['height']) || !$args['height']) &&
             (!isset($args['width'])  || !$args['width'])) {
-		/* Check to see if we've already fetched the image data */
-		if($img_size){
-                    if((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
-				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
-			}
-		} else {
-			if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
-				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
-			}
-		}
-		$return .= ' width="' . $img_size[$src][0].'" height="'.$img_size[$src][1].'"';
-	}
+     /* Check to see if we've already fetched the image data */
+        if($img_size){
+            if((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
+                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+            }
+        } else {
+            if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
+                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
+            }
+        }
+        $return .= ' width="' . $img_size[$src][0].'" height="'.$img_size[$src][1].'"';
+    }
 
-	// ## insert alt tag if there isn't one
-	if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'.$purifier->purify($src).'"';
+    // ## insert alt tag if there isn't one
+    if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'.$purifier->purify($src).'"';
 
-	$return .= ('>');
-	if ($display) {
-		print $return;
-	} else {
-		return $return;
-	}
+    $return .= ('>');
+    if ($display) {
+        print $return;
+    } else {
+        return $return;
+    }
 }
 
 function html_get_timezone_popup($selected = 0) {
@@ -84,9 +84,9 @@ function html_get_timezone_popup($selected = 0) {
 /**
  * html_get_language_popup() - Pop up box of supported languages
  *
- * @param		object	BaseLanguage object
- * @param		string	The title of the popup box
- * @param		string	Which element of the box is to be selected
+ * @param        object    BaseLanguage object
+ * @param        string    The title of the popup box
+ * @param        string    Which element of the box is to be selected
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
     $hp   = Codendi_HTMLPurifier::instance();
@@ -106,88 +106,88 @@ function html_get_language_popup ($Language,$title='language_id',$selected='xzxz
 
 function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true, $id=null, $class=null, $cellspacing=1, $cellpadding=2) {
 
-	/*
-		Takes an array of titles and builds
-		The first row of a new table
+    /*
+        Takes an array of titles and builds
+        The first row of a new table
 
-		Optionally takes a second array of links for the titles
-	*/
+        Optionally takes a second array of links for the titles
+    */
     $purifier = Codendi_HTMLPurifier::instance();
-	$return   = '
+    $return   = '
        <TABLE data-test="table-test"';
         if ($full_width) $return.='WIDTH="100%" ';
         if($id) $return .='id="'.$purifier->purify($id).'"';
         if($class) $return .=' class="'.$purifier->purify($class).'" ';
-	$return .= 'BORDER="0" CELLSPACING="'. $purifier->purify($cellspacing) .'" CELLPADDING="'. $purifier->purify($cellpadding) .'">
+    $return .= 'BORDER="0" CELLSPACING="'. $purifier->purify($cellspacing) .'" CELLPADDING="'. $purifier->purify($cellpadding) .'">
 		<TR class="boxtable">';
 
-	if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';
-	$count=count($title_arr);
-	if ($links_arr) {
-		for ($i=0; $i<$count; $i++) {
+    if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';
+    $count=count($title_arr);
+    if ($links_arr) {
+        for ($i=0; $i<$count; $i++) {
             if (empty($links_arr[$i])) {
                 $return .= '<td class="boxtitle">' . $purifier->purify($title_arr[$i]) . '</td>';
             } else {
                 $return .= '
 			        <TD class="boxtitle"><a class=sortbutton href="' . $links_arr[$i] . '">' . $purifier->purify($title_arr[$i]) . '</A></TD>';
             }
-		}
-	} else {
-		for ($i=0; $i<$count; $i++) {
-			$return .= '
+        }
+    } else {
+        for ($i=0; $i<$count; $i++) {
+            $return .= '
 			<TD class="boxtitle">'.$purifier->purify($title_arr[$i]).'</TD>';
-		}
-	}
-	return $return.'</TR>';
+        }
+    }
+    return $return.'</TR>';
 }
 
 //deprecated
 function util_get_alt_row_color ($i) {
-	return html_get_alt_row_color ($i);
+    return html_get_alt_row_color ($i);
 }
 
 //function util_get_alt_row_color ($i) {
 function html_get_alt_row_color ($i) {
-	GLOBAL $HTML;
-	if ($i % 2 == 0) {
-		return 'boxitem';
-	} else {
-		return 'boxitemalt';
-	}
+    GLOBAL $HTML;
+    if ($i % 2 == 0) {
+        return 'boxitem';
+    } else {
+        return 'boxitemalt';
+    }
 }
 
 function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0) {
-	/*
-		Takes one array, with the first array being the "id" or value
-		and the array being the text you want displayed
+    /*
+        Takes one array, with the first array being the "id" or value
+        and the array being the text you want displayed
 
-		The second parameter is the name you want assigned to this form element
+        The second parameter is the name you want assigned to this form element
 
-		The third parameter is optional. Pass the value of the item that should be checked
-	*/
+        The third parameter is optional. Pass the value of the item that should be checked
+    */
 
     $purifier = Codendi_HTMLPurifier::instance();
-	$return   = '
+    $return   = '
 		<SELECT NAME="'. $purifier->purify($select_name) .'" id="'. $purifier->purify($select_name) .'">';
 
-        foreach ($vals as $value => $label) {
-		if ( $samevals ) {
-			$return .= '<OPTION VALUE="' . $purifier->purify($label) . '""';
-			if ($label == $checked_val) {
-				$return .= ' SELECTED';
-			}
-		} else {
-			$return .= '<OPTION VALUE="' . $purifier->purify($value) .'"';
-			if ($value == $checked_val) {
-				$return .= ' SELECTED';
-			}
-		}
-		$return .= '>'. $purifier->purify($label) .'</OPTION>';
-	}
-	$return .= '
+    foreach ($vals as $value => $label) {
+        if ( $samevals ) {
+            $return .= '<OPTION VALUE="' . $purifier->purify($label) . '""';
+            if ($label == $checked_val) {
+                $return .= ' SELECTED';
+            }
+        } else {
+            $return .= '<OPTION VALUE="' . $purifier->purify($value) .'"';
+            if ($value == $checked_val) {
+                $return .= ' SELECTED';
+            }
+        }
+        $return .= '>'. $purifier->purify($label) .'</OPTION>';
+    }
+    $return .= '
 		</SELECT>';
 
-	return $return;
+    return $return;
 }
 
 /**
@@ -212,126 +212,126 @@ function html_build_select_box_from_arrays (
         $isAValueSelected = false;
         $hp               = Codendi_HTMLPurifier::instance();
 
-	/*
+    /*
 
-		The infamous '100 row' has to do with the
-			SQL Table joins done throughout all this code.
-		There must be a related row in users, categories, etc, and by default that
-			row is 100, so almost every pop-up box has 100 as the default
-		Most tables in the database should therefore have a row with an id of 100 in it
-			so that joins are successful
+        The infamous '100 row' has to do with the
+            SQL Table joins done throughout all this code.
+        There must be a related row in users, categories, etc, and by default that
+            row is 100, so almost every pop-up box has 100 as the default
+        Most tables in the database should therefore have a row with an id of 100 in it
+            so that joins are successful
 
-		There is now another infamous row called the Any row. It is not
-		in any table as opposed to 100. it's just here as a convenience mostly
-		when using select boxes in queries (bug, task,...). The 0 value is reserved
-		for Any and must not be used in any table.
+        There is now another infamous row called the Any row. It is not
+        in any table as opposed to 100. it's just here as a convenience mostly
+        when using select boxes in queries (bug, task,...). The 0 value is reserved
+        for Any and must not be used in any table.
 
-		Params:
+        Params:
 
-		Takes two arrays, with the first array being the "id" or value
-		and the other array being the text you want displayed
+        Takes two arrays, with the first array being the "id" or value
+        and the other array being the text you want displayed
 
-		The third parameter is the name you want assigned to this form element
+        The third parameter is the name you want assigned to this form element
 
-		The fourth parameter is optional. Pass the value of the item that should be checked
+        The fourth parameter is optional. Pass the value of the item that should be checked
 
-		The fifth parameter is an optional boolean - whether or not to show the '100 row'
+        The fifth parameter is an optional boolean - whether or not to show the '100 row'
 
-		The sixth parameter is optional - what to call the '100 row' defaults to none
-		The 7th parameter is an optional boolean - whether or not to show the 'Any row'
+        The sixth parameter is optional - what to call the '100 row' defaults to none
+        The 7th parameter is an optional boolean - whether or not to show the 'Any row'
 
-		The 8th parameter is optional - what to call the 'Any row' defaults to nAny	*/
+        The 8th parameter is optional - what to call the 'Any row' defaults to nAny    */
 
         // Position default values for special menu items
-        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
-        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
-        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
+    if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+    if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+    if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
-	if ( is_array($checked_val) ) {
-		$return .= '
+    if ( is_array($checked_val) ) {
+        $return .= '
 			<SELECT id="'.$select_name.'" NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
-	} else {
-		$return .= '
+    } else {
+        $return .= '
 			<SELECT id="'.$select_name.'" NAME="'.$select_name.'">';
-	}
+    }
 
-	/*
-		Put in the Unchanged box
-	*/
-	if ($show_unchanged) {
-	  $return .= '<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
-      $isAValueSelected = true;
-	}
+    /*
+        Put in the Unchanged box
+    */
+    if ($show_unchanged) {
+        $return .= '<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
+         $isAValueSelected = true;
+    }
 
-	//we don't always want the default any  row shown
-	if ($show_any) {
-		if ( is_array($checked_val) ) {
-			if ( in_array(0,$checked_val) ) {
-				$selected = "SELECTED";
+    //we don't always want the default any  row shown
+    if ($show_any) {
+        if ( is_array($checked_val) ) {
+            if ( in_array(0,$checked_val) ) {
+                $selected = "SELECTED";
                 $isAValueSelected = true;
-			} else {
-				$selected = "";
-			}
-		} else {
-	    	$selected = ( $checked_val == 0 ? 'SELECTED':'');
+            } else {
+                $selected = "";
+            }
+        } else {
+            $selected = ( $checked_val == 0 ? 'SELECTED':'');
             if ($checked_val == 0) {
                 $isAValueSelected = true;
             }
-	    }
-	    $return .= '<OPTION VALUE="0" '.$selected.'>'.$hp->purify($text_any, $purify_level).'</OPTION>';
-	}
+        }
+        $return .= '<OPTION VALUE="0" '.$selected.'>'.$hp->purify($text_any, $purify_level).'</OPTION>';
+    }
 
-	//we don't always want the default 100 row shown
-	if ($show_100) {
+    //we don't always want the default 100 row shown
+    if ($show_100) {
+        if ( is_array($checked_val) ) {
+            if ( in_array(100,$checked_val) ) {
+                $selected = "SELECTED";
+                $isAValueSelected = true;
+            } else {
+                $selected = "";
+            }
+        } else {
+            $selected = ( $checked_val == 100 ? 'SELECTED':'');
+            if ($checked_val == 100) {
+                $isAValueSelected = true;
+            }
+        }
+        $return .= '<OPTION VALUE="100" '.$selected.'>'.$hp->purify($text_100,$purify_level).'</OPTION>';
+    }
+
+    $rows=count($vals);
+    if (count($texts) != $rows) {
+        $return .= 'ERROR - uneven row counts';
+    }
+
+    for ($i=0; $i<$rows; $i++) {
+        //  uggh - sorry - don't show the 100 row and Any row
+        //  if it was shown above, otherwise do show it
+        if ( (($vals[$i] != '100') && ($vals[$i] != '0')) ||
+        ($vals[$i] == '100' && !$show_100) ||
+        ($vals[$i] == '0' && !$show_any) ) {
+            $return .= '
+				<OPTION VALUE="'.$hp->purify($vals[$i]).'"';
             if ( is_array($checked_val) ) {
-                if ( in_array(100,$checked_val) ) {
-                    $selected = "SELECTED";
+                if ( in_array($vals[$i],$checked_val) ) {
+                    $return .= ' SELECTED';
                     $isAValueSelected = true;
-                } else {
-                    $selected = "";
                 }
             } else {
-                $selected = ( $checked_val == 100 ? 'SELECTED':'');
-                if ($checked_val == 100) {
+                if ($vals[$i] == $checked_val) {
+                    $return .= ' SELECTED';
                     $isAValueSelected = true;
                 }
             }
-	    $return .= '<OPTION VALUE="100" '.$selected.'>'.$hp->purify($text_100,$purify_level).'</OPTION>';
-	}
-
-	$rows=count($vals);
-	if (count($texts) != $rows) {
-		$return .= 'ERROR - uneven row counts';
-	}
-
-	for ($i=0; $i<$rows; $i++) {
-	    //  uggh - sorry - don't show the 100 row and Any row
-	    //  if it was shown above, otherwise do show it
-	    if ( (($vals[$i] != '100') && ($vals[$i] != '0')) ||
-		 ($vals[$i] == '100' && !$show_100) ||
-		 ($vals[$i] == '0' && !$show_any) ) {
-			$return .= '
-				<OPTION VALUE="'.$hp->purify($vals[$i]).'"';
-			if ( is_array($checked_val) ) {
-				if ( in_array($vals[$i],$checked_val) ) {
-					$return .= ' SELECTED';
-                    $isAValueSelected = true;
-				}
-			} else {
-				if ($vals[$i] == $checked_val) {
-					$return .= ' SELECTED';
-                    $isAValueSelected = true;
-				}
-			}
-			$return .= '>'.$hp->purify($texts[$i],$purify_level).'</OPTION>';
-		}
-	}
+            $return .= '>'.$hp->purify($texts[$i],$purify_level).'</OPTION>';
+        }
+    }
     if ($show_unknown_value && ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected)) {
         $return .= '<OPTION VALUE="'.$hp->purify($checked_val).'" SELECTED>'.$hp->purify($Language->getText('include_html','unknown_value'),$purify_level).'</OPTION>';
     }
     $return .= '
 		</SELECT>';
-	return $return;
+    return $return;
 }
 
 function html_build_select_box (
@@ -348,25 +348,25 @@ function html_build_select_box (
     $show_unknown_value = true
 ) {
         global $Language;
-	/*
-		Takes a result set, with the first column being the "id" or value
-		and the second column being the text you want displayed
+    /*
+        Takes a result set, with the first column being the "id" or value
+        and the second column being the text you want displayed
 
-		The second parameter is the name you want assigned to this form element
+        The second parameter is the name you want assigned to this form element
 
-		The third parameter is optional. Pass the value of the item that should be checked
+        The third parameter is optional. Pass the value of the item that should be checked
 
-		The fourth parameter is an optional boolean - whether or not to show the '100 row'
+        The fourth parameter is an optional boolean - whether or not to show the '100 row'
 
-		The fifth parameter is optional - what to call the '100 row' defaults to none
-	*/
+        The fifth parameter is optional - what to call the '100 row' defaults to none
+    */
 
         // Position default values for special menu items
-        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
-        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
-        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
+    if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+    if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+    if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
-	return html_build_select_box_from_arrays(
+    return html_build_select_box_from_arrays(
             util_result_column_to_array($result,0),
             util_result_column_to_array($result,1),
             $name,
@@ -395,128 +395,128 @@ function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$
 }
 function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {
         global $Language;
-	/*
-		Takes a result set, with the first column being the "id" or value
-		and the second column being the text you want displayed
+    /*
+        Takes a result set, with the first column being the "id" or value
+        and the second column being the text you want displayed
 
-		The second parameter is the name you want assigned to this form element
+        The second parameter is the name you want assigned to this form element
 
-		The third parameter is an array of checked values;
+        The third parameter is an array of checked values;
 
-		The fourth parameter is optional. Pass the size of this box
+        The fourth parameter is optional. Pass the size of this box
 
-		Fifth to eigth params determine whether to show None and Any
+        Fifth to eigth params determine whether to show None and Any
 
-		Ninth param determine whether to show numeric values next to
-		the menu label (default true for backward compatibility
-	*/
+        Ninth param determine whether to show numeric values next to
+        the menu label (default true for backward compatibility
+    */
         $hp = Codendi_HTMLPurifier::instance();
 
         // Position default values for special menu items
-        if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
-        if ($text_any == '') { $text_any = $Language->getText('global','any'); }
-        if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
+    if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
+    if ($text_any == '') { $text_any = $Language->getText('global','any'); }
+    if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
         $disabled = $disabled ? 'disabled="disabled"' : '';
 
-	$checked_count=count($checked_array);
+    $checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
     $id = str_replace('[]', '', $name);
-	$return = '
+    $return = '
 		<SELECT NAME="'.$hp->purify($name).'" id="'.$hp->purify($id).'" MULTIPLE SIZE="'.$hp->purify($size).'" '. $disabled .'>';
 
-	/*
-		Put in the Unchanged box
-	*/
-	if ($show_unchanged)
-	  $return .= "\n".'<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged,$purify_level).'</OPTION>';
+    /*
+        Put in the Unchanged box
+    */
+    if ($show_unchanged)
+    $return .= "\n".'<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged,$purify_level).'</OPTION>';
 
-	/*
-		Put in the Any box
-	*/
-	if ($show_any) {
-	    $return .= '
+    /*
+        Put in the Any box
+    */
+    if ($show_any) {
+        $return .= '
 		<OPTION VALUE="0"';
-	    for ($j=0; $j<$checked_count; $j++) {
-		if ($checked_array[$j] == '0') {
-		    $return .= ' SELECTED';
-		}
-	    }
-	    $return .= '>'.$hp->purify($text_any,$purify_level).'</OPTION>';
-	}
+        for ($j=0; $j<$checked_count; $j++) {
+            if ($checked_array[$j] == '0') {
+                    $return .= ' SELECTED';
+            }
+        }
+        $return .= '>'.$hp->purify($text_any,$purify_level).'</OPTION>';
+    }
 
-	/*
-		Put in the default NONE box
-	*/
-	if ($show_100) {
-	    $return .= '
+    /*
+        Put in the default NONE box
+    */
+    if ($show_100) {
+        $return .= '
 		<OPTION VALUE="100"';
-	    for ($j=0; $j<$checked_count; $j++) {
-		if ($checked_array[$j] == '100') {
-		    $return .= ' SELECTED';
-		}
-	    }
-	    $return .= '>'.$hp->purify($text_100,$purify_level).'</OPTION>';
-	}
+        for ($j=0; $j<$checked_count; $j++) {
+            if ($checked_array[$j] == '100') {
+                    $return .= ' SELECTED';
+            }
+        }
+        $return .= '>'.$hp->purify($text_100,$purify_level).'</OPTION>';
+    }
 
-	foreach($array as $row) {
+    foreach($array as $row) {
         $val = $row['value'];
         if ($val != '100') {
-			$return .= '
+            $return .= '
 				<OPTION VALUE="'.$hp->purify($val).'"';
-			/*
-				Determine if it's checked
-			*/
-			for ($j=0; $j<$checked_count; $j++) {
-				if ($val == $checked_array[$j]) {
-					$return .= ' SELECTED';
-				}
-			}
-			$return .= '>'.$hp->purify(($show_value?$val.'-':'').substr($row['text'],0,60),$purify_level). '</OPTION>';
-		}
-	}
-	$return .= '
+            /*
+                Determine if it's checked
+            */
+            for ($j=0; $j<$checked_count; $j++) {
+                if ($val == $checked_array[$j]) {
+                    $return .= ' SELECTED';
+                }
+            }
+            $return .= '>'.$hp->purify(($show_value?$val.'-':'').substr($row['text'],0,60),$purify_level). '</OPTION>';
+        }
+    }
+    $return .= '
 		</SELECT>';
     return $return;
 }
 
 function html_buildpriority_select_box ($name='priority', $checked_val='5') {
-	/*
-		Return a select box of standard priorities.
-		The name of this select box is optional and so is the default checked value
-	*/
-  global $Language;
-  $purifier = Codendi_HTMLPurifier::instance();
-	?>
-	<SELECT NAME="<?php echo $purifier->purify($name); ?>">
+    /*
+        Return a select box of standard priorities.
+        The name of this select box is optional and so is the default checked value
+    */
+    global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
+    ?>
+    <SELECT NAME="<?php echo $purifier->purify($name); ?>">
     <OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - <?php echo $Language->getText('include_html','lowest'); ?></OPTION>
-	<OPTION VALUE="2"<?php if ($checked_val=="2") {echo " SELECTED";} ?>>2</OPTION>
-	<OPTION VALUE="3"<?php if ($checked_val=="3") {echo " SELECTED";} ?>>3</OPTION>
-	<OPTION VALUE="4"<?php if ($checked_val=="4") {echo " SELECTED";} ?>>4</OPTION>
-	<OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - <?php echo $Language->getText('include_html','medium'); ?></OPTION>
-	<OPTION VALUE="6"<?php if ($checked_val=="6") {echo " SELECTED";} ?>>6</OPTION>
-	<OPTION VALUE="7"<?php if ($checked_val=="7") {echo " SELECTED";} ?>>7</OPTION>
-	<OPTION VALUE="8"<?php if ($checked_val=="8") {echo " SELECTED";} ?>>8</OPTION>
-	<OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - <?php echo $Language->getText('include_html','highest'); ?></OPTION>
-	</SELECT>
-<?php
+    <OPTION VALUE="2"<?php if ($checked_val=="2") {echo " SELECTED";} ?>>2</OPTION>
+    <OPTION VALUE="3"<?php if ($checked_val=="3") {echo " SELECTED";} ?>>3</OPTION>
+    <OPTION VALUE="4"<?php if ($checked_val=="4") {echo " SELECTED";} ?>>4</OPTION>
+    <OPTION VALUE="5"<?php if ($checked_val=="5") {echo " SELECTED";} ?>>5 - <?php echo $Language->getText('include_html','medium'); ?></OPTION>
+    <OPTION VALUE="6"<?php if ($checked_val=="6") {echo " SELECTED";} ?>>6</OPTION>
+    <OPTION VALUE="7"<?php if ($checked_val=="7") {echo " SELECTED";} ?>>7</OPTION>
+    <OPTION VALUE="8"<?php if ($checked_val=="8") {echo " SELECTED";} ?>>8</OPTION>
+    <OPTION VALUE="9"<?php if ($checked_val=="9") {echo " SELECTED";} ?>>9 - <?php echo $Language->getText('include_html','highest'); ?></OPTION>
+    </SELECT>
+    <?php
 
 }
 
 function html_buildcheckboxarray($options,$name,$checked_array) {
-	$option_count  = count($options);
-	$checked_count = count($checked_array);
+    $option_count  = count($options);
+    $checked_count = count($checked_array);
     $purifier      = Codendi_HTMLPurifier::instance();
 
-	for ($i=1; $i<=$option_count; $i++) {
-		echo '
+    for ($i=1; $i<=$option_count; $i++) {
+        echo '
 			<BR><INPUT type="checkbox" name="'.$purifier->purify($name).'" value="'.$i.'"';
-		for ($j=0; $j<$checked_count; $j++) {
-			if ($i == $checked_array[$j]) {
-				echo ' CHECKED';
-			}
-		}
-		echo '> '.$purifier->purify($options[$i]);
-	}
+        for ($j=0; $j<$checked_count; $j++) {
+            if ($i == $checked_array[$j]) {
+                echo ' CHECKED';
+            }
+        }
+        echo '> '.$purifier->purify($options[$i]);
+    }
 }
 
 /*!     @function site_user_header
@@ -533,12 +533,12 @@ function site_header($params) {
     */
 
     if (isset($params['group'])) {
-	  $pm = ProjectManager::instance();
-      $project=$pm->getProject($params['group']);
-	  if ($project->isTemplate()) {
-	    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout','template_warning'));
-	  }
-	}
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($params['group']);
+        if ($project->isTemplate()) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout','template_warning'));
+        }
+    }
     echo $HTML->header($params);
     echo html_feedback_top($GLOBALS['feedback']);
 }
@@ -550,65 +550,65 @@ function site_footer($params) {
 }
 
 
-/*! 	@function site_project_header
-	@abstract everything required to handle security and state checks for a project web page
-	@param params array() must contain $toptab and $group
-	@result text - echos HTML to the screen directly
+/*!     @function site_project_header
+    @abstract everything required to handle security and state checks for a project web page
+    @param params array() must contain $toptab and $group
+    @result text - echos HTML to the screen directly
 */
 function site_project_header($params) {
-  GLOBAL $HTML, $Language;
+    GLOBAL $HTML, $Language;
 
-	/*
-		Check to see if active
-		Check to see if private (if private check if user_ismember)
-	*/
+    /*
+        Check to see if active
+        Check to see if private (if private check if user_ismember)
+    */
 
-	$group_id=$params['group'];
+    $group_id=$params['group'];
 
-	//get the project object
-	$pm = ProjectManager::instance();
+    //get the project object
+    $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
 
-	//group doesn't exist
-	if ($project->isError()) {
-		exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));
-	}
+    //group doesn't exist
+    if ($project->isError()) {
+        exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));
+    }
 
-	//group is private
-	if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
-		//if its a private group, you must be a member of that group
-		session_require(array('group'=>$group_id));
-	}
+    //group is private
+    if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
+     //if its a private group, you must be a member of that group
+        session_require(array('group'=>$group_id));
+    }
 
-	//for dead projects must be member of admin project
-	if (!$project->isActive()) {
+    //for dead projects must be member of admin project
+    if (!$project->isActive()) {
         HTTPRequest::instance()->checkUserIsSuperUser();
-	}
+    }
 
-        if (isset($params['pv']) && $params['pv'] != 0) {
-            // Printer version: no right column, no tabs...
-            echo $HTML->pv_header($params);
-        } else {
-            site_header($params);
-        }
+    if (isset($params['pv']) && $params['pv'] != 0) {
+        // Printer version: no right column, no tabs...
+        echo $HTML->pv_header($params);
+    } else {
+        site_header($params);
+    }
 }
 
 /*!     @function site_project_footer
-	@abstract currently a simple shim that should be on every project page,
-		rather than a direct call to site_footer() or theme_footer()
-	@param params array() empty
-	@result text - echos HTML to the screen directly
+    @abstract currently a simple shim that should be on every project page,
+        rather than a direct call to site_footer() or theme_footer()
+    @param params array() empty
+    @result text - echos HTML to the screen directly
 */
 function site_project_footer($params) {
-	GLOBAL $HTML;
+    GLOBAL $HTML;
 
-        if (isset($params['pv']) && $params['pv'] != 0) {
-            // Printer version
-            echo $HTML->pv_footer($params);
-        } else {
-            echo html_feedback_bottom($GLOBALS['feedback']);
-            echo $HTML->footer($params);
-        }
+    if (isset($params['pv']) && $params['pv'] != 0) {
+        // Printer version
+        echo $HTML->pv_footer($params);
+    } else {
+        echo html_feedback_bottom($GLOBALS['feedback']);
+        echo $HTML->footer($params);
+    }
 }
 
 
@@ -652,17 +652,17 @@ function html_trash_link_fontawesome($link, $warn)
  *  @param value: initial value
  *  @param ro: if true, the field is read-only
  *
- *	@return	string
+ *    @return    string
  */
 function html_select_operator($name='', $value='', $ro=false) {
     if ($ro) {
         $html = htmlspecialchars($value);
     } else {
         $html = '<select name="'.$name.'">'.
-			'<option value="1"'.(($value == '1') ? 'selected="selected"':'').'>&gt;</option>'.
-			'<option value="0"'.(($value == '0') ? 'selected="selected"':'').'>=</option>'.
-			'<option value="-1"'.(($value == '-1') ? 'selected="selected"':'').'>&lt;</option>'.
-			'</select>';
+        '<option value="1"'.(($value == '1') ? 'selected="selected"':'').'>&gt;</option>'.
+        '<option value="0"'.(($value == '0') ? 'selected="selected"':'').'>=</option>'.
+        '<option value="-1"'.(($value == '-1') ? 'selected="selected"':'').'>&lt;</option>'.
+        '</select>';
     }
     return($html);
 }
@@ -675,7 +675,7 @@ function html_select_operator($name='', $value='', $ro=false) {
  *  @param maxlength: the max field size
  *  @param ro: if true, the field is read-only
  *
- *	@return	string
+ *    @return    string
  */
 function html_field_date($field_name='',
                          $value='',

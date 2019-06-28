@@ -136,8 +136,8 @@ function MangleXmlIdentifier($str) {
 /**
  * Generates a valid URL for a given Wiki pagename.
  * @param mixed $pagename If a string this will be the name of the Wiki page to link to.
- * 			  If a WikiDB_Page object function will extract the name to link to.
- * 			  If a WikiDB_PageRevision object function will extract the name to link to.
+ *               If a WikiDB_Page object function will extract the name to link to.
+ *               If a WikiDB_PageRevision object function will extract the name to link to.
  * @param array $args 
  * @param bool $get_abs_url Default value is false.
  * @return string The absolute URL to the page passed as $pagename.
@@ -163,21 +163,21 @@ function WikiURL($pagename, $args = '', $get_abs_url = false) {
         }
     }
     if (!$get_abs_url and DEBUG and $GLOBALS['request']->getArg('start_debug')) {
-    	if (!$args)
-    	    $args = 'start_debug=' . $GLOBALS['request']->getArg('start_debug');
-    	elseif (is_array($args))
-    	    $args['start_debug'] = $GLOBALS['request']->getArg('start_debug');
-    	else 
-    	    $args .= '&start_debug=' . $GLOBALS['request']->getArg('start_debug');
+        if (!$args)
+            $args = 'start_debug=' . $GLOBALS['request']->getArg('start_debug');
+        elseif (is_array($args))
+            $args['start_debug'] = $GLOBALS['request']->getArg('start_debug');
+        else 
+            $args .= '&start_debug=' . $GLOBALS['request']->getArg('start_debug');
     }
     if (is_array($args)) {
         $enc_args = array();
         foreach ($args as $key => $val) {
             // avoid default args
             if (USE_PATH_INFO and $key == 'pagename')
-            	; 
+                ; 
             elseif ($key == 'action' and $val == 'browse')
-        	;
+            ;
             elseif (!is_array($val)) // ugly hack for getURLtoSelf() which also takes POST vars
               $enc_args[] = urlencode($key) . '=' . urlencode($val);
         }
@@ -650,7 +650,7 @@ class WikiPageName
             $this->shortName = $name;
             if (strstr($name, ':')) {
                 list($moniker, $this->shortName) = preg_split ("/:/D", $name, 2);
-	  	$map = getInterwikiMap(); // allow overrides to custom maps
+                $map = getInterwikiMap(); // allow overrides to custom maps
                 if (isset($map->_map[$moniker])) {
                     $url = $map->_map[$moniker];
                     if (strstr($url, '%s'))
@@ -670,13 +670,13 @@ class WikiPageName
                         list($name, $dummy) = explode('?', $name, 2);
                 }
             }
-	    // FIXME: We should really fix the cause for "/PageName" in the WikiDB
+        // FIXME: We should really fix the cause for "/PageName" in the WikiDB
             if ($name == '' or $name[0] == SUBPAGE_SEPARATOR) {
                 if ($basename)
                     $name = $this->_pagename($basename) . $name;
                 else {
                     $name = $this->_normalize_bad_pagename($name);
-		    $this->shortName = $name;
+                    $this->shortName = $name;
                 }
             }
         }
@@ -690,7 +690,7 @@ class WikiPageName
     }
 
     function getName() {
-    	return $this->name;
+        return $this->name;
     }
     
     function getParent() {
@@ -720,20 +720,20 @@ class WikiPageName
     }
     
     function _pagename($page) {
-	if (isa($page, 'WikiDB_Page'))
-	    return $page->getName();
+        if (isa($page, 'WikiDB_Page'))
+        return $page->getName();
         elseif (isa($page, 'WikiDB_PageRevision'))
-	    return $page->getPageName();
+        return $page->getPageName();
         elseif (isa($page, 'WikiPageName'))
-	    return $page->name;
+        return $page->name;
         // '0' or e.g. '1984' should be allowed though
         if (!is_string($page) and !is_integer($page)) {
             trigger_error(sprintf("Non-string pagename '%s' (%s)(%s)",
                                   $page, gettype($page), get_class($page)),
                           E_USER_NOTICE);
         }
-	//assert(is_string($page));
-	return $page;
+    //assert(is_string($page));
+        return $page;
     }
 
     function _normalize_bad_pagename($name) {
@@ -837,9 +837,9 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
     if (in_array(php_sapi_name(),array('apache2handler','apache2filter','isapi'))
         and preg_match("/plugin CreateToc/", $text)) 
     {
-    	trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
-    	             ._("Please remove the CreateToc line to be able to reformat this page to old markup. ")
-    	             ._("Skipped."), E_USER_WARNING);
+        trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
+                     ._("Please remove the CreateToc line to be able to reformat this page to old markup. ")
+                     ._("Skipped."), E_USER_WARNING);
         $debug_skip = true;
         //if (!DEBUG) return $text;
         return $text;
@@ -923,15 +923,15 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
 
         if (!$debug_skip) {
         // Plugins
-        $blockpats[] = '<\?plugin(?:-form)?\b.*\?>\s*$';
+            $blockpats[] = '<\?plugin(?:-form)?\b.*\?>\s*$';
         }
 
         // Section Title
         $blockpats[] = '!{1,3}[^!]';
         /*
-	removed .|\n in the anchor not to crash on /m because with /m "." already includes \n
-	this breaks headings but it doesn't crash anymore (crash on non-cgi, non-cli only)
-	*/
+    removed .|\n in the anchor not to crash on /m because with /m "." already includes \n
+    this breaks headings but it doesn't crash anymore (crash on non-cgi, non-cli only)
+    */
         $block_re = ( '/\A((?:.|\n)*?)(^(?:'
                       . join("|", $blockpats)
                       . ').*$)\n?/m' );
@@ -945,11 +945,11 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
     else {
         list ($orig, $repl) = $subs['inline'];
         $out = '';
-	//FIXME:
-	// php crashes here in the 2nd paragraph of OldTextFormattingRules, 
-	// AnciennesR%E8glesDeFormatage and more 
-	// See http://www.pcre.org/pcre.txt LIMITATIONS
-	 while (preg_match($block_re, $text, $m)) {
+    //FIXME:
+    // php crashes here in the 2nd paragraph of OldTextFormattingRules, 
+    // AnciennesR%E8glesDeFormatage and more 
+    // See http://www.pcre.org/pcre.txt LIMITATIONS
+        while (preg_match($block_re, $text, $m)) {
             $text = substr($text, strlen($m[0]));
             list (,$leading_text, $block) = $m;
             $suffix = "\n";
@@ -1060,25 +1060,25 @@ function SplitPagename ($page) {
         // either an upper-case or a numeral; except that it wont
         // split the prefixes 'Mc', 'De', or 'Di' off of their tails.
         switch ($GLOBALS['LANG']) {
-        case 'en':
-        case 'it':
-        case 'es': 
-        case 'de':
-            $RE[] = '/([[:lower:]])((?<!Mc|De|Di)[[:upper:]]|\d)/';
+            case 'en':
+            case 'it':
+            case 'es': 
+            case 'de':
+                $RE[] = '/([[:lower:]])((?<!Mc|De|Di)[[:upper:]]|\d)/';
             break;
-        case 'fr': 
-            $RE[] = '/([[:lower:]])((?<!Mc|Di)[[:upper:]]|\d)/';
+            case 'fr': 
+                $RE[] = '/([[:lower:]])((?<!Mc|Di)[[:upper:]]|\d)/';
             break;
         }
-	$sep = preg_quote(SUBPAGE_SEPARATOR, '/');
+        $sep = preg_quote(SUBPAGE_SEPARATOR, '/');
         // This the single-letter words 'I' and 'A' from any following
         // capitalized words.
         switch ($GLOBALS['LANG']) {
-        case 'en': 
-            $RE[] = "/(?<= |${sep}|^)([AI])([[:upper:]][[:lower:]])/";
+            case 'en': 
+                $RE[] = "/(?<= |${sep}|^)([AI])([[:upper:]][[:lower:]])/";
             break;
-        case 'fr': 
-            $RE[] = "/(?<= |${sep}|^)([Á])([[:upper:]][[:lower:]])/";
+            case 'fr': 
+                $RE[] = "/(?<= |${sep}|^)([Á])([[:upper:]][[:lower:]])/";
             break;
         }
         // Split numerals from following letters.
@@ -1091,7 +1091,7 @@ function SplitPagename ($page) {
     }
 
     foreach ($RE as $regexp) {
-	$page = preg_replace($regexp, '\\1 \\2', $page);
+        $page = preg_replace($regexp, '\\1 \\2', $page);
     }
     return $page;
 }
@@ -1385,16 +1385,16 @@ class fileSet {
         if ($sortby) {
             require_once('lib/PageList.php');
             switch (Pagelist::sortby($sortby, 'db')) {
-            case 'pagename ASC': break;
-            case 'pagename DESC': 
-                $list = array_reverse($list); 
+                case 'pagename ASC': break;
+                case 'pagename DESC': 
+                    $list = array_reverse($list); 
                 break;
-            case 'mtime ASC': 
-                usort($list,'sort_file_mtime'); 
+                case 'mtime ASC': 
+                    usort($list,'sort_file_mtime'); 
                 break;
-            case 'mtime DESC': 
-                usort($list,'sort_file_mtime');
-                $list = array_reverse($list); 
+                case 'mtime DESC': 
+                    usort($list,'sort_file_mtime');
+                    $list = array_reverse($list); 
                 break;
             }
         }
@@ -1454,22 +1454,22 @@ class fileSet {
 class ListRegexExpand {
     //var $match, $list, $index, $case_sensitive;
     function __construct (&$list, $match, $case_sensitive = true) {
-    	$this->match = $match;
-    	$this->list = &$list;
-    	$this->case_sensitive = $case_sensitive;	
+        $this->match = $match;
+        $this->list = &$list;
+        $this->case_sensitive = $case_sensitive;    
         //$this->index = false;
     }
     function listMatchCallback ($item, $key) {
         $quoted = str_replace('/','\/',$item);
-    	if (preg_match('/' . $this->match . ($this->case_sensitive ? '/' : '/i'), 
+        if (preg_match('/' . $this->match . ($this->case_sensitive ? '/' : '/i'), 
                        $quoted)) {
-	    unset($this->list[$this->index]);
+            unset($this->list[$this->index]);
             $this->list[] = $item;
         }
     }
     function expandRegex ($index, &$pages) {
-    	$this->index = $index;
-    	array_walk($pages, array($this, 'listMatchCallback'));
+        $this->index = $index;
+        array_walk($pages, array($this, 'listMatchCallback'));
         return $this->list;
     }
 }
@@ -1520,10 +1520,10 @@ function explodeList($input, $allnames, $glob_style = true, $case_sensitive = tr
         for ($i = 0, $max = sizeof($list); $i < $max; $i++) {
             $f = $list[$i];
             if (preg_match('/[\?\*]/',$f)) {
-            	reset($allnames);
-            	$expand = new ListRegexExpand($list, 
+                reset($allnames);
+                $expand = new ListRegexExpand($list, 
                     $glob_style ? glob_to_pcre($f) : $f, $case_sensitive);
-            	$expand->expandRegex($i, $allnames);
+                $expand->expandRegex($i, $allnames);
             }
         }
     }
@@ -1532,7 +1532,7 @@ function explodeList($input, $allnames, $glob_style = true, $case_sensitive = tr
 
 // echo implode(":",explodeList("Test*",array("xx","Test1","Test2")));
 function explodePageList($input, $include_empty=false, $sortby='pagename', 
-			 $limit=false, $exclude=false) {
+             $limit=false, $exclude=false) {
     include_once("lib/PageList.php");
     return PageList::explodePageList($input, $include_empty, $sortby, $limit, $exclude);
 }
@@ -1823,7 +1823,7 @@ function fixTitleEncoding( $s ) {
         // if charset == 'iso-8859-1' then simply use utf8_decode()
         if ($locharset == 'iso-8859-1')
             return utf8_decode( $s );
-        else
+    else
             // TODO: check for iconv support
             return iconv( "UTF-8", $charset, $s );
 
@@ -1897,9 +1897,9 @@ function GenerateId($name) {
 // content: string or array of strings
 function firstNWordsOfContent( $n, $content ) {
     if ($content and $n > 0) {
-    	if (is_array($content)) {
-    	    // fixme: return a list of lines then?
-    	    //$content = join("\n", $content);
+        if (is_array($content)) {
+            // fixme: return a list of lines then?
+            //$content = join("\n", $content);
             //$return_array = true;
             $wordcount = 0;
             foreach ($content as $line) {
@@ -1955,8 +1955,8 @@ function extractSection ($section, $content, $page, $quiet = false, $sectionhead
 // use this faster version: only load ExternalReferrer if we came from an external referrer
 function isExternalReferrer(&$request) {
     if ($referrer = $request->get('HTTP_REFERER')) {
-    	$home = SERVER_URL; // SERVER_URL or SCRIPT_NAME, if we want to check sister wiki's also
-    	if (string_starts_with(strtolower($referrer), strtolower($home))) return false;
+        $home = SERVER_URL; // SERVER_URL or SCRIPT_NAME, if we want to check sister wiki's also
+        if (string_starts_with(strtolower($referrer), strtolower($home))) return false;
         require_once("lib/ExternalReferrer.php");
         $se = new SearchEngines();
         return $se->parseSearchQuery($referrer);

@@ -63,7 +63,7 @@ extends WikiPlugin_WikiBlog
         }
         if (!$args['user'] or $args['user'] == ADMIN_USER) {
             if (BLOG_EMPTY_DEFAULT_PREFIX)
-                $args['user'] = ''; 	    // "Blogs/day" pages 
+                $args['user'] = '';         // "Blogs/day" pages 
             else
                 $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages 
         }
@@ -80,8 +80,8 @@ extends WikiPlugin_WikiBlog
             $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
             $html = HTML::ul();
             while ($page = $pages->next()) {
-            	$rev = $page->getCurrentRevision(false);
-            	if ($rev->get('pagetype') != 'wikiblog') continue;
+                $rev = $page->getCurrentRevision(false);
+                if ($rev->get('pagetype') != 'wikiblog') continue;
                 $blog = $this->_blog($rev);
                 $html->pushContent(HTML::li(WikiLink($page, 'known', $rev->get('summary'))));
             }
@@ -103,7 +103,7 @@ extends WikiPlugin_WikiBlog
             $months = array();
             foreach ($blogs as $rev) {
                 $blog = $this->_blog($rev);
-            	$mon = $blog['month'];
+                $mon = $blog['month'];
                 if (empty($months[$mon]))
                     $months[$mon] = 
                         array('title' => $this->_monthTitle($mon),

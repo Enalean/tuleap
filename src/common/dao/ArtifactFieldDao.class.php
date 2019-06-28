@@ -42,7 +42,7 @@ class ArtifactFieldDao extends DataAccessObject {
                        " FROM artifact_field ".
                        " WHERE group_artifact_id = %s ".
                        "   AND (field_name = 'assigned_to' OR field_name = 'multi_assigned_to') ",
-				$artifactTypeId);
+        $artifactTypeId);
         return $this->retrieve($sql);
     }
 }

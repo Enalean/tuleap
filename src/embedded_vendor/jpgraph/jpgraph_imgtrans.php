@@ -28,78 +28,78 @@ class ImgTrans {
 
 
         // Parameter check
-    if( $aHorizonPos < 0 || $aHorizonPos > 1.0 ) {
-        JpGraphError::RaiseL(9001);
-        //("Value for image transformation out of bounds.\nVanishing point on horizon must be specified as a value between 0 and 1.");
-    }
+        if( $aHorizonPos < 0 || $aHorizonPos > 1.0 ) {
+            JpGraphError::RaiseL(9001);
+            //("Value for image transformation out of bounds.\nVanishing point on horizon must be specified as a value between 0 and 1.");
+        }
 
-    $w = imagesx($aGdImg);
-    $h = imagesy($aGdImg);
+        $w = imagesx($aGdImg);
+        $h = imagesy($aGdImg);
 
     // Create new image
-    $ww = $w;
-    if( $aMinSize )
-    $hh = ceil($h * $aHorizon / ($aSkewDist+$h));
-    else
-    $hh = $h;
+        $ww = $w;
+        if( $aMinSize )
+        $hh = ceil($h * $aHorizon / ($aSkewDist+$h));
+        else
+        $hh = $h;
 
-    $newgdh = imagecreatetruecolor($ww,$hh);
-    $crgb = new RGB( $newgdh );
-    $fillColor = $crgb->Allocate($aFillColor);
-    imagefilledrectangle($newgdh,0,0,$ww-1,$hh-1,$fillColor);
+        $newgdh = imagecreatetruecolor($ww,$hh);
+        $crgb = new RGB( $newgdh );
+        $fillColor = $crgb->Allocate($aFillColor);
+        imagefilledrectangle($newgdh,0,0,$ww-1,$hh-1,$fillColor);
 
-    if( $aBorder ) {
-        $colidx = $crgb->Allocate($aBorder);
-        imagerectangle($newgdh,0,0,$ww-1,$hh-1,$colidx);
-    }
-
-    $mid = round($w * $aHorizonPos);
-
-    $last=$h;
-    for($y=0; $y < $h; ++$y) {
-
-        $yp = $h-$y-1;
-        $yt = floor($yp * $aHorizon / ($aSkewDist + $yp));
-
-        if( !$aQuality ) {
-            if( $last <= $yt ) continue ;
-            $last = $yt;
+        if( $aBorder ) {
+            $colidx = $crgb->Allocate($aBorder);
+            imagerectangle($newgdh,0,0,$ww-1,$hh-1,$colidx);
         }
 
-        for($x=0; $x < $w; ++$x) {
-            $xt = ($x-$mid) * $aSkewDist / ($aSkewDist + $yp);
-            if( $aDir == SKEW3D_UP )
-            $rgb = imagecolorat($aGdImg,$x,$h-$y-1);
-            else
-            $rgb = imagecolorat($aGdImg,$x,$y);
-            $r = ($rgb >> 16) & 0xFF;
-            $g = ($rgb >> 8) & 0xFF;
-            $b = $rgb & 0xFF;
-            $colidx = imagecolorallocate($newgdh,$r,$g,$b);
-            $xt = round($xt+$mid);
-            if( $aDir == SKEW3D_UP ) {
-                $syt = $yt;
-            }
-            else {
-                $syt = $hh-$yt-1;
+        $mid = round($w * $aHorizonPos);
+
+        $last=$h;
+        for($y=0; $y < $h; ++$y) {
+
+            $yp = $h-$y-1;
+            $yt = floor($yp * $aHorizon / ($aSkewDist + $yp));
+
+            if( !$aQuality ) {
+                if( $last <= $yt ) continue ;
+                $last = $yt;
             }
 
-            if( !empty($set[$yt]) ) {
-                $nrgb = imagecolorat($newgdh,$xt,$syt);
-                $nr = ($nrgb >> 16) & 0xFF;
-                $ng = ($nrgb >> 8) & 0xFF;
-                $nb = $nrgb & 0xFF;
-                $colidx = imagecolorallocate($newgdh,floor(($r+$nr)/2),
-                floor(($g+$ng)/2),floor(($b+$nb)/2));
+            for($x=0; $x < $w; ++$x) {
+                $xt = ($x-$mid) * $aSkewDist / ($aSkewDist + $yp);
+                if( $aDir == SKEW3D_UP )
+                $rgb = imagecolorat($aGdImg,$x,$h-$y-1);
+                else
+                $rgb = imagecolorat($aGdImg,$x,$y);
+                $r = ($rgb >> 16) & 0xFF;
+                $g = ($rgb >> 8) & 0xFF;
+                $b = $rgb & 0xFF;
+                $colidx = imagecolorallocate($newgdh,$r,$g,$b);
+                $xt = round($xt+$mid);
+                if( $aDir == SKEW3D_UP ) {
+                    $syt = $yt;
+                }
+                else {
+                    $syt = $hh-$yt-1;
+                }
+
+                if( !empty($set[$yt]) ) {
+                    $nrgb = imagecolorat($newgdh,$xt,$syt);
+                    $nr = ($nrgb >> 16) & 0xFF;
+                    $ng = ($nrgb >> 8) & 0xFF;
+                    $nb = $nrgb & 0xFF;
+                    $colidx = imagecolorallocate($newgdh,floor(($r+$nr)/2),
+                    floor(($g+$ng)/2),floor(($b+$nb)/2));
+                }
+
+                imagesetpixel($newgdh,$xt,$syt,$colidx);
             }
 
-            imagesetpixel($newgdh,$xt,$syt,$colidx);
+            $set[$yt] = true;
         }
 
-        $set[$yt] = true;
-    }
-
-    return $newgdh;
+        return $newgdh;
     }
 
     // --------------------------------------------------------------------

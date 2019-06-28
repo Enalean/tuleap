@@ -24,15 +24,15 @@ if (!defined('GROUP_METHOD') or
     trigger_error(_("No or unsupported GROUP_METHOD defined"), E_USER_WARNING);
     
 /* Special group names for ACL */    
-define('GROUP_EVERY',		_("Every"));
-define('GROUP_ANONYMOUS',	_("Anonymous Users"));
-define('GROUP_BOGOUSER',	_("Bogo Users"));
+define('GROUP_EVERY',        _("Every"));
+define('GROUP_ANONYMOUS',    _("Anonymous Users"));
+define('GROUP_BOGOUSER',    _("Bogo Users"));
 define('GROUP_HASHOMEPAGE',     _("HasHomePage"));
-define('GROUP_SIGNED',		_("Signed Users"));
-define('GROUP_AUTHENTICATED',	_("Authenticated Users"));
-define('GROUP_ADMIN',		_("Administrators"));
-define('GROUP_OWNER',		_("Owner"));
-define('GROUP_CREATOR',	   	_("Creator"));
+define('GROUP_SIGNED',        _("Signed Users"));
+define('GROUP_AUTHENTICATED',    _("Authenticated Users"));
+define('GROUP_ADMIN',        _("Administrators"));
+define('GROUP_OWNER',        _("Owner"));
+define('GROUP_CREATOR',           _("Creator"));
 
 /**
  * WikiGroup is an abstract class to provide the base functions for determining
@@ -69,7 +69,7 @@ class WikiGroup{
      * @param object $request The global WikiRequest object -- ignored.
      */ 
     function __construct($not_current = false) {
-    	$this->not_current = $not_current;
+        $this->not_current = $not_current;
     }
 
     /**
@@ -105,15 +105,15 @@ class WikiGroup{
      *  translated 
      */
     function specialGroup($group){
-    	return in_array($group,$this->specialGroups());
+        return in_array($group,$this->specialGroups());
     }
     /** untranslated */
     function _specialGroup($group){
-    	return in_array($group,$this->_specialGroups());
+        return in_array($group,$this->_specialGroups());
     }
     /** translated */
     function specialGroups(){
-    	return array(
+        return array(
                      GROUP_EVERY,
                      GROUP_ANONYMOUS,
                      GROUP_BOGOUSER,
@@ -125,7 +125,7 @@ class WikiGroup{
     }
     /** untranslated */
     function _specialGroups(){
-    	return array(
+        return array(
                      "_EVERY",
                      "_ANONYMOUS",
                      "_BOGOUSER",
@@ -147,8 +147,8 @@ class WikiGroup{
     function isMember($group){
         if (isset($this->membership[$group]))
             return $this->membership[$group];
-    	if ($this->specialGroup($group)) {
-    	    return $this->isSpecialMember($group);
+        if ($this->specialGroup($group)) {
+            return $this->isSpecialMember($group);
         } else {
             trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                     'isMember', GROUP_METHOD),
@@ -204,9 +204,9 @@ class WikiGroup{
     }
 
     function _allUsers() {
-    	static $result = array();
-    	if (!empty($result))
-    		return $result;
+        static $result = array();
+        if (!empty($result))
+        return $result;
 
         global $request;
         /* WikiPage users: */
@@ -251,7 +251,7 @@ class WikiGroup{
             if (isa($dbi, 'ADOConnection')) {
                 $db_result = $dbi->Execute($sql);
                 foreach ($db_result->GetArray() as $u) {
-                   $users = array_merge($users, array_values($u));
+                    $users = array_merge($users, array_values($u));
                 }
             } elseif (isa($dbi, 'DB_common')) {
                 $users = array_merge($users, $dbi->getCol($sql));
@@ -276,54 +276,54 @@ class WikiGroup{
      * @return array Array of usernames that have joined the group (always empty).
      */ 
     function getMembersOf($group){
-    	if ($this->specialGroup($group)) {
-    	    return $this->getSpecialMembersOf($group);
-    	}
+        if ($this->specialGroup($group)) {
+            return $this->getSpecialMembersOf($group);
+        }
         trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'getMembersOf', GROUP_METHOD),
                       E_USER_WARNING);
         return array();
     }
-        	
+            
     function getSpecialMembersOf($group) {
         //$request = &$this->request;
         $all = $this->_allUsers();
         $users = array();
         switch ($group) {
-        case GROUP_EVERY:
+            case GROUP_EVERY:
             return $all;
-        case GROUP_ANONYMOUS: 	
+            case GROUP_ANONYMOUS:     
             return $users;
-        case GROUP_BOGOUSER:
-            foreach ($all as $u) {
-                if (isWikiWord($u)) $users[] = $u;
-            }
+            case GROUP_BOGOUSER:
+                foreach ($all as $u) {
+                    if (isWikiWord($u)) $users[] = $u;
+                }
             return $users;
-        case GROUP_SIGNED:    	
-            foreach ($all as $u) {
-                $user = WikiUser($u);
-                if ($user->isSignedIn()) $users[] = $u;
-            }
+            case GROUP_SIGNED:        
+                foreach ($all as $u) {
+                    $user = WikiUser($u);
+                    if ($user->isSignedIn()) $users[] = $u;
+                }
             return $users;
-        case GROUP_AUTHENTICATED:
-            foreach ($all as $u) {
-                $user = WikiUser($u);
-                if ($user->isAuthenticated()) $users[] = $u;
-            }
+            case GROUP_AUTHENTICATED:
+                foreach ($all as $u) {
+                    $user = WikiUser($u);
+                    if ($user->isAuthenticated()) $users[] = $u;
+                }
             return $users;
-        case GROUP_ADMIN:		
-            foreach ($all as $u) {
-                $user = WikiUser($u);
-                if (isset($user->_level) and $user->_level == WIKIAUTH_ADMIN) 
+            case GROUP_ADMIN:        
+                foreach ($all as $u) {
+                    $user = WikiUser($u);
+                    if (isset($user->_level) and $user->_level == WIKIAUTH_ADMIN) 
                     $users[] = $u;
-            }
+                }
             return $users;
-        case GROUP_OWNER:
-        case GROUP_CREATOR:
-            // this could get complex so just return an empty array
+            case GROUP_OWNER:
+            case GROUP_CREATOR:
+                // this could get complex so just return an empty array
             return false;
-        default:
-            trigger_error(PHPWikiSprintf("Unknown special group '%s'", $group),
+            default:
+                trigger_error(PHPWikiSprintf("Unknown special group '%s'", $group),
                           E_USER_WARNING);
         }
     }
@@ -388,8 +388,8 @@ class GroupNone extends WikiGroup{
      * @return bool True if user is a member, else false (always false).
      */ 
     function isMember($group){
-    	if ($this->specialGroup($group)) {
-    	    return $this->isSpecialMember($group);
+        if ($this->specialGroup($group)) {
+            return $this->isSpecialMember($group);
         } else {
             return false;
         }

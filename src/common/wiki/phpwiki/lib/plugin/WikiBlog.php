@@ -137,13 +137,13 @@ extends WikiPlugin
             $seen[$show] = 1;
                 
             switch ($show) {
-            case 'show':
-                $html->pushContent($this->showAll($request, $args));
+                case 'show':
+                    $html->pushContent($this->showAll($request, $args));
                 break;
-            case 'add':
-                $html->pushContent($this->showForm($request, $args));
+                case 'add':
+                    $html->pushContent($this->showForm($request, $args));
                 break;
-            default:
+                default:
                 return $this->error(sprintf("Bad mode ('%s')", $show));
             }
         }
@@ -366,7 +366,7 @@ extends WikiPlugin
 
     // "User/Blog/2004-12-13/12:28:50+01:00" => array('month' => "2004-12", ...)
     function _blog($rev_or_page) {
-    	$pagename = $rev_or_page->getName();
+        $pagename = $rev_or_page->getName();
         if (preg_match("/^(.*Blog)\/(\d\d\d\d-\d\d)-(\d\d)\/(.*)/", $pagename, $m))
             list(,$prefix,$month,$day,$time) = $m;
         return array('pagename' => $pagename,
@@ -380,7 +380,7 @@ extends WikiPlugin
     }
 
     function _nonDefaultArgs($args) {
-    	return array_diff_assoc($args, $this->getDefaultArguments());
+        return array_diff_assoc($args, $this->getDefaultArguments());
     }
 
 };

@@ -76,7 +76,7 @@ class Tracker_FormElement_DateFormatter {
     }
 
     public function validate($value) {
-       $is_valid = true;
+        $is_valid = true;
         if ($value) {
             $rule     = new Rule_Date();
             $is_valid = $rule->isValid($value);

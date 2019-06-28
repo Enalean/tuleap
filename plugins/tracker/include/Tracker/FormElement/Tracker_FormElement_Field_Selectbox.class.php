@@ -167,43 +167,43 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                     $check = 'checked="checked"';
                     break;
                 }
-             }
-          }
+            }
+        }
           echo '<td class="matrix_cell" style="white-space:nowrap; text-align:center;"><label class="pc_checkbox"><input type="checkbox" name="'.$purifier->purify($box_value).'" '. $check .' />&nbsp;</label>';
-          if ($check) {
-              echo ' <a href="'.$purifier->purify(TRACKER_BASE_URL.'/?'. http_build_query(array(
-                                                        'tracker' => (int)$this->tracker_id,
-                                                        'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
-                                                        'edit_transition'  => $transition->getTransitionId()))) .'">[Details]</a>';
-          }
+        if ($check) {
+            echo ' <a href="'.$purifier->purify(TRACKER_BASE_URL.'/?'. http_build_query(array(
+                                                      'tracker' => (int)$this->tracker_id,
+                                                      'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
+                                                      'edit_transition'  => $transition->getTransitionId()))) .'">[Details]</a>';
+        }
           echo '</td>';
     }
 
     function displayTransitionsMatrix($transitions=null)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-       $field=Tracker_FormElementFactory::instance()->getFormElementById($this->id);
-       $field_values = array();
-       foreach ($field->getBind()->getAllValues() as $id => $v) {
-           if (!$v->isHidden()) {
-               $field_values[$id] = $v;
-           }
-       }
+        $field=Tracker_FormElementFactory::instance()->getFormElementById($this->id);
+        $field_values = array();
+        foreach ($field->getBind()->getAllValues() as $id => $v) {
+            if (!$v->isHidden()) {
+                $field_values[$id] = $v;
+            }
+        }
 
-       $nb_field_values =count($field_values);
+        $nb_field_values =count($field_values);
         echo '<table id="tracker_workflow_matrix">';
             echo "<tr class='boxtitle'>\n";
             echo "<td>FROM</td>";
-           for ($k=0; $k<$nb_field_values; $k++) {
-               echo "<td>TO STATE</td>";
-           }
+        for ($k=0; $k<$nb_field_values; $k++) {
+            echo "<td>TO STATE</td>";
+        }
            echo "</tr>";
 
            echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
            echo "<td></td>";
-           foreach($field_values as $field_value_id=>$field_value) {
-               echo '<td class="matrix_cell">'.$purifier->purify($field_value->getLabel())."</td>";
-           }
+        foreach($field_values as $field_value_id=>$field_value) {
+            echo '<td class="matrix_cell">'.$purifier->purify($field_value->getLabel())."</td>";
+        }
            echo "</tr>";
 
            $j=0;
@@ -211,29 +211,29 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
            echo "<td>(New Artifact)</td>";
            $field_value_from=null;
-           foreach($field_values as $field_value_id_to=>$field_value_to) {
-               $field_value_from=null;
-               $box_value = '_'.$field_value_id_to;
-               $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
-           }
+        foreach($field_values as $field_value_id_to=>$field_value_to) {
+            $field_value_from=null;
+            $box_value = '_'.$field_value_id_to;
+            $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
+        }
            echo "</tr>";
            $j++;
 
            //Display the available transitions
-           foreach($field_values as $field_value_id_from=>$field_value_from) {
-               echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
-               echo "<td>".$purifier->purify($field_value_from->getLabel())."</td>";
-               foreach($field_values as $field_value_id_to=>$field_value_to) {
-                   $box_value = $field_value_id_from.'_'.$field_value_id_to;
-                   if ($field_value_id_from!=$field_value_id_to) {
-                       $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
-                   }else {
-                       echo '<td align="center" class="matrix_cell"><input type="hidden">-&nbsp;</td>';
-                   }
-               }
-               echo "</tr>\n";
-               $j++;
-           }
+        foreach($field_values as $field_value_id_from=>$field_value_from) {
+            echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
+            echo "<td>".$purifier->purify($field_value_from->getLabel())."</td>";
+            foreach($field_values as $field_value_id_to=>$field_value_to) {
+                $box_value = $field_value_id_from.'_'.$field_value_id_to;
+                if ($field_value_id_from!=$field_value_id_to) {
+                    $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
+                }else {
+                    echo '<td align="center" class="matrix_cell"><input type="hidden">-&nbsp;</td>';
+                }
+            }
+            echo "</tr>\n";
+            $j++;
+        }
 
             echo '</table>';
     }

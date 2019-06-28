@@ -341,7 +341,7 @@ class Git_GitoliteDriver {
 
     public function delete($path) {
         if ( empty($path) || !is_writable($path) ) {
-           throw new GitDriverErrorException('Empty path or permission denied '.$path);
+            throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
         $this->logger->debug('Removing physically the repository...');

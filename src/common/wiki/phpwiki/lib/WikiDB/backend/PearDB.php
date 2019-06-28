@@ -32,7 +32,7 @@ extends WikiDB_backend
                 include_once("$dir/DB.php");
             }
         } else {
-          include_once("DB.php");
+            include_once("DB.php");
         }
 
         // Install filter to handle bogus error notices from buggy DB.php's.
@@ -86,7 +86,7 @@ extends WikiDB_backend
             trigger_error( "WARNING: database still locked " . '(lock_count = $this->_lock_count)' . "\n<br />",
                           E_USER_WARNING);
         }
-        $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);	// prevent recursive loops.
+        $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);    // prevent recursive loops.
         $this->unlock('force');
 
         $this->_dbh->disconnect();
@@ -490,7 +490,7 @@ extends WikiDB_backend
 
         $dbh->query("DELETE FROM $link_tbl WHERE linkfrom=$pageid");
 
-	if ($links) {
+        if ($links) {
             foreach($links as $link) {
                 // avoid duplicates
                 if (isset($linkseen[$link]))
@@ -501,7 +501,7 @@ extends WikiDB_backend
                 $dbh->query("INSERT INTO $link_tbl (linkfrom, linkto)"
                             . " VALUES ($pageid, $linkid)");
             }
-	}
+        }
         $this->unlock();
     }
     
@@ -669,12 +669,12 @@ extends WikiDB_backend
             . " WHERE $join_clause"
             . "  AND ($search_clause)"
             . $orderby;
-         if ($limit) {
-             list($from, $count) = $this->limit($limit);
-             $result = $dbh->limitQuery($sql, $from, $count);
-         } else {
-             $result = $dbh->query($sql);
-         }
+        if ($limit) {
+            list($from, $count) = $this->limit($limit);
+            $result = $dbh->limitQuery($sql, $from, $count);
+        } else {
+            $result = $dbh->query($sql);
+        }
         
         $iter = new WikiDB_backend_PearDB_iter($this, $result);
         $iter->stoplisted = @$searchobj->stoplisted;
@@ -739,12 +739,12 @@ extends WikiDB_backend
             . "  AND $page_tbl.group_id=".GROUP_ID
             . $where
             . $orderby;
-         if ($limit) {
-             list($from, $count) = $this->limit($limit);
-             $result = $dbh->limitQuery($sql, $from, $count);
-         } else {
-             $result = $dbh->query($sql);
-         }
+        if ($limit) {
+            list($from, $count) = $this->limit($limit);
+            $result = $dbh->limitQuery($sql, $from, $count);
+        } else {
+            $result = $dbh->query($sql);
+        }
 
         return new WikiDB_backend_PearDB_iter($this, $result);
     }
@@ -766,7 +766,7 @@ extends WikiDB_backend
         $pick = array();
         if ($since)
             $pick[] = "mtime >= $since";
-			
+            
         
         if ($include_all_revisions) {
             // Include all revisions of each page.
@@ -774,11 +774,11 @@ extends WikiDB_backend
             $join_clause = "$page_tbl.id=$version_tbl.id";
             $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
             if ($exclude_major_revisions) {
-		// Include only minor revisions
+        // Include only minor revisions
                 $pick[] = "minor_edit <> 0";
             }
             elseif (!$include_minor_revisions) {
-		// Include only major revisions
+        // Include only major revisions
                 $pick[] = "minor_edit = 0";
             }
         }
@@ -845,7 +845,7 @@ extends WikiDB_backend
             . " LEFT JOIN $page_tbl pp ON linked.linkto = pp.id"
             . " LEFT JOIN $nonempty_tbl ne ON linked.linkto = ne.id" 
             . " WHERE ne.id is NULL"
-	    .       " AND p.id = linked.linkfrom"
+        .       " AND p.id = linked.linkfrom"
             .       " AND p.group_id = ".GROUP_ID
             . $exclude_from
             . $exclude
@@ -1028,7 +1028,7 @@ extends WikiDB_backend
         if ($this->_is_false_error($error))
             return;
         
-        $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);	// prevent recursive loops.
+        $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);    // prevent recursive loops.
         $this->close();
         trigger_error($this->_pear_error_message($error), E_USER_ERROR);
     }

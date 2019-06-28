@@ -85,7 +85,7 @@ class Tracker_Key
             if ($rsa->getSize() < 2048 || $rsa->getSize() > 8192) {
                 return false;
             }
-        return true;
+            return true;
         } else {
             return false;
         }

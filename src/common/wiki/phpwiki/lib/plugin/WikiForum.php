@@ -93,16 +93,16 @@ extends WikiPlugin_WikiBlog
             $seen[$show] = 1;
                 
             switch ($show) {
-            case 'summary': // main page: list of all titles
-                $html->pushContent($this->showTopics($request, $args));
+                case 'summary': // main page: list of all titles
+                    $html->pushContent($this->showTopics($request, $args));
                 break;
-            case 'show':    // list of all contents
-                $html->pushContent($this->showAll($request, $args, 'wikiforum'));
+                case 'show':    // list of all contents
+                    $html->pushContent($this->showAll($request, $args, 'wikiforum'));
                 break;
-            case 'add':     // add to or create a new thread
-                $html->pushContent($this->showForm($request, $args, 'forumadd'));
+                case 'add':     // add to or create a new thread
+                    $html->pushContent($this->showForm($request, $args, 'forumadd'));
                 break;
-            default:
+                default:
                 return $this->error(sprintf("Bad mode ('%s')", $show));
             }
         }

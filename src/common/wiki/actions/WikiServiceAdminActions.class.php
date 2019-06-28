@@ -36,178 +36,178 @@ class WikiServiceAdminActions extends WikiActions
    * @access private 
    * @var int 
    */ 
-  var $gid;
+    var $gid;
 
-  public function __construct($controler)
-  {
-      parent::__construct($controler);
-      $this->gid = (int) $controler->gid;
-  }
-
-  function checkPage($page) {
-      global $feedback;
-
-    /**
-     * Check if the given page name is not empty
-     */
-    if(empty($page)) {
-      $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
-      return false;
+    public function __construct($controler)
+    {
+        parent::__construct($controler);
+        $this->gid = (int) $controler->gid;
     }
+
+    function checkPage($page) {
+        global $feedback;
+
+      /**
+       * Check if the given page name is not empty
+       */
+        if(empty($page)) {
+            $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
+            return false;
+        }
     
-    /**
-     * Check if the page is a valid page.
-     */
-    $wp = new WikiPage($this->gid, $page);
-    if(! $wp->exist()) {     
-      $wpw = new WikiPageWrapper($this->gid);
-      $wpw->addNewProjectPage($page);
+      /**
+       * Check if the page is a valid page.
+       */
+        $wp = new WikiPage($this->gid, $page);
+        if(! $wp->exist()) {     
+            $wpw = new WikiPageWrapper($this->gid);
+            $wpw->addNewProjectPage($page);
+        }
+
+        return true;
     }
 
-    return true;
-  }
 
+    function create() {    
+        $page=$_POST['page'];
+        if(!empty($_POST['upage'])) {
+            $page=$_POST['upage'];
+        }
 
-  function create() {    
-    $page=$_POST['page'];
-    if(!empty($_POST['upage'])) {
-      $page=$_POST['upage'];
-    }
+        if($this->checkPage($page)) {
 
-    if($this->checkPage($page)) {
-
-      $we = new WikiEntry();
-      $we->setGid($this->gid);
-      $we->setName($_POST['name']);
-      $we->setPage($page);
-      $we->setDesc($_POST['desc']);
-      $we->setRank($_POST['rank']);
-      $we->setLanguage_id($_POST['language_id']);
+            $we = new WikiEntry();
+            $we->setGid($this->gid);
+            $we->setName($_POST['name']);
+            $we->setPage($page);
+            $we->setDesc($_POST['desc']);
+            $we->setRank($_POST['rank']);
+            $we->setLanguage_id($_POST['language_id']);
       
-      $we->add();
+            $we->add();
+        }
     }
-  }
 
-  function delete() {
-    $we = new WikiEntry();
-    $we->setGid($this->gid);
-    $we->setId($_REQUEST['id']);
+    function delete() {
+        $we = new WikiEntry();
+        $we->setGid($this->gid);
+        $we->setId($_REQUEST['id']);
 
-    $we->del();
-  }
+        $we->del();
+    }
 
   /**
    * Perform wiki attachment removal.
    */
-  function deleteAttachments() {
-      $request = HTTPRequest::instance();
-      if ($request->isPost() && $request->exist('attachments_to_delete')) {
-          $args = $request->get('attachments_to_delete');
-          $deleteStatus = true;
-          $um = UserManager::instance();
-          $user = $um->getCurrentUser();
-          foreach($args as $id) {
-              $valid = new Valid_UInt('repo_id');
-              $valid->required();
-              if($valid->validate($id)) {
-                  $wa = new WikiAttachment();
-                  $wa->initWithId($id);
-                  if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
-                      if(!$wa->deleteAttachment()) {
-                          $deleteStatus = false;
-                      }
-                  } else {
-                      $deleteStatus = false;
-                  }
-              } else {
-                  $deleteStatus = false;
-              }
-          }
-          if ($deleteStatus) {
-              $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_success'));
-          } else {
-              $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_failure'));
-          }
-      }
-  }
-
-  function update() {
-    $page=$_POST['page'];
-    if(!empty($_POST['upage'])) {
-      $page=$_POST['upage'];
+    function deleteAttachments() {
+        $request = HTTPRequest::instance();
+        if ($request->isPost() && $request->exist('attachments_to_delete')) {
+            $args = $request->get('attachments_to_delete');
+            $deleteStatus = true;
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            foreach($args as $id) {
+                $valid = new Valid_UInt('repo_id');
+                $valid->required();
+                if($valid->validate($id)) {
+                    $wa = new WikiAttachment();
+                    $wa->initWithId($id);
+                    if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
+                        if(!$wa->deleteAttachment()) {
+                            $deleteStatus = false;
+                        }
+                    } else {
+                        $deleteStatus = false;
+                    }
+                } else {
+                    $deleteStatus = false;
+                }
+            }
+            if ($deleteStatus) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_success'));
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_failure'));
+            }
+        }
     }
 
-    if($this->checkPage($page)) {
-      $we = new WikiEntry();
-      $we->setId($_POST['id']);
-      $we->setGid($this->gid);
-      $we->setName($_POST['name']);
-      $we->setPage($page);
-      $we->setDesc($_POST['desc']);
-      $we->setRank($_POST['rank']);
-      $we->setLanguage_id($_POST['language_id']);
+    function update() {
+        $page=$_POST['page'];
+        if(!empty($_POST['upage'])) {
+            $page=$_POST['upage'];
+        }
+
+        if($this->checkPage($page)) {
+            $we = new WikiEntry();
+            $we->setId($_POST['id']);
+            $we->setGid($this->gid);
+            $we->setName($_POST['name']);
+            $we->setPage($page);
+            $we->setDesc($_POST['desc']);
+            $we->setRank($_POST['rank']);
+            $we->setLanguage_id($_POST['language_id']);
    
-      $we->update();
-    }
-  }
-
-  function setWikiPerms() {
-      global $feedback;
-
-    $w = new Wiki($this->gid);
-    if ($_POST['reset']) {
-        $ret = $w->resetPermissions();
-    } else {
-        $ret = $w->setPermissions($_POST['ugroups']);
+            $we->update();
+        }
     }
 
-    if(!$ret) {
-        exit_error($GLOBALS['Language']->getText('global','error'),
+    function setWikiPerms() {
+        global $feedback;
+
+        $w = new Wiki($this->gid);
+        if ($_POST['reset']) {
+            $ret = $w->resetPermissions();
+        } else {
+            $ret = $w->setPermissions($_POST['ugroups']);
+        }
+
+        if(!$ret) {
+            exit_error($GLOBALS['Language']->getText('global','error'),
                    $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
-    }
+        }
 
-    $event_manager = EventManager::instance();
-    $event_manager->processEvent(
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(
         "wiki_service_permissions_updated",
         array(
             'group_id' => $this->gid
         )
-    );
-  }
-
-  function setWikiPagePerms() {
-    global $feedback;
-
-    $wp = new WikiPage($_POST['object_id']);
-
-    if ($_POST['reset']) {
-        $ret = $wp->resetPermissions();
-    }
-    else {
-        $ret = $wp->setPermissions($_POST['ugroups']);
+        );
     }
 
-    if(!$ret) {
-        exit_error(
+    function setWikiPagePerms() {
+        global $feedback;
+
+        $wp = new WikiPage($_POST['object_id']);
+
+        if ($_POST['reset']) {
+            $ret = $wp->resetPermissions();
+        }
+        else {
+            $ret = $wp->setPermissions($_POST['ugroups']);
+        }
+
+        if(!$ret) {
+            exit_error(
             $GLOBALS['Language']->getText('global','error'),
             $GLOBALS['Language']->getText(
                 'wiki_actions_wikiserviceadmin',
                 'update_page_perm_err',
                 array($feedback)
             )
-        );
-    }
+            );
+        }
 
-    $event_manager = EventManager::instance();
-    $event_manager->processEvent(
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(
         "wiki_page_permissions_updated",
         array(
             'group_id'         => $wp->getGid(),
             'wiki_page'        => $wp->getPagename(),
         )
-    );
+        );
 
-  }
+    }
 
 
     /**

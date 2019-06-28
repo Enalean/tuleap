@@ -155,7 +155,7 @@ extends WikiPlugin
             }
         }
         elseif ($request->isPost()
-        	and $request->_user->isAdmin()
+            and $request->_user->isAdmin()
                 and !empty($p)
                 //and $request->getArg('verify')
                 and ($request->getArg('action') == 'WikiAdminSelect')
@@ -187,7 +187,7 @@ extends WikiPlugin
                 $plugin_action = preg_replace("/^WikiAdmin/","",$plugin_action);
                 $args = array();
                 foreach ($p as $page => $x) {
-                  $args["p[$page]"] = 1;
+                    $args["p[$page]"] = 1;
                 }
                 header("Location: ".
                   WikiURL(_("PhpWikiAdministration")."/"._($plugin_action),$args,1));

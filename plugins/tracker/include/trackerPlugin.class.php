@@ -444,7 +444,7 @@ class trackerPlugin extends Plugin {
                     new BurndownCacheDateRetriever()
                 );
                 break;
-                default:
+            default:
                 break;
         }
     }
@@ -522,37 +522,37 @@ class trackerPlugin extends Plugin {
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
-            case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_submit');
+                case 'PLUGIN_TRACKER_FIELD_SUBMIT':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_submit');
                 break;
-            case 'PLUGIN_TRACKER_FIELD_READ':
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_read');
+                case 'PLUGIN_TRACKER_FIELD_READ':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_read');
                 break;
-            case 'PLUGIN_TRACKER_FIELD_UPDATE':
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_update');
+                case 'PLUGIN_TRACKER_FIELD_UPDATE':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_update');
                 break;
-            case Tracker::PERMISSION_SUBMITTER_ONLY:
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_only_access');
+                case Tracker::PERMISSION_SUBMITTER_ONLY:
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_only_access');
                 break;
-            case Tracker::PERMISSION_SUBMITTER:
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_access');
+                case Tracker::PERMISSION_SUBMITTER:
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_access');
                 break;
-            case Tracker::PERMISSION_ASSIGNEE:
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_assignee_access');
+                case Tracker::PERMISSION_ASSIGNEE:
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_assignee_access');
                 break;
-            case Tracker::PERMISSION_FULL:
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_full_access');
+                case Tracker::PERMISSION_FULL:
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_full_access');
                 break;
-            case Tracker::PERMISSION_ADMIN:
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_admin');
+                case Tracker::PERMISSION_ADMIN:
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_admin');
                 break;
-            case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_artifact_access');
+                case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_artifact_access');
                 break;
-            case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
-                $params['name'] = $GLOBALS['Language']->getText('workflow_admin','permissions_transition');
+                case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
+                    $params['name'] = $GLOBALS['Language']->getText('workflow_admin','permissions_transition');
                 break;
-            default:
+                default:
                 break;
             }
         }
@@ -1153,7 +1153,7 @@ class trackerPlugin extends Plugin {
         $params['burndown'] = $this->buildRightVersionOfMilestonesBurndownResource($params['version'])->get($params['user'], $params['milestone']);
     }
 
-     private function buildRightVersionOfMilestonesBurndownResource($version) {
+    private function buildRightVersionOfMilestonesBurndownResource($version) {
         $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\MilestonesBurndownResource';
         return new $class_with_right_namespace;
     }

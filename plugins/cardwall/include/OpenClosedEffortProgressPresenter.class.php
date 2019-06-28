@@ -32,11 +32,11 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
     }
 
     public function initial_effort_completion() {
-         if ($this->cannotBeDivided($this->nb_total)) {
+        if ($this->cannotBeDivided($this->nb_total)) {
             return 100;
         }
 
-       $completion = ceil(
+        $completion = ceil(
             ( $this->nb_closed ) / $this->nb_total * 100
         );
 

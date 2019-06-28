@@ -27,4 +27,4 @@ class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences 
         return true;
     }
 }
- ?>
+?>

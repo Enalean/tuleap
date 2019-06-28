@@ -52,13 +52,13 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
 
     private function getBackendWorkerCount()
     {
-       if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
-           return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
-       }
-       if (ForgeConfig::get('sys_async_emails') !== false) {
-           return 1;
-       }
-       return 0;
+        if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
+            return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
+        }
+        if (ForgeConfig::get('sys_async_emails') !== false) {
+            return 1;
+        }
+        return 0;
     }
 
     public function getProcessOwner() {

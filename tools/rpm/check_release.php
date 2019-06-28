@@ -51,7 +51,7 @@ foreach ($tags->list->entry as $entry) {
             $maxEntry = $entry;
         }
     } else {
-       $maxEntry = $entry;
+        $maxEntry = $entry;
     }
 }
 

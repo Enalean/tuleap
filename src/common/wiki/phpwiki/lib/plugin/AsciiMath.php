@@ -30,12 +30,12 @@ require_once("lib/ASCIIMathPHP/ASCIIMathPHP.class.php");
  * Syntax: http://www1.chapman.edu/~jipsen/mathml/asciimathsyntax.xml
  * Example: "int_-1^1 sqrt(1-x^2)dx = pi/2"
  * => <math xmlns="http://www.w3.org/1998/Math/MathML">
-	<mrow><msubsup><mo>&#8747;</mo><mn>-1</mn><mn>1</mn></msubsup></mrow>
-	<msqrt><mrow><mn>1</mn><mo>-</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></msqrt>
-	<mi>d</mi>
-	<mi>x</mi>
-	<mo>=</mo>
-	<mfrac><mi>&#960;</mi><mo>2</mo></mfrac>
+    <mrow><msubsup><mo>&#8747;</mo><mn>-1</mn><mn>1</mn></msubsup></mrow>
+    <msqrt><mrow><mn>1</mn><mo>-</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></msqrt>
+    <mi>d</mi>
+    <mi>x</mi>
+    <mo>=</mo>
+    <mfrac><mi>&#960;</mi><mo>2</mo></mfrac>
       </math>
  */
 class WikiPlugin_AsciiMath

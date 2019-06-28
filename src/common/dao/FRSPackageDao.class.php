@@ -48,16 +48,16 @@ class FRSPackageDao extends DataAccessObject
     }
     
     function searchByFileId($file_id){
-       $_file_id = (int) $file_id;
-       return $this->_search(' f.file_id ='.$this->da->escapeInt($_file_id).' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),'',
-			   				 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r','frs_file AS f'));
+        $_file_id = (int) $file_id;
+        return $this->_search(' f.file_id ='.$this->da->escapeInt($_file_id).' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),'',
+                                'ORDER BY rank DESC LIMIT 1', array('frs_release AS r','frs_file AS f'));
     }
     
     function searchInGroupByReleaseId($id, $group_id) {
-       $_id = (int) $id;
-       $_group_id = (int) $group_id;
-       return $this->_search('p.group_id = '.$this->da->escapeInt($_group_id).' AND r.release_id = '.$this->da->escapeInt($_id).' AND p.package_id = r.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),'',
-	   						 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r'));
+        $_id = (int) $id;
+        $_group_id = (int) $group_id;
+        return $this->_search('p.group_id = '.$this->da->escapeInt($_group_id).' AND r.release_id = '.$this->da->escapeInt($_id).' AND p.package_id = r.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),'',
+                                'ORDER BY rank DESC LIMIT 1', array('frs_release AS r'));
     }
 
     function searchByIdList($idList) {
@@ -123,8 +123,8 @@ class FRSPackageDao extends DataAccessObject
     
     
     function searchPackageByName($package_name, $group_id){
-    	$_group_id = (int) $group_id;
-    	return $this->_search(' group_id='.$this->da->escapeInt($_group_id).' AND name='.$this->da->quoteSmart(htmlspecialchars($package_name)),'','');
+        $_group_id = (int) $group_id;
+        return $this->_search(' group_id='.$this->da->escapeInt($_group_id).' AND name='.$this->da->quoteSmart(htmlspecialchars($package_name)),'','');
     }
     
 

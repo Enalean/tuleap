@@ -88,7 +88,7 @@ class AdminScrumPresenter {
     }
 
     public function has_plannings() {
-       return count($this->plannings) > 0;
+        return count($this->plannings) > 0;
     }
 
     public function create_planning() {

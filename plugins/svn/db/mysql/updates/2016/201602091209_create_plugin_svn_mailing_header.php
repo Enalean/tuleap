@@ -22,7 +22,7 @@ class b201602091209_create_plugin_svn_mailing_header extends ForgeUpgrade_Bucket
         return 'Create table plugin_svn_mailing_header for SVN plugin';
     }
 
-   public function preUp() {
+    public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 

@@ -33,7 +33,7 @@ class RSSWriter091 extends RssWriter
     }
   /**
    * Finish construction of RSS.
-   */	
+   */    
     function finish() 
     {
         if (isset($this->_finished))
@@ -41,12 +41,12 @@ class RSSWriter091 extends RssWriter
         
         $channel = &$this->_channel;
         $items = &$this->_items;
-    	
+        
         if ($items)
             {
-		foreach ($items as $i)
+            foreach ($items as $i)
                     $channel->pushContent($i);
-            }
+        }
         $this->pushContent($channel);
         $this->spew();
         $this->_finished = true;
@@ -56,7 +56,7 @@ class RSSWriter091 extends RssWriter
      * Create a new RDF <em>typedNode</em>.
      */
     function node($type, $properties, $uri = false) {
-	return new XmlElement($type, '',
+        return new XmlElement($type, '',
                               $this->elementize($properties));
     }
 
@@ -66,12 +66,12 @@ class RSSWriter091 extends RssWriter
     function spew() {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
-		print("<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\"\n");
-		print("\"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\n\n");
+        print("<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\"\n");
+        print("\"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\n\n");
         $this->printXML();
     }
-	
-	
+    
+    
 }
 
 class _RecentChanges_RssFormatter091
@@ -130,9 +130,9 @@ extends _RecentChanges_RssFormatter
         $page = $rev->getPage();
         $pagename = $page->getName();
         
-        return array( 'title'		=> SplitPagename($pagename),
-                      'description'	=> $this->summary($rev),
-                      'link'		=> $this->pageURL($rev)                  
+        return array( 'title'        => SplitPagename($pagename),
+                      'description'    => $this->summary($rev),
+                      'link'        => $this->pageURL($rev)                  
                       );
     }
 }

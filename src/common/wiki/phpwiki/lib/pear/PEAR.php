@@ -552,13 +552,13 @@ class PEAR
     function pushErrorHandling($mode, $options = null)
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];
-            if (isset($this)) {
-                $def_mode = &$this->_default_error_mode;
-                $def_options = &$this->_default_error_options;
-            } else {
-                $def_mode = &$GLOBALS['_PEAR_default_error_mode'];
-                $def_options = &$GLOBALS['_PEAR_default_error_options'];
-            }
+        if (isset($this)) {
+            $def_mode = &$this->_default_error_mode;
+            $def_options = &$this->_default_error_options;
+        } else {
+            $def_mode = &$GLOBALS['_PEAR_default_error_mode'];
+            $def_options = &$GLOBALS['_PEAR_default_error_options'];
+        }
             $stack[] = array($def_mode, $def_options);
 
         if (isset($this)) {
@@ -738,7 +738,7 @@ class PEAR_Error
                       strlen($this->callback[1])) {
                       @call_user_func($this->callback, $this);
             }
-            }
+        }
         if (PEAR_ZE2 && $this->mode & PEAR_ERROR_EXCEPTION) {
             eval('throw $this;');
         }
@@ -795,10 +795,10 @@ class PEAR_Error
      * @return int error code
      * @access public
      */
-     function getCode()
+    function getCode()
      {
         return $this->code;
-     }
+    }
 
     // }}}
     // {{{ getType()

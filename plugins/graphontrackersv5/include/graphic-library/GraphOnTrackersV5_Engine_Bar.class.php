@@ -130,7 +130,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             $b->SetColor('#FFFFFF:0.7');
         }
         else {
-           $b->SetColor($color.':0.7');  
+            $b->SetColor($color.':0.7');  
         }
         $b->SetFillColor($color);
         // end hard coded parameter

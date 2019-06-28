@@ -163,13 +163,13 @@ class GTextTableCell {
     function GetWidth($aImg) {
         if( $this->iIcon !== null ) {
             if( $this->iIconConstrain[0] == TIMG_WIDTH ) {
-            	$this->iIcon->SetScale(1);
-            	$tmp = $this->iIcon->GetWidthHeight();
+                $this->iIcon->SetScale(1);
+                $tmp = $this->iIcon->GetWidthHeight();
                 $this->iIcon->SetScale($this->iIconConstrain[1]/$tmp[0]);
             }
             elseif( $this->iIconConstrain[0] == TIMG_HEIGHT ) {
-            	$this->iIcon->SetScale(1);
-            	$tmp = $this->iIcon->GetWidthHeight();
+                $this->iIcon->SetScale(1);
+                $tmp = $this->iIcon->GetWidthHeight();
                 $this->iIcon->SetScale($this->iIconConstrain[1]/$tmp[1]);
             }
             $tmp = $this->iIcon->GetWidthHeight();
@@ -195,13 +195,13 @@ class GTextTableCell {
     function GetHeight($aImg) {
         if( $this->iIcon !== null ) {
             if( $this->iIconConstrain[0] == TIMG_WIDTH ) {
-            	$this->iIcon->SetScale(1);
-            	$tmp = $this->iIcon->GetWidthHeight();
-            	$this->iIcon->SetScale($this->iIconConstrain[1]/$tmp[0]);
+                $this->iIcon->SetScale(1);
+                $tmp = $this->iIcon->GetWidthHeight();
+                $this->iIcon->SetScale($this->iIconConstrain[1]/$tmp[0]);
             }
             elseif( $this->iIconConstrain[0] == TIMG_HEIGHT ) {
-            	$this->iIcon->SetScale(1);
-            	$tmp = $this->iIcon->GetWidthHeight();
+                $this->iIcon->SetScale(1);
+                $tmp = $this->iIcon->GetWidthHeight();
                 $this->iIcon->SetScale($this->iIconConstrain[1]/$tmp[1]);
             }
             $tmp = $this->iIcon->GetWidthHeight();
@@ -596,7 +596,7 @@ class GTextTable {
                 $t .= 'M ';
                 $t .= 'val='.$this->iCells[$i][$j]->iVal->t;
                 $t .= ' (cs='.$this->iCells[$i][$j]->iColSpan.
-        ', rs='.$this->iCells[$i][$j]->iRowSpan.')';
+                ', rs='.$this->iCells[$i][$j]->iRowSpan.')';
                 $t .= '</td>';
             }
             $t .= '</tr>';

@@ -1080,5 +1080,5 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             ),
             $ongoing_upload_dao
         );
-}
+    }
 }

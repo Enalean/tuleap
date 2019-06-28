@@ -98,7 +98,7 @@ class SystemEventManagerTest extends TuleapTestCase {
         $this->assertTrue($se->isUserNameAvailable('titi'));
     }
 
-   public function testIsUserNameAvailableWithStringAlreadyQueuded() {
+    public function testIsUserNameAvailableWithStringAlreadyQueuded() {
         $seDao = new MockSystemEventDao($this);
 
         $dar = new MockDataAccessResult($this);
@@ -110,19 +110,19 @@ class SystemEventManagerTest extends TuleapTestCase {
         $se->setReturnValue('_getDao', $seDao);
 
         $this->assertFalse($se->isUserNameAvailable('titi'));
-   }
+    }
 
-   public function itDoesNotAccumulateSystemCheckEvents()
-   {
-       $system_event_manager = partial_mock('SystemEventManager', array('areThereMultipleEventsQueuedMatchingFirstParameter', 'createEvent'));
-       stub($system_event_manager)->areThereMultipleEventsQueuedMatchingFirstParameter()->returnsAt(0, false);
-       stub($system_event_manager)->areThereMultipleEventsQueuedMatchingFirstParameter()->returns(true);
+    public function itDoesNotAccumulateSystemCheckEvents()
+    {
+        $system_event_manager = partial_mock('SystemEventManager', array('areThereMultipleEventsQueuedMatchingFirstParameter', 'createEvent'));
+        stub($system_event_manager)->areThereMultipleEventsQueuedMatchingFirstParameter()->returnsAt(0, false);
+        stub($system_event_manager)->areThereMultipleEventsQueuedMatchingFirstParameter()->returns(true);
 
-       $system_event_manager->expectOnce('createEvent');
+        $system_event_manager->expectOnce('createEvent');
 
-       $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
-       $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
-   }
+        $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
+        $system_event_manager->addSystemEvent(Event::SYSTEM_CHECK, null);
+    }
 }
 
 class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {

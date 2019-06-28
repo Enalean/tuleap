@@ -27,7 +27,7 @@ class Tracker_Workflow_Trigger_FieldValue {
             Tracker_FormElement_Field_List_BindValue $value) {
         $this->field = $field;
         $this->value = $value;
-     }
+    }
 
     /**
      * @return Tracker_FormElement_Field_List

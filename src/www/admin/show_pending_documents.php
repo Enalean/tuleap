@@ -122,9 +122,9 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
         echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system_end') . '</p>';
         echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_restaure').'</p></div>';
 
-        foreach($params['html'] as $html) {
-            echo $html;
-        }
+    foreach($params['html'] as $html) {
+        echo $html;
+    }
     ?>
     </div>
 </main>

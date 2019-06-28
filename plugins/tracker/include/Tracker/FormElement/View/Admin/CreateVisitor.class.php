@@ -38,11 +38,11 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
     }
     
     public function setType($type) {
-      $this->type = $type;
+        $this->type = $type;
     }
 
     public function setLabel($label) {
-      $this->label = $label;
+        $this->label = $label;
     }
 
     /**

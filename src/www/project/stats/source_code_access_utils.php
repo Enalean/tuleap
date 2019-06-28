@@ -6,37 +6,37 @@
  * Prepare SQL query for given date and given person
  */
 function logs_cond($project, $span, $who) {
-	// Get information about the date $span days ago
-	// Start at midnight $span days ago
-	$time_back = localtime( (time() - ($span * 86400)), 1);
+    // Get information about the date $span days ago
+    // Start at midnight $span days ago
+    $time_back = localtime( (time() - ($span * 86400)), 1);
 
-	// This for debug
-	// print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
+    // This for debug
+    // print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
 
-	// Adjust to midnight this day
-	$time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-	$begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
+    // Adjust to midnight this day
+    $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
+    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
 
 
-	// For Debug
-	// print join(" ",localtime($begin_date,0))."<BR>";
-	// print "begin_date: $begin_date<BR>";
+    // For Debug
+    // print join(" ",localtime($begin_date,0))."<BR>";
+    // print "begin_date: $begin_date<BR>";
 
-	if ($who == "allusers") {
-	    $cond = "";
-	} else {
-	    $users = implode(',',$project->getMembersId());
-	    if ($who == "members") {
-		$cond = " AND user.user_id IN ($users) ";
-	    } else {
-		$cond = " AND user.user_id NOT IN ($users) ";
-	    }
-	}
+    if ($who == "allusers") {
+        $cond = "";
+    } else {
+        $users = implode(',',$project->getMembersId());
+        if ($who == "members") {
+            $cond = " AND user.user_id IN ($users) ";
+        } else {
+            $cond = " AND user.user_id NOT IN ($users) ";
+        }
+    }
 
-  $whereclause = "log.user_id=user.user_id ".$cond
+    $whereclause = "log.user_id=user.user_id ".$cond
     ." AND log.time >= $begin_date ";
 
-  return $whereclause;
+    return $whereclause;
 }
 
 /**
@@ -174,32 +174,32 @@ function frs_logs_extract($project,$span,$who) {
 
 function filedownload_logs_extract($project,$span,$who) {
 
-	$sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
-	."FROM filedownload_log AS log, user, frs_file, frs_release, frs_package "
-	."WHERE ".logs_cond($project, $span, $who)
-	."AND frs_package.group_id=".$project->getGroupId()." "
+    $sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title "
+    ."FROM filedownload_log AS log, user, frs_file, frs_release, frs_package "
+    ."WHERE ".logs_cond($project, $span, $who)
+    ."AND frs_package.group_id=".$project->getGroupId()." "
         ."AND log.filerelease_id=frs_file.file_id "
         ."AND frs_release.release_id=frs_file.release_id "
         ."AND frs_package.package_id=frs_release.package_id "
-	."ORDER BY time DESC";
+    ."ORDER BY time DESC";
 
-	return $sql;
+    return $sql;
 
 }
 
 // filedownload_logs_daily
 function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 
-	// check first if service is used by this project
+    // check first if service is used by this project
     // if service not used return immediately
-	if (!$project->usesFile()) {
-		return;
-	}
+    if (!$project->usesFile()) {
+        return;
+    }
 
     $sql = filedownload_logs_extract($project,$span,$who);
 
-	logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
-		     $GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download'));
+    logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
+             $GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download'));
 
     $sql = frs_logs_extract($project,$span,$who);
     logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_elements'),
@@ -208,91 +208,91 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 
 function cvsaccess_logs_extract($project,$span,$who) {
 
-	// Get information about the date $span days ago
-	// Start at midnight $span days ago
-	$time_back = localtime( (time() - ($span * 86400)), 1);
+    // Get information about the date $span days ago
+    // Start at midnight $span days ago
+    $time_back = localtime( (time() - ($span * 86400)), 1);
 
-	// This for debug
-	// print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
+    // This for debug
+    // print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
 
-	// Adjust to midnight this day
-	$time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-	$begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
+    // Adjust to midnight this day
+    $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
+    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
 
-	$begin_day = strftime("%Y%m%d", $begin_date);
+    $begin_day = strftime("%Y%m%d", $begin_date);
 
-	// For Debug
-	// print join(" ",localtime($begin_date,0))."<BR>";
-	// print "begin_day: $begin_day<BR>";
+    // For Debug
+    // print join(" ",localtime($begin_date,0))."<BR>";
+    // print "begin_day: $begin_day<BR>";
 
-	if ($who == "allusers") {
-	    $cond = "";
-	} else {
-	    $users = implode(',',$project->getMembersId());
-	    if ($who == "members") {
-		$cond = " AND user.user_id IN ($users) ";
-	    } else {
-		$cond = " AND user.user_id NOT IN ($users) ";
-	    }
-	}
+    if ($who == "allusers") {
+        $cond = "";
+    } else {
+        $users = implode(',',$project->getMembersId());
+        if ($who == "members") {
+            $cond = " AND user.user_id IN ($users) ";
+        } else {
+            $cond = " AND user.user_id NOT IN ($users) ";
+        }
+    }
 
-	$sql  = "SELECT history.day, user.user_name, user.realname, user.email, history.cvs_checkouts, history.cvs_browse "
-		."FROM group_cvs_full_history as history, user "
-		."WHERE history.user_id=user.user_id ".$cond
-		."AND history.group_id=".$project->getGroupId()." "
-		."AND day >= $begin_day "
-		."AND (cvs_checkouts != 0 OR cvs_browse != 0) "
-		."ORDER BY day DESC";
+    $sql  = "SELECT history.day, user.user_name, user.realname, user.email, history.cvs_checkouts, history.cvs_browse "
+    ."FROM group_cvs_full_history as history, user "
+    ."WHERE history.user_id=user.user_id ".$cond
+    ."AND history.group_id=".$project->getGroupId()." "
+    ."AND day >= $begin_day "
+    ."AND (cvs_checkouts != 0 OR cvs_browse != 0) "
+    ."ORDER BY day DESC";
 
-	return $sql;
+    return $sql;
 }
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
     $hp = Codendi_HTMLPurifier::instance();
-	// check first if service is used by this project
+    // check first if service is used by this project
     // if service not used return immediately
     if (!$project->usesCVS()) {
-		return;
-	}
+        return;
+    }
 
-	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
+    $month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
 
     $sql = cvsaccess_logs_extract($project, $span, $who);
 
-	// Executions will continue until morale improves.
-	$res = db_query( $sql );
+    // Executions will continue until morale improves.
+    $res = db_query( $sql );
 
-	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_co_upd'), $hp->purify($span))).'</U></B></P>';
+    print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_co_upd'), $hp->purify($span))).'</U></B></P>';
 
-	// if there are any days, we have valid data.
-	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+    // if there are any days, we have valid data.
+    if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
-		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
-			. '<TR valign="top">'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','co_upd').'</B></TD>'
-			. '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
-			. '</TR>' . "\n";
+        print    '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
+        . '<TR valign="top">'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_export_utils','user').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</B></TD>'
+        . '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','co_upd').'</B></TD>'
+        . '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
+        . '</TR>' . "\n";
 
-		$i = 0;
-		while ( $row = db_fetch_array($res) ) {
-			$i++;
-			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
-				. '<TD>' . $hp->purify($row["email"]) . '</TD>'
-				. '<TD>' . $hp->purify($row["cvs_checkouts"]) . '</TD>'
-				. '<TD>' . $hp->purify($row["cvs_browse"]) . '</TD>'
-				. '</TR>' . "\n";
-		}
+        $i = 0;
+        while ( $row = db_fetch_array($res) ) {
+            $i++;
+            print    '<TR class="' . util_get_alt_row_color($i) . '">'
+            . '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
+             . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
+            . '<TD>' . $hp->purify($row["email"]) . '</TD>'
+            . '<TD>' . $hp->purify($row["cvs_checkouts"]) . '</TD>'
+            . '<TD>' . $hp->purify($row["cvs_browse"]) . '</TD>'
+            . '</TR>' . "\n";
+        }
 
-		print '</TABLE>';
+        print '</TABLE>';
 
-	} else {
-		echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_access'));
-	}
+    } else {
+        echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_access'));
+    }
 
 
 
@@ -300,92 +300,92 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 function svnaccess_logs_extract($project, $span, $who) {
 
-	// Get information about the date $span days ago
-	// Start at midnight $span days ago
-	$time_back = localtime( (time() - ($span * 86400)), 1);
+    // Get information about the date $span days ago
+    // Start at midnight $span days ago
+    $time_back = localtime( (time() - ($span * 86400)), 1);
 
-	// This for debug
-	// print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
+    // This for debug
+    // print "time_back= ". $time_back['tm_hour'].":".$time_back['tm_min'].":".$time_back['tm_sec']." on ".$time_back['tm_mday']." ".$time_back['tm_mon']." ".$time_back['tm_year']."<BR>";
 
-	// Adjust to midnight this day
-	$time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
-	$begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
+    // Adjust to midnight this day
+    $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
+    $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
 
-	$begin_day = strftime("%Y%m%d", $begin_date);
+    $begin_day = strftime("%Y%m%d", $begin_date);
 
-	// For Debug
-	// print join(" ",localtime($begin_date,0))."<BR>";
-	// print "begin_day: $begin_day<BR>";
+    // For Debug
+    // print join(" ",localtime($begin_date,0))."<BR>";
+    // print "begin_day: $begin_day<BR>";
 
-	if ($who == "allusers") {
-	    $cond = "";
-	} else {
-	    $users = implode(',',$project->getMembersId());
-	    if ($who == "members") {
-		$cond = " AND user.user_id IN ($users) ";
-	    } else {
-		$cond = " AND user.user_id NOT IN ($users) ";
-	    }
-	}
+    if ($who == "allusers") {
+        $cond = "";
+    } else {
+        $users = implode(',',$project->getMembersId());
+        if ($who == "members") {
+            $cond = " AND user.user_id IN ($users) ";
+        } else {
+            $cond = " AND user.user_id NOT IN ($users) ";
+        }
+    }
 
-	// We do not show Co/up/del/add svn counters for now because
-	// they are at 0 in the DB
-	$sql  = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
-	."FROM group_svn_full_history, user "
-	."WHERE group_svn_full_history.user_id=user.user_id ".$cond
-	."AND group_svn_full_history.group_id=".$project->getGroupId()." "
-	."AND group_svn_full_history.day >= $begin_day "
-	."ORDER BY day DESC";
+    // We do not show Co/up/del/add svn counters for now because
+    // they are at 0 in the DB
+    $sql  = "SELECT group_svn_full_history.day, user.user_name, user.realname, user.email, svn_access_count, svn_browse "
+    ."FROM group_svn_full_history, user "
+    ."WHERE group_svn_full_history.user_id=user.user_id ".$cond
+    ."AND group_svn_full_history.group_id=".$project->getGroupId()." "
+    ."AND group_svn_full_history.day >= $begin_day "
+    ."ORDER BY day DESC";
 
-	return $sql;
+    return $sql;
 
 }
 
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
     $hp = Codendi_HTMLPurifier::instance();
-	// check first if service is used by this project
+    // check first if service is used by this project
     // if service not used return immediately
     if (! $project->usesSVN()) {
-		return;
-	}
+        return;
+    }
 
-	$month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
+    $month_name = array('Jan','Feb','Mar','Apr','May','June','Jul','Aug', 'Sep','Oct','Nov','Dec');
 
     $sql = svnaccess_logs_extract($project, $span, $who);
 
-	// Executions will continue until morale improves.
-	$res = db_query( $sql );
+    // Executions will continue until morale improves.
+    $res = db_query( $sql );
 
-	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'), $hp->purify($span))).'</U></B></P>';
+    print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'), $hp->purify($span))).'</U></B></P>';
 
-	// if there are any days, we have valid data.
-	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+    // if there are any days, we have valid data.
+    if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
 
-		print	'<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
-			. '<TR valign="top">'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_export_utils','user').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','accesses').'</B></TD>'
-			. '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
-			. '</TR>' . "\n";
-		$i=0;
-		while ( $row = db_fetch_array($res) ) {
-			$i++;
-			print	'<TR class="' . util_get_alt_row_color($i) . '">'
-				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
-				. '<TD>' . $hp->purify($row["email"]) . '</TD>'
-				. '<TD>' . $hp->purify($row["svn_access_count"]) . '</TD>'
-				. '<TD>' . $hp->purify($row["svn_browse"]) . '</TD>'
-				. '</TR>' . "\n";
-		}
+        print    '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
+        . '<TR valign="top">'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_export_utils','user').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','accesses').'</B></TD>'
+        . '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
+        . '</TR>' . "\n";
+        $i=0;
+        while ( $row = db_fetch_array($res) ) {
+            $i++;
+            print    '<TR class="' . util_get_alt_row_color($i) . '">'
+            . '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
+             . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
+            . '<TD>' . $hp->purify($row["email"]) . '</TD>'
+            . '<TD>' . $hp->purify($row["svn_access_count"]) . '</TD>'
+            . '<TD>' . $hp->purify($row["svn_browse"]) . '</TD>'
+            . '</TR>' . "\n";
+        }
 
-		print '</TABLE>';
+        print '</TABLE>';
 
-	} else {
-		echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'));
-	}
+    } else {
+        echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'));
+    }
 
 
 
@@ -393,13 +393,13 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 function wiki_logs_extract($project, $span, $who) {
 
-  $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, log.pagename AS title"
+    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, log.pagename AS title"
     ." FROM wiki_log AS log, user"
     ." WHERE ".logs_cond($project, $span, $who)
     ." AND log.group_id=".$project->getGroupId()
     ." ORDER BY time DESC";
 
-  return $sql;
+    return $sql;
 
 }
 
@@ -410,14 +410,14 @@ function wiki_logs_daily($project, $span = 7, $who="allusers") {
 
   // check first if service is used by this project
   // if service not used return immediately
-  if(!$project->usesWiki()) {
-     return;
-  }
+    if(!$project->usesWiki()) {
+        return;
+    }
 
-  $sql = wiki_logs_extract($project, $span, $who);
+    $sql = wiki_logs_extract($project, $span, $who);
 
-  logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_page'),
-	       $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_access'));
+    logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_page'),
+           $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_access'));
 }
 
 function wiki_attachments_logs_extract($project, $span, $who) {
@@ -438,7 +438,7 @@ function wiki_attachments_logs_extract($project, $span, $who) {
  */
 function wiki_attachments_logs_daily($project, $span = 7, $who="allusers") {
 
-	// check first if service is used by this project
+    // check first if service is used by this project
     // if service not used return immediately
     if(!$project->usesWiki()) {
         return;
@@ -467,8 +467,8 @@ function plugins_log_extract($project, $span, $who) {
 
 function plugins_logs_daily($project, $span = 7, $who = 'allusers') {
 
-	$logs = plugins_log_extract($project, $span, $who);
-	foreach($logs as $log) {
+    $logs = plugins_log_extract($project, $span, $who);
+    foreach($logs as $log) {
         logs_display($log['sql'], $span, $log['field'], $log['title']);
     }
 }

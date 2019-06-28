@@ -23,12 +23,12 @@ class CacheableMarkup extends XmlContent {
 
     function __construct($content, $basepage) {
         $this->_basepage = $basepage;
-	$this->_buf = '';
-	$this->_content = array();
-	$this->_append($content);
-	if ($this->_buf != '')
-	    $this->_content[] = $this->_buf;
-	unset($this->_buf);
+        $this->_buf = '';
+        $this->_content = array();
+        $this->_append($content);
+        if ($this->_buf != '')
+        $this->_content[] = $this->_buf;
+        unset($this->_buf);
     }
 
     function pack() {
@@ -83,9 +83,9 @@ class CacheableMarkup extends XmlContent {
         include_once('lib/WikiPlugin.php');
         $ploader = new WikiPluginLoader();
         
-	$links = array();
-	foreach ($this->_content as $item) {
-	    if (!isa($item, 'Cached_DynamicContent'))
+        $links = array();
+        foreach ($this->_content as $item) {
+            if (!isa($item, 'Cached_DynamicContent'))
                 continue;
 
             if (!($item_links = $item->getWikiPageLinks($this->_basepage)))
@@ -95,54 +95,54 @@ class CacheableMarkup extends XmlContent {
                     $links[] = $pagename;
         }
 
-	return array_unique($links);
+        return array_unique($links);
     }
 
     function _append($item) {
-	if (is_array($item)) {
-	    foreach ($item as $subitem)
-		$this->_append($subitem);
-	}
-	elseif (!is_object($item)) {
-	    $purifier    = Codendi_HTMLPurifier::instance();
-	    $this->_buf .= $purifier->purify((string) $item, CODENDI_PURIFIER_BASIC_NOBR, GROUP_ID);
-	}
-	elseif (isa($item, 'Cached_DynamicContent')) {
-	    if ($this->_buf) {
-		$this->_content[] = $this->_buf;
-		$this->_buf = '';
-	    }
-	    $this->_content[] = $item;
-	}
-	elseif (isa($item, 'XmlElement')) {
-	    if ($item->isEmpty()) {
-		$this->_buf .= $item->emptyTag();
-	    }
-	    else {
-		$this->_buf .= $item->startTag();
-		foreach ($item->getContent() as $subitem)
-		    $this->_append($subitem);
-		$this->_buf .= "</$item->_tag>";
+        if (is_array($item)) {
+            foreach ($item as $subitem)
+            $this->_append($subitem);
+        }
+        elseif (!is_object($item)) {
+            $purifier    = Codendi_HTMLPurifier::instance();
+            $this->_buf .= $purifier->purify((string) $item, CODENDI_PURIFIER_BASIC_NOBR, GROUP_ID);
+        }
+        elseif (isa($item, 'Cached_DynamicContent')) {
+            if ($this->_buf) {
+                $this->_content[] = $this->_buf;
+                $this->_buf = '';
+            }
+            $this->_content[] = $item;
+        }
+        elseif (isa($item, 'XmlElement')) {
+            if ($item->isEmpty()) {
+                $this->_buf .= $item->emptyTag();
+            }
+            else {
+                $this->_buf .= $item->startTag();
+                foreach ($item->getContent() as $subitem)
+                $this->_append($subitem);
+                $this->_buf .= "</$item->_tag>";
 
                 if (!isset($this->_description) and $item->getTag() == 'p')
                     $this->_glean_description($item->asString());
-	    }
-	    if (!$item->isInlineElement())
-		$this->_buf .= "\n";
-	}
-	elseif (isa($item, 'XmlContent')) {
-	    foreach ($item->getContent() as $item)
-		$this->_append($item);
-	}
-	elseif (method_exists($item, 'asXML')) {
-	    $this->_buf .= $item->asXML();
-	}
-	elseif (method_exists($item, 'asString')) {
-	    $this->_buf .= $this->_quote($item->asString());
-	}
-	else {
-	    $this->_buf .= sprintf("==Object(%s)==", get_class($item));
-	}
+            }
+            if (!$item->isInlineElement())
+            $this->_buf .= "\n";
+        }
+        elseif (isa($item, 'XmlContent')) {
+            foreach ($item->getContent() as $item)
+            $this->_append($item);
+        }
+        elseif (method_exists($item, 'asXML')) {
+            $this->_buf .= $item->asXML();
+        }
+        elseif (method_exists($item, 'asString')) {
+            $this->_buf .= $this->_quote($item->asString());
+        }
+        else {
+            $this->_buf .= sprintf("==Object(%s)==", get_class($item));
+        }
     }
 
     function _glean_description($text) {
@@ -177,10 +177,10 @@ class CacheableMarkup extends XmlContent {
     }
     
     function asXML () {
-	$xml = '';
+        $xml = '';
         $basepage = $this->_basepage;
         
-	foreach ($this->_content as $item) {
+        foreach ($this->_content as $item) {
             if (is_string($item)) {
                 $xml .= $item;
             }
@@ -192,30 +192,30 @@ class CacheableMarkup extends XmlContent {
             else {
                 $xml .= $item->asXML();
             }
-	}
-	return $xml;
+        }
+        return $xml;
     }
 
     function printXML () {
         $basepage = $this->_basepage;
         // _content might be changed from a plugin (CreateToc)
-	for ($i=0; $i < count($this->_content); $i++) {
-	    $item = $this->_content[$i];
+        for ($i=0; $i < count($this->_content); $i++) {
+            $item = $this->_content[$i];
             if (is_string($item)) {
                 print $item;
             }
             elseif ($item instanceof \Cached_DynamicContent)
-            {  	// give the content the chance to know about itself or even 
-            	// to change itself
+            {      // give the content the chance to know about itself or even 
+                // to change itself
                 $val = $item->expand($basepage, $this);
                 $val->printXML();
             }
             else {
                 $item->printXML();
             }
-	}
+        }
     }
-}	
+}    
 
 /**
  * The base class for all dynamic content.
@@ -226,7 +226,7 @@ class CacheableMarkup extends XmlContent {
 class Cached_DynamicContent {
 
     function cache(&$cache) {
-	$cache[] = $this;
+        $cache[] = $this;
     }
 
     function expand($basepage, &$obj) {
@@ -241,18 +241,18 @@ class Cached_DynamicContent {
 class Cached_Link extends Cached_DynamicContent {
 
     function isInlineElement() {
-	return true;
+        return true;
     }
     
     function _getURL($basepage) {
-	return $this->_url;
+        return $this->_url;
     }
 }
 
 class Cached_WikiLink extends Cached_Link {
 
     function __construct ($page, $label = false, $anchor = false) {
-	$this->_page = $page;
+        $this->_page = $page;
         if ($anchor)
             $this->_anchor = $anchor;
         if ($label and $label != $page)
@@ -264,9 +264,9 @@ class Cached_WikiLink extends Cached_Link {
     }
     
     function getPagename($basepage) {
-	$page = new WikiPageName($this->_page, $basepage);
-	if ($page->isValid()) return $page->name;
-	else return false;
+        $page = new WikiPageName($this->_page, $basepage);
+        if ($page->isValid()) return $page->name;
+        else return false;
     }
 
     function getWikiPageLinks($basepage) {
@@ -276,27 +276,27 @@ class Cached_WikiLink extends Cached_Link {
     }
 
     function _getName($basepage) {
-	return $this->getPagename($basepage);
+        return $this->getPagename($basepage);
     }
 
     function _getURL($basepage) {
-	return WikiURL($this->getPagename($basepage));
-	//return WikiURL($this->getPagename($basepage), false, 'abs_url');
+        return WikiURL($this->getPagename($basepage));
+    //return WikiURL($this->getPagename($basepage), false, 'abs_url');
     }
 
     function expand($basepage, &$markup) {
-	$label = isset($this->_label) ? $this->_label : false;
-	$anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $label = isset($this->_label) ? $this->_label : false;
+        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
         if ($page->isValid()) return WikiLink($page, 'auto', $label);
-	else return HTML($label);
+        else return HTML($label);
     }
 
     function asXml() {
-	$label = isset($this->_label) ? $this->_label : false;
-	$anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $label = isset($this->_label) ? $this->_label : false;
+        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, false, $anchor);
-	$link = WikiLink($page, 'auto', $label);
+        $link = WikiLink($page, 'auto', $label);
         return $link->asXml();
     }
 
@@ -310,7 +310,7 @@ class Cached_WikiLink extends Cached_Link {
 class Cached_WikiLinkIfKnown extends Cached_WikiLink
 {
     function __construct ($moniker) {
-	$this->_page = $moniker;
+        $this->_page = $moniker;
     }
 
     function expand($basepage, &$markup) {
@@ -321,13 +321,13 @@ class Cached_WikiLinkIfKnown extends Cached_WikiLink
 class Cached_PhpwikiURL extends Cached_DynamicContent
 {
     function __construct ($url, $label) {
-	$this->_url = $url;
+        $this->_url = $url;
         if ($label)
             $this->_label = $label;
     }
 
     function isInlineElement() {
-	return true;
+        return true;
     }
 
     function expand($basepage, &$markup) {
@@ -351,7 +351,7 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
 class Cached_ExternalLink extends Cached_Link {
 
     function __construct($url, $label=false) {
-	$this->_url = $url;
+        $this->_url = $url;
         if ($label && $label != $url)
             $this->_label = $label;
     }
@@ -361,15 +361,15 @@ class Cached_ExternalLink extends Cached_Link {
     }
     
     function _getName($basepage) {
-	$label = isset($this->_label) ? $this->_label : false;
-	return ($label and is_string($label)) ? $label : $this->_url;
+        $label = isset($this->_label) ? $this->_label : false;
+        return ($label and is_string($label)) ? $label : $this->_url;
     }
 
     function expand($basepage, &$markup) {
         global $request;
 
-	$label = isset($this->_label) ? $this->_label : false;
-	$link = LinkURL($this->_url, $label);
+        $label = isset($this->_label) ? $this->_label : false;
+        $link = LinkURL($this->_url, $label);
 
         if (GOOGLE_LINKS_NOFOLLOW) {
             // Ignores nofollow when the user who saved the page was authenticated. 
@@ -391,25 +391,25 @@ class Cached_ExternalLink extends Cached_Link {
 class Cached_InterwikiLink extends Cached_ExternalLink {
     
     function __construct($link, $label=false) {
-	$this->_link = $link;
+        $this->_link = $link;
         if ($label)
             $this->_label = $label;
     }
 
     function _getName($basepage) {
-	$label = isset($this->_label) ? $this->_label : false;
-	return ($label and is_string($label)) ? $label : $link;
+        $label = isset($this->_label) ? $this->_label : false;
+        return ($label and is_string($label)) ? $label : $link;
     }
     
     function _getURL($basepage) {
-	$link = $this->expand($basepage, $this);
-	return $link->getAttr('href');
+        $link = $this->expand($basepage, $this);
+        return $link->getAttr('href');
     }
 
     function expand($basepage, &$markup) {
-	$intermap = getInterwikiMap();
-	$label = isset($this->_label) ? $this->_label : false;
-	return $intermap->link($this->_link, $label);
+        $intermap = getInterwikiMap();
+        $label = isset($this->_label) ? $this->_label : false;
+        return $intermap->link($this->_link, $label);
     }
 
     function asString() {
@@ -425,9 +425,9 @@ class Cached_InterwikiLink extends Cached_ExternalLink {
 class Cached_UserLink extends Cached_WikiLink {
     function expand($basepage, &$markup) {
         $label = isset($this->_label) ? $this->_label : false;
-	$anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
-	$link = WikiLink($page, 'auto', $label);
+        $link = WikiLink($page, 'auto', $label);
         // $link = HTML::a(array('href' => $PageName));
         $link->setContent(PossiblyGlueIconToText('wikiuser', $this->_page));
         $link->setAttr('class', 'wikiuser');
@@ -438,7 +438,7 @@ class Cached_UserLink extends Cached_WikiLink {
 class Cached_PluginInvocation extends Cached_DynamicContent {
 
     function __construct ($pi) {
-	$this->_pi = $pi;
+        $this->_pi = $pi;
     }
 
     function setTightness($top, $bottom) {
@@ -448,7 +448,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
     }
     
     function isInlineElement() {
-	return false;
+        return false;
     }
 
     function expand($basepage, &$markup) {
@@ -459,21 +459,21 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
         if (is_array($plugin_cmdline = $loader->parsePI($this->_pi)) and $plugin_cmdline[1])
             $id = GenerateId($plugin_cmdline[1]->getName() . 'Plugin');
         
-	if (isset($this->_tightenable)) {
-	    if ($this->_tightenable == 3) {
+        if (isset($this->_tightenable)) {
+            if ($this->_tightenable == 3) {
                 $span = HTML::span(array('class' => 'plugin'), $xml);
                 if (!empty($id))
                     $span->setAttr('id', $id);
-	        return $span;
+                return $span;
             }
-	    $div->setInClass('tightenable');
-	    $div->setInClass('top', ($this->_tightenable & 1) != 0);
-	    $div->setInClass('bottom', ($this->_tightenable & 2) != 0);
-	}
+            $div->setInClass('tightenable');
+            $div->setInClass('top', ($this->_tightenable & 1) != 0);
+            $div->setInClass('bottom', ($this->_tightenable & 2) != 0);
+        }
         if (!empty($id))
             $div->setAttr('id', $id);
-	$div->pushContent($xml);
-	return $div;
+        $div->pushContent($xml);
+        return $div;
     }
 
     function asString() {
@@ -490,9 +490,9 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
     function & _getLoader() {
         static $loader = false;
 
-	if (!$loader) {
+        if (!$loader) {
             include_once('lib/WikiPlugin.php');
-	    $loader = new WikiPluginLoader;
+            $loader = new WikiPluginLoader;
         }
         return $loader;
     }

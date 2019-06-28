@@ -19,8 +19,8 @@ if ($request->valid($vId)) {
 
     if ($request->isPost()) {
         $csrf_token->check('/my/bookmark_delete.php?bookmark_id='.$bookmark_id);
-	bookmark_delete ($bookmark_id);
-	print '<p>'.$Language->getText('bookmark_delete', 'deleted').'</p>';
+        bookmark_delete ($bookmark_id);
+        print '<p>'.$Language->getText('bookmark_delete', 'deleted').'</p>';
     } else {
         print '<form method="post">';
         print '<p>' . $Language->getText('my_index', 'del_bookmark') . '</p>';

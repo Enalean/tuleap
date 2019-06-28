@@ -32,10 +32,10 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 <script language="JavaScript">
 
 function doSelection(form) {
-	if ( form.artifact_type_id.value != "" ) {
-		window.opener.document.<?php echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_form')); ?>.<?php echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_field')); ?>.value = form.artifact_type_id.value;
-	}
-	close();
+    if ( form.artifact_type_id.value != "" ) {
+        window.opener.document.<?php echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_form')); ?>.<?php echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_field')); ?>.value = form.artifact_type_id.value;
+    }
+    close();
 }
 
 </script>
@@ -47,26 +47,26 @@ function doSelection(form) {
 <tr valign="center"><td>
 <div align="center">
 <?php
-	//	get the Group object
+    //    get the Group object
     $group_id = $request->getValidated('group_id', 'GroupId');
-	$pm = ProjectManager::instance();
+    $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-	if (!$group || !is_object($group) || $group->isError()) {
-		exit_no_group();
-	}
+if (!$group || !is_object($group) || $group->isError()) {
+    exit_no_group();
+}
 
         $count = 0;
-	$atf = new ArtifactTypeFactory($group);
-	$trackers_array = $atf->getArtifactTypesFromId($group_id);
-	if ( $trackers_array !== false) {
-            echo '<select name="artifact_type_id" size="5">';	
-            $hp = Codendi_HTMLPurifier::instance();
+    $atf = new ArtifactTypeFactory($group);
+    $trackers_array = $atf->getArtifactTypesFromId($group_id);
+if ( $trackers_array !== false) {
+           echo '<select name="artifact_type_id" size="5">';    
+           $hp = Codendi_HTMLPurifier::instance();
             
-            foreach($trackers_array as $tracker) {
-                echo '<option value="'. (int)$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';
-                $count ++;
-            }
-        }
+    foreach($trackers_array as $tracker) {
+        echo '<option value="'. (int)$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';
+        $count ++;
+    }
+}
 
 ?>
 <?php if ( $count > 0 ) { ?>

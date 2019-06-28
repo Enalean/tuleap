@@ -60,24 +60,24 @@ class WikiPage {
         $this->empty = null;
 
         if($id != 0) {
-          if(empty($pagename)) {
-            //Given number is the WikiPage id from wiki_page table
-            $this->id = (int) $id;
-            $this->initFromDb();
-          }
-          else {
-            //Given number is group_id from wiki_page table
-            self::$gid      = (int) $id;
-            $this->pagename = $pagename;
-            $this->findPageId();
-            $this->wrapper  = new WikiPageWrapper(self::$gid);
-          }
+            if(empty($pagename)) {
+              //Given number is the WikiPage id from wiki_page table
+                $this->id = (int) $id;
+                $this->initFromDb();
+            }
+            else {
+              //Given number is group_id from wiki_page table
+                self::$gid      = (int) $id;
+                $this->pagename = $pagename;
+                $this->findPageId();
+                $this->wrapper  = new WikiPageWrapper(self::$gid);
+            }
         }
         else {
-          $this->id       = 0;
-          $this->pagename = '';
-          self::$gid      = 0;
-          $this->wrapper  = null;
+            $this->id       = 0;
+            $this->pagename = '';
+            self::$gid      = 0;
+            $this->wrapper  = null;
         }
 
         $this->referenced = $this->isWikiPageReferenced();
@@ -233,29 +233,29 @@ class WikiPage {
     function isEmpty() {
         // If this value is already computed, return now !
         if($this->empty != null) {
-          return $this->empty;
+            return $this->empty;
         }
 
         // Else compute
         $this->empty=true;
         if($this->exist()) {
-          $res = db_query(' SELECT wiki_page.id'
+            $res = db_query(' SELECT wiki_page.id'
                           .' FROM wiki_page, wiki_nonempty'
                           .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                           .' AND wiki_page.id="'.db_ei($this->id).'"'
                           .' AND wiki_nonempty.id=wiki_page.id');
-          if(db_numrows($res) == 1) {
-            $this->empty = false;
-          }
+            if(db_numrows($res) == 1) {
+                $this->empty = false;
+            }
         }
 
         return $this->empty;
     }
 
     public function permissionExist() {
-      if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id))
+        if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id))
         return true;
-      else
+        else
         return false;
     }
 
@@ -323,18 +323,18 @@ class WikiPage {
      * @todo transfer to Wrapper
      */
     function exist() {
-      return($this->id != 0);
+        return($this->id != 0);
     }
 
     public function log($user_id) {
-      $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
+        $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
             ."VALUES ('".db_ei($user_id)."','".db_ei(self::$gid)."','".db_es($this->pagename)."','".db_ei(time())."')";
-      db_query($sql);
+        db_query($sql);
     }
 
     public function render($lite=false, $full_screen=false) {
-      $wpw = new WikiPageWrapper(self::$gid);
-      $wpw->render($lite, $full_screen);
+        $wpw = new WikiPageWrapper(self::$gid);
+        $wpw->render($lite, $full_screen);
     }
 
     /**
@@ -395,7 +395,7 @@ class WikiPage {
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ('.implode(',', $admin_pages_db_escaped).')');
         while($row = db_fetch_array($res)) {
-          $allPages[]=$row[0];
+            $allPages[]=$row[0];
         }
 
         return $allPages;
@@ -420,7 +420,7 @@ class WikiPage {
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ('.implode(',', $default_pages_db_escaped).')');
         while($row = db_fetch_array($res)) {
-          $allPages[]=$row[0];
+            $allPages[]=$row[0];
         }
 
         return $allPages;
@@ -445,7 +445,7 @@ class WikiPage {
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
         while($row = db_fetch_array($res)) {
-          $allPages[]=$row[0];
+            $allPages[]=$row[0];
         }
 
         return $allPages;
@@ -565,7 +565,7 @@ class WikiPage {
              ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin"
              
              );
-  }
+    }
 
   /**
    * List all PhpWiki Admin pages 

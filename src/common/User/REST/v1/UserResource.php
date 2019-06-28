@@ -499,13 +499,13 @@ class UserResource extends AuthenticatedResource {
      * @return bool
      *
      */
-     private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee) {
+    private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee) {
         if ($watcher->isSuperUser()) {
             return true;
         }
 
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $watcher, new User_ForgeUserGroupPermission_UserManagement()
+           $watcher, new User_ForgeUserGroupPermission_UserManagement()
         );
     }
 

@@ -21,7 +21,7 @@
 
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField {
     
-	public $default_properties = array(
+    public $default_properties = array(
         'static_value' => array(
             'value' => '',
             'type'  => 'rich_text',
@@ -35,13 +35,13 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     
     public function getRichText() {
         if ($row = $this->getDao()->searchByFieldId($this->id)->getRow()) {
-        	$hp = Codendi_HTMLPurifier::instance();
-        	$value = $row['static_value'];
-        	return $hp->purify($value, CODENDI_PURIFIER_FULL);
+            $hp = Codendi_HTMLPurifier::instance();
+            $value = $row['static_value'];
+            return $hp->purify($value, CODENDI_PURIFIER_FULL);
         } else {
             return '';
         }
-    	
+        
     }
     
     protected function getDao() {

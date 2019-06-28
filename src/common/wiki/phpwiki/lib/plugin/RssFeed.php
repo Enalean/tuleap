@@ -45,13 +45,13 @@ extends WikiPlugin
 
     // Establish default values for each of this plugin's arguments.
     function getDefaultArguments() {
-        return array('feed' 		=> "",
-                     'description' 	=> "",
-                     'url' 		=> "", //"http://phpwiki.org/RecentChanges?format=rss",
-                     'maxitem' 		=> 0,
-                     'debug' 		=> false,
+        return array('feed'         => "",
+                     'description'     => "",
+                     'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
+                     'maxitem'         => 0,
+                     'debug'         => false,
                      );
-   }
+    }
 
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));

@@ -203,7 +203,7 @@ class ArtifactTest extends RestBase {
         $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
-   }
+    }
 
     /**
      * @depends testPOSTArtifactInXMLTracker
@@ -288,5 +288,5 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'Sloganv2');
         $this->assertEquals((string) $artifact_xml->values_by_field->epic_desc->format, 'html');
         $this->assertEquals((string) $artifact_xml->values_by_field->epic_desc->value, 'Descv2');
-   }
+    }
 }

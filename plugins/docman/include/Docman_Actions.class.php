@@ -136,59 +136,59 @@ class Docman_Actions extends Actions {
         }
 
         switch ($iFactory->getItemTypeForItem($item)) {
-        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-            if ($request->exist('upload_content')) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                if ($request->exist('upload_content')) {
 
-                if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
+                    if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+                        $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
+                    } else {
+                        $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number);
+                    }
+
+                    if ($path) {
+                        $uploadSucceded = true;
+
+                        if ($request->exist('file_name')) {
+                            $_filename = basename($request->get('file_name'));
+                        } else {
+                            $_filename = basename($path);
+                        }
+
+                        $_filesize = filesize($path);
+
+                        if ($request->exist('mime_type')) {
+                            $_filetype = $request->get('mime_type');
+                        } else {
+                            $_filetype = mime_content_type($path); //be careful with false detection
+                        }
+                    }
                 } else {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number);
+                    $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
+                    if ($path) {
+                        $uploadSucceded = true;
+                        $_filename = $_FILES['file']['name'];
+                        $_filesize = $_FILES['file']['size'];
+                        $_filetype = $_FILES['file']['type']; //TODO detect mime type server side
+                    }
                 }
 
-                if ($path) {
+                $mime_type_detector = new Docman_MIMETypeDetector();
+                if ($path && $mime_type_detector->isAnOfficeFile($_filename)) {
+                    $_filetype = $mime_type_detector->getRightOfficeType($_filename);
+                }
+
+            break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
                     $uploadSucceded = true;
 
-                    if ($request->exist('file_name')) {
-                        $_filename = basename($request->get('file_name'));
-                    } else {
-                        $_filename = basename($path);
-                    }
-
+                    //TODO take mimetype once the file has been written ?
+                    $_filename = basename($path);
                     $_filesize = filesize($path);
-
-                    if ($request->exist('mime_type')) {
-                        $_filetype = $request->get('mime_type');
-                    } else {
-                        $_filetype = mime_content_type($path); //be careful with false detection
-                    }
+                    $_filetype = 'text/html';
                 }
-            } else {
-                $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
-                if ($path) {
-                    $uploadSucceded = true;
-                    $_filename = $_FILES['file']['name'];
-                    $_filesize = $_FILES['file']['size'];
-                    $_filetype = $_FILES['file']['type']; //TODO detect mime type server side
-                }
-            }
-
-            $mime_type_detector = new Docman_MIMETypeDetector();
-            if ($path && $mime_type_detector->isAnOfficeFile($_filename)) {
-                $_filetype = $mime_type_detector->getRightOfficeType($_filename);
-            }
-
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-            if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
-                $uploadSucceded = true;
-
-                //TODO take mimetype once the file has been written ?
-                $_filename = basename($path);
-                $_filesize = filesize($path);
-                $_filetype = 'text/html';
-            }
-            break;
-        default:
+            default:
             break;
         }
 
@@ -600,7 +600,7 @@ class Docman_Actions extends Actions {
             }
 
             if($statusChanged) {
-               $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
             }
 
             if($create_date_changed) {
@@ -938,27 +938,27 @@ class Docman_Actions extends Actions {
      *
      * @return void
      */
-	function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode) {
-		$user      = $this->_controler->getUser();
-	    $mdMapping = false;
-	    switch ($srcMode) {
-	        case 'copy':
-				$dataRoot = $this->_controler->getProperty('docman_root');
-	            $this->_doCopyPaste($itemToPaste, $newParentItem, $user, $rank, $importMd, $dataRoot);
-	            break;
+    function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode) {
+        $user      = $this->_controler->getUser();
+        $mdMapping = false;
+        switch ($srcMode) {
+            case 'copy':
+                $dataRoot = $this->_controler->getProperty('docman_root');
+                $this->_doCopyPaste($itemToPaste, $newParentItem, $user, $rank, $importMd, $dataRoot);
+                break;
 
-	        case 'cut':
-	            $this->_doCutPaste($itemToPaste, $newParentItem, $user, $rank);
-	            break;
-	    }
-	    $this->event_manager->processEvent('send_notifications', array());
-	}
+            case 'cut':
+                $this->_doCutPaste($itemToPaste, $newParentItem, $user, $rank);
+                break;
+        }
+        $this->event_manager->processEvent('send_notifications', array());
+    }
 
     function paste($params) {
-		$this->doPaste($this->_controler->_actionParams['itemToPaste'],
-					   $this->_controler->_actionParams['item'],
-					   $this->_controler->_actionParams['rank'],
-					   $this->_controler->_actionParams['importMd'],
+        $this->doPaste($this->_controler->_actionParams['itemToPaste'],
+                       $this->_controler->_actionParams['item'],
+                       $this->_controler->_actionParams['rank'],
+                       $this->_controler->_actionParams['importMd'],
                        $this->_controler->_actionParams['srcMode']);
     }
 
@@ -1938,11 +1938,11 @@ class Docman_Actions extends Actions {
                 $this->_approval_update_add_users($atrf, $usUserList, $sUgroup);
                 if(is_array($sSelUser) && count($sSelUser) > 0) {
                     switch($sSelUserAct){
-                    case 'del':
-                        $this->_approval_update_del_users($atrf, $sSelUser);
+                        case 'del':
+                            $this->_approval_update_del_users($atrf, $sSelUser);
                         break;
-                    case 'mail':
-                        $this->_approval_update_notify_users($atrf, $sSelUser);
+                        case 'mail':
+                            $this->_approval_update_notify_users($atrf, $sSelUser);
                         break;
                     }
                 }
@@ -1970,7 +1970,7 @@ class Docman_Actions extends Actions {
         }
     }
 
-   function approval_upd_user() {
+    function approval_upd_user() {
         // Params
         $item    = $this->_controler->_actionParams['item'];
         $sUserId = $this->_controler->_actionParams['user_id'];

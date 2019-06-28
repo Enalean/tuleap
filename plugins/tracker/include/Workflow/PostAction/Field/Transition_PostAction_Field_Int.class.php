@@ -125,7 +125,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
             $child = $root->addChild(Transition_PostAction_Field_Int::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
-         }
+        }
     }
     
     /**

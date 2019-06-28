@@ -72,7 +72,7 @@ extends WikiPlugin
         if (isset($this->_links)) 
             return $this->_links;
         else {
-            global $request;	
+            global $request;    
             $this->run($request->_dbi, $argstr, $request, $basepage);
             return $this->_links;
         }

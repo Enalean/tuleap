@@ -12,11 +12,11 @@
 
 // Printer version ?
 if ( !$request->exist('pv') ) {
-	$pv = false;
-	$ro = false;
+    $pv = false;
+    $ro = false;
 } else {
     $pv = $request->get('pv');
-	if ( $pv ) $ro = true;
+    if ( $pv ) $ro = true;
 }
 
 if ($request->exist('advsrch')) {
@@ -38,21 +38,21 @@ echo '<div id="tracker_toolbar_clear"></div>';
 $submit = $request->get('submit_btn');
 if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {
     $mass_change_ids = $request->get('mass_change_ids');
-  if (!$mass_change_ids) {
-    $feedback = $Language->getText('tracker_masschange_detail','no_items_selected');
-  } else {
-    $ath->displayMassChange($ro, $mass_change_ids);
-  }
+    if (!$mass_change_ids) {
+        $feedback = $Language->getText('tracker_masschange_detail','no_items_selected');
+    } else {
+        $ath->displayMassChange($ro, $mass_change_ids);
+    }
 } else {
   // If still not defined then force it to system 'Default' report
-  $report_id = $request->get('report_id');
-  if (!$report_id) { $report_id=100; }
+    $report_id = $request->get('report_id');
+    if (!$report_id) { $report_id=100; }
   // Create factories
-  $report_fact = new ArtifactReportFactory();
+    $report_fact = new ArtifactReportFactory();
   // Create the HTML report object
-  $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
-  $query = $art_field_fact->extractFieldList();
-  $ath->displayMassChange($ro, null,$query,$art_report_html, $advsrch);
+    $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
+    $query = $art_field_fact->extractFieldList();
+    $ath->displayMassChange($ro, null,$query,$art_report_html, $advsrch);
 }
 
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');

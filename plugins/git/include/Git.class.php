@@ -1178,12 +1178,12 @@ class Git extends PluginController
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
             $deleted_repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
-            case 'GIT_REPO_CREATE':
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for a repository creation (%1$s), it will be processed in one minute or two. Please be patient!'), $p[1]));
+                case 'GIT_REPO_CREATE':
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for a repository creation (%1$s), it will be processed in one minute or two. Please be patient!'), $p[1]));
                 break;
 
-            case 'GIT_REPO_DELETE':
-                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for repository \'%1$s\' deletion, it will be processed in one minute or two. Please be patient!'), $deleted_repository->getFullName()));
+                case 'GIT_REPO_DELETE':
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for repository \'%1$s\' deletion, it will be processed in one minute or two. Please be patient!'), $deleted_repository->getFullName()));
                 break;
             }
         }

@@ -37,14 +37,14 @@ function undo_enable(bool) {
    if (bool) {
      sr_undo.src='".$undo_btn."';
      sr_undo.alt='"
-._("Undo")
-."';
+            ._("Undo")
+            ."';
      sr_undo.disabled = false;
    } else {
      sr_undo.src='".$undo_d_btn."';
      sr_undo.alt='"
-._("Undo disabled")
-."';
+            ._("Undo disabled")
+            ."';
      sr_undo.disabled = true;
      if(sr_undo.blur) sr_undo.blur();
   }
@@ -52,16 +52,16 @@ function undo_enable(bool) {
 function replace() {
    replacewin = window.open('','','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,height=90,width=450');
    replacewin.window.document.write('<html><head><title>"
-._("Search & Replace")
-."</title><style type=\"text/css\"><'+'!'+'-- body, input {font-family:Tahoma,Arial,Helvetica,sans-serif;font-size:10pt;font-weight:bold;} td {font-size:9pt}  --'+'></style></head><body bgcolor=\"#dddddd\" onload=\"if(document.forms[0].ein.focus) document.forms[0].ein.focus(); return false;\"><form><center><table><tr><td align=\"right\">'+'"
-._("Search")
-.":</td><td align=\"left\"><input type=\"text\" name=\"ein\" size=\"45\" maxlength=\"500\"></td></tr><tr><td align=\"right\">'+' "
-._("Replace with")
-.":</td><td align=\"left\"><input type=\"text\" name=\"aus\" size=\"45\" maxlength=\"500\"></td></tr><tr><td colspan=\"2\" align=\"center\"><input type=\"button\" value=\" "
-._("OK")
-." \" onclick=\"if(self.opener)self.opener.do_replace(); return false;\">&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\""
-._("Close")
-."\" onclick=\"self.close(); return false;\"></td></tr></table></center></form></body></html>');
+            ._("Search & Replace")
+            ."</title><style type=\"text/css\"><'+'!'+'-- body, input {font-family:Tahoma,Arial,Helvetica,sans-serif;font-size:10pt;font-weight:bold;} td {font-size:9pt}  --'+'></style></head><body bgcolor=\"#dddddd\" onload=\"if(document.forms[0].ein.focus) document.forms[0].ein.focus(); return false;\"><form><center><table><tr><td align=\"right\">'+'"
+            ._("Search")
+            .":</td><td align=\"left\"><input type=\"text\" name=\"ein\" size=\"45\" maxlength=\"500\"></td></tr><tr><td align=\"right\">'+' "
+            ._("Replace with")
+            .":</td><td align=\"left\"><input type=\"text\" name=\"aus\" size=\"45\" maxlength=\"500\"></td></tr><tr><td colspan=\"2\" align=\"center\"><input type=\"button\" value=\" "
+            ._("OK")
+            ." \" onclick=\"if(self.opener)self.opener.do_replace(); return false;\">&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\""
+            ._("Close")
+            ."\" onclick=\"self.close(); return false;\"></td></tr></table></center></form></body></html>');
    replacewin.window.document.close();
    return false;
 }
@@ -75,10 +75,10 @@ function do_replace() {
    txt=txt.replace(ein,aus);
    ein=ein.toString().substring(1,ein.toString().length-2);
    result(z_repl, '"
-.sprintf(_("Substring \"%s\" found %s times. Replace with \"%s\"?"), "'+ein+'", "'+z_repl+'", "'+aus+'")
-."', txt, '"
-.sprintf(_("String \"%s\" not found."), "'+ein+'")
-."');
+            .sprintf(_("Substring \"%s\" found %s times. Replace with \"%s\"?"), "'+ein+'", "'+z_repl+'", "'+aus+'")
+            ."', txt, '"
+            .sprintf(_("String \"%s\" not found."), "'+ein+'")
+            ."');
    replacewin.window.focus();
    replacewin.window.document.forms[0].ein.focus();
    return false;
@@ -100,8 +100,8 @@ function do_undo() {
       undo_buffer_index--;
       if(undo_buffer_index==0) {
          alert('".
-_("Operation undone")
-."');
+            _("Operation undone")
+            ."');
          undo_enable(false);
       }
    }

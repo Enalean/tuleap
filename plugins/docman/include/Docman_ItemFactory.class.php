@@ -104,16 +104,16 @@ class Docman_ItemFactory
     {
         $item = null;
         switch($row['item_type']) {
-        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
-            $item = new Docman_Folder($row);
+            case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+                $item = new Docman_Folder($row);
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-            $item = new Docman_File($row);
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $item = new Docman_File($row);
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
-            $item = new Docman_Link($row);
-            if (isset($row['link_version_id'])) {
-                $item->setCurrentVersion(
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $item = new Docman_Link($row);
+                if (isset($row['link_version_id'])) {
+                    $item->setCurrentVersion(
                     new Docman_LinkVersion(
                         array(
                             'id'        => $row['link_version_id'],
@@ -126,19 +126,19 @@ class Docman_ItemFactory
                             'link_url'      => $row['link_version_link_url']
                         )
                     )
-                );
-            }
+                    );
+                }
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-            $item = new Docman_EmbeddedFile($row);
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                $item = new Docman_EmbeddedFile($row);
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
-            $item = new Docman_Wiki($row);
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $item = new Docman_Wiki($row);
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
-            $item = new Docman_Empty($row);
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+                $item = new Docman_Empty($row);
             break;
-        default:
+            default:
             return;
         }
         if ($row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
@@ -164,25 +164,25 @@ class Docman_ItemFactory
 
     function getItemTypeAsText($itemTypeId) {
         switch($itemTypeId) {
-        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_folder');
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_file');
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_link');
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_embeddedfile');
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_wiki');
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
             return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_empty');
             break;
-        default:
+            default:
             return $GLOBALS['Language']->getText('include_html','unknown_value');
         }
     }
@@ -197,7 +197,7 @@ class Docman_ItemFactory
                 $type = PLUGIN_DOCMAN_ITEM_TYPE_LINK;
                 break;
             case 'docman_wiki':
-               $type = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
                 break;
             case 'docman_file':
                 $type = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
@@ -488,7 +488,7 @@ class Docman_ItemFactory
                         $itemList[$id] = $this->getItemFromRow($itemRows[$id]);
                         $itemList[$itemList[$id]->getParentId()]->addItem($itemList[$id]);
                     } else {
-                       unset($parentIds[$id]);
+                        unset($parentIds[$id]);
                     }
                 }
             }
@@ -925,7 +925,7 @@ class Docman_ItemFactory
         return $movable;
     }
 
-   function setNewParent($item_id, $new_parent_id, $ordering) {
+    function setNewParent($item_id, $new_parent_id, $ordering) {
         $item = $this->getItemFromDb($item_id);
         $dao  = $this->_getItemDao();
         return $item && $this->isMoveable($item) && $dao->setNewParent($item_id, $new_parent_id, $ordering);
@@ -988,10 +988,10 @@ class Docman_ItemFactory
         $dpm = Docman_PermissionsManager::instance($this->groupId);
         $dpm->retreiveReadPermissionsForItems($itemIds, $user);
         foreach($itemArray as $item) {
-             if(!$dpm->userCanRead($user, $item->getId())) {
-                 unset($itemList[$item->getId()]);
-                 unset($orphans[$item->getId()]);
-             }
+            if(!$dpm->userCanRead($user, $item->getId())) {
+                unset($itemList[$item->getId()]);
+                unset($orphans[$item->getId()]);
+            }
         }
 
         // Now, here we go

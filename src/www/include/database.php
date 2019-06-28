@@ -36,7 +36,7 @@ function db_query($sql,$print=0) {
  * @deprecated
  */
 function db_query_params($sql, $params) {
-	$dar = CodendiDataAccess::instance()->query($sql, $params);
+    $dar = CodendiDataAccess::instance()->query($sql, $params);
     $GLOBALS['db_qhandle'] = $dar->getResult();
     /** @psalm-suppress DeprecatedFunction */
     if (db_numrows($GLOBALS['db_qhandle'])) {
@@ -50,11 +50,11 @@ function db_query_params($sql, $params) {
  * @deprecated
  */
 function db_numrows($qhandle) {
-	// return only if qhandle exists, otherwise 0
-	if ($qhandle) {
-	    return @CodendiDataAccess::instance()->numRows($qhandle);
-	}
-	return 0;
+    // return only if qhandle exists, otherwise 0
+    if ($qhandle) {
+        return @CodendiDataAccess::instance()->numRows($qhandle);
+    }
+    return 0;
 }
 
 /**
@@ -97,22 +97,22 @@ function db_affected_rows($qhandle) {
  * @deprecated
  */
 function db_fetch_array($qhandle = 0) {
-	if ($qhandle) {
-	    return CodendiDataAccess::instance()->fetchArray($qhandle);
-	} else {
-		if ($GLOBALS['db_qhandle']) {
-			return CodendiDataAccess::instance()->fetchArray($GLOBALS['db_qhandle']);
-		} else {
-			return (array());
-		}
-	}
+    if ($qhandle) {
+        return CodendiDataAccess::instance()->fetchArray($qhandle);
+    } else {
+        if ($GLOBALS['db_qhandle']) {
+            return CodendiDataAccess::instance()->fetchArray($GLOBALS['db_qhandle']);
+        } else {
+            return (array());
+        }
+    }
 }
 
 /**
  * @deprecated
  */
 function db_insertid($qhandle) {
-	return CodendiDataAccess::instance()->lastInsertId();
+    return CodendiDataAccess::instance()->lastInsertId();
 }
 
 /**
@@ -131,8 +131,8 @@ function db_error() {
  *
  *  Reset is useful for db_fetch_array sometimes you need to start over
  *
- *  @param		string	Query result set handle
- *  @param		int		Row number
+ *  @param        string    Query result set handle
+ *  @param        int        Row number
  *
  * @deprecated
  */

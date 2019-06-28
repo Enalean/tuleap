@@ -65,10 +65,10 @@ class FRSPackageFactory {
         $_id = (int) $package_id;
         $dao = $this->_getFRSPackageDao();
         if($group_id){
-        	$_group_id = (int) $group_id;
-        	$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
+            $_group_id = (int) $group_id;
+            $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
         }else{
-        	$dar = $dao->searchById($_id, $extraFlags);
+            $dar = $dao->searchById($_id, $extraFlags);
         }
         if($dar->isError()){
             return;
@@ -84,7 +84,7 @@ class FRSPackageFactory {
     }
     
     function getFRSPackageByFileIdFromDb($file_id){
-    	$_id = (int) $file_id;
+        $_id = (int) $file_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
         
@@ -198,7 +198,7 @@ class FRSPackageFactory {
     }
 
     function getPackageIdByName($package_name, $group_id){
-    	$_id = (int) $group_id;
+        $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
@@ -207,7 +207,7 @@ class FRSPackageFactory {
         }
         
         if(!$dar->valid()){
-        	return;
+            return;
         }else{
             $res = $dar->current();
             return $res['package_id'];
@@ -215,7 +215,7 @@ class FRSPackageFactory {
     }
 
     function isPackageNameExist($package_name, $group_id){
-    	$_id = (int) $group_id;
+        $_id = (int) $group_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchPackageByName($package_name, $_id);
 
@@ -382,9 +382,9 @@ class FRSPackageFactory {
      *
      * @return bool true of user can update the package $package_id, false otherwise
      */ 
-	function userCanUpdate($group_id, $package_id, $user_id=false) {
+    function userCanUpdate($group_id, $package_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
-	}
+    }
 
     /**
      * Returns true if user has permissions to Create packages

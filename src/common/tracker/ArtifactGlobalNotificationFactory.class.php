@@ -55,10 +55,10 @@ class ArtifactGlobalNotificationFactory {
         $feedback = '';
         $arr_email_address = preg_split('/[,;]/D', $data['addresses']);
         if (!util_validateCCList($arr_email_address, $feedback, false)) {
-          $GLOBALS['Response']->addFeedback('error', $feedback);
+            $GLOBALS['Response']->addFeedback('error', $feedback);
         } else {
-          $data['addresses'] = util_cleanup_emails(implode(', ', $arr_email_address));
-          return $dao->modify($global_notification_id, $data);
+            $data['addresses'] = util_cleanup_emails(implode(', ', $arr_email_address));
+            return $dao->modify($global_notification_id, $data);
         }
         return false;
     }

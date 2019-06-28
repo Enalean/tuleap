@@ -52,7 +52,7 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                   's' 	=> false,
+                   's'     => false,
                    /* Columns to include in listing */
                    'info'     => 'some',
                    ));
@@ -92,7 +92,7 @@ extends WikiPlugin_WikiAdminSelect
         $regex = !empty($post_args['regex']);
         foreach ($pages as $pagename) {
             if (!mayAccessPage('edit',$pagename)) {
-		$ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.",$pagename)));
+                $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.",$pagename)));
             } elseif (($result = $this->replaceHelper($dbi, $pagename, $from, $to, $case_exact, $regex))) {
                 $ul->pushContent(HTML::li(fmt("Replaced '%s' with '%s' in page '%s'.", $from, $to, WikiLink($pagename))));
                 $count++;
@@ -112,7 +112,7 @@ extends WikiPlugin_WikiAdminSelect
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
-    	// no action=replace support yet
+        // no action=replace support yet
         if ($request->getArg('action') != 'browse')
             return $this->disabled("(action != 'browse')");
         

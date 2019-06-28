@@ -232,7 +232,7 @@ class GitActions extends PluginActions
     }
 
     public function process($action, $params) {
-       return call_user_func_array(array($this,$action), $params);
+        return call_user_func_array(array($this,$action), $params);
     }
 
     public function deleteRepository( $projectId, $repositoryId ) {
@@ -1141,7 +1141,7 @@ class GitActions extends PluginActions
 
     public function migrateToGerrit(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
         try {
-           $this->migration_handler->migrate($repository, $remote_server_id, $gerrit_template_id, $user);
+            $this->migration_handler->migrate($repository, $remote_server_id, $gerrit_template_id, $user);
         } catch (Exception $e) {
             $this->logger->log($e->getMessage(), Feedback::ERROR);
         }

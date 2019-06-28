@@ -527,7 +527,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             return $html;
         }
 
-       if ($criteria->is_advanced) {
+        if ($criteria->is_advanced) {
             $multiple = ' multiple="multiple" ';
             $size     = ' size="'. min(7, count($user_groups) + 2) .'" ';
         }
@@ -717,7 +717,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $ugroups = array();
 
         foreach($value_ids as $v) {
-           $ugroups[] = $v['ugroup_id'];
+            $ugroups[] = $v['ugroup_id'];
         }
 
         $changeset_value = new Tracker_Artifact_ChangesetValue_PermissionsOnArtifact($value_id, $changeset, $this, $has_changed, $changeset->getArtifact()->useArtifactPermissions(), $ugroups);

@@ -410,12 +410,12 @@ class ReferenceManager {
         $xref_dao->updateSourceKeyword($old_short_name, $new_short_name, $group_id);
     }
 
-     function createSystemReferenceGroup($template_id,$group_id,$refid) {
+    function createSystemReferenceGroup($template_id,$group_id,$refid) {
         $reference_dao = $this->_getReferenceDao();
         $proj_ref= $this->loadReference($refid, $template_id);// Is it active in template project ?
         $rgid = $reference_dao->create_ref_group($refid,
-                                                 ($proj_ref==null?false:$proj_ref->isActive()),
-                                                 $group_id);
+                                                ($proj_ref==null?false:$proj_ref->isActive()),
+                                                $group_id);
     }
 
     /**
@@ -1086,7 +1086,7 @@ class ReferenceManager {
         if ($row = $dar->getRow())
             return false;
         else return true;
-        }
+    }
 
     function _isKeywordExists($keyword, $group_id) {
         $reference_dao = $this->_getReferenceDao();

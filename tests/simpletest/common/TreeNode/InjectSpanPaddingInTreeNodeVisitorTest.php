@@ -29,8 +29,8 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
     * ROOT
     * |
     * +-Child 1 (id:6, al:8)
-    * 	 |
-    * 	 '-Child 2 (id:8)
+    *      |
+    *      '-Child 2 (id:8)
     *
     */
     protected function given_AParentWithOneChildTreeNode() {

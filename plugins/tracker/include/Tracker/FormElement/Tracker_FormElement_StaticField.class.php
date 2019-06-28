@@ -30,7 +30,7 @@
  */
 abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
 
-	/**
+    /**
      * getLabel - the label of this Tracker_FormElement_Line_Break
      * The tracker label can be internationalized.
      * To do this, fill the name field with the ad-hoc format.
@@ -85,7 +85,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     }
 
 
-	// TODO : remove these functions (no need for that kind of "fields"
+    // TODO : remove these functions (no need for that kind of "fields"
     public function fetchAddCriteria($used, $prefix = '') {
         return null;
     }

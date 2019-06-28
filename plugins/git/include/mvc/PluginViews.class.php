@@ -36,10 +36,10 @@ class PluginViews {
     protected $controller;
 
     public function __construct($controller) {
-      $this->controller   = $controller;
-      $this->request      = $controller->getRequest();
-      $this->HTMLPurifier = Codendi_HTMLPurifier::instance();
-      $this->user         = $controller->getUser();
+        $this->controller   = $controller;
+        $this->request      = $controller->getRequest();
+        $this->HTMLPurifier = Codendi_HTMLPurifier::instance();
+        $this->user         = $controller->getUser();
     }
 
     public function getController() {

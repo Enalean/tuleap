@@ -66,7 +66,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
                     , 1)
                 FROM artifact_field
                 WHERE field_name NOT IN('comment_type_id') AND group_artifact_id = $tv3_id";
-       $this->update($sql);
+        $this->update($sql);
     }
 
     private function duplicateFieldUsageAndRanking($tv3_id, $tv5_id) {
@@ -154,7 +154,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
                      INNER JOIN tracker_field AS f ON (f.id = l.field_id)
                      INNER JOIN artifact_field as a ON (a.field_id = f.old_id AND f.tracker_id = $tv5_id AND a.group_artifact_id = $tv3_id)
                 WHERE bind_type = 'users'";
-       $this->update($sql);
+        $this->update($sql);
     }
 
     private function insertIntoFieldListBindDecorators($tv3_id, $tv5_id) {
@@ -200,7 +200,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
                     SELECT id, 'artifact_submitters'
                     FROM tracker_field
                     WHERE formElement_type = 'subby' AND tracker_id = $tv5_id";
-       $this->update($sql);
+        $this->update($sql);
     }
 }
 ?>

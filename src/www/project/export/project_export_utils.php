@@ -92,7 +92,7 @@ function build_csv_record($col_list, $record) {
 }
 
 function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false){
-   global $Language;
+    global $Language;
 
     $title_arr=array();
     $title_arr[]=$Language->getText('project_export_utils','label');
@@ -104,10 +104,10 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     echo html_build_list_table_top ($title_arr);
     $cnt = 0;
     foreach ($col_list as $col) {
-      $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
-      echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
-	'<td><b>'.$lbl_list[$col].'</b>'.$star.
-	'</td><td>'.nl2br($purifier->purify($sample_val[$col])).'</td><td>'.$purifier->purify($dsc_list[$col]).'</td></tr>';
+        $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
+        echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
+        '<td><b>'.$lbl_list[$col].'</b>'.$star.
+        '</td><td>'.nl2br($purifier->purify($sample_val[$col])).'</td><td>'.$purifier->purify($dsc_list[$col]).'</td></tr>';
     }
 
     echo '</table>';
@@ -123,13 +123,13 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
     // If there is an item  available pick one at random
     // and display Sample values. 
     if ($result && $numrows > 0) {
-	$pickone = ($numrows <= 1 ? 0:rand(0, $numrows-1));
+        $pickone = ($numrows <= 1 ? 0:rand(0, $numrows-1));
     }
 
     // Build the array with the record picked at random
     $record = array();
     foreach ($col_list as $col) {
-	    $record[$col] = db_result($result,$pickone,$col);
+        $record[$col] = db_result($result,$pickone,$col);
     }
 
     return $record;
@@ -157,60 +157,60 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
        Input: a row from the artifact table (passed by reference.
        Output: the same row with values transformed for export
     */
-	
+    
     $line = '';
     foreach ($fields as $field) {
 
-		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
-			$values = array();
-			if ( $field->isStandardField() ) {
-				$values[] = $record[$field->getName()];
-			} else {
-				$values = $field->getValues($record['artifact_id']);
-			}
-			$label_values = $field->getLabelValues($group_artifact_id,$values);
-			$record[$field->getName()] = SimpleSanitizer::unsanitize(join(",",$label_values));
-			
-		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
-		    // all text fields converted from HTML to ASCII
-		    $record[$field->getName()] = prepare_textarea($record[$field->getName()]);
-		 
-		} else if ( $field->isDateField() ) {
+        if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
+            $values = array();
+            if ( $field->isStandardField() ) {
+                $values[] = $record[$field->getName()];
+            } else {
+                $values = $field->getValues($record['artifact_id']);
+            }
+            $label_values = $field->getLabelValues($group_artifact_id,$values);
+            $record[$field->getName()] = SimpleSanitizer::unsanitize(join(",",$label_values));
+            
+        } else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
+            // all text fields converted from HTML to ASCII
+            $record[$field->getName()] = prepare_textarea($record[$field->getName()]);
+         
+        } else if ( $field->isDateField() ) {
 
-		    // replace the date fields (unix time) with human readable dates that
-		    // is also accepted as a valid format in future import
-		    if ($record[$field->getName()] == '') {
-				// if date undefined then set datetime to 0. Ideally should
-				// NULL as well but if we pass NULL it is interpreted as a string
-				// later in the process
-				$record[$field->getName()] = '0';
-		    } else {
-		        if ($export == 'database') {
-				    $record[$field->getName()] = format_date($datetime_fmt, $record[$field->getName()]);
-		        } else {
-		            $record[$field->getName()] = format_date(util_get_user_preferences_export_datefmt(), $record[$field->getName()]);
-		        }
-		    }
-		} else if ( $field->isFloat() ) {
-			$record[$field->getName()] = number_format($record[$field->getName()],2);
-		}
+            // replace the date fields (unix time) with human readable dates that
+            // is also accepted as a valid format in future import
+            if ($record[$field->getName()] == '') {
+          // if date undefined then set datetime to 0. Ideally should
+          // NULL as well but if we pass NULL it is interpreted as a string
+          // later in the process
+                $record[$field->getName()] = '0';
+            } else {
+                if ($export == 'database') {
+                    $record[$field->getName()] = format_date($datetime_fmt, $record[$field->getName()]);
+                } else {
+                    $record[$field->getName()] = format_date(util_get_user_preferences_export_datefmt(), $record[$field->getName()]);
+                }
+            }
+        } else if ( $field->isFloat() ) {
+            $record[$field->getName()] = number_format($record[$field->getName()],2);
+        }
     }
 
-	// Follow ups
-	$ah=new ArtifactHtml($at,$record['artifact_id']);
-	$sys_lf_sav = $sys_lf;
-	$sys_lf = "\n";
+    // Follow ups
+    $ah=new ArtifactHtml($at,$record['artifact_id']);
+    $sys_lf_sav = $sys_lf;
+    $sys_lf = "\n";
     $record['follow_ups'] = $ah->showFollowUpComments($at->Group->getID(),true, Artifact::OUTPUT_EXPORT);
-	$sys_lf = $sys_lf_sav;
+    $sys_lf = $sys_lf_sav;
 
-	// Dependencies
+    // Dependencies
     $result=$ah->getDependencies();
     $rows=db_numrows($result);
     $dependent = '';
     for ($i=0; $i < $rows; $i++) {
-		$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
-		$dependent .= $dependent_on_artifact_id.",";
-	}
+        $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
+        $dependent .= $dependent_on_artifact_id.",";
+    }
     $record['is_dependent_on'] = (($dependent !== '')?substr($dependent,0,strlen($dependent)-1):$Language->getText('global','none'));
     
     //CC
@@ -226,7 +226,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
 
 function prepare_artifact_history_record($at, $art_field_fact, &$record) {
   
-  global $datetime_fmt;
+    global $datetime_fmt;
   
   /*
            Prepare the column values in the bug history  record
@@ -236,89 +236,89 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
   */
   
   // replace the modification date field with human readable dates 
-  $record['date'] = format_date($datetime_fmt,$record['date']);
+    $record['date'] = format_date($datetime_fmt,$record['date']);
   
-  $field = $art_field_fact->getFieldFromName($record['field_name']);
-  if ( $field ) {
-    prepare_historic_value($record, $field, $at->getID(), 'old_value');
-    prepare_historic_value($record, $field, $at->getID(), 'new_value');
-  }	else {
-  	if (preg_match("/^(lbl_)/",$record['field_name']) && preg_match("/(_comment)$/",$record['field_name'])) {
-  		$record['field_name'] = "comment";
-  		$record['label'] = "comment";
-  	}
-  }
+    $field = $art_field_fact->getFieldFromName($record['field_name']);
+    if ( $field ) {
+        prepare_historic_value($record, $field, $at->getID(), 'old_value');
+        prepare_historic_value($record, $field, $at->getID(), 'new_value');
+    }    else {
+        if (preg_match("/^(lbl_)/",$record['field_name']) && preg_match("/(_comment)$/",$record['field_name'])) {
+            $record['field_name'] = "comment";
+            $record['label'] = "comment";
+        }
+    }
   
   
   // Decode the comment type value. If null make sure there is
   // a blank entry in the array
-  if (isset($record['type'])) {
-    $field = $art_field_fact->getFieldFromName('comment_type_id');
-    if ( $field ) {
-      $values[] = $record['type'];
-      $label_values = $field->getLabelValues($at->getID(),$values);
-      $record['type'] = join(",",$label_values);
+    if (isset($record['type'])) {
+        $field = $art_field_fact->getFieldFromName('comment_type_id');
+        if ( $field ) {
+            $values[] = $record['type'];
+            $label_values = $field->getLabelValues($at->getID(),$values);
+            $record['type'] = join(",",$label_values);
+        }
+    } else {
+        $record['type']='';
     }
-  } else {
-    $record['type']='';
-  }
   
 }
 
 function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
-  if ( $field->isSelectBox() ) {
-    $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
+    if ( $field->isSelectBox() ) {
+        $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
     
-  } else if ( $field->isDateField() ) {
+    } else if ( $field->isDateField() ) {
     
-    // replace the date fields (unix time) with human readable dates that
-    // is also accepted as a valid format in future import
-    if ($record[$name] == '')
-      // if date undefined then set datetime to 0. Ideally should
-      // NULL as well but if we pass NULL it is interpreted as a string
-      // later in the process
-      $record[$name] = '0';
-    else
-      $record[$name] = format_date($GLOBALS['datetime_fmt'],$record[$name]);
+      // replace the date fields (unix time) with human readable dates that
+      // is also accepted as a valid format in future import
+        if ($record[$name] == '')
+        // if date undefined then set datetime to 0. Ideally should
+        // NULL as well but if we pass NULL it is interpreted as a string
+        // later in the process
+        $record[$name] = '0';
+        else
+        $record[$name] = format_date($GLOBALS['datetime_fmt'],$record[$name]);
     
-  } else if ( $field->isFloat() ) {
-    $record[$name] = number_format($record[$name],2);
+    } else if ( $field->isFloat() ) {
+        $record[$name] = number_format($record[$name],2);
     
-  } else {
-    // all text fields converted from HTML to ASCII
-    $record[$name] = prepare_textarea($record[$name]);
-  }
+    } else {
+      // all text fields converted from HTML to ASCII
+        $record[$name] = prepare_textarea($record[$name]);
+    }
   
 }
 
 function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
-  switch($type) {
-   case 12:
-     $saltlen=8; $saltprefix='$1$'; $saltsuffix='$'; break;
-   case 2:
-   default: 
-     // by default, fall back on Standard DES (should work everywhere)
-     $saltlen=2; $saltprefix=''; $saltsuffix=''; break;
-  }
-  $salt='';
-  while(strlen($salt)<$saltlen) $salt.= chr(rand(64,126));
-  return $saltprefix.$salt.$saltsuffix;
+    switch($type) {
+        case 12:
+            $saltlen=8; $saltprefix='$1$'; $saltsuffix='$'; break;
+        case 2:
+        default: 
+           // by default, fall back on Standard DES (should work everywhere)
+            $saltlen=2; $saltprefix=''; $saltsuffix=''; break;
+    }
+    $salt='';
+    while(strlen($salt)<$saltlen) $salt.= chr(rand(64,126));
+    return $saltprefix.$salt.$saltsuffix;
 }
 
     /**
          *  Prepare the column values in the access logs  record
          *  @param: group_id: group id
          *  @param: record: a row from the access logs table (passed by  reference).
-         * 	 
+         *      
          *  @return: the same row with values transformed for database export
          */
 
 function prepare_access_logs_record($group_id, &$record) {
 
     if (isset($record['time'])) {
-    	$time = $record['time'];
-    	$record['time'] = format_date('Y-m-d',$time);
-    	$record['local_time'] = strftime("%H:%M", $time);
+        $time = $record['time'];
+        $record['time'] = format_date('Y-m-d',$time);
+        $record['local_time'] = strftime("%H:%M", $time);
     }
     $um = UserManager::instance();
     $user = $um->getUserByUserName($record['user_name']);
@@ -329,8 +329,8 @@ function prepare_access_logs_record($group_id, &$record) {
     }
     //for cvs & svn access logs
     if (isset($record['day'])) {
-    	$day = $record['day'];
-	    $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
+        $day = $record['day'];
+        $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
     }
 }
 

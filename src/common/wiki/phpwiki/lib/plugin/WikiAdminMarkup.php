@@ -52,8 +52,8 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                   's' 		=> false,
-                   'markup' 	=> 2,
+                   's'         => false,
+                   'markup'     => 2,
                    /* Columns to include in listing */
                    'info'     => 'pagename,markup,mtime',
                    ));

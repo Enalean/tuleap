@@ -659,7 +659,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                  ' AND TO_DAYS(NOW()) - TO_DAYS(repository_deletion_date) = ?';
 
         return $this->getDB()->run($query, self::BACKEND_GITOLITE, $retention_period);
-     }
+    }
 
     /**
      * Get the list of all deleted Git repositories of a given project
@@ -781,7 +781,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
             return $rows;
         }
 
-       return $this->getDefaultPermissions($permission_type);
+        return $this->getDefaultPermissions($permission_type);
     }
 
     private function getDefaultPermissions($permission_type)

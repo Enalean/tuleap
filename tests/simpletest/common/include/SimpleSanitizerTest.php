@@ -29,7 +29,7 @@ class SimpleSanitizerTest extends SimpleSanitizerTestCase {
      */
     function setUp() {
         $this->sanitizer = new SimpleSanitizer();
-    }	
+    }    
 
 }
 ?>

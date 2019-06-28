@@ -60,27 +60,27 @@ if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
 // --uid="" uid (required);
 
 //print_r($_SERVER['argv']);
-$arg = extract_params($_SERVER['argv']);
+    $arg = extract_params($_SERVER['argv']);
 //print_r($arg);
-if(isset($arg['ldapid'])
-&& isset($arg['realname'])
-&& isset($arg['email'])
-&& isset($arg['uid'])) {
+    if(isset($arg['ldapid'])
+    && isset($arg['realname'])
+    && isset($arg['email'])
+    && isset($arg['uid'])) {
 
-    //  Check if user exists
-    $user = UserManager::instance()->getUserByLdapId($arg['ldapid']);
-    if($user) {
-        echo "Error: ldap id already in the database\n";
-        exit;
-    } else {
-        $ldapUm = $ldapPlugin->getLdapUserManager();
-        $user = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
+        //  Check if user exists
+        $user = UserManager::instance()->getUserByLdapId($arg['ldapid']);
         if($user) {
-            echo "ID=".$user->getId().":STATUS=".$user->getStatus()."\n";
-            return 0;
+            echo "Error: ldap id already in the database\n";
+            exit;
+        } else {
+            $ldapUm = $ldapPlugin->getLdapUserManager();
+            $user = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
+            if($user) {
+                echo "ID=".$user->getId().":STATUS=".$user->getStatus()."\n";
+                return 0;
+            }
         }
     }
-}
 }
 echo "Error\n";
 return 1;

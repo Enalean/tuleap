@@ -185,7 +185,7 @@ class GitViews extends PluginViews {
         $initialized  = $repository->isInitialized();
         $mails        = $params['mails'];
         if ( $this->getController()->isAPermittedAction('save') ) :
-        ?>
+            ?>
         <div class="confirm">
         <h3><?php echo dgettext('tuleap-git', 'Do you confirm change of repository access to private ?'); ?></h3>
         <form id="confirm_private" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
@@ -195,17 +195,17 @@ class GitViews extends PluginViews {
         </form>
         <h3><?php echo dgettext('tuleap-git', 'List of mails to remove from notification'); ?></h3>
     <table>
-        <?php
-        $i = 0;
-        foreach ($mails as $mail) {
-            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
-            echo '<td>'.$mail.'</td>';
-            echo '</tr>';
-        }
-        ?>
+            <?php
+            $i = 0;
+            foreach ($mails as $mail) {
+                echo '<tr class="'.html_get_alt_row_color(++$i).'">';
+                echo '<td>'.$mail.'</td>';
+                echo '</tr>';
+            }
+            ?>
     </table>
     </div>
-        <?php
+            <?php
         endif;
     }
 

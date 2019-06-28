@@ -22,7 +22,7 @@ class Tracker_Artifact_ChangesetJsonFormatter {
     private $renderer;
 
     public function __construct(TemplateRenderer $renderer) {
-       $this->renderer = $renderer;
+        $this->renderer = $renderer;
     }
 
     public function format(Tracker_Artifact_Changeset $changeset) {

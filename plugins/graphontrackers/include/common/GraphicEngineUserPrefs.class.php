@@ -29,73 +29,73 @@ class graphicEngineUserPrefs {
 
     var $atid;
     var $prefs;
-	var $advsrch;
-	var $morder;
-	var $report_id;
+    var $advsrch;
+    var $morder;
+    var $report_id;
 
     /**
-	 *
-	 *
-	 * 	@param atid:artifact type id
-	 */
+     *
+     *
+     *     @param atid:artifact type id
+     */
 
-	function __construct($atid) {
-	    $this->atid = $atid;
-	}
+    function __construct($atid) {
+        $this->atid = $atid;
+    }
 
     /**
-	 * function to set user preferences
-	 *
-	 * 	@return null
-	 */
+     * function to set user preferences
+     *
+     *     @return null
+     */
 
 
     function fetchPrefs(){
 
-    	$prefs     = array();
+        $prefs     = array();
         $advsrch   = 0;
         $morder    = "";
         $report_id = 100;
 
         //if (user_isloggedin()) {
-    	    $custom_pref = user_get_preference('artifact_brow_cust'.$this->atid);
-	        if ($custom_pref) {
-	            $pref_arr = explode('&',substr($custom_pref,1));
-                foreach ($pref_arr as $expr) {
-    	            // Extract left and right parts of the assignment
-		            // and remove the '[]' array symbol from the left part
-		            list($field,$value_id) = explode('=',$expr);
-		            $field = str_replace('[]','',$field);
-		            if ($field == 'advsrch')
-    		            $advsrch = ($value_id ? 1 : 0);
-		            else if ($field == 'msort')
-  		                $msort = ($value_id ? 1 : 0);
-		            else if ($field == 'chunksz')
-  		                $chunksz = $value_id;
-		            else if ($field == 'report_id')
-		                $report_id = $value_id;
-		            else
-		                $prefs[$field][] = urldecode($value_id);
-		            //echo '<br>DBG restoring prefs : $prefs['.$field.'] []='.$value_id;
-	            }
-	        }
+            $custom_pref = user_get_preference('artifact_brow_cust'.$this->atid);
+        if ($custom_pref) {
+            $pref_arr = explode('&',substr($custom_pref,1));
+            foreach ($pref_arr as $expr) {
+              // Extract left and right parts of the assignment
+                 // and remove the '[]' array symbol from the left part
+                list($field,$value_id) = explode('=',$expr);
+                $field = str_replace('[]','',$field);
+                if ($field == 'advsrch')
+                $advsrch = ($value_id ? 1 : 0);
+                else if ($field == 'msort')
+                $msort = ($value_id ? 1 : 0);
+                else if ($field == 'chunksz')
+                $chunksz = $value_id;
+                else if ($field == 'report_id')
+                $report_id = $value_id;
+                else
+                $prefs[$field][] = urldecode($value_id);
+                 //echo '<br>DBG restoring prefs : $prefs['.$field.'] []='.$value_id;
+            }
+        }
             $morder = user_get_preference('artifact_browse_order'.$this->atid);
         //}
         $this->prefs     = $prefs;
-	    $this->advsrch   = $advsrch;
-	    $this->morder    = $morder;
-	    $this->report_id = $report_id;
+        $this->advsrch   = $advsrch;
+        $this->morder    = $morder;
+        $this->report_id = $report_id;
     }
 
     /**
-	 * function to get artifacts in specified preference order
-	 *
-	 * 	@return null
-	 *
-	 */
+     * function to get artifacts in specified preference order
+     *
+     *     @return null
+     *
+     */
 
     public function getArtifactsInOrder()
-	{
+    {
         $select   = null;
         $from     = null;
         $where    = null;
@@ -129,7 +129,7 @@ class graphicEngineUserPrefs {
         if ($order_by == "") {
             $sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by) AS art";
         } else {
-        	$sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by,a.artifact_id ASC) AS art";
+            $sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by,a.artifact_id ASC) AS art";
         }
 
         return $ar->_ExecuteQueryForSelectReportItems($sql);

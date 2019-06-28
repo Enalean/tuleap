@@ -67,8 +67,8 @@ if ($request->get('start') && $request->get('end') && $request->get('filter')) {
 
         switch ($request->get('filter')) {
 
-        case 'month1':
-            $sampleGraph = new SampleGraph($statGraph->fetchMonthData(),
+            case 'month1':
+                $sampleGraph = new SampleGraph($statGraph->fetchMonthData(),
                                            $request->get('data'),
                                            $statGraph->getFilter(),
                                            $statGraph->getTitlePeriod(),
@@ -79,8 +79,8 @@ if ($request->get('start') && $request->get('end') && $request->get('filter')) {
                                            $request->get('end'));
             break;
 
-        case 'day1':
-            $sampleGraph = new SampleGraph($statGraph->fetchDayData(),
+            case 'day1':
+                $sampleGraph = new SampleGraph($statGraph->fetchDayData(),
                                            $request->get('data'),
                                            $statGraph->getFilter(),
                                            $statGraph->getTitlePeriod(),
@@ -91,8 +91,8 @@ if ($request->get('start') && $request->get('end') && $request->get('filter')) {
                                            $request->get('end'));
             break;
 
-        default:
-            $sampleGraph = new SampleGraph($statGraph->fetchData(),
+            default:
+                $sampleGraph = new SampleGraph($statGraph->fetchData(),
                                            $request->get('data'),
                                            $statGraph->getFilter(),
                                            $statGraph->getTitlePeriod(),

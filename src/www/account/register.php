@@ -47,7 +47,7 @@ if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible
     );
 }
 
-function register_valid($mail_confirm_code, array &$errors)	{
+function register_valid($mail_confirm_code, array &$errors)    {
     global $Language;
 
     $request = HTTPRequest::instance();
@@ -122,9 +122,9 @@ function register_valid($mail_confirm_code, array &$errors)	{
     $status = 'P';
     if($request->get('page')== "admin_creation"){
         if($request->get('form_restricted')){
-           $status = 'R';
+            $status = 'R';
         } else{
-           $status = 'A';
+            $status = 'A';
         }
     }
 
@@ -158,7 +158,7 @@ function getFieldError($field_key, array $errors) {
 }
 
 
-function display_account_form($register_error, array $errors)	{
+function display_account_form($register_error, array $errors)    {
     global $Language;
 
     $request  = HTTPRequest::instance();

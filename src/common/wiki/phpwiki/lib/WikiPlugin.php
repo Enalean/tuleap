@@ -99,7 +99,7 @@ class WikiPlugin
         list ($argstr_args, $argstr_defaults) = $this->parseArgStr($argstr);
         $args = array();
         if (!empty($defaults))
-          foreach ($defaults as $arg => $default_val) {
+        foreach ($defaults as $arg => $default_val) {
             if (isset($argstr_args[$arg])) {
                 $args[$arg] = $argstr_args[$arg];
             } elseif ( $request and ($argval = $request->getArg($arg)) !== false ) {
@@ -168,7 +168,7 @@ class WikiPlugin
     function parseArgStr($argstr) {
         $args = array();
         $defaults = array();
-	if (empty($argstr))
+        if (empty($argstr))
             return array($args,$defaults);
             
         $arg_p = '\w+';
@@ -228,7 +228,7 @@ class WikiPlugin
         }
 
         if ($argstr) {
-           $this->handle_plugin_args_cruft($argstr, $args);
+            $this->handle_plugin_args_cruft($argstr, $args);
         }
 
         return array($args, $defaults);
@@ -248,7 +248,7 @@ class WikiPlugin
         if (is_object($pagelist) and isa($pagelist, 'PageList')) {
             // table or list?
             foreach ($pagelist->_pages as $page) {
-            	$list[] = $page->getName();
+                $list[] = $page->getName();
             }
         }
         return $list;
@@ -298,7 +298,7 @@ class WikiPlugin
         $form_defaults = $this->getDefaultFormArguments();
         $defaults = array_merge($form_defaults, 
                                 array('start_debug' => $request->getArg('start_debug')),
-        			$this->getDefaultArguments());
+                    $this->getDefaultArguments());
     
         $args = $this->getArgs($argstr, $request, $defaults);
         $plugin = $this->getName();
@@ -511,15 +511,15 @@ class WikiPluginLoader {
     function getPlugin($plugin_name, $pi=false) {
         global $ErrorManager;
 
-	//Changes by Sabri LABBENE
-	//Some plugins were removed since we don't use them any more
-	//the following array contains the removed plugins names. References 
-	//to these plugins will never be processed.
+    //Changes by Sabri LABBENE
+    //Some plugins were removed since we don't use them any more
+    //the following array contains the removed plugins names. References 
+    //to these plugins will never be processed.
         $removed_plugins = array("RawHtml", "RateIt", "PhpWeather", "AnalyseAccessLogSql", "FoafViewer", "ModeratePage", "Ploticus", "AllUsers");
-	if (in_array($plugin_name, $removed_plugins)){ 
-							return $this->_error(sprintf(_("The '%s' plugin is blocked by administrator. Sorry for the inconvenience"), _($plugin_name)));
-						 }
-	// Note that there seems to be no way to trap parse errors
+        if (in_array($plugin_name, $removed_plugins)){ 
+              return $this->_error(sprintf(_("The '%s' plugin is blocked by administrator. Sorry for the inconvenience"), _($plugin_name)));
+        }
+    // Note that there seems to be no way to trap parse errors
         // from this include.  (At least not via set_error_handler().)
         $plugin_source = "lib/plugin/$plugin_name.php";
 

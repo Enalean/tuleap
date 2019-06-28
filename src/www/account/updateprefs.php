@@ -92,18 +92,18 @@ if($request->existAndNonEmpty('language_id') && $GLOBALS['Language']->isLanguage
 
 $user_csv_separator = PFUser::DEFAULT_CSV_SEPARATOR;
 if($request->existAndNonEmpty('user_csv_separator')) {
-   if($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
+    if($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
         $user_csv_separator = $request->get('user_csv_separator');
-   } else {
+    } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_separator'));
     }
 }
 
 $user_csv_dateformat = PFUser::DEFAULT_CSV_DATEFORMAT;
 if($request->existAndNonEmpty('user_csv_dateformat')) {
-   if($request->valid(new Valid_WhiteList('user_csv_dateformat', PFUser::$csv_dateformats))) {
+    if($request->valid(new Valid_WhiteList('user_csv_dateformat', PFUser::$csv_dateformats))) {
         $user_csv_dateformat = $request->get('user_csv_dateformat');
-   } else {
+    } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_dateformat'));
     }
 }

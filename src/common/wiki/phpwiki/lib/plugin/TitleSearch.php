@@ -63,8 +63,8 @@ extends WikiPlugin
                    'exclude'       => false,
                    'info'          => false,
                    'case_exact'    => false,
-                   'regex'     	   => 'auto',
-                   'format'    	   => false,
+                   'regex'            => 'auto',
+                   'format'           => false,
                    ));
     }
     // info arg allows multiple columns

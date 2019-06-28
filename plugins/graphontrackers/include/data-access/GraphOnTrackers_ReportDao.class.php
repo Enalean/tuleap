@@ -24,13 +24,13 @@
     /**
      *  Data Access Object for GraphOnTrackers_Report 
      */
-    class GraphOnTrackers_ReportDao extends DataAccessObject {
-        public function searchByTrackerIdAndScope($tracker_id, $scope) {
-            $sql = "SELECT * FROM plugin_graphontrackers_report_graphic WHERE group_artifact_id = ";
-            $sql .= $this->da->escapeInt($tracker_id);
-            $sql .= " AND scope = ";
-            $sql .= $this->da->quoteSmart($scope);
-            return $this->retrieve($sql);
-        }
+class GraphOnTrackers_ReportDao extends DataAccessObject {
+    public function searchByTrackerIdAndScope($tracker_id, $scope) {
+        $sql = "SELECT * FROM plugin_graphontrackers_report_graphic WHERE group_artifact_id = ";
+        $sql .= $this->da->escapeInt($tracker_id);
+        $sql .= " AND scope = ";
+        $sql .= $this->da->quoteSmart($scope);
+        return $this->retrieve($sql);
     }
+}
 ?>

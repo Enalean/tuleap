@@ -24,24 +24,24 @@
  * contains artifacts you cannot see. This possibly subset is what
  * we call Sliced Artifacts.
  */
- class Tracker_SlicedArtifacts {
+class Tracker_SlicedArtifacts {
 
-     /** @var Tracker_Artifact[] */
-     private $artifacts;
+    /** @var Tracker_Artifact[] */
+    private $artifacts;
 
     /** @var int */
-     private $total_size;
+    private $total_size;
 
-     public function __construct(array $artifacts, $total_size) {
-         $this->artifacts  = $artifacts;
-         $this->total_size = $total_size;
-     }
+    public function __construct(array $artifacts, $total_size) {
+        $this->artifacts  = $artifacts;
+        $this->total_size = $total_size;
+    }
 
-     public function getArtifacts() {
-         return $this->artifacts;
-     }
+    public function getArtifacts() {
+        return $this->artifacts;
+    }
 
-     public function getTotalSize() {
-         return $this->total_size;
-     }
- }
+    public function getTotalSize() {
+        return $this->total_size;
+    }
+}

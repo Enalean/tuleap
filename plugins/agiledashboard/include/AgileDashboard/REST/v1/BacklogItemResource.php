@@ -361,17 +361,17 @@ class BacklogItemResource extends AuthenticatedResource
                            $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
                            $id
                        )
-                   );
-                   $backlog_items_ids = $validator->validate($id, array(), $to_add);
+                    );
+                    $backlog_items_ids = $validator->validate($id, array(), $to_add);
 
-                   $this->artifactlink_updater->updateArtifactLinks(
+                    $this->artifactlink_updater->updateArtifactLinks(
                        $user,
                        $artifact,
                        $backlog_items_ids,
                        array(),
                        \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-                   );
-                   $indexed_children_ids = array_flip($backlog_items_ids);
+                    );
+                    $indexed_children_ids = array_flip($backlog_items_ids);
                 }
                 $this->resources_patcher->commit();
             }

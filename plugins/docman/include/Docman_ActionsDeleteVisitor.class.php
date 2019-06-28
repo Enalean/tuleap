@@ -150,12 +150,12 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @throws DeleteFailedException
      */
     function _deleteItem($item, $params) {
-       if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
+        if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             $dIF = $this->_getItemFactory();
             $dIF->delete($item);
             return true;
         } else {
-           throw DeleteFailedException::fromItem($item);
+            throw DeleteFailedException::fromItem($item);
         }
     }
 

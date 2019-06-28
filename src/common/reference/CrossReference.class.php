@@ -25,7 +25,7 @@ class CrossReference {
     var $refTargetId;
     var $refTargetGid;
     var $refTargetType;
-  	var $targetUrl;
+    var $targetUrl;
     var $targetKey;
     var $insertTargetType;
     var $insertSourceType;
@@ -35,22 +35,22 @@ class CrossReference {
      * 
      */
     function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId) {
-       $this->refSourceId=$refSourceId;
-       $this->refSourceGid=$refSourceGid;
-       $this->refSourceType=$refSourceType;
-       $this->refTargetId= $refTargetId;
-       $this->refTargetGid= $refTargetGid;
-       $this->refTargetType= $refTargetType;
-       $this->userId=$userId;
-       $this->sourceUrl='';
-       $this->targetUrl='';
+        $this->refSourceId=$refSourceId;
+        $this->refSourceGid=$refSourceGid;
+        $this->refSourceType=$refSourceType;
+        $this->refTargetId= $refTargetId;
+        $this->refTargetGid= $refTargetGid;
+        $this->refTargetType= $refTargetType;
+        $this->userId=$userId;
+        $this->sourceUrl='';
+        $this->targetUrl='';
        
-       $this->sourceKey= $refSourceKey;
-       $this->insertSourceType = $refSourceType;
-       $this->targetKey = $refTargetKey;
-       $this->insertTargetType = $refTargetType;
+        $this->sourceKey= $refSourceKey;
+        $this->insertSourceType = $refSourceType;
+        $this->targetKey = $refTargetKey;
+        $this->insertTargetType = $refTargetType;
        
-	   $this->computeUrls();
+        $this->computeUrls();
        
     }
     
@@ -69,7 +69,7 @@ class CrossReference {
     function getCreatedAt() { return $this->createdAt;}
     function getInsertSourceType() { return $this->insertSourceType;}
     function getInsertTargetType() { return $this->insertTargetType;}
-	
+    
     
     /**
      * Return true if current CrossReference is really "cross referenced" with $crossref
@@ -87,12 +87,12 @@ class CrossReference {
     }
     
     function computeUrls(){
-    	$group_param = '';
-		if ($this->refTargetGid!=100) { $group_param="&group_id=".$this->refTargetGid;}
+        $group_param = '';
+        if ($this->refTargetGid!=100) { $group_param="&group_id=".$this->refTargetGid;}
         $this->targetUrl=get_server_url()."/goto?key=".urlencode($this->targetKey)."&val=".urlencode($this->refTargetId).$group_param;
-		$group_param = '';
-		if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
+        $group_param = '';
+        if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
         $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
-	
+    
     }
 }

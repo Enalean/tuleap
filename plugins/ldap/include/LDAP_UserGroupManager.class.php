@@ -180,7 +180,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     {
         $dar = $this->getSynchronizedUgroups();
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-        foreach($dar as $row) {
+            foreach($dar as $row) {
                 $this->setId($row['ugroup_id']);
                 $this->setGroupDn($row['ldap_group_dn']);
                 $this->setProjectId($row['project_id']);

@@ -174,18 +174,18 @@ class TextSearchQuery {
     // deprecated: use _sql_clause_obj now.
     function _sql_clause($node) {
         switch ($node->op) {
-        case 'WORD':        // word => %word%
+            case 'WORD':        // word => %word%
             return $this->_sql_clause_cb->call($node->word);
-        case 'NOT':
+            case 'NOT':
             return "NOT (" . $this->_sql_clause($node->leaves[0]) . ")";
-        case 'AND':
-        case 'OR':
-            $subclauses = array();
-            foreach ($node->leaves as $leaf)
+            case 'AND':
+            case 'OR':
+                $subclauses = array();
+                foreach ($node->leaves as $leaf)
                 $subclauses[] = "(" . $this->_sql_clause($leaf) . ")";
             return join(" $node->op ", $subclauses);
-        default:
-            assert($node->op == 'VOID');
+            default:
+                assert($node->op == 'VOID');
             return '1=1';
         }
     }
@@ -200,19 +200,19 @@ class TextSearchQuery {
 
     function _sql_clause_obj($node) {
         switch ($node->op) {
-        case 'NOT':
+            case 'NOT':
             return "NOT (" . $this->_sql_clause_cb->call($node->leaves[0]) . ")";
-        case 'AND':
-        case 'OR':
-            $subclauses = array();
-            foreach ($node->leaves as $leaf)
+            case 'AND':
+            case 'OR':
+                $subclauses = array();
+                foreach ($node->leaves as $leaf)
                 $subclauses[] = "(" . $this->_sql_clause_obj($leaf) . ")";
             return join(" $node->op ", $subclauses);
-        case 'VOID':
+            case 'VOID':
             return '0=1';
-        case 'ALL':
+            case 'ALL':
             return '1=1';
-        default:
+            default:
             return $this->_sql_clause_cb->call($node);
         }
     }
@@ -231,18 +231,18 @@ class TextSearchQuery {
 
     function _as_string($node, $indent = '') {
         switch ($node->op) {
-        case 'WORD':
+            case 'WORD':
             return $indent . "WORD: $node->word";
-        case 'VOID':
+            case 'VOID':
             return $indent . "VOID";
-        case 'ALL':
+            case 'ALL':
             return $indent . "ALL";
-        default:
-            $lines = array($indent . $node->op . ":");
-            $indent .= "  ";
-            foreach ($node->leaves as $leaf)
+            default:
+                $lines = array($indent . $node->op . ":");
+                $indent .= "  ";
+                foreach ($node->leaves as $leaf)
                 $lines[] = $this->_as_string($leaf, $indent);
-            return join("\n", $lines);
+                return join("\n", $lines);
         }
     }
 }
@@ -257,8 +257,8 @@ class NullTextSearchQuery extends TextSearchQuery {
      * @see TextSearchQuery
      */
     function __construct() {}
-    function asRegexp()		{ return '/^(?!a)a/x'; }
-    function match($string)	{ return false; }
+    function asRegexp()        { return '/^(?!a)a/x'; }
+    function match($string)    { return false; }
     function getHighlightRegexp() { return ""; }
     function makeSqlClause($make_sql_clause_cb) { return "(1 = 0)"; }
     function asString() { return "NullTextSearchQuery"; }
@@ -570,34 +570,34 @@ class TextSearchQuery_Parser
     /*
      * This is a simple recursive descent parser, based on the following grammar:
      *
-     * toplist	:
-     *		| toplist expr
-     *		;
+     * toplist    :
+     *        | toplist expr
+     *        ;
      *
      *
-     * list	: expr
-     *		| list expr
-     *		;
+     * list    : expr
+     *        | list expr
+     *        ;
      *
-     * expr	: atom
-     *		| expr BINOP atom
-     *		;
+     * expr    : atom
+     *        | expr BINOP atom
+     *        ;
      *
-     * atom	: '(' list ')'
-     *		| NOT atom
-     *		| WORD
-     *		;
+     * atom    : '(' list ')'
+     *        | NOT atom
+     *        | WORD
+     *        ;
      *
      * The terminal tokens are:
      *
      *
-     * and|or		  BINOP
-     * -|not		  NOT
-     * (		  LPAREN
-     * )		  RPAREN
+     * and|or          BINOP
+     * -|not          NOT
+     * (          LPAREN
+     * )          RPAREN
      * /[^-()\s][^()\s]*  WORD
-     * /"[^"]*"/	  WORD
-     * /'[^']*'/	  WORD
+     * /"[^"]*"/      WORD
+     * /'[^']*'/      WORD
      *
      * ^WORD              STARTS_WITH
      * WORD*              STARTS_WITH
@@ -805,12 +805,12 @@ class TextSearchQuery_Lexer {
 
             /* refine the simple parsing from above: bla*bla, bla?bla, ...
             if ($regex and $type == TSQ_TOK_WORD) {
-            	if (substr($val,0,1) == "^")
-            	    $type = TSQ_TOK_STARTS_WITH;
-            	elseif (substr($val,0,1) == "*")
-            	    $type = TSQ_TOK_ENDS_WITH;
-            	elseif (substr($val,-1,1) == "*")
-            	    $type = TSQ_TOK_STARTS_WITH;
+                if (substr($val,0,1) == "^")
+                    $type = TSQ_TOK_STARTS_WITH;
+                elseif (substr($val,0,1) == "*")
+                    $type = TSQ_TOK_ENDS_WITH;
+                elseif (substr($val,-1,1) == "*")
+                    $type = TSQ_TOK_STARTS_WITH;
             }
             */
             $tokens[] = array($type, $val);

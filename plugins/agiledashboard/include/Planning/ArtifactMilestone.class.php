@@ -84,19 +84,19 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      *
      * @var float
      */
-     private $capacity = null;
+    private $capacity = null;
 
      /**
      * The remaining effort of the milestone
      *
      * @var float
      */
-     private $remaining_effort = null;
+    private $remaining_effort = null;
 
      /**
       * @var bool
       */
-     private $has_useable_burndown_field;
+    private $has_useable_burndown_field;
 
     /**
      * @var ScrumForMonoMilestoneChecker

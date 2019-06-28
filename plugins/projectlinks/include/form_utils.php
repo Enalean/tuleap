@@ -756,7 +756,7 @@ function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM
             $DefaultValue = substr($DefaultValue, 4);
             $Script = " onfocus=\"JavaScript:if (this.value == '".addslashes($DefaultValue)."') this.value='';\"";
             break;
-       default:
+        default:
             $Script = "";
             break;
     }

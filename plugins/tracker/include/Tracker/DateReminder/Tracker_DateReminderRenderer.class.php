@@ -370,7 +370,7 @@ class Tracker_DateReminderRenderer {
         }
         $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_empty_people_param');
         throw new Tracker_DateReminderException($errorMessage);
-        }
+    }
 
     /**
      * Display all reminders of the tracker
@@ -450,7 +450,7 @@ class Tracker_DateReminderRenderer {
         $output = '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
         $output .= '<fieldset>';
         if ($request->get('action') == 'delete_reminder') {
-           $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);
+            $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);
         }
         $output .=$this->displayAllReminders();
         $output .= '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label></div>';
@@ -460,8 +460,8 @@ class Tracker_DateReminderRenderer {
         if ($request->get('action') == 'add_reminder') {
             $output .= $this->getNewDateReminderForm($csrf_token);
         } elseif ($request->get('action') == 'update_reminder') {
-           $output .= '<div id="update_reminder"></div>';
-           $output .= $this->editDateReminder($request->get('reminder_id'), $csrf_token);
+            $output .= '<div id="update_reminder"></div>';
+            $output .= $this->editDateReminder($request->get('reminder_id'), $csrf_token);
         }
         $output .= '</fieldset>';
         echo $output;

@@ -23,7 +23,7 @@ if ($request->valid($vFunc) && $request->get('func') === 'detailrevision' && use
 
     require('./detail_revision.php');
 
- } else if (user_isloggedin() &&                                                             //We'll browse
+} else if (user_isloggedin() &&                                                             //We'll browse
             (
              ($request->valid($vFunc) && $request->get('func') === 'browse')     //if user ask for it
              || $request->existAndNonEmpty('rev_id')     //or if user set rev_id
@@ -32,9 +32,9 @@ if ($request->valid($vFunc) && $request->get('func') === 'detailrevision' && use
 
     require('./browse_revision.php');
 
- } else {
+} else {
 
     require('./svn_intro.php');
 
- }
+}
 ?>

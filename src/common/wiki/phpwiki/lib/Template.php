@@ -69,8 +69,8 @@ class Template
     }
     
     function _printPlugin ($pi) {
-	include_once("lib/WikiPlugin.php");
-	static $loader;
+        include_once("lib/WikiPlugin.php");
+        static $loader;
 
         if (empty($loader))
             $loader = new WikiPluginLoader;
@@ -148,7 +148,7 @@ class Template
         ob_start();
         $this->printExpansion($defaults);
         $xml = ob_get_contents();
-        ob_end_clean(); 	// PHP problem: Doesn't release its memory?
+        ob_end_clean();     // PHP problem: Doesn't release its memory?
         return $xml;
     }
 
@@ -173,7 +173,7 @@ class Template
 
     function _errorHandler($error) {
         //if (!preg_match('/: eval\(\)\'d code$/', $error->errfile))
-	//    return false;
+    //    return false;
 
         if (preg_match('/: eval\(\)\'d code$/', $error->errfile)) {
             $error->errfile = "In template '$this->_name'";
@@ -199,7 +199,7 @@ class Template
             if (isset($lines[$error->errline - 1]))
                 $error->errstr .= ":\n\t" . $lines[$error->errline - 1];
         }
-	return $error;
+        return $error;
     }
 };
 

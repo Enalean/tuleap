@@ -212,9 +212,9 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
             'channels' => 3,
             'mime' => 'image/gif'
         ));
-     }
+    }
 
-     public function itCreatesThumbnailForJpeg() {
+    public function itCreatesThumbnailForJpeg() {
         copy($this->fixture_data_dir.'/logo.jpg', $this->working_directory.'/421');
 
         $file_info_1 = new Tracker_FileInfo(421, $this->field, 0, '', '', '', 'image/jpg');
@@ -223,13 +223,13 @@ class Tracker_FileInfo_PostUploadActionsTest extends Tracker_FileInfo_CommonTest
 
         $this->assertTrue(file_exists($file_info_1->getThumbnailPath()));
         $this->assertEqual(getimagesize($file_info_1->getThumbnailPath()), array(
-            150,
-            55,
-            IMAGETYPE_JPEG,
-            'width="150" height="55"',
-            'bits' => 8,
-            'channels' => 3,
-            'mime' => 'image/jpeg'
+           150,
+           55,
+           IMAGETYPE_JPEG,
+           'width="150" height="55"',
+           'bits' => 8,
+           'channels' => 3,
+           'mime' => 'image/jpeg'
         ));
 
     }

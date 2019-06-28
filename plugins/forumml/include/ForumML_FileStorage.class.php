@@ -30,7 +30,7 @@
 class ForumML_FileStorage {
     
     // Root directory to host mails attachments 
-	var $root;
+    var $root;
     
     /**
      * ForumML_FileStorage Constructor
@@ -105,15 +105,15 @@ class ForumML_FileStorage {
             if (strlen($name) > 64) {
                 $name = substr($name, 0, 64);
             }
-    	
+        
             $name = preg_replace('`[^a-z0-9_-]`i', '_', $name);
             $name = preg_replace('`_{2,}`', '_', $name);
         }
 
         if ($type == "upload") {
-        	$path_elements = array($this->root, $type);
+            $path_elements = array($this->root, $type);
         } else if ($type == "store") {
-        	$path_elements = array($this->root, $list, $date);	
+            $path_elements = array($this->root, $list, $date);    
         }
         
         $path = '';

@@ -80,13 +80,13 @@ class Docman_ApprovalTableReviewerFactory {
 
             $atsm = $this->_getApprovalTableNotificationCycle();
             switch($this->table->getNotification()) {
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $res = $atsm->notifyAllAtOnce();
+                case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+                    $res = $atsm->notifyAllAtOnce();
                 break;
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $res = $atsm->notifyNextReviewer();
+                case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+                    $res = $atsm->notifyNextReviewer();
                 break;
-            default:
+                default:
             }
         }
         return $res;

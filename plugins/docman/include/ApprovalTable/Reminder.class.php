@@ -64,13 +64,13 @@ class Docman_ApprovalTableReminder {
     private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table) {
         if($table->isEnabled()) {
             switch ($table->getNotification()) {
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $this->notifyAllAtOnce($table);
+                case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+                    $this->notifyAllAtOnce($table);
                 break;
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $this->notifyNextReviewer($table);
+                case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+                    $this->notifyNextReviewer($table);
                 break;
-            default:
+                default:
                 break;
             }
         }
@@ -236,11 +236,11 @@ class Docman_ApprovalTableReminder {
     private function getNotificationStyle(Docman_ApprovalTable $table) {
         $notifStyle = '';
         switch($table->getNotification()) {
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
+            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
             break;
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
+            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+                $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
             break;
         }
         return $notifStyle;

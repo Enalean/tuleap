@@ -876,30 +876,30 @@ class TrackerXmlImport
                 $type = (string) $permission['type'];
 
                 switch ((string) $permission['scope']) {
-                case 'tracker':
-                    //tracker permissions
-                    if(!in_array($type, $allowed_tracker_perms)) {
-                        $this->logger->error("Can not import permission of type $type for tracker.");
-                        break;
-                    }
-                    $this->logger->debug("Adding '$type' permission to '$ugroup_name' on tracker '{$tracker->getName()}'.");
-                    $tracker->setCachePermission($ugroup_id, $type);
+                    case 'tracker':
+                        //tracker permissions
+                        if(!in_array($type, $allowed_tracker_perms)) {
+                            $this->logger->error("Can not import permission of type $type for tracker.");
+                            break;
+                        }
+                        $this->logger->debug("Adding '$type' permission to '$ugroup_name' on tracker '{$tracker->getName()}'.");
+                        $tracker->setCachePermission($ugroup_id, $type);
                     break;
-                case 'field':
-                    //field permissions
-                    $REF    = (string) $permission['REF'];
-                    if(!in_array($type, $allowed_field_perms)) {
-                        $this->logger->error("Can not import permission of type $type for field.");
-                        break;
-                    }
-                    if(!isset($this->xml_fields_mapping[$REF])) {
-                        $this->logger->error("Unknow ref to field $REF.");
-                        break;
-                    }
-                    $this->logger->debug("Adding '$type' permission to '$ugroup_name' on field '$REF'.");
-                    $this->xml_fields_mapping[$REF]->setCachePermission($ugroup_id, $type);
+                    case 'field':
+                        //field permissions
+                        $REF    = (string) $permission['REF'];
+                        if(!in_array($type, $allowed_field_perms)) {
+                            $this->logger->error("Can not import permission of type $type for field.");
+                            break;
+                        }
+                        if(!isset($this->xml_fields_mapping[$REF])) {
+                            $this->logger->error("Unknow ref to field $REF.");
+                            break;
+                        }
+                        $this->logger->debug("Adding '$type' permission to '$ugroup_name' on field '$REF'.");
+                        $this->xml_fields_mapping[$REF]->setCachePermission($ugroup_id, $type);
                     break;
-                default:
+                    default:
                     break;
                 }
             }

@@ -49,7 +49,7 @@ function run_install($part = '') {
     }
     // setup default settings
     if (!$already and !defined("_PHPWIKI_INSTALL_RUNNING")) {
-    	define("_PHPWIKI_INSTALL_RUNNING", true);
+        define("_PHPWIKI_INSTALL_RUNNING", true);
     }
     $already = 1;
 }

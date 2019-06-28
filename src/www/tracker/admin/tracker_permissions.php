@@ -7,13 +7,13 @@
 //  Written for Codendi by Nicolas Terray
 
 if ( !user_isloggedin() ) {
-	exit_not_logged_in();
-	return;
+    exit_not_logged_in();
+    return;
 }
 
 if ( !$ath->userIsAdmin() ) {
-	exit_permission_denied();
-	return;
+    exit_permission_denied();
+    return;
 }
 
 //{{{ We check variables submitted by user
@@ -28,41 +28,41 @@ $group_first = $request->getValidated('group_first', 'string') ? true : false;
 $selected_id = $request->getValidated('selected_id', 'uint', false);
 //}}}
 switch ($perm_type) {
- case 'tracker':
-     if ($update || $reset) {
-         if ($update) {
-             permission_process_update_tracker_permissions($group_id, $atid, $_REQUEST);
-         } else if($reset) {
-             //The user want to clear permissions
-             permission_clear_all_tracker($group_id, $atid);
-         }
-     }
+    case 'tracker':
+        if ($update || $reset) {
+            if ($update) {
+                permission_process_update_tracker_permissions($group_id, $atid, $_REQUEST);
+            } else if($reset) {
+                //The user want to clear permissions
+                permission_clear_all_tracker($group_id, $atid);
+            }
+        }
 
-     //display
-     $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
+        //display
+        $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
          'help' => 'tracker-v3.html#permissions-management'));
-     $ugroups_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
-     $ath->displayPermissionsTracker($ugroups_permissions);
+        $ugroups_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
+        $ath->displayPermissionsTracker($ugroups_permissions);
      break;
- case 'fields':
-     if ($update) {
-         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
-             $fields = $art_field_fact->getAllUsedFields();
-             permission_process_update_fields_permissions($group_id, $atid, $fields, $request->get('permissions'));
-         }
-     }
-     //display
-     $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
+    case 'fields':
+        if ($update) {
+            if ($request->exist('permissions') && is_array($request->get('permissions'))) {
+                $fields = $art_field_fact->getAllUsedFields();
+                permission_process_update_fields_permissions($group_id, $atid, $fields, $request->get('permissions'));
+            }
+        }
+        //display
+        $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
          'help' => 'tracker-v3.html#permissions-management'));
-     $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), false);
-     $ath->displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id);
+        $ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $art_field_fact->getAllUsedFields(), false);
+        $ath->displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id);
      break;
- default:
-     $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
+    default:
+        $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_usage','usage_admin'),
          'help' => 'tracker-v3.html#permissions-management'));
-     $ath->displayPermissionsGeneralMenu();
+        $ath->displayPermissionsGeneralMenu();
      break;
- }
+}
 
 $ath->footer(array());
 ?>

@@ -117,13 +117,13 @@ class IconPlot {
 
     function StrokeWithScale($aImg,$axscale,$ayscale) {
         if( $this->iScalePosX === null || $this->iScalePosY === null ||
-        	$axscale === null || $ayscale === null ) {
+            $axscale === null || $ayscale === null ) {
             $this->_Stroke($aImg);
         }
         else {
             $this->_Stroke($aImg,
-            	round($axscale->Translate($this->iScalePosX)),
-            	round($ayscale->Translate($this->iScalePosY)));
+                round($axscale->Translate($this->iScalePosX)),
+                round($ayscale->Translate($this->iScalePosY)));
         }
     }
 

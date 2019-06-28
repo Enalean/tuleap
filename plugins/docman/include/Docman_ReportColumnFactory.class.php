@@ -35,24 +35,24 @@ class Docman_ReportColumnFactory {
         $col = null;
         $mdFactory = $this->_getMetadataFactory();
         switch($colLabel) {
-        case 'location':
-            $col = new Docman_ReportColumnLocation();
+            case 'location':
+                $col = new Docman_ReportColumnLocation();
             break;
 
-        case 'title':
-            $md  = $mdFactory->getFromLabel($colLabel);
-            $col = new Docman_ReportColumnTitle($md);
+            case 'title':
+                $md  = $mdFactory->getFromLabel($colLabel);
+                $col = new Docman_ReportColumnTitle($md);
             break;
 
-        default:
-            $md  = $mdFactory->getFromLabel($colLabel);
-            switch($md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $col = new Docman_ReportColumnList($md);
-                break;
             default:
-                $col = new Docman_ReportColumn($md);
-            }
+                $md  = $mdFactory->getFromLabel($colLabel);
+                switch($md->getType()) {
+                    case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                        $col = new Docman_ReportColumnList($md);
+                    break;
+                    default:
+                        $col = new Docman_ReportColumn($md);
+                }
         }
         return $col;
     }

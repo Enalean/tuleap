@@ -25,13 +25,13 @@ Mock::generate('BaseLanguage');
 
 //substitute ArtifactField
 class ArtifactImportTest_ArtifactField {
-  function getLabel() {}
-  function getName() {}
-  function isEmptyOk() {}
-  function getDisplayType() {}
-  function isDateField() {}
-  function isSelectBox() {}
-  function isMultiSelectBox() {}
+    function getLabel() {}
+    function getName() {}
+    function isEmptyOk() {}
+    function getDisplayType() {}
+    function isDateField() {}
+    function isSelectBox() {}
+    function isMultiSelectBox() {}
 }
 
 
@@ -81,123 +81,123 @@ class ArtifactImportTest extends TuleapTestCase {
 
     function testALL() {
 
-      $GLOBALS['Language'] = new MockBaseLanguage($this);
-      $GLOBALS['Language']->setReturnValue('getText','on',array('global','on'));
-      $GLOBALS['Language']->setReturnValue('getText','by',array('global','by'));
-      $GLOBALS['Language']->setReturnValue('getText','none',array('global','none'));
-      $GLOBALS['Language']->setReturnValue('getText','date',array('tracker_import_utils','date'));
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText','on',array('global','on'));
+        $GLOBALS['Language']->setReturnValue('getText','by',array('global','by'));
+        $GLOBALS['Language']->setReturnValue('getText','none',array('global','none'));
+        $GLOBALS['Language']->setReturnValue('getText','date',array('tracker_import_utils','date'));
 
 
       /***************** var setup ***********************
        */
 
-      $at = new ArtifactTypeTestVersion($this);
-      $at->setReturnValue('getName','TestTracker');
-      $at->setReturnValue('allowsAnon',false);
-      $at->setReturnValue('getID','123');
-      $at->setReturnValue('userIsAdmin',true);
+        $at = new ArtifactTypeTestVersion($this);
+        $at->setReturnValue('getName','TestTracker');
+        $at->setReturnValue('allowsAnon',false);
+        $at->setReturnValue('getID','123');
+        $at->setReturnValue('userIsAdmin',true);
 
-      $submitted_by = new ArtifactFieldImportVersion($this);
-      $submitted_by->setReturnValue('getLabel','Submitted By');
-      $submitted_by->setReturnValue('getName','submitted_by');
-      $submitted_by->setReturnValue('isEmptyOk',false);
-      $submitted_by->setReturnValue('getDisplayType','SB');
-      $submitted_by->setReturnValue('isDateField',false);
-      $submitted_by->setReturnValue('isSelectBox',false);
-      $submitted_by->setReturnValue('isMultiSelectBox',false);
+        $submitted_by = new ArtifactFieldImportVersion($this);
+        $submitted_by->setReturnValue('getLabel','Submitted By');
+        $submitted_by->setReturnValue('getName','submitted_by');
+        $submitted_by->setReturnValue('isEmptyOk',false);
+        $submitted_by->setReturnValue('getDisplayType','SB');
+        $submitted_by->setReturnValue('isDateField',false);
+        $submitted_by->setReturnValue('isSelectBox',false);
+        $submitted_by->setReturnValue('isMultiSelectBox',false);
 
-      $submitted_on = new ArtifactFieldImportVersion($this);
-      $submitted_on->setReturnValue('getLabel','Submitted On');
-      $submitted_on->setReturnValue('getName','open_date');
-      $submitted_on->setReturnValue('isEmptyOk',false);
-      $submitted_on->setReturnValue('getDisplayType','DF');
-      $submitted_on->setReturnValue('isDateField',false);
-      $submitted_on->setReturnValue('isSelectBox',false);
-      $submitted_on->setReturnValue('isMultiSelectBox',false);
+        $submitted_on = new ArtifactFieldImportVersion($this);
+        $submitted_on->setReturnValue('getLabel','Submitted On');
+        $submitted_on->setReturnValue('getName','open_date');
+        $submitted_on->setReturnValue('isEmptyOk',false);
+        $submitted_on->setReturnValue('getDisplayType','DF');
+        $submitted_on->setReturnValue('isDateField',false);
+        $submitted_on->setReturnValue('isSelectBox',false);
+        $submitted_on->setReturnValue('isMultiSelectBox',false);
 
-      $last_update_date = new ArtifactFieldImportVersion($this);
-      $last_update_date->setReturnValue('getLabel','Last Modified On');
-      $last_update_date->setReturnValue('getName','last_update_date');
-      $last_update_date->setReturnValue('isEmptyOk',false);
-      $last_update_date->setReturnValue('getDisplayType','DF');
-      $last_update_date->setReturnValue('isDateField',true);
-      $last_update_date->setReturnValue('isSelectBox',false);
-      $last_update_date->setReturnValue('isMultiSelectBox',false);
+        $last_update_date = new ArtifactFieldImportVersion($this);
+        $last_update_date->setReturnValue('getLabel','Last Modified On');
+        $last_update_date->setReturnValue('getName','last_update_date');
+        $last_update_date->setReturnValue('isEmptyOk',false);
+        $last_update_date->setReturnValue('getDisplayType','DF');
+        $last_update_date->setReturnValue('isDateField',true);
+        $last_update_date->setReturnValue('isSelectBox',false);
+        $last_update_date->setReturnValue('isMultiSelectBox',false);
 
-      $artifact_id = new ArtifactFieldImportVersion($this);
-      $artifact_id->setReturnValue('getLabel','Artifact Id');
-      $artifact_id->setReturnValue('getName','artifact_id');
-      $artifact_id->setReturnValue('isEmptyOk',false);
-      $artifact_id->setReturnValue('getDisplayType','TF');
-      $artifact_id->setReturnValue('isDateField',false);
-      $artifact_id->setReturnValue('isSelectBox',false);
-      $artifact_id->setReturnValue('isMultiSelectBox',false);
-
-
-      $comment_type_id = new ArtifactFieldImportVersion($this);
-      $comment_type_id->setReturnValue('getLabel','Comment Type');
-      $comment_type_id->setReturnValue('getName','comment_type_id');
-      $comment_type_id->setReturnValue('isEmptyOk',true);
-      $comment_type_id->setReturnValue('getDisplayType','TF');
-      $comment_type_id->setReturnValue('isDateField',false);
-      $comment_type_id->setReturnValue('isSelectBox',false);
-      $comment_type_id->setReturnValue('isMultiSelectBox',false);
-
-      $assigned_to = new ArtifactFieldImportVersion($this);
-      $assigned_to->setReturnValue('getLabel','Assigned To');
-      $assigned_to->setReturnValue('getName','assigned_to');
-      $assigned_to->setReturnValue('isEmptyOk',false);
-      $assigned_to->setReturnValue('getDisplayType','SB');
-      $assigned_to->setReturnValue('isDateField',false);
-      $assigned_to->setReturnValue('isSelectBox',true);
-      $assigned_to->setReturnValue('isMultiSelectBox',false);
-
-      $orig_subm = new ArtifactFieldImportVersion($this);
-      $orig_subm->setReturnValue('getLabel','Original Submission');
-      $orig_subm->setReturnValue('getName','details');
-      $orig_subm->setReturnValue('isEmptyOk',false);
-      $orig_subm->setReturnValue('getDisplayType','TA');
-      $orig_subm->setReturnValue('isDateField',false);
-      $orig_subm->setReturnValue('isSelectBox',false);
-      $orig_subm->setReturnValue('isMultiSelectBox',false);
+        $artifact_id = new ArtifactFieldImportVersion($this);
+        $artifact_id->setReturnValue('getLabel','Artifact Id');
+        $artifact_id->setReturnValue('getName','artifact_id');
+        $artifact_id->setReturnValue('isEmptyOk',false);
+        $artifact_id->setReturnValue('getDisplayType','TF');
+        $artifact_id->setReturnValue('isDateField',false);
+        $artifact_id->setReturnValue('isSelectBox',false);
+        $artifact_id->setReturnValue('isMultiSelectBox',false);
 
 
-      $atf = new MockArtifactFieldFactory($at);
-      $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
-      $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
-      $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
-      $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
-      $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
-      $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
-      $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
-      $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
+        $comment_type_id = new ArtifactFieldImportVersion($this);
+        $comment_type_id->setReturnValue('getLabel','Comment Type');
+        $comment_type_id->setReturnValue('getName','comment_type_id');
+        $comment_type_id->setReturnValue('isEmptyOk',true);
+        $comment_type_id->setReturnValue('getDisplayType','TF');
+        $comment_type_id->setReturnValue('isDateField',false);
+        $comment_type_id->setReturnValue('isSelectBox',false);
+        $comment_type_id->setReturnValue('isMultiSelectBox',false);
+
+        $assigned_to = new ArtifactFieldImportVersion($this);
+        $assigned_to->setReturnValue('getLabel','Assigned To');
+        $assigned_to->setReturnValue('getName','assigned_to');
+        $assigned_to->setReturnValue('isEmptyOk',false);
+        $assigned_to->setReturnValue('getDisplayType','SB');
+        $assigned_to->setReturnValue('isDateField',false);
+        $assigned_to->setReturnValue('isSelectBox',true);
+        $assigned_to->setReturnValue('isMultiSelectBox',false);
+
+        $orig_subm = new ArtifactFieldImportVersion($this);
+        $orig_subm->setReturnValue('getLabel','Original Submission');
+        $orig_subm->setReturnValue('getName','details');
+        $orig_subm->setReturnValue('isEmptyOk',false);
+        $orig_subm->setReturnValue('getDisplayType','TA');
+        $orig_subm->setReturnValue('isDateField',false);
+        $orig_subm->setReturnValue('isSelectBox',false);
+        $orig_subm->setReturnValue('isMultiSelectBox',false);
+
+
+        $atf = new MockArtifactFieldFactory($at);
+        $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
+        $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
+        $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+        $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
+        $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
+        $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
+        $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
+        $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
 
 
       /**************** test parseFieldNames ************
        */
 
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Submitted By','Submitted On','Assigned To','Original Submission'));
-      $this->assertFalse($test->isError());
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array('Submitted By','Submitted On','Assigned To','Original Submission'));
+        $this->assertFalse($test->isError());
 
       // need mandatory field assigned_to
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Submitted By'));
-      $this->assertTrue($test->isError());
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array('Submitted By'));
+        $this->assertTrue($test->isError());
 
 
       //comment type is not taken into account
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Comment Type','Assigned To','Original Submission'));
-      $this->assertTrue($test->isError());
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array('Comment Type','Assigned To','Original Submission'));
+        $this->assertTrue($test->isError());
 
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission'));
-      $this->assertFalse($test->isError());
+        $this->assertFalse($test->isError());
 
 
 
@@ -205,139 +205,139 @@ class ArtifactImportTest extends TuleapTestCase {
        */
 
       // can not check submitted_by values (can not get user_id from here)
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission'));
-      $test->predefined_values = array();
-      $test->predefined_values[4] = array('schneide'=>'');
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $test->predefined_values = array();
+        $test->predefined_values[4] = array('schneide'=>'');
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
       // schnuffi not in predefined values of assigned_to
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schnuffi','my original submission');
-      $test->checkValues('1',$data,false);
-      $this->assertTrue($test->isError());
-      $test->clearError();
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schnuffi','my original submission');
+        $test->checkValues('1',$data,false);
+        $this->assertTrue($test->isError());
+        $test->clearError();
 
       //test mb fields
-      $mbox_field = new ArtifactFieldImportVersion();
-      $mbox_field->setReturnValue('getLabel','MB Field');
-      $mbox_field->setReturnValue('getName','mbox_field');
-      $mbox_field->setReturnValue('isEmptyOk',true);
-      $mbox_field->setReturnValue('getDisplayType','MB');
-      $mbox_field->setReturnValue('isDateField',false);
-      $mbox_field->setReturnValue('isSelectBox',false);
-      $mbox_field->setReturnValue('isMultiSelectBox',true);
+        $mbox_field = new ArtifactFieldImportVersion();
+        $mbox_field->setReturnValue('getLabel','MB Field');
+        $mbox_field->setReturnValue('getName','mbox_field');
+        $mbox_field->setReturnValue('isEmptyOk',true);
+        $mbox_field->setReturnValue('getDisplayType','MB');
+        $mbox_field->setReturnValue('isDateField',false);
+        $mbox_field->setReturnValue('isSelectBox',false);
+        $mbox_field->setReturnValue('isMultiSelectBox',true);
 
-      $sbox_field = new ArtifactFieldImportVersion();
-      $sbox_field->setReturnValue('getLabel','SB Field');
-      $sbox_field->setReturnValue('getName','sbox_field');
-      $sbox_field->setReturnValue('isEmptyOk',false);
-      $sbox_field->setReturnValue('getDisplayType','SB');
-      $sbox_field->setReturnValue('isDateField',false);
-      $sbox_field->setReturnValue('isSelectBox',true);
-      $sbox_field->setReturnValue('isMultiSelectBox',false);
-
-
-      $atf = new MockArtifactFieldFactory($this);
-      $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
-      $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
-      $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
-      $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
-      $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
-      $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
-      $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
-      $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
-      $atf->setReturnValue('getFieldFromName',$mbox_field,array('mbox_field'));
-      $atf->setReturnValue('getFieldFromName',$sbox_field,array('sbox_field'));
+        $sbox_field = new ArtifactFieldImportVersion();
+        $sbox_field->setReturnValue('getLabel','SB Field');
+        $sbox_field->setReturnValue('getName','sbox_field');
+        $sbox_field->setReturnValue('isEmptyOk',false);
+        $sbox_field->setReturnValue('getDisplayType','SB');
+        $sbox_field->setReturnValue('isDateField',false);
+        $sbox_field->setReturnValue('isSelectBox',true);
+        $sbox_field->setReturnValue('isMultiSelectBox',false);
 
 
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $atf = new MockArtifactFieldFactory($this);
+        $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
+        $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
+        $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+        $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
+        $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
+        $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
+        $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
+        $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
+        $atf->setReturnValue('getFieldFromName',$mbox_field,array('mbox_field'));
+        $atf->setReturnValue('getFieldFromName',$sbox_field,array('sbox_field'));
+
+
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission','MB Field','SB Field'));
-      $test->predefined_values = array();
-      $test->predefined_values[4] = array('schneide'=>'');
-      $test->predefined_values[6] = array('one'=>'','two'=>'','three'=>'');
-      $test->predefined_values[7] = array('blue'=>'','yellow'=>'','red'=>'');
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission',
-		    'one,two,'.$GLOBALS['Language']->getText('global','none'),'yellow');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $test->predefined_values = array();
+        $test->predefined_values[4] = array('schneide'=>'');
+        $test->predefined_values[6] = array('one'=>'','two'=>'','three'=>'');
+        $test->predefined_values[7] = array('blue'=>'','yellow'=>'','red'=>'');
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission',
+        'one,two,'.$GLOBALS['Language']->getText('global','none'),'yellow');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
 
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow');
-      $test->checkValues('1',$data,false);
-      $this->assertTrue($test->isError());
-      $test->clearError();
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow');
+        $test->checkValues('1',$data,false);
+        $this->assertTrue($test->isError());
+        $test->clearError();
 
       //check mandatory fields
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','','one,two,four','yellow');
-      $test->checkValues('1',$data,false);
-      $this->assertTrue($test->isError());
-      $test->clearError();
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','','one,two,four','yellow');
+        $test->checkValues('1',$data,false);
+        $this->assertTrue($test->isError());
+        $test->clearError();
 
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four',$GLOBALS['Language']->getText('global','none'));
-      $test->checkValues('1',$data,false);
-      $this->assertTrue($test->isError());
-      $test->clearError();
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four',$GLOBALS['Language']->getText('global','none'));
+        $test->checkValues('1',$data,false);
+        $this->assertTrue($test->isError());
+        $test->clearError();
 
 
       //test date format
       //submitted on is allowed to be void, we set it to current date on insert into DB
-      $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test = new ArtifactImport($at,$atf,'group');
+        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission','MB Field','SB Field','Submitted On'));
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
       //sys_date_fmt
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03 16:13');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03 16:13');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
       //xls date format
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004 16:13');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004 16:13');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
       //short sys_date_fmt
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
       //short xls date format
-      $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004');
-      $test->checkValues('1',$data,false);
-      $this->assertFalse($test->isError());
+        $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004');
+        $test->checkValues('1',$data,false);
+        $this->assertFalse($test->isError());
 
 
       /***************** test parseFollowUpComments *****************
        */
 
 
-      $aff = new MockArtifactFieldFactory($this);
-      $aff->setReturnValue('getAllUsedFields',array());
-      $aff->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
-      $aff->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
-      $aff->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
+        $aff = new MockArtifactFieldFactory($this);
+        $aff->setReturnValue('getAllUsedFields',array());
+        $aff->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
+        $aff->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+        $aff->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
 
-      $test = new ArtifactImport($at,$aff,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')));
-      $parsed_comments = array();
-      $art_id = '1149';
+        $test = new ArtifactImport($at,$aff,'group');
+        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')));
+        $parsed_comments = array();
+        $art_id = '1149';
 
-      $followup_comments= "Follow-ups
+        $followup_comments= "Follow-ups
 **********
 
 ------------------------------------------------------------------
@@ -347,25 +347,25 @@ class ArtifactImportTest extends TuleapTestCase {
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
 ";
 
-      $um = new MockUserManager($this);
-      $ai = new ArtifactImportTestVersion($this);
-      $user = mock('PFUser');
+        $um = new MockUserManager($this);
+        $ai = new ArtifactImportTestVersion($this);
+        $user = mock('PFUser');
 
-      $ai->setReturnReference('getUserManager', $um);
-      $um->setReturnReference('getUserByUserName', $user);
+        $ai->setReturnReference('getUserManager', $um);
+        $um->setReturnReference('getUserByUserName', $user);
 
-      $ai->__construct($at,$aff,'group');
+        $ai->__construct($at,$aff,'group');
 
-      $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
+        $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
 
-      $this->assertFalse($ai->isError());
-      $this->assertEqual($parsed_comments[0]['date'],'2005-09-02 18:18');
-      $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[0]['by'],'doswald');
+        $this->assertFalse($ai->isError());
+        $this->assertEqual($parsed_comments[0]['date'],'2005-09-02 18:18');
+        $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[0]['by'],'doswald');
 
 
-      $parsed_comments = array();
-      $followup_comments= "Follow-ups
+        $parsed_comments = array();
+        $followup_comments= "Follow-ups
 **********
 
 ------------------------------------------------------------------
@@ -378,19 +378,19 @@ Excel issue, reassigned to Gene, reduced to Ordinary
 1/18/2005 10:10:58 AM DCO: Accepted for investigation, Prio Major  Assigned Unassigned
 ";
 
-      $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
-      $this->assertFalse($ai->isError());
-      $this->assertEqual($parsed_comments[0]['date'],'2005-10-19 18:28');
-      $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[0]['by'],'doswald');
-      $this->assertEqual($parsed_comments[1]['date'],'2005-09-02 16:51');
-      $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[1]['by'],'doswald');
+        $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
+        $this->assertFalse($ai->isError());
+        $this->assertEqual($parsed_comments[0]['date'],'2005-10-19 18:28');
+        $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[0]['by'],'doswald');
+        $this->assertEqual($parsed_comments[1]['date'],'2005-09-02 16:51');
+        $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[1]['by'],'doswald');
 
 
-      $parsed_comments = array();
+        $parsed_comments = array();
 
-      $followup_comments= "==================================================
+        $followup_comments= "==================================================
 ".$GLOBALS['Language']->getText('tracker_import_utils','type').": ".$GLOBALS['Language']->getText('global','none')."     ".$GLOBALS['Language']->getText('global','by').": jstidd      ".$GLOBALS['Language']->getText('global','on').": 2000-12-09 00:08
 
 noreply was aliased to codendi-admin in order to prevent failure of delivery (to anybody) for the message.  This will cause all new bugs to be visible to the codendi administrators until an alternate solution is devised.  It seems ill-advised to set the email value in user=100 to null, because we are not sure where this value is used in the system and what the effects will be of possible syntax errors created by the use of null instead of a valid mail address.  What is needed is to alias noreply to a bit bucket.
@@ -410,32 +410,32 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
 ";
 
-      $test->parseLegacyDetails($followup_comments,$parsed_comments,$art_id,true);
-      $this->assertFalse($test->isError());
-      $this->assertEqual($parsed_comments[0]['date'],'2000-12-09 00:08');
-      $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[0]['by'],'jstidd');
-      $this->assertEqual($parsed_comments[1]['date'],'2000-12-08 23:06');
-      $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[1]['by'],'jstidd');
-      $this->assertEqual($parsed_comments[2]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[2]['date'],'2000-12-08 22:30');
-      $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
+        $test->parseLegacyDetails($followup_comments,$parsed_comments,$art_id,true);
+        $this->assertFalse($test->isError());
+        $this->assertEqual($parsed_comments[0]['date'],'2000-12-09 00:08');
+        $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[0]['by'],'jstidd');
+        $this->assertEqual($parsed_comments[1]['date'],'2000-12-08 23:06');
+        $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[1]['by'],'jstidd');
+        $this->assertEqual($parsed_comments[2]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[2]['date'],'2000-12-08 22:30');
+        $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
 
-      $parsed_comments = array();
-      $test->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
-      $this->assertFalse($test->isError());
-      $this->assertEqual($parsed_comments[0]['date'],'2000-12-09 00:08');
-      $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[0]['by'],'jstidd');
-      $this->assertEqual($parsed_comments[1]['date'],'2000-12-08 23:06');
-      $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[1]['by'],'jstidd');
-      $this->assertEqual($parsed_comments[2]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[2]['date'],'2000-12-08 22:30');
-      $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
-      $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
+        $parsed_comments = array();
+        $test->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
+        $this->assertFalse($test->isError());
+        $this->assertEqual($parsed_comments[0]['date'],'2000-12-09 00:08');
+        $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[0]['by'],'jstidd');
+        $this->assertEqual($parsed_comments[1]['date'],'2000-12-08 23:06');
+        $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[1]['by'],'jstidd');
+        $this->assertEqual($parsed_comments[2]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[2]['date'],'2000-12-08 22:30');
+        $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
+        $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
 
 
 

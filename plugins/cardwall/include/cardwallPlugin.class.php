@@ -427,11 +427,11 @@ class cardwallPlugin extends Plugin
                 $redirect_to     = key($cardwall);
                 $redirect_params = current($cardwall);
                 switch ($redirect_to) {
-                case 'agile':
-                    $this->redirectToAgileDashboard($redirect, $redirect_params);
+                    case 'agile':
+                        $this->redirectToAgileDashboard($redirect, $redirect_params);
                     break;
-                case 'renderer':
-                    $this->redirectToRenderer($redirect, $redirect_params);
+                    case 'renderer':
+                        $this->redirectToRenderer($redirect, $redirect_params);
                     break;
                 }
             } else {

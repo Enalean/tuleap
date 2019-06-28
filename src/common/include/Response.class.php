@@ -80,7 +80,7 @@ class Response {
     function addUniqueFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) { 
         if(! strstr($this->getRawFeedback(), $message)) {
             $this->_feedback->log($level, $message, $purify);
-         }
+        }
     }
     
     public function displayFeedback() {

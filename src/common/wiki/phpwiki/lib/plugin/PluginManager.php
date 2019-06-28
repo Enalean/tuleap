@@ -150,7 +150,7 @@ extends WikiPlugin
                 if($localizedPluginDocPageName && 
                    $dbi->isWikiPage($localizedPluginDocPageName))
                     $pluginDocPageNamelink = 
-			WikiLink($localizedPluginDocPageName, 'if_known');
+                WikiLink($localizedPluginDocPageName, 'if_known');
             }
             else {
                 $pluginNamelink = WikiLink($pluginName, 'if_known');

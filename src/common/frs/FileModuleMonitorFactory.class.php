@@ -455,9 +455,9 @@ class FileModuleMonitorFactory {
         $package = $frspf->getFRSPackageFromDb($fileModuleId);
         $html    = '<h2>'.$GLOBALS['Language']->getText('file_admin_editpackagepermissions', 'p').' <a href="showfiles.php?group_id='.urlencode($groupId).'" >'. $purifier->purify($package->getName()) .'</a></h2>';
         $html   .= $this->getSelfMonitoringForm($currentUser, $fileModuleId);
-         if ($frspf->userCanAdmin($currentUser, $groupId)) {
-             $html .= $this->getMonitoringListHTML($fileModuleId, $um, $userHelper);
-             $html .= $this->getAddMonitoringForm($fileModuleId);
+        if ($frspf->userCanAdmin($currentUser, $groupId)) {
+            $html .= $this->getMonitoringListHTML($fileModuleId, $um, $userHelper);
+            $html .= $this->getAddMonitoringForm($fileModuleId);
         }
         return $html;
     }

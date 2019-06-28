@@ -107,7 +107,7 @@ class WikiAttachmentRevision {
         $waIter = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {	
+        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {    
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
                                                         'err_upl_mv',
                                                         array($this->filename)),
@@ -191,7 +191,7 @@ class WikiAttachmentRevision {
     function setFromRow($row) {
         $this->id           = $row['id'];      
         $this->attachmentId = $row['attachment_id'];      
-        $this->owner_id     = $row['user_id'];	
+        $this->owner_id     = $row['user_id'];    
         $this->date         = $row['date'];      
         $this->revision     = $row['revision'];      
         $this->mimeType     = $row['mimetype'];      
@@ -203,12 +203,12 @@ class WikiAttachmentRevision {
         return true;
     }
 
-	function setGid($gid) {
-		 if(is_numeric($gid)) {
+    function setGid($gid) {
+        if(is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
-	}
+    }
 
     function setSize($s) {
         global $sys_max_size_upload;

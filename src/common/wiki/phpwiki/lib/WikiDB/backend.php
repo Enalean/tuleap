@@ -28,7 +28,7 @@ rcs_id('$Id: backend.php,v 1.26 2005/11/14 22:24:33 rurban Exp $');
     //version
     //created (*)
     //%superceded
-	
+    
     //:serial
 
      (types are scalars: strings, ints, bools)
@@ -519,7 +519,7 @@ class WikiDB_backend
         if (empty($order))
             if (in_array($column,array('mtime','hits')))
                 $order = '-';
-            else
+        else
                 $order = '+';
         if ($action == 'flip_order') {
             return ($order == '+' ? '-' : '+') . $column;
@@ -626,9 +626,9 @@ class WikiDB_backend_search
     /* Eliminate stoplist words.
        Keep a list of Stoplisted words to inform the poor user. */
     function isStoplisted ($node) {
-    	// check only on WORD or EXACT fulltext search
-    	if ($node->op != 'WORD' and $node->op != 'EXACT')
-    	    return false;
+        // check only on WORD or EXACT fulltext search
+        if ($node->op != 'WORD' and $node->op != 'EXACT')
+            return false;
         if (preg_match("/^".$this->_stoplist."$/i", $node->word)) {
             array_push($this->_stoplisted, $node->word);
             return true;

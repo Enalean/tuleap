@@ -116,15 +116,15 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     }
 
     function _getDefaultValuesTableHeader() {
-       $html = '';
-       if($this->_subItemsAreWritable()) {
-           $html .= '<tr>';
-           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_rec').'</th>';
-           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_md').'</td>';
-           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_val').'</th>';
-           $html .= '</tr>';
-       }
-       return $html;
+        $html = '';
+        if($this->_subItemsAreWritable()) {
+            $html .= '<tr>';
+            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_rec').'</th>';
+            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_md').'</td>';
+            $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_val').'</th>';
+            $html .= '</tr>';
+        }
+        return $html;
     }
 
     function _getDefaultValues() {

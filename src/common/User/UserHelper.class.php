@@ -91,17 +91,17 @@ class UserHelper {
     function getDisplayName($user_name, $realname) {
         $name = '';
         switch($this->_username_display) {
-        case self::PREFERENCES_LOGIN_AND_NAME:
-            $name = "$user_name ($realname)";
+            case self::PREFERENCES_LOGIN_AND_NAME:
+                $name = "$user_name ($realname)";
             break;
-        case self::PREFERENCES_LOGIN:
-            $name = $user_name;
+            case self::PREFERENCES_LOGIN:
+                $name = $user_name;
             break;
-        case self::PREFERENCES_REAL_NAME:
-            $name = $realname;
+            case self::PREFERENCES_REAL_NAME:
+                $name = $realname;
             break;
-        default:
-            $name = "$realname ($user_name)";
+            default:
+                $name = "$realname ($user_name)";
             break;
         }
         return $name;
@@ -118,17 +118,17 @@ class UserHelper {
     function getDisplayNameSQLQuery() {
         $name = '';
         switch($this->_username_display) {
-        case self::PREFERENCES_LOGIN_AND_NAME:
-            $name = "CONCAT(user.user_name,' (',user.realname,')') AS full_name";
+            case self::PREFERENCES_LOGIN_AND_NAME:
+                $name = "CONCAT(user.user_name,' (',user.realname,')') AS full_name";
             break;
-        case self::PREFERENCES_LOGIN:
-            $name = 'user.user_name AS full_name';
+            case self::PREFERENCES_LOGIN:
+                $name = 'user.user_name AS full_name';
             break;
-        case self::PREFERENCES_REAL_NAME:
-            $name = 'user.realname AS full_name';
+            case self::PREFERENCES_REAL_NAME:
+                $name = 'user.realname AS full_name';
             break;
-        default:
-            $name = "CONCAT(user.realname,' (',user.user_name,')') AS full_name";
+            default:
+                $name = "CONCAT(user.realname,' (',user.user_name,')') AS full_name";
             break;
         }
         return $name;
@@ -166,17 +166,17 @@ class UserHelper {
     function getDisplayNameSQLOrder() {
         $order = '';
         switch($this->_username_display) {
-        case self::PREFERENCES_LOGIN_AND_NAME:
-            $order = "user.user_name";
+            case self::PREFERENCES_LOGIN_AND_NAME:
+                $order = "user.user_name";
             break;
-        case self::PREFERENCES_LOGIN:
-            $order = 'user.user_name';
+            case self::PREFERENCES_LOGIN:
+                $order = 'user.user_name';
             break;
-        case self::PREFERENCES_REAL_NAME:
-            $order = 'user.realname';
+            case self::PREFERENCES_REAL_NAME:
+                $order = 'user.realname';
             break;
-        default:
-            $order = "user.realname";
+            default:
+                $order = "user.realname";
             break;
         }
         return $order;

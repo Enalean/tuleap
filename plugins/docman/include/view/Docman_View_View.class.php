@@ -74,7 +74,7 @@
     }
     /* protected */ function _javascript($params) {
         if($this->javascript != "") {
-           echo "<script type=\"text/javascript\">\n".
+            echo "<script type=\"text/javascript\">\n".
             "//<!--\n".
             $this->javascript.
             "//-->\n".

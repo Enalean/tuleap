@@ -92,7 +92,7 @@ class AnchoredRegexpSet
      * @return object  A RegexpSet_match object, or false if no match.
      */
     function match ($text) {
-    	if (!is_string($text)) return false;
+        if (!is_string($text)) return false;
         if (! preg_match($this->_re, $text, $m)) {
             return false;
         }
@@ -329,9 +329,9 @@ class Block_HtmlElement extends HtmlElement
     }
 
     function setTightness($top, $bottom) {
-	$this->setInClass('tightenable');
-	$this->setInClass('top', $top);
-	$this->setInClass('bottom', $bottom);
+        $this->setInClass('tightenable');
+        $this->setInClass('top', $top);
+        $this->setInClass('bottom', $bottom);
     }
 }
 
@@ -363,23 +363,23 @@ class ParsedBlock extends Block_HtmlElement {
 
     // FIXME: hackish. This should only be called once.
     function _initBlockTypes () {
-    	// better static or global?
-    	static $_regexpset, $_block_types;
+        // better static or global?
+        static $_regexpset, $_block_types;
 
-    	if (!is_object($_regexpset)) {
+        if (!is_object($_regexpset)) {
             foreach (array('oldlists', 'list', 'dl', 'table_dl',
                            'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
                            'plugin', 'p')
                      as $type) {
-                $class = "Block_$type";
-                $proto = new $class;
-                $this->_block_types[] = $proto;
-                $this->_regexps[] = $proto->_re;
+                   $class = "Block_$type";
+                   $proto = new $class;
+                   $this->_block_types[] = $proto;
+                   $this->_regexps[] = $proto->_re;
             }
             $this->_regexpset = new AnchoredRegexpSet($this->_regexps);
             $_regexpset = $this->_regexpset;
             $_block_types = $this->_block_types;
-    	} else {
+        } else {
              $this->_regexpset = $_regexpset;
              $this->_block_types = $_block_types;
         }
@@ -401,7 +401,7 @@ class ParsedBlock extends Block_HtmlElement {
                 $input->_debug('>', get_class($block));
             
             if ($block->_match($input, $m)) {
-            	//$block->_text = $line;
+                //$block->_text = $line;
                 if (DEBUG & _DEBUG_PARSER)
                     $input->_debug('<', get_class($block));
                 $tight_bottom = ! $input->skipSpace();
@@ -543,8 +543,8 @@ class Block_list extends BlockMarkup
     function merge ($nextBlock) {
         if (isa($nextBlock, 'Block_list') and $this->_tag == $nextBlock->_tag) {
             if ($nextBlock->_content === $this->_content) {
-            	trigger_error("Internal Error: no block advance", E_USER_NOTICE);
-            	return false;
+                trigger_error("Internal Error: no block advance", E_USER_NOTICE);
+                return false;
             }
             array_splice($this->_content, count($this->_content), 0,
                          $nextBlock->_content);
@@ -619,7 +619,7 @@ class Block_table_dl_defn extends XmlContent
         if (!is_array($defn))
             $defn = $defn->getContent();
 
-	$this->_next_tight_top = false; // value irrelevant - gets fixed later
+        $this->_next_tight_top = false; // value irrelevant - gets fixed later
         $this->_ncols = $this->_ComputeNcols($defn);
         $this->_nrows = 0;
 
@@ -639,10 +639,10 @@ class Block_table_dl_defn extends XmlContent
 
     function setTightness($tight_top, $tight_bot) {
         $this->_tight_top = $tight_top;
-	$this->_tight_bot = $tight_bot;
-	$first = &$this->firstTR();
-	$last  = &$this->lastTR();
-	$first->setInClass('top', $tight_top);
+        $this->_tight_bot = $tight_bot;
+        $first = &$this->firstTR();
+        $last  = &$this->lastTR();
+        $first->setInClass('top', $tight_top);
         if (!empty($last)) {
             $last->setInClass('bottom', $tight_bot);
         } else {
@@ -724,17 +724,17 @@ class Block_table_dl_defn extends XmlContent
     }
 
     function & firstTR() {
-	$first = &$this->_content[0];
-	if (isa($first, 'Block_table_dl_defn'))
-	    return $first->firstTR();
-	return $first;
+        $first = &$this->_content[0];
+        if (isa($first, 'Block_table_dl_defn'))
+        return $first->firstTR();
+        return $first;
     }
 
     function & lastTR() {
-	$last = &$this->_content[$this->_nrows - 1];
-	if (isa($last, 'Block_table_dl_defn'))
-	    return $last->lastTR();
-	return $last;
+        $last = &$this->_content[$this->_nrows - 1];
+        if (isa($last, 'Block_table_dl_defn'))
+        return $last->lastTR();
+        return $last;
     }
 
     function setWidth ($ncols) {
@@ -949,7 +949,7 @@ class Block_plugin extends Block_pre
         }
         $input->advance();
 
-	$this->_element = new Cached_PluginInvocation($pi);
+        $this->_element = new Cached_PluginInvocation($pi);
         return true;
     }
 }
@@ -979,7 +979,7 @@ class Block_hr extends BlockMarkup
     }
 
     function _setTightness($top, $bot) {
-	// Don't tighten <hr/>s
+    // Don't tighten <hr/>s
     }
 }
 
@@ -998,7 +998,7 @@ class Block_heading extends BlockMarkup
     }
 
     function _setTightness($top, $bot) {
-	// Don't tighten headers.
+    // Don't tighten headers.
     }
 }
 

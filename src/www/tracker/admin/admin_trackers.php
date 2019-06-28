@@ -7,13 +7,13 @@
 //  Written for Codendi by Stephane Bouhet
 
 if ( !user_isloggedin() ) {
-	exit_not_logged_in();
-	return;
+    exit_not_logged_in();
+    return;
 }
 
 if ( !user_ismember($group_id,'A') ) {
-	exit_permission_denied();
-	return;
+    exit_permission_denied();
+    return;
 }
 
 $ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_trackers','all_admin'),

@@ -203,35 +203,35 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
             // 4 => Is valid?
             switch ((string)$case[4]) {
             // no need to check
-            case '-':
-                $field->expectNever('isValid');
-                $field->expectNever('setHasErrors');
-                $is_valid = true;
+                case '-':
+                    $field->expectNever('isValid');
+                    $field->expectNever('setHasErrors');
+                    $is_valid = true;
                 break;
             // Error due to required
-            case 'R':
-                $field->expectNever('isValid');
-                $field->expectOnce('setHasErrors', array(true));
-                $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
-                $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
-                $is_valid = false;
+                case 'R':
+                    $field->expectNever('isValid');
+                    $field->expectOnce('setHasErrors', array(true));
+                    $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
+                    $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
+                    $is_valid = false;
                 break;
             // Error due to perms
-            case 'P':
-                $field->expectNever('isValid');
-                $field->expectOnce('setHasErrors', array(true));
-                $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
-                $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
-                $is_valid = false;
+                case 'P':
+                    $field->expectNever('isValid');
+                    $field->expectOnce('setHasErrors', array(true));
+                    $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
+                    $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
+                    $is_valid = false;
                 break;
             // Depends on field->isValid()
-            case 'V':
-                $field->expectOnce('isValid');
-                $field->expectNever('setHasErrors');
-                $field->setReturnValue('isValid', true);
-                $is_valid = true;
+                case 'V':
+                    $field->expectOnce('isValid');
+                    $field->expectNever('setHasErrors');
+                    $field->setReturnValue('isValid', true);
+                    $is_valid = true;
                 break;
-            default:
+                default:
                 break;
             }
 

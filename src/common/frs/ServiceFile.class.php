@@ -160,7 +160,7 @@ class ServiceFile extends Service
                                 'package_id'   => $package_id,
                             );
                             $package_displayed[$package_id] = true;
-                         }
+                        }
                     }
                 }
             }

@@ -233,7 +233,7 @@ class ProjectLinksPlugin extends Plugin {
                     'update_ok').' ';
                 } else {
                     $feedback .= ' '.$Language->getText('plugin_plinks',
-                'update_failed', db_error());
+                    'update_failed', db_error());
                 }
                 break;
 
@@ -292,7 +292,7 @@ class ProjectLinksPlugin extends Plugin {
                         '".db_es($row['description'])."',
                         '".db_es($row['uri_plus'])."'
                     );")) {
-                    $feedback .= ' '.$Language->getText('plugin_plinks', 'update_ok');
+                        $feedback .= ' '.$Language->getText('plugin_plinks', 'update_ok');
                     }
                 }
                 break;
@@ -398,36 +398,36 @@ class ProjectLinksPlugin extends Plugin {
                     false, //mass_change
                     true); //full_width
                     $cnt = 0;
-                    while ($row = db_fetch_array($db_res)) {
-                        $cls = "class='".html_get_alt_row_color($cnt++)."'";
-                        print "<TR>
+            while ($row = db_fetch_array($db_res)) {
+                $cls = "class='".html_get_alt_row_color($cnt++)."'";
+                print "<TR>
                     <td $cls style='white-space: nowrap; vertical-align: top;'>".
-                        mkAH(htmlentities($row['name']),
-                        $this->_adminURI()."?disp=edit_link_type".
-                            "&amp;group_id=".$row["group_id"].
-                            "&amp;link_type_id=".$row["link_type_id"],
-                        $Language->getText('plugin_plinks', 'update_details')).
-                    "</td>
+                mkAH(htmlentities($row['name']),
+                $this->_adminURI()."?disp=edit_link_type".
+                    "&amp;group_id=".$row["group_id"].
+                    "&amp;link_type_id=".$row["link_type_id"],
+                $Language->getText('plugin_plinks', 'update_details')).
+                "</td>
                     <td $cls style='white-space: nowrap; vertical-align: top;'>".
-                        htmlentities($row['reverse_name'])."</td>
+                htmlentities($row['reverse_name'])."</td>
                     <td $cls style='vertical-align: top;'>".
-                        htmlentities($row['description'])."</td>\n";
-                        /** **1 commented out for now - until we can decide how to deal with project links functionality
-                         print "<td $cls style='vertical-align: top;'>".
-                         htmlentities($row['uri_plus'])."</td>\n";
-                         **/
-                        print "<td $cls style='vertical-align: top;'>".
-                        mkAH($this->_icon('trash'),
-                        $this->_adminURI()."?func=pl_type_delete".
-                            "&amp;group_id=$group_id".
-                            "&amp;link_type_id=".$row["link_type_id"],
-                        $Language->getText('plugin_plinks', 'delete_type'),
-                        array('onclick' => "return confirm('".
-                        $Language->getText('plugin_plinks',
-                                    'delete_type')."?')"))."
+                htmlentities($row['description'])."</td>\n";
+                /** **1 commented out for now - until we can decide how to deal with project links functionality
+                 print "<td $cls style='vertical-align: top;'>".
+                 htmlentities($row['uri_plus'])."</td>\n";
+                 **/
+                print "<td $cls style='vertical-align: top;'>".
+                mkAH($this->_icon('trash'),
+                $this->_adminURI()."?func=pl_type_delete".
+                    "&amp;group_id=$group_id".
+                    "&amp;link_type_id=".$row["link_type_id"],
+                $Language->getText('plugin_plinks', 'delete_type'),
+                array('onclick' => "return confirm('".
+                $Language->getText('plugin_plinks',
+                            'delete_type')."?')"))."
                     </td>
                     </TR>\n";
-                    }
+            }
                     print "</TABLE>\n";
         }
         $HTML->box1_bottom();
@@ -772,16 +772,16 @@ class ProjectLinksPlugin extends Plugin {
                             AND (link_type_id =
                             ".db_ei($typeMatch[$row_templLinks['link_type_id']]).")
                         );");
-                            if (db_numrows($findlinks) <= 0) {
-                                print mkAH($this->_icon("add"),
-                                $basicURI.
-                            "&amp;target_group_id=".
-                                $row_templLinks['target_group_id'].
-                            "&amp;link_type_id=".
-                                $typeMatch[$row_templLinks['link_type_id']]);
-                            } else {
-                                print $this->_icon('matched');
-                            }
+                    if (db_numrows($findlinks) <= 0) {
+                        print mkAH($this->_icon("add"),
+                        $basicURI.
+                        "&amp;target_group_id=".
+                        $row_templLinks['target_group_id'].
+                        "&amp;link_type_id=".
+                        $typeMatch[$row_templLinks['link_type_id']]);
+                    } else {
+                        print $this->_icon('matched');
+                    }
                 } else {
                     $type_missing = true;
                     print $Language->getText('plugin_plinks',

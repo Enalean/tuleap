@@ -74,10 +74,10 @@ extends XmlParser {
 
         if ($tagName == "ITEM") {
             if (empty($this->items)) {
-                $this->items = array();	
+                $this->items = array();    
                 $GLOBALS['rss_parser_items'] = $this->items;
             } elseif (!empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
-            	// override the initial <items> list with detailed <item>'s
+                // override the initial <items> list with detailed <item>'s
                 $this->items = array();
                 $GLOBALS['rss_parser_items'] = $this->items;
             }
@@ -121,37 +121,37 @@ extends XmlParser {
             if (empty($this->item[$current_tag]))
                 $this->item[$current_tag] = '';
             if ($current_tag == 'LINK') {
-            	if (trim($data))
-            	    $this->item[$current_tag] = trim($data);
+                if (trim($data))
+                    $this->item[$current_tag] = trim($data);
             } else {
                 $this->item[$current_tag] .= trim($data);
             }
         } elseif ($this->list_items) {
             if ($current_tag == 'RDF:LI') {
-            	// FIXME: avoid duplicates. cdata called back 4x per RDF:LI
-            	if ($this->items[count($this->items)-1]['link'] != @$current_attrs['RDF:RESOURCE'])
+                // FIXME: avoid duplicates. cdata called back 4x per RDF:LI
+                if ($this->items[count($this->items)-1]['link'] != @$current_attrs['RDF:RESOURCE'])
                     $this->items[] = array('link' => @$current_attrs['RDF:RESOURCE'],
                                            'title' => '');
             }
         } else {
             switch ($current_tag) {
-            case "TITLE":
-                if (trim($data))
+                case "TITLE":
+                    if (trim($data))
                     $this->title .= " " . trim($data);
                 break;
-            case "DESCRIPTION":
-                if (trim($data))
+                case "DESCRIPTION":
+                    if (trim($data))
                     $this->description .= trim($data);
                 break;
-            case "LINK":
-                if (trim($data))
+                case "LINK":
+                    if (trim($data))
                     $this->link = trim($data);
                 break;
-            case "DC:DATE":
-                if (trim($data))
+                case "DC:DATE":
+                    if (trim($data))
                     $this->date .= " " . trim($data);
-            default:
-                if (trim($data))
+                default:
+                    if (trim($data))
                     $this->divers .= " " . $current_tag."/".$data;
                 break;
             }
@@ -166,12 +166,12 @@ extends XmlParser {
                           E_USER_WARNING);
         //OO workaround: parser object looses its params. we have to store them in globals
         if ($is_final) {
-    	    if (empty($this->items)) {
+            if (empty($this->items)) {
                 $this->items   = @$GLOBALS['rss_parser_items'];
                 $this->channel = @$GLOBALS['rss_parser_channel'];
-    	    }
-    	    unset($GLOBALS['rss_parser_items']);
-    	    unset($GLOBALS['rss_parser_channel']);
+            }
+            unset($GLOBALS['rss_parser_items']);
+            unset($GLOBALS['rss_parser_channel']);
         }
     }
 }

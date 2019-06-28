@@ -302,10 +302,10 @@ class Plugin implements PFO_Plugin {
      * @return bool true if the plugin can be made available, false if not
      */
     public function canBeMadeAvailable() {
-    	return true;
+        return true;
     }
 
-	/**
+    /**
      * Function called when a plugin is set as available or unavailable
      *
      * @param bool $available true if the plugin is available, false if unavailable

@@ -123,11 +123,11 @@ function IniConfig($file) {
     $rs = @parse_ini_file($file);
     $rsdef = @parse_ini_file(dirname(__FILE__)."/../config/config-default.ini");
     foreach ($rsdef as $k => $v) {
-    	if (defined($k)) {
-    	    $rs[$k] = constant($k);
-    	} elseif (!isset($rs[$k])) {
-    	    $rs[$k] = $v;
-    	}
+        if (defined($k)) {
+            $rs[$k] = constant($k);
+        } elseif (!isset($rs[$k])) {
+            $rs[$k] = $v;
+        }
     }
     unset($k); unset($v); 
     
@@ -205,18 +205,18 @@ function IniConfig($file) {
     // Expiry stuff
     global $ExpireParams;
     foreach (array('major','minor','author') as $major) {
-    	foreach (array('max_age','min_age','min_keep','keep','max_keep') as $max) {
-    	    $item = strtoupper($major) . '_'. strtoupper($max);
+        foreach (array('max_age','min_age','min_keep','keep','max_keep') as $max) {
+            $item = strtoupper($major) . '_'. strtoupper($max);
             if (defined($item)) $val = constant($item);
             elseif (array_key_exists($item, $rs))
                 $val = $rs[$item];
-    	    elseif (array_key_exists($item, $rsdef))
+            elseif (array_key_exists($item, $rsdef))
                 $val = $rsdef[$item];
             if (!isset($ExpireParams[$major]))
                 $ExpireParams[$major] = array();
             $ExpireParams[$major][$max] = $val;
             unset($rs[$item]);
-    	}
+        }
     }
     unset($item); unset($major); unset($max); 
     
@@ -225,7 +225,7 @@ function IniConfig($file) {
         if (isset($rs['USER_AUTH_ORDER']))
             $GLOBALS['USER_AUTH_ORDER'] = preg_split('/\s*:\s*/', 
                                                      $rs['USER_AUTH_ORDER']);
-        else 
+    else 
             $GLOBALS['USER_AUTH_ORDER'] = array("PersonalPage");
 
     // optional values will be set to '' to simplify the logic.
@@ -368,7 +368,7 @@ function fixup_static_configs($file) {
 
     // If user has not defined PHPWIKI_DIR, and we need it
     if (!defined('PHPWIKI_DIR') and !file_exists("themes/default")) {
-    	$themes_dir = FindFile("themes");
+        $themes_dir = FindFile("themes");
         define('PHPWIKI_DIR', dirname($themes_dir));
     }
         
@@ -398,8 +398,8 @@ function fixup_static_configs($file) {
 
     // Basic configurator validation
     if (!defined('ADMIN_USER') or ADMIN_USER == '') {
-    	$error = sprintf("%s may not be empty. Please update your configuration.", 
-       			 "ADMIN_USER");
+        $error = sprintf("%s may not be empty. Please update your configuration.", 
+                    "ADMIN_USER");
         // protect against recursion
         if (!preg_match("/config\-(dist|default)\.ini$/", $file)
             and !defined("_PHPWIKI_INSTALL_RUNNING"))
@@ -414,9 +414,9 @@ function fixup_static_configs($file) {
         }
     }
     if (!defined('ADMIN_PASSWD') or ADMIN_PASSWD == '') {
-    	$error = sprintf("%s may not be empty. Please update your configuration.", 
-       			 "ADMIN_PASSWD");
-    	// protect against recursion
+        $error = sprintf("%s may not be empty. Please update your configuration.", 
+                    "ADMIN_PASSWD");
+        // protect against recursion
         if (!preg_match("/config\-(dist|default)\.ini$/", $file)
            and !defined("_PHPWIKI_INSTALL_RUNNING")) 
         { 
@@ -439,11 +439,11 @@ function fixup_static_configs($file) {
     if (!defined('REQUIRE_SIGNIN_BEFORE_EDIT')) define('REQUIRE_SIGNIN_BEFORE_EDIT', ! ALLOW_ANON_EDIT);
     if (!defined('ALLOW_BOGO_LOGIN')) define('ALLOW_BOGO_LOGIN', true);
     if (!ENABLE_USER_NEW) {
-      if (!defined('ALLOW_HTTP_AUTH_LOGIN'))
+        if (!defined('ALLOW_HTTP_AUTH_LOGIN'))
           define('ALLOW_HTTP_AUTH_LOGIN', false);
-      if (!defined('ALLOW_LDAP_LOGIN')) 
+        if (!defined('ALLOW_LDAP_LOGIN')) 
           define('ALLOW_LDAP_LOGIN', function_exists('ldap_connect') and defined('LDAP_AUTH_HOST'));
-      if (!defined('ALLOW_IMAP_LOGIN')) 
+        if (!defined('ALLOW_IMAP_LOGIN')) 
           define('ALLOW_IMAP_LOGIN', function_exists('imap_open') and defined('IMAP_AUTH_HOST'));
     }
 
@@ -548,16 +548,16 @@ function fixup_dynamic_configs($file) {
              * php script is...)
              */
             switch (php_sapi_name()) {
-            case 'apache':
-            case 'apache2handler':
-                define('USE_PATH_INFO', true);
+                case 'apache':
+                case 'apache2handler':
+                    define('USE_PATH_INFO', true);
                 break;
-            case 'cgi':
-            case 'apache2filter':
-                define('USE_PATH_INFO', false);
+                case 'cgi':
+                case 'apache2filter':
+                    define('USE_PATH_INFO', false);
                 break;
-            default:
-                define('USE_PATH_INFO', preg_match('/\.(php3?|cgi)$/D', SCRIPT_NAME));
+                default:
+                    define('USE_PATH_INFO', preg_match('/\.(php3?|cgi)$/D', SCRIPT_NAME));
                 break;
             }
         }
