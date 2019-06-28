@@ -463,9 +463,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                 echo '</script>'."\n";
             }
         }
-        $em = EventManager::instance();
         echo '<script type="text/javascript">'."\n";
-        $em->processEvent(Event::JAVASCRIPT_FOOTER, null);
         echo $this->getFooterSiteJs();
         echo '
         </script>';

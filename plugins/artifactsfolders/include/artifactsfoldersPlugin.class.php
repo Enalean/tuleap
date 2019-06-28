@@ -28,6 +28,7 @@ use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
@@ -57,7 +58,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
-            $this->addHook(Event::JAVASCRIPT_FOOTER);
+            $this->addHook('javascript_file');
             $this->addHook(TrackerXmlImport::ADD_PROPERTY_TO_TRACKER);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_IS_NATURE_VALID);
@@ -101,15 +102,24 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     public function cssfile()
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+            $asset = $this->getIncludeAssets();
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />';
         }
     }
 
-    public function javascript_footer($params) // phpcs:ignore
+    public function javascript_file($params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
-            echo '</script>' . $this->getMinifiedAssetHTML() . '<script>';
+            echo $this->getIncludeAssets()->getHTMLSnippet('rollup.js');
         }
+    }
+
+    private function getIncludeAssets() : IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/artifactsfolders/',
+            '/assets/artifactsfolders'
+        );
     }
 
     public function event_get_artifactlink_natures($params)// phpcs:ignore

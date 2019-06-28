@@ -1,14 +1,4 @@
 {
     "name": "artifactsfolders",
-    "themes": {
-        "default": {
-            "files": [
-                "www/themes/default/css/style.scss"
-            ],
-            "target_dir": "www/themes/default/css"
-        }
-    },
-    "javascript": [
-        "www/scripts/rollup.js"
-    ]
+    "components": ["./"]
 }

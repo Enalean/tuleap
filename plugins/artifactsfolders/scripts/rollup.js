@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* global $$:readonly, Ajax:readonly, tuleap:readonly */
 
 (function() {
     $$("td.artifacts-folders-rollup > a.direct-link-to-artifact").each(function(link) {
@@ -38,6 +40,7 @@
         loadChildrenRecursively();
 
         function loadChildrenRecursively() {
+            // eslint-disable-next-line no-new
             new Ajax.Request("/plugins/artifactsfolders/", {
                 method: "GET",
                 parameters: {
@@ -87,6 +90,7 @@
             var additional_row = document.createElement("tr");
 
             additional_row.dataset.childOf = row_id;
+            /* eslint-disable no-multi-str */
             additional_row.innerHTML =
                 ' \
                     <td class="artifacts-folders-rollup" style="padding-left: ' +
@@ -121,6 +125,7 @@
                     <td>" +
                 child.assignees.map(formatUser).join(", ") +
                 "</td>";
+            /* eslint-enable no-multi-str */
 
             if (next_row) {
                 tbody.insertBefore(additional_row, next_row);
@@ -136,6 +141,7 @@
         var html = "";
 
         folder_hierarchy.forEach(function(folder) {
+            /* eslint-disable no-multi-str */
             html +=
                 '<i class="fa fa-angle-right"></i> \
                 <a class="direct-link-to-artifact" \
@@ -144,6 +150,7 @@
                 '&view=artifactsfolders">' +
                 tuleap.escaper.html(folder.title) +
                 "</a> ";
+            /* eslint-enable no-multi-str */
         });
 
         return html;
@@ -172,6 +179,7 @@
     }
 
     function formatUser(user_json) {
+        /* eslint-disable no-multi-str */
         return (
             '<a href="' +
             tuleap.escaper.html(user_json.url) +
@@ -181,5 +189,6 @@
             " \
                 </a>"
         );
+        /* eslint-enable no-multi-str */
     }
 })();
