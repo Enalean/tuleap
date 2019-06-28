@@ -554,6 +554,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1325,6 +1326,7 @@ fi
 %files plugin-captcha
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/captcha
+%{APP_DIR}/src/www/assets/captcha
 
 %files plugin-bugzilla-reference
 %defattr(-,%{APP_USER},%{APP_USER},-)

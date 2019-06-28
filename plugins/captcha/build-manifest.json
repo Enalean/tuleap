@@ -1,11 +1,4 @@
 {
     "name": "captcha",
-    "themes": {
-        "default": {
-            "files": [
-                "www/themes/default/css/style.scss"
-            ],
-            "target_dir": "www/themes/default/css"
-        }
-    }
+    "components": ["./"]
 }

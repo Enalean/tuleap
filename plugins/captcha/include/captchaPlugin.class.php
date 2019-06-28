@@ -34,6 +34,7 @@ use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -82,7 +83,11 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
     public function loadCSSFiles()
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account/register.php') === 0 && $this->isConfigured()) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/captcha',
+                '/assets/captcha'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'. $assets->getFileURL('style.css') . '" />';
         }
     }
 
