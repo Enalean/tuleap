@@ -29,14 +29,6 @@ use UserManager;
 
 class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         parent::__construct();

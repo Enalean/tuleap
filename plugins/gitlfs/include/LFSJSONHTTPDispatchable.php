@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,7 +60,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
         }
     }
 
-    private function doesRequestAcceptGitLFSResponse(\HttpRequest $request) : bool
+    private function doesRequestAcceptGitLFSResponse(HTTPRequest $request) : bool
     {
         return stripos(trim($request->getFromServer('HTTP_ACCEPT')), self::GIT_LFS_MIME_TYPE) === 0;
     }

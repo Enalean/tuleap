@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ class SVN_Immutable_Tags_Handler {
     /** @var SVN_Immutable_Tags_DAO */
     private $dao;
 
-    public function __construct(SVN_immutable_tags_DAO $dao) {
+    public function __construct(SVN_Immutable_Tags_DAO $dao) {
         $this->dao = $dao;
     }
 

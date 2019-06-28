@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -262,7 +262,7 @@ class proftpdPlugin extends Plugin {
 
         $presenter = $presenter_builder->build(
             $event->getProject(),
-            HttpRequest::instance()->get('group')
+            HTTPRequest::instance()->get('group')
         );
 
         $template_factory      = TemplateRendererFactory::build();

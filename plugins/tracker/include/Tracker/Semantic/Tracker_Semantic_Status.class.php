@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -530,8 +531,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function exportToREST(PFUser $user) {
         $field = $this->getFieldUserCanRead($user);
         if ($field) {
-            $classname_with_namespace = 'Tuleap\Tracker\REST\SemanticStatusRepresentation';
-            $semantic_status_representation = new $classname_with_namespace;
+            $semantic_status_representation = new SemanticStatusRepresentation();
             $semantic_status_representation->build($field->getId(), $this->getOpenValues());
             return $semantic_status_representation;
         }

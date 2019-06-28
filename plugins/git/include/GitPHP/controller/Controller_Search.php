@@ -37,14 +37,6 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
     public const SEARCH_AUTHOR    = 'author';
     public const SEARCH_COMMITTER = 'committer';
 
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         if (! Config::GetInstance()->GetValue('search', true)) {

@@ -30,14 +30,6 @@ use Tuleap\Layout\IncludeAssets;
  */
 class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
 {
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @return controller
-     */
     public function __construct()
     {
         parent::__construct();

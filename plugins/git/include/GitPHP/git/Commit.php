@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
  *
  * This file is a part of Tuleap.
@@ -755,7 +755,7 @@ class Commit extends GitObject
      * Gets the tag that contains the changes in this commit
      *
      * @access public
-     * @return tag object
+     * @return Tag object
      */
     public function GetContainingTag() // @codingStandardsIgnoreLine
     {

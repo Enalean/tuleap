@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2016 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -30,7 +30,7 @@ use SVN_CommitToTagDeniedException;
 use Tuleap\SVN\Admin\ImmutableTagFactory;
 use Tuleap\SVN\Commit\CommitInfoEnhancer;
 use Tuleap\SVN\Commit\CommitMessageValidator;
-use Tuleap\SVN\Commit\SVNLook;
+use Tuleap\SVN\Commit\Svnlook;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
@@ -51,7 +51,7 @@ class PreCommit
 
     private $transaction;
     /**
-     * @var SVNLook
+     * @var Svnlook
      */
     private $svnlook;
     /**
@@ -69,7 +69,7 @@ class PreCommit
         RepositoryManager $repository_manager,
         CommitInfoEnhancer $commit_info_enhancer,
         ImmutableTagFactory $immutable_tag_factory,
-        SVNLook $svnlook,
+        Svnlook $svnlook,
         SHA1CollisionDetector $sha1_collision_detector,
         Logger $logger,
         HookConfigRetriever $hook_config_retriever
