@@ -79,6 +79,11 @@ class WelcomeDisplayController implements DispatchableWithRequest
         }
 
         $lr = $this->ldap_user_manager->getLdapFromUserId($request->getCurrentUser()->getId());
+        if ($lr === false) {
+            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-ldap', 'Unable to retrieve LDAP info for your user account, skipping Welcome page'));
+            $layout->redirect('/my/');
+            return;
+        }
         $ldap_name = $lr->getLogin();
 
         $star = '<span class="highlight"><big>*</big></span>';

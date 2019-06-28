@@ -100,7 +100,7 @@ class LDAP_UserManager {
      * Get LDAPResult object corresponding to a User object
      * 
      * @param  PFUser $user
-     * @return LDAPResult
+     * @return LDAPResult|false
      */
     function getLdapFromUser($user) {
         if ($user && !$user->isAnonymous()) {
@@ -113,8 +113,8 @@ class LDAP_UserManager {
     /**
      * Get LDAPResult object corresponding to a user name
      *
-     * @param  $userName  The user name
-     * @return LDAPResult
+     * @param  string $userName  The user name
+     * @return LDAPResult|false
      */
     function getLdapFromUserName($userName) {
         $user = $this->getUserManager()->getUserByUserName($userName);
@@ -125,7 +125,7 @@ class LDAP_UserManager {
      * Get LDAPResult object corresponding to a user id
      *
      * @param  int $userId    The user id
-     * @return LDAPResult
+     * @return LDAPResult|false
      */
     function getLdapFromUserId($userId) {
         $user = $this->getUserManager()->getUserById($userId);
@@ -137,7 +137,7 @@ class LDAP_UserManager {
      *
      * @param LDAPResult $lr The LDAP result
      *
-     * @return PFUser
+     * @return PFUser|false
      */
     function getUserFromLdap(LDAPResult $lr) {
         $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
@@ -196,8 +196,8 @@ class LDAP_UserManager {
     /**
      * Return LDAP logins stored in DB corresponding to given userIds.
      * 
-     * @param Array $userIds Array of user ids
-     * @return Array ldap logins
+     * @param array $userIds Array of user ids
+     * @return DataAccessResult ldap logins
      */
     function getLdapLoginFromUserIds(array $userIds) {
         $dao = $this->getDao();
@@ -254,10 +254,9 @@ class LDAP_UserManager {
      * Create user account based on LDAPResult info.
      *
      * @param  LDAPResult $lr
-     * @return PFUser
+     * @return PFUser|false
      */
     function createAccountFromLdap(LDAPResult $lr) {
-
         $user = $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
         return $user;
     }
@@ -269,7 +268,7 @@ class LDAP_UserManager {
      * @param  String $uid
      * @param  String $cn
      * @param  String $email
-     * @return PFUser
+     * @return PFUser|false
      */
     function createAccount($eduid, $uid, $cn, $email) {
         if(trim($uid) == '' || trim($eduid) == '') {
@@ -308,7 +307,7 @@ class LDAP_UserManager {
     }
 
     /**
-     * @return PFUser
+     * @return PFUser|false
      * @throws LDAP_AuthenticationFailedException
      * @throws LDAP_UserNotFoundException
      */
@@ -621,8 +620,8 @@ class LDAP_UserManager {
      */
     public function getUserFromLdapIterator(?LDAPResultIterator $lri = null)
     {
-        if ($lri && count($lri) === 1) {
-            return $this->getUserFromLdap($lri->current());
+        if ($lri && count($lri) === 1 && (($user = $this->getUserFromLdap($lri->current())) !== false)) {
+            return $user;
         }
 
         return null;

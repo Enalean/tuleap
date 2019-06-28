@@ -544,7 +544,7 @@ class LdapPlugin extends Plugin {
     private function getLdapLoginInfo($user_id)
     {
         $ldap_result = $this->getLdapUserManager()->getLdapFromUserId($user_id);
-        if ($ldap_result) {
+        if ($ldap_result !== false) {
             return $this->buildLinkToDirectory($ldap_result, $ldap_result->getLogin());
         }
     }
@@ -578,7 +578,7 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function buildLinkToDirectory(&$lr, $value='') {
+    function buildLinkToDirectory(LDAPResult $lr, $value='') {
         if($value === '') {
             $value = $lr->getLogin();
         }
