@@ -140,8 +140,8 @@ msgstr "Le(s) champs suivant(s) doivent obligatoirement avoir une valeur"
 msgid "Fields that will be frozen"
 msgstr "Champs qui seront figés"
 
-msgid "Fieldsets that will be hidden"
-msgstr "Groupes de champs qui seront cachés"
+msgid "Fieldsets that will be hidden by default"
+msgstr "Groupes de champs qui seront cachés par défaut"
 
 msgid "Floats"
 msgstr "Flottants"
@@ -218,6 +218,14 @@ msgstr "Sauvegarder et démarrer la configuration"
 
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
+
+msgid ""
+"Selected fieldsets won't be displayed by default but users can make them "
+"visible if they want to. It's not an Access Control option."
+msgstr ""
+"Les groupes de champs sélectionnés ne seront pas affichés par défaut mais "
+"les utilisateurs pourront les rendre visibles s'ils le souhaitent. Il ne s'agit pas "
+"d'une fonctionnalité de contrôle d'accès."
 
 msgid "Start by adding one."
 msgstr "Commencez par en ajouter une."
