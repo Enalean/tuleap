@@ -21,11 +21,13 @@ describe("BacklogItemFactory", function() {
             status: "Open"
         };
 
-        beforeEach(inject(function(BacklogItemFactory) {
-            spyOn(BacklogItemFactory, "augment").and.callThrough();
+        beforeEach(
+            angular.mock.inject(function(BacklogItemFactory) {
+                spyOn(BacklogItemFactory, "augment").and.callThrough();
 
-            BacklogItemFactory.augment(item);
-        }));
+                BacklogItemFactory.augment(item);
+            })
+        );
 
         it("adds allowed tracker types to backlog item", function() {
             expect(item.accepted_types.toString()).toEqual("trackerId123|trackerId895");

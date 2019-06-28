@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { dropdown } from "tlp";
+import angular from "angular";
 
 export default PlanningController;
 
@@ -106,9 +106,9 @@ function PlanningController(
 
     function loadInitialMilestones(initial_milestones) {
         if (initial_milestones) {
-            _.forEach(initial_milestones.milestones_representations, function(milestone) {
-                MilestoneService.augmentMilestone(milestone, self.items);
-            });
+            initial_milestones.milestones_representations.forEach(milestone =>
+                MilestoneService.augmentMilestone(milestone, self.items)
+            );
 
             self.milestones.content = initial_milestones.milestones_representations;
             MilestoneCollectionService.milestones.open_milestones_pagination.offset =
@@ -364,7 +364,7 @@ function PlanningController(
     }
 
     function refreshSubmilestone(submilestone_id) {
-        var submilestone = _.find(self.milestones.content, { id: submilestone_id });
+        var submilestone = self.milestones.content.find(({ id }) => id === submilestone_id);
 
         submilestone.updating = true;
 

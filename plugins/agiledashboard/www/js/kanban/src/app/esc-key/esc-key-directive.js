@@ -1,3 +1,5 @@
+import angular from "angular";
+
 export default EscKeyDirective;
 
 EscKeyDirective.$inject = [];

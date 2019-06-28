@@ -1,3 +1,4 @@
+import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
 
@@ -5,7 +6,6 @@ import drop_module from "./drop.js";
 
 describe("DroppedService -", function() {
     var $q,
-        $scope,
         DroppedService,
         ProjectService,
         MilestoneService,
@@ -18,7 +18,6 @@ describe("DroppedService -", function() {
 
         angular.mock.inject(function(
             _$q_,
-            $rootScope,
             _DroppedService_,
             _ProjectService_,
             _MilestoneService_,
@@ -26,7 +25,6 @@ describe("DroppedService -", function() {
             _RestErrorService_
         ) {
             $q = _$q_;
-            $scope = $rootScope.$new();
             DroppedService = _DroppedService_;
             ProjectService = _ProjectService_;
             MilestoneService = _MilestoneService_;

@@ -1,5 +1,4 @@
 import angular from "angular";
-import _ from "lodash";
 import BacklogFilterValue from "../../backlog-filter-terms.js";
 import { getAccessibilityMode } from "../../user-accessibility-mode.js";
 
@@ -75,9 +74,9 @@ function BacklogItemDetailsController(
             return false;
         }
 
-        var child_already_in_children = _.find(self.backlog_item.children.data, {
-            id: child_item_id
-        });
+        const child_already_in_children = self.backlog_item.children.data.find(
+            ({ id }) => id === child_item_id
+        );
 
         return angular.isUndefined(child_already_in_children);
     }

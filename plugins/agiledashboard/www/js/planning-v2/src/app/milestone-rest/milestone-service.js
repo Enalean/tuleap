@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export default MilestoneService;
 
 MilestoneService.$inject = ["Restangular", "BacklogItemFactory"];
@@ -11,7 +9,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             RestangularConfigurer.setBaseUrl("/api/v1");
         });
 
-    _.extend(self, {
+    Object.assign(self, {
         milestone_content_pagination: { limit: 50, offset: 0 },
         getMilestone: getMilestone,
         getOpenMilestones: getOpenMilestones,
@@ -98,9 +96,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 fields: "slim"
             })
             .then(function(response) {
-                _.forEach(response.data, function(milestone) {
-                    augmentMilestone(milestone, scope_items);
-                });
+                response.data.forEach(milestone => augmentMilestone(milestone, scope_items));
 
                 var result = {
                     results: response.data,
@@ -128,11 +124,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", milestone_id)
             .all("milestones")
             .patch({
-                add: _.map(submilestone_ids, function(submilestone_id) {
-                    return {
-                        id: submilestone_id
-                    };
-                })
+                add: submilestone_ids.map(id => ({ id }))
             });
     }
 
@@ -179,8 +171,8 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             };
 
             function fetchMilestoneContent(limit, offset) {
-                return getContent(milestone.id, limit, offset).then(function(data) {
-                    angular.forEach(data.results, function(backlog_item) {
+                return getContent(milestone.id, limit, offset).then(data => {
+                    data.results.forEach(backlog_item => {
                         scope_items[backlog_item.id] = backlog_item;
                         augmentBacklogItem(backlog_item);
 
@@ -191,10 +183,8 @@ function MilestoneService(Restangular, BacklogItemFactory) {
 
                     if (limit + offset < data.total) {
                         return fetchMilestoneContent(limit, offset + limit);
-                    } else {
-                        milestone.loadingContent = false;
-                        return;
                     }
+                    milestone.loadingContent = false;
                 });
             }
 
@@ -205,13 +195,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
     }
 
     function updateInitialEffort(milestone) {
-        var initial_effort = 0;
-
-        _.forEach(milestone.content, function(backlog_item) {
-            initial_effort += backlog_item.initial_effort;
-        });
-
-        milestone.initialEffort = initial_effort;
+        milestone.initialEffort = milestone.content.reduce(
+            (previous_sum, backlog_item) => previous_sum + backlog_item.initial_effort,
+            0
+        );
     }
 
     function defineAllowedBacklogItemTypes(milestone) {
@@ -221,13 +208,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         milestone.backlog_accepted_types = {
             content: allowed_trackers,
             parent_trackers,
-            toString: function() {
-                var accept = [];
-                _.forEach(this.content, function(allowed_tracker) {
-                    accept.push("trackerId" + allowed_tracker.id);
-                });
-
-                return accept.join("|");
+            toString() {
+                return this.content
+                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .join("|");
             }
         };
     }
@@ -237,13 +221,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
 
         milestone.content_accepted_types = {
             content: allowed_trackers,
-            toString: function() {
-                var accept = [];
-                _.forEach(this.content, function(allowed_tracker) {
-                    accept.push("trackerId" + allowed_tracker.id);
-                });
-
-                return accept.join("|");
+            toString() {
+                return this.content
+                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .join("|");
             }
         };
     }
@@ -276,12 +257,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                     direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: source_milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: source_milestone_id
+                }))
             });
     }
 
@@ -290,12 +269,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", dest_milestone_id)
             .all("backlog")
             .patch({
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: source_milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: source_milestone_id
+                }))
             });
     }
 
@@ -322,9 +299,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                     direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return { id: dropped_item_id };
-                })
+                add: dropped_item_ids.map(id => ({ id }))
             });
     }
 
@@ -333,9 +308,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", milestone_id)
             .all("content")
             .patch({
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return { id: dropped_item_id };
-                })
+                add: dropped_item_ids.map(id => ({ id }))
             });
     }
 
@@ -354,12 +327,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                     direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: source_milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: source_milestone_id
+                }))
             });
     }
 
@@ -368,12 +339,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", dest_milestone_id)
             .all("content")
             .patch({
-                add: _.map(dropped_item_ids, function(dropped_item_id) {
-                    return {
-                        id: dropped_item_id,
-                        remove_from: source_milestone_id
-                    };
-                })
+                add: dropped_item_ids.map(dropped_item_id => ({
+                    id: dropped_item_id,
+                    remove_from: source_milestone_id
+                }))
             });
     }
 }

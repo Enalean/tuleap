@@ -1,3 +1,5 @@
+import angular from "angular";
+
 export default ResizeDirective;
 
 ResizeDirective.$inject = ["$window"];
@@ -5,7 +7,7 @@ ResizeDirective.$inject = ["$window"];
 function ResizeDirective($window) {
     return {
         restrict: "A",
-        link: function(scope, board_element, attr) {
+        link: function(scope) {
             angular.element($window).bind("resize", function() {
                 scope.$broadcast("rebuild:kustom-scroll");
             });

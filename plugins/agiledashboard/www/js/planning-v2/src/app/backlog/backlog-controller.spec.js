@@ -1,5 +1,6 @@
 import angular from "angular";
 import "angular-mocks";
+import _ from "lodash";
 
 import backlog_module from "./backlog.js";
 import BaseBacklogController from "./backlog-controller.js";
@@ -189,51 +190,62 @@ describe("BacklogController - ", () => {
         });
 
         describe("Given we are in a milestone context", function() {
-            it("If a milestone has been injected, then use it", inject(function() {
-                spyOn(BacklogController, "loadBacklog").and.callThrough();
+            it(
+                "If a milestone has been injected, then use it",
+                angular.mock.inject(function() {
+                    spyOn(BacklogController, "loadBacklog").and.callThrough();
 
-                BacklogController.$onInit();
+                    BacklogController.$onInit();
 
-                expect(BacklogController.loadBacklog).toHaveBeenCalledWith(milestone);
-                expect(MilestoneService.defineAllowedBacklogItemTypes).toHaveBeenCalledWith(
-                    milestone
-                );
-                expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
-            }));
+                    expect(BacklogController.loadBacklog).toHaveBeenCalledWith(milestone);
+                    expect(MilestoneService.defineAllowedBacklogItemTypes).toHaveBeenCalledWith(
+                        milestone
+                    );
+                    expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
+                })
+            );
 
-            it("If no milestone has been injected, then it will be retrived", inject(function() {
-                var milestone_request = $q.defer();
+            it(
+                "If no milestone has been injected, then it will be retrived",
+                angular.mock.inject(function() {
+                    var milestone_request = $q.defer();
 
-                SharedPropertiesService.getMilestone.and.stub();
-                MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
-                spyOn(BacklogController, "loadBacklog").and.callThrough();
+                    SharedPropertiesService.getMilestone.and.stub();
+                    MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
+                    spyOn(BacklogController, "loadBacklog").and.callThrough();
 
-                BacklogController.$onInit();
-                milestone_request.resolve({
-                    results: milestone
-                });
-                $scope.$apply();
+                    BacklogController.$onInit();
+                    milestone_request.resolve({
+                        results: milestone
+                    });
+                    $scope.$apply();
 
-                expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
-            }));
+                    expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
+                })
+            );
         });
 
-        it("Load injected backlog items", inject(function() {
-            SharedPropertiesService.getMilestoneId.and.stub();
-            SharedPropertiesService.getInitialBacklogItems.and.returnValue(initial_backlog_items);
-            spyOn(BacklogController, "loadInitialBacklogItems").and.callThrough();
+        it(
+            "Load injected backlog items",
+            angular.mock.inject(function() {
+                SharedPropertiesService.getMilestoneId.and.stub();
+                SharedPropertiesService.getInitialBacklogItems.and.returnValue(
+                    initial_backlog_items
+                );
+                spyOn(BacklogController, "loadInitialBacklogItems").and.callThrough();
 
-            BacklogController.$onInit();
+                BacklogController.$onInit();
 
-            expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(
-                initial_backlog_items
-            );
-            expect(BacklogController.all_backlog_items).toEqual({
-                7: { id: 7 }
-            });
-            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith("");
-        }));
+                expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(
+                    initial_backlog_items
+                );
+                expect(BacklogController.all_backlog_items).toEqual({
+                    7: { id: 7 }
+                });
+                expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
+                expect(BacklogService.filterItems).toHaveBeenCalledWith("");
+            })
+        );
     });
 
     describe("displayBacklogItems() -", function() {

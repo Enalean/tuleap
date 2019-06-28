@@ -90,7 +90,7 @@ describe("BacklogItemController -", function() {
     });
 
     describe("toggleChildrenDisplayed() -", function() {
-        var backlog_item, get_backlog_item_children_request;
+        var get_backlog_item_children_request;
 
         beforeEach(function() {
             get_backlog_item_children_request = $q.defer();
@@ -164,7 +164,6 @@ describe("BacklogItemController -", function() {
     describe("dragularEnter() -", function() {
         var $dropped_item_element,
             dropped_item_ids,
-            dropped_items,
             $source_element,
             $target_list_element,
             source_backlog_item_id,
@@ -172,7 +171,6 @@ describe("BacklogItemController -", function() {
 
         beforeEach(function() {
             dropped_item_ids = [18];
-            dropped_items = [{ id: 18 }];
             source_backlog_item_id = 57;
             target_backlog_item_id = 64;
             $dropped_item_element = affix("li");
@@ -258,7 +256,6 @@ describe("BacklogItemController -", function() {
                 source_backlog_item,
                 target_backlog_item,
                 initial_index,
-                compared_to,
                 move_request;
 
             beforeEach(function() {
@@ -291,10 +288,6 @@ describe("BacklogItemController -", function() {
                 };
                 initial_index = 0;
                 dragularService.shared.initialIndex = initial_index;
-                compared_to = {
-                    direction: "before",
-                    item_id: 25
-                };
                 BacklogItemCollectionService.items[source_backlog_item.id] = source_backlog_item;
                 BacklogItemCollectionService.items[target_backlog_item.id] = target_backlog_item;
 

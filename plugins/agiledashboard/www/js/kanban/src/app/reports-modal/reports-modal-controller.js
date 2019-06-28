@@ -1,4 +1,21 @@
-import _ from "lodash";
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 export default ReportsModalController;
 
@@ -90,15 +107,13 @@ function ReportsModalController(
     function setGraphData(cumulative_flow_data) {
         var closed_columns_id = getCollapsedKanbanColumnsIds();
 
-        _.forEach(cumulative_flow_data.columns, function(column) {
-            var data_for_today = _.last(column.values);
+        cumulative_flow_data.columns.forEach(column => {
+            const data_for_today = column.values[column.values.length - 1];
             data_for_today.start_date = moment(data_for_today.start_date)
                 .subtract(12, "hours")
                 .format();
-        });
 
-        _.forEach(cumulative_flow_data.columns, function(column) {
-            if (_.contains(closed_columns_id, column.id)) {
+            if (closed_columns_id.includes(column.id)) {
                 column.activated = false;
             }
         });
@@ -107,17 +122,12 @@ function ReportsModalController(
     }
 
     function getCollapsedKanbanColumnsIds() {
-        var kanban = SharedPropertiesService.getKanban();
+        const kanban = SharedPropertiesService.getKanban();
 
-        var all_columns = [].concat(kanban.columns);
-        all_columns.push(kanban.backlog);
-        all_columns.push(kanban.archive);
+        const all_columns = [...kanban.columns, kanban.backlog, kanban.archive];
 
-        return _(all_columns)
-            .filter({ is_open: false })
-            .map(function(column) {
-                return column.id.toString();
-            })
-            .value();
+        return all_columns
+            .filter(({ is_open }) => is_open === false)
+            .map(column => column.id.toString());
     }
 }

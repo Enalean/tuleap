@@ -18,6 +18,8 @@
  */
 
 import * as d3 from "d3";
+import tuleap from "tuleap";
+import jQuery from "jquery";
 
 /*
  * Requires jQuery and d3.js
@@ -41,4 +43,4 @@ import * as d3 from "d3";
 
         $("#add_kanban_button").tooltip();
     });
-})(window.jQuery);
+})(jQuery);

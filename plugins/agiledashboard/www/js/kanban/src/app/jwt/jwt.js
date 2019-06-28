@@ -1,3 +1,4 @@
+import angular from "angular";
 import "angular-jwt";
 
 import JWTService from "./jwt-service.js";

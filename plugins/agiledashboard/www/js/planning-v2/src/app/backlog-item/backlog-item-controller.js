@@ -94,11 +94,9 @@ function BacklogItemController(
 
                 if (offset + limit < data.total) {
                     return fetchBacklogItemChildren(backlog_item, limit, offset + limit);
-                } else {
-                    backlog_item.loading = false;
-                    backlog_item.children.loaded = true;
-                    return;
                 }
+                backlog_item.loading = false;
+                backlog_item.children.loaded = true;
             }
         );
     }

@@ -72,9 +72,8 @@ function SocketService(
                 locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
                 return subscribe();
             });
-        } else {
-            return $q.reject("No server Node.js.");
         }
+        return $q.reject("No server Node.js.");
     }
 
     function subscribe() {
