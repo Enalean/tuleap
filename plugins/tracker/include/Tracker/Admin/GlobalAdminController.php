@@ -24,21 +24,23 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
 use Project;
+use ProjectManager;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_IDisplayTrackerLayout;
+use TrackerManager;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithProject;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-class GlobalAdminController
+class GlobalAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
-
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf;
+    public const URL = '/global-admin';
 
     /**
      * @var ArtifactLinksUsageDao
@@ -64,30 +66,66 @@ class GlobalAdminController
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var TrackerManager
+     */
+    private $tracker_manager;
 
     public function __construct(
+        ProjectManager $project_manager,
+        TrackerManager $tracker_manager,
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
         HierarchyDAO $hierarchy_dao,
-        CSRFSynchronizerToken $global_admin_csrf,
         EventManager $event_manager
     ) {
         $this->dao                     = $dao;
         $this->updater                 = $updater;
-        $this->csrf                    = $global_admin_csrf;
         $this->types_presenter_factory = $types_presenter_factory;
         $this->hierarchy_dao           = $hierarchy_dao;
         $this->event_manager           = $event_manager;
+        $this->project_manager         = $project_manager;
+        $this->tracker_manager         = $tracker_manager;
     }
 
-    public function displayGlobalAdministration(Project $project, Tracker_IDisplayTrackerLayout $layout)
+    public function process(\HTTPRequest $request, BaseLayout $response, array $variables)
+    {
+        $project = $this->getProject($variables);
+        if (! $this->tracker_manager->userCanCreateTracker($project->getID())
+            && ! $this->tracker_manager->userCanAdminAllProjectTrackers()
+        ) {
+            throw new ForbiddenException();
+        }
+        switch ($request->get('func')) {
+            case 'edit-global-admin':
+                $this->updateGlobalAdministration($project);
+                $response->redirect(self::getTrackerGlobalAdministrationURL($project));
+                break;
+            case 'use-artifact-link-type':
+                $type_shortname = $request->get('type-shortname');
+                $this->updateArtifactLinkUsage($project, $type_shortname);
+                $GLOBALS['Response']->redirect(self::getTrackerGlobalAdministrationURL($project));
+                break;
+            case 'global-admin':
+            default:
+                $this->displayGlobalAdministration($project, $response);
+                break;
+        }
+    }
+
+    private function displayGlobalAdministration(Project $project, BaseLayout $response): void
     {
         $toolbar     = [];
         $params      = [];
         $breadcrumbs = [];
 
-        $layout->displayHeader(
+        $response->includeFooterJavascriptFile(TRACKER_BASE_URL . '/scripts/global-admin.js');
+        $this->tracker_manager->displayHeader(
             $project,
             $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
             $breadcrumbs,
@@ -100,7 +138,7 @@ class GlobalAdminController
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $presenter = new GlobalAdminPresenter(
             $project,
-            $this->csrf,
+            $this->getCSRF($project),
             $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
             $formatted_types,
             $this->hasAtLeastOneDisabledType($formatted_types)
@@ -111,16 +149,16 @@ class GlobalAdminController
             $presenter
         );
 
-        $layout->displayFooter($project);
+        $this->tracker_manager->displayFooter($project);
     }
 
-    public function updateGlobalAdministration(Project $project)
+    private function updateGlobalAdministration(Project $project): void
     {
-        $this->csrf->check();
+        $this->getCSRF($project)->check();
         $this->updater->update($project);
     }
 
-    public function updateArtifactLinkUsage(Project $project, $type_shortname)
+    private function updateArtifactLinkUsage(Project $project, $type_shortname): void
     {
         $type_presenter = $this->types_presenter_factory->getFromShortname($type_shortname);
 
@@ -142,7 +180,9 @@ class GlobalAdminController
                 )
             );
 
-            return $this->dao->enableTypeInProject($project->getID(), $type_shortname);
+            $this->dao->enableTypeInProject($project->getID(), $type_shortname);
+
+            return;
         }
 
         if ($this->artifactLinkTypeCanBeUnused($project, $type_presenter)) {
@@ -154,56 +194,39 @@ class GlobalAdminController
                 )
             );
 
-            return $this->dao->disableTypeInProject($project->getID(), $type_shortname);
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                sprintf(
-                    dgettext('tuleap-tracker', 'The artifact link type "%s" cannot be disabled'),
-                    $type_shortname
-                )
-            );
+            $this->dao->disableTypeInProject($project->getID(), $type_shortname);
+
+            return;
         }
-    }
 
-    /**
-     * @return string
-     */
-    public function getTrackerGlobalAdministrationURL(Project $project)
-    {
-        return TRACKER_BASE_URL . '/?' . http_build_query(array(
-                'func'     => 'global-admin',
-                'group_id' => $project->getID()
-            ));
-    }
-
-    /**
-     * @return array
-     */
-    public function getToolbar(Project $project)
-    {
-        return array(
-            array(
-                'title' => "Administration",
-                'url'   => $this->getTrackerGlobalAdministrationURL($project)
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            sprintf(
+                dgettext('tuleap-tracker', 'The artifact link type "%s" cannot be disabled'),
+                $type_shortname
             )
         );
     }
 
+    public static function getTrackerGlobalAdministrationURL(Project $project): string
+    {
+        return TRACKER_BASE_URL . self::URL . '/' . (int) $project->getID();
+    }
+
     /**
      * @return array
      */
-    private function buildFormattedTypes(Project $project)
+    private function buildFormattedTypes(Project $project): array
     {
-        $formatted_types = array();
+        $formatted_types = [];
         foreach ($this->types_presenter_factory->getAllTypesEditableInProject($project) as $type) {
-            $formatted_type = array(
+            $formatted_type = [
                 'shortname'     => $type->shortname,
                 'forward_label' => $type->forward_label,
                 'reverse_label' => $type->reverse_label,
                 'is_used'       => ! $this->isTypeDisabledInProject($project, $type),
                 'can_be_unused' => $this->artifactLinkTypeCanBeUnused($project, $type)
-            );
+            ];
 
             $formatted_types[] = $formatted_type;
         }
@@ -211,10 +234,7 @@ class GlobalAdminController
         return $formatted_types;
     }
 
-    /**
-     * @return bool
-     */
-    private function hasAtLeastOneDisabledType(array $formatted_types)
+    private function hasAtLeastOneDisabledType(array $formatted_types): bool
     {
         foreach ($formatted_types as $type) {
             if (! $type['is_used']) {
@@ -225,18 +245,12 @@ class GlobalAdminController
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    private function isTypeDisabledInProject(Project $project, NaturePresenter $type)
+    private function isTypeDisabledInProject(Project $project, NaturePresenter $type): bool
     {
         return $this->dao->isTypeDisabledInProject($project->getID(), $type->shortname);
     }
 
-    /**
-     * @return bool
-     */
-    private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type)
+    private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type): bool
     {
         $event = new ArtifactLinkTypeCanBeUnused($project, $type);
         $this->event_manager->processEvent($event);
@@ -254,5 +268,15 @@ class GlobalAdminController
         }
 
         return false;
+    }
+
+    private function getCSRF(Project $project): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(self::getTrackerGlobalAdministrationURL($project));
+    }
+
+    public function getProject(array $variables): Project
+    {
+        return $this->project_manager->getProject($variables['id']);
     }
 }

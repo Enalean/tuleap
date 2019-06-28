@@ -53,6 +53,8 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
@@ -90,6 +92,7 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
+use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
@@ -1843,12 +1846,33 @@ class trackerPlugin extends Plugin {
 
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
+
+            $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
         });
 
         $event->getRouteCollector()->addRoute(
             ['OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
             '/uploads/tracker/file/{id:\d+}',
             $this->getRouteHandler('routeUploads')
+        );
+    }
+
+    public function routeGlobalAdmin(): GlobalAdminController
+    {
+        $dao                     = new ArtifactLinksUsageDao();
+        $hierarchy_dao           = new HierarchyDAO();
+        $updater                 = new ArtifactLinksUsageUpdater($dao);
+        $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
+        $event_manager           = EventManager::instance();
+
+        return new GlobalAdminController(
+            ProjectManager::instance(),
+            new TrackerManager(),
+            $dao,
+            $updater,
+            $types_presenter_factory,
+            $hierarchy_dao,
+            $event_manager
         );
     }
 

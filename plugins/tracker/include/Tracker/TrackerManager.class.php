@@ -21,13 +21,8 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
-use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
-use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
@@ -179,7 +174,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 $group_id = (int)$request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
                     if ($this->checkServiceEnabled($project, $request)) {
-                        $golbal_admin_controller = $this->getGlobalAdminController($project);
                         switch($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {
@@ -232,34 +226,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
-                                break;
-                            case 'global-admin':
-                                if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
-                                    $golbal_admin_controller->displayGlobalAdministration($project, $this);
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-
-                                break;
-                            case 'edit-global-admin':
-                                if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
-                                    $golbal_admin_controller->updateGlobalAdministration($project);
-                                    $GLOBALS['Response']->redirect($golbal_admin_controller->getTrackerGlobalAdministrationURL($project));
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-
-                                break;
-                            case 'use-artifact-link-type':
-                                $type_shortname = $request->get('type-shortname');
-
-                                if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
-                                    $golbal_admin_controller->updateArtifactLinkUsage($project, $type_shortname);
-                                    $GLOBALS['Response']->redirect($golbal_admin_controller->getTrackerGlobalAdministrationURL($project));
-                                } else {
-                                    $this->redirectToTrackerHomepage($group_id);
-                                }
-
                                 break;
 
                             case 'permissions-per-group':
@@ -356,17 +322,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         ];
 
         if ($this->getCurrentUser()->isAdmin($project->getID())) {
-            $admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
-                    [
-                        'func'     => 'global-admin',
-                        'group_id' => $project->getID()
-                    ]
-                );
-
             $service_tracker_breadcrumb['sub_items'] = [
                 [
                     'title' => $GLOBALS['Language']->getText('global', 'Administration'),
-                    'url'   => $admin_url
+                    'url'   => GlobalAdminController::getTrackerGlobalAdministrationURL($project)
                 ]
             ];
         }
@@ -1230,27 +1189,5 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     private function getTrackerFormElementFactory() {
         return Tracker_FormElementFactory::instance();
-    }
-
-    /**
-     * @return GlobalAdminController
-     */
-    protected function getGlobalAdminController(Project $project)
-    {
-        $global_admin_csrf       = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
-        $dao                     = new ArtifactLinksUsageDao();
-        $hierarchy_dao           = new HierarchyDAO();
-        $updater                 = new ArtifactLinksUsageUpdater($dao);
-        $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
-        $event_manager           = EventManager::instance();
-
-        return new GlobalAdminController(
-            $dao,
-            $updater,
-            $types_presenter_factory,
-            $hierarchy_dao,
-            $global_admin_csrf,
-            $event_manager
-        );
     }
 }
