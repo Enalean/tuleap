@@ -32,14 +32,14 @@ require_once "lib/WikiPlugin.php";
 // types:
 define('PLUGIN_CACHED_HTML', 0);         // cached html (extensive calculation)
 define('PLUGIN_CACHED_IMG_INLINE', 1);   // gd images
-define('PLUGIN_CACHED_MAP', 2);    	     // area maps
-define('PLUGIN_CACHED_SVG', 3);    	     // special SVG/SVGZ object
+define('PLUGIN_CACHED_MAP', 2);             // area maps
+define('PLUGIN_CACHED_SVG', 3);             // special SVG/SVGZ object
 define('PLUGIN_CACHED_SVG_PNG', 4);      // special SVG/SVGZ object with PNG fallback
-define('PLUGIN_CACHED_SWF', 5);    	     // special SWF (flash) object
-define('PLUGIN_CACHED_PS', 7);    	     // special PS object (inlinable?)
+define('PLUGIN_CACHED_SWF', 5);             // special SWF (flash) object
+define('PLUGIN_CACHED_PS', 7);             // special PS object (inlinable?)
 // boolean tests:
 define('PLUGIN_CACHED_IMG_ONDEMAND', 64); // don't cache
-define('PLUGIN_CACHED_STATIC', 128); 	 // make it available via /uploads/, not via /getimg.php?id=
+define('PLUGIN_CACHED_STATIC', 128);      // make it available via /uploads/, not via /getimg.php?id=
 
 /**
  * An extension of the WikiPlugin class to allow image output and      
@@ -70,7 +70,7 @@ class WikiPluginCached extends WikiPlugin
      * TODO: check if args is needed at all (on lost cache)
      */
     function genUrl($cache, $argarray) {
-    	global $request;
+        global $request;
         //$cacheparams = $GLOBALS['CacheParams'];
 
         $plugincall = serialize( array( 

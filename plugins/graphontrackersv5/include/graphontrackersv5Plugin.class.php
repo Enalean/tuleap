@@ -118,7 +118,7 @@ class GraphOnTrackersV5Plugin extends Plugin
             if (isset($params['row']['charts']) && isset($params['row']['mapping'])) {
                 $charts = array();
                 foreach ($params['row']['charts']->chart as $chart) {
-                   $charts[] = $f->getInstanceFromXML($chart, $params['instance'], $params['row']['mapping'], $params['store_in_session']);
+                    $charts[] = $f->getInstanceFromXML($chart, $params['instance'], $params['row']['mapping'], $params['store_in_session']);
                 }
             } else {
                 $charts = $f->getCharts($params['instance'], $params['store_in_session']);

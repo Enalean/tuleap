@@ -52,7 +52,7 @@ function UpgradeUser ($olduser, $user) {
     if (isa($user,'WikiUser') and isa($olduser,'WikiUser')) {
         // populate the upgraded class with the values from the old object
         foreach (get_object_vars($olduser) as $k => $v) {
-            $user->$k = $v;	
+            $user->$k = $v;    
         }
         $GLOBALS['request']->_user = $user;
         return $user;
@@ -430,7 +430,7 @@ class WikiUser {
         if ($this->_authmethod == 'authdb')
             return true;
     }
-                         }
+}
 
 // create user and default user homepage
 // FIXME: delete this, not used?

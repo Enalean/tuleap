@@ -306,7 +306,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
                 break;
         }
         return $output;
-     }
+    }
 
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.

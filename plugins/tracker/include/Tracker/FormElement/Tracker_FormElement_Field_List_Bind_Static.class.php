@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return "$R2.id AS `". $this->field->name ."`";
     }
 
-	/**
+    /**
      * Get the "select" statement to retrieve field values with the RGB values of their decorator
      * @return string
      * @see getQueryFrom

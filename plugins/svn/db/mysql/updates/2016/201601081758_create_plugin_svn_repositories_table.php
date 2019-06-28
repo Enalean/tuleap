@@ -22,7 +22,7 @@ class b201601081758_create_plugin_svn_repositories_table extends ForgeUpgrade_Bu
         return 'Create table plugin_svn_repositories for SVN plugin';
     }
 
-   public function preUp() {
+    public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 

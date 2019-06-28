@@ -106,8 +106,8 @@ function isBrowserSafari($version = false) {
  */
 function guessing_lang ($languages=false) {
     if (!$languages) {
-    	// make this faster
-    	$languages = array("en","de","es","fr","it","ja","zh","nl","sv");
+        // make this faster
+        $languages = array("en","de","es","fr","it","ja","zh","nl","sv");
         // ignore possible "_<territory>" and codeset "ja.utf8"
         /*
         require_once("lib/Theme.php");
@@ -208,7 +208,7 @@ function guessing_setlocale ($category, $locale) {
             if (strlen($lang) > 2) { 
                 foreach ($alt as $try => $locs) {
                     if (in_array($locale, $locs) or in_array($lang, $locs)) {
-                    	//if (empty($GLOBALS['LANG'])) $GLOBALS['LANG'] = $try;
+                        //if (empty($GLOBALS['LANG'])) $GLOBALS['LANG'] = $try;
                         return $try;
                     }
                 }
@@ -329,7 +329,7 @@ function getUploadFilePath() {
         : realpath(dirname(__FILE__) . "/../uploads/");
 }
 function getUploadDataPath() {
-  return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
+    return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
 }
 
 // $Log: config.php,v $

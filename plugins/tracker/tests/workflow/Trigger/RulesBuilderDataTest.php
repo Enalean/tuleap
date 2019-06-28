@@ -70,15 +70,15 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $this->assertEqual($result['triggers'][$tracker_id]['fields'], array());
     }
 
-     public function itHasATriggerTrackerWithAField() {
-         $field_id = 693;
-         $field = aMockField()->withId($field_id)->build();
-         stub($field)->fetchFormattedForJson()->returns('whatever')->once();
+    public function itHasATriggerTrackerWithAField() {
+        $field_id = 693;
+        $field = aMockField()->withId($field_id)->build();
+        stub($field)->fetchFormattedForJson()->returns('whatever')->once();
 
-         $tracker_id = 90;
-         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
-            new ArrayIterator(array($field))
+        $tracker_id = 90;
+        $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
+           aTracker()->withId($tracker_id)->withName('Tasks')->build(),
+           new ArrayIterator(array($field))
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));

@@ -67,11 +67,11 @@ class Feedback {
     }
 
     function fetchAsPlainText() {
-    	   $txt = '';
-       foreach($this->logs as $log) {
-       	   $txt .= $log['level'] .': '. $log['msg'] ."\n"; 
-       }
-       return $txt;
+           $txt = '';
+        foreach($this->logs as $log) {
+            $txt .= $log['level'] .': '. $log['msg'] ."\n"; 
+        }
+        return $txt;
     }
 
     /**
@@ -108,12 +108,12 @@ class Feedback {
     
     public function hasErrors()
     {
-       foreach ($this->logs as $log) {
-           if ($log['level'] === self::ERROR) {
-               return true;
-           }
-       }
-       return false;
+        foreach ($this->logs as $log) {
+            if ($log['level'] === self::ERROR) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function clearErrors()

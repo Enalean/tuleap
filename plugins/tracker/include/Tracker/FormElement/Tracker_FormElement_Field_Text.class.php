@@ -480,15 +480,15 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     public function testImport() {
         if(parent::testImport()){
             if (static::class == 'Tracker_FormElement_Field_Text') {
-	            if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
-	                var_dump($this, 'Properties must be "rows" and "cols"');
-	                return false;
-	            }
+                if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
+                    var_dump($this, 'Properties must be "rows" and "cols"');
+                    return false;
+                }
             } elseif (static::class == 'Tracker_FormElement_Field_String') {
-	            if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
-	                var_dump($this, 'Properties must be "maxchars" and "size"');
-	                return false;
-	            }
+                if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
+                    var_dump($this, 'Properties must be "maxchars" and "size"');
+                    return false;
+                }
             }
         }
         return true;
@@ -546,9 +546,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         if ($this->doesValueUseTheByFieldOutput($value)) {
-           $text_value = $this->formatValueWithTheByFieldOutput($value);
+            $text_value = $this->formatValueWithTheByFieldOutput($value);
 
-           return $this->getRestFieldData($text_value);
+            return $this->getRestFieldData($text_value);
         }
 
         return parent::getFieldDataFromRESTValueByField($value, $artifact);

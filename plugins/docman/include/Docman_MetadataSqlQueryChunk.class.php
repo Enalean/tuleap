@@ -39,27 +39,27 @@ class Docman_MetadataSqlQueryChunk {
 
         if($this->isRealMetadata) {
             switch($md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                $this->field = $this->mdv.'.valueText';
+                case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                    $this->field = $this->mdv.'.valueText';
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                $this->field = $this->mdv.'.valueString';
+                case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                    $this->field = $this->mdv.'.valueString';
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $this->field = $this->mdv.'.valueDate';
+                case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                    $this->field = $this->mdv.'.valueDate';
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $this->field = $this->mdv.'.valueInt';
+                case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                    $this->field = $this->mdv.'.valueInt';
                 break;
             }
         }
         else {
             switch($md->getLabel()) {
-            case 'owner':
-                $this->field = 'i.user_id';
+                case 'owner':
+                    $this->field = 'i.user_id';
                 break;
-            default:
-                $this->field = 'i.'.$md->getLabel();
+                default:
+                    $this->field = 'i.'.$md->getLabel();
             }
         }
     }

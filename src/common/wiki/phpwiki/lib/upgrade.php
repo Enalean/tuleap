@@ -101,10 +101,10 @@ function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
  *  Returns the plugin name.
  */ 
 function isActionPage($filename) {
-    static $special = array("DebugInfo" 	=> "_BackendInfo",
+    static $special = array("DebugInfo"     => "_BackendInfo",
                             "PhpWikiRecentChanges" => "RssFeed",
-                            "ProjectSummary"  	=> "RssFeed",
-                            "RecentReleases"  	=> "RssFeed",
+                            "ProjectSummary"      => "RssFeed",
+                            "RecentReleases"      => "RssFeed",
                             "InterWikiMap"      => "InterWikiMap",
                             );
     $base = preg_replace("/\..{1,4}$/","",basename($filename));
@@ -255,7 +255,7 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
 /** entry function from lib/main.php
  */
 function DoUpgrade($request) {
-	
+    
 
     if (!$request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);

@@ -171,7 +171,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->getQueryFrom();
     }
 
-	/**
+    /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
      * which tables used to retrieve the last changeset of matching artifacts.
@@ -677,22 +677,22 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                            $valid = false;
                     }
                 } else {
-                if ($last_changeset->getValue($this)!=null) {
-                    foreach ($last_changeset->getValue($this)->getListValues() as $id => $value) {
-                        if ($value != $field_value_to) {
-                            if (!$this->isTransitionValid($value, $field_value_to)) {
-                                $this->has_errors = true;
-                                $valid = false;
+                    if ($last_changeset->getValue($this)!=null) {
+                        foreach ($last_changeset->getValue($this)->getListValues() as $id => $value) {
+                            if ($value != $field_value_to) {
+                                if (!$this->isTransitionValid($value, $field_value_to)) {
+                                    $this->has_errors = true;
+                                    $valid = false;
+                                }
                             }
                         }
-                    }
-                } else {
-                    if (!$this->isTransitionValid(null, $field_value_to)) {
-                        $this->has_errors = true;
-                        $valid = false;
+                    } else {
+                        if (!$this->isTransitionValid(null, $field_value_to)) {
+                            $this->has_errors = true;
+                            $valid = false;
+                        }
                     }
                 }
-            }
             } catch (Tracker_FormElement_InvalidFieldValueException $exexption) {
                 $valid = false;
             }
@@ -737,10 +737,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     protected function getSelectedValue($selected_values) {
         if ($this->getBind()) {
             foreach($this->getBind()->getAllValues() as $id => $value) {
-                    if(isset($selected_values[$id])) {
-                        $from = $value;
-                        return $from;
-                    }
+                if(isset($selected_values[$id])) {
+                    $from = $value;
+                    return $from;
+                }
             }
             return null;
         }
@@ -936,13 +936,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         foreach($this->getBind()->getAllValues() as $id => $value) {
-                    if (!$value->isHidden()) {
-                        $styles  = $this->getBind()->getSelectOptionStyles($id);
+            if (!$value->isHidden()) {
+                $styles  = $this->getBind()->getSelectOptionStyles($id);
 
-                        $html .= '<option value="'. $id .'" title="'. $this->getBind()->formatArtifactValue($id) .'" style="'. $styles['inline-styles'] . '" classe="' . $styles['classes'] .'">';
-                        $html .= $this->getBind()->formatArtifactValue($id);
-                        $html .= '</option>';
-                    }
+                $html .= '<option value="'. $id .'" title="'. $this->getBind()->formatArtifactValue($id) .'" style="'. $styles['inline-styles'] . '" classe="' . $styles['classes'] .'">';
+                $html .= $this->getBind()->formatArtifactValue($id);
+                $html .= '</option>';
+            }
         }
 
         $html .= '</select>';
@@ -1100,7 +1100,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param array                                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored (and values)
      * @param User\XML\Import\IFindUserFromXMLReference $user_finder
      */
-     public function continueGetInstanceFromXML(
+    public function continueGetInstanceFromXML(
          $xml,
          &$xmlMapping,
          User\XML\Import\IFindUserFromXMLReference $user_finder
@@ -1178,18 +1178,18 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $changeset_value;
     }
 
-     public function getRESTBindingProperties() {
-         $bind = $this->getBind();
-         return $bind->getRESTBindingProperties();
-     }
+    public function getRESTBindingProperties() {
+        $bind = $this->getBind();
+        return $bind->getRESTBindingProperties();
+    }
 
-     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
-         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
-             return array_map('intval', $value['bind_value_ids']);
-         }
-         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-            . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
-     }
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
+        if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
+            return array_map('intval', $value['bind_value_ids']);
+        }
+        throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
+           . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
+    }
 
     public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();

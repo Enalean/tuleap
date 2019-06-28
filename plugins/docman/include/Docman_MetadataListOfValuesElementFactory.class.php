@@ -144,17 +144,17 @@ class Docman_MetadataListOfValuesElementFactory {
     public function getByElementId($id, $mdLabel = null) {
         $e = null;
         switch($mdLabel) {
-        case 'status':
-            $ea = $this->getStatusList();
-            $e  = $ea[$id];
+            case 'status':
+                $ea = $this->getStatusList();
+                $e  = $ea[$id];
             break;
             
-        default:
-            $dao = $this->getDao();
-            $dar = $dao->serachByValueId($id);
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                $e = $this->instanciateLove($dar->current());
-            }
+            default:
+                $dao = $this->getDao();
+                $dar = $dao->serachByValueId($id);
+                if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    $e = $this->instanciateLove($dar->current());
+                }
         }
         return $e;
     }
@@ -166,20 +166,20 @@ class Docman_MetadataListOfValuesElementFactory {
         $ea = array();
         $ei = null;
         switch($mdLabel) {
-        case 'status':
-            $stElmtArray = $this->getStatusList();
-            foreach($stElmtArray as $elmt) {
-                if($elmt->getName() == $name) {
-                    $ea[] = $elmt;
+            case 'status':
+                $stElmtArray = $this->getStatusList();
+                foreach($stElmtArray as $elmt) {
+                    if($elmt->getName() == $name) {
+                        $ea[] = $elmt;
+                    }
                 }
-            }
-            $ei = new ArrayIterator($ea);
+                $ei = new ArrayIterator($ea);
             break;
             
-        default:
-            $dao = $this->getDao();
-            $dar = $dao->searchByName($this->metadataId, $name, true);
-            $ei  = $this->_returnLoveIteratorFromDar($dar);
+            default:
+                $dao = $this->getDao();
+                $dar = $dao->searchByName($this->metadataId, $name, true);
+                $ei  = $this->_returnLoveIteratorFromDar($dar);
         }
         
         return $ei;

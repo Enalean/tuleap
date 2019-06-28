@@ -431,7 +431,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
 
         if(!$this->exist()) {
-            if(!$this->create()) {	
+            if(!$this->create()) {    
                 return -1;
             }
         }

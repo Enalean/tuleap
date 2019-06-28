@@ -1202,9 +1202,9 @@ class WindrosePlot {
     function getWidth($aImg) {
 
         $scaling = 1;//$this->iAntiAlias ? 2 : 1 ;
-       	if( $this->iSize > 0 && $this->iSize < 1 ) {
-			$this->iSize *= min($aImg->width,$aImg->height);
-       	}
+        if( $this->iSize > 0 && $this->iSize < 1 ) {
+            $this->iSize *= min($aImg->width,$aImg->height);
+        }
 
 
         $value = new Text();
@@ -1243,9 +1243,9 @@ class WindrosePlot {
     function getHeight($aImg) {
 
         $scaling = 1;//$this->iAntiAlias ? 2 : 1 ;
-       	if( $this->iSize > 0 && $this->iSize < 1 ) {
-			$this->iSize *= min($aImg->width,$aImg->height);
-       	}
+        if( $this->iSize > 0 && $this->iSize < 1 ) {
+            $this->iSize *= min($aImg->width,$aImg->height);
+        }
 
         $value = new Text();
         $value->SetFont($this->iFontFamily,$this->iFontStyle,$this->iFontSize*$scaling);
@@ -1273,7 +1273,7 @@ class WindrosePlot {
 
         $legendheight = round($this->legend->iShow ? 1 : 0);
         $legendheight *= max($this->legend->iCircleRadius*2,$this->legend->iTxtFontSize*2)+
-        				 $this->legend->iMargin + $this->legend->iBottomMargin + 2;
+                         $this->legend->iMargin + $this->legend->iBottomMargin + 2;
         $legendheight *= $scaling;
         $h = round($this->iSize*$scaling + $valymarg) + $legendheight ;
 
@@ -1282,23 +1282,23 @@ class WindrosePlot {
 
     function Stroke($aGraph) {
 
-		$aImg = $aGraph->img;
+        $aImg = $aGraph->img;
 
-		if( $this->iX > 0 && $this->iX < 1 ) {
-			$this->iX = round( $aImg->width * $this->iX ) ;
-		}
+        if( $this->iX > 0 && $this->iX < 1 ) {
+            $this->iX = round( $aImg->width * $this->iX ) ;
+        }
 
-       	if( $this->iY > 0 && $this->iY < 1 ) {
-       		$this->iY = round( $aImg->height * $this->iY ) ;
-       	}
+        if( $this->iY > 0 && $this->iY < 1 ) {
+            $this->iY = round( $aImg->height * $this->iY ) ;
+        }
 
-       	if( $this->iSize > 0 && $this->iSize < 1 ) {
-			$this->iSize *= min($aImg->width,$aImg->height);
-       	}
+        if( $this->iSize > 0 && $this->iSize < 1 ) {
+            $this->iSize *= min($aImg->width,$aImg->height);
+        }
 
-       	if( $this->iCenterSize > 0 && $this->iCenterSize < 1 ) {
-			$this->iCenterSize *= $this->iSize;
-       	}
+        if( $this->iCenterSize > 0 && $this->iCenterSize < 1 ) {
+            $this->iCenterSize *= $this->iSize;
+        }
 
         $this->scale->AutoScale(($this->iSize - $this->iCenterSize)/2, round(2.5*$this->scale->iFontSize));
 
@@ -1355,8 +1355,8 @@ class WindrosePlot {
             $dblImg->SetColor('red');
             $old = $dblImg->SetLineWeight(2);
             $dblImg->Line($xc-5,$yc-5,$xc+5,$yc+5);
-			$dblImg->Line($xc+5,$yc-5,$xc-5,$yc+5);
-			$dblImg->SetLineWeight($old);
+            $dblImg->Line($xc+5,$yc-5,$xc-5,$yc+5);
+            $dblImg->SetLineWeight($old);
         }
 
         $this->iSize *= $scaling;
@@ -1540,7 +1540,7 @@ class WindroseGraph extends Graph {
         // n holds number of plots
         $n = count($this->plots);
         for($i=0; $i < $n ; ++$i) {
-     		$this->plots[$i]->Stroke($this);
+            $this->plots[$i]->Stroke($this);
         }
 
         $this->footer->Stroke($this->img);

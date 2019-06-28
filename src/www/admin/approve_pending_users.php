@@ -57,155 +57,155 @@ $valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDI
 $page = $request->getValidated('page', $valid_page, '');
 $csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
-    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-        $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
-    }else{
-        $vDate = new Valid_String();
-        if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
-            $date_list = explode("-", $request->get('form_expiry'), 3);
-            $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-            $expiry_date = $unix_expiry_time;
+if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
+    $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
+}else{
+    $vDate = new Valid_String();
+    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
+        $date_list = explode("-", $request->get('form_expiry'), 3);
+        $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+        $expiry_date = $unix_expiry_time;
 
+    }
+
+    if (($action_select=='activate')) {
+        $csrf_token->check();
+
+        $shell="";
+        if ($status=='restricted') {
+            $newstatus='R';
+            $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
+        } else $newstatus='A';
+
+        $users_ids = db_ei_implode($users_array);
+        // update the user status flag to active
+        db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
+                 ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+             " WHERE user_id IN ($users_ids)");
+
+        $em = EventManager::instance();
+        foreach ($users_array as $user_id) {
+            $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
         }
 
-        if (($action_select=='activate')) {
-            $csrf_token->check();
+        // Now send the user verification emails
+        $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
+                 . " WHERE user_id IN ($users_ids)");
 
-            $shell="";
-            if ($status=='restricted') {
-                $newstatus='R';
-                $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
-            } else $newstatus='A';
-
-            $users_ids = db_ei_implode($users_array);
-            // update the user status flag to active
-            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
-                     ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                 " WHERE user_id IN ($users_ids)");
-
-            $em = EventManager::instance();
-            foreach ($users_array as $user_id) {
-                $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+         // Send a notification message to the user when account is activated by the Site Administrator
+         $base_url = get_server_url();
+        while ($row_user = db_fetch_array($res_user)) {
+            if (!send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
+                 $GLOBALS['Response']->addFeedback(
+                     Feedback::ERROR,
+                     $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                 );
             }
+               usleep(250000);
+        }
 
-            // Now send the user verification emails
-            $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                     . " WHERE user_id IN ($users_ids)");
+        if (count($users_array) > 1) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'users_activated_success')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'user_activated_success')
+            );
+        }
 
-             // Send a notification message to the user when account is activated by the Site Administrator
-             $base_url = get_server_url();
-             while ($row_user = db_fetch_array($res_user)) {
-                if (!send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
+    } else if($action_select=='validate'){
+        $csrf_token->check();
+        if($status=='restricted'){
+            $newstatus='W';
+        }else{
+            $newstatus='V';
+        }
+
+
+        // update the user status flag to active
+        db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".
+                 ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+                 " WHERE user_id IN (".implode(',', $users_array).")");
+
+        // Now send the user verification emails
+        $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
+                 . " WHERE user_id IN (".implode(',', $users_array).")");
+
+        while ($row_user = db_fetch_array($res_user)) {
+            if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
                     );
-                }
-                usleep(250000);
+            }
+            usleep(250000);
+        }
+
+        if (count($users_array) > 1) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'users_validated_success')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'user_validated_success')
+            );
+        }
+
+    } else if ($action_select=='delete') {
+        $csrf_token->check();
+        db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+                 " WHERE user_id IN (".implode(',', $users_array).")");
+        $em = EventManager::instance();
+        foreach ($users_array as $user_id) {
+            $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
+        }
+
+        if (count($users_array) > 1) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'users_deleted_success')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $Language->getText('admin_approve_pending_users', 'user_deleted_success')
+            );
+        }
+    } else if ($action_select === 'resend_email') {
+        $csrf_token->check();
+        $user_manager = UserManager::instance();
+        foreach ($users_array as $user_id) {
+            $user = $user_manager->getUserById($user_id);
+            if ($user === null) {
+                continue;
+            }
+            if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
+                $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
+                continue;
             }
 
-            if (count($users_array) > 1) {
+            $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
+
+            if ($is_mail_sent) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'users_activated_success')
+                    $Language->getText('admin_approve_pending_users', 'resend_mail_success',
+                        array($user->getEmail()))
                 );
             } else {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'user_activated_success')
+                    $Language->getText('admin_approve_pending_users', 'resend_mail_error', array($user->getEmail()))
                 );
-            }
-
-        } else if($action_select=='validate'){
-            $csrf_token->check();
-            if($status=='restricted'){
-                $newstatus='W';
-            }else{
-                $newstatus='V';
-            }
-
-
-            // update the user status flag to active
-            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".
-                     ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                     " WHERE user_id IN (".implode(',', $users_array).")");
-
-            // Now send the user verification emails
-            $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                     . " WHERE user_id IN (".implode(',', $users_array).")");
-
-            while ($row_user = db_fetch_array($res_user)) {
-                if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
-                        );
-                }
-                usleep(250000);
-            }
-
-            if (count($users_array) > 1) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'users_validated_success')
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'user_validated_success')
-                );
-            }
-
-        } else if ($action_select=='delete') {
-            $csrf_token->check();
-            db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                     " WHERE user_id IN (".implode(',', $users_array).")");
-            $em = EventManager::instance();
-            foreach ($users_array as $user_id) {
-                $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
-            }
-
-            if (count($users_array) > 1) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'users_deleted_success')
-                );
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'user_deleted_success')
-                );
-            }
-        } else if ($action_select === 'resend_email') {
-            $csrf_token->check();
-            $user_manager = UserManager::instance();
-            foreach ($users_array as $user_id) {
-                $user = $user_manager->getUserById($user_id);
-                if ($user === null) {
-                    continue;
-                }
-                if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
-                    $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
-                    continue;
-                }
-
-                $is_mail_sent = send_new_user_email($user->getEmail(), $user->getUserName(), $user->getConfirmHash());
-
-                if ($is_mail_sent) {
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        $Language->getText('admin_approve_pending_users', 'resend_mail_success',
-                            array($user->getEmail()))
-                    );
-                } else {
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        $Language->getText('admin_approve_pending_users', 'resend_mail_error', array($user->getEmail()))
-                    );
-                }
             }
         }
     }
+}
 // No action - First time in this script
 // Show the list of pending user waiting for approval
 if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){

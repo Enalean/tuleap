@@ -117,9 +117,9 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-     public function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
-         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
-         if ($dar->isError()) {
+    public function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
+        $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
+        if ($dar->isError()) {
             return;
         }
 
@@ -138,7 +138,7 @@ class PermissionsManager implements IPermissionsManagerNG {
             $dar->next();
         }
         return $ugroups_name;
-     }
+    }
      
     /**
      * Returns all ugroup id for a given object_id and permission_type
@@ -148,14 +148,14 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-     public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
-         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
-         if ($dar->isError()) {
+    public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
+        $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
+        if ($dar->isError()) {
             return;
-         } else {
-             return $dar;
-         }
-     }
+        } else {
+            return $dar;
+        }
+    }
 
      /**
       * Return the list of the default ugroup_ids authorized to access the given permission_type
@@ -166,9 +166,9 @@ class PermissionsManager implements IPermissionsManagerNG {
       * 
       * @return DataAccessResult
       */
-     public function getDefaults($permissionType, $withName = true) {
-         return $this->_permission_dao->searchDefaults($permissionType, $withName);
-     }
+    public function getDefaults($permissionType, $withName = true) {
+        return $this->_permission_dao->searchDefaults($permissionType, $withName);
+    }
 
      /**
       * Return the list of ugroups authorized to access the given object with the given permission_type
@@ -180,14 +180,14 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * @return DataAccessResult
       */
-     public function getAuthorizedUgroups($objectId, $permissionType, $withName = true) {
-         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $objectId, $permissionType, $withName);
+    public function getAuthorizedUgroups($objectId, $permissionType, $withName = true) {
+        $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $objectId, $permissionType, $withName);
         if ($dar && $dar->rowCount() > 0) {
             return $dar;
         } else {
             return $this->getDefaults($permissionType, $withName);
         }
-     }
+    }
 
      /**
       * Return the list of ugroup ids authorized to access the given object with the given permission_type
@@ -199,18 +199,18 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * @return array
       */
-     public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true) {
-         $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
-         if (!$dar || $dar->isError()) {
-             return array();
-         }
+    public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true) {
+        $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
+        if (!$dar || $dar->isError()) {
+            return array();
+        }
          
-         $ugroups = array();
-         foreach ($dar as $row) {
-             $ugroups[] = $row['ugroup_id'];
-         }
-         return $ugroups;
-     }
+        $ugroups = array();
+        foreach ($dar as $row) {
+            $ugroups[] = $row['ugroup_id'];
+        }
+        return $ugroups;
+    }
 
     public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type) {
         $ugroups = array();
@@ -363,9 +363,9 @@ class PermissionsManager implements IPermissionsManagerNG {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
     }
 
-    public function isPermissionExist($object_id, $ptype){    	
-    	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
-    	return $dar->valid();
+    public function isPermissionExist($object_id, $ptype){        
+        $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
+        return $dar->valid();
     }
     
     public function addPermission($permission_type, $object_id, $ugroup_id){

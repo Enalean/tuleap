@@ -142,13 +142,13 @@ extends WikiPluginCached
             echo "<?xml version=\"1.0\" encoding=\"$charset\"?>";
             // As applet it prefers only "GraphXML.dtd", but then we must copy it to the webroot.
             $dtd = $WikiTheme->_findData("GraphXML.dtd");
-	    echo "<!DOCTYPE GraphXML SYSTEM \"$dtd\">\n";
-	    echo "<GraphXML xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
-	    echo "<graph id=\"",MangleXmlIdentifier(WIKI_NAME),"\">\n";
+            echo "<!DOCTYPE GraphXML SYSTEM \"$dtd\">\n";
+            echo "<GraphXML xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
+            echo "<graph id=\"",MangleXmlIdentifier(WIKI_NAME),"\">\n";
             echo '<style><line tag="node" class="main" colour="#ffffff"/><line tag="node" class="child" colour="blue"/><line tag="node" class="relation" colour="green"/></style>',"\n\n";
             while ($page = $pages->next()) {
-            	$pageid = MangleXmlIdentifier($page->getName());
-            	$pagename = $page->getName();
+                $pageid = MangleXmlIdentifier($page->getName());
+                $pagename = $page->getName();
                 echo "<node name=\"$pageid\"";
                 if ($pagename == $currpage) echo " class=\"main\"";
                 echo "><label>$pagename</label>";
@@ -160,8 +160,8 @@ extends WikiPluginCached
                 }
                 echo "\n";
             }
-	    echo "</graph>\n";
-	    echo "</GraphXML>\n";
+            echo "</graph>\n";
+            echo "</GraphXML>\n";
             if (empty($WikiTheme->DUMP_MODE)) {
                 unset($GLOBALS['ErrorManager']->_postponed_errors);
                 $request->finish();

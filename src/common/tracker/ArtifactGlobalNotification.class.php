@@ -20,7 +20,7 @@
 class ArtifactGlobalNotification {
     
     var $data;
-	
+    
     /**
     * Constructor
     */

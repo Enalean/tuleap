@@ -25,8 +25,8 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     * ROOT
     * |
     * +-Child 1 (id:6, al:8)
-    * 	 |
-    * 	 '-Child 2 (id:8)
+    *      |
+    *      '-Child 2 (id:8)
     *
     */
     protected function buildBaseTree() {
@@ -76,7 +76,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
             $artifactLinks = implode(', ', $artifactLinks);
         }
         $nodeData = array(
-        	'id'            => $id,
+            'id'            => $id,
             'title'         => $title,
             'artifactlinks' => $artifactLinks,
         );

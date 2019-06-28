@@ -38,7 +38,7 @@ extends WikiPlugin
     }
 
     function getDescription() {
-      return _("Layout tables using a very rich markup style.");
+        return _("Layout tables using a very rich markup style.");
     }
 
     function getDefaultArguments() {
@@ -51,7 +51,7 @@ extends WikiPlugin
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-    	global $WikiTheme;
+        global $WikiTheme;
         include_once("lib/BlockParser.php");
         // RichTablePlugin markup is new.
         $markup = 2.0; 
@@ -84,7 +84,7 @@ extends WikiPlugin
                         unset($cell);
                     }
                     $table->pushContent($row);
-                }	
+                }    
                 $row = HTML::tr();
                 $attrs = $this->_parse_attr(substr($line,1));
                 foreach ($attrs as $key => $value) {

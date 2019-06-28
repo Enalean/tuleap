@@ -44,9 +44,9 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
      * |-Child 7 (id:18)
      * |
      * '-Child 8 (id:20, al:22, 24)
-     * 	 |
-     * 	 |-Child 9 (id:22)
-     * 	 |
+     *      |
+     *      |-Child 9 (id:22)
+     *      |
      *   '-Child 10 (id:24)
      * 
      */

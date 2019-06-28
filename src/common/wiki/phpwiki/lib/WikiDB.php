@@ -178,7 +178,7 @@ class WikiDB {
      * @param string $pagename Name of page to delete.
      */
     function deletePage($pagename) {
-    	// don't create empty revisions of already purged pages.
+        // don't create empty revisions of already purged pages.
         if ($this->_backend->get_latest_version($pagename))
             $result = $this->_cache->delete_page($pagename);
         else 
@@ -267,7 +267,7 @@ class WikiDB {
      * exclude: comma-seperated list pagenames: TBD: array of pagenames
      */
     function numPages($include_empty=false, $exclude='') {
-    	if (method_exists($this->_backend, 'numPages'))
+        if (method_exists($this->_backend, 'numPages'))
             // FIXME: currently are all args ignored.
             $count = $this->_backend->numPages($include_empty, $exclude);
         else {
@@ -786,11 +786,11 @@ class WikiDB_Page
             if (empty($val) || $key[0] == '_' || $key[0] == '%')
                 unset($data[$key]);
         }
-			
+            
         assert(!empty($data['author']));
         if (empty($data['author_id']))
             @$data['author_id'] = $data['author'];
-		
+        
         if (empty($data['mtime']))
             $data['mtime'] = time();
 
@@ -805,8 +805,8 @@ class WikiDB_Page
                 $data['mtime'] = $pdata['mtime'];
             }
             
-	    // FIXME: use (possibly user specified) 'mtime' time or
-	    // time()?
+        // FIXME: use (possibly user specified) 'mtime' time or
+        // time()?
             $cache->update_versiondata($pagename, $latestversion,
                                        array('_supplanted' => $data['mtime']));
         }
@@ -842,14 +842,14 @@ class WikiDB_Page
      * @param hash $meta  Meta-data for new revision.
      */
     function save($wikitext, $version, $meta) {
-	$formatted = new TransformedText($this, $wikitext, $meta);
+        $formatted = new TransformedText($this, $wikitext, $meta);
         $type = $formatted->getType();
-	$meta['pagetype'] = $type->getName();
-	$links = $formatted->getWikiPageLinks();
+        $meta['pagetype'] = $type->getName();
+        $links = $formatted->getWikiPageLinks();
 
-	$backend = &$this->_wikidb->_backend;
-	$newrevision = $this->createRevision($version, $wikitext, $meta, $links);
-	if ($newrevision and !WIKIDB_NOCACHE_MARKUP)
+        $backend = &$this->_wikidb->_backend;
+        $newrevision = $this->createRevision($version, $wikitext, $meta, $links);
+        if ($newrevision and !WIKIDB_NOCACHE_MARKUP)
             $this->set('_cached_html', $formatted->pack());
 
         /* Generate notification emails? */
@@ -865,7 +865,7 @@ class WikiDB_Page
             $newrevision->_transformedContent = $formatted;
         }
 
-	return $newrevision;
+        return $newrevision;
     }
 
     function getPageChangeEmails($notify) {
@@ -970,7 +970,7 @@ class WikiDB_Page
         if (@is_array($request->_deferredPageChangeNotification)) {
             // collapse multiple changes (loaddir) into one email
             $request->_deferredPageChangeNotification[] 
-		= array($this->_pagename, $emails, $userids);
+            = array($this->_pagename, $emails, $userids);
             return;
         }
         $backend = &$this->_wikidb->_backend;
@@ -1377,7 +1377,7 @@ class WikiDB_Page
         for ($v=1; $v <= $latestversion; $v++) {
             $rev = $this->getRevision($v,false);
             if ($rev and $owner = $rev->get('author_id')) {
-            	return ($owner == "The PhpWiki programming team") ? ADMIN_USER : $owner;
+                return ($owner == "The PhpWiki programming team") ? ADMIN_USER : $owner;
             }
         }
         return '';
@@ -1469,7 +1469,7 @@ class WikiDB_PageRevision
     function getContent() {
         return explode("\n", $this->getPackedContent());
     }
-	
+    
    /**
      * Get the pagename of the revision.
      *
@@ -1509,18 +1509,18 @@ class WikiDB_PageRevision
      * contents.
      */
     function getTransformedContent($pagetype_override=false) {
-	$backend = &$this->_wikidb->_backend;
+        $backend = &$this->_wikidb->_backend;
         
-	if ($pagetype_override) {
-	    // Figure out the normal page-type for this page.
+        if ($pagetype_override) {
+            // Figure out the normal page-type for this page.
             $type = PageType::GetPageType($this->get('pagetype'));
-	    if ($type->getName() == $pagetype_override)
-		$pagetype_override = false; // Not really an override...
-	}
+            if ($type->getName() == $pagetype_override)
+            $pagetype_override = false; // Not really an override...
+        }
 
         if ($pagetype_override) {
             // Overriden page type, don't cache (or check cache).
-	    return new TransformedText($this->getPage(),
+            return new TransformedText($this->getPage(),
                                        $this->getPackedContent(),
                                        $this->getMetaData(),
                                        $pagetype_override);
@@ -1546,7 +1546,7 @@ class WikiDB_PageRevision
                 $possibly_cache_results = false;
             }
             //$backend->unlock();
-	}
+        }
         
         if (!$this->_transformedContent) {
             $this->_transformedContent
@@ -1789,8 +1789,8 @@ class WikiDB_PageIterator
     }
     
     function asArray() {
-    	$result = array();
-    	while ($page = $this->next())
+        $result = array();
+        while ($page = $this->next())
             $result[] = $page;
         //$this->reset();
         return $result;
@@ -1919,8 +1919,8 @@ class WikiDB_PageRevisionIterator
     }
 
     function asArray() {
-    	$result = array();
-    	while ($rev = $this->next())
+        $result = array();
+        while ($rev = $this->next())
             $result[] = $rev;
         $this->free();
         return $result;
@@ -2064,7 +2064,7 @@ class WikiDB_cache
 
     // FIXME: ugly and wrong. may overwrite full cache with partial cache
     function cache_data($data) {
-    	;
+        ;
         //if (isset($data['pagedata']))
         //    $this->_pagedata_cache[$data['pagename']] = $data['pagedata'];
     }
@@ -2072,7 +2072,7 @@ class WikiDB_cache
     function get_versiondata($pagename, $version, $need_content = false) {
         //  FIXME: Seriously ugly hackage
         $readdata = false;
-	if (USECACHE) {   //temporary - for debugging
+        if (USECACHE) {   //temporary - for debugging
             assert(is_string($pagename) && $pagename != '');
             // There is a bug here somewhere which results in an assertion failure at line 105
             // of ArchiveCleaner.php  It goes away if we use the next line.
@@ -2082,10 +2082,10 @@ class WikiDB_cache
             if (!isset($cache[$pagename][$version][$nc]) 
                 || !(is_array ($cache[$pagename])) 
                 || !(is_array ($cache[$pagename][$version]))) 
-            {
-                $cache[$pagename][$version][$nc] = 
-                    $this->_backend->get_versiondata($pagename, $version, $need_content);
-                $readdata = true;
+                   {
+                       $cache[$pagename][$version][$nc] = 
+                       $this->_backend->get_versiondata($pagename, $version, $need_content);
+                       $readdata = true;
                 // If we have retrieved all data, we may as well set the cache for 
                 // $need_content = false
                 if ($need_content){
@@ -2093,10 +2093,10 @@ class WikiDB_cache
                 }
             }
             $vdata = $cache[$pagename][$version][$nc];
-	} else {
+        } else {
             $vdata = $this->_backend->get_versiondata($pagename, $version, $need_content);
             $readdata = true;
-	}
+        }
         if ($readdata && $vdata && !empty($vdata['%pagedata'])) {
             $this->_pagedata_cache[$pagename] = $vdata['%pagedata'];
         }
@@ -2132,7 +2132,7 @@ class WikiDB_cache
         if (isset($this->_glv_cache[$pagename]) and $this->_glv_cache[$pagename] == $version)
             unset ($this->_glv_cache[$pagename]);
     }
-	
+    
     function get_latest_version($pagename)  {
         if (USECACHE) {
             assert (is_string($pagename) && $pagename != '');

@@ -85,12 +85,12 @@ class Docman_MetadataFactory {
      */
     public function _createFromRow($row) {
         switch($row['data_type']) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $md = new Docman_ListMetadata();
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                $md = new Docman_ListMetadata();
             break;
             
-        default:
-            $md = new Docman_Metadata();
+            default:
+                $md = new Docman_Metadata();
         }
         $md->initFromRow($row);
 
@@ -374,14 +374,14 @@ class Docman_MetadataFactory {
     function _getMetadataValueFromRow($md, $row) {
         $value = null;
         switch($md->getType()) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            $value = $row['valueText'];
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                $value = $row['valueText'];
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-             $value = $row['valueString'];
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                 $value = $row['valueString'];
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $value = $row['valueDate'];
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $value = $row['valueDate'];
             break;
         }
         return $value;
@@ -540,95 +540,95 @@ class Docman_MetadataFactory {
     {
         $md = null;
         switch($label) {
-        case 'title':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_title_name'));
-            $md->setLabel('title');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_title_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(false);
-            $md->setKeepHistory(false);
-            $md->setUseIt(true);
-            $md->setCanChangeValue(true);
+            case 'title':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_title_name'));
+                $md->setLabel('title');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_title_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+                $md->setIsRequired(true);
+                $md->setIsEmptyAllowed(false);
+                $md->setKeepHistory(false);
+                $md->setUseIt(true);
+                $md->setCanChangeValue(true);
             break;
 
-        case 'description':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_desc_name'));
-            $md->setLabel('description');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_desc_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(false);
-            $md->setUseIt(true);
-            $md->setCanChangeValue(true);
+            case 'description':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_desc_name'));
+                $md->setLabel('description');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_desc_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+                $md->setIsRequired(true);
+                $md->setIsEmptyAllowed(true);
+                $md->setKeepHistory(false);
+                $md->setUseIt(true);
+                $md->setCanChangeValue(true);
             break;
 
-        case 'owner':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_owner_name'));
-            $md->setLabel('owner');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_owner_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(true);
-            $md->setUseIt(true);
-            $md->setCanChangeValue(true);
+            case 'owner':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_owner_name'));
+                $md->setLabel('owner');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_owner_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+                $md->setIsRequired(true);
+                $md->setIsEmptyAllowed(true);
+                $md->setKeepHistory(true);
+                $md->setUseIt(true);
+                $md->setCanChangeValue(true);
             break;
 
-        case 'create_date':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_name'));
-            $md->setLabel('create_date');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(false);
-            $md->setKeepHistory(true);
-            $md->setUseIt(true);
-            $md->setCanChangeValue(false);
+            case 'create_date':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_name'));
+                $md->setLabel('create_date');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_cdate_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+                $md->setIsRequired(true);
+                $md->setIsEmptyAllowed(false);
+                $md->setKeepHistory(true);
+                $md->setUseIt(true);
+                $md->setCanChangeValue(false);
             break;
 
-        case 'update_date':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_udate_name'));
-            $md->setLabel('update_date');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_udate_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(false);
-            $md->setKeepHistory(true);
-            $md->setUseIt(true);
-            $md->setCanChangeValue(false);
+            case 'update_date':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_udate_name'));
+                $md->setLabel('update_date');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_udate_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+                $md->setIsRequired(true);
+                $md->setIsEmptyAllowed(false);
+                $md->setKeepHistory(true);
+                $md->setUseIt(true);
+                $md->setCanChangeValue(false);
             break;
 
-        case 'status': 
-            $md = new Docman_ListMetadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_status_name'));
-            $md->setLabel('status');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_status_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-            $md->setIsRequired(false);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(true);
-            $md->setCanChangeValue(true);
-            $md->setDefaultValue(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+            case 'status': 
+                $md = new Docman_ListMetadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_status_name'));
+                $md->setLabel('status');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_status_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+                $md->setIsRequired(false);
+                $md->setIsEmptyAllowed(true);
+                $md->setKeepHistory(true);
+                $md->setCanChangeValue(true);
+                $md->setDefaultValue(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
             break;
 
-        case 'obsolescence_date':
-            $md = new Docman_Metadata();
-            $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_odate_name'));
-            $md->setLabel('obsolescence_date');
-            $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_odate_desc'));
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(false);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(false);
-            $md->setCanChangeValue(true);
-            $md->setDefaultValue(0);
+            case 'obsolescence_date':
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_odate_name'));
+                $md->setLabel('obsolescence_date');
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_odate_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+                $md->setIsRequired(false);
+                $md->setIsEmptyAllowed(true);
+                $md->setKeepHistory(false);
+                $md->setCanChangeValue(true);
+                $md->setDefaultValue(0);
             break;
         }
 

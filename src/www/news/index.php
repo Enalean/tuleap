@@ -67,12 +67,12 @@ if ($pv != 2) {
 }
 
 /*
-	Put the result set (list of forums for this group) into a column with folders
+    Put the result set (list of forums for this group) into a column with folders
 */
 if ($group_id && ($group_id != $GLOBALS['sys_news_group'])) {
-	$sql="SELECT * FROM news_bytes WHERE group_id=". db_ei($group_id) ." AND is_approved <> '4' ORDER BY date DESC";
+    $sql="SELECT * FROM news_bytes WHERE group_id=". db_ei($group_id) ." AND is_approved <> '4' ORDER BY date DESC";
 } else {
-	$sql="SELECT * FROM news_bytes WHERE is_approved='1' ORDER BY date DESC";
+    $sql="SELECT * FROM news_bytes WHERE is_approved='1' ORDER BY date DESC";
 }
 
 $result=db_query($sql);
@@ -81,38 +81,38 @@ $rows=db_numrows($result);
 $purifier = Codendi_HTMLPurifier::instance();
 
 if ($rows < 1) {
-	echo '<H2>'.$Language->getText('news_index','no_news_found');
-	if ($group_id) {
-      echo $purifier->purify(' '.$Language->getText('news_index','for', $pm->getProject($group_id)->getUnconvertedPublicName()));
-	}
-	echo '</H2>';
-	echo '
+    echo '<H2>'.$Language->getText('news_index','no_news_found');
+    if ($group_id) {
+         echo $purifier->purify(' '.$Language->getText('news_index','for', $pm->getProject($group_id)->getUnconvertedPublicName()));
+    }
+    echo '</H2>';
+    echo '
 		<P>'.$Language->getText('news_index','no_items_found');
 } else {
-	echo '<table WIDTH="100%" border=0>
+    echo '<table WIDTH="100%" border=0>
 		<TR><TD VALIGN="TOP">';
 
-	for ($j = 0; $j < $rows; $j++) {
-	  $forum_id=db_result($result,$j,'forum_id');
-	  if (news_check_permission($forum_id,$group_id)) {
-	      if ($group_id) {
-	      echo '
+    for ($j = 0; $j < $rows; $j++) {
+        $forum_id=db_result($result,$j,'forum_id');
+        if (news_check_permission($forum_id,$group_id)) {
+            if ($group_id) {
+                echo '
 		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-		'&group_id='.$group_id.
-	        '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
-	        $purifier->purify(db_result($result, $j, 'summary')).'</A> ';
-	      } else {
-	        echo '
+                '&group_id='.$group_id.
+                '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+                $purifier->purify(db_result($result, $j, 'summary')).'</A> ';
+            } else {
+                echo '
 		  <A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-	          '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
-	          $purifier->purify(db_result($result, $j, 'summary')).'</A> ';
-	      }
-		echo '
+                '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+                $purifier->purify(db_result($result, $j, 'summary')).'</A> ';
+            }
+            echo '
 		<BR>';
-	  }
-	}
+        }
+    }
 
-	echo '
+    echo '
 	</TD></TR></TABLE>';
 }
 

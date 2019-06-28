@@ -49,7 +49,7 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tr
                 break;
 
             case Tracker_Permission_Command::PERMISSION_SUBMITTER:
-                 if ($this->canSetSubmitter($permission_setter, $ugroup_id)) {
+                if ($this->canSetSubmitter($permission_setter, $ugroup_id)) {
                     $permission_setter->grant(Tracker::PERMISSION_SUBMITTER, $ugroup_id);
                 }
                 break;

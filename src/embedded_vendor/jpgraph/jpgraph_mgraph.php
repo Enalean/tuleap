@@ -308,9 +308,9 @@ class MGraph {
         $this->_strokeBackgroundImage();
 
         if( $this->iDoFrame && ! $this->doshadow ) {
-           $image->SetColor($this->iFrameColor);
-           $image->SetLineWeight($this->iFrameWeight);
-           $image->Rectangle(0,0,$w-1,$h-1);
+            $image->SetColor($this->iFrameColor);
+            $image->SetLineWeight($this->iFrameWeight);
+            $image->Rectangle(0,0,$w-1,$h-1);
         }
 
         // Copy all sub graphs to the container

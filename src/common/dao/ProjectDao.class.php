@@ -264,8 +264,8 @@ class ProjectDao extends DataAccessObject {
                                   WHERE short_name="homepage"
                                   AND group_id= '.$this->da->quoteSmart($project->getID());
                 return $this->update($sql_homePage);
-                }
             }
+        }
         return false;
     }
 

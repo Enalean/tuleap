@@ -42,12 +42,12 @@ function getLdapFromUserName($username) {
     if(!isset($list[$username])) {
         $user = UserManager::instance()->getUserByUserName($username);
         if($user) {
-        $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = '.$user->getId());
-        if(!db_error($res) && db_numrows($res) === 1) {
-            $list[$username] = strtolower(db_result($res, 0, 'ldap_uid'));
-        } else {
-            $list[$username] = false;
-        }
+            $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = '.$user->getId());
+            if(!db_error($res) && db_numrows($res) === 1) {
+                $list[$username] = strtolower(db_result($res, 0, 'ldap_uid'));
+            } else {
+                $list[$username] = false;
+            }
         } else {
             $list[$username] = false;
         }

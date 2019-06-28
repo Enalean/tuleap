@@ -217,7 +217,7 @@ class BacklogItemsTest extends RestBase {
         $another_story_id = $this->stories['Another story'];
 
         try {
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($task_in_another_story_id),
                 'direction'   => 'after',
@@ -229,8 +229,8 @@ class BacklogItemsTest extends RestBase {
                     'remove_from' => $another_story_id,
                 )
             )
-        ))));
-        $this->assertEquals($response->getStatusCode(), 200);
+            ))));
+            $this->assertEquals($response->getStatusCode(), 200);
         } catch(Exception $e) {
             $res = $e->getResponse();
             var_dump($res->getStatusCode(), $res->getBody(true));

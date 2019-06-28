@@ -29,80 +29,80 @@ define('FORUMML_CC', 34);
 
 // Get message headers
 function plugin_forumml_get_message_headers($id_message) {
-	
-	$sql = sprintf('SELECT value'.
-					' FROM plugin_forumml_messageheader'.
-					' WHERE id_message = %d'.
-					' AND id_header < 5'.
-					' ORDER BY id_header',
-					db_ei($id_message));
-	$res = db_query($sql);				
-	return $res;				
+    
+    $sql = sprintf('SELECT value'.
+                    ' FROM plugin_forumml_messageheader'.
+                    ' WHERE id_message = %d'.
+                    ' AND id_header < 5'.
+                    ' ORDER BY id_header',
+                    db_ei($id_message));
+    $res = db_query($sql);                
+    return $res;                
 }
 
 // Display search results
 function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $result,$group_id,$list_id)
 {
-	
-	echo "<table width='100%'>
+    
+    echo "<table width='100%'>
 			<tr>
 				<th class=forumml>".
-					$GLOBALS['Language']->getText('plugin_forumml','thread')."
+                    $GLOBALS['Language']->getText('plugin_forumml','thread')."
 				</th>
 				<th class=forumml>".
-					$GLOBALS['Language']->getText('plugin_forumml','submitted_on')."
+                    $GLOBALS['Language']->getText('plugin_forumml','submitted_on')."
 				</th>
 				<th class=forumml>".
-					$GLOBALS['Language']->getText('plugin_forumml','author')."
+                    $GLOBALS['Language']->getText('plugin_forumml','author')."
 				</th>
 			</tr>";
 
-	$idx = 0;
-	// Build a table full of search results
-	while ($rows = $result->getRow()) {
-		$idx++;
-		if ($idx % 2 == 0) {
-			$class="boxitemalt";
-		} else {
-			$class="boxitem";
-		}
-	
-		$sql1 = sprintf('SELECT value, body'.
-						' FROM plugin_forumml_message m, plugin_forumml_messageheader mh'.
-						' WHERE m.id_message = %d'.
-						' AND mh.id_message = %d'.
-						' AND m.id_list = %d'.
-						' AND mh.id_header = %s',
-						db_ei($rows['id_message']),
-						db_ei($rows['id_message']),
-						db_ei($list_id),
-						FORUMML_SUBJECT);
-		$res1 = db_query($sql1);
-		$subject = mb_decode_mimeheader(db_result($res1,0,'value'));	
-     	$sql2 = sprintf('SELECT value FROM plugin_forumml_messageheader'.
-						' WHERE id_message = %d'.
-        				' LIMIT 1,2',
-        				db_ei($rows['id_message']));
-	    $res2 = db_query($sql2);
-    	$k = 1;
-        while ($rows2 = db_fetch_array($res2)) {
-        	$header[$k] = $rows2['value'];
-        	$k++;
+    $idx = 0;
+    // Build a table full of search results
+    while ($rows = $result->getRow()) {
+        $idx++;
+        if ($idx % 2 == 0) {
+            $class="boxitemalt";
+        } else {
+            $class="boxitem";
         }
-	    $from = mb_decode_mimeheader($header[2]);
+    
+        $sql1 = sprintf('SELECT value, body'.
+         ' FROM plugin_forumml_message m, plugin_forumml_messageheader mh'.
+         ' WHERE m.id_message = %d'.
+         ' AND mh.id_message = %d'.
+         ' AND m.id_list = %d'.
+         ' AND mh.id_header = %s',
+         db_ei($rows['id_message']),
+         db_ei($rows['id_message']),
+         db_ei($list_id),
+         FORUMML_SUBJECT);
+        $res1 = db_query($sql1);
+        $subject = mb_decode_mimeheader(db_result($res1,0,'value'));    
+         $sql2 = sprintf('SELECT value FROM plugin_forumml_messageheader'.
+         ' WHERE id_message = %d'.
+                        ' LIMIT 1,2',
+                        db_ei($rows['id_message']));
+        $res2 = db_query($sql2);
+        $k = 1;
+        while ($rows2 = db_fetch_array($res2)) {
+            $header[$k] = $rows2['value'];
+            $k++;
+        }
+        $from = mb_decode_mimeheader($header[2]);
 
-        // Replace '<' by '&lt;' and '>' by '&gt;'. Otherwise the email adress won't be displayed 
-        // because it will be considered as an xhtml tag.
-        $from = preg_replace('/\</', '&lt;', $from);
-        $from = preg_replace('/\>/', '&gt;', $from);
+           // Replace '<' by '&lt;' and '>' by '&gt;'. Otherwise the email adress won't be displayed 
+           // because it will be considered as an xhtml tag.
+           $from = preg_replace('/\</', '&lt;', $from);
+           $from = preg_replace('/\>/', '&gt;', $from);
 
-		$date = date("Y-m-d H:i",strtotime($header[1]));
-		// purify message subject (CODENDI_PURIFIER_FORUMML level)
-		$hp = ForumML_HTMLPurifier::instance();
-		$subject = $hp->purify($subject,CODENDI_PURIFIER_FORUMML);
-		
-		// display the resulting threads in rows 
-		printf ("<tr class='".$class."'>
+        $date = date("Y-m-d H:i",strtotime($header[1]));
+     // purify message subject (CODENDI_PURIFIER_FORUMML level)
+        $hp = ForumML_HTMLPurifier::instance();
+        $subject = $hp->purify($subject,CODENDI_PURIFIER_FORUMML);
+        
+     // display the resulting threads in rows 
+        printf ("<tr class='".$class."'>
 					<td class='subject'>
 						&nbsp;<img src='".$p->getThemePath()."/images/ic/comment.png'/>
     					<a href='message.php?group_id=".$group_id."&topic=".$rows['id_message']."&list=".$list_id."'><b>%s</b></a>						
@@ -114,14 +114,14 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
 						<font class='info'>%s</font>
 					</td>
 				</tr>",$subject,$date,$from);
-	}										
-	echo "</table>";				
-	
+    }                                        
+    echo "</table>";                
+    
 }
 
 // List all threads
 function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
-	
+    
     $chunks = 30;
     $request = HTTPRequest::instance();
 
@@ -165,7 +165,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
     // all threads to be displayed
     $colspan = "";
     $item = $GLOBALS['Language']->getText('plugin_forumml','thread');
-		
+        
     if (isset($offset) && $offset != 0) {
         $begin = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."\"><img src='".$p->getThemePath()."/images/ic/resultset_first.png' title='".$GLOBALS['Language']->getText('plugin_forumml','begin')."'/></a>";
         $previous = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($offset - $chunks)."\"><img src='".$p->getThemePath()."/images/ic/resultset_previous.png' 
@@ -174,8 +174,8 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
         $begin = "<img src='".$p->getThemePath()."/images/ic/resultset_first_disabled.png'/>";
         $previous = "<img src='".$p->getThemePath()."/images/ic/resultset_previous_disabled.png' 
                               title='".$GLOBALS['Language']->getText('plugin_forumml','previous', $chunks)."'/>"; 
-    }	 
-		
+    }     
+        
     if (($offset + $chunks ) < $nbThreads) {
         $next = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($offset + $chunks)."\"><img src='".$p->getThemePath()."/images/ic/resultset_next.png' title='".$GLOBALS['Language']->getText('plugin_forumml','next', $chunks)."'/></a>";
         $finish = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($chunks * (int) (($nbThreads - 1) / $chunks))."\"><img src='".$p->getThemePath()."/images/ic/resultset_last.png' title='".$GLOBALS['Language']->getText('plugin_forumml','end')."'/></a>";
@@ -183,7 +183,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
         $next = "<img src='".$p->getThemePath()."/images/ic/resultset_next_disabled.png' title='".$chunks."'/>"; 
         $finish = "<img src='".$p->getThemePath()."/images/ic/resultset_last_disabled.png'/>";
     }
-		
+        
     // display page-splitting information, at the top of threads table
     echo "<table width='100%'>
 				<tr>
@@ -205,7 +205,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 				</tr>	
 			</table>";
     if ($nbRowFound > 0) {
-	
+    
         echo "<table class='border' width='100%' border='0'>
             <tr>
                 <th class='forumml' ".$colspan." width='60%'>".$item."</th>
@@ -253,9 +253,9 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 			    </td>
                 <td class='info'>".DateHelper::formatForLanguage($GLOBALS['Language'], (int) strtotime($msg['date'])) ."</td>
                 <td class='info'>".$hp->purify($msg['sender'], CODENDI_PURIFIER_CONVERT_HTML)."</td>
-            </tr>";	
+            </tr>";    
         }
-		
+        
         echo '</table>';
         // display page-splitting information, at the bottom of threads table
         echo "<table width='100%'>
@@ -466,8 +466,8 @@ function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, PFUser
 
 // Display a message
 function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFUser $current_user) {
-	$body    = $msg['body'];
-	$request = HTTPRequest::instance();
+    $body    = $msg['body'];
+    $request = HTTPRequest::instance();
 
     // Is "ready to display" body already in cache or not
     $bodyIsCached = false;
@@ -515,7 +515,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
         }
         print '<div class="plugin_forumml_message_header_cc">'. $GLOBALS['Language']->getText('plugin_forumml','show_message_cc') .' '. $ccs .'</div>';
     }
-    	
+        
     // Message content
     if (strpos($msg['content_type'], 'multipart/') !== false) {
         $content_type = $msg['msg_type'];
@@ -558,7 +558,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
         echo '</div>';
     }
     echo '</div>';
-	
+    
     print '<div id="plugin_forumml_message_content_'.$msg['id_message'].'" class="plugin_forumml_message_content_std">';
     $body = str_replace("\r\n","\n", $body);
 
@@ -623,9 +623,9 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     // If you click on 'Reply', load reply form
     $vMess = new Valid_UInt('id_mess');
     $vMess->required();
-    if ($request->valid($vMess) && $request->get('id_mess') == $msg['id_message']) {			
+    if ($request->valid($vMess) && $request->get('id_mess') == $msg['id_message']) {            
         $vReply = new Valid_WhiteList('reply',array(0,1));
-        $vReply->required();            	
+        $vReply->required();                
         if ($request->valid($vReply) && $request->get('reply') == 1) {
             if ($is_html) {
                 $body = $hp->purify($body, CODENDI_PURIFIER_STRIP_HTML);
@@ -725,57 +725,57 @@ function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_pa
 // Build Mail headers, and send the mail
 function plugin_forumml_process_mail($reply=false) {
 
-	$request = HTTPRequest::instance();
-	$hp = ForumML_HTMLPurifier::instance();
-	
-	// Instantiate a new Mail class
-	$mail = new Codendi_Mail();
-	
-	// Build mail headers
-	$to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];
-	$mail->setTo($to);
-	
-	$from = user_getrealname(user_getid())." <".user_getemail(user_getid()).">";
-	$mail->setFrom($from);
-	
-	$vMsg = new Valid_Text('message');
-	if ($request->valid($vMsg)) {
-		$message = $request->get('message');
-	}
+    $request = HTTPRequest::instance();
+    $hp = ForumML_HTMLPurifier::instance();
+    
+    // Instantiate a new Mail class
+    $mail = new Codendi_Mail();
+    
+    // Build mail headers
+    $to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];
+    $mail->setTo($to);
+    
+    $from = user_getrealname(user_getid())." <".user_getemail(user_getid()).">";
+    $mail->setFrom($from);
+    
+    $vMsg = new Valid_Text('message');
+    if ($request->valid($vMsg)) {
+        $message = $request->get('message');
+    }
 
-	$subject = $request->get('subject');
-	$mail->setSubject($subject);
-	
-	if ($reply) {
-		// set In-Reply-To header
-		$hres = plugin_forumml_get_message_headers($request->get('reply_to'));
-		$reply_to = db_result($hres,0,'value');			
-		$mail->addAdditionalHeader("In-Reply-To",$reply_to);
-	} 
-	$continue = true;
-	
-	if ($request->validArray(new Valid_Email('ccs')) && $request->exist('ccs')) {
-		$cc_array = array();
-		$idx = 0;
-		foreach ($request->get('ccs') as $cc) {
-			if (trim($cc) != "") {
-				$cc_array[$idx] = $hp->purify($cc,CODENDI_PURIFIER_FULL);
-				$idx++;
-			}
-		}
-		// Checks sanity of CC List
-		$err = '';
-		if (!util_validateCCList($cc_array,$err)) {
-	 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml','invalid_mail',$err));
-	 		$continue = false;
-	 	} else {
-	 		// add list of cc users to mail mime
+    $subject = $request->get('subject');
+    $mail->setSubject($subject);
+    
+    if ($reply) {
+     // set In-Reply-To header
+        $hres = plugin_forumml_get_message_headers($request->get('reply_to'));
+        $reply_to = db_result($hres,0,'value');            
+        $mail->addAdditionalHeader("In-Reply-To",$reply_to);
+    } 
+    $continue = true;
+    
+    if ($request->validArray(new Valid_Email('ccs')) && $request->exist('ccs')) {
+        $cc_array = array();
+        $idx = 0;
+        foreach ($request->get('ccs') as $cc) {
+            if (trim($cc) != "") {
+                $cc_array[$idx] = $hp->purify($cc,CODENDI_PURIFIER_FULL);
+                $idx++;
+            }
+        }
+     // Checks sanity of CC List
+        $err = '';
+        if (!util_validateCCList($cc_array,$err)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml','invalid_mail',$err));
+            $continue = false;
+        } else {
+        // add list of cc users to mail mime
             $mail->setCc($cc_array,true);
-	 	}
-	}
+        }
+    }
 
-	if ($continue) {
-		// Process attachments
+    if ($continue) {
+     // Process attachments
         if (isset($_FILES["files"]) && count($_FILES["files"]['name']) > 0) {
             foreach ($_FILES["files"]['name'] as $i => $fileName) {
                 $data = file_get_contents($_FILES["files"]["tmp_name"][$i]);
@@ -785,16 +785,16 @@ function plugin_forumml_process_mail($reply=false) {
             }
         }
 
-		$mail->setBodyText($message);
+        $mail->setBodyText($message);
 
-		if ($mail->send()) {
-			$GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_forumml','mail_succeed'));
-		} else {
-			$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml','mail_fail'));
-			$continue = false;
-		}
-	}
-	return $continue;
-	
+        if ($mail->send()) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_forumml','mail_succeed'));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml','mail_fail'));
+            $continue = false;
+        }
+    }
+    return $continue;
+    
 }
 

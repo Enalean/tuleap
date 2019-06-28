@@ -150,182 +150,182 @@ class SystemEventManager {
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
         switch ($event) {
-        case Event::SYSTEM_CHECK:
-            if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, null)) {
-                $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
+            case Event::SYSTEM_CHECK:
+                if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, null)) {
+                    $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
                     '',
                     SystemEvent::PRIORITY_LOW);
-            }
+                }
             break;
-        case Event::EDIT_SSH_KEYS:
-            $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
+            case Event::EDIT_SSH_KEYS:
+                $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
                                $this->concatParameters($params, array('user_id', 'original_keys')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case SystemEvent::TYPE_MOVE_FRS_FILE:
-            $this->createEvent(SystemEvent::TYPE_MOVE_FRS_FILE,
+            case SystemEvent::TYPE_MOVE_FRS_FILE:
+                $this->createEvent(SystemEvent::TYPE_MOVE_FRS_FILE,
                                $this->concatParameters($params, array('project_path', 'file_id', 'old_path' )),
                                SystemEvent::PRIORITY_HIGH);
             break;
-        case 'approve_pending_project':
-            $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
+            case 'approve_pending_project':
+                $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_is_deleted':
-            $this->createEvent(SystemEvent::TYPE_PROJECT_DELETE,
+            case 'project_is_deleted':
+                $this->createEvent(SystemEvent::TYPE_PROJECT_DELETE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
-        case 'project_is_active':
-            $this->createEvent(SystemEvent::TYPE_PROJECT_ACTIVE,
+            case 'project_is_active':
+                $this->createEvent(SystemEvent::TYPE_PROJECT_ACTIVE,
                 $params['group_id'],
                 SystemEvent::PRIORITY_LOW);
             break;
-        case 'project_is_suspended':
-            $this->createEvent(
+            case 'project_is_suspended':
+                $this->createEvent(
                 SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
                 $params['group_id'],
                 SystemEvent::PRIORITY_LOW
-            );
+                );
             break;
-        case Event::PROJECT_RENAME:
-            $this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
+            case Event::PROJECT_RENAME:
+                $this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
                                $this->concatParameters($params, array('group_id', 'new_name')),
                                SystemEvent::PRIORITY_HIGH);
             break;
-        case 'project_admin_add_user':
-            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE,
+            case 'project_admin_add_user':
+                $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE,
                                $this->concatParameters($params, array('group_id', 'user_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_remove_user':
-            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_DELETE,
+            case 'project_admin_remove_user':
+                $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_DELETE,
                                $this->concatParameters($params, array('group_id', 'user_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_activate_user':
-            $this->createEvent(SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE,
+            case 'project_admin_activate_user':
+                $this->createEvent(SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_delete_user':
-            $this->createEvent(SystemEvent::TYPE_USER_DELETE,
+            case 'project_admin_delete_user':
+                $this->createEvent(SystemEvent::TYPE_USER_DELETE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
-        case Event::USER_RENAME:
-            $this->createEvent(SystemEvent::TYPE_USER_RENAME,
+            case Event::USER_RENAME:
+                $this->createEvent(SystemEvent::TYPE_USER_RENAME,
                                $this->concatParameters($params, array('user_id', 'new_name', 'old_user')),
                                SystemEvent::PRIORITY_HIGH);
             break;
-        case 'cvs_is_private':
-            $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::TYPE_CVS_IS_PRIVATE,
+            case 'cvs_is_private':
+                $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
+                $this->createEvent(SystemEvent::TYPE_CVS_IS_PRIVATE,
                                $this->concatParameters($params, array('group_id', 'cvs_is_private')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_is_private':
-            $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::TYPE_PROJECT_IS_PRIVATE,
+            case 'project_is_private':
+                $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
+                $this->createEvent(SystemEvent::TYPE_PROJECT_IS_PRIVATE,
                                $this->concatParameters($params, array('group_id', 'project_is_private')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_ugroup_edition':
-            $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
+            case 'project_admin_ugroup_edition':
+                $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
                               $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name')),
                               SystemEvent::PRIORITY_MEDIUM);
                         break;
-        case 'project_admin_ugroup_creation':
-        case 'project_admin_ugroup_remove_user':
-        case 'project_admin_ugroup_add_user':
-        case 'project_admin_ugroup_deletion':
-        case 'project_admin_ugroup_bind_modified':
-            $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
+            case 'project_admin_ugroup_creation':
+            case 'project_admin_ugroup_remove_user':
+            case 'project_admin_ugroup_add_user':
+            case 'project_admin_ugroup_deletion':
+            case 'project_admin_ugroup_bind_modified':
+                $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
                                $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_remove_user_from_project_ugroups':
-            // multiple ugroups
-            // We create several events for coherency. However, the current UGROUP_MODIFY event
-            // only needs to be called once per project
-            //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
-            foreach ($params['ugroups'] as $ugroup_id) {
-                $params['ugroup_id'] = $ugroup_id;
-                $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
+            case 'project_admin_remove_user_from_project_ugroups':
+                // multiple ugroups
+                // We create several events for coherency. However, the current UGROUP_MODIFY event
+                // only needs to be called once per project
+                //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
+                foreach ($params['ugroups'] as $ugroup_id) {
+                    $params['ugroup_id'] = $ugroup_id;
+                    $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
                                    $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                    SystemEvent::PRIORITY_MEDIUM);
-            }
+                }
             break;
-        case 'mail_list_create':
-            $this->createEvent(SystemEvent::TYPE_MAILING_LIST_CREATE,
+            case 'mail_list_create':
+                $this->createEvent(SystemEvent::TYPE_MAILING_LIST_CREATE,
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'mail_list_delete':
-            $this->createEvent(SystemEvent::TYPE_MAILING_LIST_DELETE,
+            case 'mail_list_delete':
+                $this->createEvent(SystemEvent::TYPE_MAILING_LIST_DELETE,
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
-        case Event::SERVICE_IS_USED:
-            $this->createEvent(SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
+            case Event::SERVICE_IS_USED:
+                $this->createEvent(SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
                                $this->concatParameters($params, array('group_id', 'shortname', 'is_used')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'codendi_daily_start':
-            $this->createEvent(SystemEvent::TYPE_ROOT_DAILY,
+            case 'codendi_daily_start':
+                $this->createEvent(SystemEvent::TYPE_ROOT_DAILY,
                                '',
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case Event::COMPUTE_MD5SUM:
-            $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
+            case Event::COMPUTE_MD5SUM:
+                $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
                                $params['fileId'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
 
-        case Event::MASSMAIL:
-            $this->createEvent(
+            case Event::MASSMAIL:
+                $this->createEvent(
                 SystemEvent::TYPE_MASSMAIL,
                 json_encode($params),
                 SystemEvent::PRIORITY_MEDIUM
-            );
+                );
             break;
 
-        case Event::SVN_UPDATE_HOOKS:
-            $this->createEvent(
+            case Event::SVN_UPDATE_HOOKS:
+                $this->createEvent(
                 SystemEvent::TYPE_SVN_UPDATE_HOOKS,
                 $params['group_id'],
                 SystemEvent::PRIORITY_MEDIUM
-            );
+                );
             break;
 
-        case Event::SVN_AUTHORIZE_TOKENS:
-            $this->createEvent(
+            case Event::SVN_AUTHORIZE_TOKENS:
+                $this->createEvent(
                 SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS,
                 $params['group_id'],
                 SystemEvent::PRIORITY_MEDIUM
-            );
+                );
             break;
 
-        case Event::SVN_REVOKE_TOKENS:
-            $this->createEvent(
+            case Event::SVN_REVOKE_TOKENS:
+                $this->createEvent(
                 SystemEvent::TYPE_SVN_REVOKE_TOKENS,
                 $params['project_ids'],
                 SystemEvent::PRIORITY_MEDIUM
-            );
+                );
             break;
 
-        case Event::SVN_AUTH_CACHE_CHANGE:
-            $this->createEvent(
+            case Event::SVN_AUTH_CACHE_CHANGE:
+                $this->createEvent(
                 SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE, '', SystemEvent::PRIORITY_MEDIUM
-            );
+                );
             break;
 
-        case Event::UPDATE_ALIASES:
-            $this->createEvent(SystemEvent::TYPE_UPDATE_ALIASES, '', SystemEvent::PRIORITY_HIGH);
+            case Event::UPDATE_ALIASES:
+                $this->createEvent(SystemEvent::TYPE_UPDATE_ALIASES, '', SystemEvent::PRIORITY_HIGH);
             break;
 
-        default:
+            default:
 
             break;
         }
@@ -429,10 +429,10 @@ class SystemEventManager {
         $klass        = null;
         $klass_params = null;
         switch ($row['type']) {
-        case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
-            $klass        = SystemEventUserActiveStatusChange::class;
-            $user_manager = UserManager::instance();
-            $klass_params = [
+            case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
+                $klass        = SystemEventUserActiveStatusChange::class;
+                $user_manager = UserManager::instance();
+                $klass_params = [
                 $user_manager,
                 new UserGroupDao(),
                 new UserRemover(
@@ -443,38 +443,38 @@ class SystemEventManager {
                     $user_manager,
                     new ProjectHistoryDao(),
                     new UGroupManager()
-                )
-            ];
+                    )
+                ];
             break;
-        case SystemEvent::TYPE_SYSTEM_CHECK:
-        case SystemEvent::TYPE_EDIT_SSH_KEYS:
-        case SystemEvent::TYPE_PROJECT_CREATE:
-        case SystemEvent::TYPE_PROJECT_RENAME:
-        case SystemEvent::TYPE_MEMBERSHIP_CREATE:
-        case SystemEvent::TYPE_MEMBERSHIP_DELETE:
-        case SystemEvent::TYPE_UGROUP_MODIFY:
-        case SystemEvent::TYPE_USER_DELETE:
-        case SystemEvent::TYPE_USER_RENAME:
-        case SystemEvent::TYPE_MAILING_LIST_CREATE:
-        case SystemEvent::TYPE_MAILING_LIST_DELETE:
-        case SystemEvent::TYPE_CVS_IS_PRIVATE:
-        case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
-        case SystemEvent::TYPE_ROOT_DAILY:
-        case SystemEvent::TYPE_COMPUTE_MD5SUM:
-        case SystemEvent::TYPE_MASSMAIL:
-            $klass = $this->getClassForType($row['type']);
+            case SystemEvent::TYPE_SYSTEM_CHECK:
+            case SystemEvent::TYPE_EDIT_SSH_KEYS:
+            case SystemEvent::TYPE_PROJECT_CREATE:
+            case SystemEvent::TYPE_PROJECT_RENAME:
+            case SystemEvent::TYPE_MEMBERSHIP_CREATE:
+            case SystemEvent::TYPE_MEMBERSHIP_DELETE:
+            case SystemEvent::TYPE_UGROUP_MODIFY:
+            case SystemEvent::TYPE_USER_DELETE:
+            case SystemEvent::TYPE_USER_RENAME:
+            case SystemEvent::TYPE_MAILING_LIST_CREATE:
+            case SystemEvent::TYPE_MAILING_LIST_DELETE:
+            case SystemEvent::TYPE_CVS_IS_PRIVATE:
+            case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
+            case SystemEvent::TYPE_ROOT_DAILY:
+            case SystemEvent::TYPE_COMPUTE_MD5SUM:
+            case SystemEvent::TYPE_MASSMAIL:
+                $klass = $this->getClassForType($row['type']);
             break;
-        case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
-        case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
-        case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
-        case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
-            $klass = $this->getClassForType($row['type']);
-            $klass_params = array(Backend::instance(Backend::SVN));
+            case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
+            case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
+            case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
+            case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
+                $klass = $this->getClassForType($row['type']);
+                $klass_params = array(Backend::instance(Backend::SVN));
             break;
-        case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
-            $klass          = $this->getClassForType($row['type']);
-            $ugroup_manager = new UGroupManager();
-            $klass_params   = [
+            case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
+                $klass          = $this->getClassForType($row['type']);
+                $ugroup_manager = new UGroupManager();
+                $klass_params   = [
                 $this->getSVNAuthenticationCacheInvalidator(),
                 new UserRemover(
                     ProjectManager::instance(),
@@ -484,19 +484,19 @@ class SystemEventManager {
                     UserManager::instance(),
                     new ProjectHistoryDao(),
                     $ugroup_manager
-                ),
-                $ugroup_manager
-            ];
+                    ),
+                    $ugroup_manager
+                ];
             break;
-        case SystemEvent::TYPE_PROJECT_ACTIVE:
-        case SystemEvent::TYPE_PROJECT_DELETE:
-        case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
-            $klass        = $this->getClassForType($row['type']);
-            $klass_params = [$this->getSVNAuthenticationCacheInvalidator()];
+            case SystemEvent::TYPE_PROJECT_ACTIVE:
+            case SystemEvent::TYPE_PROJECT_DELETE:
+            case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
+                $klass        = $this->getClassForType($row['type']);
+                $klass_params = [$this->getSVNAuthenticationCacheInvalidator()];
             break;
 
-        default:
-            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
+            default:
+                $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
         $sysevent = $this->instanciateSystemEventByType(

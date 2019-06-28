@@ -56,7 +56,7 @@ class _PageList_Column_numbacklinks extends _PageList_Column_custom
 class _PageList_Column_coagreement extends _PageList_Column_custom 
 {
     function __construct ($params) {
-    	$this->_pagelist = $params[3];
+        $this->_pagelist = $params[3];
         $this->_PageList_Column($params[0], $params[1], $params[2]);
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
@@ -69,16 +69,16 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
 
         $active_user = $request->getUser();
         $active_userId = $active_user->getId();
-        $dbi = $request->getDbh();	
+        $dbi = $request->getDbh();    
         $p = CoAgreement($dbi, $pagename, $this->_selectedBuddies, $active_userId);
         if($p == 1){
             $p = "yes";
         } elseif($p == 0){
             $p = "unsure";
         } elseif($p == -1){
-            $p = "no";	
+            $p = "no";    
         } else {
-            $p = "error";	
+            $p = "error";    
         }   
         //FIXME: $WikiTheme->getImageURL()
         return HTML::img(array('src' => "../images/" . $p . ".gif"));
@@ -88,7 +88,7 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
 class _PageList_Column_minmisery extends _PageList_Column_custom 
 {
     function __construct ($params) {
-    	$this->_pagelist = $params[3];
+        $this->_pagelist = $params[3];
         $this->_PageList_Column($params[0], $params[1], $params[2]);
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
@@ -101,9 +101,9 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
 
         $active_user = $request->getUser();
         $active_userId = $active_user->getId();
-        $dbi = $request->getDbh();	
+        $dbi = $request->getDbh();    
         $p = MinMisery($dbi, $pagename, $this->_selectedBuddies, $active_userId);
-       	$imgFix = floor($p * 2) / 2;
+           $imgFix = floor($p * 2) / 2;
         //FIXME: $WikiTheme->getImageURL()
         return HTML::img(array('src' => "../images/" . $imgFix . ".png"));
     }

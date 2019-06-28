@@ -20,17 +20,17 @@
 
 class XMLImportHelperTest extends TuleapTestCase {
 
-   public function testItImportsAnonymousUser() {
-       $user_manager  = mock('UserManager');
-       $import_helper = new XMLImportHelper($user_manager);
-       stub($user_manager)->getUserByIdentifier()->returns(null);
-       stub($user_manager)->getUserAnonymous()->returns(new PFUser());
+    public function testItImportsAnonymousUser() {
+        $user_manager  = mock('UserManager');
+        $import_helper = new XMLImportHelper($user_manager);
+        stub($user_manager)->getUserByIdentifier()->returns(null);
+        stub($user_manager)->getUserAnonymous()->returns(new PFUser());
 
-       $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
 <user>veloc@dino.com</user>');
 
-       $user = $import_helper->getUser($xml);
+        $user = $import_helper->getUser($xml);
 
-       $this->assertEqual($user->getEmail(), 'veloc@dino.com');
-   }
+        $this->assertEqual($user->getEmail(), 'veloc@dino.com');
+    }
 }

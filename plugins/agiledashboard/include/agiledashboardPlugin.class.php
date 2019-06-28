@@ -520,9 +520,9 @@ class AgileDashboardPlugin extends Plugin
         } else {
              $this->setQueryParametersFromRequest($request, $redirect);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
-             if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
-                 $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
-             }
+            if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
+                $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
+            }
         }
     }
 

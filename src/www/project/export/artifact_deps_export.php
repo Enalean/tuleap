@@ -20,28 +20,28 @@
  */
 
 
-//	get the Group object
+//    get the Group object
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
-	exit_no_group();
+    exit_no_group();
 }
 
 if ( $atid ) {
-	//	Create the ArtifactType object
-	$at = new ArtifactType($group,$atid);
-	if (!$at || !is_object($at)) {
-		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','at_not_created'));
-	}
-	if ($at->isError()) {
-		exit_error($Language->getText('global','error'),$at->getErrorMessage());
-	}
+    //    Create the ArtifactType object
+    $at = new ArtifactType($group,$atid);
+    if (!$at || !is_object($at)) {
+        exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','at_not_created'));
+    }
+    if ($at->isError()) {
+        exit_error($Language->getText('global','error'),$at->getErrorMessage());
+    }
 
-	// Create field factory
-	$art_field_fact = new ArtifactFieldFactory($at);
-	if ($art_field_fact->isError()) {
-		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
-	}
+    // Create field factory
+    $art_field_fact = new ArtifactFieldFactory($at);
+    if ($art_field_fact->isError()) {
+        exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
+    }
 
 }
 
@@ -55,9 +55,9 @@ $sql = 'SELECT ad.artifact_id,'.
 
 $col_list = array('artifact_id','is_dependent_on_artifact_id');
 $lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
-	     'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export','depend_on_art'));
+         'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export','depend_on_art'));
 $dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_deps_export','art_id_desc'),
-	     'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export','depend_on_art'));
+         'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export','depend_on_art'));
 
 $eol = "\n";
 
@@ -70,29 +70,29 @@ if ($export == 'artifact_deps') {
 
     // Send the result in CSV format
     if ($result && $rows > 0) {
-	
-	        $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getItemName());
-		header ('Content-Type: text/csv');
-		header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
-		
-		echo build_csv_header($col_list, $lbl_list).$eol;
-	
-		while ($arr = db_fetch_array($result)) {
-		    echo build_csv_record($col_list, $arr).$eol;
-		}
+    
+            $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getItemName());
+        header ('Content-Type: text/csv');
+        header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
+        
+        echo build_csv_header($col_list, $lbl_list).$eol;
+    
+        while ($arr = db_fetch_array($result)) {
+            echo build_csv_record($col_list, $arr).$eol;
+        }
 
     } else {
 
-		project_admin_header(array('title'=>$pg_title), 'data');
+        project_admin_header(array('title'=>$pg_title), 'data');
 
-		echo '<h3>'.$Language->getText('project_export_artifact_deps_export','art_deps_export').'</h3>';
-		if ($result) {
-		    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_deps_found');
-		} else {
-		    echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',$GLOBALS['sys_name']);
-		    echo '<br>'.db_error();
-		}
-		site_project_footer( array() );
+        echo '<h3>'.$Language->getText('project_export_artifact_deps_export','art_deps_export').'</h3>';
+        if ($result) {
+            echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_deps_found');
+        } else {
+            echo '<P>'.$Language->getText('project_export_artifact_deps_export','db_access_err',$GLOBALS['sys_name']);
+            echo '<br>'.db_error();
+        }
+        site_project_footer( array() );
     }
 
 

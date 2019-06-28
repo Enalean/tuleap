@@ -193,26 +193,26 @@ class Docman_FilterFactory {
         }
         else {
             switch($md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                $filter = new Docman_FilterText($md);
-                if(Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
-                    $this->dynTextFields[] = $md->getLabel();
-                }
+                case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                    $filter = new Docman_FilterText($md);
+                    if(Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
+                        $this->dynTextFields[] = $md->getLabel();
+                    }
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                if($advSearch) {
-                    $filter = new Docman_FilterDateAdvanced($md);
-                } else {
-                    $filter = new Docman_FilterDate($md);
-                }
+                case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                    if($advSearch) {
+                        $filter = new Docman_FilterDateAdvanced($md);
+                    } else {
+                        $filter = new Docman_FilterDate($md);
+                    }
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                if($advSearch) {
-                    $filter = new Docman_FilterListAdvanced($md);
-                } else {
-                    $filter = new Docman_FilterList($md);
-                }
+                case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                    if($advSearch) {
+                        $filter = new Docman_FilterListAdvanced($md);
+                    } else {
+                        $filter = new Docman_FilterList($md);
+                    }
                 break;
             }
         }

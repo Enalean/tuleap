@@ -84,20 +84,20 @@ function util_get_user_preferences_export_datefmt() {
 function util_importdatefmt_to_unixtime($date) {
     $time = 0;
     if (!$date||$date=="") {
-    	return array($time,false);
+        return array($time,false);
     }
 
     if (strstr($date,"/") !== false) {
-      list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
-      $time = mktime($hour, $minute, 0, $month, $day, $year);
+        list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
+        $time = mktime($hour, $minute, 0, $month, $day, $year);
       
-      return array($time,true);
+        return array($time,true);
     }
     
     if (strstr($date,"-") !== false) {
-      list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
-      $time = mktime($hour, $minute, 0, $month, $day, $year);
-      return array($time,true);
+        list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
+        $time = mktime($hour, $minute, 0, $month, $day, $year);
+        return array($time,true);
     }
 
     return array($time,false);
@@ -107,34 +107,34 @@ function util_importdatefmt_to_unixtime($date) {
 // if DD and MM are not defined then default them to 1
 function util_xlsdatefmt_explode($date) {
   
-  if ($u_pref = user_get_preference("user_csv_dateformat")) {
-  } else {
-      $u_pref = PFUser::DEFAULT_CSV_DATEFORMAT;
-  }
+    if ($u_pref = user_get_preference("user_csv_dateformat")) {
+    } else {
+        $u_pref = PFUser::DEFAULT_CSV_DATEFORMAT;
+    }
   
-  $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
-  if ($res == 0) { 
-    //if it doesn't work try (n/j/Y) only
-    $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+)/",$date,$match);
+    $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
     if ($res == 0) { 
-      // nothing is valid return Epoch time
-      $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
+      //if it doesn't work try (n/j/Y) only
+        $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+)/",$date,$match);
+        if ($res == 0) { 
+          // nothing is valid return Epoch time
+            $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
+        } else {
+            if ($u_pref == "day_month_year") {
+                list(,$day,$month,$year) = $match; $hour='0'; $minute='0';
+            } else {
+                list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
+            }
+        }
     } else {
         if ($u_pref == "day_month_year") {
-            list(,$day,$month,$year) = $match; $hour='0'; $minute='0';
-        } else {
-            list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
-        }
-    }
-  } else {
-      if ($u_pref == "day_month_year") {
             list(,$day,$month,$year,$hour,$minute) = $match;
         } else {
             list(,$month,$day,$year,$hour,$minute) = $match;
         }
-  }
+    }
 
-  return array($year,$month,$day,$hour,$minute);
+    return array($year,$month,$day,$hour,$minute);
 }
 
 
@@ -145,11 +145,11 @@ function util_xlsdatefmt_explode($date) {
 function util_date_to_unixtime($date) {
     $time = 0;
     if (!$date||$date=="") {
-    	return array($time,false);
+        return array($time,false);
     }
     
-	list($year,$month,$day) = util_date_explode($date);
-	$time = mktime(0, 0, 0, $month, $day, $year);
+    list($year,$month,$day) = util_date_explode($date);
+    $time = mktime(0, 0, 0, $month, $day, $year);
     return array($time,true);
 }
 
@@ -158,24 +158,24 @@ function util_date_to_unixtime($date) {
 function util_date_explode($date) {
     $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
     if ($res == 0) { 
-	// if it doesn't work try YYYY-MM only
-	$res = preg_match("/\s*(\d+)-(\d+)/",$date,$match);
-	if ($res == 0) {
-	    // if it doesn't work try YYYY only
-	    $res = preg_match("/\s*(\d+)/",$date,$match);return array('1970','1','1');
-	    if ($res == 0) {
-		// nothing is valid return Epoch time
-		$year = '1970'; $month='1'; $day='1';
-	    } else {
-		list(,$year) = $match ; $month='1'; $day='1';
-	    }
-	    
-	} else {
-	    list(,$year,$month) = $match ; $day='1';
-	}
-	
+    // if it doesn't work try YYYY-MM only
+        $res = preg_match("/\s*(\d+)-(\d+)/",$date,$match);
+        if ($res == 0) {
+            // if it doesn't work try YYYY only
+            $res = preg_match("/\s*(\d+)/",$date,$match);return array('1970','1','1');
+            if ($res == 0) {
+         // nothing is valid return Epoch time
+                $year = '1970'; $month='1'; $day='1';
+            } else {
+                list(,$year) = $match ; $month='1'; $day='1';
+            }
+        
+        } else {
+            list(,$year,$month) = $match ; $day='1';
+        }
+    
     } else {
-	list(,$year,$month,$day) = $match;
+        list(,$year,$month,$day) = $match;
     }
     return array($year,$month,$day);
 }
@@ -187,7 +187,7 @@ function util_date_explode($date) {
 function util_sysdatefmt_to_unixtime($date) {
     $time = 0;
     if (!$date||$date=="") {
-    	return array($time,false);
+        return array($time,false);
     }
     
     list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
@@ -198,52 +198,52 @@ function util_sysdatefmt_to_unixtime($date) {
 // Explode a date in the form of (Y-M-d H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
 function util_sysdatefmt_explode($date) {
-  $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
+    $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
 
-  $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/",$date,$match);
-  if ($res == 0) { 
-    //if it doesn't work try (Y-M-d) only
-    $res = preg_match("/\s*(\d+)-(.+)-(\d+)/",$date,$match);
+    $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/",$date,$match);
     if ($res == 0) { 
+      //if it doesn't work try (Y-M-d) only
+        $res = preg_match("/\s*(\d+)-(.+)-(\d+)/",$date,$match);
+        if ($res == 0) { 
       
-      // if it doesn't work try Y-M only
-      $res = preg_match("/\s*(\d+)-(.+)/",$date,$match);
-      if ($res == 0) {
-	// if it doesn't work try YYYY only
-	$res = preg_match("/\s*(\d+)/",$date,$match);
-	if ($res == 0) {
-	  // nothing is valid return Epoch time
-	  $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
-	} else {
-	  list(,$year) = $match ; $month='1'; $day='1'; $hour='0'; $minute='0';
-	}
-	
-      } else {
-	list(,$year,$month) = $match ; $day='1'; $hour='0'; $minute='0';
-      }
+          // if it doesn't work try Y-M only
+            $res = preg_match("/\s*(\d+)-(.+)/",$date,$match);
+            if ($res == 0) {
+         // if it doesn't work try YYYY only
+                $res = preg_match("/\s*(\d+)/",$date,$match);
+                if ($res == 0) {
+                       // nothing is valid return Epoch time
+                       $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
+                } else {
+                          list(,$year) = $match ; $month='1'; $day='1'; $hour='0'; $minute='0';
+                }
+    
+            } else {
+                list(,$year,$month) = $match ; $day='1'; $hour='0'; $minute='0';
+            }
       
+        } else {
+            list(,$year,$month,$day) = $match; $hour='0'; $minute='0';
+        }
     } else {
-      list(,$year,$month,$day) = $match; $hour='0'; $minute='0';
+        list(,$year,$month,$day,$hour,$minute) = $match;
     }
-  } else {
-    list(,$year,$month,$day,$hour,$minute) = $match;
-  }
 
-  return array($year,getMonth($month,$ok),$day,$hour,$minute);
+    return array($year,getMonth($month,$ok),$day,$hour,$minute);
 }
 
 //accept now month either in format Jan-Dec or 1-12
 function getMonth($month,&$ok) {
-  $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
-  if (array_key_exists($month,$months)) {
-    $ok = true;
-    return $months[$month];
-  } else if (in_array($month,$months)) {
-    $ok = true;
-    return $month;
-  } 
-  $ok = false; 
-  return 1;
+    $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
+    if (array_key_exists($month,$months)) {
+        $ok = true;
+        return $months[$month];
+    } else if (in_array($month,$months)) {
+        $ok = true;
+        return $month;
+    } 
+    $ok = false; 
+    return 1;
 
 }
 
@@ -261,102 +261,102 @@ function util_ISO8601_to_date($ISO8601_date) {
 }
 
 function util_prep_string_for_sendmail($body) {
-	$body=str_replace("\\","\\\\",$body);
-	$body=str_replace("\"","\\\"",$body);
-	$body=str_replace("\$","\\\$",$body);
+    $body=str_replace("\\","\\\\",$body);
+    $body=str_replace("\"","\\\"",$body);
+    $body=str_replace("\$","\\\$",$body);
         $body=str_replace("`","\\`",$body);
-	return $body;
+    return $body;
 }
 
 function util_unconvert_htmlspecialchars($string) {
-	if (strlen($string) < 1) {
-		return '';
-	} else {
-		$string=str_replace('&nbsp;',' ',$string);
-		$string=str_replace('&quot;','"',$string);
-		$string=str_replace('&gt;','>',$string);
-		$string=str_replace('&lt;','<',$string);
-		$string=str_replace('&amp;','&',$string);
-		return $string;
-	}
+    if (strlen($string) < 1) {
+        return '';
+    } else {
+        $string=str_replace('&nbsp;',' ',$string);
+        $string=str_replace('&quot;','"',$string);
+        $string=str_replace('&gt;','>',$string);
+        $string=str_replace('&lt;','<',$string);
+        $string=str_replace('&amp;','&',$string);
+        return $string;
+    }
 }
 
 function util_result_column_to_array($result, $col=0) {
-	/*
-		Takes a result set and turns the optional column into
-		an array
-	*/
-	$rows=db_numrows($result);
+    /*
+        Takes a result set and turns the optional column into
+        an array
+    */
+    $rows=db_numrows($result);
 
-	if ($rows > 0) {
-		$arr=array();
-		for ($i=0; $i<$rows; $i++) {
-			$arr[$i]=db_result($result,$i,$col);
-		}
-	} else {
-		$arr=array();
-	}
-	return $arr;
+    if ($rows > 0) {
+        $arr=array();
+        for ($i=0; $i<$rows; $i++) {
+            $arr[$i]=db_result($result,$i,$col);
+        }
+    } else {
+        $arr=array();
+    }
+    return $arr;
 }
 
 function result_column_to_array($result, $col=0) {
-	/*
-		backwards compatibility
-	*/
-	return util_result_column_to_array($result, $col);
+    /*
+        backwards compatibility
+    */
+    return util_result_column_to_array($result, $col);
 }
 
 function util_wrap_find_space($string,$wrap) {
-	//echo"\n";
-	$start=$wrap-5;
-	$try=1;
-	$found=false;
-	
-	while (!$found) {
-		//find the first space starting at $start
-		$pos=@strpos($string,' ',$start);
-		
-		//if that space is too far over, go back and start more to the left
-		if (($pos > ($wrap+5)) || !$pos) {
-			$try++;
-			$start=($wrap-($try*5));
-			//if we've gotten so far left , just truncate the line
-			if ($start<=10) {
-				return $wrap;
-			}       
-			$found=false;
-		} else {
-			$found=true;
-		}       
-	}       
-	
-	return $pos;
+    //echo"\n";
+    $start=$wrap-5;
+    $try=1;
+    $found=false;
+    
+    while (!$found) {
+     //find the first space starting at $start
+        $pos=@strpos($string,' ',$start);
+        
+     //if that space is too far over, go back and start more to the left
+        if (($pos > ($wrap+5)) || !$pos) {
+            $try++;
+            $start=($wrap-($try*5));
+         //if we've gotten so far left , just truncate the line
+            if ($start<=10) {
+                return $wrap;
+            }       
+            $found=false;
+        } else {
+            $found=true;
+        }       
+    }       
+    
+    return $pos;
 }
 
 function util_line_wrap ($text, $wrap = 80, $break = "\n") {
-	$paras = explode("\n", $text);
-			
-	$result = array();
-	$i = 0;
-	while ($i < count($paras)) {
-		if (strlen($paras[$i]) <= $wrap) {
-			$result[] = $paras[$i];
-			$i++;
-		} else {
-			$pos=util_wrap_find_space($paras[$i],$wrap);
-			
-			$result[] = substr($paras[$i], 0, $pos);
-			
-			$new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
-			if ($new != '') {
-				$paras[$i] = $new;
-				$pos=util_wrap_find_space($paras[$i],$wrap);
-			} else {
-				$i++;
-			}       
-		}       
-	}		       
-	return implode($break, $result);
+    $paras = explode("\n", $text);
+            
+    $result = array();
+    $i = 0;
+    while ($i < count($paras)) {
+        if (strlen($paras[$i]) <= $wrap) {
+            $result[] = $paras[$i];
+            $i++;
+        } else {
+            $pos=util_wrap_find_space($paras[$i],$wrap);
+            
+            $result[] = substr($paras[$i], 0, $pos);
+            
+            $new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
+            if ($new != '') {
+                $paras[$i] = $new;
+                $pos=util_wrap_find_space($paras[$i],$wrap);
+            } else {
+                $i++;
+            }       
+        }       
+    }               
+    return implode($break, $result);
 }
 
 function util_make_reference_links ($data,$group_id) {
@@ -388,41 +388,41 @@ function util_user_nolink($username) {
 }
 
 function util_multi_user_link ($usernames) {
-	
-	$users = explode(", ",$usernames);
-	if ( count($users) > 1 ) {
-		// Multiple users
-				
-		$str = "";
-		for($i=0;$i<count($users)-1;$i++) {
-			$str .= util_user_link($users[$i]).", ";
-		}
-		$str .= util_user_link($users[$i]);
-		return $str;
-		
-	} else {
-		// Single user name
-		return util_user_link ($usernames);
-	}
+    
+    $users = explode(", ",$usernames);
+    if ( count($users) > 1 ) {
+     // Multiple users
+                
+        $str = "";
+        for($i=0;$i<count($users)-1;$i++) {
+            $str .= util_user_link($users[$i]).", ";
+        }
+        $str .= util_user_link($users[$i]);
+        return $str;
+        
+    } else {
+     // Single user name
+        return util_user_link ($usernames);
+    }
 }
 
 function util_multi_user_nolink ($usernames) {
-	
-	$users = explode(", ",$usernames);
-	if ( count($users) > 1 ) {
-		// Multiple users
-				
-		$str = "";
-		for($i=0;$i<count($users)-1;$i++) {
-			$str .= util_user_nolink($users[$i]).", ";
-		}
-		$str .= util_user_nolink($users[$i]);
-		return $str;
-		
-	} else {
-		// Single user name
-		return util_user_nolink ($usernames);
-	}
+    
+    $users = explode(", ",$usernames);
+    if ( count($users) > 1 ) {
+     // Multiple users
+                
+        $str = "";
+        for($i=0;$i<count($users)-1;$i++) {
+            $str .= util_user_nolink($users[$i]).", ";
+        }
+        $str .= util_user_nolink($users[$i]);
+        return $str;
+        
+    } else {
+     // Single user name
+        return util_user_nolink ($usernames);
+    }
 }
 
 function util_double_diff_array($arr1, $arr2) {
@@ -459,58 +459,58 @@ function get_priority_color ($index) {
 }
 
 Function  ShowResultSet($result,$title="Untitled",$linkify=false)  {
-	global $group_id,$HTML;
-	/*
-		Very simple, plain way to show a generic result set
-		Accepts a result set and title
-		Makes certain items into HTML links
-	*/
+    global $group_id,$HTML;
+    /*
+        Very simple, plain way to show a generic result set
+        Accepts a result set and title
+        Makes certain items into HTML links
+    */
 
-	if  ($result)  {
-		$rows  =  db_numrows($result);
-		$cols  =  db_numfields($result);
+    if  ($result)  {
+        $rows  =  db_numrows($result);
+        $cols  =  db_numfields($result);
 
-		echo '
+        echo '
 			<TABLE BORDER="0" WIDTH="100%">';
 
-		/*  Create the title  */
+     /*  Create the title  */
 
-		echo '
+        echo '
 		<TR class="boxtitle">
 		<TD COLSPAN="'.$cols.'" class="boxitem"><B>'.$title.'</B></TD></TR>';
 
-		/*  Create the rows  */
-		for ($j = 0; $j < $rows; $j++) {
-			echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
-			for ($i = 0; $i < $cols; $i++) {
-				if ($linkify && $i == 0) {
-					$link = '<A HREF="?';
-					$linkend = '</A>';
-					if ($linkify == "bug_cat") {
-						$link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';
-					} else if($linkify == "bug_group") {
-						$link .= 'group_id='.$group_id.'&bug_group_mod=y&bug_group_id='.db_result($result, $j, 'bug_group_id').'">';
-					} else if($linkify == "patch_cat") {
-						$link .= 'group_id='.$group_id.'&patch_cat_mod=y&patch_cat_id='.db_result($result, $j, 'patch_category_id').'">';
-					} else if($linkify == "support_cat") {
-						$link .= 'group_id='.$group_id.'&support_cat_mod=y&support_cat_id='.db_result($result, $j, 'support_category_id').'">';
-					} else if($linkify == "pm_project") {
-						$link .= 'group_id='.$group_id.'&project_cat_mod=y&project_cat_id='.db_result($result, $j, 'group_project_id').'">';
-					} else {
-						$link = $linkend = '';
-					}
-				} else {
-					$link = $linkend = '';
-				}
-				echo '<td>'.$link . db_result($result,  $j,  $i) . $linkend.'</td>';
+     /*  Create the rows  */
+        for ($j = 0; $j < $rows; $j++) {
+            echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
+            for ($i = 0; $i < $cols; $i++) {
+                if ($linkify && $i == 0) {
+                    $link = '<A HREF="?';
+                    $linkend = '</A>';
+                    if ($linkify == "bug_cat") {
+                        $link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';
+                    } else if($linkify == "bug_group") {
+                        $link .= 'group_id='.$group_id.'&bug_group_mod=y&bug_group_id='.db_result($result, $j, 'bug_group_id').'">';
+                    } else if($linkify == "patch_cat") {
+                        $link .= 'group_id='.$group_id.'&patch_cat_mod=y&patch_cat_id='.db_result($result, $j, 'patch_category_id').'">';
+                    } else if($linkify == "support_cat") {
+                        $link .= 'group_id='.$group_id.'&support_cat_mod=y&support_cat_id='.db_result($result, $j, 'support_category_id').'">';
+                    } else if($linkify == "pm_project") {
+                        $link .= 'group_id='.$group_id.'&project_cat_mod=y&project_cat_id='.db_result($result, $j, 'group_project_id').'">';
+                    } else {
+                        $link = $linkend = '';
+                    }
+                } else {
+                    $link = $linkend = '';
+                }
+                echo '<td>'.$link . db_result($result,  $j,  $i) . $linkend.'</td>';
 
-			}
-			echo '</tr>';
-		}
-		echo '</table>';
-	} else {
-		echo db_error();
-	}
+            }
+            echo '</tr>';
+        }
+        echo '</table>';
+    } else {
+        echo db_error();
+    }
 }
 
 // Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
@@ -532,9 +532,9 @@ function util_normalize_email ($address) {
     }
     $address = util_cleanup_emails($address);
     if (validate_email($address))
-	return $address;
+    return $address;
     else
-	return $address."@$host";
+    return $address."@$host";
 }
 
 // Clean up email address (remove spaces...) and split comma or semi-colon separated emails
@@ -589,32 +589,32 @@ function validate_emails ($addresses) {
      *
      * @return bool
      */
-    function util_validateCCList(&$arr_email, &$message, $strict=false) {
-      global $Language;
-        $valid = true;
-        $message = "";
-        $purifier = Codendi_HTMLPurifier::instance();
-        foreach($arr_email as $key => $cc) {
-            // Make sure that the address is valid
-            $ref = util_user_finder($cc, $strict);	  
-            if(empty($ref)) {
-                $valid = false;
-                $message .= "'".$purifier->purify($cc)."'<br>";
-                continue;
-            }
-            else {	    
-                $arr_email[$key] = $ref;
-            }
+function util_validateCCList(&$arr_email, &$message, $strict=false) {
+    global $Language;
+    $valid = true;
+    $message = "";
+    $purifier = Codendi_HTMLPurifier::instance();
+    foreach($arr_email as $key => $cc) {
+        // Make sure that the address is valid
+        $ref = util_user_finder($cc, $strict);      
+        if(empty($ref)) {
+            $valid = false;
+            $message .= "'".$purifier->purify($cc)."'<br>";
+            continue;
         }
-        
-        if (! $valid) {
-            $message = $Language->getText('include_utils','address_problem').":"
-                . "<blockquote>$message</blockquote>"
-                . $Language->getText('include_utils','email_explain');
+        else {        
+            $arr_email[$key] = $ref;
         }
-        
-        return $valid;
     }
+        
+    if (! $valid) {
+        $message = $Language->getText('include_utils','address_problem').":"
+            . "<blockquote>$message</blockquote>"
+            . $Language->getText('include_utils','email_explain');
+    }
+        
+    return $valid;
+}
 
 
 /**
@@ -682,7 +682,7 @@ function util_get_image_theme($fn, $the_theme=false, $absolute=false){
 function util_get_dir_image_theme($the_theme=false)
 {
     if (! $the_theme) {
-      $the_theme = $GLOBALS['sys_user_theme'];
+        $the_theme = $GLOBALS['sys_user_theme'];
     }
 
     return '/themes/'.$the_theme.'/images/';
@@ -772,36 +772,36 @@ function get_list_server_url() {
 /**
  * util_check_fileupload() - determines if a filename is appropriate for upload
  *
- * @param	   string  The name of the file being uploaded
+ * @param       string  The name of the file being uploaded
  */
 function util_check_fileupload($filename) {
 
-	/* Empty file is a valid file.
-	This is because this function should be called
-	unconditionally at the top of submit action processing
-	and many forms have optional file upload. */
-	if ($filename == 'none' || $filename == '') {
-		return true;
-	}
+    /* Empty file is a valid file.
+    This is because this function should be called
+    unconditionally at the top of submit action processing
+    and many forms have optional file upload. */
+    if ($filename == 'none' || $filename == '') {
+        return true;
+    }
 
-	/* This should be enough... */
-	if (!is_uploaded_file($filename)) {
-	  //echo "$filename is not uploaded file";
-		return false;
-	}
-	/* ... but we'd rather be paranoic */
-	if (strstr($filename, '..')) {
-		return false;
-	}
-	if (!is_file($filename)) {
-	  //echo "$filename is not file";
-		return false;
-	}
-	if (!file_exists($filename)) {
-	  //echo "$filename does not exist";
-		return false;
-	}
-	return true;
+    /* This should be enough... */
+    if (!is_uploaded_file($filename)) {
+      //echo "$filename is not uploaded file";
+        return false;
+    }
+    /* ... but we'd rather be paranoic */
+    if (strstr($filename, '..')) {
+        return false;
+    }
+    if (!is_file($filename)) {
+      //echo "$filename is not file";
+        return false;
+    }
+    if (!file_exists($filename)) {
+      //echo "$filename does not exist";
+        return false;
+    }
+    return true;
 }
 
 
@@ -857,23 +857,23 @@ function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
  * @return group_id, or 0 if group does not exist
  */
 function util_get_group_from_commit_id($cid) {
-  $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=".db_ei($cid);
-  $res = db_query($sql);
-  $repository_id = db_result($res, 0, 'repositoryid');
-  if (!$repository_id) return 0;
+    $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=".db_ei($cid);
+    $res = db_query($sql);
+    $repository_id = db_result($res, 0, 'repositoryid');
+    if (!$repository_id) return 0;
 
-  $sql = "SELECT repository FROM cvs_repositories WHERE id=".db_ei($repository_id);
-  $res = db_query($sql);
-  $repository = db_result($res, 0, 'repository');
-  if (!$repository) return 0;
+    $sql = "SELECT repository FROM cvs_repositories WHERE id=".db_ei($repository_id);
+    $res = db_query($sql);
+    $repository = db_result($res, 0, 'repository');
+    if (!$repository) return 0;
 
   // Remove ".*/cvsroot/" to get the project unix name
-  $projname = preg_replace("/.*\/cvsroot\//i","",$repository);
-  if (!$projname) return 0;
+    $projname = preg_replace("/.*\/cvsroot\//i","",$repository);
+    if (!$projname) return 0;
 
-  $sql = "SELECT group_id FROM groups WHERE unix_group_name='".db_es($projname)."'";
-  $res = db_query($sql);
-  return db_result($res, 0, 'group_id');
+    $sql = "SELECT group_id FROM groups WHERE unix_group_name='".db_es($projname)."'";
+    $res = db_query($sql);
+    return db_result($res, 0, 'group_id');
 }    
 
 /**
@@ -883,12 +883,12 @@ function util_get_group_from_commit_id($cid) {
  * @return string the value
  */
 function getStringFromServer($key) {
-        if(isset($_SERVER[$key])) {
-                return $_SERVER[$key];
-        }
-        else {
-                return '';
-        }
+    if(isset($_SERVER[$key])) {
+            return $_SERVER[$key];
+    }
+    else {
+            return '';
+    }
 }
 
 /**

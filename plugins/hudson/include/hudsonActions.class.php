@@ -34,7 +34,7 @@ class hudsonActions extends Actions {
 
         $this->svn_paths_updater = new SVNPathsUpdater();
     }
-	
+    
     public function addJob()
     {
         $request = HTTPRequest::instance();

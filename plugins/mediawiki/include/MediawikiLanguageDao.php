@@ -19,27 +19,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
- class MediawikiLanguageDao extends DataAccessObject {
+class MediawikiLanguageDao extends DataAccessObject {
 
-     public function getUsedLanguageForProject($project_id) {
-         $project_id = $this->da->escapeInt($project_id);
+    public function getUsedLanguageForProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
 
-         $sql = "SELECT language
+        $sql = "SELECT language
                  FROM plugin_mediawiki_admin_options
                  WHERE project_id = $project_id";
 
-         return $this->retrieveFirstRow($sql);
-     }
+        return $this->retrieveFirstRow($sql);
+    }
 
-     public function updateLanguageOption($project_id, $language) {
-         $project_id = $this->da->escapeInt($project_id);
-         $language   = $this->da->quoteSmart($language);
+    public function updateLanguageOption($project_id, $language) {
+        $project_id = $this->da->escapeInt($project_id);
+        $language   = $this->da->quoteSmart($language);
 
-         $sql = "INSERT INTO plugin_mediawiki_admin_options (project_id, language)
+        $sql = "INSERT INTO plugin_mediawiki_admin_options (project_id, language)
                  VALUES ($project_id, $language)
                  ON DUPLICATE KEY
                      UPDATE language = VALUES(language)";
 
-         return $this->update($sql);
-     }
- }
+        return $this->update($sql);
+    }
+}

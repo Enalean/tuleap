@@ -88,11 +88,11 @@ extends WikiPlugin
              $user->isAuthenticated() and !empty($userid))
         {
             $pref = &$request->_prefs;
-	    $args['isForm'] = true;
+            $args['isForm'] = true;
             //trigger_error("DEBUG: reading prefs from getPreferences".print_r($pref));
  
             if ($request->isPost()) {
-            	$errmsg = '';
+                $errmsg = '';
                 $delete = $request->getArg('delete');
                 if ($delete and $request->getArg('verify')) {
                     // deleting prefs, verified
@@ -150,7 +150,7 @@ extends WikiPlugin
                             $errmsg .= " " ._("No changes.");
                         } else {
                             $request->_setUser($user);
-                            $pref = $user->_prefs;	
+                            $pref = $user->_prefs;    
                             $errmsg .= sprintf(_("%d UserPreferences fields successfully updated."), $num);
                         }  
                     }

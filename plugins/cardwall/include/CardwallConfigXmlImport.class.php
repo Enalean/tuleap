@@ -235,7 +235,7 @@ class CardwallConfigXmlImport {
 
             return $new_value->getId();
         } else {
-           $GLOBALS['Response']->addFeedback(
+            $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_value_error', array($xml_value_id))
             );

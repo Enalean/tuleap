@@ -25,69 +25,69 @@
 class TemplateSingleton
 {
   // simply containing the
-  var $data_array = array();
+    var $data_array = array();
 
-  public const PROJECT      = 1;
-  public const TEMPLATE     = 2;
-  public const TEST_PROJECT = 3;
+    public const PROJECT      = 1;
+    public const TEMPLATE     = 2;
+    public const TEST_PROJECT = 3;
 
-  function __construct() {
-    $this->update();
-  }
-
-  public static function instance() {
-    static $template_instance;
-    if (!$template_instance) {
-      $template_instance = new TemplateSingleton();
+    function __construct() {
+        $this->update();
     }
-    return $template_instance;
-  }
 
-  function getLabel($proj_type) {
-    return $GLOBALS['Language']->getText('include_common_template',$this->data_array[$proj_type]);
-  }
-
-  function update() {
-    $db_res=db_query("SELECT * FROM group_type");
-    $this->data_array=array();
-    $rows=db_numrows($db_res);
-    for ($i=0; $i<$rows; $i++) {
-      $this->data_array[db_result($db_res,$i,'type_id')] = db_result($db_res,$i,'name');
+    public static function instance() {
+        static $template_instance;
+        if (!$template_instance) {
+            $template_instance = new TemplateSingleton();
+        }
+        return $template_instance;
     }
-  }
 
-  function isTemplate($id) {
-    return ($id == self::TEMPLATE);
-  }
-
-  function isProject($id) {
-    return ($id == self::PROJECT);
-  }
-
-  function isTestProject($id) {
-    return ($id == self::TEST_PROJECT);
-  }
-
-  function showTypeBox($name='group_type',$checked_val='xzxz') {
-    $localizedTypes = array();
-    foreach (array_keys($this->data_array) as $type_id) {
-      $localizedTypes[] = $this->getLabel($type_id);
+    function getLabel($proj_type) {
+        return $GLOBALS['Language']->getText('include_common_template',$this->data_array[$proj_type]);
     }
-    return html_build_select_box_from_arrays (array_keys($this->data_array),$localizedTypes,$name,$checked_val,false);
-  }
 
-  public function getLocalizedTypes()
-  {
-      $localized = array();
-      foreach (array_keys($this->data_array) as $type_id) {
-          $localized[$type_id] = $this->getLabel($type_id);
-      }
+    function update() {
+        $db_res=db_query("SELECT * FROM group_type");
+        $this->data_array=array();
+        $rows=db_numrows($db_res);
+        for ($i=0; $i<$rows; $i++) {
+            $this->data_array[db_result($db_res,$i,'type_id')] = db_result($db_res,$i,'name');
+        }
+    }
 
-      return $localized;
-  }
+    function isTemplate($id) {
+        return ($id == self::TEMPLATE);
+    }
 
-  function getTemplates() {
-    $db_templates = db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM groups WHERE type='2' and status IN ('A','s')");
-    return $db_templates;
-  }
+    function isProject($id) {
+        return ($id == self::PROJECT);
+    }
+
+    function isTestProject($id) {
+        return ($id == self::TEST_PROJECT);
+    }
+
+    function showTypeBox($name='group_type',$checked_val='xzxz') {
+        $localizedTypes = array();
+        foreach (array_keys($this->data_array) as $type_id) {
+            $localizedTypes[] = $this->getLabel($type_id);
+        }
+        return html_build_select_box_from_arrays (array_keys($this->data_array),$localizedTypes,$name,$checked_val,false);
+    }
+
+    public function getLocalizedTypes()
+    {
+        $localized = array();
+        foreach (array_keys($this->data_array) as $type_id) {
+            $localized[$type_id] = $this->getLabel($type_id);
+        }
+
+        return $localized;
+    }
+
+    function getTemplates() {
+        $db_templates = db_query("SELECT group_id,group_name,unix_group_name,short_description,register_time FROM groups WHERE type='2' and status IN ('A','s')");
+        return $db_templates;
+    }
 }

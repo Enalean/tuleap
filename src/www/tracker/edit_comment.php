@@ -24,7 +24,7 @@
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+    exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
 }
 if (!$ah->userCanEditFollowupComment($request->get('artifact_history_id'))) {
     exit_permission_denied();

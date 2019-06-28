@@ -43,7 +43,7 @@ class Docman_SOAPController extends Docman_Controller {
     /* protected */ function _setView($view) {
         switch($view) {
             default:
-               $this->view = 'SOAP';
+                $this->view = 'SOAP';
                break;
         }
     }
@@ -100,7 +100,7 @@ class Docman_SOAPController extends Docman_Controller {
                 break;
             default: parent::_dispatch($view, $item, $root, $get_show_view);
         }
-   }
+    }
 }
 
 ?>

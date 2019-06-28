@@ -295,8 +295,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * clear: clear the cached tracker data
      */
     function clearTrackerData() {
-       unset($this->_tracker_data);
-       $this->_tracker_data = null;
+        unset($this->_tracker_data);
+        $this->_tracker_data = null;
     }
 
     /**
@@ -418,7 +418,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @return bool
      */
     public function isTrackerAdmin($group_id,$group_artifact_id) {
-      return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
+        return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
     }
 
     /**
@@ -996,14 +996,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'P' = Pending
      */
     function setStatus($status) {
-    	$allowedStatus = array('A' => true,
-    	                       'R' => true,
-    	                       'D' => true,
-    	                       'S' => true,
-    	                       'P' => true);
-    	if (isset($allowedStatus[$status])) {
+        $allowedStatus = array('A' => true,
+                               'R' => true,
+                               'D' => true,
+                               'S' => true,
+                               'P' => true);
+        if (isset($allowedStatus[$status])) {
             $this->status = $status;
-    	}
+        }
     }
     /**
      * @param string ldap identifier of the user
@@ -1050,12 +1050,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * 'D' = Deleted
      */
     function setUnixStatus($unixStatus) {
-    	$allowedStatus = array(0 => true,
-    	                       '0' => true,
-    	                       'N' => true,
-    	                       'A' => true,
-    	                       'S' => true,
-    	                       'D' => true);
+        $allowedStatus = array(0 => true,
+                               '0' => true,
+                               'N' => true,
+                               'A' => true,
+                               'S' => true,
+                               'D' => true);
         if (isset($allowedStatus[$unixStatus])) {
             $this->unix_status = $unixStatus;
         }
@@ -1268,66 +1268,66 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * setSessionHash
      * @param $session_hash string
      */
-     public function setSessionHash($session_hash) {
-         $this->session_hash = $session_hash;
-     }
+    public function setSessionHash($session_hash) {
+        $this->session_hash = $session_hash;
+    }
 
      /**
       * getSessionHash
       * @return string
       */
-     function getSessionHash() {
-         return $this->session_hash;
-     }
+    function getSessionHash() {
+        return $this->session_hash;
+    }
 
-     public function setSessionId($session_id)
+    public function setSessionId($session_id)
      {
-         $this->session_id = $session_id;
-     }
+        $this->session_id = $session_id;
+    }
 
     /**
      * @return int|false
      */
-     public function getSessionId()
+    public function getSessionId()
      {
-         return $this->session_id;
-     }
+        return $this->session_id;
+    }
 
      /**
       * Return all valid status
       *
       * @return Array
       */
-     public static function getAllUnixStatus() {
-         return array('N', 'A', 'S', 'D');
-     }
+    public static function getAllUnixStatus() {
+        return array('N', 'A', 'S', 'D');
+    }
 
      /**
       * Return all possible shells
       *
       * @return Array
       */
-     public static function getAllUnixShells() {
-         return file('/etc/shells', FILE_IGNORE_NEW_LINES);
-     }
+    public static function getAllUnixShells() {
+        return file('/etc/shells', FILE_IGNORE_NEW_LINES);
+    }
 
      /**
       * Return all "working" status (after validation step)
       *
       * @return Array
       */
-     public static function getAllWorkingStatus() {
-         return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
-     }
+    public static function getAllWorkingStatus() {
+        return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
+    }
 
      /**
       * Say if the user has avatar
       *
       * @return bool
       */
-     public function hasAvatar() {
-         return $this->has_avatar;
-     }
+    public function hasAvatar() {
+        return $this->has_avatar;
+    }
 
      /**
       * Set if the user has avatar
@@ -1336,79 +1336,79 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return PFUser for chaining methods
       */
-     public function setHasAvatar($has_avatar = 1) {
-         $this->has_avatar = ($has_avatar ? 1 : 0);
-         return $this;
-     }
+    public function setHasAvatar($has_avatar = 1) {
+        $this->has_avatar = ($has_avatar ? 1 : 0);
+        return $this;
+    }
 
      /**
       * Display the html code for this users's avatar
       *
       * @return string html
       */
-     public function fetchHtmlAvatar() {
-         $purifier    = Codendi_HTMLPurifier::instance();
-         $user_helper = new UserHelper();
+    public function fetchHtmlAvatar() {
+        $purifier    = Codendi_HTMLPurifier::instance();
+        $user_helper = new UserHelper();
 
-         $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
-         $user_id  = $this->getId();
+        $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
+        $user_id  = $this->getId();
 
-         $html = '<div class="avatar"
+        $html = '<div class="avatar"
                         title="'. $title . '"
                         data-user-id = "' . $user_id . '"
                     >';
 
-         $url = $this->getAvatarUrl();
+        $url = $this->getAvatarUrl();
 
-         if ($url) {
-             $alternate_text = $purifier->purify(_('User avatar'));
-             $html .= '<img src="'. $url .'" alt="'. $alternate_text .'" />';
-         }
+        if ($url) {
+            $alternate_text = $purifier->purify(_('User avatar'));
+            $html .= '<img src="'. $url .'" alt="'. $alternate_text .'" />';
+        }
 
-         $html .= '</div>';
-         return $html;
-     }
+        $html .= '</div>';
+        return $html;
+    }
 
      /**
       * Return the user avatar url
       * @return string url
       */
-     public function getAvatarUrl()
+    public function getAvatarUrl()
      {
-         $request    = HTTPRequest::instance();
-         $avatar_url = self::DEFAULT_AVATAR_URL;
+        $request    = HTTPRequest::instance();
+        $avatar_url = self::DEFAULT_AVATAR_URL;
 
-         if (! $this->isAnonymous() && $this->hasAvatar()) {
-             $avatar_url = '/users/'. urlencode($this->getUserName()) .'/avatar-'.hash_file('sha256', $this->getAvatarFilePath()).'.png';
-         }
+        if (! $this->isAnonymous() && $this->hasAvatar()) {
+            $avatar_url = '/users/'. urlencode($this->getUserName()) .'/avatar-'.hash_file('sha256', $this->getAvatarFilePath()).'.png';
+        }
 
-         return $request->getServerUrl() . $avatar_url;
-     }
+        return $request->getServerUrl() . $avatar_url;
+    }
 
     /**
      * @return string
      */
-     public function getAvatarFilePath()
+    public function getAvatarFilePath()
      {
-         return ForgeConfig::get('sys_avatar_path') .
-             DIRECTORY_SEPARATOR .
-             substr($this->user_id, -2, 1) .
-             DIRECTORY_SEPARATOR .
-             substr($this->user_id, -1, 1) .
-             DIRECTORY_SEPARATOR .
-             $this->user_id .
-             DIRECTORY_SEPARATOR .
-             'avatar';
-     }
+        return ForgeConfig::get('sys_avatar_path') .
+            DIRECTORY_SEPARATOR .
+            substr($this->user_id, -2, 1) .
+            DIRECTORY_SEPARATOR .
+            substr($this->user_id, -1, 1) .
+            DIRECTORY_SEPARATOR .
+            $this->user_id .
+            DIRECTORY_SEPARATOR .
+            'avatar';
+    }
 
      /**
       * Lab features mode
       *
       * @return bool true if the user want lab features
       */
-     public function useLabFeatures() {
-         return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
-     }
+    public function useLabFeatures() {
+        return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
+    }
 
      /**
       * (de)Activate lab features mode
@@ -1417,9 +1417,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return void
       */
-     public function setLabFeatures($toggle) {
-         $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
-     }
+    public function setLabFeatures($toggle) {
+        $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
+    }
 
      /**
       * Return true if user can do "$permissionType" on "$objectId"
@@ -1432,9 +1432,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return bool
       */
-     public function hasPermission($permissionType, $objectId, $groupId) {
-         return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
-     }
+    public function hasPermission($permissionType, $objectId, $groupId) {
+        return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
+    }
 
     /**
      * Wrapper for BaseLanguageFactory

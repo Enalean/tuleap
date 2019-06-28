@@ -84,7 +84,7 @@ foreach ($res as $package) {
 
         if ($request->existAndNonEmpty('release_id')) {
             if($request->valid(new Valid_UInt('release_id'))) {
-        	    $release_id = $request->get('release_id');
+                $release_id = $request->get('release_id');
                 $row3 = $frsrf->getFRSReleaseFromDb($release_id);
             }
         }
@@ -250,10 +250,10 @@ foreach ($packages as $package_id => $package_for_display) {
                     $bgcolor = 'boxitem';
                     if ($request->existAndNonEmpty('release_id')) {
                         if($request->valid(new Valid_UInt('release_id'))) {
-            	            $release_id = $request->get('release_id');
-            	            if ($release_id == $package_release->getReleaseID()) {
-            	            	$bgcolor = 'boxitemalt';
-            	            }
+                            $release_id = $request->get('release_id');
+                            if ($release_id == $package_release->getReleaseID()) {
+                                $bgcolor = 'boxitemalt';
+                            }
                         }
                     }
 

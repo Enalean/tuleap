@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
         return $this->update($sql);
     }
 
-     public function createNoneValue($tracker_id, $field_id) {
+    public function createNoneValue($tracker_id, $field_id) {
         $changeset_value_ids   = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( !is_array($changeset_value_ids) || empty($changeset_value_ids) ) {
             return false;

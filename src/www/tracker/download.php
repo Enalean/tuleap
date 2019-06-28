@@ -5,7 +5,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
+//    Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');

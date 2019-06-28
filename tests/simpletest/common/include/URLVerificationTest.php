@@ -166,8 +166,8 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['protocol'], null);
     }
 
-   public function testVerifyHostHTTPSAndHTTPSIsAvailable()
-   {
+    public function testVerifyHostHTTPSAndHTTPSIsAvailable()
+    {
         ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $urlVerification = new URLVerification();

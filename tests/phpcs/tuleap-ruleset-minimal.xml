@@ -13,6 +13,18 @@
     <exclude-pattern>*/src/www/assets/*</exclude-pattern>
     <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
 
+    <!-- PSR-2 rules -->
+    <!-- Indenting - 4 spaces - no tabs -->
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="ignoreIndentationTokens" type="array">
+                <element value="T_COMMENT"/>
+                <element value="T_DOC_COMMENT_OPEN_TAG"/>
+            </property>
+        </properties>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
     <!-- Forbid use of short open tags <? -->
     <rule ref="Generic.PHP.DisallowShortOpenTag" />
 

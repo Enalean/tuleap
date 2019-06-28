@@ -32,7 +32,7 @@ if (defined('E_STRICT')
 */
 define ('EM_FATAL_ERRORS', E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | ~2048);
 define ('EM_WARNING_ERRORS',
-	E_WARNING | E_CORE_WARNING | E_COMPILE_WARNING | E_USER_WARNING);
+    E_WARNING | E_CORE_WARNING | E_COMPILE_WARNING | E_USER_WARNING);
 if (defined('E_DEPRECATED'))
   define ('EM_NOTICE_ERRORS', E_NOTICE | E_USER_NOTICE | E_DEPRECATED);
 else
@@ -238,7 +238,7 @@ class ErrorManager
         // so display now all errors directly.
         if (!empty($GLOBALS['request']->_finishing)) {
             $this->_postpone_mask = 0;
-	}
+        }
         
         $in_handler = true;
 
@@ -356,9 +356,9 @@ class ErrorManager
 function ErrorManager_errorHandler($errno, $errstr, $errfile, $errline) 
 {
     if (!isset($GLOBALS['ErrorManager'])) {
-      $GLOBALS['ErrorManager'] = new ErrorManager;
+        $GLOBALS['ErrorManager'] = new ErrorManager;
     }
-	
+    
     $error = new PhpErrorOnce($errno, $errstr, $errfile, $errline);
     $GLOBALS['ErrorManager']->handleError($error);
 }
@@ -455,20 +455,20 @@ class PhpError {
     function _getDetail() {
         $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__),0,-4);
         if (substr(PHP_OS,0,3) == 'WIN') {
-           $dir = str_replace('/','\\',$dir);
-           $this->errfile = str_replace('/','\\',$this->errfile);
-           $dir .= "\\";
+            $dir = str_replace('/','\\',$dir);
+            $this->errfile = str_replace('/','\\',$this->errfile);
+            $dir .= "\\";
         } else 
            $dir .= '/';
         $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         $lines = explode("\n", $this->errstr);
         if (DEBUG & _DEBUG_VERBOSE) {
-          $msg = sprintf("%s:%d: %s[%d]: %s",
+            $msg = sprintf("%s:%d: %s[%d]: %s",
                          $errfile, $this->errline,
                          $this->getDescription(), $this->errno,
                          array_shift($lines));
         } else {
-          $msg = sprintf("%s:%d: %s: \"%s\"",
+            $msg = sprintf("%s:%d: %s: \"%s\"",
                          $errfile, $this->errline,
                          $this->getDescription(),
                          array_shift($lines));
@@ -581,19 +581,19 @@ class PhpErrorOnce extends PhpError {
     function _getDetail($count=0) {
         // Codendi : don't display notices
         //if ($this->isNotice()) return;
-    	if (!$count) $count = $this->_count;
-	    $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__),0,-4);
+        if (!$count) $count = $this->_count;
+        $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__),0,-4);
         if (substr(PHP_OS,0,3) == 'WIN') {
-           $dir = str_replace('/','\\',$dir);
-           $this->errfile = str_replace('/','\\',$this->errfile);
-           $dir .= "\\";
+            $dir = str_replace('/','\\',$dir);
+            $this->errfile = str_replace('/','\\',$this->errfile);
+            $dir .= "\\";
         } else 
            $dir .= '/';
         $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         if (is_string($this->errstr))
-	        $lines = explode("\n", $this->errstr);
-	    elseif (is_object($this->errstr))
-	        $lines = array($this->errstr->asXML());
+            $lines = explode("\n", $this->errstr);
+        elseif (is_object($this->errstr))
+            $lines = array($this->errstr->asXML());
         $errtype = (DEBUG & _DEBUG_VERBOSE) ? sprintf("%s[%d]", $this->getDescription(), $this->errno)
                                             : sprintf("%s", $this->getDescription());
         $msg = sprintf("%s:%d: %s: %s %s",

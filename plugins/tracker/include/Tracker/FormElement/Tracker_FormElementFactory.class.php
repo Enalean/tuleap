@@ -1463,7 +1463,7 @@ class Tracker_FormElementFactory {
             }
 
             $visitor->setType($type);
-	    $visitor->setLabel($label);
+            $visitor->setLabel($label);
 
             $form_element->accept($visitor);
             $visitor->display($tracker_manager, $request);

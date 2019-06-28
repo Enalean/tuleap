@@ -226,13 +226,13 @@ extends Docman_View_ItemDetailsSection {
         $itemType = $itemFactory->getItemTypeForItem($this->item);
         // Get current version for file, embeddedfile and wiki
         switch($itemType) {
-        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-            $currentVersion = $this->item->getCurrentVersion();
-            $version = $currentVersion->getNumber();
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $currentVersion = $this->item->getCurrentVersion();
+                $version = $currentVersion->getNumber();
             break;
-        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
-            $version = $itemFactory->getCurrentWikiVersion($this->item);
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $version = $itemFactory->getCurrentWikiVersion($this->item);
             break;
         }
         return $version;

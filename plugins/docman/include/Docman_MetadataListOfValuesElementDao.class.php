@@ -106,41 +106,41 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
             $valIdList = implode(',', $valId);
 
             switch($rank) {
-            case 'end':
-                //print 'Put a the end<br>';
-                $sql = sprintf('SELECT MAX(rank)+1 AS rank'.
+                case 'end':
+                    //print 'Put a the end<br>';
+                    $sql = sprintf('SELECT MAX(rank)+1 AS rank'.
                                ' FROM plugin_docman_metadata_love AS love'.
                                ' WHERE value_id IN ('.$valIdList.')');
-                $dar = $this->retrieve($sql);
-                if ($dar && $dar->valid()) {
-                    $row = $dar->current();
-                    $rank = $row['rank'];
-                }
-                //print '  with rank: '.$rank.'<br>';
+                    $dar = $this->retrieve($sql);
+                    if ($dar && $dar->valid()) {
+                        $row = $dar->current();
+                        $rank = $row['rank'];
+                    }
+                    //print '  with rank: '.$rank.'<br>';
                 break;
-            case 'beg':
-                //print 'Put a the beginning<br>';
-                $sql = sprintf('SELECT MIN(rank) AS rank'.
+                case 'beg':
+                    //print 'Put a the beginning<br>';
+                    $sql = sprintf('SELECT MIN(rank) AS rank'.
                                ' FROM plugin_docman_metadata_love AS love'.
                                ' WHERE value_id IN ('.$valIdList.')');
-                $dar = $this->retrieve($sql);
-                if ($dar && $dar->valid()) {
-                    $row = $dar->current();
-                    $rank = $row['rank'];
-                }
-                //print '  with rank: '.$rank.'<br>';
-                // no break
-            default:
-                $sql = sprintf('UPDATE plugin_docman_metadata_love AS love'.
+                    $dar = $this->retrieve($sql);
+                    if ($dar && $dar->valid()) {
+                        $row = $dar->current();
+                        $rank = $row['rank'];
+                    }
+                    //print '  with rank: '.$rank.'<br>';
+                    // no break
+                default:
+                    $sql = sprintf('UPDATE plugin_docman_metadata_love AS love'.
                                ' SET rank = rank + 1'.
                                ' WHERE rank >= %d'.
                                ' AND value_id IN ('.$valIdList.')',
                                $rank);
-                //print $sql."<br>";
-                $updated = $this->update($sql);
-                if($updated == false) {
-                    $rank = false;
-                }
+                    //print $sql."<br>";
+                    $updated = $this->update($sql);
+                    if($updated == false) {
+                        $rank = false;
+                    }
             }
         }
         return $rank;

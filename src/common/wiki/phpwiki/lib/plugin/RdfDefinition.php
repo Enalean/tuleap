@@ -51,7 +51,7 @@ extends WikiPlugin
     }
     function getDefaultArguments() { 
         return array(
-                     'pages' => false,		// define affected pageset here?	
+                     'pages' => false,        // define affected pageset here?    
                      );
     }
     function handle_plugin_args_cruft(&$argstr, &$args) {

@@ -360,9 +360,9 @@ class ProjectCreator {
         $random_num=rand(0,1000000);
 
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
-          $http_domain=$GLOBALS['sys_default_domain'];
+            $http_domain=$GLOBALS['sys_default_domain'];
         } else {
-          $http_domain=$data->getUnixName().'.'.$GLOBALS['sys_default_domain'];
+            $http_domain=$data->getUnixName().'.'.$GLOBALS['sys_default_domain'];
         }
 
         $access = $data->getAccess();
@@ -490,10 +490,10 @@ class ProjectCreator {
             if (isset($service_info['is_used'])) {
                  $is_used = $service_info['is_used'];
             } else {
-               $is_used = '0';
-               if ($arr['short_name'] == 'admin' || $arr['short_name'] == 'summary') {
-                   $is_used = '1';
-               }
+                $is_used = '0';
+                if ($arr['short_name'] == 'admin' || $arr['short_name'] == 'summary') {
+                    $is_used = '1';
+                }
             }
 
             if(isset($service_info['server_id']) && $service_info['server_id']) {
@@ -671,7 +671,7 @@ class ProjectCreator {
                                          '1', // is_used
                                          $group_id);
                     $result = $this->reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
-               }
+                }
             }
         }
         return array($tracker_mapping, $report_mapping);

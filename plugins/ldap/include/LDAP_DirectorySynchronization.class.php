@@ -146,7 +146,7 @@ class LDAP_DirectorySynchronization {
             $projectManager = $this->getProjectManager();
             $userManager    = $this->getUserManager();
             $this->getLdapSyncReminderNotificationManager($projectManager, $userManager)->processReminders();
-       }
+        }
     }
 
     /**
@@ -155,7 +155,7 @@ class LDAP_DirectorySynchronization {
      * @return LDAP_SyncReminderNotificationManager
      */
     protected function getLdapSyncReminderNotificationManager($projectManager, $userManager) {
-       return new LDAP_SyncReminderNotificationManager($projectManager, $userManager);
+        return new LDAP_SyncReminderNotificationManager($projectManager, $userManager);
     }
 
     public function getElapsedLdapTime() {

@@ -57,7 +57,7 @@ class XmlParser {
             $this->_parser = xml_parser_create($encoding);
         else
             $this->_parser = xml_parser_create(); 
-	xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, $GLOBALS['charset']);
+        xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, $GLOBALS['charset']);
         //xml_set_object($this->_parser, &$this);
         xml_set_element_handler($this->_parser,
                                 array(&$this, 'tag_open'),
@@ -90,7 +90,7 @@ class XmlParser {
         if (is_string($attrs) and !empty($attrs)) {
             // lowercase attr names
             foreach(preg_split('/ /D',$attrs) as $pair) {
-            	if (strstr($pair,"=")) {
+                if (strstr($pair,"=")) {
                     list($key,$val) = preg_split('/=/D',$pair);
                     $key = strtolower(trim($key));
                     $val = str_replace(array('"',"'"),'',trim($val));
@@ -101,7 +101,7 @@ class XmlParser {
                 }
             }
         } elseif (!empty($attrs) and is_array($attrs)) {
-            foreach ($attrs as $key => $val) {	
+            foreach ($attrs as $key => $val) {    
                 $key = strtolower(trim($key));
                 $val = str_replace(array('"',"'"),'',trim($val));
                 $node->_attr[$key] = $val;
@@ -111,9 +111,9 @@ class XmlParser {
             $this->current->_content[] = $node;    // copy or ref?
             $node->parent = $this->current;       // ref
         }
-        $this->current = $node;	  		// ref
+        $this->current = $node;              // ref
         if (empty($this->root)) {
-            $this->root = $node; 		 	// ref for === test below
+            $this->root = $node;              // ref for === test below
             $GLOBALS['xml_parser_root'] = $this->root;  // copy
         }
     }
@@ -150,7 +150,7 @@ class XmlParser {
                 return;
             }
             while ($data = fread($fp, 4096))  {
-            	$this->parse($data, feof($fp));
+                $this->parse($data, feof($fp));
             }
             fclose($fp);
         } else {

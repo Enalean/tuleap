@@ -27,11 +27,11 @@ class Docman_SqlReportColumnFactory {
     function &getFromColumn($c) {
         $obj = null;
         switch(strtolower(get_class($c))) {
-        case 'docman_reportcolumnlocation':
-            // No sort on this column
+            case 'docman_reportcolumnlocation':
+                // No sort on this column
             break;
-        default:
-            $obj = new Docman_SqlReportColumn($c);
+            default:
+                $obj = new Docman_SqlReportColumn($c);
         }
         return $obj;
     }

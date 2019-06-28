@@ -60,51 +60,51 @@ class FRSReleaseFactory {
         self::$instance = null;
     }
 
-	function  getFRSReleaseFromArray(& $array) {
-		$frs_release = new FRSRelease($array);
-		return $frs_release;
-	}
+    function  getFRSReleaseFromArray(& $array) {
+        $frs_release = new FRSRelease($array);
+        return $frs_release;
+    }
 
-	/**
-	 * Get one or more releases from the database
-	 * 
-	 * $extraFlags allow to define if you want to include deleted releases into
-	 * the search (thanks to FRSReleaseDao::INCLUDE_DELETED constant)
-	 * 
-	 * @param $release_id
-	 * @param $group_id
-	 * @param $package_id
-	 * @param $extraFlags
+    /**
+     * Get one or more releases from the database
+     * 
+     * $extraFlags allow to define if you want to include deleted releases into
+     * the search (thanks to FRSReleaseDao::INCLUDE_DELETED constant)
+     * 
+     * @param $release_id
+     * @param $group_id
+     * @param $package_id
+     * @param $extraFlags
          *
          * @return FRSRelease|null
-	 */
-	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
-		$_id = (int) $release_id;
-		$dao = $this->_getFRSReleaseDao();
-		if($group_id && $package_id){
-			$_group_id = (int) $group_id;
-			$_package_id = (int) $package_id;
-			$dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
-		}else if($group_id) {
-			$_group_id = (int) $group_id;
-			$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
-		}else{
-			$dar = $dao->searchById($_id, $extraFlags);
-		}
-		
+     */
+    function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
+        $_id = (int) $release_id;
+        $dao = $this->_getFRSReleaseDao();
+        if($group_id && $package_id){
+            $_group_id = (int) $group_id;
+            $_package_id = (int) $package_id;
+            $dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
+        }else if($group_id) {
+            $_group_id = (int) $group_id;
+            $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
+        }else{
+            $dar = $dao->searchById($_id, $extraFlags);
+        }
+        
 
-		if ($dar->isError()) {
-			return null;
-		}
+        if ($dar->isError()) {
+            return null;
+        }
 
-		if (!$dar->valid()) {
-			return null;
-		}
+        if (!$dar->valid()) {
+            return null;
+        }
 
-		$data_array = $dar->current();
+        $data_array = $dar->current();
 
-		return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
-	}
+        return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
+    }
 
     /**
      * @return FRSRelease[]
@@ -188,25 +188,25 @@ class FRSReleaseFactory {
         return;
     }
 
-	function isActiveReleases($package_id) {
-		$_id = (int) $package_id;
+    function isActiveReleases($package_id) {
+        $_id = (int) $package_id;
         $dao = $this->_getFRSReleaseDao();
-		$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
+        $dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 
-		if ($dar->isError()) {
-			return;
-		}
+        if ($dar->isError()) {
+            return;
+        }
 
-		return $dar->valid();
+        return $dar->valid();
 
-	}
+    }
 
 
     /**
      * @return int|null
      */
     public function getReleaseIdByName($release_name, $package_id){
-    	$_id = (int) $package_id;
+        $_id = (int) $package_id;
         $dao = $this->_getFRSReleaseDao();
         $dar = $dao->searchReleaseByName($release_name, $_id);
 
@@ -215,10 +215,10 @@ class FRSReleaseFactory {
         }
         
         if(!$dar->valid()){
-        	return;
+            return;
         }else{
             $res = $dar->current();
-        	return $res['release_id'];
+            return $res['release_id'];
         }
     }
 
@@ -227,20 +227,20 @@ class FRSReleaseFactory {
      *
      * @return bool true if there is already a release named $release_name in the package package_id, false otherwise
      */
-     function isReleaseNameExist($release_name, $package_id) {
-         $release_exists = $this->getReleaseIdByName($release_name, $package_id);
-         return ($release_exists && count($release_exists) >=1);
-     }
+    function isReleaseNameExist($release_name, $package_id) {
+        $release_exists = $this->getReleaseIdByName($release_name, $package_id);
+        return ($release_exists && count($release_exists) >=1);
+    }
 
     
-	var $dao;
+    var $dao;
 
-	function  _getFRSReleaseDao() {
-		if (!$this->dao) {
-			$this->dao =  new FRSReleaseDao(CodendiDataAccess :: instance(), $this->STATUS_DELETED);
-		}
-		return $this->dao;
-	}
+    function  _getFRSReleaseDao() {
+        if (!$this->dao) {
+            $this->dao =  new FRSReleaseDao(CodendiDataAccess :: instance(), $this->STATUS_DELETED);
+        }
+        return $this->dao;
+    }
 
     function update($data_array) {
         $dao =  $this->_getFRSReleaseDao();
@@ -409,9 +409,9 @@ class FRSReleaseFactory {
      *
      * @return bool true if user can update the release $release_id, false otherwise
      */ 
-	function userCanUpdate($group_id, $release_id, $user_id=false) {
+    function userCanUpdate($group_id, $release_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
-	}
+    }
     
     /** 
      * Returns true if user has permissions to Create releases
@@ -424,15 +424,15 @@ class FRSReleaseFactory {
      *
      * @return bool true if the user has permission to create releases, false otherwise
      */ 
-	function userCanCreate($group_id, $user_id=false) {
+    function userCanCreate($group_id, $user_id=false) {
         $um = $this->getUserManager();
-	    if (! $user_id) {
+        if (! $user_id) {
             $user = $um->getCurrentUser();
         } else {
             $user = $um->getUserById($user_id);    
         }
         return $this->userCanAdmin($user, $group_id);
-	}
+    }
 
     /**
      * Set default permission on given release

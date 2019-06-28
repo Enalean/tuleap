@@ -66,7 +66,7 @@ extends WikiPlugin
         // tailored SQL query via the backend, but this does the job
 
         $allpages_iter = $dbi->getAllPages($include_empty);
-	$pages = array();
+        $pages = array();
         while ($page = $allpages_iter->next()) {
             $links_iter = $page->getBackLinks();
             // Test for absence of backlinks. If a page is linked to
@@ -90,7 +90,7 @@ extends WikiPlugin
         if (!$pagesize) $pagelist->addPageList($pages);
         else {
             for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
-            	if ($i >= $args['count']) break;
+                if ($i >= $args['count']) break;
                 $pagelist->addPage($pages[$i]);
             }
         }

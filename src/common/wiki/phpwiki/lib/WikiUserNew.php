@@ -188,7 +188,7 @@ function _determineBogoUserOrPassUser($UserName) {
             return $_BogoUser;
     }
     if (_isUserPasswordsAllowed()) {
-    	// PassUsers override BogoUsers if a password is stored
+        // PassUsers override BogoUsers if a password is stored
         if (isset($_BogoUser) and isset($_BogoUser->_prefs) 
             and $_BogoUser->_prefs->get('passwd'))
             return new _PassUser($UserName, $_BogoUser->_prefs);
@@ -288,7 +288,7 @@ function UpgradeUser ($olduser, $user) {
             $olduser->_authmethod = $user->_authmethod;
         /*
         foreach (get_object_vars($user) as $k => $v) {
-            if (!empty($v)) $olduser->$k = $v;	
+            if (!empty($v)) $olduser->$k = $v;    
         }
         */
         $olduser->hasHomePage(); // revive db handle, because these don't survive sessions
@@ -415,7 +415,7 @@ class _WikiUser
                 $this->_current_index = $this->array_position($this->_current_method,
                                                               $this->_auth_methods);
             } else {
-            	$this->_current_index = -1;
+                $this->_current_index = -1;
             }
         }
         $this->_current_index++;
@@ -536,7 +536,7 @@ class _WikiUser
 
         if ($logout) { // Log out
             if (method_exists($GLOBALS['request']->_user, "logout")) { //_HttpAuthPassUser
-          	$GLOBALS['request']->_user->logout();
+                $GLOBALS['request']->_user->logout();
             }
             $user = new _AnonUser();
             $user->_userid = '';
@@ -597,7 +597,7 @@ class _WikiUser
 class _AnonUser
 extends _WikiUser
 {
-    var $_level = WIKIAUTH_ANON; 	// var in php-5.0.0RC1 deprecated
+    var $_level = WIKIAUTH_ANON;     // var in php-5.0.0RC1 deprecated
 
     /** Anon only gets to load and save prefs in a cookie, that's it.
      */
@@ -639,8 +639,8 @@ extends _WikiUser
         $unpacked = $prefs->unpack($packed);
         if (count($unpacked)) {
             foreach (array('_method','_select','_update','_insert') as $param) {
-            	if (!empty($this->_prefs->{$param}))
-            	    $prefs->{$param} = $this->_prefs->{$param};
+                if (!empty($this->_prefs->{$param}))
+                    $prefs->{$param} = $this->_prefs->{$param};
             }
             $this->_prefs = $prefs;
         }
@@ -750,8 +750,8 @@ extends _AnonUser
         $dbh = $GLOBALS['request']->getDbh();
         if ( $dbi and !isset($this->_prefs->_select) and $dbh->getAuthParam('pref_select')) {
             if (!$this->_prefs) {
-            	$this->_prefs = new UserPreferences();
-            	$need_pref = true;
+                $this->_prefs = new UserPreferences();
+                $need_pref = true;
             }
             $this->_prefs->_method = $dbh->getParam('dbtype');
             $this->_prefs->_select = $this->prepare($dbh->getAuthParam('pref_select'), "userid");
@@ -762,8 +762,8 @@ extends _AnonUser
             }
         } else {
             if (!$this->_prefs) {
-            	$this->_prefs = new CodendiUserPreferences();
-            	$need_pref = true;
+                $this->_prefs = new CodendiUserPreferences();
+                $need_pref = true;
             }
             $this->_prefs->_method = 'HomePage';
         }
@@ -905,7 +905,7 @@ extends _AnonUser
             ($dbi->getAuthParam('auth_dsn') and $dbi->getParam('dsn') == $dbi->getAuthParam('auth_dsn')))
         {
             if (!stristr($stmt, $prefix)) {
-            	$oldstmt = $stmt;
+                $oldstmt = $stmt;
                 $stmt = str_replace(array(" user "," pref "," member "),
                                     array(" ".$prefix."user ",
                                           " ".$prefix."pref ",
@@ -934,19 +934,19 @@ extends _AnonUser
     function getPreferences() {
         if (!empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
-            	// FIXME: strange why this should be needed...
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/AdoDb.php");
+                // FIXME: strange why this should be needed...
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/AdoDb.php");
                 _AdoDbPassUser::_AdoDbPassUser($this->_userid, $this->_prefs);
                 return _AdoDbPassUser::getPreferences();
             } elseif ($this->_prefs->_method == 'SQL') {
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/PearDb.php");
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/PearDb.php");
                 _PearDbPassUser::_PearDbPassUser($this->_userid, $this->_prefs);
                 return _PearDbPassUser::getPreferences();
             } elseif ($this->_prefs->_method == 'PDO') {
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/PdoDb.php");
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/PdoDb.php");
                 _PdoDbPassUser::_PdoDbPassUser($this->_userid, $this->_prefs);
                 return _PdoDbPassUser::getPreferences();
             }
@@ -972,21 +972,21 @@ extends _AnonUser
     function setPreferences($prefs, $id_only=false) {
         if (!empty($this->_prefs->_method)) {
             if ($this->_prefs->_method == 'ADODB') {
-            	// FIXME: strange why this should be needed...
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/AdoDb.php");
+                // FIXME: strange why this should be needed...
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/AdoDb.php");
                 _AdoDbPassUser::_AdoDbPassUser($this->_userid, $prefs);
                 return _AdoDbPassUser::setPreferences($prefs, $id_only);
             }
             elseif ($this->_prefs->_method == 'SQL') {
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/PearDb.php");
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/PearDb.php");
                 _PearDbPassUser::_PearDbPassUser($this->_userid, $prefs);
                 return _PearDbPassUser::setPreferences($prefs, $id_only);
             }
             elseif ($this->_prefs->_method == 'PDO') {
-            	include_once("lib/WikiUser/Db.php");
-            	include_once("lib/WikiUser/PdoDb.php");
+                include_once("lib/WikiUser/Db.php");
+                include_once("lib/WikiUser/PdoDb.php");
                 _PdoDbPassUser::_PdoDbPassUser($this->_userid, $prefs);
                 return _PdoDbPassUser::setPreferences($prefs, $id_only);
             }
@@ -1144,7 +1144,7 @@ extends _PassUser
         return false;
     }
     function checkPass($submitted_password) {
-    	if ($this->_userid == ADMIN_USER)
+        if ($this->_userid == ADMIN_USER)
             $stored_password = ADMIN_PASSWD;
         else {
             // Should not happen! Only ADMIN_USER should use this class.
@@ -1167,7 +1167,7 @@ extends _PassUser
     }
 
     function storePass($submitted_password) {
-    	if ($this->_userid == ADMIN_USER)
+        if ($this->_userid == ADMIN_USER)
             return false;
         else {
             // should not happen! only ADMIN_USER should use this class.
@@ -1196,27 +1196,27 @@ class _UserPreference
     }
 
     function get ($name) {
-    	if (isset($this->{$name}))
-	    return $this->{$name};
-    	else 
+        if (isset($this->{$name}))
+        return $this->{$name};
+        else 
             return $this->default_value;
     }
 
     function getraw ($name) {
-    	if (!empty($this->{$name}))
-	    return $this->{$name};
+        if (!empty($this->{$name}))
+        return $this->{$name};
     }
 
     // stores the value as $this->$name, and not as $this->value (clever?)
     function set ($name, $value) {
-    	$return = 0;
-    	$value = $this->sanify($value);
-	if ($this->get($name) != $value) {
-	    $this->update($value);
-	    $return = 1;
-	}
-	if ($value != $this->default_value) {
-	    $this->{$name} = $value;
+        $return = 0;
+        $value = $this->sanify($value);
+        if ($this->get($name) != $value) {
+            $this->update($value);
+            $return = 1;
+        }
+        if ($value != $this->default_value) {
+            $this->{$name} = $value;
         } else {
             unset($this->{$name});
         }
@@ -1225,7 +1225,7 @@ class _UserPreference
 
     // default: no side-effects 
     function update ($value) {
-    	;
+        ;
     }
 }
 
@@ -1348,7 +1348,7 @@ class _UserPreference_notify
 extends _UserPreference
 {
     function sanify ($value) {
-    	if (!empty($value))
+        if (!empty($value))
             return $value;
         else
             return $this->default_value;
@@ -1362,7 +1362,7 @@ extends _UserPreference
      *                ...);
      */
     function update ($value) {
-    	if (!empty($this->_init)) return;
+        if (!empty($this->_init)) return;
         $dbh = $GLOBALS['request']->getDbh();
         $notify = $dbh->get('notify');
         if (empty($notify))
@@ -1442,7 +1442,7 @@ extends _UserPreference
      * For true verification (value = 2), we'd need a mailserver hook.
      */
     function update($value) {
-    	if (!empty($this->_init)) return;
+        if (!empty($this->_init)) return;
         $verified = $this->getraw('emailVerified');
         // hack!
         if (($value == 1 or $value === true) and $verified)
@@ -1541,7 +1541,7 @@ function ValidateMail($email, $noconnect=false) {
             $result[0] = false;
             $result[1] = "No response from server";
             return $result;
-          }
+        }
     }  else {
         $result[0]=false;
         $result[1]="Can not connect E-Mail server.";
@@ -1616,8 +1616,8 @@ class UserPreferences
     }
 
     function _getPref($name) {
-    	if ($name == 'emailVerified')
-    	    $name = 'email';
+        if ($name == 'emailVerified')
+            $name = 'email';
         if (!isset($this->_prefs[$name])) {
             if ($name == 'passwd2') return false;
             if ($name == 'passwd') return false;
@@ -1629,13 +1629,13 @@ class UserPreferences
     
     // get the value or default_value of the subobject
     function get($name) {
-    	if ($_pref = $this->_getPref($name))
-    	    if ($name == 'emailVerified')
-    	        return $_pref->getraw($name);
-    	    else
-    	        return $_pref->get($name);
-    	else
-    	    return false;  
+        if ($_pref = $this->_getPref($name))
+            if ($name == 'emailVerified')
+                return $_pref->getraw($name);
+        else
+                return $_pref->get($name);
+        else
+            return false;  
     }
 
     // check and set the new value in the subobject
@@ -1662,7 +1662,7 @@ class UserPreferences
         {
             if ($name == 'emailVerified') $newvalue = $value;
             else $newvalue = $pref->sanify($value);
-	    $pref->set($name, $newvalue);
+            $pref->set($name, $newvalue);
         }
         $this->_prefs[$name] = $pref;
         return true;
@@ -1681,7 +1681,7 @@ class UserPreferences
                     $count++;
             }
             foreach (array_keys($this->_prefs) as $type) {
-            	$obj = $this->_prefs[$type];
+                $obj = $this->_prefs[$type];
                 $obj->_init = $init;
                 if ($prefs->get($type) !== $obj->get($type)) {
                     // special systemdefault prefs: (probably not needed)
@@ -1696,12 +1696,12 @@ class UserPreferences
         } elseif (is_array($prefs)) {
             //unset($this->_prefs['userid']);
             /*
-	    if (isset($this->_method) and 
-	         ($this->_method == 'SQL' or $this->_method == 'ADODB')) {
+        if (isset($this->_method) and 
+             ($this->_method == 'SQL' or $this->_method == 'ADODB')) {
                 unset($this->_prefs['passwd']);
-	    }
-	    */
-	    // emailVerified at first, the rest later
+        }
+        */
+        // emailVerified at first, the rest later
             $type = 'emailVerified'; $obj = $this->_prefs['email'];
             $obj->_init = $init;
             if (isset($prefs[$type]) and $obj->get($type) !== $prefs[$type]) {
@@ -1709,7 +1709,7 @@ class UserPreferences
                     $count++;
             }
             foreach (array_keys($this->_prefs) as $type) {
-            	$obj = $this->_prefs[$type];
+                $obj = $this->_prefs[$type];
                 $obj->_init = $init;
                 if (!isset($prefs[$type]) and isa($obj,"_UserPreference_bool")) 
                     $prefs[$type] = false;
@@ -1760,11 +1760,11 @@ class UserPreferences
                 $prefs[$name] = $pref->get($name);
             // fix old-style prefs
             } elseif (is_numeric($name) and is_array($packed_pref)) {
-            	if (count($packed_pref) == 1) {
+                if (count($packed_pref) == 1) {
                     $name  = key($packed_pref);
                     $value = current($packed_pref);
-            	    $prefs[$name] = $value;
-            	}
+                    $prefs[$name] = $value;
+                }
             } else {
                 $prefs[$name] = @unserialize($packed_pref);
                 if (empty($prefs[$name]))
@@ -1789,11 +1789,11 @@ class UserPreferences
     }
 
     function defaultPreferences() {
-    	$prefs = array();
-    	foreach ($this->_prefs as $key => $obj) {
-    	    $prefs[$key] = $obj->default_value;
-    	}
-    	return $prefs;
+        $prefs = array();
+        foreach ($this->_prefs as $key => $obj) {
+            $prefs[$key] = $obj->default_value;
+        }
+        return $prefs;
     }
     
     // array of objects
@@ -1835,7 +1835,7 @@ class CookieUserPreferences
 extends UserPreferences
 {
     function CookieUserPreferences ($saved_prefs = false) {
-    	//_AnonUser::_AnonUser('',$saved_prefs);
+        //_AnonUser::_AnonUser('',$saved_prefs);
         UserPreferences::UserPreferences($saved_prefs);
     }
 }

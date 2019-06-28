@@ -49,16 +49,16 @@ require_once('lib/plugin/SiteMap.php');
 class WikiPlugin_IncludeSiteMap
 extends WikiPlugin_SiteMap
 {
-  function getName () {
-    return _("IncludeSiteMap");
-  }
+    function getName () {
+        return _("IncludeSiteMap");
+    }
 
-  function getDescription () {
-    return sprintf(_("Include recursively all linked pages starting at %s"),
-		   $this->_pagename);
-  }
-  function getDefaultArguments() {
-      return array('exclude'        => '',
+    function getDescription () {
+        return sprintf(_("Include recursively all linked pages starting at %s"),
+        $this->_pagename);
+    }
+    function getDefaultArguments() {
+        return array('exclude'        => '',
                    'include_self'   => 0,
                    'noheader'       => 0,
                    'page'           => '[pagename]',
@@ -73,7 +73,7 @@ extends WikiPlugin_SiteMap
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-      return WikiPlugin_SiteMap::run($dbi, $argstr, $request, $basepage);
+        return WikiPlugin_SiteMap::run($dbi, $argstr, $request, $basepage);
     }
 }
 

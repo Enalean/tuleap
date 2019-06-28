@@ -54,9 +54,9 @@ class Wiki {
    *
    * @return bool Return if a permission is set on this Wiki
    */
-  function permissionExist() {
-    return permission_exist('WIKI_READ', $this->gid);
-  }
+    function permissionExist() {
+        return permission_exist('WIKI_READ', $this->gid);
+    }
 
     /**
      * @param  int     User identifier
@@ -80,16 +80,16 @@ class Wiki {
    * @param  string[] $groups List of groups allowed to access to the Wiki
    * @return bool Modification status
    */
-  function setPermissions($groups) {
-    global $feedback;
+    function setPermissions($groups) {
+        global $feedback;
 
-      /** @psalm-suppress DeprecatedFunction */
-    list ($ret, $feedback) = permission_process_selection_form($this->gid, 
-							       'WIKI_READ', 
-							       $this->gid, 
-							       $groups);
-    return $ret;
-  }
+        /** @psalm-suppress DeprecatedFunction */
+        list ($ret, $feedback) = permission_process_selection_form($this->gid, 
+                                   'WIKI_READ', 
+                                   $this->gid, 
+                                   $groups);
+        return $ret;
+    }
 
  
   /**
@@ -97,152 +97,152 @@ class Wiki {
    *
    * @return bool Modification status
    */
-  function resetPermissions() {
-    return permission_clear_all($this->gid, 
+    function resetPermissions() {
+        return permission_clear_all($this->gid, 
                                 'WIKI_READ', 
                                 $this->gid);
-  }
+    }
 
  
   /**
    * Check WikiEntry existance for given project.
    * @return bool
    */
-  function exist() {
-      if($this->exist === null) {
-          $res = db_query('SELECT count(*) AS nb FROM wiki_page'
+    function exist() {
+        if($this->exist === null) {
+            $res = db_query('SELECT count(*) AS nb FROM wiki_page'
                           .' WHERE group_id='.db_ei($this->gid));
 
-          $this->exist = (db_result($res, 0, 'nb') > 0);
-      }
-      return $this->exist;
-  }
+            $this->exist = (db_result($res, 0, 'nb') > 0);
+        }
+        return $this->exist;
+    }
 
   /**
    * Get number of wiki pages.
    * @return number of pages (0 if wiki is empty)
    */
-  function getPageCount() {
-    $res = db_query(' SELECT count(*) as count'
-		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
-		    .' AND wiki_nonempty.id=wiki_page.id');
+    function getPageCount() {
+        $res = db_query(' SELECT count(*) as count'
+        .' FROM wiki_page, wiki_nonempty'
+        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+        .' AND wiki_nonempty.id=wiki_page.id');
     
-    if(db_numrows($res) > 0) 
-      return db_result($res,0,'count');
-    else
-      return 0;
-  }
+        if(db_numrows($res) > 0) 
+        return db_result($res,0,'count');
+        else
+        return 0;
+    }
 
 
   /**
    * Get number of project wiki pages.
    * @return number of project pages (0 if wiki is empty)
    */
-  function getProjectPageCount() {
-      $excluded_pages_db_escaped = [];
-      foreach (array_merge(WikiPage::getAdminPages(), WikiPage::getDefaultPages()) as $excluded_page) {
-          $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
-      }
-    $res = db_query(' SELECT count(*) as count'
-		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
-		    .' AND wiki_nonempty.id=wiki_page.id'
+    function getProjectPageCount() {
+        $excluded_pages_db_escaped = [];
+        foreach (array_merge(WikiPage::getAdminPages(), WikiPage::getDefaultPages()) as $excluded_page) {
+            $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
+        }
+        $res = db_query(' SELECT count(*) as count'
+        .' FROM wiki_page, wiki_nonempty'
+        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+        .' AND wiki_nonempty.id=wiki_page.id'
             .' AND wiki_page.pagename NOT IN ('.implode(',', $excluded_pages_db_escaped).')');
     
-    if(db_numrows($res) > 0) 
-      return db_result($res,0,'count');
-    else
-      return 0;
-  }
+        if(db_numrows($res) > 0) 
+        return db_result($res,0,'count');
+        else
+        return 0;
+    }
 
   
   /** 
    * Get wiki language (set at creation time)
    * return 0 if no wiki document exist
    */
-  function getLanguage_id() {
-      // The language of the wiki is the language of all its wiki documents.
-      if (!$this->language_id) {
-          // We only support one language for all the wiki documents of a project.
-          $entry = new WikiEntry();
-          $wei   = $entry->getEntryIterator($this->gid);
-          if ($wei->valid()) {
-              $we = $wei->current(); // get first element
-              $this->language_id = $we->getLanguage_id();
-          }
-      }
-      return $this->language_id;
-  }
+    function getLanguage_id() {
+        // The language of the wiki is the language of all its wiki documents.
+        if (!$this->language_id) {
+            // We only support one language for all the wiki documents of a project.
+            $entry = new WikiEntry();
+            $wei   = $entry->getEntryIterator($this->gid);
+            if ($wei->valid()) {
+                $we = $wei->current(); // get first element
+                $this->language_id = $we->getLanguage_id();
+            }
+        }
+        return $this->language_id;
+    }
 
 
   /**
    * Experimental
    */
 
-  function dropLink($id) {
-    $res = db_query('  DELETE FROM wiki_link'
-		    .' WHERE linkfrom='.db_ei($id)
-		    .' OR linkto='.db_ei($id));
+    function dropLink($id) {
+        $res = db_query('  DELETE FROM wiki_link'
+        .' WHERE linkfrom='.db_ei($id)
+        .' OR linkto='.db_ei($id));
 
-    if(db_affected_rows($res) === 1)
-      return true;
-
-    
-  }
-
-  function dropNonEmpty($id) {
-    $res = db_query('  DELETE FROM wiki_nonempty'
-		    .' WHERE id='.db_ei($id));
-
-   
-  }
-
-  function dropRecent($id) {
-    $res = db_query('  DELETE FROM wiki_recent'
-		    .' WHERE id='.db_ei($id));
+        if(db_affected_rows($res) === 1)
+        return true;
 
     
-  }
-
-  function dropVersion($id) {
-    $res = db_query('  DELETE FROM wiki_version'
-		    .' WHERE id='.db_ei($id));
-
-   
-    
-  }
-
-  function dropPage($id) {
-    $res = db_query('  DELETE FROM wiki_page'
-		    .' WHERE id='.db_ei($id));
-  }
-
-  function drop() {
-    //TODO: Drop entries
-
-
-    // PhpWiki
-    $res = db_query('  SELECT id FROM wiki_page'
-		    .' WHERE group_id='.db_ei($this->gid));
-    
-    while($row = db_fetch_array($res)) {
-      $pid = $row['id'];
-
-      // Link
-      $this->dropLink($pid);
-
-      // Non empty
-      $this->dropNonEmpty($pid);
-
-      // Recent
-      $this->dropRecent($pid);
-
-      // Version
-      $this->dropVersion($pid);
-
-      // Page
-      $this->dropPage($pid);
     }
-  }
+
+    function dropNonEmpty($id) {
+        $res = db_query('  DELETE FROM wiki_nonempty'
+        .' WHERE id='.db_ei($id));
+
+   
+    }
+
+    function dropRecent($id) {
+        $res = db_query('  DELETE FROM wiki_recent'
+        .' WHERE id='.db_ei($id));
+
+    
+    }
+
+    function dropVersion($id) {
+        $res = db_query('  DELETE FROM wiki_version'
+        .' WHERE id='.db_ei($id));
+
+   
+    
+    }
+
+    function dropPage($id) {
+        $res = db_query('  DELETE FROM wiki_page'
+        .' WHERE id='.db_ei($id));
+    }
+
+    function drop() {
+      //TODO: Drop entries
+
+
+      // PhpWiki
+        $res = db_query('  SELECT id FROM wiki_page'
+        .' WHERE group_id='.db_ei($this->gid));
+    
+        while($row = db_fetch_array($res)) {
+            $pid = $row['id'];
+
+            // Link
+            $this->dropLink($pid);
+
+            // Non empty
+            $this->dropNonEmpty($pid);
+
+            // Recent
+            $this->dropRecent($pid);
+
+            // Version
+            $this->dropVersion($pid);
+
+            // Page
+            $this->dropPage($pid);
+        }
+    }
 }

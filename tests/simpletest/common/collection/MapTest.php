@@ -27,7 +27,7 @@ class MapTest extends TuleapTestCase {
     function testEmptyMap() {
         $m = new Map();
         $this->assertTrue($m->isEmpty());
-    }	
+    }    
     function testNonEmptyMap() {
         $key = 'key';
         $m = new Map();

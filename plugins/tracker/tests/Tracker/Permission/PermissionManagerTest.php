@@ -210,10 +210,10 @@ class Tracker_Permission_PermissionManager_AnonymousWithFullAccessTest extends T
         $this->permission_manager->save($request, $this->permission_setter);
     }
 
-     public function itDoesntGrantSubmitterOnlyToRegisteredWhenAnonymousHaveFullAccess() {
+    public function itDoesntGrantSubmitterOnlyToRegisteredWhenAnonymousHaveFullAccess() {
         $request = new Tracker_Permission_PermissionRequest(array(
-            ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
-            ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
+           ProjectUGroup::ANONYMOUS  => Tracker_Permission_Command::PERMISSION_FULL,
+           ProjectUGroup::REGISTERED => Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
         ));
 
         expect($this->permissions_manager)->addPermission()->never();

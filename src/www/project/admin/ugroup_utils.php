@@ -196,23 +196,23 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
         $user = UserManager::instance()->getUserById($user);
     }
   
-  if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
+    if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
 
-  $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
+    $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
 
-  if (ForgeConfig::areRestrictedUsersAllowed()) $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
-  if ($user->isMember($group_id))               $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-  if ($user->isMember($group_id,'A'))           $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-  if ($user->isMember($group_id,'W2'))          $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
-  if (is_int($instances)) {
-      if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
-  } else if (is_array($instances)) {
-      if (isset($instances['artifact_type'])) {
-          if ($user->isTrackerAdmin($group_id,$instances['artifact_type']))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
-      }
-  }
+    if (ForgeConfig::areRestrictedUsersAllowed()) $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
+    if ($user->isMember($group_id))               $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
+    if ($user->isMember($group_id,'A'))           $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+    if ($user->isMember($group_id,'W2'))          $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
+    if (is_int($instances)) {
+        if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+    } else if (is_array($instances)) {
+        if (isset($instances['artifact_type'])) {
+            if ($user->isTrackerAdmin($group_id,$instances['artifact_type']))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
+        }
+    }
 
-  return $res;
+    return $res;
 }
 
 /** Return user group name from ID */
@@ -261,7 +261,7 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);	
+        $group = $pm->getProject($group_id);    
         $at = new ArtifactType($group, $atid);
         return $at->userIsAdmin($user_id);
     } else { 
@@ -316,7 +316,7 @@ function ugroup_db_get_dynamic_members(
         $user_status .= ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
     }
 
-	// Special Cases
+    // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group
         return null;

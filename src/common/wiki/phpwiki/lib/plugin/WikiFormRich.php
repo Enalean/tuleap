@@ -26,12 +26,12 @@ rcs_id('$Id: WikiFormRich.php,v 1.15 2004/11/26 18:25:33 rurban Exp $');
  * Previously encoded with the "phpwiki:" syntax.
  *
  * Enhanced WikiForm to be more generic:
- * - editbox[] 		name=.. value=.. text=..
- * - checkbox[] 	name=.. value=0|1 checked text=..
- * - radio[] 	        name=.. value=.. text=..
- * - pulldown[]		name=.. value=.. selected=.. text=..
- * - combobox[]		name=.. method=.. value=.. selected=.. text=..
- * - hidden[]		name=.. value=..
+ * - editbox[]         name=.. value=.. text=..
+ * - checkbox[]     name=.. value=0|1 checked text=..
+ * - radio[]             name=.. value=.. text=..
+ * - pulldown[]        name=.. value=.. selected=.. text=..
+ * - combobox[]        name=.. method=.. value=.. selected=.. text=..
+ * - hidden[]        name=.. value=..
  * - submit[]
  * - action, submit buttontext, optional cancel button (bool)
  * - method=get or post, Default: post.
@@ -59,28 +59,28 @@ rcs_id('$Id: WikiFormRich.php,v 1.15 2004/11/26 18:25:33 rurban Exp $');
             checkbox[] name=overwrite value=1
             editbox[]  name=exclude value="" ?>
   <?plugin WikiFormRich action=TitleSearch method=get class=wikiadmin nobr=1
-  	   editbox[] name=s text=""
+         editbox[] name=s text=""
            submit[]
-  	   checkbox[] name=case_exact
-  	   checkbox[] name=regex ?>
+         checkbox[] name=case_exact
+         checkbox[] name=regex ?>
   <?plugin WikiFormRich action=FullTextSearch method=get class=wikiadmin nobr=1
-  	   editbox[] name=s text=""
+         editbox[] name=s text=""
            submit[]
-  	   checkbox[] name=case_exact
-  	   checkbox[] name=regex ?>
+         checkbox[] name=case_exact
+         checkbox[] name=regex ?>
   <?plugin WikiFormRich action=FuzzyPages method=get class=wikiadmin nobr=1
-  	   editbox[] name=s text=""
+         editbox[] name=s text=""
            submit[]
-  	   checkbox[] name=case_exact ?>
+         checkbox[] name=case_exact ?>
   <?plugin WikiFormRich action=AppendText buttontext="AddPlugin"
-  	   radio[] name=s value=<!plugin-list BackLinks page=WikiPlugin limit=10 !>
-  	   ?>
+         radio[] name=s value=<!plugin-list BackLinks page=WikiPlugin limit=10 !>
+         ?>
   <?plugin WikiFormRich action=AppendText buttontext="AddPlugin"
-  	   pulldown[] name=s text="Plugins: " value=<!plugin-list BackLinks page=WikiPlugin !>
-  	   ?>
+         pulldown[] name=s text="Plugins: " value=<!plugin-list BackLinks page=WikiPlugin !>
+         ?>
   <?plugin WikiFormRich action=AppendText buttontext="AddCategory"
-  	   pulldown[] name=s text="Categories: " value=<!plugin-list TitleSearch s=Category !>
-  	   ?>
+         pulldown[] name=s text="Categories: " value=<!plugin-list TitleSearch s=Category !>
+         ?>
 */
 
 class WikiPlugin_WikiFormRich
@@ -109,52 +109,52 @@ extends WikiPlugin
     /* TODO: support better block alignment: <br>, tables, indent
      */
     function handle_plugin_args_cruft($argstr, $args) {
-    	$allowed = array("editbox", "hidden", "checkbox", "radiobutton"/*deprecated*/,
-    			 "radio", "pulldown", "submit", "reset", "combobox");
-    	// no editbox[] = array(...) allowed (space)
-    	$arg_array = preg_split("/\n/", $argstr);
-    	// for security we should check this better
+        $allowed = array("editbox", "hidden", "checkbox", "radiobutton"/*deprecated*/,
+                 "radio", "pulldown", "submit", "reset", "combobox");
+        // no editbox[] = array(...) allowed (space)
+        $arg_array = preg_split("/\n/", $argstr);
+        // for security we should check this better
         $arg = '';
-    	for ($i = 0; $i < count($arg_array); $i++) {
-    	    //TODO: we require an name=value pair here, but submit may go without also.
-    	    if (preg_match("/^\s*(".join("|",$allowed).")\[\](.*)$/", $arg_array[$i], $m)) {
-    	    	$name = $m[1]; // one of the allowed input types
+        for ($i = 0; $i < count($arg_array); $i++) {
+            //TODO: we require an name=value pair here, but submit may go without also.
+            if (preg_match("/^\s*(".join("|",$allowed).")\[\](.*)$/", $arg_array[$i], $m)) {
+                $name = $m[1]; // one of the allowed input types
                 $this->inputbox[][$name] = array(); $j = count($this->inputbox) - 1;
                 $curargs = trim($m[2]);
                 // must match name=NAME and also value=<!plugin-list name !>
                 while (preg_match("/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/", 
                                   $curargs, $m)) {
-                    $attr = $m[1]; $value = $m[2];
-                    $curargs = substr($curargs, strlen($m[0]));
-                    if (preg_match("/^\"(.*)\"$/", $value, $m))
+                       $attr = $m[1]; $value = $m[2];
+                       $curargs = substr($curargs, strlen($m[0]));
+                       if (preg_match("/^\"(.*)\"$/", $value, $m))
                         $value = $m[1];
                     if (in_array($name, array("pulldown","checkbox","radio","radiobutton","combobox"))
                             and preg_match('/^<!plugin-list.+!>$/', $value, $m))
-            	    // like pulldown[] name=test value=<!plugin-list BackLinks page=HomePage!>
-                    {
-            		$loader = new WikiPluginLoader();
-            		$markup = null;
-            		$basepage = null;
-            		$plugin_str = preg_replace(array("/^<!/","/!>$/"),array("<?","?>"), $value);
-            		// will return a pagelist object! pulldown,checkbox,radiobutton
-            		$value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
-            		if (isa($value, 'PageList')) 
-            		    $value = $value->_pages;
-            		elseif (!is_array($value))
-    	    		    trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
-    	    	                          E_USER_WARNING);
+                    // like pulldown[] name=test value=<!plugin-list BackLinks page=HomePage!>
+                       {
+                        $loader = new WikiPluginLoader();
+                        $markup = null;
+                        $basepage = null;
+                        $plugin_str = preg_replace(array("/^<!/","/!>$/"),array("<?","?>"), $value);
+                 // will return a pagelist object! pulldown,checkbox,radiobutton
+                        $value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
+                        if (isa($value, 'PageList')) 
+                        $value = $value->_pages;
+                        elseif (!is_array($value))
+                        trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
+                                       E_USER_WARNING);
                     }
-                    elseif (defined($value))
+                        elseif (defined($value))
                         $value = constant($value);
-                    $this->inputbox[$j][$name][$attr] = $value;
+                        $this->inputbox[$j][$name][$attr] = $value;
                 }
-    	    	//trigger_error("not yet finished");
+             //trigger_error("not yet finished");
                 //eval('$this->inputbox[]["'.$m[1].'"]='.$m[2].';');
             } else {
-    	    	trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
-    	    	              E_USER_WARNING);
+                trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
+                  E_USER_WARNING);
             }
-    	}
+        }
         return;
     }
 
@@ -172,133 +172,133 @@ extends WikiPlugin
         $already_submit = 0;
         foreach ($this->inputbox as $inputbox) {
             foreach ($inputbox as $inputtype => $input) {
-              if ($inputtype == 'radiobutton') $inputtype='radio'; // convert from older versions
-              $input['type'] = $inputtype;
-              $text = '';
-              if ($inputtype != 'submit') {
-                  if (empty($input['name']))
+                if ($inputtype == 'radiobutton') $inputtype='radio'; // convert from older versions
+                $input['type'] = $inputtype;
+                $text = '';
+                if ($inputtype != 'submit') {
+                    if (empty($input['name']))
                       return $this->error(fmt("A required argument '%s' is missing.",
                                             $inputtype."[][name]"));
-                  if (!isset($input['text'])) $input['text'] = gettext($input['name']);
-                  $text = $input['text'];
-                  unset($input['text']);
-              }
-              switch($inputtype) {
-              case 'checkbox':
-              case 'radio':
-                if (empty($input['value'])) $input['value'] = 1;
-                if (is_array($input['value'])) {
-                    $div = HTML::div(array('class' => $class));
-                    $values = $input['value'];
-                    $name = $input['name'];
-                    $input['name'] = $inputtype == 'checkbox' ? $name."[]" : $name;
-                    foreach ($values as $val) {
-                        $input['value'] = $val;
-                        if ($request->getArg($name)) {
-                            if ($request->getArg($name) == $val)
-                                $input['checked'] = 'checked';
-                            else 
-                                unset($input['checked']);
-                        }
-                        $div->pushContent(HTML::input($input), $nbsp, $val, $nbsp, "\n");
-                        if (!$nobr)
-                            $div->pushContent(HTML::br());
-                    }
-                    $form->pushContent($div);
-                } else {
-                    if (empty($input['checked'])) {
-                        if ($request->getArg($input['name']))
-                            $input['checked'] = 'checked';
-                    } else {
-                        $input['checked'] = 'checked';
-                    }
-                    if ($nobr)
-                        $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
-                    else
-                        $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                    if (!isset($input['text'])) $input['text'] = gettext($input['name']);
+                    $text = $input['text'];
+                    unset($input['text']);
                 }
-                break;
-              case 'editbox':
-                  $input['type'] = 'text';
-                  if (empty($input['value']) and ($s = $request->getArg($input['name'])))
-                      $input['value'] = $s;
-                  if ($nobr)
-                      $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
-                  else
-                      $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                switch($inputtype) {
+                    case 'checkbox':
+                    case 'radio':
+                        if (empty($input['value'])) $input['value'] = 1;
+                        if (is_array($input['value'])) {
+                            $div = HTML::div(array('class' => $class));
+                            $values = $input['value'];
+                            $name = $input['name'];
+                            $input['name'] = $inputtype == 'checkbox' ? $name."[]" : $name;
+                            foreach ($values as $val) {
+                                $input['value'] = $val;
+                                if ($request->getArg($name)) {
+                                    if ($request->getArg($name) == $val)
+                                    $input['checked'] = 'checked';
+                                    else 
+                                    unset($input['checked']);
+                                }
+                                $div->pushContent(HTML::input($input), $nbsp, $val, $nbsp, "\n");
+                                if (!$nobr)
+                                $div->pushContent(HTML::br());
+                            }
+                            $form->pushContent($div);
+                        } else {
+                            if (empty($input['checked'])) {
+                                if ($request->getArg($input['name']))
+                                $input['checked'] = 'checked';
+                            } else {
+                                $input['checked'] = 'checked';
+                            }
+                            if ($nobr)
+                            $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
+                            else
+                            $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                        }
                   break;
-              case 'combobox':
-                  // TODO: moACDROPDOWN
-                  $values = $input['value'];
-                  unset($input['value']);
-                  $input['type'] = 'text';
-                  if (is_string($values)) $values = explode(",", $values);
-                  if (empty($values)) {
-                      if ($input['method'])
-                          $input['value'] = xmlrequest($input['method']);
-                       elseif ($s = $request->getArg($input['name']))
-                           $input['value'] = $s;
-                  } elseif (is_array($values)) {
-                      $name = $input['name'];
-                      unset($input['name']);
-                      foreach ($values as $val) {
-                          $input = array('value' => $val);
-                          if ($request->getArg($name)) {
-                              if ($request->getArg($name) == $val)
-                                  $input['selected'] = 'selected';
-                              else
-                                  unset($input['selected']);
-                          }
-                          //$select->pushContent(HTML::option($input, $val));
-                      }
-                  }
-                  if ($nobr)
-                      $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
-                  else
-                      $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                    case 'editbox':
+                          $input['type'] = 'text';
+                          if (empty($input['value']) and ($s = $request->getArg($input['name'])))
+                          $input['value'] = $s;
+                          if ($nobr)
+                          $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
+                        else
+                          $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                    break;
+                    case 'combobox':
+                          // TODO: moACDROPDOWN
+                          $values = $input['value'];
+                          unset($input['value']);
+                          $input['type'] = 'text';
+                          if (is_string($values)) $values = explode(",", $values);
+                        if (empty($values)) {
+                            if ($input['method'])
+                            $input['value'] = xmlrequest($input['method']);
+                            elseif ($s = $request->getArg($input['name']))
+                            $input['value'] = $s;
+                        } elseif (is_array($values)) {
+                            $name = $input['name'];
+                            unset($input['name']);
+                            foreach ($values as $val) {
+                                $input = array('value' => $val);
+                                if ($request->getArg($name)) {
+                                    if ($request->getArg($name) == $val)
+                                      $input['selected'] = 'selected';
+                                    else
+                                      unset($input['selected']);
+                                }
+                                //$select->pushContent(HTML::option($input, $val));
+                            }
+                        }
+                        if ($nobr)
+                        $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
+                        else
+                        $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
                   break;
-              case 'pulldown':
-                  $values = $input['value'];
-                  unset($input['value']);
-                  unset($input['type']);
-                  $select = HTML::select($input);
-                  if (is_string($values)) $values = explode(",", $values);
-                  if (empty($values) and ($s = $request->getArg($input['name']))) {
-                      $select->pushContent(HTML::option(array('value'=> $s), $s));
-                  } elseif (is_array($values)) {
-                      $name = $input['name'];
-                      unset($input['name']);
-                      foreach ($values as $val) {
-                          $input = array('value' => $val);
-                          if ($request->getArg($name)) {
-                              if ($request->getArg($name) == $val)
-                                  $input['selected'] = 'selected';
-                              else
-                                  unset($input['selected']);
-                          }
-                          $select->pushContent(HTML::option($input, $val));
-                      }
-                  }
-                  $form->pushContent($text, $nbsp, $select);
+                    case 'pulldown':
+                          $values = $input['value'];
+                          unset($input['value']);
+                          unset($input['type']);
+                          $select = HTML::select($input);
+                          if (is_string($values)) $values = explode(",", $values);
+                        if (empty($values) and ($s = $request->getArg($input['name']))) {
+                            $select->pushContent(HTML::option(array('value'=> $s), $s));
+                        } elseif (is_array($values)) {
+                            $name = $input['name'];
+                            unset($input['name']);
+                            foreach ($values as $val) {
+                                $input = array('value' => $val);
+                                if ($request->getArg($name)) {
+                                    if ($request->getArg($name) == $val)
+                                      $input['selected'] = 'selected';
+                                    else
+                                      unset($input['selected']);
+                                }
+                                $select->pushContent(HTML::option($input, $val));
+                            }
+                        }
+                        $form->pushContent($text, $nbsp, $select);
                   break;
-              case 'reset':
-              case 'hidden':
-                  $form->pushContent(HTML::input($input));
-                  break;
-              // change the order of inputs, by explicitly placing a submit button here.
-              case 'submit':
-                  //$input['type'] = 'submit';
-                  if (empty($input['value'])) $input['value'] = $buttontext ? $buttontext : $action;
-                  unset($input['text']);
-                  if (empty($input['class'])) $input['class'] = $class;
-                  if ($nobr)
-                      $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
-                  else
-                      $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
-                  // unset the default submit button
-                  $already_submit = 1;
-                  break;
-              }
+                    case 'reset':
+                    case 'hidden':
+                          $form->pushContent(HTML::input($input));
+                    break;
+                // change the order of inputs, by explicitly placing a submit button here.
+                    case 'submit':
+                          //$input['type'] = 'submit';
+                          if (empty($input['value'])) $input['value'] = $buttontext ? $buttontext : $action;
+                          unset($input['text']);
+                          if (empty($input['class'])) $input['class'] = $class;
+                          if ($nobr)
+                          $form->pushContent(HTML::input($input), $nbsp, $text, $nbsp);
+                        else
+                          $form->pushContent(HTML::div(array('class' => $class), HTML::input($input), $text));
+                          // unset the default submit button
+                          $already_submit = 1;
+                    break;
+                }
             }
         }
         if ($request->getArg('start_debug'))

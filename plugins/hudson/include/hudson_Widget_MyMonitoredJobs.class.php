@@ -134,11 +134,11 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $job_dao          = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar              = $job_dao->searchByUserID($user->getId());
         $nb_jobs_in_error = 0;
-    	if ($dar->rowCount() > 0) {
-	        $monitored_jobs = $this->_getMonitoredJobsByUser();
-	        if (sizeof($monitored_jobs) > 0) {
-	            $html .= '<table style="width:100%">';
-	            $cpt = 1;
+        if ($dar->rowCount() > 0) {
+            $monitored_jobs = $this->_getMonitoredJobsByUser();
+            if (sizeof($monitored_jobs) > 0) {
+                $html .= '<table style="width:100%">';
+                $cpt = 1;
 
                 $job_dao             = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $minimal_hudson_jobs = [];
@@ -179,12 +179,12 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
                         $nb_jobs_in_error++;
                     }
                 }
-	            $html .= '</table>';
-	        } else {
-	        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_monitoredjob_my');
-	        }
+                $html .= '</table>';
+            } else {
+                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_monitoredjob_my');
+            }
         } else {
-        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
         }
         if ($nb_jobs_in_error > 0) {
             $html_error_string  = '<div class="tlp-alert-warning">';

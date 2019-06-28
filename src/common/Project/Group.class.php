@@ -19,19 +19,19 @@
  */
 /*
 
-	Group object by Tim Perdue, August 28, 2000
+    Group object by Tim Perdue, August 28, 2000
 
-	Sets up database results and preferences for a group and abstracts this info
+    Sets up database results and preferences for a group and abstracts this info
 
-	Project.class.php call this.
+    Project.class.php call this.
 
-	Project.class.php contains all the deprecated API from the old group.php file
+    Project.class.php contains all the deprecated API from the old group.php file
 
 
 
-	GENERALLY YOU SHOULD NEVER CALL THIS OBJECT
-	USE Project instead
-	DIRECT CALLS TO THIS OBJECT ARE NOT SUPPORTED
+    GENERALLY YOU SHOULD NEVER CALL THIS OBJECT
+    USE Project instead
+    DIRECT CALLS TO THIS OBJECT ARE NOT SUPPORTED
 
 */
 
@@ -43,93 +43,93 @@ function group_get_object_by_name($groupname) {
 
 class Group {
 
-	//associative array of data from db
-	var $data_array;
+    //associative array of data from db
+    var $data_array;
 
-	var $group_id;
+    var $group_id;
 
-	//database result set handle
-	var $db_result;
+    //database result set handle
+    var $db_result;
 
-	//permissions data row from db
-	var $perm_data_array;
+    //permissions data row from db
+    var $perm_data_array;
 
-	//membership data row from db
-	var $members_data_array;
+    //membership data row from db
+    var $members_data_array;
 
-	//whether the user is an admin/super user of this project
-	var $is_admin;
-	/**
-	 * @var string
-	 */
-	private $error_message = '';
-	/**
-	 * @var bool
-	 */
-	private $error_state = false;
+    //whether the user is an admin/super user of this project
+    var $is_admin;
+    /**
+     * @var string
+     */
+    private $error_message = '';
+    /**
+     * @var bool
+     */
+    private $error_state = false;
 
-	function __construct($param) {
+    function __construct($param) {
             //$param can be:
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
             global $Language;
-            if (is_array($param)) {
-                $this->group_id=$param['group_id'];
-                $this->data_array=$param;
-            } elseif(intval($param) > 0) {
-                $this->group_id=(int)$param; // TODO db_es()?
-		$this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
-		if (db_numrows($this->db_result) < 1) {
-			//function in class we extended
-			$this->setError($Language->getText('include_group','g_not_found'));
-			$this->data_array=array();
-		} else {
-			//set up an associative array for use by other functions
-			$this->data_array=db_fetch_array($this->db_result);
-		}
-            } else {
-                $this->setError('');
+        if (is_array($param)) {
+            $this->group_id=$param['group_id'];
+            $this->data_array=$param;
+        } elseif(intval($param) > 0) {
+            $this->group_id=(int)$param; // TODO db_es()?
+            $this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
+            if (db_numrows($this->db_result) < 1) {
+             //function in class we extended
+                $this->setError($Language->getText('include_group','g_not_found'));
                 $this->data_array=array();
+            } else {
+             //set up an associative array for use by other functions
+                $this->data_array=db_fetch_array($this->db_result);
             }
-	}
+        } else {
+            $this->setError('');
+            $this->data_array=array();
+        }
+    }
 
 
-	/*
-		Return database result handle for direct access
+    /*
+        Return database result handle for direct access
 
-		Generall should NOT be used - here for supporting deprecated group.php
-	*/
-	function getData() {
-		return $this->db_result;
-	}
-
-
-	/*
-		Simply return the group_id for this object
-	*/
-	function getGroupId() {
-		return $this->group_id;
-	}
+        Generall should NOT be used - here for supporting deprecated group.php
+    */
+    function getData() {
+        return $this->db_result;
+    }
 
 
-	/*
-		Project, template, test, etc
-	*/
-	function getType() {
-		return $this->data_array['type'];
-	}
+    /*
+        Simply return the group_id for this object
+    */
+    function getGroupId() {
+        return $this->group_id;
+    }
 
 
-	function getUnixBox() {
-	  return $this->data_array['unix_box'];
-	}
+    /*
+        Project, template, test, etc
+    */
+    function getType() {
+        return $this->data_array['type'];
+    }
 
-	/*
-		Statuses include H,A,D
-	*/
-	function getStatus() {
-		return $this->data_array['status'];
-	}
+
+    function getUnixBox() {
+        return $this->data_array['unix_box'];
+    }
+
+    /*
+        Statuses include H,A,D
+    */
+    function getStatus() {
+        return $this->data_array['status'];
+    }
 
     /**
      * Simple boolean test to see if it's a project or not
@@ -153,9 +153,9 @@ class Group {
         return $this->getStatus() == 's' || $this->getStatus() == 'S';
     }
 
-	function getUnixName($tolower = true) {
-		return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
-	}
+    function getUnixName($tolower = true) {
+        return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
+    }
 
     public function getUnixNameLowerCase() {
         return strtolower($this->getUnixNameMixedCase());
@@ -172,72 +172,72 @@ class Group {
 
     /** @deprecated */
     public function getPublicName() {
-	  return $this->data_array['group_name'];
-	}
+        return $this->data_array['group_name'];
+    }
 
     public function getUnconvertedPublicName() {
         return util_unconvert_htmlspecialchars($this->data_array['group_name']);
     }
 
-	//short description as entered on the group admin page
-	function getDescription() {
-	  return $this->data_array['short_description'];
-	}
+    //short description as entered on the group admin page
+    function getDescription() {
+        return $this->data_array['short_description'];
+    }
 
 
-	//date the group was registered
-	function getStartDate() {
-		return $this->data_array['register_time'];
-	}
+    //date the group was registered
+    function getStartDate() {
+        return $this->data_array['register_time'];
+    }
 
-	function getHTTPDomain() {
-	  return $this->data_array['http_domain'];
-	}
+    function getHTTPDomain() {
+        return $this->data_array['http_domain'];
+    }
 
-	/**
-	 * @return int group_id | null.
-	 */
-	public function getID() {
-            if (isset($this->data_array['group_id'])) {
-		return $this->data_array['group_id'];
-            }
+    /**
+     * @return int group_id | null.
+     */
+    public function getID() {
+        if (isset($this->data_array['group_id'])) {
+            return $this->data_array['group_id'];
+        }
 
             return null;
-	}
+    }
 
-	/**
-	 *	getUnixGID - return the Unix GID for this group.
-	 *
-	 *	@return int GID.
-	 */
-	function getUnixGID() {
-		return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
-	}
+    /**
+     *    getUnixGID - return the Unix GID for this group.
+     *
+     *    @return int GID.
+     */
+    function getUnixGID() {
+        return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
+    }
 
-	/**
-	 *	getMembersId - Return an array of user ids of group members
-	 *
-	 *	@return int group_id.
-	 */
-	function getMembersId() {
-	    if ($this->members_data_array) {
-		//list of members already built
-	    } else {
-		$res=db_query("SELECT user_id FROM user_group WHERE group_id='". $this->getGroupId() ."'");
-		if ($res && db_numrows($res) > 0) {
-		    $mb_array = array();
-		    while ($row = db_fetch_array($res)) {
-			$mb_array[] = $row[0];
-		    }
-		    $this->members_data_array = $mb_array;
-		} else {
-		    echo db_error();
-		    $this->members_data_array=array();
-		}
-		db_free_result($res);
-	    }
-	    return $this->members_data_array;
-	}
+    /**
+     *    getMembersId - Return an array of user ids of group members
+     *
+     *    @return int group_id.
+     */
+    function getMembersId() {
+        if ($this->members_data_array) {
+     //list of members already built
+        } else {
+            $res=db_query("SELECT user_id FROM user_group WHERE group_id='". $this->getGroupId() ."'");
+            if ($res && db_numrows($res) > 0) {
+                    $mb_array = array();
+                while ($row = db_fetch_array($res)) {
+                    $mb_array[] = $row[0];
+                }
+                $this->members_data_array = $mb_array;
+            } else {
+                    echo db_error();
+                    $this->members_data_array=array();
+            }
+            db_free_result($res);
+        }
+        return $this->members_data_array;
+    }
 
     protected $members_usernames_data_array;
     /**
@@ -254,31 +254,31 @@ class Group {
     }
 
 
-	/*
+    /*
 
-		Basic user permissions that apply to all Groups
+        Basic user permissions that apply to all Groups
 
-	*/
+    */
 
 
-	/*
-		Simple test to see if the current user is a member of this project
-	*/
-	function userIsMember($field='user_id',$value=0) {
-	    if ($this->userIsAdmin()) {
-		//admins are tested first so that super-users can return true
-		//and admins of a project should always have full privileges
-		//on their project
-		return true;
-	    } else {
-		$arr=$this->getPermData();
-		if (array_key_exists($field, $arr) && ($arr[$field] > $value)) {
-		    return true;
-		} else {
-		    return false;
-		}
-	    }
-	}
+    /*
+        Simple test to see if the current user is a member of this project
+    */
+    function userIsMember($field='user_id',$value=0) {
+        if ($this->userIsAdmin()) {
+     //admins are tested first so that super-users can return true
+     //and admins of a project should always have full privileges
+     //on their project
+            return true;
+        } else {
+            $arr=$this->getPermData();
+            if (array_key_exists($field, $arr) && ($arr[$field] > $value)) {
+                    return true;
+            } else {
+                    return false;
+            }
+        }
+    }
 
         /**
          * This method relies on global state so kittens die everytime you use it
@@ -321,28 +321,28 @@ class Group {
         return $this->is_admin;
     }
 
-	/*
-		Return an associative array of permissions for this group/user
-	*/
-	function getPermData(){
-	    if ($this->perm_data_array) {
-		//have already been through here and set up perms data
-	    } else {
-		if (user_isloggedin()) {
-		    $res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
-		    if ($res && db_numrows($res) > 0) {
-			$this->perm_data_array=db_fetch_array($res);
-		    } else {
-			echo db_error();
-			$this->perm_data_array=array();
-		    }
-		    db_free_result($res);
-		} else {
-		    $this->perm_data_array=array();
-		}
-	    }
-	    return $this->perm_data_array;
-	}
+    /*
+        Return an associative array of permissions for this group/user
+    */
+    function getPermData(){
+        if ($this->perm_data_array) {
+     //have already been through here and set up perms data
+        } else {
+            if (user_isloggedin()) {
+                    $res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
+                if ($res && db_numrows($res) > 0) {
+                    $this->perm_data_array=db_fetch_array($res);
+                } else {
+                    echo db_error();
+                    $this->perm_data_array=array();
+                }
+                db_free_result($res);
+            } else {
+                    $this->perm_data_array=array();
+            }
+        }
+        return $this->perm_data_array;
+    }
 
 
     /**
@@ -355,49 +355,49 @@ class Group {
     }
 
 
-	/** return the template id from which this group was built */
-	function getTemplate() {
-	  return $this->data_array['built_from_template'];
-	}
+    /** return the template id from which this group was built */
+    function getTemplate() {
+        return $this->data_array['built_from_template'];
+    }
 
-	function setType($type) {
-	  db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
-	}
+    function setType($type) {
+        db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
+    }
 
     /**
      * Get template singleton
      *
      * @return TemplateSingleton
      */
-     private function _getTemplateSingleton() {
-         return TemplateSingleton::instance();
-     }
+    private function _getTemplateSingleton() {
+        return TemplateSingleton::instance();
+    }
 
-	/**
-	 * @param $string
-	 */
-	public function setError($string) {
-		$this->error_state = true;
-		$this->error_message = $string;
-	}
+    /**
+     * @param $string
+     */
+    public function setError($string) {
+        $this->error_state = true;
+        $this->error_message = $string;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getErrorMessage() {
-		if ($this->error_state) {
-			return $this->error_message;
-		} else {
-			return $GLOBALS['Language']->getText('include_common_error', 'no_err');
-		}
-	}
+    /**
+     * @return string
+     */
+    public function getErrorMessage() {
+        if ($this->error_state) {
+            return $this->error_message;
+        } else {
+            return $GLOBALS['Language']->getText('include_common_error', 'no_err');
+        }
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function isError() {
-		return $this->error_state;
-	}
+    /**
+     * @return bool
+     */
+    public function isError() {
+        return $this->error_state;
+    }
 
 }
 

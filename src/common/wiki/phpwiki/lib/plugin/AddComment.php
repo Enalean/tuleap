@@ -120,17 +120,17 @@ function togglecomments(a) {
                 continue;
             $seen[$show] = 1;
             switch ($show) {
-            case 'show':
-                $show = $this->showAll($request, $args, 'comment');
-                //if ($args['jshide']) $show->setAttr('style','display:none;');
-                $div->pushContent($show);
+                case 'show':
+                    $show = $this->showAll($request, $args, 'comment');
+                    //if ($args['jshide']) $show->setAttr('style','display:none;');
+                    $div->pushContent($show);
                 break;
-            case 'add':
-                $add = $this->showForm($request, $args, 'addcomment');
-                //if ($args['jshide']) $add->setAttr('style','display:none;');
-                $div->pushContent($add);
+                case 'add':
+                    $add = $this->showForm($request, $args, 'addcomment');
+                    //if ($args['jshide']) $add->setAttr('style','display:none;');
+                    $div->pushContent($add);
                 break;
-            default:
+                default:
                 return $this->error(sprintf("Bad mode ('%s')", $show));
             }
         }

@@ -90,7 +90,7 @@ class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends TuleapTestCase
         $this->rules_processor->process($this->artifact, $this->rule);
     }
 
-     public function itDoesntSetTargetValueIfAlreadySet() {
+    public function itDoesntSetTargetValueIfAlreadySet() {
         stub($this->parent)->getValue($this->target_field)->returns(aChangesetValueList()->withValues(array($this->target_value))->build());
         expect($this->parent)->createNewChangeset()->never();
         $this->rules_processor->process($this->artifact, $this->rule);

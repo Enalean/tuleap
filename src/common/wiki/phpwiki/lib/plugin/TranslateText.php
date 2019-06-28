@@ -134,7 +134,7 @@ extends WikiPlugin__WikiTranslation
                                              'require_authority_for_post' => WIKIAUTH_BOGO,
                                              )),
                           $buttons);
-       }
+    }
 };
 
 // $Log: TranslateText.php,v $

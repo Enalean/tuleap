@@ -392,9 +392,9 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
             $count = 0;
             if ($dar && !$dar->isError()) {
                     $row = $dar->getRow();
-                    if ($row) {
-                        $count = $row['count'];
-                    }
+                if ($row) {
+                    $count = $row['count'];
+                }
             }
             $formatter->clearContent();
             $formatter->addEmptyLine();

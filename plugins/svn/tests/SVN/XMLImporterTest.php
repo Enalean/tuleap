@@ -542,6 +542,6 @@ XML;
     }
 
     private function getSVNDir($project_id, $repo_name) {
-       return ForgeConfig::get('sys_data_dir')."/svn_plugin/$project_id/$repo_name";
+        return ForgeConfig::get('sys_data_dir')."/svn_plugin/$project_id/$repo_name";
     }
 }

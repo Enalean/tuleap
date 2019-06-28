@@ -66,7 +66,7 @@ class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
          
          $result = $this->db->dbh->exec($sql);
          
-         if ($result === false) {
+        if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }

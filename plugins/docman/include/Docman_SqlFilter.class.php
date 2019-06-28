@@ -193,24 +193,24 @@ extends Docman_SqlFilter {
         $stmt = array();
 
         switch($this->filter->getOperator()) {
-        case '-1': // '<'
-            $s = $this->_getEndStatement($this->filter->getValue());
-            if($s != '') {
-                $stmt[] = $s;
-            }
+            case '-1': // '<'
+                $s = $this->_getEndStatement($this->filter->getValue());
+                if($s != '') {
+                    $stmt[] = $s;
+                }
             break;
-        case '0': // '=' means that day between 00:00 and 23:59
-            $s = $this->_getEqualStatement($this->filter->getValue());
-            if($s != '') {
-                $stmt[] = $s;
-            }
+            case '0': // '=' means that day between 00:00 and 23:59
+                $s = $this->_getEqualStatement($this->filter->getValue());
+                if($s != '') {
+                    $stmt[] = $s;
+                }
             break;
-        case '1': // '>'
-        default:
-            $s = $this->_getStartStatement($this->filter->getValue());
-            if($s != '') {
-                $stmt[] = $s;
-            }
+            case '1': // '>'
+            default:
+                $s = $this->_getStartStatement($this->filter->getValue());
+                if($s != '') {
+                    $stmt[] = $s;
+                }
             break;
         }
 

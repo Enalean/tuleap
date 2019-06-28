@@ -144,7 +144,7 @@ class PluginTest extends TuleapTestCase {
         $p->setReturnReference('_getPluginManager', $pm);
 
         $this->assertEqual($p->getPluginEtcRoot(), $GLOBALS['sys_custompluginsroot'].'/'.$shortname.'/etc');
-     }
+    }
     function testGetPluginPath() {
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';

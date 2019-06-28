@@ -182,12 +182,12 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedC
         stub($this->changeset_value)->getFiles()->returns(array($file1));
     }
 
-      public function itCreatesFileNodeWithRightName() {
+    public function itCreatesFileNodeWithRightName() {
         $this->exporter->export(
-            $this->artifact_xml,
-            $this->changeset_xml,
-            $this->artifact,
-            $this->changeset_value
+          $this->artifact_xml,
+          $this->changeset_xml,
+          $this->artifact,
+          $this->changeset_value
         );
 
         $this->assertEqual(count($this->artifact_xml->file), 1);

@@ -202,7 +202,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 
                 if (trim($item->getDescription()) != '') {
                     $this->html .= '<div class="docman_item_description">'. $this->hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC, $item->getGroupId()) .'</div>';
-            }
+                }
                 $li_displayed = true;
             }
         }

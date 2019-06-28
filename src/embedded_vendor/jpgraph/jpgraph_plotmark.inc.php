@@ -298,7 +298,7 @@ class PlotMark {
             if( !empty($this->csimtarget) ) {
                 $this->csimareas = "<area shape=\"rect\" coords=\"".
                 $dx.','.$dy.','.round($dx+$dw).','.round($dy+$dh).'" '.
-      "href=\"".htmlentities($this->csimtarget)."\"";
+                "href=\"".htmlentities($this->csimtarget)."\"";
 
                 if( !empty($this->csimwintarget) ) {
                     $this->csimareas .= " target=\"".$this->csimwintarget."\" ";

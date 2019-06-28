@@ -93,7 +93,7 @@ extends WikiPlugin
                 if (isset($pagearray[$i])) $pagelist->addPage($pagearray[$i]);
         } else { // if $numpages = 1
              if (isset($pagearray[$shuffle]))
-	         $pagelist->addPage($pagearray[$shuffle]);
+            $pagelist->addPage($pagearray[$shuffle]);
         }
         return $pagelist;
     }

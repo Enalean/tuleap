@@ -28,11 +28,11 @@ class DatabaseForge extends DatabaseMysqli {
     }
 
     function tableName($name, $format = 'quoted') {
-            switch ($name) {
+        switch ($name) {
             case 'interwiki':
-                    return ForgeConfig::get('sys_dbname').'.plugin_mediawiki_interwiki';
+                return ForgeConfig::get('sys_dbname').'.plugin_mediawiki_interwiki';
             default:
-                    return parent::tableName($name, $format);
-            }
+                return parent::tableName($name, $format);
+        }
     }
 }

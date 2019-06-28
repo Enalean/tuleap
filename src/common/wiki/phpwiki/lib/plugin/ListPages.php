@@ -71,8 +71,8 @@ extends WikiPlugin
         extract($args);
         // If the ratings table does not exist, or on dba it will break otherwise. 
         // Check if Theme isa 'wikilens'
-	if ($info == 'pagename' and isa($GLOBALS['WikiTheme'], 'wikilens'))
-	    $info .= ",top3recs";
+        if ($info == 'pagename' and isa($GLOBALS['WikiTheme'], 'wikilens'))
+        $info .= ",top3recs";
         if ($info)
             $info = preg_split('/,/D', $info);
         else
@@ -90,9 +90,9 @@ extends WikiPlugin
                 // TKL: moved getBuddies call inside if statement because it was
                 // causing the userids[] parameter to be ignored
                 if (is_string($active_userid) 
-		    and strlen($active_userid) 
-		    and $active_user->isSignedIn()) 
-		{
+                and strlen($active_userid) 
+                and $active_user->isSignedIn()) 
+                {
                     $userids = getBuddies($active_userid, $dbi);
                 } else {
                     $userids = array();

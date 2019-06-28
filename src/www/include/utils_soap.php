@@ -27,7 +27,7 @@ function groups_to_soap($groups) {
         if (!$group || $group->isError()) {
             //skip if error
         } else {
-            $return[] = group_to_soap($group);	
+            $return[] = group_to_soap($group);    
         }
     }
     return $return;

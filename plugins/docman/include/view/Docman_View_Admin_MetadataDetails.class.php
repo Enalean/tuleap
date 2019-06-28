@@ -87,18 +87,18 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 $canDelete = false;
                 $displayed = true;
                 switch($e->getStatus()) {
-                case 'A':
-                    $canDelete = true;
-                    $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_active');
+                    case 'A':
+                        $canDelete = true;
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_active');
                     break;
-                case 'P':
-                    $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_perm');
+                    case 'P':
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_perm');
                     break;
-                case 'D':
-                    $displayed = false;
+                    case 'D':
+                        $displayed = false;
                     break;
-                default:
-                    $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_inactive');
+                    default:
+                        $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_inactive');
                 }
                 
                 if($displayed) {

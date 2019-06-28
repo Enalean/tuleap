@@ -255,24 +255,24 @@ class Tracker_FileInfo {
             }
         }
         switch ($size[2]) {
-        case IMAGETYPE_GIF:
-            $source      = imagecreatefromgif($this->getPath());
-            $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
-            imagepalettecopy($destination, $source);
-            $store       = 'imagegif';
+            case IMAGETYPE_GIF:
+                $source      = imagecreatefromgif($this->getPath());
+                $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
+                imagepalettecopy($destination, $source);
+                $store       = 'imagegif';
             break;
-        case IMAGETYPE_JPEG:
-            $source      = imagecreatefromjpeg($this->getPath());
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagejpeg';
+            case IMAGETYPE_JPEG:
+                $source      = imagecreatefromjpeg($this->getPath());
+                $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+                $store       = 'imagejpeg';
             break;
-        case IMAGETYPE_PNG:
-            $source      = imagecreatefrompng($this->getPath());
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagepng';
+            case IMAGETYPE_PNG:
+                $source      = imagecreatefrompng($this->getPath());
+                $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+                $store       = 'imagepng';
             break;
-        default:
-            // Not an image, exit;
+            default:
+                // Not an image, exit;
             return false;
         }
         imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);

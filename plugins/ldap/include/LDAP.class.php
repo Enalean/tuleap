@@ -307,17 +307,17 @@ class LDAP {
         if ($this->_connectAndBind()) {
             $this->_initErrorHandler();
             switch ($scope) {
-            case self::SCOPE_BASE:
-                $sr = ldap_read($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+                case self::SCOPE_BASE:
+                    $sr = ldap_read($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
                 break;
             
-            case self::SCOPE_ONELEVEL:
-                $sr = ldap_list($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+                case self::SCOPE_ONELEVEL:
+                    $sr = ldap_list($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
                 break;
             
-            case self::SCOPE_SUBTREE:
-            default:
-                $sr = ldap_search($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+                case self::SCOPE_SUBTREE:
+                default:
+                    $sr = ldap_search($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
             }
             $this->_restoreErrorHandler();
 

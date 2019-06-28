@@ -191,7 +191,7 @@ class FlamingParrot_NavBarPresenter
     }
 
     public function include_menu_login_text() {
-       return $GLOBALS['Language']->getText('include_menu','login');
+        return $GLOBALS['Language']->getText('include_menu','login');
     }
 
     public function include_menu_new_user_text() {

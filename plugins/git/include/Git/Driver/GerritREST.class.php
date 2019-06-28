@@ -118,7 +118,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
-       return $this->doesTheProjectExist($server, $project_name);
+        return $this->doesTheProjectExist($server, $project_name);
     }
 
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {

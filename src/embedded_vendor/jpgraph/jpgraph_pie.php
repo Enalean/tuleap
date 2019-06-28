@@ -38,10 +38,10 @@ class PiePlot {
     protected $weight=1, $color="black";
     protected $legend_margin=6,$show_labels=true;
     protected $themearr = array(
- "earth"  => array(136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430),
- "pastel" => array(27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38),
- "water"  => array(8,370,24,40,335,56,213,237,268,14,326,387,10,388),
- "sand"   => array(27,168,34,170,19,50,65,72,131,209,46,393));
+    "earth"  => array(136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430),
+    "pastel" => array(27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38),
+    "water"  => array(8,370,24,40,335,56,213,237,268,14,326,387,10,388),
+    "sand"   => array(27,168,34,170,19,50,65,72,131,209,46,393));
     protected $setslicecolors=array();
     protected $labeltype=0; // Default to percentage
     protected $pie_border=true,$pie_interior_border=true;
@@ -249,8 +249,8 @@ class PiePlot {
     // Should we display actual value or percentage?
     function SetLabelType($aType) {
         if( $aType < 0 || $aType > 2 )
-        	JpGraphError::RaiseL(15008,$aType);
-	        //("PiePlot::SetLabelType() Type for pie plots must be 0 or 1 (not $t).");
+            JpGraphError::RaiseL(15008,$aType);
+            //("PiePlot::SetLabelType() Type for pie plots must be 0 or 1 (not $t).");
         $this->labeltype = $aType;
     }
 
@@ -648,7 +648,7 @@ class PiePlot {
         if( $aaoption !== 1 ) {
             $this->title->SetPos($xc,
             $yc-$this->title->GetFontHeight($img)-$radius-$this->title->margin,
-     "center","bottom");
+            "center","bottom");
             $this->title->Stroke($img);
         }
 
@@ -1252,7 +1252,7 @@ class PieGraph extends Graph {
         $this->SetColor(array(255,255,255));
 
         if ($this->graph_theme) {
-          $this->graph_theme->ApplyGraph($this);
+            $this->graph_theme->ApplyGraph($this);
         }
     }
 

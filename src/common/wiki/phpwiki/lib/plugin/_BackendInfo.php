@@ -76,7 +76,7 @@ extends WikiPlugin
                 $table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
                 $table->pushContent($this->_showhash("get_versiondata('$page',$version)",
                                                      $vdata));
-            }
+        }
 
         $html->pushContent($table);
         return $html;
@@ -91,7 +91,7 @@ extends WikiPlugin
 
         foreach ($data as $key => $val) {
             if (is_integer($key)) {
-            	;
+                ;
             } elseif ($key == 'passwd' and !$user->isAdmin()) {
                 $data[$key] = $val ? _("<not displayed>") : _("<empty>");
             } elseif ($key and $key == '_cached_html') {
@@ -102,7 +102,7 @@ extends WikiPlugin
                 ob_end_clean();
             }
             elseif (is_bool($val)) {
-            	$data[$key] = $val ? "<true>" : "<false>";
+                $data[$key] = $val ? "<true>" : "<false>";
             }
             elseif (is_string($val) && (substr($val, 0, 2) == 'a:')) {
                 // how to indent this table?

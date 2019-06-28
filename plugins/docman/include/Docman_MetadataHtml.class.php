@@ -26,30 +26,30 @@ class Docman_MetadataHtmlFactory {
         $mdh = null;
 
         switch($md->getLabel()) {
-        case 'owner':
-            $mdh = new Docman_MetadataHtmlOwner($md, $formParams);;
+            case 'owner':
+                $mdh = new Docman_MetadataHtmlOwner($md, $formParams);;
             break;
 
-        case 'obsolescence_date':
-            $mdh = new Docman_MetadataHtmlObsolescence($md, $formParams);;
+            case 'obsolescence_date':
+                $mdh = new Docman_MetadataHtmlObsolescence($md, $formParams);;
             break;
         }
 
         if($mdh === null) {
             switch($md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                $mdh = new Docman_MetadataHtmlText($md, $formParams);;
+                case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                    $mdh = new Docman_MetadataHtmlText($md, $formParams);;
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                $mdh = new Docman_MetadataHtmlString($md, $formParams);;
+                case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                    $mdh = new Docman_MetadataHtmlString($md, $formParams);;
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $mdh = new Docman_MetadataHtmlDate($md, $formParams);;
+                case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                    $mdh = new Docman_MetadataHtmlDate($md, $formParams);;
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $mdh = new Docman_MetadataHtmlList($md, $formParams);;
+                case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                    $mdh = new Docman_MetadataHtmlList($md, $formParams);;
                 break;
-            default:
+                default:
             }    
         }      
 
@@ -320,13 +320,13 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
         $hp = Codendi_HTMLPurifier::instance();
         $name = '';
         switch($e->getId()) {
-        case 100:
-            if(!$hideNone) {
-                $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
-            }
+            case 100:
+                if(!$hideNone) {
+                    $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+                }
             break;
-        default:
-            $name = $hp->purify($e->getName());
+            default:
+                $name = $hp->purify($e->getName());
         }
         return $name;
     }
@@ -335,12 +335,12 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
     {
         $name = '';
         switch($e->getId()) {
-        case 100:
-            $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
+            case 100:
+                $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
             break;
-        default:
-            $hp = Codendi_HTMLPurifier::instance();
-            $name = $hp->purify($e->getDescription());
+            default:
+                $hp = Codendi_HTMLPurifier::instance();
+                $name = $hp->purify($e->getDescription());
         }
         return $name;
     }
@@ -438,10 +438,10 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
     function getValue() {
         $v = $this->md->getValue();
         switch($v) {
-        case PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
+            case PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
             return $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent');
             break;
-        default:
+            default:
             return DateHelper::formatForLanguage($GLOBALS['Language'], $v, true);
         }
     }

@@ -91,7 +91,7 @@ class StockPlot extends Plot {
 
             if( $exist_x ) {
                 $x=$this->coords[1][$i];
-				if ($x === null) continue;
+                if ($x === null) continue;
             }
             else {
                 $x=$i;

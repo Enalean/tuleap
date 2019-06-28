@@ -783,25 +783,25 @@ extends Rule {
         $ok = false;
         if(is_array($file)) {
             switch($file['error']) {
-            case UPLOAD_ERR_OK:
-                // all is OK
-                $ok = true;
+                case UPLOAD_ERR_OK:
+                    // all is OK
+                    $ok = true;
                 break;
-            case UPLOAD_ERR_INI_SIZE:
-            case UPLOAD_ERR_FORM_SIZE:
-                $this->error = $this->geti18nError('error_upload_size', $file['error']);
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->error = $this->geti18nError('error_upload_size', $file['error']);
                 break;
-            case UPLOAD_ERR_PARTIAL:
-                $this->error = $this->geti18nError('error_upload_partial', $file['error']);
+                case UPLOAD_ERR_PARTIAL:
+                    $this->error = $this->geti18nError('error_upload_partial', $file['error']);
                 break;
-            case UPLOAD_ERR_NO_FILE:
-                $this->error = $this->geti18nError('error_upload_nofile', $file['error']);
+                case UPLOAD_ERR_NO_FILE:
+                    $this->error = $this->geti18nError('error_upload_nofile', $file['error']);
                 break;
                 //case UPLOAD_ERR_NO_TMP_DIR: PHP 5.0.3
                 //case UPLOAD_ERR_CANT_WRITE: PHP 5.1.0
                 //case UPLOAD_ERR_EXTENSION: PHP 5.2.0
-            default:
-                $this->error = $this->geti18nError('error_upload_unknown', $file['error']);
+                default:
+                    $this->error = $this->geti18nError('error_upload_unknown', $file['error']);
             }
             if($ok && $file['name'] == '') {
                 $ok = false;
@@ -810,8 +810,8 @@ extends Rule {
             if($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
                 if(file_utils_get_size($file['tmp_name']) > $this->maxSize) {
-                   $ok = false;
-                   $this->error = $this->geti18nError('error_upload_size', 1);
+                    $ok = false;
+                    $this->error = $this->geti18nError('error_upload_size', 1);
                 }
             }
         }

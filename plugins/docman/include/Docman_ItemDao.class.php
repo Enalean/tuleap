@@ -433,7 +433,7 @@ class Docman_ItemDao extends DataAccessObject {
                     $wiki_page=null, $file_is_embedded=null) {       
        
         $argArray = array();
-		
+        
         if($parent_id !== null) {
             $argArray[] = 'parent_id='.((int) $parent_id);
         }
@@ -832,10 +832,10 @@ class Docman_ItemDao extends DataAccessObject {
         );
         $res = $this->retrieve($sql);
         if($res && !$res->isError()) {
-	        if($res->rowCount() > 1) {
+            if($res->rowCount() > 1) {
                 $res->rewind();
                 while($res->valid()) {
-		            $row = $res->current();
+                    $row = $res->current();
                     $ids[] = $row['item_id'];
                     $res->next();
                 }

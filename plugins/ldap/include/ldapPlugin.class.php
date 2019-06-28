@@ -738,13 +738,13 @@ class LdapPlugin extends Plugin {
            && $svnProjectManager->hasSVNLDAPAuthByName(basename($params['project_svnroot']))) {
                $ldapUm = $this->getLdapUserManager();
                $lr     = $ldapUm->getLdapFromUserName($params['username']);
-               if($lr !== false) {
-                   // Must lower the username because LDAP is case insensitive
-                   // while svn permission comparator is case sensitive and in
-                   // backend the .SVNAccessFile is generated with lowercase
-                   // usernames
-                   $params['username'] = strtolower($lr->getLogin());
-               }
+            if($lr !== false) {
+                // Must lower the username because LDAP is case insensitive
+                // while svn permission comparator is case sensitive and in
+                // backend the .SVNAccessFile is generated with lowercase
+                // usernames
+                $params['username'] = strtolower($lr->getLogin());
+            }
         }
     }
 

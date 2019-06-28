@@ -65,7 +65,7 @@ class Docman_HTTPController extends Docman_Controller {
         $this->view = 'Details';
     }
     /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
-    	   $this->view = $item->accept($get_show_view, $this->request->get('report'));
+           $this->view = $item->accept($get_show_view, $this->request->get('report'));
     }
     /* protected */ function _set_createItemView_afterCreate($view) {
         if ($view == 'createFolder') {

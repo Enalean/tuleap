@@ -58,7 +58,7 @@ if (!defined('HIGHLIGHT_EXE'))
 if (!defined('HIGHLIGHT_DATA_DIR'))
     if (isWindows())
         define('HIGHLIGHT_DATA_DIR','f:\cygnus\usr\local\share\highlight');
-    else
+else
         define('HIGHLIGHT_DATA_DIR','/usr/share/highlight');
         //define('HIGHLIGHT_DATA_DIR','/home/groups/p/ph/phpwiki/share/highlight');
 

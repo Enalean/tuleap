@@ -60,7 +60,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      * @param string $description the description of the renderer
      * @param int $rank the rank
      */
-     public function __construct($id, $report, $name, $description, $rank) {
+    public function __construct($id, $report, $name, $description, $rank) {
         $this->id          = $id;
         $this->report      = $report;
         $this->name        = $name;

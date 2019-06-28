@@ -56,7 +56,7 @@ extends WikiPlugin
         global $LANG;
         return array('text' => "Hello WikiWorld!",
                      'l'    => $LANG );
-        }
+    }
 
     function run($dbi, $argstr, &$request, $basepage) {
         if (ImageTypes() & IMG_PNG) {
@@ -165,14 +165,14 @@ extends WikiPlugin
         if ($success > 0) {
             if (defined('text2png_debug')) {
                 switch($success) {
-                case 1:
-                    trigger_error(sprintf(_("Image saved to cache file: %s"),
+                    case 1:
+                        trigger_error(sprintf(_("Image saved to cache file: %s"),
                                           $filepath . $filename),
                                   E_USER_NOTICE);
-                case 2:
-                    trigger_error(sprintf(_("Image loaded from cache file: %s"),
-                                          $filepath . $filename),
-                                  E_USER_NOTICE);
+                    case 2:
+                        trigger_error(sprintf(_("Image loaded from cache file: %s"),
+                                      $filepath . $filename),
+                              E_USER_NOTICE);
                 }
             }
             $url = "images/$l/$filename";

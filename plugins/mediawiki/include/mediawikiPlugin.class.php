@@ -193,48 +193,48 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-        public function layout_search_entry($params) {
-            $project = $this->getProjectFromRequest();
-            if ($this->isSearchEntryAvailable($project)) {
-                $params['search_entries'][] = array(
-                    'value'    => $this->getName(),
-                    'label'    => $this->text,
-                    'selected' => $this->isSearchEntrySelected($params['type_of_search']),
-                );
-                $params['hidden_fields'][] = array(
-                    'name'  => 'group_id',
-                    'value' => $project->getID()
-                );
-            }
+    public function layout_search_entry($params) {
+        $project = $this->getProjectFromRequest();
+        if ($this->isSearchEntryAvailable($project)) {
+            $params['search_entries'][] = array(
+                'value'    => $this->getName(),
+                'label'    => $this->text,
+                'selected' => $this->isSearchEntrySelected($params['type_of_search']),
+            );
+            $params['hidden_fields'][] = array(
+                'name'  => 'group_id',
+                'value' => $project->getID()
+            );
         }
+    }
 
         /**
          * @see Event::SEARCH_TYPE
          */
-        public function search_type($params) {
-            $query   = $params['query'];
-            $project = $query->getProject();
+    public function search_type($params) {
+        $query   = $params['query'];
+        $project = $query->getProject();
 
-            if ($query->getTypeOfSearch() == $this->getName() && $this->isSearchEntryAvailable($project)) {
-                if (! $project->isError()) {
-                   util_return_to($this->getMediawikiSearchURI($project, $query->getWords()));
-                }
+        if ($query->getTypeOfSearch() == $this->getName() && $this->isSearchEntryAvailable($project)) {
+            if (! $project->isError()) {
+                util_return_to($this->getMediawikiSearchURI($project, $query->getWords()));
             }
         }
+    }
 
         /**
          * @see Event::SEARCH_TYPES_PRESENTERS
          */
-        public function search_types_presenters($params) {
-            if ($this->isSearchEntryAvailable($params['project'])) {
-                $params['project_presenters'][] = new Search_SearchTypePresenter(
-                    $this->getName(),
-                    $this->text,
-                    array(),
-                    $this->getMediawikiSearchURI($params['project'], $params['words'])
-                );
-            }
+    public function search_types_presenters($params) {
+        if ($this->isSearchEntryAvailable($params['project'])) {
+            $params['project_presenters'][] = new Search_SearchTypePresenter(
+                $this->getName(),
+                $this->text,
+                array(),
+                $this->getMediawikiSearchURI($params['project'], $params['words'])
+            );
         }
+    }
 
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
@@ -243,106 +243,106 @@ class MediaWikiPlugin extends Plugin {
         $this->getMediawikiMLEBExtensionManager()->activateMLEBForCompatibleProjects($params['logger']);
     }
 
-        private function getMediawikiSearchURI(Project $project, $words) {
-            return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
-        }
+    private function getMediawikiSearchURI(Project $project, $words) {
+        return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
+    }
 
-        private function isSearchEntryAvailable(?Project $project = null) {
-            if ($project && ! $project->isError()) {
-                return $project->usesService(self::SERVICE_SHORTNAME);
-            }
-            return false;
+    private function isSearchEntryAvailable(?Project $project = null) {
+        if ($project && ! $project->isError()) {
+            return $project->usesService(self::SERVICE_SHORTNAME);
         }
+        return false;
+    }
 
-        private function isSearchEntrySelected($type_of_search) {
-            return ($type_of_search == $this->getName()) || $this->isMediawikiUrl();
-        }
+    private function isSearchEntrySelected($type_of_search) {
+        return ($type_of_search == $this->getName()) || $this->isMediawikiUrl();
+    }
 
-        private function isMediawikiUrl() {
-            return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
-        }
+    private function isMediawikiUrl() {
+        return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
+    }
 
         /**
          *
          * @return Project | null
          */
-        private function getProjectFromRequest() {
-            $matches = array();
-            preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
-            if (isset($matches[1])) {
-                $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
+    private function getProjectFromRequest() {
+        $matches = array();
+        preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
+        if (isset($matches[1])) {
+            $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
 
-                if ($project->isError()) {
-                    $project = ProjectManager::instance()->getProject($matches[1]);
-                }
-
-                if (! $project->isError()) {
-                    return $project;
-                }
+            if ($project->isError()) {
+                $project = ProjectManager::instance()->getProject($matches[1]);
             }
-            return null;
-        }
 
-        public function cssFile($params) {
-            // Only show the stylesheet if we're actually in the Mediawiki pages.
-            if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-                strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-                echo '<link rel="stylesheet" type="text/css" href="/plugins/mediawiki/themes/default/css/style.css" />';
+            if (! $project->isError()) {
+                return $project;
             }
         }
+        return null;
+    }
 
-        public function showImage(Codendi_Request $request) {
-            $project = $this->getProjectFromRequest();
-            $user    = $request->getCurrentUser();
+    public function cssFile($params) {
+        // Only show the stylesheet if we're actually in the Mediawiki pages.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="/plugins/mediawiki/themes/default/css/style.css" />';
+        }
+    }
 
-            if (! $project) {
-                exit;
-            }
+    public function showImage(Codendi_Request $request) {
+        $project = $this->getProjectFromRequest();
+        $user    = $request->getCurrentUser();
 
-            if ((! $project->isPublic() || $user->isRestricted())
-                && ! $project->userIsMember()
-                && ! $user->isSuperUser()
-                && ! $this->doesUserHavePermission($user)
-                && ! $this->getMediawikiManager()->userCanRead($user, $project)
-            ) {
-                exit;
-            }
-
-            preg_match('%'.$this->getPluginPath().'/wiki/[^/]+/images(.*)%', $_SERVER['REQUEST_URI'], $matches);
-            $file_location = $matches[1];
-
-            $folder_location = '';
-            if (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName())) {
-                $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName().'/images';
-            } elseif (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getId())) {
-                $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId().'/images';
-            } else {
-                exit;
-            }
-
-            $file = $folder_location.$file_location;
-            if (! file_exists($file)) {
-                exit;
-            }
-
-            $size = getimagesize($file);
-            $fp   = fopen($file, 'r');
-
-            if ($size and $fp) {
-                header('Content-Type: '.$size['mime']);
-                header('Content-Length: '.filesize($file));
-
-                readfile($file);
-                exit;
-            }
+        if (! $project) {
+            exit;
         }
 
-        function process() {
+        if ((! $project->isPublic() || $user->isRestricted())
+            && ! $project->userIsMember()
+            && ! $user->isSuperUser()
+            && ! $this->doesUserHavePermission($user)
+            && ! $this->getMediawikiManager()->userCanRead($user, $project)
+        ) {
+            exit;
+        }
+
+        preg_match('%'.$this->getPluginPath().'/wiki/[^/]+/images(.*)%', $_SERVER['REQUEST_URI'], $matches);
+        $file_location = $matches[1];
+
+        $folder_location = '';
+        if (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName())) {
+            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName().'/images';
+        } elseif (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getId())) {
+            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId().'/images';
+        } else {
+            exit;
+        }
+
+        $file = $folder_location.$file_location;
+        if (! file_exists($file)) {
+            exit;
+        }
+
+        $size = getimagesize($file);
+        $fp   = fopen($file, 'r');
+
+        if ($size and $fp) {
+            header('Content-Type: '.$size['mime']);
+            header('Content-Length: '.filesize($file));
+
+            readfile($file);
+            exit;
+        }
+    }
+
+    function process() {
         echo '<h1>Mediawiki</h1>';
         echo $this->getPluginInfo()->getpropVal('answer');
-        }
+    }
 
-        function &getPluginInfo() {
+    function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
             $this->pluginInfo = new MediaWikiPluginInfo($this);
         }

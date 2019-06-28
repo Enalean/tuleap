@@ -27,14 +27,14 @@ class ArtifactRuleValueView {
 
     var $rule;
     
-	/**
-	 *  ArtifactRuleValueView() - constructor
-	 *
-	 *  @param $artifact_rule object
-	 */
-	function __construct($rule) {
-		$this->rule = $rule;
-	}
+    /**
+     *  ArtifactRuleValueView() - constructor
+     *
+     *  @param $artifact_rule object
+     */
+    function __construct($rule) {
+        $this->rule = $rule;
+    }
     
     function display() {
         echo $this->fetch();

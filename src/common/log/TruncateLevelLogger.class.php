@@ -67,20 +67,20 @@ class TruncateLevelLogger implements Logger {
     }
 
     public function log($message, $level = null) {
-       switch ($level) {
-           case Logger::DEBUG:
-               $this->debug($message);
-               break;
-           case Logger::INFO:
-               $this->info($message);
-               break;
-           case Logger::WARN:
-               $this->warn($message);
-               break;
-           case Logger::ERROR:
-               $this->error($message);
-               break;
-       }
+        switch ($level) {
+            case Logger::DEBUG:
+                $this->debug($message);
+                break;
+            case Logger::INFO:
+                $this->info($message);
+                break;
+            case Logger::WARN:
+                $this->warn($message);
+                break;
+            case Logger::ERROR:
+                $this->error($message);
+                break;
+        }
     }
 
     public function createLogFileForAppUser($file_path)

@@ -5,7 +5,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
+//    Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();

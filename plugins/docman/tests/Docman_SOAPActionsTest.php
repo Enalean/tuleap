@@ -416,7 +416,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $action->getTreeInfo();
     }
 
-        public function testGetFileChunk() {
+    public function testGetFileChunk() {
         $action = $this->action;
 
         $params = array('group_id'=> 10, 'item_id'=> 128000, 'chunk_offset' => 10, 'chunk_size' => 64, 'version_number' => 2);

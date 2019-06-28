@@ -798,7 +798,7 @@ class BackendSVN extends Backend {
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
                 $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARNING);
-               $this->setSVNPrivacy($project, $is_private);
+                $this->setSVNPrivacy($project, $is_private);
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)

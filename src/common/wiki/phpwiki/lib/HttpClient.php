@@ -62,7 +62,7 @@ class HttpClient {
         $this->path = $path;
         $this->method = 'POST';
         $this->postdata = $this->buildQueryString($data);
-    	return $this->doRequest();
+        return $this->doRequest();
     }
     function buildQueryString($data) {
         $querystring = '';
@@ -78,10 +78,10 @@ class HttpClient {
                 }
             }
             $querystring = substr($querystring, 0, -1); // Eliminate unnecessary &
-    	} else {
-    	    $querystring = $data;
-    	}
-    	return $querystring;
+        } else {
+            $querystring = $data;
+        }
+        return $querystring;
     }
     function doRequest() {
         // Performs the actual HTTP request, returning true or false depending on outcome
@@ -90,16 +90,16 @@ class HttpClient {
         if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout)) {
             // Set error message
             switch($errno) {
-            case -3:
-                $this->errormsg = 'Socket creation failed (-3)';
-            case -4:
-                $this->errormsg = 'DNS lookup failure (-4)';
-            case -5:
-                $this->errormsg = 'Connection refused or timed out (-5)';
-            default:
-                $this->errormsg = 'Connection failed ('.$errno.')';
-                $this->errormsg .= ' '.$errstr;
-                $this->debug($this->errormsg);
+                case -3:
+                    $this->errormsg = 'Socket creation failed (-3)';
+                case -4:
+                    $this->errormsg = 'DNS lookup failure (-4)';
+                case -5:
+                    $this->errormsg = 'Connection refused or timed out (-5)';
+                default:
+                    $this->errormsg = 'Connection failed ('.$errno.')';
+                    $this->errormsg .= ' '.$errstr;
+                    $this->debug($this->errormsg);
             }
             return false;
         }
@@ -107,59 +107,59 @@ class HttpClient {
         $request = $this->buildRequest();
         $this->debug('Request', $request);
         fwrite($fp, $request);
-    	// Reset all the variables that should not persist between requests
-    	$this->headers = array();
-    	$this->content = '';
-    	$this->errormsg = '';
-    	// Set a couple of flags
-    	$inHeaders = true;
-    	$atStart = true;
-    	// Now start reading back the response
-    	while (!feof($fp)) {
-    	    $line = fgets($fp, 4096);
-    	    if ($atStart) {
-    	        // Deal with first line of returned data
-    	        $atStart = false;
-    	        if (!preg_match('/HTTP\/(\\d\\.\\d)\\s*(\\d+)\\s*(.*)/', $line, $m)) {
-    	            $this->errormsg = "Status code line invalid: ".htmlentities($line);
-    	            $this->debug($this->errormsg);
-    	            return false;
-    	        }
-    	        $http_version = $m[1]; // not used
-    	        $this->status = $m[2];
-    	        $status_string = $m[3]; // not used
-    	        $this->debug(trim($line));
-    	        continue;
-    	    }
-    	    if ($inHeaders) {
-    	        if (trim($line) == '') {
-    	            $inHeaders = false;
-    	            $this->debug('Received Headers', $this->headers);
-    	            if ($this->headers_only) {
-    	                break; // Skip the rest of the input
-    	            }
-    	            continue;
-    	        }
-    	        if (!preg_match('/([^:]+):\\s*(.*)/', $line, $m)) {
-    	            // Skip to the next header
-    	            continue;
-    	        }
-    	        $key = strtolower(trim($m[1]));
-    	        $val = trim($m[2]);
-    	        // Deal with the possibility of multiple headers of same name
-    	        if (isset($this->headers[$key])) {
-    	            if (is_array($this->headers[$key])) {
-    	                $this->headers[$key][] = $val;
-    	            } else {
-    	                $this->headers[$key] = array($this->headers[$key], $val);
-    	            }
-    	        } else {
-    	            $this->headers[$key] = $val;
-    	        }
-    	        continue;
-    	    }
-    	    // We're not in the headers, so append the line to the contents
-    	    $this->content .= $line;
+        // Reset all the variables that should not persist between requests
+        $this->headers = array();
+        $this->content = '';
+        $this->errormsg = '';
+        // Set a couple of flags
+        $inHeaders = true;
+        $atStart = true;
+        // Now start reading back the response
+        while (!feof($fp)) {
+            $line = fgets($fp, 4096);
+            if ($atStart) {
+                // Deal with first line of returned data
+                $atStart = false;
+                if (!preg_match('/HTTP\/(\\d\\.\\d)\\s*(\\d+)\\s*(.*)/', $line, $m)) {
+                    $this->errormsg = "Status code line invalid: ".htmlentities($line);
+                    $this->debug($this->errormsg);
+                    return false;
+                }
+                $http_version = $m[1]; // not used
+                $this->status = $m[2];
+                $status_string = $m[3]; // not used
+                $this->debug(trim($line));
+                continue;
+            }
+            if ($inHeaders) {
+                if (trim($line) == '') {
+                    $inHeaders = false;
+                    $this->debug('Received Headers', $this->headers);
+                    if ($this->headers_only) {
+                        break; // Skip the rest of the input
+                    }
+                    continue;
+                }
+                if (!preg_match('/([^:]+):\\s*(.*)/', $line, $m)) {
+                    // Skip to the next header
+                    continue;
+                }
+                $key = strtolower(trim($m[1]));
+                $val = trim($m[2]);
+                // Deal with the possibility of multiple headers of same name
+                if (isset($this->headers[$key])) {
+                    if (is_array($this->headers[$key])) {
+                        $this->headers[$key][] = $val;
+                    } else {
+                        $this->headers[$key] = array($this->headers[$key], $val);
+                    }
+                } else {
+                    $this->headers[$key] = $val;
+                }
+                continue;
+            }
+            // We're not in the headers, so append the line to the contents
+            $this->content .= $line;
         }
         fclose($fp);
         // If data is compressed, uncompress it
@@ -218,25 +218,25 @@ class HttpClient {
         if (!empty($this->referer)) {
             $headers[] = "Referer: {$this->referer}";
         }
-    	// Cookies
-    	if (!empty($this->cookies)) {
-    	    $cookie = 'Cookie: ';
-    	    foreach ($this->cookies as $key => $value) {
-    	        $cookie .= "$key=$value; ";
-    	    }
-    	    $headers[] = $cookie;
-    	}
-    	// Basic authentication
-    	if (!empty($this->username) && !empty($this->password)) {
-    	    $headers[] = 'Authorization: BASIC '.base64_encode($this->username.':'.$this->password);
-    	}
-    	// If this is a POST, set the content type and length
-    	if ($this->postdata) {
-    	    $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-    	    $headers[] = 'Content-Length: '.strlen($this->postdata);
-    	}
-    	$request = implode("\r\n", $headers)."\r\n\r\n".$this->postdata;
-    	return $request;
+        // Cookies
+        if (!empty($this->cookies)) {
+            $cookie = 'Cookie: ';
+            foreach ($this->cookies as $key => $value) {
+                $cookie .= "$key=$value; ";
+            }
+            $headers[] = $cookie;
+        }
+        // Basic authentication
+        if (!empty($this->username) && !empty($this->password)) {
+            $headers[] = 'Authorization: BASIC '.base64_encode($this->username.':'.$this->password);
+        }
+        // If this is a POST, set the content type and length
+        if ($this->postdata) {
+            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+            $headers[] = 'Content-Length: '.strlen($this->postdata);
+        }
+        $request = implode("\r\n", $headers)."\r\n\r\n".$this->postdata;
+        return $request;
     }
     function getStatus() {
         return $this->status;

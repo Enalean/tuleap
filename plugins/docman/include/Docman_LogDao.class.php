@@ -32,7 +32,7 @@ class Docman_LogDao extends DataAccessObject
     public function searchByItemId($itemId, $order = '')
     {
         $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
-				$this->da->quoteSmart($itemId));
+        $this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
     }
     /**
@@ -66,7 +66,7 @@ class Docman_LogDao extends DataAccessObject
     */
     public function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null)
     {
-		$sql = 'INSERT INTO plugin_docman_log (time, group_id, item_id, user_id, type';
+        $sql = 'INSERT INTO plugin_docman_log (time, group_id, item_id, user_id, type';
         if (!is_null($old_value)) {
             $sql .= ', old_value';
         }

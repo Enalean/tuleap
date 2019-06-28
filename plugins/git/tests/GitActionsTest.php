@@ -646,7 +646,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
      */
     private $actions;
 
-     public function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
@@ -683,36 +683,36 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
 
 
         $this->actions = new GitActions(
-            $this->controller,
-            $this->system_event_manager,
-            $this->factory,
-            \Mockery::spy(\GitRepositoryManager::class),
-            $this->gerrit_server_factory,
-            mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns($this->driver),
-            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
-            $this->project_creator,
-            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
-            \Mockery::spy(\ProjectManager::class),
-            $this->git_permissions_manager,
-            $url_manager,
-            \Mockery::spy(\Logger::class),
-            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
-            \Mockery::spy(\ProjectHistoryDao::class),
-            \Mockery::spy(\GitRepositoryMirrorUpdater::class),
-            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
-            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
-            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
-            \Mockery::spy(\UGroupManager::class)
+           $this->controller,
+           $this->system_event_manager,
+           $this->factory,
+           \Mockery::spy(\GitRepositoryManager::class),
+           $this->gerrit_server_factory,
+           mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns($this->driver),
+           \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+           $this->project_creator,
+           \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
+           \Mockery::spy(\ProjectManager::class),
+           $this->git_permissions_manager,
+           $url_manager,
+           \Mockery::spy(\Logger::class),
+           \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+           \Mockery::spy(\ProjectHistoryDao::class),
+           \Mockery::spy(\GitRepositoryMirrorUpdater::class),
+           \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
+           \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
+           \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
+           \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
+           \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
+           \Mockery::spy(\UGroupManager::class)
         );
 
     }

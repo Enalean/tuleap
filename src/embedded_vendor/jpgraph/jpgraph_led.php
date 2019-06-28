@@ -259,7 +259,7 @@ class DigitalLED74
 
 
     function Stroke($aValStr, $aColor = 0, $aFileName = '') {
-    	$this->StrokeNumber($aValStr, $aColor, $aFileName);
+        $this->StrokeNumber($aValStr, $aColor, $aFileName);
     }
 
 
@@ -279,7 +279,7 @@ class DigitalLED74
                 $d = (int)$d;
             }
             else {
-               $d = strtoupper($d);
+                $d = strtoupper($d);
             }
             $digit_img[$i] = $this->_GetLED($d, $aColor);
         }

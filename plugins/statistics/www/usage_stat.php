@@ -77,7 +77,7 @@ while($row = db_fetch_array($res)) {
 $sql = 'SELECT YEAR(FROM_UNIXTIME(register_time)) as year, month(FROM_UNIXTIME(register_time)) as month, count(*) as c from groups where group_id > 101 group by year,month';
 $res = db_query($sql);
 while($row = db_fetch_array($res)) {
-if($row['year'] < $min_year) {
+    if($row['year'] < $min_year) {
         $min_year = $row['year'];
     }
     if($row['year'] > $max_year) {

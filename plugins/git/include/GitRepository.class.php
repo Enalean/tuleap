@@ -465,10 +465,10 @@ class GitRepository implements DVCSRepository
      * @return String
      */
     public function getRootPath() {
-       if ( !$this->exists() ) {
-           $this->rootPath = $this->project->getUnixName();
-       }
-       return $this->rootPath;
+        if ( !$this->exists() ) {
+            $this->rootPath = $this->project->getUnixName();
+        }
+        return $this->rootPath;
     }
 
     /**

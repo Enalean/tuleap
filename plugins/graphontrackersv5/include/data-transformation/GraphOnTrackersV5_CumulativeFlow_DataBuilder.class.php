@@ -179,7 +179,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
                 $resultArray[$timestamp] = array_reverse($resultArray[$timestamp], true);
             }
 
-        return $resultArray;
+            return $resultArray;
     }
 
     /**
@@ -198,7 +198,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $res = db_query($sql);
         $changesets = array();
         while($data = db_fetch_array($res)) {
-           $changesets[] = $data['id'];
+            $changesets[] = $data['id'];
         }
         return $changesets;
     }

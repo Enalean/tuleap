@@ -36,9 +36,9 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
      * |-Child 3 (id:10)
      * |
      * '-Child 4 (id:12, al:14, 16)
-     * 	 |
-     * 	 |-Child 5 (id:14)
-     * 	 |
+     *      |
+     *      |-Child 5 (id:14)
+     *      |
      *   '-Child 6 (id:16)
      * 
      */

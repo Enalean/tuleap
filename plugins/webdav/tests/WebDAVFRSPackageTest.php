@@ -435,18 +435,18 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testDeleteSucceede() {
 
-    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-    $webDAVFRSPackage->setReturnValue('getReleaseList', array());
-    $packageFactory = new MockFRSPackageFactory();
-    $packageFactory->setReturnValue('delete_package', 1);
-    $utils = new MockWebDAVUtils();
-    $utils->setReturnValue('getPackageFactory', $packageFactory);
-    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-    $project = new MockProject();
-    $webDAVFRSPackage->setReturnValue('getProject', $project);
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $webDAVFRSPackage->setReturnValue('getReleaseList', array());
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('delete_package', 1);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getPackageFactory', $packageFactory);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $project = new MockProject();
+        $webDAVFRSPackage->setReturnValue('getProject', $project);
 
-    $webDAVFRSPackage->delete();
+        $webDAVFRSPackage->delete();
 
     }
 
@@ -474,18 +474,18 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testSetNameFailWithNameExist() {
 
-    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-    $packageFactory = new MockFRSPackageFactory();
-    $packageFactory->setReturnValue('isPackageNameExist', true);
-    $utils = new MockWebDAVUtils();
-    $utils->setReturnValue('getPackageFactory', $packageFactory);
-    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-    $project = new MockProject();
-    $webDAVFRSPackage->setReturnValue('getProject', $project);
-    $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('isPackageNameExist', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getPackageFactory', $packageFactory);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $project = new MockProject();
+        $webDAVFRSPackage->setReturnValue('getProject', $project);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
-    $webDAVFRSPackage->setName('newName');
+        $webDAVFRSPackage->setName('newName');
 
     }
 
@@ -494,19 +494,19 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testSetNameSucceede() {
 
-    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-    $packageFactory = new MockFRSPackageFactory();
-    $packageFactory->setReturnValue('isPackageNameExist', false);
-    $utils = new MockWebDAVUtils();
-    $utils->setReturnValue('getPackageFactory', $packageFactory);
-    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-    $project = new MockProject();
-    $webDAVFRSPackage->setReturnValue('getProject', $project);
-    $package = new MockFRSPackage();
-    $webDAVFRSPackage->setReturnValue('getPackage', $package);
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('isPackageNameExist', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getPackageFactory', $packageFactory);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $project = new MockProject();
+        $webDAVFRSPackage->setReturnValue('getProject', $project);
+        $package = new MockFRSPackage();
+        $webDAVFRSPackage->setReturnValue('getPackage', $package);
 
-    $webDAVFRSPackage->setName('newName');
+        $webDAVFRSPackage->setName('newName');
 
     }
 

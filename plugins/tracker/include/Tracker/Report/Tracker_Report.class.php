@@ -462,7 +462,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $i = 0;
         foreach ($reports as $report) {
             if ($report->user_id == null) {
-              $i++;
+                $i++;
             }
         }
         return $i;

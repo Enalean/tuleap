@@ -565,7 +565,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
-   private function GivenFormElementFactoryHasOnlyStartDateField() {
+    private function GivenFormElementFactoryHasOnlyStartDateField() {
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'start_date', $this->current_user)->returns($this->start_date_field);
@@ -584,7 +584,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
-   public function itDisplaysAMessageWhenStartDateIsEmpty() {
+    public function itDisplaysAMessageWhenStartDateIsEmpty() {
         // Empty timestamp
         $start_date_changeset_value = mockery_stub(\Tracker_Artifact_ChangesetValue_Date::class)->getTimestamp()->returns('');
 

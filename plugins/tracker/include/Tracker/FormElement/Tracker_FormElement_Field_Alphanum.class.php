@@ -110,7 +110,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      *
      * @return mixed The values or null if there are no specific available values
      */
-     public function getRESTAvailableValues() {
-         return null;
-     }
+    public function getRESTAvailableValues() {
+        return null;
+    }
 }

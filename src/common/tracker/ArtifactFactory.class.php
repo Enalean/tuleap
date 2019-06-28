@@ -21,12 +21,12 @@
 
 class ArtifactFactory {
 
-	/**
-	 * The ArtifactType object.
-	 *
-	 * @var	 object  $ArtifactType.
-	 */
-	var $ArtifactType;
+    /**
+     * The ArtifactType object.
+     *
+     * @var     object  $ArtifactType.
+     */
+    var $ArtifactType;
     /**
      * @var string
      */
@@ -37,99 +37,99 @@ class ArtifactFactory {
     private $error_state = false;
 
     /**
-	 *
-	 *
-	 *	@param	object	The ArtifactType object to which this ArtifactFactory is associated.
-	 *	@return bool success.
-	 */
-	function __construct(&$ArtifactType) {
-	  global $Language;
+     *
+     *
+     *    @param    object    The ArtifactType object to which this ArtifactFactory is associated.
+     *    @return bool success.
+     */
+    function __construct(&$ArtifactType) {
+        global $Language;
 
-		if (!$ArtifactType || !is_object($ArtifactType)) {
-			$this->setError('ArtifactFactory:: '.$Language->getText('tracker_common_canned','not_valid'));
-			return false;
-		}
-		if ($ArtifactType->isError()) {
-			$this->setError('ArtifactFactory:: '.$ArtifactType->getErrorMessage());
-			return false;
-		}
-		$this->ArtifactType = $ArtifactType;
+        if (!$ArtifactType || !is_object($ArtifactType)) {
+            $this->setError('ArtifactFactory:: '.$Language->getText('tracker_common_canned','not_valid'));
+            return false;
+        }
+        if ($ArtifactType->isError()) {
+            $this->setError('ArtifactFactory:: '.$ArtifactType->getErrorMessage());
+            return false;
+        }
+        $this->ArtifactType = $ArtifactType;
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 *	getMyArtifacts - get an array of Artifact objects submitted by a user or assigned to this user
-	 *
-	 *  @param user_id: the user id
-	 *
-	 *	@return	array	The array of Artifact objects.
-	 */
-	function getMyArtifacts($user_id) {
-	  global $Language;
+    /**
+     *    getMyArtifacts - get an array of Artifact objects submitted by a user or assigned to this user
+     *
+     *  @param user_id: the user id
+     *
+     *    @return    array    The array of Artifact objects.
+     */
+    function getMyArtifacts($user_id) {
+        global $Language;
 
-		$artifacts = array();
+        $artifacts = array();
 
-		// List of trackers - Check on assigned_to or multi_assigned_to or submitted by
-		$sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
-			   "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id AND ".
-			   "(af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id AND ".
-			   "(afv.valueInt=". db_ei($user_id) ." OR a.submitted_by=". db_ei($user_id) .") AND a.status_id <> 3 LIMIT 100";
+     // List of trackers - Check on assigned_to or multi_assigned_to or submitted by
+        $sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
+         "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id AND ".
+         "(af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id AND ".
+         "(afv.valueInt=". db_ei($user_id) ." OR a.submitted_by=". db_ei($user_id) .") AND a.status_id <> 3 LIMIT 100";
 
-		//echo $sql;
-		$result=db_query($sql);
-		$rows = db_numrows($result);
-		$this->fetched_rows=$rows;
-		if (db_error()) {
-			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
-			return false;
-		} else {
-			while ($arr = db_fetch_array($result)) {
-				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
-			}
-			if ( count($artifacts) ) {
-				return $artifacts;
-			}
-		}
+     //echo $sql;
+        $result=db_query($sql);
+        $rows = db_numrows($result);
+        $this->fetched_rows=$rows;
+        if (db_error()) {
+            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            return false;
+        } else {
+            while ($arr = db_fetch_array($result)) {
+                $artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
+            }
+            if ( count($artifacts) ) {
+                return $artifacts;
+            }
+        }
 
-		// List of trackers - Check on submitted_by
-		$sql = "SELECT a.*, 0 as assigned_to FROM artifact_group_list agl, artifact a WHERE ".
-			   "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND ".
-			   "a.submitted_by=". db_ei($user_id) ." AND a.status_id <> 3 LIMIT 100";
+     // List of trackers - Check on submitted_by
+        $sql = "SELECT a.*, 0 as assigned_to FROM artifact_group_list agl, artifact a WHERE ".
+         "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND ".
+         "a.submitted_by=". db_ei($user_id) ." AND a.status_id <> 3 LIMIT 100";
 
-		//echo $sql;
-		$result=db_query($sql);
-		$rows = db_numrows($result);
-		$this->fetched_rows=$rows;
-		if (db_error()) {
-			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
-			return false;
-		} else {
-			while ($arr = db_fetch_array($result)) {
-				$artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
-			}
-		}
+     //echo $sql;
+        $result=db_query($sql);
+        $rows = db_numrows($result);
+        $this->fetched_rows=$rows;
+        if (db_error()) {
+            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            return false;
+        } else {
+            while ($arr = db_fetch_array($result)) {
+                $artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
+            }
+        }
 
-		return $artifacts;
-	}
-	/**
-	 *  getArtifacts - get an array of Artifact objects
-	 *
-	 *	@param $criteria : array of items field => value
-	 *	@param $offset   : the index of artifact to begin
-	 *	@param $max_rows : number of artifacts to return
-	 *
+        return $artifacts;
+    }
+    /**
+     *  getArtifacts - get an array of Artifact objects
+     *
+     *    @param $criteria : array of items field => value
+     *    @param $offset   : the index of artifact to begin
+     *    @param $max_rows : number of artifacts to return
+     *
      *  @param OUT $total_artifacts : total number of artifacts (if offset and max_rows were not here) 
      *
-	 *	@return	array	The array of Artifact objects.
-	 */
-	function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts) {
-		global $Language, $art_field_fact;
+     *    @return    array    The array of Artifact objects.
+     */
+    function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts) {
+        global $Language, $art_field_fact;
         
         $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
 
         $artifacts = array();
-		if (is_array($criteria) && count($criteria) > 0) {
+        if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
             $sql_from = " FROM artifact_group_list agl, artifact a ";
             $sql_where = " WHERE a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND 
@@ -137,13 +137,13 @@ class ArtifactFactory {
             
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
             foreach ($criteria as $c => $cr) {
-				$af = $art_field_fact->getFieldFromName($cr->field_name);
-				if (!$af || !is_object($af)) {
+                $af = $art_field_fact->getFieldFromName($cr->field_name);
+                if (!$af || !is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : '.$cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
                     $this->setError($art_field_fact->getErrorMessage());
-	        	    return false;
+                    return false;
                 }
                 
                 if ($af->isDateField() && ($cr->field_name != 'open_date' && $cr->field_name != 'close_date' && $cr->field_name != 'last_update_date')) {
@@ -152,11 +152,11 @@ class ArtifactFactory {
                 }
                 
                 $operator = "=";    // operator by default
-				if (isset($cr->operator) && in_array($cr->operator, $ACCEPTED_OPERATORS)) {
+                if (isset($cr->operator) && in_array($cr->operator, $ACCEPTED_OPERATORS)) {
                     $operator = $cr->operator;
                 }
                 
-				if ($af->isStandardField()) {
+                if ($af->isStandardField()) {
                     if ($cr->operator == '=' && ($cr->field_name == 'open_date' || $cr->field_name == 'close_date' || $cr->field_name == 'last_update_date')) {
                         // special case for open_date and close_date with operator = : the hours, minutes, and seconds are stored, so we have to compare an interval
                         list($year,$month,$day) = util_date_explode($cr->field_value);
@@ -170,7 +170,7 @@ class ArtifactFactory {
                             $sql_where .= " AND (a.".$cr->field_name." ".$operator." '". db_es($cr->field_value) ."')";
                         }
                     }
-				} else {
+                } else {
                     $sql_select .= ", afv".$cpt_criteria.".valueInt ";
                     $sql_from .= ", artifact_field af".$cpt_criteria.", artifact_field_value afv".$cpt_criteria." ";
                     $sql_where .= " AND af".$cpt_criteria.".group_artifact_id = agl.group_artifact_id
@@ -178,14 +178,14 @@ class ArtifactFactory {
                                     AND afv".$cpt_criteria.".".$af->getValueFieldName()." ".$operator." '".$cr->field_value."') 
                                     AND af".$cpt_criteria.".field_id = afv".$cpt_criteria.".field_id 
                                     AND a.artifact_id = afv".$cpt_criteria.".artifact_id ";
-				}        
+                }        
                 $cpt_criteria += 1;
-			}
-			
+            }
+            
             $sql = $sql_select . $sql_from . $sql_where;
             
-		} else {
-			$sql = "SELECT a.artifact_id 
+        } else {
+            $sql = "SELECT a.artifact_id 
                     FROM artifact_group_list agl, artifact a 
                     WHERE a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND 
                           a.group_artifact_id = agl.group_artifact_id";
@@ -199,29 +199,29 @@ class ArtifactFactory {
         $offset = intval($offset);
         $max_rows = intval($max_rows);
         if ($max_rows > 0) {
-			if (!$offset || $offset < 0) {
-				$offset=0;
-			}
-			$sql .=" LIMIT ".  db_ei($offset)  .",".  db_ei($max_rows);
-		}
+            if (!$offset || $offset < 0) {
+                $offset=0;
+            }
+            $sql .=" LIMIT ".  db_ei($offset)  .",".  db_ei($max_rows);
+        }
         
         $result=db_query($sql);
         $rows = db_numrows($result);
-		$this->fetched_rows=$rows;
+        $this->fetched_rows=$rows;
         if (db_error()) {
-			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
-			return false;
-		} else {
-			while ($arr = db_fetch_array($result)) {
-				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true);
+            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            return false;
+        } else {
+            while ($arr = db_fetch_array($result)) {
+                $artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true);
                 // artifact is not added if the user can't view it
                 if ($artifact->userCanView()) {
                     $artifacts[$arr['artifact_id']] = $artifact;
                 }
-			}
-		}
-		return $artifacts;
-	}
+            }
+        }
+        return $artifacts;
+    }
     
     
     function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts) {
@@ -347,7 +347,7 @@ class ArtifactFactory {
         }
         
         
-		return $artifacts;
+        return $artifacts;
     }
 
     /**

@@ -12,7 +12,7 @@
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
-	exit_error($Language->getText('global','error'),$Language->getText('tracker_add', 'invalid'));
+    exit_error($Language->getText('global','error'),$Language->getText('tracker_add', 'invalid'));
 }
 
 // Create factories
@@ -21,11 +21,11 @@ $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 // Printer version ?
 if ( !$request->exist('pv') ) {
-	$pv = false;
-	$ro = !user_isloggedin();
+    $pv = false;
+    $ro = !user_isloggedin();
 } else {
     $pv = $request->get('pv');
-	if ( $pv ) $ro = true;
+    if ( $pv ) $ro = true;
 }
 
 $GLOBALS['HTML']->addFeed(

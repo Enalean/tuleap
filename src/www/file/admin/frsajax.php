@@ -54,9 +54,9 @@ if ($action == 'permissions_frs_package') {
 } else {
     if ($action == 'permissions_frs_release') {
 
-   	    $vReleaseId = new Valid_UInt('release_id');
+           $vReleaseId = new Valid_UInt('release_id');
         $vReleaseId->required();
-	    $vGroupId = new Valid_GroupId();
+        $vGroupId = new Valid_GroupId();
         $vGroupId->required();
         if ($request->valid($vReleaseId) && $request->valid($vGroupId)) {
             $group_id   = $request->get('group_id');
@@ -77,7 +77,7 @@ if ($action == 'permissions_frs_package') {
             $vDate = new Valid_String('date');
             $vDate->required();
             $vPackageId = new Valid_UInt('package_id');
-            $vPackageId->required();    	          
+            $vPackageId->required();                  
             $vGroupId = new Valid_GroupId();
             $vGroupId->required();
             if ($request->valid($vName) &&
@@ -109,12 +109,12 @@ if ($action == 'permissions_frs_package') {
         } else {
             if ($action == 'validator_frs_update') {
                 $vName = new Valid_String('name');
- 	            $vDate = new Valid_String('date');
- 	            $vDate->required();
+                $vDate = new Valid_String('date');
+                $vDate->required();
                 $vPackageId = new Valid_UInt('package_id');
-    	        $vPackageId->required();
+                $vPackageId->required();
                 $vReleaseId = new Valid_UInt('release_id');
-                $vReleaseId->required();    	          
+                $vReleaseId->required();                  
                 $vGroupId = new Valid_GroupId();
                 $vGroupId->required();
                 if ($request->valid($vName) &&

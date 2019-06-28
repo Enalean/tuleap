@@ -186,12 +186,12 @@ extends WikiPlugin
                                              $page));
         }
         $warning = HTML(
-_("Please use one of the downloadable versions rather than copying and pasting from the above preview.")
-. " " .
-_("The wordwrap of the preview doesn't take nested markup or list indentation into consideration!")
-. " ",
-HTML::em(
-_("PhpWiki developers should manually inspect the downloaded file for nested markup before rewrapping with emacs and checking into CVS.")
+        _("Please use one of the downloadable versions rather than copying and pasting from the above preview.")
+        . " " .
+        _("The wordwrap of the preview doesn't take nested markup or list indentation into consideration!")
+        . " ",
+        HTML::em(
+        _("PhpWiki developers should manually inspect the downloaded file for nested markup before rewrapping with emacs and checking into CVS.")
          )
                         );
 

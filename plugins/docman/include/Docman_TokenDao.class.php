@@ -32,8 +32,8 @@ class Docman_TokenDao extends DataAccessObject {
     */
     function searchUrl($user_id, $token) {
         $sql = sprintf("SELECT url FROM plugin_docman_tokens WHERE user_id = %s AND token = %s",
-				$this->da->quoteSmart($user_id),
-				$this->da->quoteSmart($token));
+        $this->da->quoteSmart($user_id),
+        $this->da->quoteSmart($token));
         return $this->retrieve($sql);
     }
     
@@ -42,10 +42,10 @@ class Docman_TokenDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($user_id, $token, $url) {
-		$sql = sprintf("INSERT INTO plugin_docman_tokens (user_id, token, url, created_at) VALUES (%s, %s, %s, NOW())",
-				$this->da->quoteSmart($user_id),
-				$this->da->quoteSmart($token),
-				$this->da->quoteSmart($url));
+        $sql = sprintf("INSERT INTO plugin_docman_tokens (user_id, token, url, created_at) VALUES (%s, %s, %s, NOW())",
+        $this->da->quoteSmart($user_id),
+        $this->da->quoteSmart($token),
+        $this->da->quoteSmart($url));
         $inserted = $this->update($sql);
  
         return $inserted;
@@ -56,8 +56,8 @@ class Docman_TokenDao extends DataAccessObject {
     */
     function delete($user_id, $token) {
         $sql = sprintf("DELETE FROM plugin_docman_tokens WHERE (TO_DAYS(NOW()) - TO_DAYS(created_at)) > 1 OR (user_id = %s AND token = %s)",
-				$this->da->quoteSmart($user_id),
-				$this->da->quoteSmart($token));
+        $this->da->quoteSmart($user_id),
+        $this->da->quoteSmart($token));
         $deleted = $this->update($sql);
  
         return $deleted;

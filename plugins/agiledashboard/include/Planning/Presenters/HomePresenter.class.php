@@ -192,7 +192,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     }
 
     public function kanban_name_label() {
-       return $GLOBALS['Language']->getText('plugin_agiledashboard','kanban_name_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','kanban_name_label');
     }
 
     public function tracker_kanban_label() {

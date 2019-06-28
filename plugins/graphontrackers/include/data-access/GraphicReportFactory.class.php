@@ -30,9 +30,9 @@ class GraphicReportFactory {
     var $reports;
 
     /**
-	*
-	*
-	* 	@return null
+    *
+    *
+    *     @return null
     */ 
     
     function __construct($group_artifact_id,$user_id){
@@ -41,9 +41,9 @@ class GraphicReportFactory {
     }
 
     /**
-	* function fetchData to fetch all properties of graphic reports from database
-	*
-	* 	@return array: result set
+    * function fetchData to fetch all properties of graphic reports from database
+    *
+    *     @return array: result set
     */    
     
     function fetchData(){
@@ -57,11 +57,11 @@ class GraphicReportFactory {
     }
 
     /**
-    *	Retrieve the artifact report list order by scope
+    *    Retrieve the artifact report list order by scope
     *
-    *	@param	group_artifact_id: the artifact type
+    *    @param    group_artifact_id: the artifact type
     *
-    *	@return	array
+    *    @return    array
     */
 
     function getReports_ids() {
@@ -92,8 +92,8 @@ class GraphicReportFactory {
         // else get personal reports in addition  project-wide and system wide.
         $sql = "SELECT * FROM plugin_graphontrackers_report_graphic WHERE ";
         if ($this->user_id == 100) {
-   	        $sql .= "(group_artifact_id=".db_ei($this->group_artifact_id)." AND scope='P') OR scope='S' ".
-   	        "ORDER BY report_graphic_id";
+               $sql .= "(group_artifact_id=".db_ei($this->group_artifact_id)." AND scope='P') OR scope='S' ".
+               "ORDER BY report_graphic_id";
         } else {
             $sql .= "(group_artifact_id=".db_ei($this->group_artifact_id)." AND (user_id=".db_ei($this->user_id)." OR scope='P')) OR ".
             "scope='S' ORDER BY report_graphic_id";
@@ -102,9 +102,9 @@ class GraphicReportFactory {
     }
 
     /**
-	* function getReportGraphicIdFromName to get graphic report name from a identifier
-	*
-	* 	@return String graphic report name
+    * function getReportGraphicIdFromName to get graphic report name from a identifier
+    *
+    *     @return String graphic report name
     */  
         
     function getReportGraphicIdFromName($report_name){

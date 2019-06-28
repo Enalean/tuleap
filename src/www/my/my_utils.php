@@ -5,7 +5,7 @@
 //
 //
 //
-//	Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
+//    Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 
 /*
   Function that generates hide/show urls to expand/collapse
@@ -41,22 +41,22 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     if ($old_hide == false) { $old_hide = 0; }
 
     if ($item_id == $db_item_id) {
-		if (isset($hide)) {
-		    $pref_value = "$hide|$count";
-		} else {
-		    $pref_value = "$old_hide|$count";
-		    $hide = $old_hide;
-		}
+        if (isset($hide)) {
+            $pref_value = "$hide|$count";
+        } else {
+            $pref_value = "$old_hide|$count";
+            $hide = $old_hide;
+        }
     } else {
-		if ($old_hide) {
-		    // if items are hidden keep the old count and keep pref as is
-		    $pref_value = $old_pref_value;
-		} else {
-		    // only update the item count if the items are visible
-		    // if they are hidden keep reporting the old count
-		    $pref_value = "$old_hide|$count";
-		}
-		$hide = $old_hide;
+        if ($old_hide) {
+            // if items are hidden keep the old count and keep pref as is
+            $pref_value = $old_pref_value;
+        } else {
+            // only update the item count if the items are visible
+            // if they are hidden keep reporting the old count
+            $pref_value = "$old_hide|$count";
+        }
+        $hide = $old_hide;
     }
 
     // Update pref value if needed
@@ -65,11 +65,11 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     }
 
     if ($hide) {
-		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
-		$hide_now = true;
+        $hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
+        $hide_now = true;
     } else {
-		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
-		$hide_now = false;
+        $hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
+        $hide_now = false;
     }
 
     return array($hide_now, $count-$old_count, $hide_url);
@@ -84,11 +84,11 @@ function my_hide($svc, $db_item_id, $item_id, $hide) {
     if ($old_hide == false) { $old_hide = 0; }
 
     if ($item_id == $db_item_id) {
-		if (!isset($hide)) {
-		    $hide = $old_hide;
-		}
+        if (!isset($hide)) {
+            $hide = $old_hide;
+        }
     } else {
-		$hide = $old_hide;
+        $hide = $old_hide;
     }
     return $hide;
 }

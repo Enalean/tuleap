@@ -527,9 +527,9 @@ class LDAP_UserManager {
             }
         }
         if ($this->ldap->getErrno() === LDAP::ERR_SUCCESS && $ldapSearch) {
-           if (count($ldapSearch) == 0) {
-               return true;
-           }
+            if (count($ldapSearch) == 0) {
+                return true;
+            }
         }
         return false;
     }

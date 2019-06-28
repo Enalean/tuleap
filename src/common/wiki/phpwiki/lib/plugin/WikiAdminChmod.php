@@ -55,8 +55,8 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                   's' 		=> false,
-                   'perm' 	=> false,
+                   's'         => false,
+                   'perm'     => false,
                    /* Columns to include in listing */
                    'info'     => 'pagename,perm,mtime,author',
                    ));
@@ -96,7 +96,7 @@ extends WikiPlugin_WikiAdminSelect
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
-	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if (!DEBUG)
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
         
@@ -188,9 +188,9 @@ extends WikiPlugin_WikiAdminSelect
                                       'value' => 1));
         if (!empty($post_args['updatechildren']))  $checkbox->setAttr('checked','checked');
         $header->pushContent($checkbox, HTML::raw("&nbsp;"),
-        	_("Propagate new permissions to all subpages?"),
-        	HTML::raw("&nbsp;&nbsp;"),
-        	HTML::em(_("(disable individual page permissions, enable inheritance)?")));
+            _("Propagate new permissions to all subpages?"),
+            HTML::raw("&nbsp;&nbsp;"),
+            HTML::em(_("(disable individual page permissions, enable inheritance)?")));
         $header->pushContent(HTML::hr(),HTML::p());
         return $header;
     }

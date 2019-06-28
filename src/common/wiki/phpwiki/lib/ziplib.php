@@ -195,8 +195,8 @@ function zip_deflate ($content)
     extract(unpack("Vcrc32", substr($z, $gz_header_len + $gz_data_len)));
     
     return array(substr($z, $gz_header_len, $gz_data_len), // gzipped data
-                 $crc32,		// crc
-                 $os_type		// OS type
+                 $crc32,        // crc
+                 $os_type        // OS type
                  );
 }
 
@@ -217,7 +217,7 @@ function zip_inflate ($data, $crc32, $uncomp_size)
     }
     
     // Reconstruct gzip header and ungzip the data.
-    $mtime = time();		//(Bogus mtime)
+    $mtime = time();        //(Bogus mtime)
     
     return gzip_uncompress( pack("a2CxV@10", GZIP_MAGIC, GZIP_DEFLATE, $mtime)
                             . $data
@@ -226,7 +226,7 @@ function zip_inflate ($data, $crc32, $uncomp_size)
 
 function unixtime2dostime ($unix_time) {
     if ($unix_time % 1)
-        $unix_time++;		// Round up to even seconds.
+        $unix_time++;        // Round up to even seconds.
 
     list ($year,$month,$mday,$hour,$min,$sec)
         = explode(" ", date("Y n j G i s", $unix_time));
@@ -267,61 +267,61 @@ class ZipWriter
     function __construct ($comment = "", $zipname = "archive.zip") {
         $this->comment = $comment;
         $this->nfiles = 0;
-        $this->dir = "";		// "Central directory block"
-        $this->offset = 0;		// Current file position.
+        $this->dir = "";        // "Central directory block"
+        $this->offset = 0;        // Current file position.
         
         $zipname = addslashes($zipname);
         header("Content-Type: application/zip; name=\"$zipname\"");
         header("Content-Disposition: attachment; filename=\"$zipname\"");
     }
     
-  function addRegularFile ($filename, $content, $attrib = false) {
-      if (!$attrib)
+    function addRegularFile ($filename, $content, $attrib = false) {
+        if (!$attrib)
           $attrib = array();
       
-      $size = strlen($content);
-      if (function_exists('gzopen')) {
-          list ($data, $crc32, $os_type) = zip_deflate($content);
-          if (strlen($data) < $size) {
-              $content = $data;	// Use compressed data.
-              $comp_type = ZIP_DEFLATE;
-          }
-          else
-              unset($crc32);	// force plain store.
-      }
-      else  {
-          // Punt:
-          $os_type = 3;     // 0 = FAT --- hopefully this is good enough.
-          /* (Another choice might be 3 = Unix) */
-      }
+        $size = strlen($content);
+        if (function_exists('gzopen')) {
+            list ($data, $crc32, $os_type) = zip_deflate($content);
+            if (strlen($data) < $size) {
+                $content = $data;    // Use compressed data.
+                $comp_type = ZIP_DEFLATE;
+            }
+            else
+              unset($crc32);    // force plain store.
+        }
+        else  {
+            // Punt:
+            $os_type = 3;     // 0 = FAT --- hopefully this is good enough.
+            /* (Another choice might be 3 = Unix) */
+        }
 
-      if (!isset($crc32)) {
-          $comp_type = ZIP_STORE;
-          $crc32 = zip_crc32($content);
-      }
+        if (!isset($crc32)) {
+            $comp_type = ZIP_STORE;
+            $crc32 = zip_crc32($content);
+        }
       
-      if (!empty($attrib['write_protected']))
+        if (!empty($attrib['write_protected']))
           $atx = (0100444 << 16) | 1; // S_IFREG + read permissions to
                                       // everybody.
-      else
+        else
           $atx = (0100644 << 16); // Add owner write perms.
       
-      $ati = $attrib['is_ascii'] ? 1 : 0;
+        $ati = $attrib['is_ascii'] ? 1 : 0;
       
-      if (empty($attrib['mtime']))
+        if (empty($attrib['mtime']))
           $attrib['mtime'] = time();
-      list ($mod_date, $mod_time) = unixtime2dostime($attrib['mtime']);
+        list ($mod_date, $mod_time) = unixtime2dostime($attrib['mtime']);
       
-      // Construct parts common to "Local file header" and "Central
-      // directory file header."
-      if (!isset($attrib['extra_field']))
+        // Construct parts common to "Local file header" and "Central
+        // directory file header."
+        if (!isset($attrib['extra_field']))
           $attrib['extra_field'] = '';
-      if (!isset($attrib['file_comment']))
+        if (!isset($attrib['file_comment']))
           $attrib['file_comment'] = '';
       
-      $head = pack("vvvvvVVVvv",
-                   20,	// Version needed to extract (FIXME: is this right?)
-                   0,	// Gen purp bit flag
+        $head = pack("vvvvvVVVvv",
+                   20,    // Version needed to extract (FIXME: is this right?)
+                   0,    // Gen purp bit flag
                    $comp_type,
                    $mod_time,
                    $mod_date,
@@ -331,49 +331,49 @@ class ZipWriter
                    strlen($filename),
                    strlen($attrib['extra_field']));
       
-      // Construct the "Local file header"
-      $lheader = ZIP_LOCHEAD_MAGIC . $head . $filename
+        // Construct the "Local file header"
+        $lheader = ZIP_LOCHEAD_MAGIC . $head . $filename
           . $attrib['extra_field'];
       
-      // Construct the "central directory file header"
-      $this->dir .= pack("a4CC",
+        // Construct the "central directory file header"
+        $this->dir .= pack("a4CC",
                          ZIP_CENTHEAD_MAGIC,
-                         23,	// Version made by (FIXME: is this right?)
+                         23,    // Version made by (FIXME: is this right?)
                          $os_type);
-      $this->dir .= $head;
-      $this->dir .= pack("vvvVV",
+        $this->dir .= $head;
+        $this->dir .= pack("vvvVV",
                          strlen($attrib['file_comment']),
                          0,              // Disk number start
-                         $ati,	         // Internal file attributes
-                         $atx,	         // External file attributes
+                         $ati,             // Internal file attributes
+                         $atx,             // External file attributes
                          $this->offset); // Relative offset of local header
-      $this->dir .= $filename . $attrib['extra_field']
+        $this->dir .= $filename . $attrib['extra_field']
           . $attrib['file_comment'];
       
-      // Output the "Local file header" and file contents.
-      echo $lheader;
-      echo $content;
+        // Output the "Local file header" and file contents.
+        echo $lheader;
+        echo $content;
       
-      $this->offset += strlen($lheader) + strlen($content);
-      $this->nfiles++;
-  }
+        $this->offset += strlen($lheader) + strlen($content);
+        $this->nfiles++;
+    }
   
-  function finish () {
-      // Output the central directory
-      echo $this->dir;
+    function finish () {
+        // Output the central directory
+        echo $this->dir;
       
-      // Construct the "End of central directory record"
-      echo ZIP_ENDDIR_MAGIC;
-      echo pack("vvvvVVv",
+        // Construct the "End of central directory record"
+        echo ZIP_ENDDIR_MAGIC;
+        echo pack("vvvvVVv",
                 0,                  // Number of this disk.
                 0,                  // Number of disk with start of c dir
                 $this->nfiles,      // Number entries on this disk
-                $this->nfiles,	    // Number entries
+                $this->nfiles,        // Number entries
                 strlen($this->dir), // Size of central directory
-                $this->offset,	    // Offset of central directory
+                $this->offset,        // Offset of central directory
                 strlen($this->comment));
-      echo $this->comment;
-  }
+        echo $this->comment;
+    }
 }
 
 
@@ -400,12 +400,12 @@ class ZipReader
             $this->fp = $zipfile;
             $zipfile = NULL;
         } elseif (((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
-		and (substr($zipfile,0,2) == "\037\213")
-		or (substr($zipfile,0,2) == "x\332")) {  // 120, 218
-	    $this->fp = NULL;	
-	    $this->buf = $zipfile;
+        and (substr($zipfile,0,2) == "\037\213")
+        or (substr($zipfile,0,2) == "x\332")) {  // 120, 218
+            $this->fp = NULL;    
+            $this->buf = $zipfile;
             $zipfile = NULL;
-	} 
+        } 
         if ($zipfile) {
             $this->zipfile = $zipfile;
             if (!($this->fp = fopen($zipfile, "rb"))) {
@@ -416,91 +416,91 @@ class ZipReader
     }
     
     function _read ($nbytes) {
-	if ($this->fp) {
+        if ($this->fp) {
             $chunk = fread($this->fp, $nbytes);
             if (strlen($chunk) != $nbytes)
                 trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
             return $chunk;
-	} elseif ($this->buf)  {
-	    if (strlen($this->buf) < $nbytes)
-		trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
-	    $chunk = substr($this->buf, 0, $nbytes);
-	    $this->buf = substr($this->buf, $nbytes);
-	    return $chunk;
-	}
+        } elseif ($this->buf)  {
+            if (strlen($this->buf) < $nbytes)
+            trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+            $chunk = substr($this->buf, 0, $nbytes);
+            $this->buf = substr($this->buf, $nbytes);
+            return $chunk;
+        }
     }
     
     function done () {
-	if ($this->fp)
+        if ($this->fp)
             fclose($this->fp);
-	else
-	    $this->buf = '';
+        else
+        $this->buf = '';
         return false;
     }
     
-  function readFile () {
-      $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
+    function readFile () {
+        $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
       
-      extract(unpack("a4magic/vreq_version/vflags/vcomp_type"
+        extract(unpack("a4magic/vreq_version/vflags/vcomp_type"
                      . "/vmod_time/vmod_date"
                      . "/Vcrc32/Vcomp_size/Vuncomp_size"
                      . "/vfilename_len/vextrafld_len",
                      $head));
       
-      if ($magic != ZIP_LOCHEAD_MAGIC) {
-          // maybe gzip?
-          //$x = substr($magic,0,3);
-          if (substr($magic,0,3) == "\037\213\225")
+        if ($magic != ZIP_LOCHEAD_MAGIC) {
+            // maybe gzip?
+            //$x = substr($magic,0,3);
+            if (substr($magic,0,3) == "\037\213\225")
               //and (substr($magic,3,1) & 0x3e) == 0) 
-          {
-              if ($this->fp) {
-                  fclose($this->fp);
-                  $this->fp = fopen($this->zipfile, "rb");
-                  $content = $this->_read(filesize($this->fp));
-              } else {
-                  $content = $this->buf;
-              }
-              // TODO...
-              $data = zip_deflate($content);
-              return array($filename, $data, $attrib);
-          }
-          if ($magic != ZIP_CENTHEAD_MAGIC)
+            {
+                if ($this->fp) {
+                    fclose($this->fp);
+                    $this->fp = fopen($this->zipfile, "rb");
+                    $content = $this->_read(filesize($this->fp));
+                } else {
+                    $content = $this->buf;
+                }
+                // TODO...
+                $data = zip_deflate($content);
+                return array($filename, $data, $attrib);
+            }
+            if ($magic != ZIP_CENTHEAD_MAGIC)
               // FIXME: better message?
               ExitWiki(sprintf("Unsupported ZIP header type: %s", $magic));
-          return $this->done();
-      }
-      if (($flags & 0x21) != 0)
+            return $this->done();
+        }
+        if (($flags & 0x21) != 0)
           ExitWiki("Encryption and/or zip patches not supported.");
-      if (($flags & 0x08) != 0)
+        if (($flags & 0x08) != 0)
           // FIXME: better message?
           ExitWiki("Postponed CRC not yet supported.");
       
-      $filename = $this->_read($filename_len);
-      //FIXME: we should probably check $req_version.
-      $attrib['mtime'] = dostime2unixtime($mod_date, $mod_time);
-      if ($extrafld_len != 0)
+        $filename = $this->_read($filename_len);
+        //FIXME: we should probably check $req_version.
+        $attrib['mtime'] = dostime2unixtime($mod_date, $mod_time);
+        if ($extrafld_len != 0)
           $attrib['extra_field'] = $this->_read($extrafld_len);
       
-      $data = $this->_read($comp_size);
+        $data = $this->_read($comp_size);
       
-      if ($comp_type == ZIP_DEFLATE) {
-          $data = zip_inflate($data, $crc32, $uncomp_size);
-      }
-      else if ($comp_type == ZIP_STORE) {
-          $crc = zip_crc32($data);
-          if ($crc32 != $crc)
+        if ($comp_type == ZIP_DEFLATE) {
+            $data = zip_inflate($data, $crc32, $uncomp_size);
+        }
+        else if ($comp_type == ZIP_STORE) {
+            $crc = zip_crc32($data);
+            if ($crc32 != $crc)
               ExitWiki(sprintf("CRC mismatch %x != %x", $crc, $crc32));
-      }
-      else
+        }
+        else
           ExitWiki(sprintf("Compression method %s unsupported",
                            $comp_method));
       
-      if (strlen($data) != $uncomp_size)
+        if (strlen($data) != $uncomp_size)
           ExitWiki(sprintf("Uncompressed size mismatch %d != %d",
                            strlen($data), $uncomp_size));
       
-      return array($filename, $data, $attrib);
-  }
+        return array($filename, $data, $attrib);
+    }
 }
 
 /**
@@ -732,7 +732,7 @@ function ParseMimeMultipart($data, $boundary)
         }
             
         if ($match[2])
-            return $parts;	// End boundary found.
+            return $parts;    // End boundary found.
     }
     ExitWiki("No end boundary?");
 }
@@ -820,34 +820,34 @@ function ParseMimeifiedPages ($data)
             continue;
         $value = rawurldecode($value);
         switch ($key) {
-        case 'pagename':
-        case 'version':
-            $page[$key] = $value;
+            case 'pagename':
+            case 'version':
+                $page[$key] = $value;
             break;
-        case 'flags':
-            if (preg_match('/PAGE_LOCKED/', $value))
+            case 'flags':
+                if (preg_match('/PAGE_LOCKED/', $value))
                 $pagedata['locked'] = 'yes';
             break;
-        case 'owner':
-        case 'created':
-        case 'hits':
-            $pagedata[$key] = $value;
+            case 'owner':
+            case 'created':
+            case 'hits':
+                $pagedata[$key] = $value;
             break;
-        case 'acl':
-        case 'perm':
-            if (class_exists('PagePermission')) {
-                $pagedata['perm'] = ParseMimeifiedPerm($value);
-            }
+            case 'acl':
+            case 'perm':
+                if (class_exists('PagePermission')) {
+                    $pagedata['perm'] = ParseMimeifiedPerm($value);
+                }
             break;
-        case 'lastmodified':
-            $versiondata['mtime'] = $value;
+            case 'lastmodified':
+                $versiondata['mtime'] = $value;
             break;
-        case 'author':
-        case 'author_id':
-        case 'summary':
-        case 'markup':
-        case 'pagetype':
-            $versiondata[$key] = $value;
+            case 'author':
+            case 'author_id':
+            case 'summary':
+            case 'markup':
+            case 'pagetype':
+                $versiondata[$key] = $value;
             break;
         }
     }

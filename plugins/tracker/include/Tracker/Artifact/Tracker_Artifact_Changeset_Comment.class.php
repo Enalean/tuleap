@@ -268,16 +268,16 @@ class Tracker_Artifact_Changeset_Comment {
     private function fetchFormattedMailComment() {
         $formatted_comment = '';
         if (!empty($this->body)) {
-           if ($this->parent_id && !trim($this->body)) {
-               $comment =
+            if ($this->parent_id && !trim($this->body)) {
+                $comment =
                 '<em>'.
                     $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
                 </em>';
-           } else {
-               $comment = $this->getPurifiedBodyForHTML();
-           }
+            } else {
+                $comment = $this->getPurifiedBodyForHTML();
+            }
 
-           $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">'. $comment .'</div>';
+            $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">'. $comment .'</div>';
         }
 
         return $formatted_comment;

@@ -20,7 +20,7 @@
 
 class Encoding_SupportedXmlCharEncoding {
 
-   private static $php_supported_encoding_types = array(
+    private static $php_supported_encoding_types = array(
         'UTF-8',
         'ISO-8859-1',
         'ISO-8859-5',
@@ -30,7 +30,7 @@ class Encoding_SupportedXmlCharEncoding {
    /**
     * @see http://www.w3.org/TR/REC-xml/#charsets
     */
-   public static function getXMLCompatibleString($string) {
+    public static function getXMLCompatibleString($string) {
         $clean   = "";
         $current = null;
 
@@ -67,7 +67,7 @@ class Encoding_SupportedXmlCharEncoding {
         }
 
         return $clean;
-   }
+    }
 
    /**
     * @return UTF-8 string. All unrecognized characters are stripped-out

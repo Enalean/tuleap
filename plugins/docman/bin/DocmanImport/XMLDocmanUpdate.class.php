@@ -85,11 +85,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $folderArray = array();
             
             foreach ($array as $k => $v) {
-            	if ($v['xmlElement']['type'] == 'folder') {
-            	    $folderArray[$k] = $v;
-            	} else {
-            	    $docArray[$k] = $v;
-            	}
+                if ($v['xmlElement']['type'] == 'folder') {
+                    $folderArray[$k] = $v;
+                } else {
+                    $docArray[$k] = $v;
+                }
             }
 
             return array_merge($folderArray, $docArray);

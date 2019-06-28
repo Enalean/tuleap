@@ -59,16 +59,16 @@ class Docman_ApprovalTableNotificationCycle {
         else {
             $isLastReviewer = false;
             switch($review->getState()) {
-            case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                $this->reviewerApprove($reviewer, $isLastReviewer, $withComments);
+                case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
+                    $this->reviewerApprove($reviewer, $isLastReviewer, $withComments);
 
                 break;
                 case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
-                $this->reviewerDecline($reviewer, $isLastReviewer);
+                    $this->reviewerDecline($reviewer, $isLastReviewer);
 
                 break;
-            case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
-                $this->reviewerComment($reviewer);
+                case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                    $this->reviewerComment($reviewer);
                 break;
             }
         }
@@ -135,12 +135,12 @@ class Docman_ApprovalTableNotificationCycle {
             while($rIter->valid()) {
                 $reviewer = $rIter->current();
                 switch($reviewer->getState()) {
-                case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
-                case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
-                    $sent = $this->notifyIndividual($reviewer->getId());
-                    if($sent) {
-                        $nbNotif++;
-                    }
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
+                    case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                        $sent = $this->notifyIndividual($reviewer->getId());
+                        if($sent) {
+                            $nbNotif++;
+                        }
                 }
                 $rIter->next();
             }
@@ -478,14 +478,14 @@ class Docman_ApprovalTableNotificationCycle {
         while(!$rejected && $revIterator->valid()) {
             $reviewer = $revIterator->current();
             switch($reviewer->getState()) {
-            case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                $nbApproved++;
+                case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
+                    $nbApproved++;
                 break;
-            case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
-                $rejected = true;
+                case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
+                    $rejected = true;
                 break;
-            case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
-                $nbDeclined++;
+                case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
+                    $nbDeclined++;
                 break;
             }
             $revIterator->next();

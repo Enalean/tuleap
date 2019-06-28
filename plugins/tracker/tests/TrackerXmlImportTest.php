@@ -835,7 +835,7 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
 
         $this->mapping_registery = new MappingsRegistry();
         $this->configuration     = new ImportConfig();
-     }
+    }
 
     public function itDelegatesToRulesManager() {
         expect($this->trigger_rulesmanager)->createFromXML(

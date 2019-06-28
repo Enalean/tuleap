@@ -68,17 +68,17 @@ if (is_array($sparkline_urls)) {
                 $ref->replaceLink($args, $projname);
             
                 switch ($ref->getServiceShortName()) {
-                case 'tracker':
-                case 'svn':
-                case 'cvs':
-                case 'file':
+                    case 'tracker':
+                    case 'svn':
+                    case 'cvs':
+                    case 'file':
                     break;
 
-                default:
-                    $res_sparkline = '';
-                    //Process to display the reference sparkline (ex: Hudson jobs)
-                    $event_manager = EventManager::instance();
-                    $event_manager->processEvent(
+                    default:
+                        $res_sparkline = '';
+                        //Process to display the reference sparkline (ex: Hudson jobs)
+                        $event_manager = EventManager::instance();
+                        $event_manager->processEvent(
                         Event::AJAX_REFERENCE_SPARKLINE,
                         array(
                             'reference'=> $ref,
@@ -87,10 +87,10 @@ if (is_array($sparkline_urls)) {
                             'val'      => $val,
                             'sparkline'=> &$res_sparkline
                         )
-                    );
-                    if ($res_sparkline) {
-                        $json[$url] = $res_sparkline;
-                    }
+                        );
+                        if ($res_sparkline) {
+                            $json[$url] = $res_sparkline;
+                        }
                 }
             }
         }

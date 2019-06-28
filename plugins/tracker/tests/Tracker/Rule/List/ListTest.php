@@ -24,11 +24,11 @@ class Tracker_Rule_List_ListTest extends TuleapTestCase {
      *
      * @var Tracker_Rule_List
      */
-   protected $list_rule;
+    protected $list_rule;
 
 
 
-   public function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->list_rule = new Tracker_Rule_List();
     }

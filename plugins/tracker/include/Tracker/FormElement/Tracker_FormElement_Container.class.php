@@ -326,7 +326,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
      *
      * @return void
      */
-     public function continueGetInstanceFromXML(
+    public function continueGetInstanceFromXML(
          $xml,
          &$xmlMapping,
          User\XML\Import\IFindUserFromXMLReference $user_finder

@@ -35,9 +35,9 @@ EOT;
         $sql = 'ALTER TABLE artifact_history '.
                ' ADD format tinyint NOT NULL default 0';
         $res = $this->db->dbh->exec($sql);
-            if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column format to the table artifact_history');
-            }
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column format to the table artifact_history');
+        }
     }
 
     public function postUp() {

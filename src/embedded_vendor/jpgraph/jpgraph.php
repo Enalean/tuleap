@@ -1112,7 +1112,7 @@ class Graph {
         $this->y2grid = new Grid($this->y2axis);
 
         if ($this->graph_theme) {
-          $this->graph_theme->ApplyGraph($this);
+            $this->graph_theme->ApplyGraph($this);
         }
     }
 

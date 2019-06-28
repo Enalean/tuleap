@@ -39,7 +39,7 @@ class GerritServerRepresentation {
     public $html_url;
 
     public function build(Git_RemoteServer_GerritServer $server) {
-       $this->id       = JsonCast::toInt($server->getId());
-       $this->html_url = $server->getBaseUrl();
+        $this->id       = JsonCast::toInt($server->getId());
+        $this->html_url = $server->getBaseUrl();
     }
 }

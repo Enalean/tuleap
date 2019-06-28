@@ -96,7 +96,7 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
  * @return bool true if the mail was sent false otherwise
  */
 function account_send_add_user_to_group_email($group_id,$user_id) {
-  global $Language;
+    global $Language;
     $base_url = get_server_url();
 
     // Get email address
@@ -250,7 +250,7 @@ function account_redirect_after_login($return_to) {
     } else {
         if (isset($pv) && $pv == 2) {
             $url = '/my/index.php?pv=2';
-	    } else {
+        } else {
             $url = '/my/index.php';
         }
     }

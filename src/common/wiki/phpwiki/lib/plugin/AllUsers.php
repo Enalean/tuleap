@@ -75,7 +75,7 @@ extends WikiPlugin
         if (method_exists($group,'_allUsers')) {
             $allusers = $group->_allUsers();
         } else {
-        	$allusers = array();
+            $allusers = array();
         }
         $args['count'] = count($allusers);
         // deleted pages show up as version 0.
@@ -89,7 +89,7 @@ extends WikiPlugin
             $pagelist->addPageList($allusers);
         } else {
             for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
-            	if ($i >= $args['count']) break;
+                if ($i >= $args['count']) break;
                 $pagelist->addPage($allusers[$i]);
             }
         }

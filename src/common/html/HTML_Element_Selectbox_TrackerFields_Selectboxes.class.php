@@ -35,13 +35,13 @@ class HTML_Element_Selectbox_TrackerFields_Selectboxes extends HTML_Element_Sele
         $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);
         $aff = new ArtifactFieldFactory($at);
 
-        foreach ($aff->getAllUsedFields() as $field) {      	
-        	if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-	            if ($field->getName() != 'comment_type_id' && ($field->isMultiSelectBox() || $field->isSelectBox()) && ($with_user || !$field->isUsername())) {
-	                $selected = $this->value == $field->getName();
-	                $this->addOption(new HTML_Element_Option($field->getLabel(), $field->getName(), $selected));
-	            }
-        	}
+        foreach ($aff->getAllUsedFields() as $field) {          
+            if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                if ($field->getName() != 'comment_type_id' && ($field->isMultiSelectBox() || $field->isSelectBox()) && ($with_user || !$field->isUsername())) {
+                    $selected = $this->value == $field->getName();
+                    $this->addOption(new HTML_Element_Option($field->getLabel(), $field->getName(), $selected));
+                }
+            }
         }
     }
 }

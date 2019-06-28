@@ -52,7 +52,7 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                     's' 	=> false,
+                     's'     => false,
                      /* Columns to include in listing */
                      'info'     => 'pagename,mtime',
                      'updatelinks' => 0
@@ -64,9 +64,9 @@ extends WikiPlugin_WikiAdminSelect
             $pattern = '/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':'');
             return preg_replace($pattern, $to, $name);
         }
-    	elseif ($options['icase'])
-    	    return str_ireplace($from, $to, $name);
-    	else
+        elseif ($options['icase'])
+            return str_ireplace($from, $to, $name);
+        else
             return str_replace($from, $to, $name);
     }
 

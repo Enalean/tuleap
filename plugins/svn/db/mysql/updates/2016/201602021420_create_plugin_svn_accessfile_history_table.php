@@ -22,7 +22,7 @@ class b201602021420_create_plugin_svn_accessfile_history_table extends ForgeUpgr
         return 'Create table plugin_svn_accessfile_history for SVN plugin';
     }
 
-   public function preUp() {
+    public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 

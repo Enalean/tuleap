@@ -365,7 +365,7 @@ class UserDao extends DataAccessObject {
      * actions on an execution.
      */
     function storeLoginSuccess($user_id, $time) {
-       $sql = 'UPDATE user_access
+        $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
                     last_auth_success = '. $this->da->escapeInt($time).',
@@ -735,7 +735,7 @@ class UserDao extends DataAccessObject {
         $dar  = $this->retrieve($sql);
         if($dar && !$dar->isError()) {
             $row = $dar->getRow();
-           return $row;
+            return $row;
         } else {
             return false;
         }

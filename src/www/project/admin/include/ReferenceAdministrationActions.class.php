@@ -152,8 +152,8 @@ class ReferenceAdministrationActions extends Actions
     // Delete a reference.
     // If it is shared by several projects, only delete the reference_group entry.
     // WARNING: If it is a system reference, delete all occurences of the reference!
-   public function do_delete()
-   {
+    public function do_delete()
+    {
         global $feedback;
         $request = HTTPRequest::instance();
         // Sanity check
@@ -185,15 +185,15 @@ class ReferenceAdministrationActions extends Actions
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','del_fail',db_error()));
         } 
-   }
+    }
 
-   private function getCrossReferenceDao()
-   {
-       return new CrossReferenceDao(CodendiDataAccess::instance());
-   }
+    private function getCrossReferenceDao()
+    {
+        return new CrossReferenceDao(CodendiDataAccess::instance());
+    }
 
-   private function getArtifactGroupListDao()
-   {
-       return new ArtifactGroupListDao(CodendiDataAccess::instance());
-   }
+    private function getArtifactGroupListDao()
+    {
+        return new ArtifactGroupListDao(CodendiDataAccess::instance());
+    }
 }

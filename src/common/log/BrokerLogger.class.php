@@ -52,18 +52,18 @@ class BrokerLogger implements Logger {
 
     public function log($message, $level = Logger::INFO) {
         switch ($level) {
-           case Logger::DEBUG:
-               $this->debug($message);
+            case Logger::DEBUG:
+                $this->debug($message);
                break;
-           case Logger::INFO:
-               $this->info($message);
+            case Logger::INFO:
+                $this->info($message);
                break;
-           case Logger::WARN:
-               $this->warn($message);
+            case Logger::WARN:
+                $this->warn($message);
                break;
-           case Logger::ERROR:
-               $this->error($message);
+            case Logger::ERROR:
+                $this->error($message);
                break;
-       }
+        }
     }
 }

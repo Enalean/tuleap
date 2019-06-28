@@ -42,15 +42,15 @@ extends _PassUser
            parent::__construct($this->_userid);
 
         switch($this->_userid) {
-        case '':
-        case 'NA':
-            $this->_level = WIKIAUTH_ANON;
+            case '':
+            case 'NA':
+                $this->_level = WIKIAUTH_ANON;
             break;
-        case 'admin':
-            $this->_level = WIKIAUTH_ADMIN; // admin Codendi
+            case 'admin':
+                $this->_level = WIKIAUTH_ADMIN; // admin Codendi
             break;
-        default:
-            $this->_level = WIKIAUTH_USER;
+            default:
+                $this->_level = WIKIAUTH_USER;
         }
      
         if(user_ismember(GROUP_ID, 'W2'))

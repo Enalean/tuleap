@@ -336,11 +336,11 @@ class Docman_Controller extends Controler {
             $i           = $this->request->get('item');
             $itemFactory = $this->getItemFactory();
             switch($itemFactory->getItemTypeForItem($item)) {
-            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
-                $item->setPagename($i['wiki_page']);
+                case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                    $item->setPagename($i['wiki_page']);
                 break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
-                $item->setUrl($i['link_url']);
+                case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                    $item->setUrl($i['link_url']);
                 break;
             }
         }
@@ -513,471 +513,447 @@ class Docman_Controller extends Controler {
         $dpm          = $this->_getPermissionsManager();
 
         switch ($view) {
-        case 'show':
-            if($item->isObsolete()) {
-                if(!$this->userCanAdmin($item->getId())) {
-                    // redirect to details view
-                    $this->view = 'Details';
-                    break;
+            case 'show':
+                if($item->isObsolete()) {
+                    if(!$this->userCanAdmin($item->getId())) {
+                        // redirect to details view
+                        $this->view = 'Details';
+                        break;
+                    }
                 }
-            }
-            $this->view = $item->accept($get_show_view, $this->request->get('report'));
+                $this->view = $item->accept($get_show_view, $this->request->get('report'));
             break;
-        case 'expandFolder':
-            $this->action = 'expandFolder';
-            if ($this->request->get('view') == 'ulsubfolder') {
-                $this->view = 'RawTree';
-            } else {
+            case 'expandFolder':
+                $this->action = 'expandFolder';
+                if ($this->request->get('view') == 'ulsubfolder') {
+                    $this->view = 'RawTree';
+                } else {
+                    $this->_viewParams['item'] = $root;
+                    $this->view                = 'Tree';
+                }
+            break;
+            case 'getRootFolder':
+                $this->_viewParams['action_result'] = $root->getId();
+                $this->_setView('getRootFolder');
+            break;
+            case 'collapseFolder':
+                $this->action              = 'collapseFolder';
                 $this->_viewParams['item'] = $root;
                 $this->view                = 'Tree';
-            }
             break;
-        case 'getRootFolder':
-            $this->_viewParams['action_result'] = $root->getId();
-            $this->_setView('getRootFolder');
+            case 'admin_set_permissions':
+                $this->action = $view;
+                $this->view   = 'Admin_Permissions';
             break;
-        case 'collapseFolder':
-            $this->action              = 'collapseFolder';
-            $this->_viewParams['item'] = $root;
-            $this->view                = 'Tree';
-            break;
-        case 'admin_set_permissions':
-            $this->action = $view;
-            $this->view   = 'Admin_Permissions';
-            break;
-        case 'admin_change_view':
-            $this->action = $view;
-            $this->_viewParams['default_url_params'] = array('action'  => 'admin_view',
+            case 'admin_change_view':
+                $this->action = $view;
+                $this->_viewParams['default_url_params'] = array('action'  => 'admin_view',
                                                              'id'      => $item->getParentId());
-            $this->view = 'RedirectAfterCrud';
-            break;
-        case 'admin':
-        case 'details':
-            $this->view = ucfirst($view);
-            break;
-        case 'admin_view':
-            $this->view = 'Admin_View';
-            break;
-        case 'admin_permissions':
-            $this->view = 'Admin_Permissions';
-            break;
-        case 'admin_metadata':
-            $this->view = 'Admin_Metadata';
-            $mdFactory  = new Docman_MetadataFactory($this->_viewParams['group_id']);
-            $mdIter     = $mdFactory->getMetadataForGroup();
-            $this->_viewParams['mdIter'] = $mdIter;
-            break;
-        case 'admin_md_details':
-            // Sanitize
-            $_mdLabel = $this->request->get('md');
-
-            $md = null;
-            $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-            $valid = $this->validateMetadata($_mdLabel, $md);
-
-            if(!$valid) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman',
-                                                                            'error_invalid_md'));
                 $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
-            }
-            else {
-                $this->view = 'Admin_MetadataDetails';
-                $mdFactory->appendMetadataValueList($md, false);
-                $this->_viewParams['md'] = $md;
-            }
             break;
-        case 'admin_md_details_update':
-            $_name = trim($this->request->get('name'));
-            $_label = $this->request->get('label');
+            case 'admin':
+            case 'details':
+                $this->view = ucfirst($view);
+            break;
+            case 'admin_view':
+                $this->view = 'Admin_View';
+            break;
+            case 'admin_permissions':
+                $this->view = 'Admin_Permissions';
+            break;
+            case 'admin_metadata':
+                $this->view = 'Admin_Metadata';
+                $mdFactory  = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                $mdIter     = $mdFactory->getMetadataForGroup();
+                $this->_viewParams['mdIter'] = $mdIter;
+            break;
+            case 'admin_md_details':
+                // Sanitize
+                $_mdLabel = $this->request->get('md');
 
-            $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
-            if($mdFactory->isValidLabel($_label)) {
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details', 'md' => $_label);
-                if ($mdFactory->isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
+                $md = null;
+                $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                $valid = $this->validateMetadata($_mdLabel, $md);
+
+                if(!$valid) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman',
+                                                                            'error_invalid_md'));
+                    $this->view = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                }
+                else {
+                    $this->view = 'Admin_MetadataDetails';
+                    $mdFactory->appendMetadataValueList($md, false);
+                    $this->_viewParams['md'] = $md;
+                }
+            break;
+            case 'admin_md_details_update':
+                $_name = trim($this->request->get('name'));
+                $_label = $this->request->get('label');
+
+                $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
+                if($mdFactory->isValidLabel($_label)) {
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details', 'md' => $_label);
+                    if ($mdFactory->isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
+                        $this->action = $view;
+                    }
+                } else {
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
+                }
+                $this->view = 'RedirectAfterCrud';
+            break;
+            case 'admin_create_metadata':
+                $_name = trim($this->request->get('name'));
+                $valid = $this->validateNewMetadata($_name);
+
+                if ($valid) {
                     $this->action = $view;
                 }
-            } else {
+
                 $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
-            }
-            $this->view = 'RedirectAfterCrud';
+                $this->view = 'RedirectAfterCrud';
             break;
-        case 'admin_create_metadata':
-            $_name = trim($this->request->get('name'));
-            $valid = $this->validateNewMetadata($_name);
+            case 'admin_delete_metadata':
+                $valid = false;
+                // md
+                // Sanitize
+                $_mdLabel = $this->request->get('md');
 
-            if ($valid) {
-                $this->action = $view;
-            }
-
-            $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
-            $this->view = 'RedirectAfterCrud';
-            break;
-        case 'admin_delete_metadata':
-            $valid = false;
-            // md
-            // Sanitize
-            $_mdLabel = $this->request->get('md');
-
-            // Valid
-            $logmsg = '';
-            $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-            $md = null;
-            $vld = $this->validateMetadata($_mdLabel, $md);
-            if($vld) {
-                if(!$mdFactory->isHardCodedMetadata($md->getLabel())) {
-                    $valid = true;
+                // Valid
+                $logmsg = '';
+                $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                $md = null;
+                $vld = $this->validateMetadata($_mdLabel, $md);
+                if($vld) {
+                    if(!$mdFactory->isHardCodedMetadata($md->getLabel())) {
+                        $valid = true;
+                    }
+                    else {
+                        $logmsg = $GLOBALS['Language']->getText('plugin_docman',
+                                                            'error_cannot_delete_hc_md');
+                    }
                 }
                 else {
                     $logmsg = $GLOBALS['Language']->getText('plugin_docman',
-                                                            'error_cannot_delete_hc_md');
-                }
-            }
-            else {
-                $logmsg = $GLOBALS['Language']->getText('plugin_docman',
                                                         'error_invalid_md');
-            }
+                }
 
-            if(!$valid) {
-                if($logmsg != '') {
-                    $this->feedback->log('error', $logmsg);
+                if(!$valid) {
+                    if($logmsg != '') {
+                        $this->feedback->log('error', $logmsg);
+                    }
+                    $this->view = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                }
+                else {
+                    $this->action = $view;
+                    $this->_actionParams['md'] = $md;
+                }
+
+            break;
+            case 'admin_create_love':
+                $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
+                if($mdFactory->isValidLabel($this->request->get('md'))) {
+                    $this->action = $view;
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
+                                                                 'md' => $this->request->get('md'));
+                } else {
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
                 }
                 $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
-            }
-            else {
-                $this->action = $view;
-                $this->_actionParams['md'] = $md;
-            }
-
             break;
-        case 'admin_create_love':
-            $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
-            if($mdFactory->isValidLabel($this->request->get('md'))) {
-                $this->action = $view;
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
+            case 'admin_delete_love':
+                $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
+                if($mdFactory->isValidLabel($this->request->get('md'))) {
+                    $this->action = $view;
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
                                                                  'md' => $this->request->get('md'));
-            } else {
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
-            }
-            $this->view = 'RedirectAfterCrud';
-            break;
-        case 'admin_delete_love':
-            $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
-            if($mdFactory->isValidLabel($this->request->get('md'))) {
-                $this->action = $view;
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
-                                                                 'md' => $this->request->get('md'));
-            } else {
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
-            }
-            $this->view = 'RedirectAfterCrud';
-            break;
-        case 'admin_display_love':
-            $valid = false;
-            // Required params:
-            // md (string [a-z_]+)
-            // loveid (int)
-
-            // Sanitize
-            $_mdLabel = $this->request->get('md');
-            $_loveId = (int) $this->request->get('loveid');
-
-            // Valid
-            $md = null;
-            $love = null;
-            $this->validateMetadata($_mdLabel, $md);
-            if($md !== null && $md->getLabel() !== 'status') {
-                $valid = $this->validateLove($_loveId, $md, $love);
-            }
-
-            if(!$valid) {
-                $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
-            }
-            else {
-                $mdFactory = new Docman_MetadataFactory($this->groupId);
-                $mdFactory->appendMetadataValueList($md, false);
-
-                $this->view = 'Admin_MetadataDetailsUpdateLove';
-                $this->_viewParams['md'] = $md;
-                $this->_viewParams['love'] = $love;
-            }
-            break;
-        case 'admin_update_love':
-            $valid = false;
-            // Required params:
-            // md (string [a-z_]+)
-            // loveid (int)
-            //
-            // rank (beg, end, [0-9]+)
-            // name
-            // descr
-
-            // Sanitize
-            /// @todo sanitize md, rank, name, descr
-            $_mdLabel = $this->request->get('md');
-            $_loveId = (int) $this->request->get('loveid');
-            $_rank = $this->request->get('rank');
-            $_name = $this->request->get('name');
-            $_descr = $this->request->get('descr');
-
-            // Valid
-            $md = null;
-            $love = null;
-            $this->validateMetadata($_mdLabel, $md);
-            if($md !== null && $md->getLabel() !== 'status') {
-                $valid = $this->validateLove($_loveId, $md, $love);
-            }
-
-            if(!$valid) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_md_or_love'));
-                $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
-            }
-            else {
-                // Set parameters
-                $love->setRank($_rank);
-                $love->setName($_name);
-                $love->setDescription($_descr);
-
-                // define action
-                $this->action = $view;
-                $this->_actionParams['md'] = $md;
-                $this->_actionParams['love'] = $love;
-            }
-            break;
-
-        case 'admin_import_metadata_check':
-            $ok = false;
-            if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
-                $pm = ProjectManager::instance();
-                $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
-                if ($srcGroup && !$srcGroup->isError()) {
-                    $this->_viewParams['sSrcGroupId'] = $srcGroup->getGroupId();
-                    $this->view = 'Admin_MetadataImport';
-                    $ok = true;
+                } else {
+                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
                 }
-            }
-            if (!$ok) {
                 $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
-            }
+            break;
+            case 'admin_display_love':
+                $valid = false;
+                // Required params:
+                // md (string [a-z_]+)
+                // loveid (int)
+
+                // Sanitize
+                $_mdLabel = $this->request->get('md');
+                $_loveId = (int) $this->request->get('loveid');
+
+                // Valid
+                $md = null;
+                $love = null;
+                $this->validateMetadata($_mdLabel, $md);
+                if($md !== null && $md->getLabel() !== 'status') {
+                    $valid = $this->validateLove($_loveId, $md, $love);
+                }
+
+                if(!$valid) {
+                    $this->view = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                }
+                else {
+                    $mdFactory = new Docman_MetadataFactory($this->groupId);
+                    $mdFactory->appendMetadataValueList($md, false);
+
+                    $this->view = 'Admin_MetadataDetailsUpdateLove';
+                    $this->_viewParams['md'] = $md;
+                    $this->_viewParams['love'] = $love;
+                }
+            break;
+            case 'admin_update_love':
+                $valid = false;
+                // Required params:
+                // md (string [a-z_]+)
+                // loveid (int)
+                //
+                // rank (beg, end, [0-9]+)
+                // name
+                // descr
+
+                // Sanitize
+                /// @todo sanitize md, rank, name, descr
+                $_mdLabel = $this->request->get('md');
+                $_loveId = (int) $this->request->get('loveid');
+                $_rank = $this->request->get('rank');
+                $_name = $this->request->get('name');
+                $_descr = $this->request->get('descr');
+
+                // Valid
+                $md = null;
+                $love = null;
+                $this->validateMetadata($_mdLabel, $md);
+                if($md !== null && $md->getLabel() !== 'status') {
+                    $valid = $this->validateLove($_loveId, $md, $love);
+                }
+
+                if(!$valid) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_md_or_love'));
+                    $this->view = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                }
+                else {
+                    // Set parameters
+                    $love->setRank($_rank);
+                    $love->setName($_name);
+                    $love->setDescription($_descr);
+
+                    // define action
+                    $this->action = $view;
+                    $this->_actionParams['md'] = $md;
+                    $this->_actionParams['love'] = $love;
+                }
             break;
 
-        case 'admin_import_metadata':
-            if($this->request->existAndNonEmpty('confirm')) {
-
+            case 'admin_import_metadata_check':
+                $ok = false;
                 if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
                     $pm = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
-                    $srcGroupId = $srcGroup->getGroupId();
-                    $this->_actionParams['sSrcGroupId'] = $srcGroupId;
-                    $this->_actionParams['sGroupId'] = $this->_viewParams['group_id'];
+                    if ($srcGroup && !$srcGroup->isError()) {
+                        $this->_viewParams['sSrcGroupId'] = $srcGroup->getGroupId();
+                        $this->view = 'Admin_MetadataImport';
+                        $ok = true;
+                    }
+                }
+                if (!$ok) {
+                    $this->view = 'RedirectAfterCrud';
+                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                }
+            break;
 
-                    $this->action = $view;
+            case 'admin_import_metadata':
+                if($this->request->existAndNonEmpty('confirm')) {
+
+                    if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
+                        $pm = ProjectManager::instance();
+                        $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
+                        $srcGroupId = $srcGroup->getGroupId();
+                        $this->_actionParams['sSrcGroupId'] = $srcGroupId;
+                        $this->_actionParams['sGroupId'] = $this->_viewParams['group_id'];
+
+                        $this->action = $view;
+                    } else {
+                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param'));
+                        $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'operation_canceled'));
+                    }
                 } else {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param'));
                     $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'operation_canceled'));
                 }
-            } else {
-                $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'operation_canceled'));
-            }
-            $this->view = 'RedirectAfterCrud';
-            $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                $this->view = 'RedirectAfterCrud';
+                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
             break;
 
-        case 'admin_obsolete':
-            $this->view = 'Admin_Obsolete';
+            case 'admin_obsolete':
+                $this->view = 'Admin_Obsolete';
             break;
 
-        case 'admin_lock_infos':
-            $this->view = 'Admin_LockInfos';
+            case 'admin_lock_infos':
+                $this->view = 'Admin_LockInfos';
             break;
 
-        case 'move':
-            if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
-                $this->view = 'Details';
-            } else {
-                if ($this->request->exist('quick_move')) {
-                    $this->action = 'move';
-                    $this->view = null;
-                } else {
-                    $this->_viewParams['hierarchy'] = $this->getItemHierarchy($root);
-                    $this->view                     = ucfirst($view);
-                }
-            }
-            break;
-        case 'newGlobalDocument':
-            if ($dpm->oneFolderIsWritable($user)) {
-                $this->_viewParams['hierarchy'] = $this->getItemHierarchy($root);
-                $this->view                     = 'New_FolderSelection';
-            } else {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                $this->view = $item->accept($get_show_view, $this->request->get('report'));
-            }
-            break;
-        case 'newDocument':
-        case 'newFolder':
-            if ($this->request->exist('cancel')) {
-                $this->_set_redirectView();
-            } else {
-                if (!$this->userCanWrite($item->getId())) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+            case 'move':
+                if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
                     $this->view = 'Details';
                 } else {
-                    $this->_viewParams['ordering'] = $this->request->get('ordering');
-                    if($this->request->get('item_type') == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-                        $view = 'newFolder';
+                    if ($this->request->exist('quick_move')) {
+                        $this->action = 'move';
+                        $this->view = null;
+                    } else {
+                        $this->_viewParams['hierarchy'] = $this->getItemHierarchy($root);
+                        $this->view                     = ucfirst($view);
                     }
-                    $this->view = ucfirst($view);
                 }
-            }
             break;
-        case 'monitor':
-            if ($this->request->exist('monitor')) {
-                $this->_actionParams['monitor'] =  $this->request->get('monitor');
-                if ($this->request->exist('cascade')) {
-                    $this->_actionParams['cascade'] = $this->request->get('cascade');
+            case 'newGlobalDocument':
+                if ($dpm->oneFolderIsWritable($user)) {
+                    $this->_viewParams['hierarchy'] = $this->getItemHierarchy($root);
+                    $this->view                     = 'New_FolderSelection';
+                } else {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                    $this->view = $item->accept($get_show_view, $this->request->get('report'));
                 }
-                $this->_actionParams['item'] = $item;
-                $this->action                = 'monitor';
-            }
-            $this->_setView('Details');
             break;
-        case 'update_monitoring':
-            $users_to_delete   = $this->request->get('listeners_users_to_delete');
-            $ugroups_to_delete = $this->request->get('listeners_ugroups_to_delete');
-            $listeners_to_add  = $this->request->get('listeners_to_add');
+            case 'newDocument':
+            case 'newFolder':
+                if ($this->request->exist('cancel')) {
+                    $this->_set_redirectView();
+                } else {
+                    if (!$this->userCanWrite($item->getId())) {
+                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                        $this->view = 'Details';
+                    } else {
+                        $this->_viewParams['ordering'] = $this->request->get('ordering');
+                        if($this->request->get('item_type') == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                            $view = 'newFolder';
+                        }
+                        $this->view = ucfirst($view);
+                    }
+                }
+            break;
+            case 'monitor':
+                if ($this->request->exist('monitor')) {
+                    $this->_actionParams['monitor'] =  $this->request->get('monitor');
+                    if ($this->request->exist('cascade')) {
+                        $this->_actionParams['cascade'] = $this->request->get('cascade');
+                    }
+                    $this->_actionParams['item'] = $item;
+                    $this->action                = 'monitor';
+                }
+                $this->_setView('Details');
+            break;
+            case 'update_monitoring':
+                $users_to_delete   = $this->request->get('listeners_users_to_delete');
+                $ugroups_to_delete = $this->request->get('listeners_ugroups_to_delete');
+                $listeners_to_add  = $this->request->get('listeners_to_add');
 
-            if (! $users_to_delete && ! $ugroups_to_delete && ! $listeners_to_add) {
-                $this->feedback->log('error',
+                if (! $users_to_delete && ! $ugroups_to_delete && ! $listeners_to_add) {
+                    $this->feedback->log('error',
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_element'));
-            } else {
-                if ($users_to_delete || $ugroups_to_delete) {
-                    $this->removeMonitoring($item, $users_to_delete, $ugroups_to_delete);
+                } else {
+                    if ($users_to_delete || $ugroups_to_delete) {
+                        $this->removeMonitoring($item, $users_to_delete, $ugroups_to_delete);
+                    }
+                    if ($listeners_to_add) {
+                        $this->addMonitoring($item, $listeners_to_add);
+                    }
+                    $this->_actionParams['item'] = $item;
+                    $this->action                = 'update_monitoring';
                 }
-                if ($listeners_to_add) {
-                    $this->addMonitoring($item, $listeners_to_add);
-                }
-                $this->_actionParams['item'] = $item;
-                $this->action                = 'update_monitoring';
-            }
-            $this->view                       = 'RedirectAfterCrud';
-            $this->_viewParams['redirect_to'] = DOCMAN_BASE_URL.'/index.php?group_id='
+                $this->view                       = 'RedirectAfterCrud';
+                $this->_viewParams['redirect_to'] = DOCMAN_BASE_URL.'/index.php?group_id='
                 .$item->groupId.'&id='.$item->id.'&action=details&section=notifications';
             break;
-        case 'move_here':
-            if (!$this->request->exist('item_to_move')) {
-                $this->feedback->log('error', 'Missing parameter.');
-                $this->view = 'DocmanError';
-            } else {
-                $item_to_move = $item_factory->getItemFromDb($this->request->get('item_to_move'));
-                $this->view   = null;
-                if ($this->request->exist('confirm')) {
-                    if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
-                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
-                        $this->_set_moveView_errorPerms();
-                    } else {
-                        $this->action = 'move';
+            case 'move_here':
+                if (!$this->request->exist('item_to_move')) {
+                    $this->feedback->log('error', 'Missing parameter.');
+                    $this->view = 'DocmanError';
+                } else {
+                    $item_to_move = $item_factory->getItemFromDb($this->request->get('item_to_move'));
+                    $this->view   = null;
+                    if ($this->request->exist('confirm')) {
+                        if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
+                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
+                            $this->_set_moveView_errorPerms();
+                        } else {
+                            $this->action = 'move';
+                        }
+                    }
+                    if (!$this->view) {
+                        $this->_set_redirectView();
                     }
                 }
-                if (!$this->view) {
-                    $this->_set_redirectView();
+            break;
+            case 'permissions':
+                if (!$this->userCanManage($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
+                    $this->view = 'Details';
+                } else {
+                    $this->action = 'permissions';
+                    $this->view   = 'Details';
                 }
-            }
             break;
-        case 'permissions':
-            if (!$this->userCanManage($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
-                $this->view = 'Details';
-            } else {
-                $this->action = 'permissions';
-                $this->view   = 'Details';
-            }
-            break;
-        case 'confirmDelete':
-            if ($this->userCannotDelete($user, $item)) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
-                $this->view = 'Details';
-            } else {
-                $this->view   = 'Delete';
-            }
-            break;
-        case 'action_new_version':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $dPm = $this->_getPermissionsManager();
-                if($dPm->getLockFactory()->itemIsLocked($item)) {
-                    $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add'));
+            case 'confirmDelete':
+                if ($this->userCannotDelete($user, $item)) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
+                    $this->view = 'Details';
+                } else {
+                    $this->view   = 'Delete';
                 }
-                $this->view   = 'NewVersion';
-            }
             break;
-        case 'action_update':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->view   = 'Update';
-            }
+            case 'action_new_version':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $dPm = $this->_getPermissionsManager();
+                    if($dPm->getLockFactory()->itemIsLocked($item)) {
+                        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add'));
+                    }
+                    $this->view   = 'NewVersion';
+                }
+            break;
+            case 'action_update':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $this->view   = 'Update';
+                }
             break;
 
-        case 'action_copy':
-            //@XSS: validate action against a regexp.
-            $_action = $this->request->get('orig_action');
-            $_id     = (int) $this->request->get('orig_id');
-            $this->_actionParams['item'] = $item;
+            case 'action_copy':
+                //@XSS: validate action against a regexp.
+                $_action = $this->request->get('orig_action');
+                $_id     = (int) $this->request->get('orig_id');
+                $this->_actionParams['item'] = $item;
 
-            $this->action = $view;
-            if(!$this->request->exist('ajax_copy')) {
-                $this->_viewParams['default_url_params'] = array('action'  => $_action,
+                $this->action = $view;
+                if(!$this->request->exist('ajax_copy')) {
+                    $this->_viewParams['default_url_params'] = array('action'  => $_action,
                                                                  'id'      => $_id);
-                $this->view = 'RedirectAfterCrud';
-            }
+                    $this->view = 'RedirectAfterCrud';
+                }
             break;
 
-        case 'action_cut':
-            $_action = $this->request->get('orig_action');
-            $_id = (int) $this->request->get('orig_id');
-            $this->_actionParams['item'] = $item;
+            case 'action_cut':
+                $_action = $this->request->get('orig_action');
+                $_id = (int) $this->request->get('orig_id');
+                $this->_actionParams['item'] = $item;
 
-            $this->action = $view;
-            if(!$this->request->exist('ajax_cut')) {
-                $this->_viewParams['default_url_params'] = array('action'  => $_action,
+                $this->action = $view;
+                if(!$this->request->exist('ajax_cut')) {
+                    $this->_viewParams['default_url_params'] = array('action'  => $_action,
                                                                  'id'      => $_id);
-                $this->view = 'RedirectAfterCrud';
-            }
+                    $this->view = 'RedirectAfterCrud';
+                }
             break;
 
-        case 'action_paste':
-            $itemToPaste = null;
-            $mode        = null;
-            $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
-            if(!$allowed) {
-                $this->view = 'Details';
-            }
-            else {
-                $this->_viewParams['itemToPaste'] = $itemToPaste;
-                $this->_viewParams['srcMode']     = $mode;
-                $this->view = 'Paste';
-            }
-            break;
-
-        case 'paste_cancel':
-            // intend to be only called through ajax call
-            $item_factory->delCopyPreference();
-            $item_factory->delCutPreference();
-            break;
-
-        case 'paste':
-            if($this->request->exist('cancel')) {
-                $this->_viewParams['default_url_params'] = array('action'  => 'show');
-                $this->view = 'RedirectAfterCrud';
-            } else {
+            case 'action_paste':
                 $itemToPaste = null;
                 $mode        = null;
                 $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
@@ -985,48 +961,128 @@ class Docman_Controller extends Controler {
                     $this->view = 'Details';
                 }
                 else {
-                    $this->_viewParams['importMd'] = false;
-                    if($this->userCanAdmin()) {
-                        if($this->request->exist('import_md') &&
-                           $this->request->get('import_md') == '1') {
-                            $this->_viewParams['importMd'] = true;
+                    $this->_viewParams['itemToPaste'] = $itemToPaste;
+                    $this->_viewParams['srcMode']     = $mode;
+                    $this->view = 'Paste';
+                }
+            break;
+
+            case 'paste_cancel':
+                // intend to be only called through ajax call
+                $item_factory->delCopyPreference();
+                $item_factory->delCutPreference();
+            break;
+
+            case 'paste':
+                if($this->request->exist('cancel')) {
+                    $this->_viewParams['default_url_params'] = array('action'  => 'show');
+                    $this->view = 'RedirectAfterCrud';
+                } else {
+                    $itemToPaste = null;
+                    $mode        = null;
+                    $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
+                    if(!$allowed) {
+                        $this->view = 'Details';
+                    }
+                    else {
+                        $this->_viewParams['importMd'] = false;
+                        if($this->userCanAdmin()) {
+                            if($this->request->exist('import_md') &&
+                               $this->request->get('import_md') == '1') {
+                                $this->_viewParams['importMd'] = true;
+                            }
+                        }
+                        $this->_viewParams['item'] = $item;
+                        $this->_viewParams['rank'] = $this->request->get('rank');
+                        $this->_viewParams['itemToPaste'] = $itemToPaste;
+                        $this->_viewParams['srcMode']     = $mode;
+                        /*$this->action = $view;
+
+                        $this->_viewParams['default_url_params'] = array('action'  => 'show',
+                                                                     'id'      => $item->getId());
+                        $this->view = 'RedirectAfterCrud';*/
+                        $this->_viewParams['item']        = $item;
+                        $this->_viewParams['rank']        = $this->request->get('rank');
+                        $this->_viewParams['itemToPaste'] = $itemToPaste;
+                        $this->_viewParams['srcMode']     = $mode;
+                        $this->view                       = 'PasteInProgress';
+                    }
+                }
+            break;
+
+            case 'approval_create':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $this->view = 'ApprovalCreate';
+                }
+            break;
+
+            case 'approval_delete':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    if ($this->request->exist('confirm')) {
+                        $this->action = $view;
+                        $this->_actionParams['item']   = $item;
+
+                        // Version
+                        $vVersion = new Valid_UInt('version');
+                        $vVersion->required();
+                        if($this->request->valid($vVersion)) {
+                            $this->_actionParams['version'] = $this->request->get('version');
+                        } else {
+                            $this->_actionParams['version'] = null;
                         }
                     }
-                    $this->_viewParams['item'] = $item;
-                    $this->_viewParams['rank'] = $this->request->get('rank');
-                    $this->_viewParams['itemToPaste'] = $itemToPaste;
-                    $this->_viewParams['srcMode']     = $mode;
-                    /*$this->action = $view;
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'show',
-                                                                     'id'      => $item->getId());
-                    $this->view = 'RedirectAfterCrud';*/
-                    $this->_viewParams['item']        = $item;
-                    $this->_viewParams['rank']        = $this->request->get('rank');
-                    $this->_viewParams['itemToPaste'] = $itemToPaste;
-                    $this->_viewParams['srcMode']     = $mode;
-                    $this->view                       = 'PasteInProgress';
+                    $this->_viewParams['default_url_params'] = array('action'  => 'details',
+                                                                 'section' => 'approval',
+                                                                 'id'      => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
                 }
-            }
             break;
 
-        case 'approval_create':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->view = 'ApprovalCreate';
-            }
-            break;
-
-        case 'approval_delete':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                if ($this->request->exist('confirm')) {
-                    $this->action = $view;
+            case 'approval_update':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
                     $this->_actionParams['item']   = $item;
+
+                    // Settings
+                    $this->_actionParams['status']       = (int) $this->request->get('status');
+                    $this->_actionParams['description']  = $this->request->get('description');
+                    $this->_actionParams['notification'] = (int) $this->request->get('notification');
+                    $this->_actionParams['reminder']     = $this->request->get('reminder');
+                    $this->_actionParams['occurence']    = (int) $this->request->get('occurence');
+                    $this->_actionParams['period']       = (int) $this->request->get('period');
+
+                    // Users
+                    $this->_actionParams['user_list'] = $this->request->get('user_list');
+                    $this->_actionParams['ugroup_list'] = null;
+                    if(is_array($this->request->get('ugroup_list'))) {
+                        $this->_actionParams['ugroup_list'] = array_map('intval', $this->request->get('ugroup_list'));
+                    }
+
+                    // Selected users
+                    $this->_actionParams['sel_user'] = null;
+                    if(is_array($this->request->get('sel_user'))) {
+                        $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
+                    }
+                    $allowedAct = array('100', 'mail', 'del');
+                    $this->_actionParams['sel_user_act'] = null;
+                    if(in_array($this->request->get('sel_user_act'), $allowedAct)) {
+                        $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
+                    }
+
+                    // Resend
+                    $this->_actionParams['resend_notif'] = false;
+                    if($this->request->get('resend_notif') == 'yes') {
+                        $this->_actionParams['resend_notif'] = true;
+                    }
 
                     // Version
                     $vVersion = new Valid_UInt('version');
@@ -1036,477 +1092,421 @@ class Docman_Controller extends Controler {
                     } else {
                         $this->_actionParams['version'] = null;
                     }
-                }
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'details',
-                                                                 'section' => 'approval',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
-            break;
+                    // Import
+                    $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+                    $vImport->required();
+                    $this->_actionParams['import'] = $this->request->getValidated('app_table_import', $vImport, false);
 
-        case 'approval_update':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->_actionParams['item']   = $item;
+                    // Owner
+                    $vOwner = new Valid_String('table_owner');
+                    $vOwner->required();
+                    $this->_actionParams['table_owner'] = $this->request->getValidated('table_owner', $vOwner, false);
 
-                // Settings
-                $this->_actionParams['status']       = (int) $this->request->get('status');
-                $this->_actionParams['description']  = $this->request->get('description');
-                $this->_actionParams['notification'] = (int) $this->request->get('notification');
-                $this->_actionParams['reminder']     = $this->request->get('reminder');
-                $this->_actionParams['occurence']    = (int) $this->request->get('occurence');
-                $this->_actionParams['period']       = (int) $this->request->get('period');
-
-                // Users
-                $this->_actionParams['user_list'] = $this->request->get('user_list');
-                $this->_actionParams['ugroup_list'] = null;
-                if(is_array($this->request->get('ugroup_list'))) {
-                    $this->_actionParams['ugroup_list'] = array_map('intval', $this->request->get('ugroup_list'));
-                }
-
-                // Selected users
-                $this->_actionParams['sel_user'] = null;
-                if(is_array($this->request->get('sel_user'))) {
-                    $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
-                }
-                $allowedAct = array('100', 'mail', 'del');
-                $this->_actionParams['sel_user_act'] = null;
-                if(in_array($this->request->get('sel_user_act'), $allowedAct)) {
-                    $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
-                }
-
-                // Resend
-                $this->_actionParams['resend_notif'] = false;
-                if($this->request->get('resend_notif') == 'yes') {
-                    $this->_actionParams['resend_notif'] = true;
-                }
-
-                // Version
-                $vVersion = new Valid_UInt('version');
-                $vVersion->required();
-                if($this->request->valid($vVersion)) {
-                    $this->_actionParams['version'] = $this->request->get('version');
-                } else {
-                    $this->_actionParams['version'] = null;
-                }
-
-                // Import
-                $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
-                $vImport->required();
-                $this->_actionParams['import'] = $this->request->getValidated('app_table_import', $vImport, false);
-
-                // Owner
-                $vOwner = new Valid_String('table_owner');
-                $vOwner->required();
-                $this->_actionParams['table_owner'] = $this->request->getValidated('table_owner', $vOwner, false);
-
-                // Special handeling of table deletion
-                if($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
-                    $this->_viewParams['default_url_params'] = array('action' => 'approval_create',
+                    // Special handeling of table deletion
+                    if($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
+                        $this->_viewParams['default_url_params'] = array('action' => 'approval_create',
                                                                      'delete' => 'confirm',
                                                                      'id'     => $item->getId());
-                } else {
-                    // Action!
-                    $this->action = $view;
-                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                    } else {
+                        // Action!
+                        $this->action = $view;
+                        $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
                                                                      'id'      => $item->getId());
+                    }
+                    if($this->_actionParams['version'] !== null) {
+                        $this->_viewParams['default_url_params']['version'] = $this->_actionParams['version'];
+                    }
+                    $this->view = 'RedirectAfterCrud';
                 }
-                if($this->_actionParams['version'] !== null) {
-                    $this->_viewParams['default_url_params']['version'] = $this->_actionParams['version'];
+            break;
+
+            case 'approval_upd_user':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $this->_actionParams['item'] = $item;
+                    $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
+                    $this->_actionParams['rank']    = $this->request->get('rank');
+                    $this->action = $view;
+
+                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                                                                 'id'      => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
                 }
-                $this->view = 'RedirectAfterCrud';
-            }
             break;
 
-        case 'approval_upd_user':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->_actionParams['item'] = $item;
-                $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
-                $this->_actionParams['rank']    = $this->request->get('rank');
-                $this->action = $view;
+            case 'approval_del_user':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $this->_actionParams['item'] = $item;
+                    $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
+                    $this->action = $view;
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
                                                                  'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
+                    $this->view = 'RedirectAfterCrud';
+                }
             break;
 
-        case 'approval_del_user':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->_actionParams['item'] = $item;
-                $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
-                $this->action = $view;
-
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
-            break;
-
-        case 'approval_user_commit':
-            $atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
-            $table = $atf->getTable();
-            $atrf  = new Docman_ApprovalTableReviewerFactory($table, $item);
-            if (!$this->userCanRead($item->getId())
+            case 'approval_user_commit':
+                $atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
+                $table = $atf->getTable();
+                $atrf  = new Docman_ApprovalTableReviewerFactory($table, $item);
+                if (!$this->userCanRead($item->getId())
                 || !$atrf->isReviewer($user->getId())
                 || !$table->isEnabled()) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            }
-            else {
-                $this->_actionParams['item'] = $item;
-
-                $svState = 0;
-                $sState = (int) $this->request->get('state');
-                if($sState >= 0 && $sState < 5) {
-                    $svState = $sState;
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
                 }
-                $this->_actionParams['svState'] = $svState;
+                else {
+                    $this->_actionParams['item'] = $item;
 
-                $this->_actionParams['sVersion'] = null;
-                if($this->request->exist('version')) {
-                    $sVersion = (int) $this->request->get('version');
-                    switch($item_factory->getItemTypeForItem($item)) {
-                    case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
-                        if($sVersion <= 0) {
-                            $sVersion = null;
-                        }
-                    case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                    case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-                        // assume ok: do nothing.
-                        break;
-                    default:
-                        $sVersion = null;
+                    $svState = 0;
+                    $sState = (int) $this->request->get('state');
+                    if($sState >= 0 && $sState < 5) {
+                        $svState = $sState;
                     }
-                    $this->_actionParams['sVersion'] = $sVersion;
-                }
-                $this->_actionParams['usComment'] = $this->request->get('comment');
-                $this->_actionParams['monitor'] = (int) $this->request->get('monitor');
+                    $this->_actionParams['svState'] = $svState;
 
-                $this->action = $view;
+                    $this->_actionParams['sVersion'] = null;
+                    if($this->request->exist('version')) {
+                        $sVersion = (int) $this->request->get('version');
+                        switch($item_factory->getItemTypeForItem($item)) {
+                            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                                if($sVersion <= 0) {
+                                    $sVersion = null;
+                                }
+                            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                                // assume ok: do nothing.
+                            break;
+                            default:
+                                $sVersion = null;
+                        }
+                        $this->_actionParams['sVersion'] = $sVersion;
+                    }
+                    $this->_actionParams['usComment'] = $this->request->get('comment');
+                    $this->_actionParams['monitor'] = (int) $this->request->get('monitor');
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'details',
+                    $this->action = $view;
+
+                    $this->_viewParams['default_url_params'] = array('action'  => 'details',
                                                                  'section' => 'approval',
                                                                  'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
+                    $this->view = 'RedirectAfterCrud';
+                }
             break;
 
-        case 'approval_notif_resend':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->action = $view;
-                $this->_actionParams['item'] = $item;
-
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
-            break;
-
-        case 'edit':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                $mdFactory->appendAllListOfValuesToItem($item);
-                $this->view   = 'Edit';
-            }
-            break;
-        case 'delete':
-            if ($this->userCannotDelete($user, $item)) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
-                $this->_set_deleteView_errorPerms();
-            } else if ($this->request->exist('confirm')) {
-                $this->action = $view;
-                $this->_set_redirectView();
-            } else {
-                $this->view = 'Details';
-            }
-            break;
-
-        case 'deleteVersion':
-            if ($this->userCannotDelete($user, $item)) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
-                $this->_set_deleteView_errorPerms();
-            } else if ($this->request->exist('confirm')) {
-                $this->action = $view;
-                $this->_set_redirectView();
-            } else {
-                $this->view = 'Details';
-            }
-            break;
-
-        case 'createFolder':
-        case 'createDocument':
-        case 'createItem':
-            if ($this->request->exist('cancel')) {
-                $this->_set_redirectView();
-            } else {
-                $i = $this->request->get('item');
-                if (!$i || !isset($i['parent_id'])) {
-                    $this->feedback->log('error', 'Missing parameter.');
-                    $this->view = 'DocmanError';
+            case 'approval_notif_resend':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $this->txt('error_perms_edit'));
+                    $this->view = 'Details';
                 } else {
-                    $parent = $item_factory->getItemFromDb($i['parent_id']);
-                    if (!$parent || $parent->getGroupId() != $this->getGroupId() || !$this->userCanWrite($parent->getId())) {
-                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                        $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
-                    } else {
-                        //Validations
-                        $new_item = $this->createItemFromUserInput();
+                    $this->action = $view;
+                    $this->_actionParams['item'] = $item;
 
-                        $fields = array_merge(
+                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                                                                 'id'      => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
+                }
+            break;
+
+            case 'edit':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                    $mdFactory->appendAllListOfValuesToItem($item);
+                    $this->view   = 'Edit';
+                }
+            break;
+            case 'delete':
+                if ($this->userCannotDelete($user, $item)) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
+                    $this->_set_deleteView_errorPerms();
+                } else if ($this->request->exist('confirm')) {
+                    $this->action = $view;
+                    $this->_set_redirectView();
+                } else {
+                    $this->view = 'Details';
+                }
+            break;
+
+            case 'deleteVersion':
+                if ($this->userCannotDelete($user, $item)) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
+                    $this->_set_deleteView_errorPerms();
+                } else if ($this->request->exist('confirm')) {
+                    $this->action = $view;
+                    $this->_set_redirectView();
+                } else {
+                    $this->view = 'Details';
+                }
+            break;
+
+            case 'createFolder':
+            case 'createDocument':
+            case 'createItem':
+                if ($this->request->exist('cancel')) {
+                    $this->_set_redirectView();
+                } else {
+                    $i = $this->request->get('item');
+                    if (!$i || !isset($i['parent_id'])) {
+                        $this->feedback->log('error', 'Missing parameter.');
+                        $this->view = 'DocmanError';
+                    } else {
+                        $parent = $item_factory->getItemFromDb($i['parent_id']);
+                        if (!$parent || $parent->getGroupId() != $this->getGroupId() || !$this->userCanWrite($parent->getId())) {
+                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                            $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
+                        } else {
+                            //Validations
+                            $new_item = $this->createItemFromUserInput();
+
+                            $fields = array_merge(
                             $new_item->accept(new Docman_View_GetFieldsVisitor()),
                             $new_item->accept(
                                 new Docman_View_GetSpecificFieldsVisitor(),
                                 ['request' => $this->request]
                             )
-                        );
-                        $valid = $this->_validateRequest($fields);
-                        if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
-                            $news = $this->request->get('news');
-                            if ($news) {
-                                $is_news_details = isset($news['details']) && trim($news['details']);
-                                $is_news_summary = isset($news['summary']) && trim($news['summary']);
-                                if ($is_news_details && !$is_news_summary) {
-                                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_summary'));
-                                    $valid = false;
-                                }
-                                if (!$is_news_details && $is_news_summary) {
-                                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
-                                    $valid = false;
+                            );
+                            $valid = $this->_validateRequest($fields);
+                            if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
+                                $news = $this->request->get('news');
+                                if ($news) {
+                                    $is_news_details = isset($news['details']) && trim($news['details']);
+                                    $is_news_summary = isset($news['summary']) && trim($news['summary']);
+                                    if ($is_news_details && !$is_news_summary) {
+                                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_summary'));
+                                        $valid = false;
+                                    }
+                                    if (!$is_news_details && $is_news_summary) {
+                                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
+                                        $valid = false;
+                                    }
                                 }
                             }
-                        }
 
-                        if ($valid && $new_item !== null) {
-                            $document_retriever         = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
-                            $is_document_being_uploaded = $document_retriever->isThereAlreadyAnUploadOngoing(
+                            if ($valid && $new_item !== null) {
+                                $document_retriever         = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
+                                $is_document_being_uploaded = $document_retriever->isThereAlreadyAnUploadOngoing(
                                 $parent,
                                 $new_item->getTitle(),
                                 new DateTimeImmutable()
-                            );
-                            if ($is_document_being_uploaded) {
-                                $valid = false;
-                                $this->feedback->log(
-                                    Feedback::ERROR,
-                                    dgettext('tuleap-docman', 'There is already a document being uploaded for this item')
                                 );
+                                if ($is_document_being_uploaded) {
+                                    $valid = false;
+                                    $this->feedback->log(
+                                        Feedback::ERROR,
+                                        dgettext('tuleap-docman', 'There is already a document being uploaded for this item')
+                                    );
+                                }
                             }
-                        }
 
-                        if ($valid) {
-                            $this->action = $view;
-                            $this->_set_redirectView();
-                        } else {
-                            // Propagate return page
-                            $this->_viewParams['token']               = $this->request->get('token');
+                            if ($valid) {
+                                $this->action = $view;
+                                $this->_set_redirectView();
+                            } else {
+                                // Propagate return page
+                                $this->_viewParams['token']               = $this->request->get('token');
 
-                            $this->_viewParams['force_item']          = $new_item;
-                            $this->_viewParams['force_news']          = $this->request->get('news');
-                            $this->_viewParams['force_permissions']   = $this->request->get('permissions');
-                            $this->_viewParams['force_ordering']      = $this->request->get('ordering');
-                            $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
-                            $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
-                            $this->_viewParams['hierarchy']           = $this->getItemHierarchy($root);
-                            $this->_set_createItemView_afterCreate($view);
+                                $this->_viewParams['force_item']          = $new_item;
+                                $this->_viewParams['force_news']          = $this->request->get('news');
+                                $this->_viewParams['force_permissions']   = $this->request->get('permissions');
+                                $this->_viewParams['force_ordering']      = $this->request->get('ordering');
+                                $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
+                                $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
+                                $this->_viewParams['hierarchy']           = $this->getItemHierarchy($root);
+                                $this->_set_createItemView_afterCreate($view);
+                            }
                         }
                     }
                 }
-            }
             break;
-        case 'update':
-            $this->_viewParams['recurseOnDocs'] = false;
-            $this->_actionParams['recurseOnDocs'] = false;
-            if($this->request->get('recurse_on_doc') == 1) {
-                $this->_viewParams['recurseOnDocs'] = true;
-                $this->_actionParams['recurseOnDocs'] = true;
-            }
-        case 'update_wl':
-        case 'new_version':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                // For properties update ('update' action), we need to confirm
-                // the recursive application of metadata update.
-                if($view == 'update' &&
-                   $this->request->exist('recurse') &&
-                   !$this->request->exist('cancel')) {
-                    $this->_viewParams['recurse'] = $this->request->get('recurse');
-                    if(!$this->request->exist('validate_recurse')) {
-                        $updateConfirmed = false;
-                    } elseif($this->request->get('validate_recurse') != 'true') {
-                        $updateConfirmed = false;
+            case 'update':
+                $this->_viewParams['recurseOnDocs'] = false;
+                $this->_actionParams['recurseOnDocs'] = false;
+                if($this->request->get('recurse_on_doc') == 1) {
+                    $this->_viewParams['recurseOnDocs'] = true;
+                    $this->_actionParams['recurseOnDocs'] = true;
+                }
+            case 'update_wl':
+            case 'new_version':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                    $this->view = 'Details';
+                } else {
+                    // For properties update ('update' action), we need to confirm
+                    // the recursive application of metadata update.
+                    if($view == 'update' &&
+                       $this->request->exist('recurse') &&
+                       !$this->request->exist('cancel')) {
+                        $this->_viewParams['recurse'] = $this->request->get('recurse');
+                        if(!$this->request->exist('validate_recurse')) {
+                            $updateConfirmed = false;
+                        } elseif($this->request->get('validate_recurse') != 'true') {
+                            $updateConfirmed = false;
+                        } else {
+                            $updateConfirmed = true;
+                        }
                     } else {
                         $updateConfirmed = true;
                     }
-                } else {
-                    $updateConfirmed = true;
-                }
 
-                $valid = true;
-                if ($this->request->exist('confirm')) {
-                    $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
-                    if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
-                        $valid = false;
+                    $valid = true;
+                    if ($this->request->exist('confirm')) {
+                        $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
+                        if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
+                            $valid = false;
+                        }
+                        //Validations
+                        if ($valid && $view == 'update') {
+                            $this->updateMetadataFromUserInput($item);
+                            $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
+                        } else if ($valid) {
+                            $this->updateItemFromUserInput($item);
+                            $valid = (($this->_validateApprovalTable($this->request, $item))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
+                        }
+                        //Actions
+                        if ($valid && $updateConfirmed) {
+                            if ($view == 'update_wl') {
+                                $this->action = 'update';
+                            } else {
+                                $this->action = $view;
+                            }
+                        }
                     }
-                    //Validations
-                    if ($valid && $view == 'update') {
-                        $this->updateMetadataFromUserInput($item);
-                        $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
-                    } else if ($valid) {
-                        $this->updateItemFromUserInput($item);
-                        $valid = (($this->_validateApprovalTable($this->request, $item))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
-                    }
-                    //Actions
+                    //Views
                     if ($valid && $updateConfirmed) {
-                        if ($view == 'update_wl') {
-                            $this->action = 'update';
-                        } else {
-                            $this->action = $view;
+                        if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
+                            $this->_viewParams['redirect_to'] = $redirect_to;
                         }
-                    }
-                }
-                //Views
-                if ($valid && $updateConfirmed) {
-                    if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
-                        $this->_viewParams['redirect_to'] = $redirect_to;
-                    }
-                    $this->view = 'RedirectAfterCrud';
-                } else {
-                    if ($view == 'update_wl') {
-                        $this->view = 'Update';
-                    } else if ($view == 'new_version') {
-                        // Keep fields values
-                        $v = $this->request->get('version');
-                        $this->_viewParams['label']     = $v['label'];
-                        $this->_viewParams['changelog'] = $v['changelog'];
-                        if ($item instanceof Docman_EmbeddedFile) {
-                            $v = $item->getCurrentVersion();
-                            $v->setContent($this->request->get('content'));
-                        }
-                        $this->view = 'NewVersion';
+                        $this->view = 'RedirectAfterCrud';
                     } else {
-                        $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
-                        $mdFactory->appendAllListOfValuesToItem($item);
-                        if($this->request->existAndNonEmpty('token')) {
-                            // propagate the token so the user will be
-                            // redirected to the original page even after
-                            // several properties update errors or
-                            // confirmations.
-                            $this->_viewParams['token'] = $this->request->get('token');
+                        if ($view == 'update_wl') {
+                            $this->view = 'Update';
+                        } else if ($view == 'new_version') {
+                            // Keep fields values
+                            $v = $this->request->get('version');
+                            $this->_viewParams['label']     = $v['label'];
+                            $this->_viewParams['changelog'] = $v['changelog'];
+                            if ($item instanceof Docman_EmbeddedFile) {
+                                $v = $item->getCurrentVersion();
+                                $v->setContent($this->request->get('content'));
+                            }
+                            $this->view = 'NewVersion';
+                        } else {
+                            $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                            $mdFactory->appendAllListOfValuesToItem($item);
+                            if($this->request->existAndNonEmpty('token')) {
+                                // propagate the token so the user will be
+                                // redirected to the original page even after
+                                // several properties update errors or
+                                // confirmations.
+                                $this->_viewParams['token'] = $this->request->get('token');
+                            }
+                            $this->_viewParams['updateConfirmed'] = $updateConfirmed;
+                            // The item may have changed (new user input)
+                            unset($this->_viewParams['item']);
+                            $this->_viewParams['item'] = $item;
+
+                            $this->view = 'Edit';
                         }
-                        $this->_viewParams['updateConfirmed'] = $updateConfirmed;
-                        // The item may have changed (new user input)
-                        unset($this->_viewParams['item']);
-                        $this->_viewParams['item'] = $item;
-
-                        $this->view = 'Edit';
                     }
                 }
-            }
             break;
-        case 'change_view':
-            $this->action = $view;
-            break;
-        case 'install':
-            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_alreadyinstalled'));
-            $this->view = 'DocmanError';
-            break;
-        case 'search':
-            $this->view = 'Table';
-            break;
-        case 'positionWithinFolder':
-            $this->_viewParams['force_ordering'] = $this->request->get('default_position');
-            $this->_viewParams['exclude']        = $this->request->get('exclude');
-            $this->_viewParams['hierarchy']      = $this->getItemHierarchy($root);
-            $this->view = ucfirst($view);
-            break;
-        case 'permissionsForItem':
-            $this->_viewParams['user_can_manage'] = $this->userCanManage($item->getId());
-            $this->view = ucfirst($view);
-            break;
-        case 'report_settings':
-            $this->view = 'ReportSettings';
-            break;
-        case 'report_del':
-            if($this->request->exist('report_id')) {
-                $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
-                $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
-
+            case 'change_view':
                 $this->action = $view;
-            }
-            $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
-            $this->view = 'RedirectAfterCrud';
-
             break;
-        case 'report_upd':
-            if($this->request->exist('report_id')) {
-                $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
-                $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
-                $usScope = $this->request->get('scope');
-                if($usScope === 'I' || $usScope === 'P') {
-                    $this->_actionParams['sScope'] = $usScope;
-                }
-                $this->_actionParams['description'] = $this->request->get('description');
-                $this->_actionParams['title']       = $this->request->get('title');
-                $this->_actionParams['sImage'] = (int) $this->request->get('image');
-
-                $this->action = $view;
-            }
-            $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
-            $this->view = 'RedirectAfterCrud';
+            case 'install':
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_alreadyinstalled'));
+                $this->view = 'DocmanError';
             break;
+            case 'search':
+                $this->view = 'Table';
+            break;
+            case 'positionWithinFolder':
+                $this->_viewParams['force_ordering'] = $this->request->get('default_position');
+                $this->_viewParams['exclude']        = $this->request->get('exclude');
+                $this->_viewParams['hierarchy']      = $this->getItemHierarchy($root);
+                $this->view = ucfirst($view);
+            break;
+            case 'permissionsForItem':
+                $this->_viewParams['user_can_manage'] = $this->userCanManage($item->getId());
+                $this->view = ucfirst($view);
+            break;
+            case 'report_settings':
+                $this->view = 'ReportSettings';
+            break;
+            case 'report_del':
+                if($this->request->exist('report_id')) {
+                    $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
+                    $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
 
-        case 'report_import':
-            if($this->request->exist('import_search_report_from_group')) {
-                $pm = ProjectManager::instance();
-                $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
-                if ($srcGroup && !$srcGroup->isError()) {
-                    $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
-                    $this->_actionParams['sImportGroupId'] = $srcGroup->getGroupId();
-                    $this->_actionParams['sImportReportId'] = null;
-                    if($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
-                        $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
-                    }
                     $this->action = $view;
                 }
-            }
+                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->view = 'RedirectAfterCrud';
 
-            $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
-            $this->view = 'RedirectAfterCrud';
+            break;
+            case 'report_upd':
+                if($this->request->exist('report_id')) {
+                    $this->_actionParams['sReportId'] = (int) $this->request->get('report_id');
+                    $this->_actionParams['sGroupId']  = $this->_viewParams['group_id'];
+                    $usScope = $this->request->get('scope');
+                    if($usScope === 'I' || $usScope === 'P') {
+                        $this->_actionParams['sScope'] = $usScope;
+                    }
+                    $this->_actionParams['description'] = $this->request->get('description');
+                    $this->_actionParams['title']       = $this->request->get('title');
+                    $this->_actionParams['sImage'] = (int) $this->request->get('image');
+
+                    $this->action = $view;
+                }
+                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->view = 'RedirectAfterCrud';
             break;
 
-        case 'action_lock_add':
-            $this->_actionParams['item'] = $item;
-            $this->action = 'action_lock_add';
+            case 'report_import':
+                if($this->request->exist('import_search_report_from_group')) {
+                    $pm = ProjectManager::instance();
+                    $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
+                    if ($srcGroup && !$srcGroup->isError()) {
+                        $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
+                        $this->_actionParams['sImportGroupId'] = $srcGroup->getGroupId();
+                        $this->_actionParams['sImportReportId'] = null;
+                        if($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
+                            $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
+                        }
+                        $this->action = $view;
+                    }
+                }
+
+                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->view = 'RedirectAfterCrud';
             break;
 
-        case 'action_lock_del':
-            $this->_actionParams['item'] = $item;
-            $this->action = 'action_lock_del';
+            case 'action_lock_add':
+                $this->_actionParams['item'] = $item;
+                $this->action = 'action_lock_add';
             break;
 
-        case 'ajax_reference_tooltip':
-            $this->view = 'AjaxReferenceTooltip';
+            case 'action_lock_del':
+                $this->_actionParams['item'] = $item;
+                $this->action = 'action_lock_del';
             break;
 
-        default:
-            $purifier = Codendi_HTMLPurifier::instance();
+            case 'ajax_reference_tooltip':
+                $this->view = 'AjaxReferenceTooltip';
+            break;
+
+            default:
+                $purifier = Codendi_HTMLPurifier::instance();
             die($purifier->purify($view) . ' is not supported');
             break;
         }

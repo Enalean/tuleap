@@ -52,7 +52,7 @@ class ForumMLPlugin extends Plugin {
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->allowedForProject = array();
     }
-	
+    
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');

@@ -24,47 +24,47 @@ class ArtifactFieldSet {
     /**
      * The ArtifactType Object
      *
-     * @var	object{ArtifactType} $ArtifactType
+     * @var    object{ArtifactType} $ArtifactType
      */
-	var $ArtifactType;
+    var $ArtifactType;
 
     /**
      * The ID of this ArtifactfieldSet
      *
-     * @var	int $field_set_id
+     * @var    int $field_set_id
      */
     var $field_set_id;
 
     /**
      * The name of this ArtifactFieldSet
      *
-     * @var	string $name
+     * @var    string $name
      */
     var $name;
 
     /**
      * The description of this ArtifactFieldSet
      *
-     * @var	string $description
+     * @var    string $description
      */
     var $description;
 
     /**
      * The rank of this ArtifactFieldSet
      *
-     * @var	string $rank
+     * @var    string $rank
      */
     var $rank;
     
     /**
-	 * The array of ArtifactFields Object contained in this ArtifactFieldSet
-	 *
-	 * @var	array of object{ArtifactField} $ArtifactFields
-	 */
+     * The array of ArtifactFields Object contained in this ArtifactFieldSet
+     *
+     * @var    array of object{ArtifactField} $ArtifactFields
+     */
     var $ArtifactFields;
 
     /**
-     *	ArtifactFieldSet - constructor.
+     *    ArtifactFieldSet - constructor.
      */
     function __construct() {
     }
@@ -92,27 +92,27 @@ class ArtifactFieldSet {
     }
 
     /**
-	 *  Set the attributes values
-	 *
-	 * @param array $fieldset_array the values array
-	 * @return void
-	 */
-	function setFromArray($fieldset_array) {
-		$this->field_set_id = $fieldset_array['field_set_id'];
-		$this->group_artifact_id = $fieldset_array['group_artifact_id'];
-		$this->name = $fieldset_array['name'];
-		$this->description = $fieldset_array['description'];
-		$this->rank = $fieldset_array['rank'];
-	}
+     *  Set the attributes values
+     *
+     * @param array $fieldset_array the values array
+     * @return void
+     */
+    function setFromArray($fieldset_array) {
+        $this->field_set_id = $fieldset_array['field_set_id'];
+        $this->group_artifact_id = $fieldset_array['group_artifact_id'];
+        $this->name = $fieldset_array['name'];
+        $this->description = $fieldset_array['description'];
+        $this->rank = $fieldset_array['rank'];
+    }
     
     /**
-	 *  Set the fields of this field set
-	 *
-	 * @param array{ArtifactFiel} $fields the array of fields contained in this Field set
-	 */
-	function setArtifactFields($fields) {
-		$this->ArtifactFields = $fields;
-	}
+     *  Set the fields of this field set
+     *
+     * @param array{ArtifactFiel} $fields the array of fields contained in this Field set
+     */
+    function setArtifactFields($fields) {
+        $this->ArtifactFields = $fields;
+    }
     /**
      * getArtifactFields - get the ArtifactField objects contained in this ArtifactFieldSet
      *
@@ -233,11 +233,11 @@ class ArtifactFieldSet {
     }
     
     /**
-	 *  Return all the fields used contained in this fieldset
-	 *
-	 *	@return	array{ArtifactField}
-	 */
-	function getAllUsedFields() {
+     *  Return all the fields used contained in this fieldset
+     *
+     *    @return    array{ArtifactField}
+     */
+    function getAllUsedFields() {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
             if ( $field->IsUsed() ) {
@@ -245,14 +245,14 @@ class ArtifactFieldSet {
             }
         }
         return $result_fields;
-	}
+    }
 
-	/**
-	 *  Return all the fields unused contained in this fieldset
-	 *
-	 *	@return	array{ArtifactField}
-	 */
-	function getAllUnusedFields() {
+    /**
+     *  Return all the fields unused contained in this fieldset
+     *
+     *    @return    array{ArtifactField}
+     */
+    function getAllUnusedFields() {
         $result_fields = array();
         foreach ($this->ArtifactFields as $key => $field) {
             if ( ! $field->IsUsed() ) {
@@ -260,7 +260,7 @@ class ArtifactFieldSet {
             }
         }
         return $result_fields;
-	}
+    }
     
     /** 
      * userCanSubmit : returns true if user has Submit permission on this fieldset (this means that at least one field of this fieldset has submit permissions)
@@ -295,9 +295,9 @@ class ArtifactFieldSet {
     /**
      *  update - use this to update this ArtifactFieldSet in the database.
      *
-     *  @param	string	The item name.
-     *  @param	string	The item description.
-     *  @param	int		The rank.
+     *  @param    string    The item name.
+     *  @param    string    The item description.
+     *  @param    int        The rank.
      *  @return true on success, false on failure.
      */
     function update($name, $description, $rank) {

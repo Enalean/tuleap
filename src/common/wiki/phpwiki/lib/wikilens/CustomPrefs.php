@@ -46,7 +46,7 @@ class _UserPreference_recnnbr // recommendation engine key clustering, neighborh
 extends _UserPreference_numeric{};
 
 $WikiTheme->customUserPreferences
-	(array
+    (array
          (
           'recengine' => new _UserPreference_recengine('php'),
           'recalgo'   => new _UserPreference_recalgo('itemProb'),

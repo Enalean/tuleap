@@ -177,12 +177,12 @@ class GitDriver implements DVCSDriver {
 
     public function delete($path) {
         if ( empty($path) || !is_writable($path) ) {
-           throw new GitDriverErrorException('Empty path or permission denied '.$path);
+            throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
         $output = system('rm -fr '.escapeshellarg($path), $rcode);
         if ( $rcode != 0 ) {
-           throw new GitDriverErrorException('Unable to delete path '.$path);
+            throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         return true;
     }

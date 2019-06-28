@@ -51,39 +51,39 @@ class WikiServiceAdminViews extends WikiViews {
   /**
    * WikiServiceAdminViews - Constructor
    */
-  function __construct(&$controler, $id=0) {
-    parent::WikiView($controler, $id);
-    $pm = ProjectManager::instance();
-    $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'title', array($pm->getProject($this->gid)->getPublicName()));
-  }
+    function __construct(&$controler, $id=0) {
+        parent::WikiView($controler, $id);
+        $pm = ProjectManager::instance();
+        $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'title', array($pm->getProject($this->gid)->getPublicName()));
+    }
 
   /**
    * displayEntryForm - private
    */
-  function _displayEntryForm($act='', $id='', $name='', $page='', $desc='', $rank='') {
-    $purifier = Codendi_HTMLPurifier::instance();
-    print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
+    function _displayEntryForm($act='', $id='', $name='', $page='', $desc='', $rank='') {
+        $purifier = Codendi_HTMLPurifier::instance();
+        print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="action" value="'.$act.'" />
              <input type="hidden" name="id" value="'.$id.'" />
            <table>';
 
-    print '<tr>
+        print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'entry_name').'</td>
              <td ><input type="text" name="name" value="'. $purifier->purify($name) .'" size="60" maxlength="255"/></td>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'entry_em').'</td>
            </tr>';
 
-    $allPages = WikiPage::getAllUserPages();
-    $allPages[]='';
+        $allPages = WikiPage::getAllUserPages();
+        $allPages[]='';
 
-    $selectedPage = $purifier->purify($page);
-    $upageValue   = '';
-    if(!in_array($page, $allPages)) {
-        $selectedPage = '';
-        $upageValue   = $purifier->purify($page);
-    }
-    print '<tr>
+        $selectedPage = $purifier->purify($page);
+        $upageValue   = '';
+        if(!in_array($page, $allPages)) {
+            $selectedPage = '';
+            $upageValue   = $purifier->purify($page);
+        }
+        print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikipage').'</td>
              <td>
                '.html_build_select_box_from_array($allPages, 'page', $selectedPage, true).'<br />'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'givename').' <input type="text" name="upage" value="'.$upageValue.'" size="20" maxlength="255"/>
@@ -91,32 +91,32 @@ class WikiServiceAdminViews extends WikiViews {
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikipage_em', array($this->wikiAdminLink)).'</td>
            </tr>';
     
-    print '<tr>
+        print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'description').'</td>
              <td><textarea name="desc" rows="5" cols="60">'. $purifier->purify($desc) .'</textarea></td>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'description_em').'</td>
            </tr>';
     
-    print '<tr>
+        print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'rank_screen').'</td>
              <td><input type="text" name="rank" value="'.$rank.'" size="3" maxlength="3"/></td>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'rank_screen_em').'</td>
            </tr>';
 
-    print '<tr>
+        print '<tr>
              <td colspan="3"><input type="submit" value="'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'act_'.$act).'" /></td>
            </tr>';
 
-    print '</table>
+        print '</table>
            </form>';
-  }
+    }
 
   /**
    * displayMenu - public
    */
-  function displayMenu() {     
-    switch(DEFAULT_LANGUAGE){	    
-	case 'fr_FR': print '
+    function displayMenu() {     
+        switch(DEFAULT_LANGUAGE){        
+            case 'fr_FR': print '
 		     <ul class="ServiceMenu">
 		       <li><a href="/wiki/index.php?group_id='.$this->gid.'">Parcourir</a>&nbsp;|&nbsp;</li>
 		       <li><a href="/wiki/admin/index.php?group_id='.$this->gid.'">Admin</a>&nbsp;|&nbsp;</li>
@@ -125,9 +125,9 @@ class WikiServiceAdminViews extends WikiViews {
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Fichiers joints</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Permissions Wiki</a>&nbsp;|&nbsp;</li>
 		     </ul>';
-		     break;
-	case 'en_US':
-    default :     print '
+           break;
+            case 'en_US':
+            default :     print '
 		     <ul class="ServiceMenu">
 		       <li><a href="/wiki/index.php?group_id='.$this->gid.'">View</a>&nbsp;|&nbsp;</li>
 		       <li><a href="/wiki/admin/index.php?group_id='.$this->gid.'">Admin</a>&nbsp;|&nbsp;</li>
@@ -136,135 +136,135 @@ class WikiServiceAdminViews extends WikiViews {
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Wiki Attachments</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Wiki Permissions</a>&nbsp;|&nbsp;</li>
 		     </ul>';
+        }
     }
-  }
 
   /**
    * main - public View
    *
    * Main and default view.
    */
-  function main() {
-    switch (DEFAULT_LANGUAGE){
-	case 'fr_FR': printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
-		     printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
-		     break;
-	case 'en_US':	     
-	default :     printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments>Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiPages>Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p>", $this->wikiAdminLink); 	
-		     printf("<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>", $this->wikiAdminLink);	
-		     printf("<h3><a href=%s&view=wikiPerms>Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>", $this->wikiAdminLink, $this->wikiname);
-		     printf("<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>", $this->wikiLink);
-		     break;
+    function main() {
+        switch (DEFAULT_LANGUAGE){
+            case 'fr_FR': printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
+                printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
+                printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
+                printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
+                printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
+           break;
+            case 'en_US':         
+            default :     printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments>Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);
+                printf("<h3><a href=%s&view=wikiPages>Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p>", $this->wikiAdminLink);     
+                printf("<h3><a href=%s&view=wikiAttachments>Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p>", $this->wikiAdminLink);    
+                printf("<h3><a href=%s&view=wikiPerms>Set Wiki Permissions</a></h3><p>Set permissions on whole %s Wiki.</p>", $this->wikiAdminLink, $this->wikiname);
+                printf("<h3><a href=%s&pagename=PhpWikiAdministration>PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>", $this->wikiLink);
+           break;
+    
+        }
     
     }
-    
- }
 
 
   /**
    * wikiDocuments - public view
    */
-  function wikiDocuments() {
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_title', array($this->wikiname));
+    function wikiDocuments() {
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_title', array($this->wikiname));
 
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_createdoc', $this->gid);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
-    print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_create', array($hurl));
-    if(!$hideFlag){
-      $this->_createWikiDocument();
-    }
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_createdoc', $this->gid);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
+        print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_create', array($hurl));
+        if(!$hideFlag){
+            $this->_createWikiDocument();
+        }
     
-    //    print "\n<hr/>\n";
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_browsedoc', $this->gid);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
-    print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_docs', array($hurl));
-    if(!$hideFlag){
-      $this->_browseWikiDocument();
-    }
+      //    print "\n<hr/>\n";
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_browsedoc', $this->gid);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiDocuments&'.$hideUrl.'">'.$hideImg.'</a>';
+        print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_docs', array($hurl));
+        if(!$hideFlag){
+            $this->_browseWikiDocument();
+        }
       
-    print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
-  }
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
+    }
 
   /**
    * _createWikiDocument - private
    */
-  function _createWikiDocument() {
-    print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'createwikidoc', array($this->wikiLink));
-    $this->_displayEntryForm('create');
-  }
+    function _createWikiDocument() {
+        print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'createwikidoc', array($this->wikiLink));
+        $this->_displayEntryForm('create');
+    }
 
   /**
    * _browseWikiDocument - private
    */
-  function _browseWikiDocument() {
-    $purifier = Codendi_HTMLPurifier::instance();
-    $wei = WikiEntry::getEntryIterator($this->gid);
+    function _browseWikiDocument() {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $wei = WikiEntry::getEntryIterator($this->gid);
    
-    print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browsedoc');
+        print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browsedoc');
     
-    print html_build_list_table_top(array($GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_name'),
+        print html_build_list_table_top(array($GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_name'),
                                           $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_page'),
                                           $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_rank'),
                                           $GLOBALS['Language']->getText('wiki_views_wkserviews', 'doc_delete')));
-    $i=0;
-    while($wei->valid()) {
-        $we = $wei->current();
+        $i=0;
+        while($wei->valid()) {
+            $we = $wei->current();
 
-      print '<tr class="'.html_get_alt_row_color($i).'">';
+            print '<tr class="'.html_get_alt_row_color($i).'">';
 
-      print '<td>
+            print '<td>
                <a href="'.$this->wikiAdminLink.'&view=updateWikiDocument&id='.$we->getId().'">'. $purifier->purify($we->getName()) .'</a>
             </td>';
 
-      print '<td>';
-      print $purifier->purify($we->getPage());
-      print ' - ';
-      print '<a href="'.$this->wikiAdminLink.'&view=docPerms&id='.$we->wikiPage->getId().'">';
-      $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
-      if($we->wikiPage->permissionExist()) {
-        $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
-      }
-      print '['.$purifier->purify($status).']';
-      print '</a>';
-      print '</td>';
+            print '<td>';
+            print $purifier->purify($we->getPage());
+            print ' - ';
+            print '<a href="'.$this->wikiAdminLink.'&view=docPerms&id='.$we->wikiPage->getId().'">';
+            $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
+            if($we->wikiPage->permissionExist()) {
+                $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+            }
+            print '['.$purifier->purify($status).']';
+            print '</a>';
+            print '</td>';
 
-      print '<td align="center">'.$we->getRank().'</td>';
+            print '<td align="center">'.$we->getRank().'</td>';
 
-      print '<td align="center">';
+            print '<td align="center">';
 
-      $alt = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'deletedoc', array($purifier->purify($we->getName())));
-      print html_trash_link($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId(),
+            $alt = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'deletedoc', array($purifier->purify($we->getName())));
+            print html_trash_link($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId(),
                             $GLOBALS['Language']->getText('common_mvc_view','warn',$alt),
                             $alt);
-      print '</td>';
+            print '</td>';
 
-      print '</tr>';
+            print '</tr>';
 
-      $i++;
-      $wei->next();
+            $i++;
+            $wei->next();
+        }
+        print '</table>';
     }
-    print '</table>';
-  }
 
   /**
    * updateWikiDocument - public View
    */
-  function updateWikiDocument() {
-    print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'updatedoc', array($this->wikiname));
+    function updateWikiDocument() {
+        print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'updatedoc', array($this->wikiname));
 
-    $we = new WikiEntry($_REQUEST['id']);
-    $this->_displayEntryForm('update',
-			    $we->getId(),
-			    $we->getName(),
-			    $we->getPage(),
-			    $we->getDesc(),
-			    $we->getRank());
-    print '<p><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
-  }
+        $we = new WikiEntry($_REQUEST['id']);
+        $this->_displayEntryForm('update',
+         $we->getId(),
+         $we->getName(),
+         $we->getPage(),
+         $we->getDesc(),
+         $we->getRank());
+        print '<p><a href="'.$this->wikiAdminLink.'&view=wikiDocuments">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
+    }
 
   /**
    * This function is a "false" document permission view. Actually, 
@@ -274,67 +274,67 @@ class WikiServiceAdminViews extends WikiViews {
    *
    * pagePerms - public View
    */
-   function docPerms() {
-     $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiDocuments&action=setWikiPagePerms';
-     $this->_pagePerms($postUrl);    
-     print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages"'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
-  }
+    function docPerms() {
+        $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiDocuments&action=setWikiPagePerms';
+        $this->_pagePerms($postUrl);    
+        print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages"'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
+    }
 
 
   /**
    * pagePerms - public View
    */
-   function pagePerms() {
-     $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPages&action=setWikiPagePerms';
-     $this->_pagePerms($postUrl);    
-     print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
-  }
+    function pagePerms() {
+        $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPages&action=setWikiPagePerms';
+        $this->_pagePerms($postUrl);    
+        print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
+    }
 
   /**
    * wikiPages - public View
    */
-  function wikiPages() {
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_title', array($this->wikiname));
+    function wikiPages() {
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_title', array($this->wikiname));
     
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_project_pages', $this->gid);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_project', array($hurl));
-    if(!$hideFlag){
-      print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_pj_all');
-      $allUserPages = WikiPage::getAllUserPages();
-      $this->_browsePages($allUserPages);
-    }
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_project_pages', $this->gid);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_project', array($hurl));
+        if(!$hideFlag){
+            print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_pj_all');
+            $allUserPages = WikiPage::getAllUserPages();
+            $this->_browsePages($allUserPages);
+        }
 
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_empty_pages', $this->gid);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_empty', array($hurl));
-    if(!$hideFlag){
-      print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_emp_all');
-      $wpw = new WikiPageWrapper($this->gid);
-      $allEmptyPages = $wpw->getProjectEmptyLinks();
-      $this->_browsePages($allEmptyPages);
-    }
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_empty_pages', $this->gid);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_empty', array($hurl));
+        if(!$hideFlag){
+            print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_emp_all');
+            $wpw = new WikiPageWrapper($this->gid);
+            $allEmptyPages = $wpw->getProjectEmptyLinks();
+            $this->_browsePages($allEmptyPages);
+        }
 
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_pages', $this->gid);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_admin', array($hurl));
-    if(!$hideFlag){
-      print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_adm_all');
-      $allAdminPages = WikiPage::getAllAdminPages();
-      $this->_browsePages($allAdminPages);
-    }
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_pages', $this->gid);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_admin', array($hurl));
+        if(!$hideFlag){
+            print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_adm_all');
+            $allAdminPages = WikiPage::getAllAdminPages();
+            $this->_browsePages($allAdminPages);
+        }
 
-    list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_internal_pages', $this->gid, true);
-    $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_intern', array($hurl));
-    if(!$hideFlag){
-      print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_int_all');
-      $allInternalsPages = WikiPage::getAllInternalPages();
-      $this->_browsePages($allInternalsPages);
-    }
+        list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_internal_pages', $this->gid, true);
+        $hurl='<a href="'.$this->wikiAdminLink.'&view=wikiPages&'.$hideUrl.'">'.$hideImg.'</a>';
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_intern', array($hurl));
+        if(!$hideFlag){
+            print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_int_all');
+            $allInternalsPages = WikiPage::getAllInternalPages();
+            $this->_browsePages($allInternalsPages);
+        }
     
-    print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
-  }
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
+    }
 
 
     /**
@@ -354,7 +354,7 @@ class WikiServiceAdminViews extends WikiViews {
             $page   = new WikiPage($this->gid, $pagename);
             $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
             if (permission_exist('WIKIPAGE_READ',$page->getId())) {
-	            $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+                $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
             }
             $eM = EventManager::instance();
             $referenced = false;
@@ -389,13 +389,13 @@ class WikiServiceAdminViews extends WikiViews {
   /**
    * wikiPerms - public View
    */
-  function wikiPerms() {
-    echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', array($this->wikiname, $this->wikiname));
-    $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&action=setWikiPerms';
-    permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
+    function wikiPerms() {
+        echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', array($this->wikiname, $this->wikiname));
+        $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&action=setWikiPerms';
+        permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
 
-    print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
-  }
+        print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
+    }
   
     /**
      * @access public
@@ -443,7 +443,7 @@ class WikiServiceAdminViews extends WikiViews {
         print'<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete').'"></td></tr>';
         print '</table>';
         print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
-    print '</form>';
+        print '</form>';
     }
   
 

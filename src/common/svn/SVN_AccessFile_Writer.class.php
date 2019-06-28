@@ -70,15 +70,15 @@ class SVN_AccessFile_Writer {
         $this->err = false;
         $fd = fopen($this->accessfile, "w+");
         if ($fd) {
-	    if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
+            if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
                 $this->err = 'write';
-	        $ret = false;
-	    } else {
-	        $ret = true;
-	    }
+                $ret = false;
+            } else {
+                $ret = true;
+            }
         } else {
             $this->err = 'file';
-	    $ret = false;
+            $ret = false;
         }
         fclose($fd);
         return $ret;

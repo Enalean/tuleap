@@ -28,7 +28,7 @@ class b201303200939_add_per_tracker_artifact_id extends ForgeUpgrade_Bucket {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-public function up() {
+    public function up() {
         $sql = "ALTER TABLE `tracker_artifact`
 					ADD COLUMN `per_tracker_artifact_id` INT(11) NOT NULL;";
         $result = $this->db->dbh->exec($sql);
@@ -55,7 +55,7 @@ SET per_tracker_artifact_id = numbered_ids.RowNumber;";
 
          $result = $this->db->dbh->exec($sql);
 
-         if ($result === false) {
+        if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }

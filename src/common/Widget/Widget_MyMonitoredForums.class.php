@@ -105,8 +105,8 @@ class Widget_MyMonitoredForums extends Widget {
 
                     if (!$hide_now) {
 
-                    $group_forum_id = db_result($result2,$i,'group_forum_id');
-                    $html .= '
+                        $group_forum_id = db_result($result2,$i,'group_forum_id');
+                        $html .= '
                     <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
                         '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
                         stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.

@@ -20,26 +20,26 @@
  */
 
 class GroupFactory {
-	/**
-	 * @var bool
-	 */
-	private $error_state = false;
+    /**
+     * @var bool
+     */
+    private $error_state = false;
 
-	/**
-	 *
-	 *
-	 *	@return bool success.
-	 */
-	function __construct() {
+    /**
+     *
+     *
+     *    @return bool success.
+     */
+    function __construct() {
             return true;
-	}
+    }
 
-	/**
-	 *	return a resultset of Group
-	 *
-	 *	@return	resultset
-	 */
-	function getAllGroups() {
+    /**
+     *    return a resultset of Group
+     *
+     *    @return    resultset
+     */
+    function getAllGroups() {
         global $Language;
         if (user_isloggedin()) {
             // For  surperuser), we can see all the trackers (both public and non public)
@@ -58,64 +58,64 @@ class GroupFactory {
             return false;
         }
 
-		$sql="SELECT group_id,group_name,unix_group_name FROM groups
+        $sql="SELECT group_id,group_name,unix_group_name FROM groups
 			WHERE group_id <> 100 AND status = 'A'
 			$access_condition
 			ORDER BY group_name ASC";
 
-		//echo $sql;
+     //echo $sql;
 
-		$result = db_query ($sql);
+        $result = db_query ($sql);
 
-		$rows = db_numrows($result);
+        $rows = db_numrows($result);
 
-		if (!$result || $rows < 1) {
+        if (!$result || $rows < 1) {
                     if (isset($GLOBALS['Language']))
                         $this->setError();
                     return false;
-		}
-		return $result;
-	}
-
-	/**
-	 *	return a resultset of Group for the current user
-	 *
-	 *	@return	resultset
-	 */
-	function getMemberGroups() {
-                global $Language;
-		if (!user_isloggedin()) {
-			$this->setError();
-			return false;
-		}
-
-		$sql="SELECT g.group_id,g.group_name ".
-			 "FROM groups g, user_group ug ".
-			 "WHERE g.group_id <> 100 AND g.status = 'A' AND g.group_id = ug.group_id ".
-			 "AND ug.user_id=".user_getid()." ".
-			 "ORDER BY g.group_name ASC";
-
-		//echo $sql;
-
-		$result = db_query ($sql);
-
-		$rows = db_numrows($result);
-
-		if (!$result || $rows < 1) {
-			$this->setError();
-			return false;
-		}
-		return $result;
-	}
+        }
+        return $result;
+    }
 
     /**
-	 *	return an array of Group for the current user (the groups the user is member of)
-	 *
-	 *	@return	array of {Group}
-	 */
-	function getMyGroups() {
+     *    return a resultset of Group for the current user
+     *
+     *    @return    resultset
+     */
+    function getMemberGroups() {
+                global $Language;
+        if (!user_isloggedin()) {
+            $this->setError();
+            return false;
+        }
+
+        $sql="SELECT g.group_id,g.group_name ".
+        "FROM groups g, user_group ug ".
+        "WHERE g.group_id <> 100 AND g.status = 'A' AND g.group_id = ug.group_id ".
+        "AND ug.user_id=".user_getid()." ".
+        "ORDER BY g.group_name ASC";
+
+     //echo $sql;
+
+        $result = db_query ($sql);
+
+        $rows = db_numrows($result);
+
+        if (!$result || $rows < 1) {
+            $this->setError();
+            return false;
+        }
+        return $result;
+    }
+
+    /**
+     *    return an array of Group for the current user (the groups the user is member of)
+     *
+     *    @return    array of {Group}
+     */
+    function getMyGroups() {
         global $Language;
-		$result_my_groups = $this->getMemberGroups();
+        $result_my_groups = $this->getMemberGroups();
         if ($this->isError() || !$result_my_groups) {
             return false;
         } else {
@@ -129,19 +129,19 @@ class GroupFactory {
             }
             return $my_groups;
         }
-	}
+    }
 
-	/**
-	 * @internal param $string
-	 */
-	public function setError() {
-		$this->error_state = true;
-	}
+    /**
+     * @internal param $string
+     */
+    public function setError() {
+        $this->error_state = true;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function isError() {
-		return $this->error_state;
-	}
+    /**
+     * @return bool
+     */
+    public function isError() {
+        return $this->error_state;
+    }
 }

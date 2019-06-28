@@ -78,7 +78,7 @@ print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>'
 
 // Now fetch the project details
 
-$currentproject->displayProjectsDescFieldsValue();	
+$currentproject->displayProjectsDescFieldsValue();    
 
 echo getReferencesTable($group_id);
 

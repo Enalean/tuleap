@@ -31,12 +31,12 @@ class DataBuilderV5 {
     var $y_values;
 
     /**
-	*
-	*  @param field_X: base_field (field_name)on which will data will be based
-	*  @param field_Y: group_field (field_name)on which will data will be grouped
-	*  @param atid: the artifact type id
-	*  @param artifacts: the array of artifacts to be used for data generation
-	*  @return null
+    *
+    *  @param field_X: base_field (field_name)on which will data will be based
+    *  @param field_Y: group_field (field_name)on which will data will be grouped
+    *  @param atid: the artifact type id
+    *  @param artifacts: the array of artifacts to be used for data generation
+    *  @return null
     */
 
     function __construct($field_X,$field_Y,$atid,$artifacts) {
@@ -50,8 +50,8 @@ class DataBuilderV5 {
     }
 
     /**
-	* function to generate data array based on base_field (and eventually group_field if group_field != null)
-	*  @return array : data array
+    * function to generate data array based on base_field (and eventually group_field if group_field != null)
+    *  @return array : data array
     */
 
     function generateData() {
@@ -133,7 +133,7 @@ class DataBuilderV5 {
                     $select   .= ",u1.realName AS field2, u1.user_id AS id2 ";
                     $from     .= "INNER JOIN user u1";
                     $from     .= " ON (u1.user_id=a.".db_es($this->field_Y).") ";
-               } else if (!$af_y->isStandardField() && (!$af_y->isUsername())) {
+                } else if (!$af_y->isStandardField() && (!$af_y->isUsername())) {
                     //echo " : 3<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
@@ -190,7 +190,7 @@ class DataBuilderV5 {
                 if ($r[$i]['id1']==100){
                     $result['field1'][$i]=$GLOBALS['Language']->getText('global','none');
                     
-                 }
+                }
                 if (!is_null($this->field_Y)) {
                     $result['field2'][$i] = $r[$i]['field2'];
                     if ($r[$i]['id2']==100){
@@ -213,9 +213,9 @@ class DataBuilderV5 {
         if (!is_null($this->field_Y)) {
             for ($i=0;$i<count($result['field2']);$i++) {
                 $y = array_search($result['field2'][$i],$this->y_values);
-                    if ($y === false) {
-                        $this->y_values[count($this->y_values)] = $result['field2'][$i];
-                    }
+                if ($y === false) {
+                    $this->y_values[count($this->y_values)] = $result['field2'][$i];
+                }
             }
         }
 

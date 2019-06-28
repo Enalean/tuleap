@@ -148,23 +148,23 @@ class RegexpSet
         // and storing only those regexp which actually match. 
         // There may be more than one, so we have to find the longest, 
         // and match inside until the shortest is empty.
-	$matched = array(); $matched_ind = array();
-        for ($i=0; $i<count($regexps); $i++) {
-            if (!trim($regexps[$i])) {
-                trigger_error("empty regexp $i", E_USER_WARNING);
-                continue;
+            $matched = array(); $matched_ind = array();
+            for ($i=0; $i<count($regexps); $i++) {
+                if (!trim($regexps[$i])) {
+                    trigger_error("empty regexp $i", E_USER_WARNING);
+                    continue;
+                }
+                $pat= "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
+                if (preg_match($pat, $text, $_m)) {
+                    $m = $_m; // FIXME: prematch, postmatch is wrong
+                    $matched[] = $regexps[$i];
+                    $matched_ind[] = $i;
+                    $regexp_ind = $i;
+                }
             }
-            $pat= "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
-            if (preg_match($pat, $text, $_m)) {
-            	$m = $_m; // FIXME: prematch, postmatch is wrong
-                $matched[] = $regexps[$i];
-                $matched_ind[] = $i;
-                $regexp_ind = $i;
-            }
-        }
         // To overcome ANCHORED:
         // We could sort by longest match and iterate over these.
-        if (empty($matched)) return false;
+            if (empty($matched)) return false;
         }
         $match = new RegexpSet_match;
         
@@ -326,10 +326,10 @@ function LinkBracketLink($bracketlink) {
     // strip brackets and leading space
     // FIXME: \n inside [] will lead to errors
     preg_match('/(\#?) \[\s* (?: (.*?) \s* (?<!' . ESCAPE_CHAR . ')(\|) )? \s* (.+?) \s*\]/x',
-	       $bracketlink, $matches);
+           $bracketlink, $matches);
     if (count($matches) < 4) {
-    	trigger_error(_("Invalid [] syntax ignored").": ".$bracketlink, E_USER_WARNING);
-    	return new Cached_Link;
+        trigger_error(_("Invalid [] syntax ignored").": ".$bracketlink, E_USER_WARNING);
+        return new Cached_Link;
     }
     list (, $hash, $label, $bar, $rawlink) = $matches;
 
@@ -526,41 +526,41 @@ class Markup_old_emphasis  extends BalancedMarkup
 class Markup_nestled_emphasis extends BalancedMarkup
 {
     function getStartRegexp() {
-	static $start_regexp = false;
+        static $start_regexp = false;
 
-	if (!$start_regexp) {
-	    // The three possible delimiters
+        if (!$start_regexp) {
+            // The three possible delimiters
             // (none of which can be followed by itself.)
-	    $i = "_ (?! _)";
-	    $b = "\\* (?! \\*)";
-	    $tt = "= (?! =)";
+            $i = "_ (?! _)";
+            $b = "\\* (?! \\*)";
+            $tt = "= (?! =)";
 
-	    $any = "(?: ${i}|${b}|${tt})"; // any of the three.
+            $any = "(?: ${i}|${b}|${tt})"; // any of the three.
 
-	    // Any of [_*=] is okay if preceded by space or one of [-"'/:]
-	    $start[] = "(?<= \\s|^|[-\"'\\/:]) ${any}";
+            // Any of [_*=] is okay if preceded by space or one of [-"'/:]
+            $start[] = "(?<= \\s|^|[-\"'\\/:]) ${any}";
 
-	    // _ or * is okay after = as long as not immediately followed by =
-	    $start[] = "(?<= =) (?: ${i}|${b}) (?! =)";
-	    // etc...
-	    $start[] = "(?<= _) (?: ${b}|${tt}) (?! _)";
-	    $start[] = "(?<= \\*) (?: ${i}|${tt}) (?! \\*)";
+            // _ or * is okay after = as long as not immediately followed by =
+            $start[] = "(?<= =) (?: ${i}|${b}) (?! =)";
+            // etc...
+            $start[] = "(?<= _) (?: ${b}|${tt}) (?! _)";
+            $start[] = "(?<= \\*) (?: ${i}|${tt}) (?! \\*)";
 
 
-	    // any delimiter okay after an opening brace ( [{<(] )
-	    // as long as it's not immediately followed by the matching closing
-	    // brace.
-	    $start[] = "(?<= { ) ${any} (?! } )";
-	    $start[] = "(?<= < ) ${any} (?! > )";
-	    $start[] = "(?<= \\( ) ${any} (?! \\) )";
-	    
-	    $start = "(?:" . join('|', $start) . ")";
-	    
-	    // Any of the above must be immediately followed by non-whitespace.
-	    $start_regexp = $start . "(?= \S)";
-	}
+            // any delimiter okay after an opening brace ( [{<(] )
+            // as long as it's not immediately followed by the matching closing
+            // brace.
+            $start[] = "(?<= { ) ${any} (?! } )";
+            $start[] = "(?<= < ) ${any} (?! > )";
+            $start[] = "(?<= \\( ) ${any} (?! \\) )";
+        
+            $start = "(?:" . join('|', $start) . ")";
+        
+            // Any of the above must be immediately followed by non-whitespace.
+            $start_regexp = $start . "(?= \S)";
+        }
 
-	return $start_regexp;
+        return $start_regexp;
     }
 
     function getEndRegexp ($match) {
@@ -570,9 +570,9 @@ class Markup_nestled_emphasis extends BalancedMarkup
     
     function markup ($match, $body) {
         switch ($match) {
-        case '*': return new HtmlElement('b', $body);
-        case '=': return new HtmlElement('tt', $body);
-        case '_': return new HtmlElement('i', $body);
+            case '*': return new HtmlElement('b', $body);
+            case '=': return new HtmlElement('tt', $body);
+            case '_': return new HtmlElement('i', $body);
         }
     }
 }
@@ -599,23 +599,23 @@ class Markup_html_abbr extends BalancedMarkup
     var $_start_regexp = "<(?: abbr|acronym )(?: \stitle=[^>]*)?>";
 
     function getEndRegexp ($match) {
-    	if (substr($match,1,4) == 'abbr')
-    	    $tag = 'abbr';
-    	else
-    	    $tag = 'acronym';
+        if (substr($match,1,4) == 'abbr')
+            $tag = 'abbr';
+        else
+            $tag = 'acronym';
         return "<\\/" . $tag . '>';
     }
     
     function markup ($match, $body) {
-    	if (substr($match,1,4) == 'abbr')
-    	    $tag = 'abbr';
-    	else
-    	    $tag = 'acronym';
-    	$rest = substr($match,1+strlen($tag),-1);
-    	if (!empty($rest)) {
-    	    list($key,$val) = explode("=",$rest);
-    	    $args = array($key => $val);
-    	} else $args = array();
+        if (substr($match,1,4) == 'abbr')
+            $tag = 'abbr';
+        else
+            $tag = 'acronym';
+        $rest = substr($match,1+strlen($tag),-1);
+        if (!empty($rest)) {
+            list($key,$val) = explode("=",$rest);
+            $args = array($key => $val);
+        } else $args = array();
         return new HtmlElement($tag, $args, $body);
     }
 }
@@ -630,7 +630,7 @@ class Markup_color extends BalancedMarkup {
     var $_end_regexp = "%%";
     
     function markup ($match, $body) {
-    	$color = substr($match, 7, -1);
+        $color = substr($match, 7, -1);
         if (strlen($color) != 7 
             and in_array($color, array('red', 'blue', 'grey', 'black'))) {
             // must be a name
@@ -641,7 +641,7 @@ class Markup_color extends BalancedMarkup {
         } else {
             trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
         }
-        	
+            
     }
 }
 
@@ -652,9 +652,9 @@ class Markup_plugin extends SimpleMarkup
     var $_match_regexp = '<\?plugin(?:-form)?\s[^\n]+?\?>';
 
     function markup ($match) {
-	//$xml = new Cached_PluginInvocation($match);
-	//$xml->setTightness(true,true);
-	return new Cached_PluginInvocation($match);
+    //$xml = new Cached_PluginInvocation($match);
+    //$xml->setTightness(true,true);
+        return new Cached_PluginInvocation($match);
     }
 }
 
@@ -676,10 +676,10 @@ class Markup_template_plugin  extends SimpleMarkup
             $vars = str_replace('|', '&', $_m[2]);
         }
         if ($vars)
-    	    $s = '<?plugin Template page=' . $page . ' vars="' . $vars . '"?>';
-    	else
-    	    $s = '<?plugin Template page=' . $page . '?>';
-	return new Cached_PluginInvocation($s);
+            $s = '<?plugin Template page=' . $page . ' vars="' . $vars . '"?>';
+        else
+            $s = '<?plugin Template page=' . $page . '?>';
+        return new Cached_PluginInvocation($s);
     }
 }
 

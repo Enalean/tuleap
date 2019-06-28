@@ -29,15 +29,15 @@ class Request {
         $this->_fix_multipart_form_data();
         
         switch($this->get('REQUEST_METHOD')) {
-        case 'GET':
-        case 'HEAD':
-            $this->args = &$_GET;
+            case 'GET':
+            case 'HEAD':
+                $this->args = &$_GET;
             break;
-        case 'POST':
-            $this->args = &$_POST;
+            case 'POST':
+                $this->args = &$_POST;
             break;
-        default:
-            $this->args = array();
+            default:
+                $this->args = array();
             break;
         }
         
@@ -56,13 +56,13 @@ class Request {
             return $vars[$key];
 
         switch ($key) {
-        case 'REMOTE_HOST':
-            $addr = $vars['REMOTE_ADDR'];
-            if (defined('ENABLE_REVERSE_DNS') && ENABLE_REVERSE_DNS)
+            case 'REMOTE_HOST':
+                $addr = $vars['REMOTE_ADDR'];
+                if (defined('ENABLE_REVERSE_DNS') && ENABLE_REVERSE_DNS)
                 return $vars[$key] = gethostbyaddr($addr);
-            else
+                else
                 return $addr;
-        default:
+            default:
             return false;
         }
     }
@@ -411,19 +411,19 @@ class Request {
     }
 
     function finish() {
-    	$this->_finishing = true;
+        $this->_finishing = true;
         
         if (!empty($this->_is_buffering_output)) {
             // if _is_compressing_output then ob_get_length() returns 
             // the uncompressed length, not the gzip'ed as required.
-	    if (!headers_sent() and !$this->_is_compressing_output) {
-		if (empty($this->_do_chunked_output)) {
-		    $this->_ob_get_length = ob_get_length();
-		}
-		header(sprintf("Content-Length: %d", $this->_ob_get_length));
+            if (!headers_sent() and !$this->_is_compressing_output) {
+                if (empty($this->_do_chunked_output)) {
+                    $this->_ob_get_length = ob_get_length();
+                }
+                header(sprintf("Content-Length: %d", $this->_ob_get_length));
             }
             $this->_is_buffering_output = false;
-	}
+        }
 
         while (@ob_end_flush()); // hmm. there's some error in redirect
         session_write_close();
@@ -562,20 +562,20 @@ class Request_UploadedFile {
             $err = (int) $fileinfo['error'];
             // errmsgs by Shilad Sen
             switch ($err) {
-            case 1:
-                trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                case 1:
+                    trigger_error(_("Upload error: file too big"), E_USER_WARNING);
                 break;
-            case 2:
-                trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                case 2:
+                    trigger_error(_("Upload error: file too big"), E_USER_WARNING);
                 break;
-            case 3:
-                trigger_error(_("Upload error: file only partially recieved"), E_USER_WARNING);
+                case 3:
+                    trigger_error(_("Upload error: file only partially recieved"), E_USER_WARNING);
                 break;
-            case 4:
-                trigger_error(_("Upload error: no file selected"), E_USER_WARNING);
+                case 4:
+                    trigger_error(_("Upload error: no file selected"), E_USER_WARNING);
                 break;
-            default:
-                trigger_error(_("Upload error: unknown error #") . $err, E_USER_WARNING);
+                default:
+                    trigger_error(_("Upload error: unknown error #") . $err, E_USER_WARNING);
             }
             return false;
         }
@@ -591,21 +591,21 @@ class Request_UploadedFile {
                 /* but ending slash in php.ini upload_tmp_dir is required. */
                 if (realpath(preg_replace('#/+#D', '/', $tmp_file)) != realpath($fileinfo['tmp_name'])) {
                     trigger_error(sprintf("Uploaded tmpfile illegal: %s != %s.",$tmp_file, $fileinfo['tmp_name']).
-                    	          "\n".
-                    	          "Probably illegal TEMP environment or upload_tmp_dir setting.",
+                                  "\n".
+                                  "Probably illegal TEMP environment or upload_tmp_dir setting.",
                                   E_USER_ERROR);
                     return false;
                 } else {
                     /*
                     trigger_error(sprintf("Workaround for PHP/Windows is_uploaded_file() problem for %s.",
                                           $fileinfo['tmp_name'])."\n".
-            	                  "Probably illegal TEMP environment or upload_tmp_dir setting.", 
-            	                  E_USER_NOTICE);
-            	    */
-            	    ;
+                                  "Probably illegal TEMP environment or upload_tmp_dir setting.", 
+                                  E_USER_NOTICE);
+                    */
+                    ;
                 }
             } else {
-              trigger_error(sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name'])."\n".
+                trigger_error(sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name'])."\n".
                            " Probably illegal TEMP environment or upload_tmp_dir setting.",
                           E_USER_WARNING);
             }
@@ -728,10 +728,10 @@ class HTTP_ETag {
 
 // Possible results from the HTTP_ValidatorSet::_check*() methods.
 // (Higher numerical values take precedence.)
-define ('_HTTP_VAL_PASS', 0);         	// Test is irrelevant
-define ('_HTTP_VAL_NOT_MODIFIED', 1); 	// Test passed, content not changed
-define ('_HTTP_VAL_MODIFIED', 2); 	// Test failed, content changed
-define ('_HTTP_VAL_FAILED', 3);   	// Precondition failed.
+define ('_HTTP_VAL_PASS', 0);             // Test is irrelevant
+define ('_HTTP_VAL_NOT_MODIFIED', 1);     // Test passed, content not changed
+define ('_HTTP_VAL_MODIFIED', 2);     // Test failed, content changed
+define ('_HTTP_VAL_FAILED', 3);       // Precondition failed.
 
 class HTTP_ValidatorSet {
     function __construct($validators) {

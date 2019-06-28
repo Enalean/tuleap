@@ -157,8 +157,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
         $html .= '</form>';
 
-       if ($func == 'show_projects'){
-           $res = $this->getAllProject($offset, $limit, $condition, $pattern);
+        if ($func == 'show_projects'){
+            $res = $this->getAllProject($offset, $limit, $condition, $pattern);
 
             if ($res['numrows'] > 0) {
                 $html .= '<table width="100%" class="tlp-table">';

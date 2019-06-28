@@ -256,7 +256,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         CreatedFileURLMapping $url_mapping
     ) {
        //The field is ReadOnly
-       return false;
+        return false;
     }
 
     /**
@@ -512,20 +512,20 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-     public function fetchSubmit(array $submitted_values)
+    public function fetchSubmit(array $submitted_values)
      {
-         return '';
-     }
+        return '';
+    }
 
      /**
      * Fetch the element for the submit masschange form
      *
      * @return string html
      */
-     public function fetchSubmitMasschange() {
-         $html = $this->fetchSubmitValueMassChange();
-         return $html;
-     }
+    public function fetchSubmitMasschange() {
+        $html = $this->fetchSubmitValueMassChange();
+        return $html;
+    }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitCrossReferences($this);

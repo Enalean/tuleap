@@ -46,11 +46,11 @@ if ($svn_preamble != '') {
 } else {
     $host = $GLOBALS['sys_default_domain'];
     if (ForgeConfig::get('sys_https_host')) {
-       $svn_url = 'https://'. $host;
+        $svn_url = 'https://'. $host;
     } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
-      $svn_url = 'http://'.$host;
+        $svn_url = 'http://'.$host;
     } else {
-       $svn_url = 'http://svn.'. $project->getUnixNameMixedCase() .'.'. $host;
+        $svn_url = 'http://svn.'. $project->getUnixNameMixedCase() .'.'. $host;
     }
     // Domain name must be lowercase (issue with some SVN clients)
     $svn_url = strtolower($svn_url);

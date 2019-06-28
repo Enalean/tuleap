@@ -36,9 +36,9 @@ class Tracker_Report_RendererFactory {
      *
      * @return EventManager
      */
-     private function getEventManager() {
-         return EventManager::instance();
-     }
+    private function getEventManager() {
+        return EventManager::instance();
+    }
 
     /**
      * Hold an instance of the class

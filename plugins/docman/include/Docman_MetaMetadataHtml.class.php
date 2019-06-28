@@ -200,17 +200,17 @@ class Docman_MetaMetadataHtml
         }
         else {
             switch($this->md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_text');
+                case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_text');
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_string');
+                case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_string');
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_date');
+                case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_date');
                 break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_list');
+                case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                    $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_list');
                 break;
             }
         }

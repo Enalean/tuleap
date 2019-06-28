@@ -548,7 +548,7 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
                 self::PARAMETER_TARGET_FIELD => '22',
                 self::PARAMETER_COMPARATOR   => '>'
             ),
-        ))->build();
+         ))->build();
 
         expect($this->date_factory)->save()->never();
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();

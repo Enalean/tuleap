@@ -271,7 +271,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      *
      * @return void
      */
-     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId() && in_array($this->getFieldId(), $xmlMapping)) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());
@@ -279,8 +279,8 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
              $child->addChild('label', $this->getLabel());
              $child->addChild('description', $this->getDescription());
              $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
-         }
-     }
+        }
+    }
 
     /**
      * Is the field used in semantics?

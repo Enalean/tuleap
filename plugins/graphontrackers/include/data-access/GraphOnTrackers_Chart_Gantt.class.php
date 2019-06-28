@@ -96,12 +96,12 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
         $res = db_query($sql);
     }
     public function getProperties() {
-    	
-    	$parent_properties=parent::getProperties();
-    	unset($parent_properties['dimensions']);
+        
+        $parent_properties=parent::getProperties();
+        unset($parent_properties['dimensions']);
         return array_merge($parent_properties,
             array(
-            	new HTML_Element_Columns(
+                new HTML_Element_Columns(
                     new HTML_Element_Selectbox_TrackerFields_Dates($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_start'), 'chart[field_start]', $this->getField_start()),
                     new HTML_Element_Selectbox_TrackerFields_Dates($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_due'), 'chart[field_due]', $this->getField_due(), true),
                     new HTML_Element_Selectbox_TrackerFields_Dates($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_finish'), 'chart[field_finish]', $this->getField_finish())
@@ -159,56 +159,56 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
         return false;
     }
     
-    function userCanVisualize(){	
-    	
-    	if($this->field_due){   	
-	    	$artifact_field_due=new ArtifactField();
-	    	$artifact_field_due->fetchData($GLOBALS['ath']->getID(),$this->field_due);
-	    	if(!$artifact_field_due->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	if($this->field_percentage){
-	    	$artifact_field_percentage=new ArtifactField();
-	    	$artifact_field_percentage->fetchData($GLOBALS['ath']->getID(),$this->field_percentage);
-	    	if(!$artifact_field_percentage->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	
-    	if($this->field_righttext){
-    		$artifact_field_fieldright=new ArtifactField();
-    		$artifact_field_fieldright->fetchData($GLOBALS['ath']->getID(),$this->field_righttext);
-	    	if(!$artifact_field_fieldright->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	if($this->summary){	
-	    	$artifact_field_summary=new ArtifactField();
-    		$artifact_field_summary->fetchData($GLOBALS['ath']->getID(),$this->summary);
-	    	if(!$artifact_field_summary->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	
-    	if($this->field_start){  		
-	    	$artifact_field_start=new ArtifactField();
-    		$artifact_field_start->fetchData($GLOBALS['ath']->getID(),$this->field_start);
-	    	if(!$artifact_field_start->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	
-    	  if($this->field_finish){   		
-	    	$artifact_field_finish=new ArtifactField();
-    		$artifact_field_finish->fetchData($GLOBALS['ath']->getID(),$this->field_finish);
-	    	if(!$artifact_field_finish->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	return true;
-    	
-    	
+    function userCanVisualize(){    
+        
+        if($this->field_due){       
+            $artifact_field_due=new ArtifactField();
+            $artifact_field_due->fetchData($GLOBALS['ath']->getID(),$this->field_due);
+            if(!$artifact_field_due->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+        if($this->field_percentage){
+            $artifact_field_percentage=new ArtifactField();
+            $artifact_field_percentage->fetchData($GLOBALS['ath']->getID(),$this->field_percentage);
+            if(!$artifact_field_percentage->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+        
+        if($this->field_righttext){
+            $artifact_field_fieldright=new ArtifactField();
+            $artifact_field_fieldright->fetchData($GLOBALS['ath']->getID(),$this->field_righttext);
+            if(!$artifact_field_fieldright->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+        if($this->summary){    
+            $artifact_field_summary=new ArtifactField();
+            $artifact_field_summary->fetchData($GLOBALS['ath']->getID(),$this->summary);
+            if(!$artifact_field_summary->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+        
+        if($this->field_start){          
+            $artifact_field_start=new ArtifactField();
+            $artifact_field_start->fetchData($GLOBALS['ath']->getID(),$this->field_start);
+            if(!$artifact_field_start->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                return false;
+            }
+        }
+        
+        if($this->field_finish){           
+            $artifact_field_finish=new ArtifactField();
+            $artifact_field_finish->fetchData($GLOBALS['ath']->getID(),$this->field_finish);
+            if(!$artifact_field_finish->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
+                 return false;
+            }
+        }
+        return true;
+        
+        
     }
     
     public function getChartType() {

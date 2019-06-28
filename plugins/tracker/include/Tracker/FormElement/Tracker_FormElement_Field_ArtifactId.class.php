@@ -234,10 +234,10 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string html
      */
-     public function fetchSubmit(array $submitted_values)
+    public function fetchSubmit(array $submitted_values)
      {
-         return '';
-     }
+        return '';
+    }
 
      /**
      * Fetch the element for the submit new artifact form

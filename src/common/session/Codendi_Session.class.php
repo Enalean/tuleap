@@ -106,35 +106,35 @@ class Codendi_Session extends PHP_Session {
             //throw new Exception('ERROR - Empty session namespace');
         }
         //only array can be iterated
-	if ( !is_array($session) ) {
-		return $session;
-	}
-	$pathway = explode('.', $namespace);
+        if ( !is_array($session) ) {
+            return $session;
+        }
+        $pathway = explode('.', $namespace);
         $count   = count($pathway);
         $i = 0;
-	foreach ( $pathway as $path ) {
+        foreach ( $pathway as $path ) {
                 $i = $i+1;
                 //last path element not reached yet <=> wrong path
-                if ( !$create_path && $i < $count && ((is_array($session) && !isset($session[$path])) || !is_array($session) || !is_array($session[$path]) )) {
-                    $r = null;
-                    return $r; 
-                }
+            if ( !$create_path && $i < $count && ((is_array($session) && !isset($session[$path])) || !is_array($session) || !is_array($session[$path]) )) {
+                $r = null;
+                return $r; 
+            }
 
                 //only array can be iterated
-		if ( !is_array($session) ) {
-			return $session;
-		}
-		if ( !isset($session[$path]) ) {
-			if ($create_path) {
-				$session[$path] = array();
-			} else {
-				//path does not exist and we do not want to create it 
-				$r = null;
-				return $r;
-			}
-		} 
-		$session = &$session[$path];
-	}
+            if ( !is_array($session) ) {
+                return $session;
+            }
+            if ( !isset($session[$path]) ) {
+                if ($create_path) {
+                    $session[$path] = array();
+                } else {
+               //path does not exist and we do not want to create it 
+                    $r = null;
+                    return $r;
+                }
+            } 
+            $session = &$session[$path];
+        }
         return $session;
     }   
 

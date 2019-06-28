@@ -5,7 +5,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2003, Codendi Team, Xerox
+//    Originally written by Laurent Julliard 2003, Codendi Team, Xerox
 //
 // Purpose: Display contextual help for artifact search criteria. 
 //              Help depends upon the field type.
@@ -22,14 +22,14 @@ $field_info = $request->get('field_info');
 // help_id argument
 list($group_id, $artifact_type_id, $field_name) = explode('|',urldecode($helpid));
 
-//	get the Group object
+//    get the Group object
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
     exit_no_group();
 }
 
-//	Create the ArtifactType object
+//    Create the ArtifactType object
 $at = new ArtifactType($group,$artifact_type_id);
 if (!$at || !is_object($at)) {
     exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','at_not_created'));
@@ -64,16 +64,16 @@ if ( $field->isSelectBox() ) {
 } else if ($field->isTextField() ) {
 
     if ($field->data_type == $field->DATATYPE_TEXT) {
-	$cug_section = 'ArtifactTextField';
+        $cug_section = 'ArtifactTextField';
     } else if ($field->data_type == $field->DATATYPE_INT){
-	$cug_section = 'ArtifactIntegerField';
+        $cug_section = 'ArtifactIntegerField';
     } else if ($field->data_type == $field->DATATYPE_FLOAT){
-	$cug_section = 'ArtifactFloatingPointNumberField';
+        $cug_section = 'ArtifactFloatingPointNumberField';
     } 
 } else if ($field->isDateField() ) {
-	$cug_section = 'ArtifactDateField';
+    $cug_section = 'ArtifactDateField';
 } else if ($field->isTextArea() ) {
-	$cug_section = 'ArtifactTextField';
+    $cug_section = 'ArtifactTextField';
 }
 
 // Display the customized help frame at the top with info for this specific field

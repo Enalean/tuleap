@@ -62,29 +62,29 @@ $user_id    = $request->get('user_id');
 $csrf_token = new CSRFSynchronizerToken('/admin/user_changepw.php?user_id=' . urlencode($user_id));
 if (register_valid($request, $csrf_token)) {
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed'), 'main_classes' => array('tlp-framed')));
-?>
+    ?>
 <h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header_changed')); ?></h3>
 <p><?php echo $purifier->purify($Language->getText('admin_user_changepw','msg_changed')); ?></p>
 
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
-<?php
+    <?php
 } else { // not valid registration, or first time to page
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title'), 'main_classes' => array('tlp-framed')));
 
     $em =& EventManager::instance();
     $em->processEvent('before_admin_change_pw', array());
 
-?>
+    ?>
 <h3><?php echo $purifier->purify($Language->getText('admin_user_changepw','header')); ?></h3>
 <form action="user_changepw.php" method="post">
-<?php user_display_choose_password('',$user_id); ?>
+    <?php user_display_choose_password('',$user_id); ?>
 <p><input type="submit" class="tlp-button-primary" name="Update" value="<?php echo $purifier->purify($Language->getText('global','btn_update')); ?>">
-<?php
-echo $csrf_token->fetchHTMLInput();
-?>
+    <?php
+    echo $csrf_token->fetchHTMLInput();
+    ?>
 </form>
 
-<?php
+    <?php
 }
 $HTML->footer(array());
 

@@ -60,7 +60,7 @@ extends WikiPlugin
     // sortby: only pagename or hits. mtime not!
 
     function run($dbi, $argstr, &$request, $basepage) {
-    	$args = $this->getArgs($argstr, $request);
+        $args = $this->getArgs($argstr, $request);
         extract($args);
         if (strstr($sortby,'mtime')) {
             trigger_error(_("sortby=mtime not supported with MostPopular"),

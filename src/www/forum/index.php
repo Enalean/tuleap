@@ -43,8 +43,8 @@ $result = db_query ($sql);
 $rows = db_numrows($result); 
 
 if (!$result || $rows < 1) {
-  $pm = ProjectManager::instance();
-  echo '<H1>'.$Language->getText('forum_index','no_forums',$pm->getProject($group_id)->getPublicName()).'</H1>';
+    $pm = ProjectManager::instance();
+    echo '<H1>'.$Language->getText('forum_index','no_forums',$pm->getProject($group_id)->getPublicName()).'</H1>';
     echo db_error();
     forum_footer($params);
     exit;

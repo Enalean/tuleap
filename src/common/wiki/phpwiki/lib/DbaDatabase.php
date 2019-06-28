@@ -33,9 +33,9 @@ class DbaDatabase
             if (!in_array($handler, dba_handlers()))
                 $this->_error(
                     sprintf(
-                	    _("The DBA handler %s is unsupported!")."\n".
-                    	    _("Supported handlers are: %s"), 
-                    	    $handler, join(",",dba_handlers())));
+                        _("The DBA handler %s is unsupported!")."\n".
+                            _("Supported handlers are: %s"), 
+                            $handler, join(",",dba_handlers())));
         }
         if ($mode)
             $this->open($mode);
@@ -63,9 +63,9 @@ class DbaDatabase
         if (strlen($mode) == 1) {
             // PHP 4.3.x Windows lock bug workaround: http://bugs.php.net/bug.php?id=23975
             if (isWindows()) {
-                $mode .= "-"; 			// suppress locking, or
-            } elseif ($this->_handler != 'gdbm') { 	// gdbm does it internally
-            	$mode .= "d"; 			// else use internal locking
+                $mode .= "-";             // suppress locking, or
+            } elseif ($this->_handler != 'gdbm') {     // gdbm does it internally
+                $mode .= "d";             // else use internal locking
             }
         }
         while (($dbh = dba_open($this->_file, $mode, $this->_handler)) < 1) {

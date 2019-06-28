@@ -25,7 +25,7 @@ rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
  * UnfoldSubpages:  Lists the content of all SubPages of the current page.
  *   This is e.g. useful for the CalendarPlugin, to see all entries at once.
  *   Warning: Better don't use it with non-existant sections!
- *	      The section extractor is currently quite unstable.
+ *          The section extractor is currently quite unstable.
  * Usage:   <?plugin UnfoldSubpages sortby=-mtime words=50 maxpages=5 ?>
  * Author:  Reini Urban <rurban@x-ray.at>
  * 
@@ -63,18 +63,18 @@ extends WikiPlugin_IncludePage
                    'sortby'   => '',    // [+|-]pagename, [+|-]mtime, [+|-]hits
                    'maxpages' => false, // maximum number of pages to include (== limit)
                    'smalltitle' => false, // if set, hide transclusion-title,
-                   			//  just have a small link at the start of 
-            				//  the page.
-                   'words'   => false, 	// maximum number of words
-                                	//  per page to include
-                   'lines'   => false, 	// maximum number of lines
-                                	//  per page to include
-                   'bytes'   => false, 	// maximum number of bytes
-                                	//  per page to include
+                               //  just have a small link at the start of 
+                            //  the page.
+                   'words'   => false,     // maximum number of words
+                                    //  per page to include
+                   'lines'   => false,     // maximum number of lines
+                                    //  per page to include
+                   'bytes'   => false,     // maximum number of bytes
+                                    //  per page to include
                    'sections' => false, // maximum number of sections per page to include
-                   'section' => false, 	// this named section per page only
+                   'section' => false,     // this named section per page only
                    'sectionhead' => false // when including a named
-                   			//  section show the heading
+                               //  section show the heading
                    ));
     }
 
@@ -90,19 +90,19 @@ extends WikiPlugin_IncludePage
         //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
         //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false, 
         //                            $sortby, $limit, $exclude);
-	if (is_string($exclude) and !is_array($exclude))
+        if (is_string($exclude) and !is_array($exclude))
             $exclude = PageList::explodePageList($exclude, false, false, $limit);
         $content = HTML();
 
         include_once('lib/BlockParser.php');
-	$i = 0;
+        $i = 0;
         while ($page = $subpages->next()) {
             $cpagename = $page->getName();
-     	    if ($maxpages and ($i++ > $maxpages)) {
+            if ($maxpages and ($i++ > $maxpages)) {
                 return $content;
             }
             if (in_array($cpagename, $exclude))
-            	continue;
+                continue;
             // A page cannot include itself. Avoid doublettes.
             if (in_array($cpagename, $included_pages)) {
                 $content->pushContent(HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
@@ -119,14 +119,14 @@ extends WikiPlugin_IncludePage
                 {
                     // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {
-                    	if (!$quiet)
+                        if (!$quiet)
                             $content->pushContent(
                                 HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
                                                 $cpagename.' => '.$m[1])));
                         continue;
                     }
-	            $cpagename = $m[1];
-	            $page = $dbi->getPage($cpagename);
+                    $cpagename = $m[1];
+                    $page = $dbi->getPage($cpagename);
                     $r = $page->getCurrentRevision();
                     $c = $r->getContent();   // array of lines
                 }

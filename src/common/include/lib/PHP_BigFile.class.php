@@ -133,42 +133,42 @@ class PHP_BigFile {
         $fileMustExist  = false;
         $mustCreateFile = false;
         switch ($mode) {
-        case 'r':
-        case 'r+':
-        case 'rb':
-        case 'r+b':
-        case 'rb+':
-            if ($fileExists) {
-                $this->filesize = self::getSize($this->path);
-                return true;
-            }
+            case 'r':
+            case 'r+':
+            case 'rb':
+            case 'r+b':
+            case 'rb+':
+                if ($fileExists) {
+                    $this->filesize = self::getSize($this->path);
+                    return true;
+                }
             return false;
             break;
 
-        case 'w':
-        case 'wb':
-        case 'w+':
-        case 'wb+':
-        case 'w+b':
-            if ($fileExists) {
-                $cmd = '>'.escapeshellarg($this->path);
-                `$cmd`;
-                return true;
-            } else {
-                return touch($this->path);
-            }
+            case 'w':
+            case 'wb':
+            case 'w+':
+            case 'wb+':
+            case 'w+b':
+                if ($fileExists) {
+                    $cmd = '>'.escapeshellarg($this->path);
+                    `$cmd`;
+                    return true;
+                } else {
+                    return touch($this->path);
+                }
             break;
 
-        case 'a':
-        case 'ab':
-        case 'a+':
-        case 'ab+':
-        case 'a+b':
-            if ($fileExists) {
-                $this->offset = self::getSize($this->path);
-            } else {
-                return touch($this->path);
-            }
+            case 'a':
+            case 'ab':
+            case 'a+':
+            case 'ab+':
+            case 'a+b':
+                if ($fileExists) {
+                    $this->offset = self::getSize($this->path);
+                } else {
+                    return touch($this->path);
+                }
             break;
 
         }

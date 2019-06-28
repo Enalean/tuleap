@@ -250,9 +250,9 @@ class PluginFactory // phpcs:ignore
      */
     function _getAvailableOrUnavailablePlugins($map, $criteria) {
          $dar = $this->plugin_dao->searchByAvailable($criteria);
-         while($row = $dar->getRow()) {
-             $p = $this->_getInstancePlugin($row['id'], $row);
-         }
+        while($row = $dar->getRow()) {
+            $p = $this->_getInstancePlugin($row['id'], $row);
+        }
          return $this->retrieved_plugins[$map];
     }
     /**

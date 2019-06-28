@@ -212,30 +212,30 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
-        case 'admin-formElement-update':
-            $this->processUpdate($layout, $request, $current_user);
-            $this->displayAdminFormElement($layout, $request, $current_user);
+            case 'admin-formElement-update':
+                $this->processUpdate($layout, $request, $current_user);
+                $this->displayAdminFormElement($layout, $request, $current_user);
             break;
-        case 'admin-formElement-remove':
-            if ($this->isUsedInTrigger()) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
-            }
+            case 'admin-formElement-remove':
+                if ($this->isUsedInTrigger()) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                }
 
-            if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
-            }
-            $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
+                if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                }
+                $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
             break;
-        case 'admin-formElement-delete':
-            if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
-            }
-            $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
+            case 'admin-formElement-delete':
+                if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                }
+                $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
             break;
-        default:
+            default:
             break;
         }
     }
@@ -1130,9 +1130,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     protected function ugroupsCanRead($ugroups) {
-      $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, self::PERMISSION_READ, $ugroups);
-      return $ok;
+        $pm = PermissionsManager::instance();
+        $ok = $pm->userHasPermission($this->id, self::PERMISSION_READ, $ugroups);
+        return $ok;
     }
 
     /**
@@ -1143,9 +1143,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     protected function ugroupsCanUpdate($ugroups) {
-      $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, self::PERMISSION_UPDATE, $ugroups);
-      return $ok;
+        $pm = PermissionsManager::instance();
+        $ok = $pm->userHasPermission($this->id, self::PERMISSION_UPDATE, $ugroups);
+        return $ok;
     }
 
     /**
@@ -1156,9 +1156,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     protected function ugroupsCanSubmit($ugroups) {
-      $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, self::PERMISSION_SUBMIT, $ugroups);
-      return $ok;
+        $pm = PermissionsManager::instance();
+        $ok = $pm->userHasPermission($this->id, self::PERMISSION_SUBMIT, $ugroups);
+        return $ok;
     }
 
     /**

@@ -53,7 +53,7 @@ extends WikiPlugin
 
     function preg_quote ($heading) {
         return str_replace(array("/",".","?","*"),
-    		           array('\/','\.','\?','\*'), $heading);
+                       array('\/','\.','\?','\*'), $heading);
     }
     
 
@@ -99,15 +99,15 @@ extends WikiPlugin
                 
 
     function dumpFile(&$thispage, $filename) {
-      include_once("lib/loadsave.php");
-      $mailified = MailifyPage($thispage);
+        include_once("lib/loadsave.php");
+        $mailified = MailifyPage($thispage);
 
-      $attrib = array('mtime' => $thispage->get('mtime'), 'is_ascii' => 1);
+        $attrib = array('mtime' => $thispage->get('mtime'), 'is_ascii' => 1);
 
-      $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $filename);
-      $zip->addRegularFile( FilenameForPage($thispage->getName()),
+        $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $filename);
+        $zip->addRegularFile( FilenameForPage($thispage->getName()),
                             $mailified, $attrib);
-      $zip->finish();
+        $zip->finish();
 
     }
 
@@ -127,16 +127,16 @@ extends WikiPlugin
         $current = $page->getCurrentRevision();
         $content = $current->getContent();
 
-	// Prepare the button to trigger dumping
-	$dump_url = $request->getURLtoSelf(array("file" => "tube.bib"));
+    // Prepare the button to trigger dumping
+        $dump_url = $request->getURLtoSelf(array("file" => "tube.bib"));
         global $WikiTheme;
         $dump_button = $WikiTheme->makeButton("To File", 
-					  $dump_url , 'foo');
+        $dump_url , 'foo');
 
         $html = HTML::div(array('class' => 'bib','align' => 'left'));
-	$html->pushContent($dump_button, ' ');
+        $html->pushContent($dump_button, ' ');
         $list = HTML::pre(array('name'=>'biblist','id'=>'biblist',
-				'class' => 'bib'));
+        'class' => 'bib'));
 
         // Let's find the subpages
         if ($articles = $this->extractArticles($content)) {
@@ -164,7 +164,7 @@ extends WikiPlugin
             $c = $p->getCurrentRevision();
             $pagedata = $c->getContent();
             $this->dumpFile($pagedata, $request->getArg('file'));
-	}
+        }
 
         return $html;
     }

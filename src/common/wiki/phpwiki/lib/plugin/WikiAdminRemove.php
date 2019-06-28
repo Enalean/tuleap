@@ -55,7 +55,7 @@ extends WikiPlugin_WikiAdminSelect
             (
              PageList::supportedArgs(),
              array(
-                   's' 	=> false,
+                   's'     => false,
                      /*
                       * Show only pages which have been 'deleted' this
                       * long (in days).  (negative or non-numeric
@@ -117,7 +117,7 @@ extends WikiPlugin_WikiAdminSelect
                 $ul->pushContent(HTML::li(fmt("Removed page '%s' successfully.", $name)));
                 $count++;
             } else {
-            	$ul->pushContent(HTML::li(fmt("Didn't removed page '%s'. Access denied.", $name)));
+                $ul->pushContent(HTML::li(fmt("Didn't removed page '%s'. Access denied.", $name)));
             }
         }
         if ($count) $dbi->touch();

@@ -55,7 +55,7 @@ class MediawikiGroups {
 
     private function removeGroupsNotExplicitelyAdded() {
         foreach ($this->original_groups as $group => $nop) {
-             if (! isset($this->added_index[$group])) {
+            if (! isset($this->added_index[$group])) {
                 $this->added_removed['removed'][] = $group;
             }
         }

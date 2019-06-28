@@ -24,11 +24,11 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
      *
      * @var Tracker_Rule_Date
      */
-   protected $date_rule;
+    protected $date_rule;
 
 
 
-   public function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->date_rule = new Tracker_Rule_Date();
     }

@@ -311,7 +311,7 @@ class Tracker_ReportFactory {
                     $rendererDB = Tracker_Report_RendererFactory::instance()->getReportRendererById($rendererId, $reportDB);
                     $rendererDB->afterSaveObject($renderer);
                 }
-	        }
+            }
         }
         return $reportDB->id;
     }

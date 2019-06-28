@@ -32,13 +32,13 @@ require_once('common/tracker/ArtifactRuleValueView.class.php');
 class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
 
     /**
-	 *  ArtifactRuleHtml() - constructor
-	 *
-	 *  @param $artifact_rule object
-	 */
-	function __construct(&$rule) {
-		parent::__construct($rule);
-	}
+     *  ArtifactRuleHtml() - constructor
+     *
+     *  @param $artifact_rule object
+     */
+    function __construct(&$rule) {
+        parent::__construct($rule);
+    }
     
     function fetch() {
         $output  = '{id:'. (int)$this->rule->id .', ';

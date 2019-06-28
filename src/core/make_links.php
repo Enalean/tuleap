@@ -45,12 +45,12 @@ if (!$request->getValidated('group_id', 'GroupId')) {
             $group_id = $project->getID();
         }
     }
- } else $group_id=$request->get('group_id');
+} else $group_id=$request->get('group_id');
 
 if (!$request->getValidated('text', 'text')) {
     // Empty string? return empty string...
     exit;
- }
+}
 if ($request->get('help')) {
     echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
     exit;

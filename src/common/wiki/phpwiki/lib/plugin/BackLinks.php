@@ -103,7 +103,7 @@ extends WikiPlugin
                     // else if ($pagelist->getTotal() == 2)
                     //     $pagelist->setCaption(fmt("Two pages would link to %s:",
                     //                               $pagelink));
-                    else
+                else
                         $pagelist->setCaption(fmt("%s pages would link to %s:",
                                                   $pagelist->getTotal(), $pagelink));
             }

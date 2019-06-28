@@ -35,7 +35,7 @@ define('invalid_operator', '3021');
 if (defined('NUSOAP')) {
 
 // Type definition
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'Docman_Item',
     'complexType',
     'struct',
@@ -56,9 +56,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'item_type' => array('name'=>'item_type', 'type' => 'xsd:int'),
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfDocman_Item',
     'complexType',
     'array',
@@ -67,9 +67,9 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Docman_Item[]')),
     'tns:Docman_Item'
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'Permission',
     'complexType',
     'struct',
@@ -79,9 +79,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'), 
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfPermission',
     'complexType',
     'array',
@@ -90,9 +90,9 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Permission[]')),
     'tns:Permission'
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'MetadataValue',
     'complexType',
     'struct',
@@ -102,9 +102,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'label' => array('name'=>'label', 'type' => 'xsd:string'),
         'value' => array('name'=>'value', 'type' => 'xsd:string'), 
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfMetadataValue',
     'complexType',
     'array',
@@ -113,9 +113,9 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataValue[]')),
     'tns:MetadataValue'
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'MetadataListValue',
     'complexType',
     'struct',
@@ -125,9 +125,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'name'     => array('name'=>'name', 'type' => 'xsd:string'),
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfMetadataListValue',
     'complexType',
     'array',
@@ -136,9 +136,9 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataListValue[]')),
     'tns:MetadataListValue'
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'Metadata',
     'complexType',
     'struct',
@@ -152,9 +152,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type' => 'xsd:int'),
         'listOfValues' => array('name'=>'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'), 
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfMetadata',
     'complexType',
     'array',
@@ -163,9 +163,9 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
     'tns:Metadata'
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ItemInfo',
     'complexType',
     'struct',
@@ -179,9 +179,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
     )
-);
+    );
 
-$GLOBALS['server']->wsdl->addComplexType(
+    $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfItemInfo',
     'complexType',
     'array',
@@ -190,7 +190,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ItemInfo[]')),
     'tns:ItemInfo'
-);
+    );
 
 
 }
@@ -552,7 +552,7 @@ function getDocmanProjectMetadata($sessionKey, $group_id) {
         $md->listOfValues = array();
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $md->listOfValues = _makeDocmanRequest($sessionKey, $group_id, 'getMetadataListOfValues', array('label' => $md->getLabel()));
-         }
+        }
     }
     
     return $result;
@@ -891,7 +891,7 @@ function _registerFunction($name, $doc, $response = 'xsd:int') {
         
         $usedParameters = array();
         foreach ($parameters as $parameter) {
-        	$usedParameters[] = $parameter->getName();
+            $usedParameters[] = $parameter->getName();
         }
         
         $soapParameters = $GLOBALS['soapParameters'];
@@ -928,7 +928,7 @@ function _registerFunctions($functions) {
     if (is_array($functions)) {
         foreach ($functions as $function) {
             if (isset($function[2])) {
-    	        _registerFunction($function[0], $function[1], $function[2]);
+                _registerFunction($function[0], $function[1], $function[2]);
             } else {
                 _registerFunction($function[0], $function[1]);
             }

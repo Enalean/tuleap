@@ -158,27 +158,27 @@ class FRSPackage {
     }
     
     /**
-	 * Associative array of data from db.
-	 *
-	 * @var  array   $data_array.
-	 */
-	var $data_array;
-	var $package_releases;
+     * Associative array of data from db.
+     *
+     * @var  array   $data_array.
+     */
+    var $data_array;
+    var $package_releases;
 
 
-	/**
-	 *	getReleases - gets Release objects for all the releases in this package.
-	 *
-	 *  return  array   Array of FRSRelease Objects.
-	 */
-	function &getReleases() {
-		if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
-			$this->package_releases=array();
-			$frsrf = new FRSReleaseFactory();
-			$this->package_releases = $frsrf->getFRSReleasesFromDb($this->getPackageID());
-		}
-		return $this->package_releases;
-	}
+    /**
+     *    getReleases - gets Release objects for all the releases in this package.
+     *
+     *  return  array   Array of FRSRelease Objects.
+     */
+    function &getReleases() {
+        if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
+            $this->package_releases=array();
+            $frsrf = new FRSReleaseFactory();
+            $this->package_releases = $frsrf->getFRSReleasesFromDb($this->getPackageID());
+        }
+        return $this->package_releases;
+    }
     
     public function userCanRead($user_id = 0)
     {

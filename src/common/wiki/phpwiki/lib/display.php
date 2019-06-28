@@ -106,36 +106,36 @@ function displayPage(&$request, $template=false) {
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
         array_shift($pages);
         foreach ($pages as $p)  {
-	    if ($pv != 2){	//Add the Backlink in page title
-            $pageheader->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
+            if ($pv != 2){    //Add the Backlink in page title
+                   $pageheader->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
                                                   'class' => 'backlinks'),
                                             $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)));
-	    }else{	// Remove Backlinks
-	    $pageheader->pushContent(HTML::h1($pagename));
-	    }
+            }else{    // Remove Backlinks
+                $pageheader->pushContent(HTML::h1($pagename));
+            }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
-	if ($pv != 2){
-		$backlink = HTML::a(array('href' => WikiURL($pagename,
-							    array('action' => _("BackLinks"))),
-					  'class' => 'backlinks'),
-				    $WikiTheme->maybeSplitWikiWord($last_page));
-		$backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-	}else{
-		$backlink = HTML::h1($pagename);
-	}
-	$pageheader->pushContent($backlink);
-	
+        if ($pv != 2){
+            $backlink = HTML::a(array('href' => WikiURL($pagename,
+                  array('action' => _("BackLinks"))),
+                      'class' => 'backlinks'),
+                    $WikiTheme->maybeSplitWikiWord($last_page));
+            $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+        }else{
+            $backlink = HTML::h1($pagename);
+        }
+        $pageheader->pushContent($backlink);
+    
     } else {
-	if ($pv != 2){
-		$pageheader = HTML::a(array('href' => WikiURL($pagename,
-							     array('action' => _("BackLinks"))),
-					   'class' => 'backlinks'),
-				     $WikiTheme->maybeSplitWikiWord($pagename));
-		$pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-	}else{
-		$pageheader = HTML::h1($pagename); //Remove Backlinks
-	}
+        if ($pv != 2){
+            $pageheader = HTML::a(array('href' => WikiURL($pagename,
+                                 array('action' => _("BackLinks"))),
+                       'class' => 'backlinks'),
+                     $WikiTheme->maybeSplitWikiWord($pagename));
+            $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+        }else{
+            $pageheader = HTML::h1($pagename); //Remove Backlinks
+        }
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
     }
@@ -189,18 +189,18 @@ function displayPage(&$request, $template=false) {
     // FIXME: move that to the transformer?
     // OR: add the searchhightplugin line to the content?
     if ($result = isExternalReferrer($request)) {
-    	if (DEBUG and !empty($result['query'])) {
+        if (DEBUG and !empty($result['query'])) {
             //$GLOBALS['SearchHighlightQuery'] = $result['query'];
             /* simply add the SearchHighlight plugin to the top of the page. 
                This just parses the wikitext, and doesn't highlight the markup */
             include_once('lib/WikiPlugin.php');
-	    $loader = new WikiPluginLoader;
+            $loader = new WikiPluginLoader;
             $xml = $loader->expandPI('<'.'?plugin SearchHighlight s="'.$result['query'].'"?'.'>', $request, $markup);
             if ($xml and is_array($xml)) {
-              foreach (array_reverse($xml) as $line) {
-                array_unshift($page_content->_content, $line);
-              }
-              array_unshift($page_content->_content, 
+                foreach (array_reverse($xml) as $line) {
+                    array_unshift($page_content->_content, $line);
+                }
+                array_unshift($page_content->_content, 
                             HTML::div(_("You searched for: "), HTML::strong($result['query'])));
             }
             
@@ -208,28 +208,28 @@ function displayPage(&$request, $template=false) {
             /* Parse the transformed (mixed HTML links + strings) lines?
                This looks like overkill.
              */
-            require_once("lib/TextSearchQuery.php");
-            $query = new TextSearchQuery($result['query']);
-            $hilight_re = $query->getHighlightRegexp();
+                require_once("lib/TextSearchQuery.php");
+                $query = new TextSearchQuery($result['query']);
+                $hilight_re = $query->getHighlightRegexp();
             //$matches = preg_grep("/$hilight_re/i", $revision->getContent());
             // FIXME!
-            for ($i=0; $i < count($page_content->_content); $i++) {
-                $found = false;
-                $line = $page_content->_content[$i];
-            	if (is_string($line)) {
-                    while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
-                        $found = true;
-                        $line = substr($line, strlen($m[0]));
-                        $html[] = $m[1];    // prematch
-                        $html[] = HTML::strong(array('class' => 'search-term'), $m[2]); // match
+                for ($i=0; $i < count($page_content->_content); $i++) {
+                    $found = false;
+                    $line = $page_content->_content[$i];
+                    if (is_string($line)) {
+                        while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
+                            $found = true;
+                            $line = substr($line, strlen($m[0]));
+                            $html[] = $m[1];    // prematch
+                            $html[] = HTML::strong(array('class' => 'search-term'), $m[2]); // match
+                        }
                     }
-            	}
-                if ($found) {
-                    $html[] = $line;  // postmatch
-                    $page_content->_content[$i] = HTML::span(array('class' => 'search-context'),
+                    if ($found) {
+                        $html[] = $line;  // postmatch
+                        $page_content->_content[$i] = HTML::span(array('class' => 'search-context'),
                                                              $html);
+                    }
                 }
-            }
             }
         }
     }

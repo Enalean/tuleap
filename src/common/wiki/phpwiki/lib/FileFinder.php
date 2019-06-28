@@ -75,11 +75,11 @@ class FileFinder
      * Force using '/' as path seperator.
      */
     function forcePathSlashes ($path, $sep='/') {
-    	if (is_array($path)) {
-    	    $result = array();
-    	    foreach ($path as $dir) { $result[] = $this->forcePathSlashes($dir,$sep); }
-    	    return $result;
-    	} else {
+        if (is_array($path)) {
+            $result = array();
+            foreach ($path as $dir) { $result[] = $this->forcePathSlashes($dir,$sep); }
+            return $result;
+        } else {
             if (isWindows() or $this->_isOtherPathsep()) {
                 if (isMac()) $from = ":";
                 elseif (isWindows()) $from = "\\";
@@ -94,7 +94,7 @@ class FileFinder
                 return strtr($path, $from, $sep);
             } else 
                 return $path;
-    	}
+        }
     }
 
     /**
@@ -134,7 +134,7 @@ class FileFinder
      * @return string path_separator.
      */
     function _get_syspath_separator () {
-    	if (!empty($this->_pathsep)) return $this->_pathsep;
+        if (!empty($this->_pathsep)) return $this->_pathsep;
         elseif (isWindowsNT()) return "/"; // we can safely use '/'
         elseif (isWindows()) return "\\";  // FAT might use '\'
         elseif (isMac()) return ':';    // MacOsX is /
@@ -222,12 +222,12 @@ class FileFinder
         foreach ($this->_path as $dir) {
             // ensure we use the same pathsep
             if ($this->_isOtherPathsep()) {
-            	$dir = $this->slashifyPath($dir);
-            	$file = $this->slashifyPath($file);
+                $dir = $this->slashifyPath($dir);
+                $file = $this->slashifyPath($file);
                 if (file_exists($dir . $this->_pathsep . $file))
                     return $dir;
             } elseif (@file_exists($dir . $this->_pathsep . $file))
-               	return $dir;
+                   return $dir;
         }
         return false;
     }
@@ -475,14 +475,14 @@ function FindFile ($file, $missing_okay = false, $slashify = false)
     static $finder;
     if (!isset($finder)) {
         $finder = new FileFinder;
-    	// remove "/lib" from dirname(__FILE__)
-    	$wikidir = preg_replace('/.lib$/','',dirname(__FILE__));
+        // remove "/lib" from dirname(__FILE__)
+        $wikidir = preg_replace('/.lib$/','',dirname(__FILE__));
         // let the system favor its local pear?
-    	$finder->_append_to_include_path(dirname(__FILE__)."/pear");
-    	$finder->_prepend_to_include_path($wikidir);
+        $finder->_append_to_include_path(dirname(__FILE__)."/pear");
+        $finder->_prepend_to_include_path($wikidir);
         // Don't override existing INCLUDE_PATH config.
         if (!defined("INCLUDE_PATH"))
- 	    define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
+        define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
     }
     $s = $finder->findFile($file, $missing_okay);
     if ($slashify)

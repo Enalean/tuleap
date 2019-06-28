@@ -146,16 +146,16 @@ class Codendi_HTMLPurifier {
             return $this->config[$level];
         }
         switch($level) {
-        case CODENDI_PURIFIER_LIGHT:
-            $this->config[CODENDI_PURIFIER_LIGHT] = $this->getLightConfig();
+            case CODENDI_PURIFIER_LIGHT:
+                $this->config[CODENDI_PURIFIER_LIGHT] = $this->getLightConfig();
             break;
 
-        case CODENDI_PURIFIER_FULL:
-            $this->config[CODENDI_PURIFIER_FULL] = $this->getCodendiConfig();
+            case CODENDI_PURIFIER_FULL:
+                $this->config[CODENDI_PURIFIER_FULL] = $this->getCodendiConfig();
             break;
 
-        case CODENDI_PURIFIER_STRIP_HTML:
-            $this->config[CODENDI_PURIFIER_STRIP_HTML] = $this->getStripConfig();
+            case CODENDI_PURIFIER_STRIP_HTML:
+                $this->config[CODENDI_PURIFIER_STRIP_HTML] = $this->getStripConfig();
             break;
         }
         return $this->config[$level];
@@ -227,43 +227,43 @@ class Codendi_HTMLPurifier {
     function purify($html, $level=0, $groupId=0) {
         $clean = '';
         switch($level) {
-        case CODENDI_PURIFIER_DISABLED:
-            $clean = $html;
-            break;
-
-        case CODENDI_PURIFIER_LIGHT:
-            if (empty($html)) {
+            case CODENDI_PURIFIER_DISABLED:
                 $clean = $html;
-                break;
-            }
-            $this->insertReferences($html, $groupId);
-        case CODENDI_PURIFIER_STRIP_HTML:
-        case CODENDI_PURIFIER_FULL:
-            $hp = HTMLPurifier::getInstance();
-
-            $config = $this->getHPConfig($level);
-            $clean = $hp->purify($html, $config);
             break;
 
-        case CODENDI_PURIFIER_BASIC:
-            $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
-            $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
-            $clean = $this->purify(nl2br($data), CODENDI_PURIFIER_LIGHT, $groupId);
+            case CODENDI_PURIFIER_LIGHT:
+                if (empty($html)) {
+                    $clean = $html;
+                    break;
+                }
+                $this->insertReferences($html, $groupId);
+            case CODENDI_PURIFIER_STRIP_HTML:
+            case CODENDI_PURIFIER_FULL:
+                $hp = HTMLPurifier::getInstance();
+
+                $config = $this->getHPConfig($level);
+                $clean = $hp->purify($html, $config);
             break;
-        case CODENDI_PURIFIER_BASIC_NOBR:
-            $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
-            $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
-            $clean = $this->purify($data, CODENDI_PURIFIER_LIGHT, $groupId);
+
+            case CODENDI_PURIFIER_BASIC:
+                $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
+                $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
+                $clean = $this->purify(nl2br($data), CODENDI_PURIFIER_LIGHT, $groupId);
             break;
-        case CODENDI_PURIFIER_JS_QUOTE:
-            $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
+            case CODENDI_PURIFIER_BASIC_NOBR:
+                $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
+                $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
+                $clean = $this->purify($data, CODENDI_PURIFIER_LIGHT, $groupId);
             break;
-        case CODENDI_PURIFIER_JS_DQUOTE:
-            $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
+            case CODENDI_PURIFIER_JS_QUOTE:
+                $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
             break;
-        case CODENDI_PURIFIER_CONVERT_HTML:
-        default:
-            $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
+            case CODENDI_PURIFIER_JS_DQUOTE:
+                $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
+            break;
+            case CODENDI_PURIFIER_CONVERT_HTML:
+            default:
+                $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
             break;
         }
         return $clean;

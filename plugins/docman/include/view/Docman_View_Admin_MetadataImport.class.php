@@ -40,22 +40,22 @@ extends Docman_View_Extra {
 
 
     function getImportForm($sthToImport) {
-       $html = '';
-       if($sthToImport) {
-           $html .= '<form name="" method="post" action="?">';
-           $html .= '<input type="hidden" name="action" value="admin_import_metadata">';
-           $html .= '<input type="hidden" name="group_id" value="'.$this->dstGo->getGroupId().'">';
-           $html .= '<input type="hidden" name="plugin_docman_metadata_import_group" value="'.$this->srcGo->getGroupId().'">';
-           $html .= '<p>';
-           $html .= '<input type="submit" name="confirm" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_form_submit').'">';
-           $html .= ' ';
-           $html .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'">';
-           $html .= '</p>';
-           $html .= '</form>';
-       } else {
-           $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_form_nothingtodo').'</p>';
-       }
-       return $html;
+        $html = '';
+        if($sthToImport) {
+            $html .= '<form name="" method="post" action="?">';
+            $html .= '<input type="hidden" name="action" value="admin_import_metadata">';
+            $html .= '<input type="hidden" name="group_id" value="'.$this->dstGo->getGroupId().'">';
+            $html .= '<input type="hidden" name="plugin_docman_metadata_import_group" value="'.$this->srcGo->getGroupId().'">';
+            $html .= '<p>';
+            $html .= '<input type="submit" name="confirm" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_form_submit').'">';
+            $html .= ' ';
+            $html .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'">';
+            $html .= '</p>';
+            $html .= '</form>';
+        } else {
+            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_form_nothingtodo').'</p>';
+        }
+        return $html;
     }
 
     /**

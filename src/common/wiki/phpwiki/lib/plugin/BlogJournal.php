@@ -58,7 +58,7 @@ extends WikiPlugin_WikiBlog
         }
         if (!$args['user'] or $args['user'] == ADMIN_USER) {
             if (BLOG_EMPTY_DEFAULT_PREFIX)
-                $args['user'] = ''; 	    // "Blogs/day" pages 
+                $args['user'] = '';         // "Blogs/day" pages 
             else
                 $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages 
         }

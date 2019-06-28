@@ -71,7 +71,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->assertEqual( (String) $attributes['id'], 'T614');
     }
 
-     public function itReturnsTheGoodRootXmlWithoutTrackers() {
+    public function itReturnsTheGoodRootXmlWithoutTrackers() {
         $cardwall_config       = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
         $cardwall_config2      = mockery_stub(\Cardwall_OnTop_Config::class)->isEnabled()->returns(false);
         $this->config_factory2 = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);

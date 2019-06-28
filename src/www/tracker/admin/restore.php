@@ -54,7 +54,7 @@ switch ($func) {
         $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
         break;
 
-        case 'delete':
+    case 'delete':
         // Create field factory
         if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
             $atid           = $request->getValidated('atid', 'uint');

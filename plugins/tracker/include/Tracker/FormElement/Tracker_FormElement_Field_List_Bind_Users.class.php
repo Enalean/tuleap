@@ -551,31 +551,31 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $html .= '<select multiple="multiple" name="'. $select_name .'">
                   <option value="">'.$GLOBALS['Language']->getText('global','none').'</option>';
         $selected = "";
-	    if (in_array("artifact_submitters", $value_function)) {
-	        $selected = 'selected="selected"';
-	    }
-	    $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submitters').'</option>';
+        if (in_array("artifact_submitters", $value_function)) {
+            $selected = 'selected="selected"';
+        }
+        $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submitters').'</option>';
 
-	    $selected = "";
-	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
-	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if (in_array("group_members", $value_function)) {
-	        $selected = 'selected="selected"';
-	    }
-	    $html .= '<option value="group_members" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
+        $selected = "";
+        $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
+        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        if (in_array("group_members", $value_function)) {
+            $selected = 'selected="selected"';
+        }
+        $html .= '<option value="group_members" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
 
-	    $selected = "";
-	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
-	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if (in_array("group_admins", $value_function)) {
-	        $selected = 'selected="selected"';
-	    }
-	    $html .= '<option value="group_admins" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
+        $selected = "";
+        $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
+        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        if (in_array("group_admins", $value_function)) {
+            $selected = 'selected="selected"';
+        }
+        $html .= '<option value="group_admins" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
 
         /** @psalm-suppress DeprecatedFunction */
-	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
-	    $rows = db_numrows($ugroup_res);
-	    for ( $i = 0 ; $i < $rows ; $i++) {
+        $ugroup_res = ugroup_db_get_existing_ugroups(100);
+        $rows = db_numrows($ugroup_res);
+        for ( $i = 0 ; $i < $rows ; $i++) {
             $ug = db_result($ugroup_res, $i,'ugroup_id');
             $selected = "";
             if (($ug == $GLOBALS['UGROUP_NONE']) ||
@@ -583,19 +583,19 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) ||
                 ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
                 ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
-            ) {
-                continue;
+               ) {
+                   continue;
             }
 
             $ugr  ="ugroup_". $ug;
             if (in_array($ugr, $value_function)) {
-              $selected = 'selected="selected"';
+                $selected = 'selected="selected"';
             }
             $html .= '<option value="'.$ugr.'" '.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
-	    }
+        }
 
         $group_id = $field->getTracker()->getGroupId();
-	    if ($group_id != 100) {
+        if ($group_id != 100) {
             /** @psalm-suppress DeprecatedFunction */
             $ugroup_res = ugroup_db_get_existing_ugroups($group_id);
             $rows = db_numrows($ugroup_res);
@@ -608,8 +608,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 }
                 $html .= '<option value="'.$ugr.'" '.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
             }
-	    }
-	    $html .= '</select>';
+        }
+        $html .= '</select>';
         return $html;
     }
 

@@ -364,11 +364,11 @@ class Tracker_RulesManager
                 $currMatrix=array();
 
                 foreach($field_source_values as $field_source_value_id =>$field_source_value) {
-                   foreach($field_target_values as $field_target_value_id => $field_target_value) {
-                       $dependency = $field_source_value_id.'_'.$field_target_value_id;
-                       if ($request->existAndNonEmpty($dependency)) {
-                           $currMatrix[]=array($field_source_value_id, $field_target_value_id);
-                           $this->getTrackerRuleListFactory()->create(
+                    foreach($field_target_values as $field_target_value_id => $field_target_value) {
+                        $dependency = $field_source_value_id.'_'.$field_target_value_id;
+                        if ($request->existAndNonEmpty($dependency)) {
+                            $currMatrix[]=array($field_source_value_id, $field_target_value_id);
+                            $this->getTrackerRuleListFactory()->create(
                                    $field_source->getId(),
                                    $field_target->getId(),
                                    $this->tracker->id,
@@ -376,7 +376,7 @@ class Tracker_RulesManager
                                    $field_target_value_id
                                    );
                         }
-                   }
+                    }
                 }
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','updated'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-dependencies')));
@@ -489,34 +489,34 @@ class Tracker_RulesManager
 
 
     protected function displayDependenciesMatrix($source_field, $target_field, $dependencies=null) {
-       $source_field_values = $source_field->getVisibleValuesPlusNoneIfAny();
-       $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
+        $source_field_values = $source_field->getVisibleValuesPlusNoneIfAny();
+        $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
-       $purifier = Codendi_HTMLPurifier::instance();
-       echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
-       echo '<table id="tracker_field_dependencies_matrix">';
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
+        echo '<table id="tracker_field_dependencies_matrix">';
 
-       echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
-       echo "<td></td>";
-       foreach($target_field_values as $target_field_value_id=>$target_field_value) {
-           echo '<td class="matrix_cell">'.$purifier->purify($target_field_value->getLabel())."</td>";
-       }
-       echo "</tr>";
+        echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
+        echo "<td></td>";
+        foreach($target_field_values as $target_field_value_id=>$target_field_value) {
+            echo '<td class="matrix_cell">'.$purifier->purify($target_field_value->getLabel())."</td>";
+        }
+        echo "</tr>";
 
-       $dependencies = $this->getDependenciesBySourceTarget($this->tracker->id, $source_field->getId(), $target_field->getId());
+        $dependencies = $this->getDependenciesBySourceTarget($this->tracker->id, $source_field->getId(), $target_field->getId());
 
-       $j=0;
+        $j=0;
        //Display the available transitions
-       foreach($source_field_values as $source_field_value_id=>$source_field_value) {
-           echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
-           echo "<td>".$purifier->purify($source_field_value->getLabel())."</td>";
-           foreach($target_field_values as $target_field_value_id =>$target_field_value) {
-               $box_value = $source_field_value_id.'_'.$target_field_value_id;
-               $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
-           }
-           echo "</tr>\n";
-           $j++;
-       }
+        foreach($source_field_values as $source_field_value_id=>$source_field_value) {
+            echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
+            echo "<td>".$purifier->purify($source_field_value->getLabel())."</td>";
+            foreach($target_field_values as $target_field_value_id =>$target_field_value) {
+                $box_value = $source_field_value_id.'_'.$target_field_value_id;
+                $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
+            }
+            echo "</tr>\n";
+            $j++;
+        }
 
         echo '</table>';
         echo '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
@@ -539,8 +539,8 @@ class Tracker_RulesManager
                     $checked = 'checked="checked"';
                     break;
                 }
-             }
-          }
+            }
+        }
 
           echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="'.$box_value.'" '. $checked .'>&nbsp;</label></td>';
     }
@@ -776,13 +776,13 @@ class Tracker_RulesManager
                                 // looking for the target field value which cause the dependence problem
                                 $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
                                 if(is_null($target_value)) {
-                                   $pb_target_values = array();
+                                    $pb_target_values = array();
                                 } else {
                                     $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
                                 }
                                 $target_field->setHasErrors(true);
                                // detailled error message
-                               $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
+                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
                             }
                         }
                     }

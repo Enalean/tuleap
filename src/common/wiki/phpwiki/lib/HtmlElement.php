@@ -114,7 +114,7 @@ class HTML extends HtmlElement {
             if ($tag)
                 if (isset($props[$tag]))
                     $props[$tag] |= $prop_flag;
-                else
+            else
                     $props[$tag] = $prop_flag;
         }
     }

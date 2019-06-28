@@ -22,7 +22,7 @@ class b201705121210_update_table_user_dashboards extends ForgeUpgrade_Bucket
 {
     public function description()
     {
-    return 'Alter table user_dashboards';
+        return 'Alter table user_dashboards';
     }
 
     public function preUp()

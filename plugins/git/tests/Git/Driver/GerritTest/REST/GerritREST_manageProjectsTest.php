@@ -48,7 +48,7 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
     }
 
     public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer(){
-       $url_create_project = $this->gerrit_server_host
+        $url_create_project = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/projects/'. urlencode($this->project_name);
 
@@ -143,24 +143,24 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
         $this->driver->setProjectInheritance($this->gerrit_server, $this->project_name, 'prj');
     }
 
-     public function itResetsTheProjectInheritance() {
+    public function itResetsTheProjectInheritance() {
         $url = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/projects/'. urlencode($this->project_name) .'/parent';
+           .':'. $this->gerrit_server_port
+           .'/a/projects/'. urlencode($this->project_name) .'/parent';
 
         $expected_json_data = json_encode(
-            array(
-                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
-            )
+           array(
+               'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
+           )
         );
 
         expect($this->guzzle_client)->put(
-            $url,
-            array(
-                Git_Driver_GerritREST::HEADER_CONTENT_TYPE => Git_Driver_GerritREST::MIME_JSON,
-                'verify' => false,
-            ),
-            $expected_json_data
+           $url,
+           array(
+               Git_Driver_GerritREST::HEADER_CONTENT_TYPE => Git_Driver_GerritREST::MIME_JSON,
+               'verify' => false,
+           ),
+           $expected_json_data
         )->once();
         stub($this->guzzle_client)->put()->returns($this->guzzle_request);
 

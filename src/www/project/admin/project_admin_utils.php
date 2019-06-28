@@ -41,7 +41,7 @@ function project_admin_header($params, $current_pane_shortname) {
 
 /*
 
-	Standard footer to be used on all /project/admin/* pages
+    Standard footer to be used on all /project/admin/* pages
 
 */
 
@@ -54,12 +54,12 @@ function project_admin_footer($params) {
 
 /*
 
-	The following functions are for group
-	audit trail
+    The following functions are for group
+    audit trail
 
-	When changes like adduser/rmuser/change status
-	are made to a group, a row is added to audit trail
-	using group_add_history()
+    When changes like adduser/rmuser/change status
+    are made to a group, a row is added to audit trail
+    using group_add_history()
 
 */
 

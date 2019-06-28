@@ -921,15 +921,15 @@ class DocmanPlugin extends Plugin
      *
      * @return void
      */
-        function project_is_deleted($params) {
-            $groupId = $params['group_id'];
-            if ($groupId) {
-                require_once('Docman_ItemFactory.class.php');
-                $docmanItemFactory = new Docman_ItemFactory();
-                $docmanItemFactory->deleteProjectTree($groupId);
-            }
-            $this->cleanUnusedResources();
+    function project_is_deleted($params) {
+        $groupId = $params['group_id'];
+        if ($groupId) {
+            require_once('Docman_ItemFactory.class.php');
+            $docmanItemFactory = new Docman_ItemFactory();
+            $docmanItemFactory->deleteProjectTree($groupId);
         }
+        $this->cleanUnusedResources();
+    }
 
     /**
      * Function called when a user is removed from a project

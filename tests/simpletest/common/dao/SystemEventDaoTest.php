@@ -51,7 +51,7 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
         );
 
         $dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
-     }
+    }
 
     public function itCreatesCorrectQueryWithSearchTermInLastPosition()
     {
@@ -67,7 +67,7 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
         );
 
         $dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
-     }
+    }
 
     public function itCreatesCorrectQueryWithExactSearchTerm()
     {
@@ -84,6 +84,6 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
         );
 
         $dao->searchWithParam('all', $this->search_term, $this->event_type, $this->status);
-     }
+    }
 }
 

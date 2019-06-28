@@ -107,7 +107,7 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $session[1]['is_advanced'] = 1;
         $criterion = $this->tracker_report_session->updateCriterion( 1, '', array('is_advanced', 0));
         $this->assertTrue( $session[1]['value'], 'tutu');
-        $this->assertTrue( $session[1]['is_advanced'], 0);	
+        $this->assertTrue( $session[1]['is_advanced'], 0);    
     }
 
     public function test_changeSessionNamespace_Relative_DoesntExist() {
@@ -149,7 +149,7 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-3]['charts'][-2]) );
     }
 
-     public function test_copy_RenderersWithNewCharts() {
+    public function test_copy_RenderersWithNewCharts() {
         $this->tracker_report_session->changeSessionNamespace('.');
         $session   = &$this->tracker_report_session->getSessionNamespace();
         $charts    = array('2'=>array('titi','toto','tata'), '-1'=>array('titi','toto','tata') );
@@ -166,7 +166,7 @@ class Tracker_Report_SessionTest extends TuleapTestCase {
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-2]['charts'][-2]) );
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-3]['charts'][-1]) );
         $this->assertTrue(isset($_SESSION['trackers']['reports']['2']['renderers'][-3]['charts'][-2]) );
-     }
+    }
 }
 
 ?>

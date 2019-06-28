@@ -177,11 +177,11 @@ class SVNAccessFile {
      * @return String
      */
     public function parseGroupLines(Project $project, $contents, $verbose = false) {
-       return $this->parseGroup($project->getSVNRootPath(), $contents, $verbose);
+        return $this->parseGroup($project->getSVNRootPath(), $contents, $verbose);
     }
 
     public function parseGroupLinesByRepositories($svn_dir, $contents, $verbose = false) {
-       return $this->parseGroup($svn_dir, $contents, $verbose);
+        return $this->parseGroup($svn_dir, $contents, $verbose);
     }
 
     private function parseGroup($svn_dir, $contents, $verbose = false) {

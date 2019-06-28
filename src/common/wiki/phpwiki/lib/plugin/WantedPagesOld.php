@@ -210,7 +210,7 @@ extends WikiPlugin
             if (! $dbi->isWikiPage($linkname = $link_handle->getName()))
                 if (! in_array($linkname, array_keys($this->pagelist)))
                     $this->pagelist[$linkname] = 1;
-                else
+            else
                     $this->pagelist[$linkname] += 1;
         }
     }

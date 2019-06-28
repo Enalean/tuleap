@@ -52,14 +52,14 @@ extends WikiPlugin
         $allGroups = $group->getAllGroupsIn();
 
         foreach ($allGroups as $g) {
-          $members = $group->getMembersOf($g);
-          $output->pushContent(HTML::h3($g . " - members: " .
-sizeof($members) . " - isMember: " . ($group->isMember($g) ? "yes" : "no")
-));
-          foreach($members as $m) {
-            $output->pushContent($m);
-            $output->pushContent(HTML::br());
-          }
+            $members = $group->getMembersOf($g);
+            $output->pushContent(HTML::h3($g . " - members: " .
+            sizeof($members) . " - isMember: " . ($group->isMember($g) ? "yes" : "no")
+            ));
+            foreach($members as $m) {
+                $output->pushContent($m);
+                $output->pushContent(HTML::br());
+            }
         }
         $output->pushContent(HTML::p("--- the end ---"));
 

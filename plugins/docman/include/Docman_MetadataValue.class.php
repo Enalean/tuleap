@@ -146,31 +146,31 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
     
     function getValue() {
         switch($this->type) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
             return $this->valueText;
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
             return $this->valueString;
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
             return $this->valueDate;
             break;
-        default:
+            default:
             return null;
         }
     }
     function setValue($v) {
         switch($this->type) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            $this->valueText = $v;
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                $this->valueText = $v;
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            $this->valueString = $v;
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                $this->valueString = $v;
             break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            $this->valueDate = $v;
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $this->valueDate = $v;
             break;
-        default:
+            default:
             return null;
         }
     }

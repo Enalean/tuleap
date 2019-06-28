@@ -487,8 +487,8 @@ extends Docman_View_ItemDetailsSectionApproval {
             // See notification email
             if($request->exist('section')) {
                 switch($request->get('section')){
-                case 'view_notification_email':
-                    $html .= $this->displayNotificationEmail();
+                    case 'view_notification_email':
+                        $html .= $this->displayNotificationEmail();
                     break;
                 }
                 return $html;

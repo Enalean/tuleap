@@ -44,38 +44,38 @@ class ForumML_Attachment {
         } else {
             // Retrieve the uploaded file type
             switch(strtoupper(strrchr($row['file_name'], "."))) {
-            case ".GZ":
-                $type = "application/x-gzip";
+                case ".GZ":
+                    $type = "application/x-gzip";
                 break;
-            case ".TGZ":
-                $type = "application/x-gzip";
+                case ".TGZ":
+                    $type = "application/x-gzip";
                 break;
-            case ".ZIP":
-                $type = "application/zip";
+                case ".ZIP":
+                    $type = "application/zip";
                 break;
-            case ".PDF":
-                $type = "application/pdf";
+                case ".PDF":
+                    $type = "application/pdf";
                 break;
-            case ".PNG":
-                $type = "image/png";
+                case ".PNG":
+                    $type = "image/png";
                 break;
-            case ".GIF":
-                $type = "image/gif";
+                case ".GIF":
+                    $type = "image/gif";
                 break;
-            case ".JPG":
-                $type = "image/jpeg";
+                case ".JPG":
+                    $type = "image/jpeg";
                 break;
-            case ".TXT":
-                $type = "text/plain";
+                case ".TXT":
+                    $type = "text/plain";
                 break;
-            case ".HTM":
-                $type = "text/html";
+                case ".HTM":
+                    $type = "text/html";
                 break;
-            case ".HTML":
-                $type = "text/html";
+                case ".HTML":
+                    $type = "text/html";
                 break;
-            default:
-                $type = "application/octet-stream";
+                default:
+                    $type = "application/octet-stream";
                 break;
             }
         }

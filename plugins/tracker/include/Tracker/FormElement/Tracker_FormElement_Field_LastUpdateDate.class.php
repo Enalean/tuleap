@@ -249,7 +249,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
                 break;
         }
         return $output;
-     }
+    }
 
     /**
      * Fetch the html code to display the field value in tooltip

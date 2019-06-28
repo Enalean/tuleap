@@ -53,16 +53,16 @@ extends WikiPlugin
 
     function getDefaultArguments() {
         return array('logfile'  => false,
-        	     // add a link of the fresh file automatically to the 
-        	     // end of the page (or current page)
-        	     'autolink' => false, 
-        	     'page'     => '[pagename]',
-        	     );
+                 // add a link of the fresh file automatically to the 
+                 // end of the page (or current page)
+                 'autolink' => false, 
+                 'page'     => '[pagename]',
+                 );
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
         $this->disallowed_extensions = explode("\n",
-"ad[ep]
+        "ad[ep]
 asd
 ba[st]
 chm
@@ -147,7 +147,7 @@ ws[cfh]");
             $userfile_name = $userfile->getName();
             $userfile_name = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
-	    $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
+            $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
 
             /// MV add
             /// Wiki attachments
@@ -156,8 +156,8 @@ ws[cfh]");
                                        $userfile->getType(), $userfile->getTmpName());
             if($rev >= 0) {
                 $prev = $rev+1;
-            	$interwiki = new PageType_interwikimap();
-            	$link = $interwiki->link("Upload:$prev/$userfile_name");
+                $interwiki = new PageType_interwikimap();
+                $link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
                 
@@ -181,7 +181,7 @@ ws[cfh]");
                 }
             }
             else {
-            	$message->pushContent($err_header);
+                $message->pushContent($err_header);
                 $message->pushContent(HTML::br(),_("Uploading failed."),HTML::br());
             }
         }
@@ -251,8 +251,8 @@ ws[cfh]");
     }
 
     function log ($userfile, $upload_log, &$message) {
-    	global $WikiTheme;
-    	$user = $GLOBALS['request']->_user;
+        global $WikiTheme;
+        $user = $GLOBALS['request']->_user;
         if (!is_writable($upload_log)) {
             trigger_error(_("The upload logfile is not writable."), E_USER_WARNING);
         }

@@ -189,7 +189,7 @@ class Diff3 {
                                      array("======="),
                                      $block->final2,
                                      array(">>>>>>>" . ($label2 ? " $label2" : '')));
-				$this->ConflictingBlocks++;
+                $this->ConflictingBlocks++;
             }
             else {
                 $lines = array_merge($lines, $block->merged());

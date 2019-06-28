@@ -327,7 +327,7 @@ class Tracker_Workflow_Trigger_RulesManager {
         $new_triggers = array();
 
         foreach ($template_triggers as $template_trigger) {
-           $new_triggers[] = $this->buildRuleTargetFromTemplateTriggerRule($template_trigger, $field_mapping);
+            $new_triggers[] = $this->buildRuleTargetFromTemplateTriggerRule($template_trigger, $field_mapping);
         }
 
         return $new_triggers;
