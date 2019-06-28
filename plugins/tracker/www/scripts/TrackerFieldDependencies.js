@@ -52,168 +52,168 @@ tuleap.tracker.rule_forest = {
     }
 };
 
-tuleap.tracker.RuleNode = Class.create({
-    initialize: function(field) {
-        this.field = field;
-        this.targets = new Map();
+tuleap.tracker.RuleNode = function(field) {
+    //Register event on the field
+    var f = tuleap.tracker.fields.get(field);
+    this.onchangeEvent = f.onchange.bind(f);
+    f.element().addEventListener("change", this.onchangeEvent);
 
-        //Register event on the field
-        var f = tuleap.tracker.fields.get(this.field);
-        this.onchangeEvent = f.onchange.bind(f);
-        f.element().addEventListener("change", this.onchangeEvent);
-    },
-    addRule: function(source_value, target_field, target_value) {
-        this.chainSourceAndTargetNodes(target_field);
-        this.appendTargetValue(source_value, target_field, target_value);
-    },
-    chainSourceAndTargetNodes: function(target_field) {
-        if (!this.targets.has(target_field)) {
-            this.targets.set(target_field, {
-                field: tuleap.tracker.rule_forest.getNode(target_field, true),
-                values: {}
-            });
-        }
-        // Once target is connected to source, it's no longer a tree root
-        tuleap.tracker.rule_forest.removeNodeFromTrees(target_field);
-    },
-    appendTargetValue: function(source_value, target_field, target_value) {
-        if (!this.targets.get(target_field).values[source_value]) {
-            this.targets.get(target_field).values[source_value] = [];
-        }
-        this.targets.get(target_field).values[source_value].push(target_value);
-    },
-    process: function() {
-        //retrieve selected source values
-        var selected_sources = [];
-        tuleap.tracker.fields
-            .get(this.field)
-            .element()
-            .options.forEach(function(option) {
-                if (option.selected) {
-                    selected_sources.push(option.value);
-                }
-            });
-
-        //Store only if we are root (else already stored before we reach this field)
-        if (tuleap.tracker.rule_forest.isTree(this.field)) {
-            tuleap.tracker.fields.get(this.field).updateSelectedState(selected_sources);
-        }
-
-        const unchanged_value = "-1";
-        this.targets.forEach(function(transitions, target_field_id) {
-            //retrieve options of the target
-            const target_field = tuleap.tracker.fields.get(target_field_id);
-            var target_options = target_field.options;
-
-            //Build the new options accordingly to the rules
-            var new_target_options = new Map();
-            selected_sources.forEach(function(selected_value) {
-                if (transitions.values[selected_value]) {
-                    transitions.values[selected_value].forEach(function(target_value) {
-                        new_target_options.set(
-                            parseInt(target_value, 10),
-                            Object.clone(target_options[target_value])
-                        );
-                    });
-                }
-
-                if (selected_value === unchanged_value) {
-                    new_target_options.set(
-                        parseInt(unchanged_value, 10),
-                        new Option(unchanged_value, unchanged_value)
-                    );
-                }
-            });
-
-            //Force field to new options
-            tuleap.tracker.fields.get(target_field_id).force(new_target_options);
-
-            //Chain the process
-            tuleap.tracker.rule_forest.getNode(target_field_id).process();
-        });
-    }
-});
-
-tuleap.tracker.Field = Class.create({
-    initialize: function(id, name, label) {
-        this.id = id;
-        this.name = name;
-        this.label = label;
-        this._highlight = null;
-        this.options = new Map();
-    },
-    addOption: function(text, value, selected) {
-        this.options.set(parseInt(value, 10), {
-            value: value,
-            text: text,
-            selected: selected
-        });
-        return this;
-    },
-    force: function(new_options) {
-        var el = this.element();
-        //Clear the field
-        var len = el.options.length;
-        for (var i = len; i >= 0; i--) {
-            el.options[i] = null;
-        }
-
-        //Revert selected state for all options
-        this.updateSelectedState();
-
-        //Add options
-        this.options.forEach(
-            function(option, value) {
-                if (new_options.has(value)) {
-                    var opt = new Option(option.text, option.value);
-                    if (new_options.get(value).selected) {
-                        opt.selected = true;
-                        //Store the selected state for this option
-                        this.options.get(option.value).selected = true;
-                    }
-                    el.options[el.options.length] = opt;
-                }
-            }.bind(this)
-        );
-
-        //We've finished. Highlight the field to indicate to the user that it has changed (or not)
-        this.highlight();
-    },
-    highlight: function() {
-        if (this._highlight) {
-            this.removeHighlight();
-        }
-        this.element().classList.add("tracker-field-dependency-highlight");
-        this._highlight = setTimeout(this.removeHighlight.bind(this), 1000);
-    },
-    removeHighlight: function() {
-        this.element().classList.remove("tracker-field-dependency-highlight");
-        clearTimeout(this._highlight);
-    },
-    updateSelectedState: function(selected_values) {
-        //Revert selected state for all options
-        this.options.forEach(function(option) {
-            option.selected = selected_values && selected_values[option.value] ? true : false;
-        });
-    },
-    element: function() {
-        var id_sb = "tracker_field_" + this.id;
-        return document.getElementById(id_sb);
-    },
-    onchange: function() {
-        var el = this.element();
-        //Store the selected state
-        var len = el.options.length;
-
-        for (var i = 0; i < len; ++i) {
-            if (typeof this.options[el.options[i].value] !== "undefined") {
-                this.options[el.options[i].value].selected = el.options[i].selected;
+    return {
+        field: field,
+        targets: new Map(),
+        addRule: function(source_value, target_field, target_value) {
+            this.chainSourceAndTargetNodes(target_field);
+            this.appendTargetValue(source_value, target_field, target_value);
+        },
+        chainSourceAndTargetNodes: function(target_field) {
+            if (!this.targets.has(target_field)) {
+                this.targets.set(target_field, {
+                    field: tuleap.tracker.rule_forest.getNode(target_field, true),
+                    values: {}
+                });
             }
+            // Once target is connected to source, it's no longer a tree root
+            tuleap.tracker.rule_forest.removeNodeFromTrees(target_field);
+        },
+        appendTargetValue: function(source_value, target_field, target_value) {
+            if (!this.targets.get(target_field).values[source_value]) {
+                this.targets.get(target_field).values[source_value] = [];
+            }
+            this.targets.get(target_field).values[source_value].push(target_value);
+        },
+        process: function() {
+            //retrieve selected source values
+            var selected_sources = [];
+            tuleap.tracker.fields
+                .get(this.field)
+                .element()
+                .options.forEach(function(option) {
+                    if (option.selected) {
+                        selected_sources.push(option.value);
+                    }
+                });
+
+            //Store only if we are root (else already stored before we reach this field)
+            if (tuleap.tracker.rule_forest.isTree(this.field)) {
+                tuleap.tracker.fields.get(this.field).updateSelectedState(selected_sources);
+            }
+
+            const unchanged_value = "-1";
+            this.targets.forEach(function(transitions, target_field_id) {
+                //retrieve options of the target
+                const target_field = tuleap.tracker.fields.get(target_field_id);
+                var target_options = target_field.options;
+
+                //Build the new options accordingly to the rules
+                var new_target_options = new Map();
+                selected_sources.forEach(function(selected_value) {
+                    if (transitions.values[selected_value]) {
+                        transitions.values[selected_value].forEach(function(target_value) {
+                            new_target_options.set(
+                                parseInt(target_value, 10),
+                                Object.clone(target_options[target_value])
+                            );
+                        });
+                    }
+
+                    if (selected_value === unchanged_value) {
+                        new_target_options.set(
+                            parseInt(unchanged_value, 10),
+                            new Option(unchanged_value, unchanged_value)
+                        );
+                    }
+                });
+
+                //Force field to new options
+                tuleap.tracker.fields.get(target_field_id).force(new_target_options);
+
+                //Chain the process
+                tuleap.tracker.rule_forest.getNode(target_field_id).process();
+            });
         }
-        //Process rules
-        tuleap.tracker.rule_forest.getNode(this.id).process();
-    }
-});
+    };
+};
+
+tuleap.tracker.Field = function(id, name, label) {
+    return {
+        id: id,
+        name: name,
+        label: label,
+        _highlight: null,
+        options: new Map(),
+        addOption: function(text, value, selected) {
+            this.options.set(parseInt(value, 10), {
+                value: value,
+                text: text,
+                selected: selected
+            });
+            return this;
+        },
+        force: function(new_options) {
+            var el = this.element();
+            //Clear the field
+            var len = el.options.length;
+            for (var i = len; i >= 0; i--) {
+                el.options[i] = null;
+            }
+
+            //Revert selected state for all options
+            this.updateSelectedState();
+
+            //Add options
+            this.options.forEach(
+                function(option, value) {
+                    if (new_options.has(value)) {
+                        var opt = new Option(option.text, option.value);
+                        if (new_options.get(value).selected) {
+                            opt.selected = true;
+                            //Store the selected state for this option
+                            this.options.get(option.value).selected = true;
+                        }
+                        el.options[el.options.length] = opt;
+                    }
+                }.bind(this)
+            );
+
+            //We've finished. Highlight the field to indicate to the user that it has changed (or not)
+            this.highlight();
+        },
+        highlight: function() {
+            if (this._highlight) {
+                this.removeHighlight();
+            }
+            this.element().classList.add("tracker-field-dependency-highlight");
+            this._highlight = setTimeout(this.removeHighlight.bind(this), 1000);
+        },
+        removeHighlight: function() {
+            this.element().classList.remove("tracker-field-dependency-highlight");
+            clearTimeout(this._highlight);
+        },
+        updateSelectedState: function(selected_values) {
+            //Revert selected state for all options
+            this.options.forEach(function(option) {
+                option.selected = selected_values && selected_values[option.value] ? true : false;
+            });
+        },
+        element: function() {
+            var id_sb = "tracker_field_" + this.id;
+            return document.getElementById(id_sb);
+        },
+        onchange: function() {
+            var el = this.element();
+            //Store the selected state
+            var len = el.options.length;
+
+            for (var i = 0; i < len; ++i) {
+                if (typeof this.options[el.options[i].value] !== "undefined") {
+                    this.options[el.options[i].value].selected = el.options[i].selected;
+                }
+            }
+            //Process rules
+            tuleap.tracker.rule_forest.getNode(this.id).process();
+        }
+    };
+};
 
 tuleap.tracker.fields = {
     fields: {},
