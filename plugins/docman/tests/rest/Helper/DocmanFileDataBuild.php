@@ -20,12 +20,33 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\rest\v1;
+namespace Tuleap\Docman\Test\rest\Helper;
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use ProjectUGroup;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 
-class DocmanFileDataBuild extends DocmanDataBuildCommon
+class DocmanFileDataBuild
 {
+    /**
+     * @var int
+     */
+    private $admin_user_id;
+    /**
+     * @var int
+     */
+    private $docman_user_id;
+
+    /**
+     * @var DocmanDataBuildCommon
+     */
+    private $common_builder;
+
+    public function __construct(DocmanDataBuildCommon $common_builder)
+    {
+        $this->common_builder = $common_builder;
+        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME);
+        $this->admin_user_id  = $this->common_builder->getUserByName(DocmanDataBuilder::ADMIN_USER_NAME);
+    }
 
     /**
      * To help understand tests structure, below a representation of folder hierarchy
@@ -44,15 +65,13 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      */
     public function createFolderFileWithContent($docman_root): void
     {
-        $this->docman_user_id = $this->getUseByName(self::DOCMAN_REGULAR_USER_NAME);
-        $this->admin_user_id = $this->getUseByName(DocmanDataBuilder::ADMIN_USER_NAME);
-        $folder_file_id       = $this->createItemWithVersion(
+        $folder_file_id       = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $docman_root->getId(),
             'File',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->addWritePermissionOnItem($folder_file_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_file_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $this->createPutFolder($folder_file_id);
         $this->createPatchFolder($folder_file_id);
@@ -79,36 +98,36 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      */
     private function createPutFolder(int $folder_id): void
     {
-        $folder_put_id = $this->createItemWithVersion(
+        $folder_put_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_id,
             'PUT HM File',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->addWritePermissionOnItem($folder_put_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_put_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_put_id,
             'PUT F OD',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_put_id,
             'PUT F Status',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_put_id,
             'PUT F',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_put_id,
             'PUT F O',
@@ -136,45 +155,42 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      * (AT R) => Reset Approval table on this item
      * (AT E) => Empty Approval table on this item
      * (DIS AT) => Disabled Approval table on this item
-     *
-     *
-     * @param $docman_root
      */
     private function createPatchFolder(int $folder_id): void
     {
-        $folder_file_id = $this->createItemWithVersion(
+        $folder_file_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_id,
             'PATCH File',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->addWritePermissionOnItem($folder_file_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_file_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createFileWithApprovalTable($folder_file_id, 'PATCH F AT C', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->createFileWithApprovalTable($folder_file_id, 'PATCH F AT R', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->createFileWithApprovalTable($folder_file_id, 'PATCH F AT E', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->createFileWithApprovalTable($folder_file_id, 'PATCH F AT', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT C', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT R', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT E', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $this->createItem(
+        $this->common_builder->createItem(
             $this->docman_user_id,
             $folder_file_id,
             'PATCH F NO AT',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
-        $this->createItem(
+        $this->common_builder->createItem(
             $this->docman_user_id,
             $folder_file_id,
             'PATCH F KO',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
-        $this->createItem(
+        $this->common_builder->createItem(
             $this->docman_user_id,
             $folder_file_id,
             'PATCH F',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem(
+        $this->common_builder->createAndLockItem(
             $folder_file_id,
             $this->docman_user_id,
             $this->admin_user_id,
@@ -182,7 +198,7 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem(
+        $this->common_builder->createAndLockItem(
             $folder_file_id,
             $this->docman_user_id,
             $this->docman_user_id,
@@ -206,24 +222,24 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      */
     private function createDeleteFolder(int $folder_id): void
     {
-        $folder_delete_id = $this->createItemWithVersion(
+        $folder_delete_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_id,
             'DELETE File',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->addWritePermissionOnItem($folder_delete_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_delete_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_delete_id,
             'DELETE F',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem($folder_delete_id, $this->admin_user_id, $this->admin_user_id, 'DELETE F L', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createAndLockItem($folder_delete_id, $this->admin_user_id, $this->admin_user_id, 'DELETE F L', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $this->createAdminOnlyItem($folder_delete_id, 'DELETE F RO', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createAdminOnlyItem($folder_delete_id, 'DELETE F RO', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
     }
 
     /**
@@ -248,51 +264,57 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      */
     private function createPostVersionFolder(int $folder_id): void
     {
-        $folder_post_version_id = $this->createItemWithVersion(
+        $folder_post_version_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_id,
             'POST File Version',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $this->addWritePermissionOnItem($folder_post_version_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_post_version_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_post_version_id,
             'POST F V',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createFileWithApprovalTable(
+        $this->common_builder->createItemWithApprovalTable(
             $folder_post_version_id,
             'POST F V AT C',
             'version title',
-            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createFileWithApprovalTable(
+        $this->common_builder->createItemWithApprovalTable(
             $folder_post_version_id,
             'POST F V AT E',
             'version title',
-            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createFileWithApprovalTable(
+        $this->common_builder->createItemWithApprovalTable(
             $folder_post_version_id,
             'POST F V AT R',
             'version title',
-            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_post_version_id,
             'POST F V No AT',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem(
+        $this->common_builder->createAndLockItem(
             $folder_post_version_id,
             $this->admin_user_id,
             $this->admin_user_id,
@@ -300,14 +322,14 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem(
+        $this->common_builder->createAndLockItem(
             $folder_post_version_id,
             $this->admin_user_id,
             $this->docman_user_id,
             'POST F V L',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
-        $this->createAndLockItem(
+        $this->common_builder->createAndLockItem(
             $folder_post_version_id,
             $this->admin_user_id,
             $this->docman_user_id,
@@ -334,25 +356,25 @@ class DocmanFileDataBuild extends DocmanDataBuildCommon
      */
     private function createLockFolder(int $folder_id): void
     {
-        $folder_lock_id = $this->createItemWithVersion(
+        $folder_lock_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_id,
             'LOCK File',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->addWritePermissionOnItem($folder_lock_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_lock_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createAdminOnlyItem($folder_lock_id, 'LOCK F RO', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createAdminOnlyItem($folder_lock_id, 'LOCK F RO', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $this->createItemWithVersion(
+        $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $folder_lock_id,
             'LOCK F',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
-        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK F RL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK F RL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $this->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK F AL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK F AL', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
     }
 }

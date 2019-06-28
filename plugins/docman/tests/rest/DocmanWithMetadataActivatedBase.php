@@ -21,9 +21,11 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\rest;
+namespace Tuleap\Docman\Test\rest;
 
 use RestBase;
+
+require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 class DocmanWithMetadataActivatedBase extends RestBase
 {

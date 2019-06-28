@@ -20,16 +20,16 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\rest\v1;
+namespace Tuleap\Docman\Test\rest\Docman;
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Guzzle\Http\Client;
 use REST_TestDataBuilder;
-use Tuleap\Docman\rest\DocmanBase;
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanBase;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class DocmanItemsTestFoldersTest extends DocmanBase
+class DocmanFoldersTest extends DocmanBase
 {
     public function testGetRootId()
     {

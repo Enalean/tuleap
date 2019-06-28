@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,16 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\rest;
+namespace Tuleap\Docman\Test\rest;
 
 use Docman_ApprovalTableWikiDao;
 use ProjectUGroup;
-use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
-use Tuleap\Docman\rest\v1\DocmanFileDataBuild;
-
-require_once __DIR__ .'/DocmanDatabaseInitialization.php';
-require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
-require_once __DIR__ . '/helper/DocmanFileDataBuild.php';
+use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
+use Tuleap\Docman\Test\rest\Helper\DocmanEmbeddedDataBuild;
+use Tuleap\Docman\Test\rest\Helper\DocmanFileDataBuild;
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
@@ -56,10 +53,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+---------------------+--------------+---------------+
-     *    |           |                     |              |               |
-     *    +           +                     +              +               +
-     * folder 1   Folder B Embedded   Folder C wiki   Folder D Link   Trash (Folder)
+     *    +-----+-----+------------------+--------------+------------+-------+
+     *    |           |                  |              |            |       |
+     *    +           +                  +              +            +       +
+     * folder 1   Folder C wiki   Folder D Link   Trash (Folder)    File   Embedded
      *    +          +                     +
      *    |          |                     |
      *   ...        ...                   ...
@@ -70,12 +67,14 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     {
         $docman_root = $this->docman_item_factory->getRoot($this->project->getID());
 
-        $file_builder = new DocmanFileDataBuild(self::PROJECT_NAME);
+        $file_builder = new DocmanFileDataBuild(new DocmanDataBuildCommon(self::PROJECT_NAME));
         $file_builder->createFolderFileWithContent($docman_root);
+
+        $file_builder = new DocmanEmbeddedDataBuild(new DocmanDataBuildCommon(self::PROJECT_NAME));
+        $file_builder->createEmbeddedFileWithContent($docman_root);
 
         $this->createFolderLinkWithContent($docman_root);
         $this->createFolder1WithSubContent($docman_root);
-        $this->createFolderEmbeddedWithContent($docman_root);
         $this->createFolderWikiWithContent($docman_root);
         $this->createFolderContentToDelete($docman_root);
     }
@@ -204,136 +203,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->appendCustomMetadataValueToItem($wiki_id, "custom value for item_G");
     }
 
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *                                    Folder Embedded
-     *                                            +
-     *                                            |
-     *                                            +
-     *                  +----------------+--------+-------+----------------+---------------+---------------+---------------+------------+
-     *                  |                |                |                |               |               |               |            |
-     *                  +                +                +                +               +               +               +            +
-     *          embedded AT C    embedded AT R     embedded AT E   embedded DIS AT  embedded NO AT     embedded L    embedded LA     embedded POST L
-     *
-     * (L)    => Lock on this item
-     * (AT)   => Approval table on this item
-     * (AT C) => Copy Approval table on this item
-     * (AT R) => Reset Approval table on this item
-     * (AT E) => Empty Approval table on this item
-     * (DIS AT) => Disabled Approval table on this item
-     *
-     */
-    private function createFolderEmbeddedWithContent($docman_root)
-    {
-        $folder_embedded_id = $this->createItemWithVersion(
-            self::REGULAR_USER_ID,
-            $docman_root->getId(),
-            'Folder B Embedded',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-
-        $embedded_ATC_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded AT C',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $embedded_ATC_version_id = $this->addEmbeddedVersion($embedded_ATC_id, 'First !');
-
-        $this->addWritePermissionOnItem($embedded_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
-        $embedded_ATR_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded AT R',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $embedded_ATR_version_id = $this->addEmbeddedVersion($embedded_ATR_id, 'Second !');
-        $this->addWritePermissionOnItem($embedded_ATR_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $embedded_ATE_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded AT E',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $embedded_ATE_version_id = $this->addEmbeddedVersion($embedded_ATE_id, 'Third !');
-        $this->addWritePermissionOnItem($embedded_ATE_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $embedded_DIS_AT_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded DIS AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-        $embedded_DIS_AT_version_id = $this->addEmbeddedVersion($embedded_DIS_AT_id, ':o !');
-        $this->addWritePermissionOnItem($embedded_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addApprovalTable("embedded_DIS_AT", (int)$embedded_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded NO AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
-        $embedded_L_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded L',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
-        $embedded_LA_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded LA',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_embedded_id,
-            'embedded POST L',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
-
-        $this->addApprovalTable("embedded_ATC", (int)$embedded_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("embedded_ATR", (int)$embedded_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("embedded_ATE", (int)$embedded_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addReadPermissionOnItem($folder_embedded_id, \ProjectUGroup::PROJECT_ADMIN);
-
-        $this->lockItem($embedded_L_id, self::REGULAR_USER_ID);
-        $this->lockItem($embedded_LA_id, self::REGULAR_USER_ID);
-
-        $this->appendCustomMetadataValueToItem($folder_embedded_id, "custom value for folder_3");
-
-        $this->appendCustomMetadataValueToItem($embedded_ATC_id, "custom value for embedded ATC");
-        $this->appendCustomMetadataValueToItem($embedded_ATR_id, "custom value for embedded ATR");
-        $this->appendCustomMetadataValueToItem($embedded_ATE_id, "custom value for embedded ATE");
-    }
-
-    private function addEmbeddedVersion(int $embedded_ATC_id, string $title)
-    {
-        $version = [
-            'item_id'   => $embedded_ATC_id,
-            'number'    => 1,
-            'user_id'   => 102,
-            'label'     => '',
-            'changelog' => '',
-            'date'      => time(),
-            'filename'  => $title,
-            'filesize'  => 3,
-            'filetype'  => PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
-            'path'      => __DIR__. '/_fixtures/docmanFile/file.txt'
-        ];
-
-        $version_factory = new \Docman_VersionFactory();
-        return $version_factory->create($version);
-    }
-
-    /**
+     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
      *                     Folder C Wiki
@@ -546,13 +416,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $this->addReadPermissionOnItem($link_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
-        $embedded_file_L_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "old embedded file L",
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
         $wiki_L_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
@@ -592,12 +455,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         );
 
         $dao->addLock(
-            $embedded_file_L_id,
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            time()
-        );
-
-        $dao->addLock(
             $wiki_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
@@ -618,25 +475,9 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
-            "another old file",
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
             "another old link",
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
-
-        $another_embedded_file_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "another old embedded file",
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-        );
-
-        $this->addReadPermissionOnItem($another_embedded_file_id, self::REGULAR_USER_ID);
 
         $another_wiki_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,

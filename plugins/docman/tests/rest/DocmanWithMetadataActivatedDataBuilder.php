@@ -21,13 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\rest;
+namespace Tuleap\Docman\Test\rest;
 
 use ProjectUGroup;
-use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
-
-require_once __DIR__ .'/DocmanDatabaseInitialization.php';
-require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
+use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 
 class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
 {

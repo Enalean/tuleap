@@ -21,15 +21,15 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\rest\v1;
+namespace Tuleap\Docman\Test\rest\DocmanMandatoryMetadata;
+
 
 use DateTimeZone;
 use Guzzle\Http\Client;
 use REST_TestDataBuilder;
-use Tuleap\Docman\rest\DocmanDataBuilder;
-use Tuleap\Docman\rest\DocmanWithMetadataActivatedBase;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedBase;
 
-require_once __DIR__ . '/../bootstrap.php';
 
 class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 {

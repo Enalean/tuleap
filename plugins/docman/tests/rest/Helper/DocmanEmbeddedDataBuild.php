@@ -1,0 +1,229 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Tuleap\Docman\Test\rest\Helper;
+
+use ProjectUGroup;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+
+class DocmanEmbeddedDataBuild
+{
+    /**
+     * @var int
+     */
+    private $admin_user_id;
+    /**
+     * @var int
+     */
+    private $docman_user_id;
+
+    /**
+     * @var DocmanDataBuildCommon
+     */
+    private $common_builder;
+
+    public function __construct(DocmanDataBuildCommon $common_builder)
+    {
+        $this->common_builder = $common_builder;
+        $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME);
+        $this->admin_user_id  = $this->common_builder->getUserByName(DocmanDataBuilder::ADMIN_USER_NAME);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                                 Embedded
+     *                                   +
+     *                                   |
+     *                                   +
+     *      +------------------+-----------------+
+     *      |                  |                 |
+     *      +                  +                 +
+     * PATCH Embedded    DELETE Embedded    LOCK Embedded
+     *
+     * HM => Hardcoded Metadata
+     *
+     */
+    public function createEmbeddedFileWithContent($docman_root)
+    {
+        $folder_embedded_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $docman_root->getId(),
+            'Embedded',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_embedded_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->createPatchFolder($folder_embedded_id);
+        $this->createDeleteFolder($folder_embedded_id);
+        $this->createLockFolder($folder_embedded_id);
+    }
+
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                                       PATCH Embedded
+     *                                            +
+     *                                            |
+     *                                            +
+     *    +-------------+-------------+-----------------+--------------+----------+-------------+-----------+---------+
+     *    |             |             |                 |              |          |             |           |         |
+     *    +             +             +                 +              +          +             +           +         +
+     *  PATCH E AT C  PATCH E AT R  PATCH E AT E   PATCH E AT   PATCH E NO AT  PATCH E AL   PATCH E KO     PATCH E
+     *  PATCH E RL
+     *
+     *
+     * (RL)   => Docman Regular user Lock on this item
+     * (AL)   => Docman Admin Lock on this item
+     * (AT)   => Approval table on this item
+     * (AT C) => Copy Approval table on this item
+     * (AT R) => Reset Approval table on this item
+     * (AT E) => Empty Approval table on this item
+     * (DIS AT) => Disabled Approval table on this item
+     */
+    private function createPatchFolder(int $folder_id): void
+    {
+        $folder_embedded_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PATCH Embedded',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_embedded_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithApprovalTable($folder_embedded_id, 'PATCH E AT C', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $this->common_builder->createItemWithApprovalTable($folder_embedded_id, 'PATCH E AT R', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $this->common_builder->createItemWithApprovalTable($folder_embedded_id, 'PATCH E AT E', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $this->common_builder->createItemWithApprovalTable($folder_embedded_id, 'PATCH E AT', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+
+        $this->common_builder->createItem(
+            $this->docman_user_id,
+            $folder_embedded_id,
+            'PATCH E NO AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $this->common_builder->createItem(
+            $this->docman_user_id,
+            $folder_embedded_id,
+            'PATCH E KO',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $this->common_builder->createItem(
+            $this->docman_user_id,
+            $folder_embedded_id,
+            'PATCH E',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_embedded_id,
+            $this->docman_user_id,
+            $this->admin_user_id,
+            'PATCH E AL',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_embedded_id,
+            $this->docman_user_id,
+            $this->docman_user_id,
+            'PATCH E RL',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        DELETE Embedded
+     *                           +
+     *                           |
+     *                           +
+     *                  +----------------+---------------+
+     *                  |                |               |
+     *                  +                +               +
+     *              DELETE E       DELETE E L       DELETE E RO
+     *
+     */
+    private function createDeleteFolder(int $folder_id): void
+    {
+        $folder_delete_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'DELETE Embedded',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_delete_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_delete_id,
+            'DELETE E',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem($folder_delete_id, $this->admin_user_id, $this->admin_user_id, 'DELETE E L', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+
+        $this->common_builder->createAdminOnlyItem($folder_delete_id, 'DELETE E RO', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        LOCK Embedded
+     *                           +
+     *                           |
+     *                           +
+     *                  +----------------+---------------+-------------+
+     *                  |                |               |             |
+     *                  +                +               +             +
+     *              LOCK E RO         LOCK E       LOCK E AL       LOCK E RF
+     *
+     * (RL)   => Docman Regular user Lock on this item
+     * (AL)   => Docman Admin Lock on this item
+     * (RO)   => Only admins has read permission this item
+     */
+    private function createLockFolder(int $folder_id): void
+    {
+        $folder_lock_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'LOCK Embedded',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_lock_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createAdminOnlyItem($folder_lock_id, 'LOCK E RO', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_lock_id,
+            'LOCK E',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK E RL', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+
+        $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK E AL', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+    }
+}

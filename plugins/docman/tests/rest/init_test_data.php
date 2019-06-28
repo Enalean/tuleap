@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,9 @@
  */
 
 require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/DocmanDataBuilder.php';
-require_once __DIR__.'/DocmanWithMetadataActivatedDataBuilder.php';
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
-use Tuleap\Docman\rest\DocmanWithMetadataActivatedDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedDataBuilder;
 
 $data_builder = new DocmanDataBuilder(DocmanDataBuilder::PROJECT_NAME);
 $data_builder->setUp();
