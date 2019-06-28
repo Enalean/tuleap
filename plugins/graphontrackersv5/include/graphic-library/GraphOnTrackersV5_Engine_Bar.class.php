@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('GraphOnTrackersV5_Engine.class.php');
 
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
 
@@ -91,7 +90,8 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
                 }
                 uksort($this->data[$group], array($this, 'sort'));
             }
-            $l = 0; 
+            $l = 0;
+            $b = [];
             foreach($this->data as $base => $group) {
                 $b[$l] = $this->getBarPlot(array_values($group), $colors[$base]);
                 $b[$l]->SetLegend($this->legend[$base]);
