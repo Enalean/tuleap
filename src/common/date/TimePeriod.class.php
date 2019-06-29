@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -37,9 +37,19 @@ abstract class TimePeriod
      */
     private $duration;
 
-    public function __construct($start_date, $duration) {
+    public function __construct($start_date, $duration)
+    {
         $this->start_date = $start_date;
-        $this->duration   = $duration;
+        $this->duration   = $this->formatDuration($duration);
+    }
+
+    private function formatDuration($duration)
+    {
+        if (is_numeric($duration)) {
+            return (int) ceil((float) $duration);
+        }
+
+        return $duration;
     }
 
     /**
