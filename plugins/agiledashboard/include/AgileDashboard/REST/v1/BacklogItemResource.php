@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,6 +40,7 @@ use Tracker_SemanticManager;
 use Tracker_SlicedArtifactsBuilder;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -154,11 +155,12 @@ class BacklogItemResource extends AuthenticatedResource
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
         $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact, false);
         $backlog_item = $this->updateBacklogItemStatusSemantic($current_user, $artifact, $backlog_item, $semantics);
-        $backlog_item = $this->updateBacklogItemInitialEffortSemantic(
+
+        $initial_effort_updater = new InitialEffortSemanticUpdater();
+        $backlog_item           = $initial_effort_updater->updateBacklogItemInitialEffortSemantic(
             $current_user,
-            $artifact,
             $backlog_item,
-            $semantics
+            $semantics[AgileDashBoard_Semantic_InitialEffort::NAME]
         );
         $backlog_item = $this->updateBacklogItemRemainingEffort($current_user, $backlog_item);
         $parent_artifact = $artifact->getParent($current_user);
@@ -199,41 +201,6 @@ class BacklogItemResource extends AuthenticatedResource
         }
 
         return $backlog_item;
-    }
-
-    private function updateBacklogItemInitialEffortSemantic(
-        PFUser $current_user,
-        Tracker_Artifact $artifact,
-        AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item,
-        Tracker_SemanticCollection $semantics
-    ) {
-        $semantic_initial_effort = $semantics[AgileDashBoard_Semantic_InitialEffort::NAME];
-        $initial_effort_field    = $semantic_initial_effort->getField();
-
-        if ($initial_effort_field && $initial_effort_field->userCanRead($current_user)) {
-            $rest_value = $initial_effort_field->getFullRESTValue($current_user, $artifact->getLastChangeset());
-            if ($rest_value) {
-                if (is_a($initial_effort_field, 'Tracker_FormElement_Field_List')) {
-                    $value = $this->getBacklogItemInitialEffortFromList($rest_value);
-                } elseif (is_a($initial_effort_field, 'Tracker_FormElement_Field_Computed')) {
-                    $value = $initial_effort_field->getComputedValue($current_user, $artifact);
-                } else {
-                    $value = $rest_value->value;
-                }
-
-                $backlog_item->setInitialEffort($value);
-            }
-        }
-
-        return $backlog_item;
-    }
-
-    private function getBacklogItemInitialEffortFromList($rest_value) {
-        if (! isset($rest_value->values[0]) && ! isset($rest_value->values[0]['label'])) {
-            return null;
-        }
-
-        return $rest_value->values[0]['label'];
     }
 
     private function updateBacklogItemRemainingEffort(
