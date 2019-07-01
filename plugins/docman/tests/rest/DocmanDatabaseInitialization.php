@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\rest;
+namespace Tuleap\Docman\Test\rest;
 
 require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.class.php';
 

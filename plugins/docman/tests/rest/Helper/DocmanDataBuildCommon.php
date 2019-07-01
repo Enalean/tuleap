@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Docman\rest\v1;
+namespace Tuleap\Docman\Test\rest\Helper;
 
 use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
@@ -27,7 +27,7 @@ use Docman_MetadataValueFactory;
 use PluginManager;
 use ProjectUGroup;
 use REST_TestDataBuilder;
-use Tuleap\Docman\rest\DocmanDatabaseInitialization;
+use Tuleap\Docman\Test\rest\DocmanDatabaseInitialization;
 
 class DocmanDataBuildCommon extends REST_TestDataBuilder
 {
@@ -39,12 +39,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @var int
      */
-
-    protected $admin_user_id;
-    /**
-     * @var int
-     */
-    protected $docman_user_id;
+    private $docman_user_id;
 
     /**
      * @var \Docman_ItemFactory
@@ -82,7 +77,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @return bool|int
      */
-    protected function createItemWithVersion(
+    public function createItemWithVersion(
         int $user_id,
         int $docman_root_id,
         string $title,
@@ -115,7 +110,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @return bool|int
      */
-    protected function createItem(
+    public function createItem(
         int $user_id,
         int $docman_root_id,
         string $title,
@@ -146,7 +141,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @return bool|int
      */
-    protected function addFileVersion(int $item_id, string $title, string $item_type, string $file_path)
+    public function addFileVersion(int $item_id, string $title, string $item_type, string $file_path)
     {
         $version         = array(
             'item_id'   => $item_id,
@@ -164,7 +159,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         return $version_factory->create($version);
     }
 
-    protected function addLinkVersion(int $item_id): int
+    public function addLinkVersion(int $item_id): int
     {
         $docman_factory = new Docman_ItemFactory();
         $docman_link    = $docman_factory->getItemFromDb($item_id);
@@ -175,7 +170,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         return $link_version->getId();
     }
 
-    protected function addLinkWithCustomVersionNumber(int $item_id, $version): int
+    public function addLinkWithCustomVersionNumber(int $item_id, $version): int
     {
         $docman_factory = new Docman_ItemFactory();
         $docman_link    = $docman_factory->getItemFromDb($item_id);
@@ -192,21 +187,21 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         return $link_version->getId();
     }
 
-    protected function generateDocmanRegularUser(): void
+    public function generateDocmanRegularUser(): void
     {
         $this->user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
         $this->user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
         $this->user_manager->updateDb($this->user);
     }
 
-    protected function installPlugin(\Project $project): void
+    public function installPlugin(\Project $project): void
     {
         $plugin_manager = PluginManager::instance();
         $plugin_manager->installAndActivate('docman');
         $this->activateWikiServiceForTheProject($project->getUnixName());
     }
 
-    protected function addReadPermissionOnItem(int $object_id, int $ugroup_name): void
+    public function addReadPermissionOnItem(int $object_id, int $ugroup_name): void
     {
         permission_add_ugroup(
             $this->project->getID(),
@@ -217,7 +212,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         );
     }
 
-    protected function addWritePermissionOnItem(int $object_id, int $ugroup_name): void
+    public function addWritePermissionOnItem(int $object_id, int $ugroup_name): void
     {
         permission_add_ugroup(
             $this->project->getID(),
@@ -228,7 +223,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         );
     }
 
-    protected function createCustomMetadata(): void
+    public function createCustomMetadata(): void
     {
         $custom_metadata = new \Docman_Metadata();
 
@@ -246,7 +241,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         );
     }
 
-    protected function appendCustomMetadataValueToItem(int $item_id, string $value): void
+    public function appendCustomMetadataValueToItem(int $item_id, string $value): void
     {
         $metadata_value = new \Docman_MetadataValueScalar();
 
@@ -265,7 +260,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $initializer->setup($this->project);
     }
 
-    protected function addApprovalTable(string $title, int $version_id, int $status): void
+    public function addApprovalTable(string $title, int $version_id, int $status): void
     {
         $dao = new Docman_ApprovalTableItemDao();
         $table_id = $dao->createTable(
@@ -283,7 +278,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $reviewer_dao->updateReview($table_id, $this->docman_user_id, time(), 1, "", 1);
     }
 
-    protected function lockItem(int $item_id, int $user_id)
+    public function lockItem(int $item_id, int $user_id)
     {
         $dao = new \Docman_LockDao();
         $dao->addLock(
@@ -293,17 +288,19 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         );
     }
 
-    protected function createFileWithApprovalTable(
+    public function createItemWithApprovalTable(
         int $folder_id,
         string $file_name,
         string $file_version_title,
-        $approval_status
+        int $approval_status,
+        int $user_id,
+        int $item_type
     ): void {
         $item_id         = $this->createItem(
-            $this->docman_user_id,
+            $user_id,
             $folder_id,
             $file_name,
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+            $item_type
         );
 
         $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', "");
@@ -314,7 +311,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @param $folder_id
      */
-    protected function createAndLockItem(int $folder_id, int $item_owner_id, int $lock_owner_id, string $item_title, int $docman_item_type): void
+    public function createAndLockItem(int $folder_id, int $item_owner_id, int $lock_owner_id, string $item_title, int $docman_item_type): void
     {
         $file_id = $this->createItem(
             $item_owner_id,
@@ -329,7 +326,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @param $folder_id
      */
-    protected function createReadOnlyItem(int $folder_id, string $title, int $item_type): void
+    public function createReadOnlyItem(int $folder_id, string $title, int $item_type): void
     {
         $file_id = $this->createItem(
             $this->docman_user_id,
@@ -343,7 +340,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @param $folder_id
      */
-    protected function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
+    public function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
     {
         $read_only_file_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
@@ -354,7 +351,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($read_only_file_id, ProjectUGroup::DOCUMENT_ADMIN);
     }
 
-    protected function getUseByName(string $user_name): int
+    public function getUserByName(string $user_name): int
     {
         $this->user = $this->user_manager->getUserByUserName($user_name);
         return $this->user->getId();

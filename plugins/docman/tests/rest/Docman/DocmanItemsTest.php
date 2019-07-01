@@ -20,13 +20,15 @@
  *
  */
 
-namespace Tuleap\Docman\rest\v1;
+declare(strict_types = 1);
+
+namespace Tuleap\Docman\Test\rest\Docman;
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use REST_TestDataBuilder;
-use Tuleap\Docman\rest\DocmanDataBuilder;
-
-require_once __DIR__ . '/../bootstrap.php';
-require_once __DIR__ . '/../helper/DocmanTestExecutionHelper.php';
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
 class DocmanItemsTest extends DocmanTestExecutionHelper
 {
@@ -91,7 +93,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($file['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
             $file['file_properties']['download_href'],
-            '/plugins/docman/download/' . urlencode($file['id']) . '/1'
+            '/plugins/docman/download/' . urlencode((string)$file['id']) . '/1'
         );
         $this->assertEquals($file['file_properties']['file_size'], 3);
         $this->assertEquals($link['file_properties'], null);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,11 @@
  *
  */
 
-namespace Tuleap\Docman\rest;
+namespace Tuleap\Docman\Test\rest;
 
 use RestBase;
+
+require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 class DocmanBase extends RestBase
 {

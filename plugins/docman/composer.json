@@ -9,6 +9,11 @@
       "include/constants.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+        "Tuleap\\Docman\\Test\\rest\\": ["./tests/rest/"]
+    }
+  },
   "config": {
     "sort-packages": true
   }

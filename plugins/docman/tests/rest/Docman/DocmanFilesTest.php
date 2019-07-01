@@ -20,15 +20,17 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\rest\v1;
+namespace Tuleap\Docman\Test\rest\Docman;
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Guzzle\Http\Client;
 use REST_TestDataBuilder;
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
+use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
+class DocmanFilesTest extends DocmanTestExecutionHelper
 {
     /**
      * @depends testGetRootId
@@ -332,7 +334,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponseByName(
-            DocmanFileDataBuild::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch(
                 'docman_files/' . $file['id'],
                 null,
@@ -455,14 +457,14 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         );
 
         $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch('docman_files/' . $file_id, null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotEmpty($response->json()['upload_href']);
 
         $response2 = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch('docman_files/' . $file_id, null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
@@ -478,7 +480,7 @@ class DocmanItemsTestFilesTest extends DocmanTestExecutionHelper
         $general_use_http_client->setSslVerification(false, false, false);
         $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
             $general_use_http_client->patch(
                 $response->json()['upload_href'],
                 [
