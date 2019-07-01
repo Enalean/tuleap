@@ -67,7 +67,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $list_metadata->shouldReceive('isRequired')->andReturn(true);
         $list_metadata->shouldReceive('getLabel')->andReturn("list_metadata_label");
 
-        $factory->shouldReceive('appendItemMetadataListWithoutBasicProperties');
+        $factory->shouldReceive('appendItemMetadataList');
         $item->shouldReceive('getMetadata')->andReturn(
             [
                 $simple_metadata,
@@ -84,7 +84,8 @@ class MetadataRepresentationBuilderTest extends TestCase
                 false,
                 "my simple value",
                 null,
-                false
+                false,
+                "simple_metadata_label"
             ),
             new MetadataRepresentation(
                 "list metadata label",
@@ -95,7 +96,8 @@ class MetadataRepresentationBuilderTest extends TestCase
                     new MetadataListValueRepresentation(1, "My value 1"),
                     new MetadataListValueRepresentation(2, "My value 2")
                 ],
-                true
+                true,
+                "list_metadata_label"
             ),
         ];
 

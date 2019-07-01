@@ -20,9 +20,12 @@
 import moment from "moment";
 import phptomoment from "phptomoment";
 
-export const formatDateUsingPreferredUserFormat = (date, user_preferred_format) =>
-    moment(date).format(phptomoment(user_preferred_format));
+export function formatDateUsingPreferredUserFormat(date, user_preferred_format) {
+    return moment(date).format(phptomoment(user_preferred_format));
+}
 
-export const getElapsedTimeFromNow = date => moment(date).fromNow();
+export function getElapsedTimeFromNow(date) {
+    return moment(date).fromNow();
+}
 
 export const isDateValid = date => moment(date).isValid();

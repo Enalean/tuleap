@@ -36,7 +36,12 @@
                     <user-badge v-bind:user="item.owner"/>
                 </p>
             </div>
-            <quick-look-document-additional-metadata-list v-for="metadata in metadata_right_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
+            <quick-look-document-additional-metadata-list
+                v-for="metadata in metadata_right_column"
+                v-bind:metadata="metadata"
+                v-bind:key="metadata.name"
+                data-test="additional-metadata-right-list"
+            />
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
@@ -60,7 +65,12 @@
                     Approval status
                 </label>
                 <p id="document-approval-status">
-                    <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="false" v-if="has_an_approval_table"/>
+                    <approval-table-badge
+                        v-bind:item="item"
+                        v-bind:is-in-folder-content-row="false"
+                        v-if="has_an_approval_table"
+                        data-test="docman-item-approval-badge"
+                    />
                     <span class="document-quick-look-property-empty" v-else v-translate>
                         Empty
                     </span>
@@ -70,11 +80,16 @@
                 <label for="document-file-size" class="tlp-label" v-translate>
                     File size
                 </label>
-                <p id="document-file-size">
+                <p id="document-file-size" data-test="docman-file-size">
                     {{ file_size_in_mega_bytes }}
                 </p>
             </div>
-            <quick-look-document-additional-metadata-list v-for="metadata in metadata_left_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
+            <quick-look-document-additional-metadata-list
+                v-for="metadata in metadata_left_column"
+                v-bind:metadata="metadata"
+                v-bind:key="metadata.name"
+                data-test="additional-metadata-left-list"
+            />
         </div>
     </section>
 </template>
@@ -98,14 +113,14 @@ export default {
     computed: {
         ...mapState(["date_time_format"]),
         metadata_right_column() {
-            const metadata_length = this.item.metadata.length;
+            const metadata_length = this.get_custom_metadata.length;
 
-            return this.item.metadata.slice(0, Math.ceil(metadata_length / 2));
+            return this.get_custom_metadata.slice(0, Math.ceil(metadata_length / 2));
         },
         metadata_left_column() {
-            const metadata_length = this.item.metadata.length;
+            const metadata_length = this.get_custom_metadata.length;
 
-            return this.item.metadata.slice(Math.ceil(metadata_length / 2), metadata_length);
+            return this.get_custom_metadata.slice(Math.ceil(metadata_length / 2), metadata_length);
         },
         is_file() {
             return this.item.type === TYPE_FILE;
@@ -118,6 +133,21 @@ export default {
         },
         has_an_approval_table() {
             return this.item.approval_table;
+        },
+        get_custom_metadata() {
+            const hardcoded_metadata = [
+                "title",
+                "description",
+                "owner",
+                "create_date",
+                "update_date",
+                "status",
+                "obsolescence_date"
+            ];
+
+            return this.item.metadata.filter(
+                ({ short_name }) => !hardcoded_metadata.includes(short_name)
+            );
         }
     },
     methods: {

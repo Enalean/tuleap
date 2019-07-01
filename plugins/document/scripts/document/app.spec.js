@@ -70,6 +70,7 @@ import "./components/Folder/ModalDeleteItem/AdditionalCheckboxes/DeleteAssociate
 
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentAdditionalMetadataList.spec.js";
+import "./components/Folder/QuickLook/QuickLookDocumentMetadata.spec.js";
 
 import "./components/Folder/ProgressBar/UploadProgressBar.spec.js";
 

@@ -36,7 +36,7 @@ class MetadataRepresentation
      */
     public $type;
     /**
-     * @var string
+     * @var string|int|null
      */
     public $value;
     /**
@@ -51,14 +51,22 @@ class MetadataRepresentation
      * @var bool
      */
     public $is_multiple_value_allowed;
+    /**
+     * @var string
+     */
+    public $short_name;
 
+    /**
+     * @param string|int|null $value
+     */
     public function __construct(
         string $name,
         string $type,
         bool $is_multiple_value_allowed,
-        string $value,
+        $value,
         ?array $list_value,
-        bool $is_required
+        bool $is_required,
+        string $short_name
     ) {
         $this->name = $name;
         $this->type = $type;
@@ -70,5 +78,6 @@ class MetadataRepresentation
         $this->is_required               = $is_required;
         $this->is_multiple_value_allowed = $is_multiple_value_allowed;
         $this->list_value                = $list_value;
+        $this->short_name                = $short_name;
     }
 }
