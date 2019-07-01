@@ -19,7 +19,13 @@
 
 import { get } from "tlp";
 
-export { getNbOfBacklogItems, getNbOfUpcomingReleases, getCurrentMilestones, getNbOfSprints };
+export {
+    getNbOfBacklogItems,
+    getNbOfUpcomingReleases,
+    getCurrentMilestones,
+    getNbOfSprints,
+    getInitialEffortOfRelease
+};
 
 function getProjectMilestonesWithQuery(project_id, query, pagination_limit, pagination_offset) {
     return get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
@@ -84,6 +90,17 @@ async function getNbOfSprints(milestone_id, { pagination_limit, pagination_offse
     );
 
     return getPaginationSizeFromHeader(response.headers);
+}
+
+async function getInitialEffortOfRelease(id_release, { pagination_limit, pagination_offset }) {
+    const response = await get(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
+        params: {
+            pagination_limit,
+            pagination_offset
+        }
+    });
+
+    return response.json();
 }
 
 function getPaginationSizeFromHeader(header) {

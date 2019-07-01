@@ -38,12 +38,28 @@
 
         </div>
         <div v-if="is_open" class="project-release-infos" data-test="toggle_open">
-            <a class="project-release-info tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
+            <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
                 <i class="fa fa-map-signs tlp-badge-icon"></i>
                 <translate v-bind:translate-n="total_sprint" translate-plural="%{ total_sprint } sprints">
                     %{ total_sprint } sprint
                 </translate>
             </a>
+            <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
+                <translate v-if="capacityExist()" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
+                    Capacity: %{capacity}
+                </translate>
+                <translate v-else data-test="capacity-empty">
+                    Capacity: N/A
+                </translate>
+            </div>
+            <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
+                <translate v-if="initialEffortExist()" v-bind:translate-params="{initial_effort: initial_effort}" data-test="initial-effort-not-empty">
+                    Initial effort: %{initial_effort}
+                </translate>
+                <translate v-else data-test="initial-effort-empty">
+                    Initial effort: N/A
+                </translate>
+            </div>
 
         </div>
     </div>
@@ -60,7 +76,8 @@ export default {
     data() {
         return {
             is_open: false,
-            total_sprint: null
+            total_sprint: null,
+            initial_effort: null
         };
     },
     computed: {
@@ -78,6 +95,7 @@ export default {
     },
     mounted() {
         this.setTotalSprints();
+        this.setInitialEffort();
     },
     methods: {
         formatDate(date) {
@@ -93,7 +111,19 @@ export default {
             );
         },
         startDateExist() {
-            return this.releaseData.start_date !== null;
+            return this.releaseData.start_date;
+        },
+        async setInitialEffort() {
+            this.initial_effort = await this.$store.dispatch(
+                "getInitialEffortOfRelease",
+                this.releaseData.id
+            );
+        },
+        capacityExist() {
+            return this.releaseData.capacity && this.releaseData.capacity > 0;
+        },
+        initialEffortExist() {
+            return this.initial_effort && this.initial_effort > 0;
         }
     }
 };

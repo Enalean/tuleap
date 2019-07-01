@@ -19,6 +19,7 @@
 
 import {
     getCurrentMilestones as getAllCurrentMilestones,
+    getInitialEffortOfRelease as getInitialEffort,
     getNbOfBacklogItems as getBacklogs,
     getNbOfSprints as getSprints,
     getNbOfUpcomingReleases as getReleases
@@ -58,6 +59,20 @@ export async function getMilestones(context) {
 export async function getNumberOfSprints(context, milestone_id) {
     try {
         return await getSprints(milestone_id, context.state);
+    } catch (error) {
+        await handleErrorMessage(context, error);
+    }
+}
+
+export async function getInitialEffortOfRelease(context, id_release) {
+    try {
+        let user_stories = await getInitialEffort(id_release, context.state);
+        return user_stories.reduce((acc, cu) => {
+            if (cu.initial_effort !== null) {
+                return acc + cu.initial_effort;
+            }
+            return acc;
+        }, 0);
     } catch (error) {
         await handleErrorMessage(context, error);
     }

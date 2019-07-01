@@ -20,6 +20,8 @@
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 
 const project_id = 102;
 function getPersonalWidgetInstance(store_options) {
@@ -30,6 +32,12 @@ function getPersonalWidgetInstance(store_options) {
         },
         mocks: { $store: store }
     };
+
+    Vue.use(GetTextPlugin, {
+        translations: {},
+        silent: true
+    });
+
     return shallowMount(App, component_options);
 }
 
@@ -72,5 +80,15 @@ describe("Given a release widget", () => {
         expect(wrapper.contains("[data-test=is-loading]")).toBeTruthy();
         expect(wrapper.contains("[data-test=widget-content]")).toBeFalsy();
         expect(wrapper.contains("[data-test=show-error-message]")).toBeFalsy();
+    });
+
+    it("When there is a rest error and it is empty, Then another message is displayed", () => {
+        store_options.state.error_message = "";
+        store_options.getters.has_rest_error = true;
+
+        const wrapper = getPersonalWidgetInstance(store_options);
+        expect(wrapper.find("[data-test=show-error-message]").text()).toEqual(
+            "Oops, an error occurred!"
+        );
     });
 });

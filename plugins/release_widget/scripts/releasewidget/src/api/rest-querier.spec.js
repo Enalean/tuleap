@@ -21,7 +21,8 @@ import {
     getNbOfBacklogItems,
     getNbOfUpcomingReleases,
     getCurrentMilestones,
-    getNbOfSprints
+    getNbOfSprints,
+    getInitialEffortOfRelease
 } from "./rest-querier.js";
 
 import { mockFetchSuccess, tlp } from "tlp-mocks";
@@ -161,5 +162,43 @@ describe("getProject() -", () => {
         });
 
         expect(result).toEqual(2);
+    });
+
+    it("the REST API will be queried and the total of user stories of a release returned", async () => {
+        let user_stories = [
+            {
+                initial_effort: 5
+            },
+            {
+                initial_effort: 8
+            }
+        ];
+
+        mockFetchSuccess(tlp.get, {
+            headers: {
+                get: header_name => {
+                    const headers = {
+                        "X-PAGINATION-SIZE": 2
+                    };
+
+                    return headers[header_name];
+                }
+            },
+            return_json: user_stories
+        });
+
+        const result = await getInitialEffortOfRelease(milestone_id, {
+            pagination_limit,
+            pagination_offset
+        });
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/milestones/" + milestone_id + "/content", {
+            params: {
+                pagination_limit,
+                pagination_offset
+            }
+        });
+
+        expect(result).toEqual(user_stories);
     });
 });
