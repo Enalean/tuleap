@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
@@ -130,12 +131,14 @@ class Docman_Controller extends Controler {
             $pm = ProjectManager::instance();
             $project = $pm->getProject($_gid);
             $tmplGroupId = (int) $project->getTemplate();
-            $this->_cloneDocman($tmplGroupId, $_gid, $ugroupsMapping);
+            $this->_cloneDocman($tmplGroupId, $project, $ugroupsMapping);
         }
     }
 
-    function _cloneDocman($srcGroupId, $dstGroupId, $ugroupsMapping) {
-        $user = $this->getUser();
+    function _cloneDocman($srcGroupId, Project $destination_project, $ugroupsMapping)
+    {
+        $user       = $this->getUser();
+        $dstGroupId = $destination_project->getID();
 
         // Clone Docman permissions
         $dPm = $this->_getPermissionsManager();
@@ -152,16 +155,26 @@ class Docman_Controller extends Controler {
         $mdFactory->cloneMetadata($dstGroupId, $metadataMapping);
 
         // Clone Items, Item's permissions and metadata values
-        $itemFactory = $this->getItemFactory();
-        $dataRoot = $this->getProperty('docman_root');
-        $itemMapping = $itemFactory->cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot);
+        $itemFactory     = $this->getItemFactory();
+        $dataRoot        = $this->getProperty('docman_root');
+        $src_root_folder = $itemFactory->getRoot($srcGroupId);
+        if ($src_root_folder === null) {
+            $itemFactory->createRoot($dstGroupId, 'roottitle_lbl_key');
+            $itemMapping = [];
+        } else {
+            $itemMapping = $itemFactory->cloneItems(
+                $user,
+                $metadataMapping,
+                $ugroupsMapping,
+                $dataRoot,
+                $src_root_folder,
+                DestinationCloneItem::fromDestinationProject($itemFactory, $destination_project)
+            );
+        }
 
         // Clone reports
         $reportFactory = new Docman_ReportFactory($srcGroupId);
         $reportFactory->copy($dstGroupId, $metadataMapping, $user, false, $itemMapping);
-
-        //@todo: verify that key for title for root is copied instead of
-        //       string
     }
 
     function getLogger() {
@@ -421,7 +434,7 @@ class Docman_Controller extends Controler {
                 $pm = ProjectManager::instance();
                 $project = $pm->getProject($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
-                $this->_cloneDocman($tmplGroupId, $_gid, false);
+                $this->_cloneDocman($tmplGroupId, $project, false);
                 if (!$item_factory->getRoot($_gid)) {
                     $item_factory->createRoot($_gid, 'roottitle_lbl_key');
                 }
