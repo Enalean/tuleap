@@ -17,12 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getNbOfBacklogItems, getNbOfUpcomingReleases } from "./rest-querier.js";
+import {
+    getNbOfBacklogItems,
+    getNbOfUpcomingReleases,
+    getCurrentMilestones
+} from "./rest-querier.js";
 import { mockFetchSuccess, tlp } from "tlp-mocks";
 
 describe("getProject() -", () => {
-    const limit = 2,
-        offset = 0,
+    const pagination_limit = 2,
+        pagination_offset = 0,
         project_id = 102;
 
     it("the REST API will be queried and the project's backlog returned", async () => {
@@ -37,9 +41,13 @@ describe("getProject() -", () => {
             }
         });
 
-        const result = await getNbOfBacklogItems(project_id, limit, offset);
+        const result = await getNbOfBacklogItems({
+            project_id,
+            pagination_limit,
+            pagination_offset
+        });
         expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/backlog", {
-            params: { limit, offset }
+            params: { pagination_limit, pagination_offset }
         });
 
         expect(result).toEqual(2);
@@ -58,7 +66,11 @@ describe("getProject() -", () => {
             }
         });
 
-        const result = await getNbOfUpcomingReleases(project_id, limit, offset);
+        const result = await getNbOfUpcomingReleases({
+            project_id,
+            pagination_limit,
+            pagination_offset
+        });
 
         let query = JSON.stringify({
             period: "future"
@@ -66,12 +78,57 @@ describe("getProject() -", () => {
 
         expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
             params: {
-                limit,
-                offset,
+                pagination_limit,
+                pagination_offset,
                 query
             }
         });
 
         expect(result).toEqual(2);
+    });
+
+    it("the REST API will be queried and the current milestones returned", async () => {
+        let milestones = [
+            [
+                {
+                    start_date: {},
+                    end_date: {},
+                    project: {}
+                }
+            ]
+        ];
+
+        mockFetchSuccess(tlp.get, {
+            headers: {
+                get: header_name => {
+                    const headers = {
+                        "X-PAGINATION-SIZE": 1
+                    };
+
+                    return headers[header_name];
+                }
+            },
+            return_json: milestones
+        });
+
+        const result = await getCurrentMilestones({
+            project_id,
+            pagination_limit,
+            pagination_offset
+        });
+
+        let query = JSON.stringify({
+            period: "current"
+        });
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/milestones", {
+            params: {
+                pagination_limit,
+                pagination_offset,
+                query
+            }
+        });
+
+        expect(result).toEqual(milestones);
     });
 });

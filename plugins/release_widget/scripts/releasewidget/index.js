@@ -24,6 +24,7 @@ import GetTextPlugin from "vue-gettext";
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
 import { createStore } from "./src/store/index.js";
+import { setUserLocale } from "./src/helpers/user-locale-helper.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -33,7 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
         silent: true
     });
 
-    Vue.config.language = document.body.dataset.userLocale;
+    const locale = document.body.dataset.userLocale;
+    Vue.config.language = locale;
+    setUserLocale(locale.replace("_", "-"));
 
     const vue_mount_point = document.getElementById("release-widget");
 

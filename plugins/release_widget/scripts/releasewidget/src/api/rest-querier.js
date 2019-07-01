@@ -19,29 +19,53 @@
 
 import { get } from "tlp";
 
-export { getNbOfBacklogItems, getNbOfUpcomingReleases };
+export { getNbOfBacklogItems, getNbOfUpcomingReleases, getCurrentMilestones };
 
-async function getNbOfUpcomingReleases(project_id, limit, offset) {
+function getProjectMilestonesWithQuery(project_id, query, pagination_limit, pagination_offset) {
+    return get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
+        params: {
+            pagination_limit,
+            pagination_offset,
+            query
+        }
+    });
+}
+
+async function getNbOfUpcomingReleases({ project_id, pagination_limit, pagination_offset }) {
     const query = JSON.stringify({
         period: "future"
     });
 
-    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
-        params: {
-            query,
-            limit,
-            offset
-        }
-    });
+    const response = await getProjectMilestonesWithQuery(
+        project_id,
+        query,
+        pagination_limit,
+        pagination_offset
+    );
 
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getNbOfBacklogItems(project_id, limit, offset) {
+async function getCurrentMilestones({ project_id, pagination_limit, pagination_offset }) {
+    const query = JSON.stringify({
+        period: "current"
+    });
+
+    const response = await getProjectMilestonesWithQuery(
+        project_id,
+        query,
+        pagination_limit,
+        pagination_offset
+    );
+
+    return response.json();
+}
+
+async function getNbOfBacklogItems({ project_id, pagination_limit, pagination_offset }) {
     const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
         params: {
-            limit,
-            offset
+            pagination_limit,
+            pagination_offset
         }
     });
 

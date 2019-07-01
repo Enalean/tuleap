@@ -24,3 +24,5 @@ import "./api/rest-querier.spec.js";
 import "./store/actions.spec.js";
 
 import "./components/App.spec.js";
+
+import "./helpers/date-formatters.spec.js";

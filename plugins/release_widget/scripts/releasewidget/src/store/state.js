@@ -24,7 +24,8 @@ const state = {
     error_message: null,
     pagination_offset: 0,
     pagination_limit: 50,
-    is_loading: false
+    is_loading: false,
+    current_milestones: []
 };
 
 export default state;

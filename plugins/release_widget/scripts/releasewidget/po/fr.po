@@ -22,6 +22,9 @@ msgstr ""
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
 
+msgid "Release %{release_label}"
+msgstr "Version %{release_label}"
+
 msgid "There is nothing here!"
 msgstr "Il n'y a rien ici !"
 
