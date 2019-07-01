@@ -32,7 +32,9 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
+use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElementFactory;
@@ -67,37 +69,15 @@ final class TimeframeBuilderTest extends TestCase
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
     }
 
-    public function testItBuildATimePeriodWithoutWeekObjectForArtifact()
+    public function testItBuildATimePeriodWithoutWeekObjectForArtifact(): void
     {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
 
-        $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $start_date_changeset->shouldReceive('getTimestamp')->andReturn(strtotime($start_date));
-
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($start_date_changeset);
-
-        $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
-            ->with(
-                $this->tracker,
-                $this->user,
-                'start_date'
-            )
-            ->andReturn($start_date_field);
-
-        $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $duration_field->shouldReceive('getComputedValue')
-            ->with($this->user, $this->artifact)
-            ->andReturn($duration);
-
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')
-            ->with(1, 'duration', $this->user)
-            ->andReturn($duration_field);
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->mockDurationFieldWithValue($duration);
 
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
 
@@ -106,7 +86,7 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(10, $time_period->getDuration());
     }
 
-    public function testItBuildATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoFieldStartDate()
+    public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoFieldStartDate(): void
     {
         $duration = 10;
 
@@ -117,15 +97,7 @@ final class TimeframeBuilderTest extends TestCase
                 'start_date'
             )
             ->andReturnNull();
-
-        $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $duration_field->shouldReceive('getComputedValue')
-            ->with($this->user, $this->artifact)
-            ->andReturn($duration);
-
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')
-            ->with(1, 'duration', $this->user)
-            ->andReturn($duration_field);
+        $this->mockDurationFieldWithValue($duration);
 
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
 
@@ -134,28 +106,13 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(10, $time_period->getDuration());
     }
 
-    public function testItBuildATimePeriodWithoutWeekObjectWithDurationAsZeroForArtifactIfNoFieldDuration()
+    public function testItBuildsATimePeriodWithoutWeekObjectWithDurationAsZeroForArtifactIfNoFieldDuration(): void
     {
         $start_date = '07/01/2013';
 
-        $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $start_date_changeset->shouldReceive('getTimestamp')->andReturn(strtotime($start_date));
-
-        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
-        $start_date_field->shouldReceive('getLastChangesetValue')
-            ->with($this->artifact)
-            ->andReturn($start_date_changeset);
-
-        $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
-            ->with(
-                $this->tracker,
-                $this->user,
-                'start_date'
-            )
-            ->andReturn($start_date_field);
-
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')
-            ->with(1, 'duration', $this->user)
+        $this->mockStartDateFieldWithValue($start_date);
+        $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
+            ->with($this->tracker, $this->user, 'duration')
             ->andReturnNull();
 
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
@@ -165,7 +122,7 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(0, $time_period->getDuration());
     }
 
-    public function testItBuildATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate()
+    public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
     {
         $duration = 10;
 
@@ -182,19 +139,67 @@ final class TimeframeBuilderTest extends TestCase
             )
             ->andReturn($start_date_field);
 
-        $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $duration_field->shouldReceive('getComputedValue')
-            ->with($this->user, $this->artifact)
-            ->andReturn($duration);
-
-        $this->formelement_factory->shouldReceive('getComputableFieldByNameForUser')
-            ->with(1, 'duration', $this->user)
-            ->andReturn($duration_field);
+        $this->mockDurationFieldWithValue($duration);
 
         $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
 
         $this->assertSame(0, $time_period->getStartDate());
         $this->assertSame(1209600, $time_period->getEndDate());
         $this->assertSame(10, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithZeroDurationWhenDurationFieldHasNoLastChangeset(): void
+    {
+        $start_date = '07/01/2013';
+
+        $this->mockStartDateFieldWithValue($start_date);
+        $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $duration_field->shouldReceive('getLastChangesetValue')
+            ->with($this->artifact)
+            ->andReturnNull();
+
+        $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
+            ->with($this->tracker, $this->user, 'duration')
+            ->andReturn($duration_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($start_date), $time_period->getEndDate());
+        $this->assertSame(0, $time_period->getDuration());
+    }
+
+    private function mockStartDateFieldWithValue(string $start_date): void
+    {
+        $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $start_date_changeset->shouldReceive('getTimestamp')->andReturn(strtotime($start_date));
+
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getLastChangesetValue')
+            ->with($this->artifact)
+            ->andReturn($start_date_changeset);
+
+        $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
+            ->with(
+                $this->tracker,
+                $this->user,
+                'start_date'
+            )
+            ->andReturn($start_date_field);
+    }
+
+    private function mockDurationFieldWithValue(int $duration): void
+    {
+        $duration_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Integer::class);
+        $duration_changeset_value->shouldReceive('getNumeric')->andReturn($duration);
+
+        $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $duration_field->shouldReceive('getLastChangesetValue')
+            ->with($this->artifact)
+            ->andReturn($duration_changeset_value);
+
+        $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
+            ->with($this->tracker, $this->user, 'duration')
+            ->andReturn($duration_field);
     }
 }

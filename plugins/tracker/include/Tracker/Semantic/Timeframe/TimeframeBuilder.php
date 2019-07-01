@@ -30,6 +30,8 @@ use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Date;
+use Tracker_Artifact_ChangesetValue_Numeric;
+use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElementFactory;
 
@@ -50,8 +52,8 @@ class TimeframeBuilder
 
     public function buildTimePeriodWithoutWeekendForArtifact(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
-        $start_date  = $this->getTimestamp($user, $artifact);
-        $duration    = $this->getComputedFieldValue($user, $artifact);
+        $start_date = $this->getTimestamp($user, $artifact);
+        $duration   = $this->getDurationFieldValue($user, $artifact);
 
         return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
@@ -71,7 +73,7 @@ class TimeframeBuilder
         assert($field instanceof Tracker_FormElement_Field_Date);
 
         $value = $field->getLastChangesetValue($artifact);
-        if (! $value) {
+        if ($value === null) {
             return 0;
         }
 
@@ -80,18 +82,25 @@ class TimeframeBuilder
         return (int) $value->getTimestamp();
     }
 
-    private function getComputedFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact)
+    private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact)
     {
-        $field = $this->formelement_factory->getComputableFieldByNameForUser(
-            $milestone_artifact->getTracker()->getId(),
-            self::DURATION_FIELD_NAME,
-            $user
+        $field = $this->formelement_factory->getNumericFieldByNameForUser(
+            $milestone_artifact->getTracker(),
+            $user,
+            self::DURATION_FIELD_NAME
         );
 
-        if ($field) {
-            return $field->getComputedValue($user, $milestone_artifact);
+        if ($field === null) {
+            return 0;
         }
 
-        return 0;
+        $last_changeset_value = $field->getLastChangesetValue($milestone_artifact);
+        if ($last_changeset_value === null) {
+            return 0;
+        }
+
+        assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Numeric);
+
+        return $last_changeset_value->getNumeric();
     }
 }
