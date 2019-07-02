@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenu from "./DropdownMenu.vue";
+import { restore, rewire$redirectToUrl } from "../../../helpers/location-helper";
 
 describe("DropdownMenu", () => {
     let dropdown_menu_factory, store;
@@ -45,6 +46,9 @@ describe("DropdownMenu", () => {
         };
 
         store.getters.is_item_an_empty_document = () => false;
+    });
+    afterEach(() => {
+        restore();
     });
     it(`Given item title should be hidden (button displayed in quick look view)
         When we display the menu
@@ -108,6 +112,51 @@ describe("DropdownMenu", () => {
         });
 
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
+    });
+
+    it(`Given an user who wants to update wiki properties
+        When we display the menu
+        Then the user should be redirected to the old UI`, () => {
+        const redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
+
+        const wrapper = dropdown_menu_factory({
+            hideDetailsEntry: false,
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "wiki",
+                can_user_manage: true
+            }
+        });
+        expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
+
+        wrapper.find("[data-test=docman-dropdown-details]").trigger("click");
+
+        expect(redirect_to_url).toHaveBeenCalled();
+    });
+
+    it(`Given an user who wants to update file properties
+        When we display the menu
+        Then the user should see the update properties modal`, () => {
+        const wrapper = dropdown_menu_factory({
+            hideDetailsEntry: false,
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                can_user_manage: true
+            }
+        });
+        spyOn(document, "dispatchEvent");
+
+        expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
+
+        wrapper.find("[data-test=docman-dropdown-details]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-update-item-metadata-modal")
+        );
     });
 
     it(`Given user is docman writer and the current folder is not the root folder

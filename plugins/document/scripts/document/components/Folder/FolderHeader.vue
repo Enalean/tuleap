@@ -31,7 +31,8 @@
                 <folder-header-action v-bind:item="current_folder"/>
                 <new-item-modal/>
                 <new-folder-modal/>
-                <create-new-item-version-modal v-bind:is="shown_modal" v-bind:item="updated_item"/>
+                <create-new-item-version-modal v-bind:is="shown_new_version_modal" v-bind:item="updated_item"/>
+                <update-metadata-modal v-bind:is="shown_update_metadata_modal" v-bind:item="updated_metadata"/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
@@ -47,7 +48,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK } from "../../constants.js";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
@@ -68,8 +69,10 @@ export default {
     },
     data() {
         return {
-            shown_modal: "",
+            shown_new_version_modal: "",
+            shown_update_metadata_modal: "",
             updated_item: null,
+            updated_metadata: null,
             item_to_delete: null
         };
     },
@@ -98,6 +101,11 @@ export default {
         );
         document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
 
+        document.addEventListener(
+            "show-update-item-metadata-modal",
+            this.showUpdateItemMetadataModal
+        );
+
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener(
                 "show-create-new-item-version-modal",
@@ -107,6 +115,10 @@ export default {
                 "show-confirm-item-deletion-modal",
                 this.showDeleteItemModal
             );
+            document.removeEventListener(
+                "show-update-item-metadata-modal",
+                this.showUpdateItemMetadataModal
+            );
         });
     },
     methods: {
@@ -115,24 +127,37 @@ export default {
 
             switch (this.updated_item.type) {
                 case TYPE_FILE:
-                    this.shown_modal = () =>
+                    this.shown_new_version_modal = () =>
                         import(/* webpackChunkName: "document-new-file-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionFileModal.vue");
                     break;
                 case TYPE_EMBEDDED:
-                    this.shown_modal = () =>
+                    this.shown_new_version_modal = () =>
                         import(/* webpackChunkName: "document-new-embedded-version-file-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue");
                     break;
                 case TYPE_WIKI:
-                    this.shown_modal = () =>
+                    this.shown_new_version_modal = () =>
                         import(/* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionWikiModal.vue");
                     break;
                 case TYPE_LINK:
-                    this.shown_modal = () =>
+                    this.shown_new_version_modal = () =>
                         import(/* webpackChunkName: "document-new-wiki-version-modal" */ "./ModalCreateNewItemVersion/CreateNewVersionLinkModal.vue");
+                    break;
+                default: //nothing
             }
         },
         showDeleteItemModal(event) {
             this.item_to_delete = event.detail.current_item;
+        },
+        showUpdateItemMetadataModal(event) {
+            this.updated_metadata = event.detail.current_item;
+
+            switch (this.updated_metadata.type) {
+                case TYPE_FILE:
+                    this.shown_update_metadata_modal = () =>
+                        import(/* webpackChunkName: "update-metadata-modal" */ "./ModalUpdateMetadata/UpdateMetadataModal.vue");
+                    break;
+                default: //nothing
+            }
         },
         hideDeleteItemModal() {
             this.item_to_delete = null;

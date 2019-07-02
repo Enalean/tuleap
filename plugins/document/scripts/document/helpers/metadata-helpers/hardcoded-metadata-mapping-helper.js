@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,26 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'headers';
-@import 'icons';
-@import 'folder-content';
-@import 'new-document';
-@import 'upload';
-@import 'notifications';
-@import 'switch-to-docman';
-@import 'quicklook';
-@import 'update-document';
-@import 'confirm-deletion-modal';
-@import 'embedded-document';
-@import "metadata";
-@import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
-.document-app {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+export function getStatusMetadata(all_metadata) {
+    return all_metadata.find(metadata => metadata.short_name === "status");
+}
 
-    > .breadcrumb {
-        flex: 0 0 auto;
+export function getStatusFromMapping(value) {
+    const status_mapping = {
+        100: "none",
+        101: "draft",
+        102: "approved",
+        103: "rejected"
+    };
+
+    const status_string = status_mapping[parseInt(value, 10)];
+    if (status_string) {
+        return status_string;
     }
+
+    return "none";
 }

@@ -26,6 +26,8 @@ import "./store/actions-helpers/load-folder-content.spec.js";
 import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
+import "./helpers/metadata-helpers/check-item-title.spec.js";
+
 import "./store/error/error-mutations.spec.js";
 import "./store/error/error-getters.js";
 
@@ -84,8 +86,8 @@ import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 import "./components/Folder/Property/LockProperty.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
-import "./components/Folder/Metadata/StatusMetadata.spec";
-import "./components/Folder/Metadata/ObsolescenceDateMetadata.spec.js";
+import "./components/Folder/Metadata/GlobalMetadata.spec.js";
+import "./components/Folder/Metadata/OtherInformationMetadata.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";
@@ -93,3 +95,4 @@ import "./components/User/UserName.spec.js";
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";
 import "./helpers/approval-table-helper.spec.js";
+import "./helpers/metadata-helpers/hardcoded-metadata-mapping-helper.spec.js";

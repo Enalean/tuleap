@@ -21,16 +21,35 @@ import localVue from "../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import TitleMetadata from "./TitleMetadata.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import { TYPE_EMBEDDED, TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 
 describe("TitleMetadata", () => {
-    let title_metadata_factory;
+    let title_metadata_factory,
+        store,
+        existing_folder_name,
+        existing_document_name,
+        updated_document_name;
     beforeEach(() => {
+        existing_folder_name = "Existing folder";
+        existing_document_name = "Existing file";
+        updated_document_name = "my file";
         const state = {
             folder_content: [
                 {
-                    id: 42,
-                    title: "Document title",
+                    id: 2,
+                    title: existing_folder_name,
+                    type: TYPE_FOLDER,
+                    parent_id: 3
+                },
+                {
+                    id: 20,
+                    title: existing_document_name,
+                    type: TYPE_FILE,
+                    parent_id: 3
+                },
+                {
+                    id: 10,
+                    title: updated_document_name,
                     type: TYPE_FILE,
                     parent_id: 3
                 }
@@ -41,7 +60,7 @@ describe("TitleMetadata", () => {
             state
         };
 
-        const store = createStoreMock(store_options);
+        store = createStoreMock(store_options);
 
         title_metadata_factory = (props = {}) => {
             return shallowMount(TitleMetadata, {
@@ -52,72 +71,142 @@ describe("TitleMetadata", () => {
         };
     });
 
-    it(`Given docman has several items
-        When user enter an exiting item name
-        Then a custom error is displayed`, async () => {
-        const value = "";
-        const type = TYPE_EMBEDDED;
-        const parent = {
-            id: 3,
-            title: "test",
-            type: TYPE_FOLDER
-        };
+    describe("Folder creation", () => {
+        it(`Title is valid when no other folder has the same name`, async () => {
+            const value = "A new folder title";
+            const isInUpdateContext = false;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FOLDER
+            };
 
-        const wrapper = title_metadata_factory({
-            value,
-            type,
-            parent
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: value });
+
+            await wrapper.vm.$nextTick().then(() => {});
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
         });
 
-        wrapper.setProps({ value: "Document title" });
+        it(`Error is rendered if folder title is already used`, async () => {
+            const value = "";
+            const isInUpdateContext = false;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FOLDER
+            };
 
-        await wrapper.vm.$nextTick().then(() => {});
-        expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: existing_folder_name });
+
+            await wrapper.vm.$nextTick().then(() => {});
+
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+        });
     });
 
-    it(`Given docman has several items
-        When user enter a folder with the same name than an item
-        Then no error is displayed`, async () => {
-        const value = "";
-        const type = TYPE_FOLDER;
-        const parent = {
-            id: 3,
-            title: "test",
-            type: TYPE_FOLDER
-        };
+    describe("Document creation", () => {
+        it(`Title is valid when not other folder has the same name`, async () => {
+            const value = "A new document title";
+            const isInUpdateContext = false;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FILE
+            };
 
-        const wrapper = title_metadata_factory({
-            value,
-            type,
-            parent
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: value });
+
+            await wrapper.vm.$nextTick().then(() => {});
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
         });
 
-        wrapper.setProps({ value: "Document title" });
+        it(`Error is rendered if folder title is already used`, async () => {
+            const value = "";
+            const isInUpdateContext = false;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FILE
+            };
 
-        await wrapper.vm.$nextTick().then(() => {});
-        expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: existing_document_name });
+
+            await wrapper.vm.$nextTick().then(() => {});
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+        });
     });
 
-    it(`Given docman has several items
-        When user enter a new item name
-        Then no error is displayed`, async () => {
-        const value = "";
-        const type = TYPE_EMBEDDED;
-        const parent = {
-            id: 3,
-            title: "test",
-            type: TYPE_FOLDER
-        };
+    describe("Document update", () => {
+        it(`Title is valid when no other document has the same name`, async () => {
+            const value = "old title";
+            const isInUpdateContext = true;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FILE
+            };
 
-        const wrapper = title_metadata_factory({
-            value,
-            type,
-            parent
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: "updated title" });
+
+            await wrapper.vm.$nextTick().then(() => {});
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
         });
 
-        wrapper.setProps({ value: "An other document title" });
+        it(`Error is rendered if folder title is already used`, async () => {
+            const value = updated_document_name;
+            const isInUpdateContext = true;
+            const parent = {
+                id: 3
+            };
+            const currentlyUpdatedItem = {
+                type: TYPE_FILE
+            };
 
-        await wrapper.vm.$nextTick().then(() => {});
-        expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
+            const wrapper = title_metadata_factory({
+                value,
+                isInUpdateContext,
+                parent,
+                currentlyUpdatedItem
+            });
+            wrapper.setProps({ value: existing_document_name });
+
+            await wrapper.vm.$nextTick().then(() => {});
+            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+        });
     });
 });

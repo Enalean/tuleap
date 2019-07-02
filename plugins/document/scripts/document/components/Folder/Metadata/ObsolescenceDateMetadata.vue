@@ -19,31 +19,43 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-new-obsolescence-date"
+    <div class="tlp-form-element" v-if="is_obsolescence_date_metadata_used">
+        <label class="tlp-label"
+               for="document-new-obsolescence-date"
+               v-translate
         >
-            <translate>Obsolescence date</translate>
+            Obsolescence date
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-            <input type="text" id="document-new-obsolescence-date" class="tlp-input tlp-input-date" size="11"
-                   ref="obsolescence_date"
-                   v-on:click.prevent="$emit('documentObsolescenceDateSelectEvent',$event.target.value)"
-                   name="obsolescence_date"
-                   data-test="document-new-item-obsolescence-date">
+            <input type="text"
+                   id="document-new-obsolescence-date"
+                   class="tlp-input tlp-input-date"
+                   size="11"
+                   v-on:click.prevent="$emit('input', $event.target.value)"
+                   name="input"
+                   data-test="document-new-item-obsolescence-date"
+                   v-bind:value="value"
+                   ref="input"
+            >
         </div>
     </div>
 </template>
 
 <script>
 import { datePicker } from "tlp";
+import { mapState } from "vuex";
 
 export default {
     name: "ObsolescenceDateMetadata",
+    props: {
+        value: String
+    },
+    computed: {
+        ...mapState(["is_obsolescence_date_metadata_used"])
+    },
     mounted() {
-        datePicker(this.$refs.obsolescence_date);
+        datePicker(this.$refs.input);
     }
 };
 </script>

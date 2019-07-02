@@ -20,31 +20,39 @@
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-new-item-status"
-        >
+        <label class="tlp-label" for="document-new-item-status">
             <translate>Status</translate>
+            <i class="fa fa-asterisk"></i>
         </label>
         <select
             class="tlp-select"
             id="document-new-item-status"
             name="status"
-            v-on:change="$emit('itemStatusSelectEvent',$event.target.value)"
+            v-on:input="$emit('input', $event.target.value)"
+            v-bind:value="value"
+            ref="input"
             data-test="document-new-item-status"
         >
-            <option name="none" value="none">
+            <option name="none" value="100">
                 <translate>None</translate>
             </option>
-            <option name="draft" value="draft">
+            <option name="draft" value="101">
                 <translate>Draft</translate>
             </option>
-            <option name="approved" value="approved">
+            <option name="approved" value="102">
                 <translate>Approved</translate>
             </option>
-            <option name="rejected" value="rejected">
+            <option name="rejected" value="103">
                 <translate>Rejected</translate>
             </option>
         </select>
     </div>
 </template>
+
+<script>
+export default {
+    props: {
+        value: Number
+    }
+};
+</script>

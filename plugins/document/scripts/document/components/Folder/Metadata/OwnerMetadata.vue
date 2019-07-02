@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,32 +14,36 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
 <template>
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title document-modal-title" v-bind:id="ariaLabelledBy"  v-bind:title="modalTitle">
-            <i class="fa fa-plus tlp-modal-title-icon"></i>
-            {{ modalTitle }}
-        </h1>
-        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
-            &times;
-        </div>
+    <div class="tlp-form-element">
+        <label
+            class="tlp-label"
+            for="document-new-item-owner"
+        >
+            <translate>Owner</translate>
+            <i class="fa fa-asterisk"></i>
+        </label>
+        <input
+            disabled
+            type="text"
+            class="tlp-input"
+            id="document-new-item-owner"
+            name="owner"
+            required
+            v-bind:value="currentlyUpdatedItem.owner.username"
+        >
     </div>
 </template>
+
 <script>
 export default {
-    name: "ModalHeader",
+    name: "OwnerMetadata",
     props: {
-        modalTitle: String,
-        ariaLabelledBy: String
-    },
-    computed: {
-        close() {
-            return this.$gettext("Close");
-        }
+        currentlyUpdatedItem: Object
     }
 };
 </script>

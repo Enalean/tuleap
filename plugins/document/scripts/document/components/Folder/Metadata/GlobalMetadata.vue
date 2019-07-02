@@ -18,26 +18,64 @@
   -->
 
 <template>
-    <div class="document-new-item-properties">
-        <title-metadata v-model="item.title" v-bind:type="item.type" v-bind:parent="parent"/>
-        <description-metadata v-model="item.description"/>
+    <div class="document-metadata">
+        <div class="document-metadata-title-and-status-properties-container">
+            <title-metadata
+                v-model="currentlyUpdatedItem.title"
+                v-bind:currently-updated-item="currentlyUpdatedItem"
+                v-bind:parent="parent"
+                v-bind:is-in-update-context="isInUpdateContext"
+            />
+            <status-metadata v-model="status_value" v-if="is_item_status_metadata_used" data-test="document-status-metadata"/>
+        </div>
+        <description-metadata v-model="currentlyUpdatedItem.description"/>
         <slot></slot>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import TitleMetadata from "./TitleMetadata.vue";
+import StatusMetadata from "./StatusMetadata.vue";
 import DescriptionMetadata from "./DescriptionMetadata.vue";
+import {
+    getStatusFromMapping,
+    getStatusMetadata
+} from "../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
+import { DOCMAN_ITEM_STATUS_NONE } from "../../../constants.js";
 
 export default {
     name: "GlobalMetadata",
     components: {
+        DescriptionMetadata,
         TitleMetadata,
-        DescriptionMetadata
+        StatusMetadata
     },
     props: {
-        item: Object,
-        parent: Object
+        currentlyUpdatedItem: Object,
+        parent: Object,
+        isInUpdateContext: Boolean
+    },
+    computed: {
+        ...mapState(["is_item_status_metadata_used"]),
+        status_value: {
+            get() {
+                const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
+                if (!metadata) {
+                    return DOCMAN_ITEM_STATUS_NONE;
+                }
+                return metadata.list_value[0].id;
+            },
+            set(value) {
+                const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
+                const status_string = getStatusFromMapping(value);
+
+                metadata.list_value[0].id = parseInt(value, 10);
+                metadata.list_value[0].name = status_string;
+
+                this.currentlyUpdatedItem.status = status_string;
+            }
+        }
     }
 };
 </script>

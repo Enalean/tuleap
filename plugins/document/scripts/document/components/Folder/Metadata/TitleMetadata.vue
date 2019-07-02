@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <div class="tlp-form-element document-metadata-title">
         <label
             class="tlp-label"
             for="document-new-item-title"
@@ -45,12 +45,19 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import {
+    doesDocumentAlreadyExistsAtUpdate,
+    doesDocumentNameAlreadyExist,
+    doesFolderNameAlreadyExist
+} from "../../../helpers/metadata-helpers/check-item-title.js";
+
 export default {
     props: {
         value: String,
-        type: String,
-        parent: Object
+        parent: Object,
+        isInUpdateContext: Boolean,
+        currentlyUpdatedItem: Object
     },
     data() {
         return {
@@ -65,37 +72,63 @@ export default {
     },
     watch: {
         value(text_value) {
-            let error = "";
-            if (this.type === TYPE_FOLDER) {
-                const does_folder_already_exist = this.folder_content.find(
-                    item =>
-                        item.title === text_value &&
-                        item.type === TYPE_FOLDER &&
-                        item.parent_id === this.parent.id
-                );
-
-                if (does_folder_already_exist) {
-                    error = this.$gettext("A folder already exists with the same title.");
-                }
-            } else {
-                const does_document_already_exist = this.folder_content.find(
-                    item =>
-                        item.title === text_value &&
-                        item.type !== TYPE_FOLDER &&
-                        item.parent_id === this.parent.id
-                );
-
-                if (does_document_already_exist) {
-                    error = this.$gettext("A document already exists with the same title.");
-                }
-            }
-
+            const error = this.checkTitleValidity(text_value);
             this.$refs.input.setCustomValidity(error);
             this.error_message = error;
         }
     },
     mounted() {
         this.$refs.input.focus();
+    },
+    methods: {
+        checkTitleValidity(text_value) {
+            if (this.isInUpdateContext === true) {
+                return this.getValidityErrorAtUpdate(
+                    text_value,
+                    this.type,
+                    this.currentlyUpdatedItem,
+                    this.parent
+                );
+            }
+
+            return this.getValidityErrorAtCreation(text_value, this.type, this.parent);
+        },
+        getValidityErrorAtCreation(text_value) {
+            if (
+                this.currentlyUpdatedItem.type === TYPE_FOLDER &&
+                doesFolderNameAlreadyExist(text_value, this.folder_content, this.parent)
+            ) {
+                return this.getErrorWhenFolderAlreadyExists();
+            } else if (
+                this.currentlyUpdatedItem.type !== TYPE_FOLDER &&
+                doesDocumentNameAlreadyExist(text_value, this.folder_content, this.parent)
+            ) {
+                return this.getErrorWhenDocumentAlreadyExists();
+            }
+
+            return "";
+        },
+        getValidityErrorAtUpdate(text_value) {
+            if (
+                this.currentlyUpdatedItem.type === TYPE_FILE &&
+                doesDocumentAlreadyExistsAtUpdate(
+                    text_value,
+                    this.folder_content,
+                    this.currentlyUpdatedItem,
+                    this.parent
+                )
+            ) {
+                return this.getErrorWhenDocumentAlreadyExists();
+            }
+
+            return "";
+        },
+        getErrorWhenDocumentAlreadyExists() {
+            return this.$gettext("A document already exists with the same title.");
+        },
+        getErrorWhenFolderAlreadyExists() {
+            return this.$gettext("A folder already exists with the same title.");
+        }
     }
 };
 </script>
