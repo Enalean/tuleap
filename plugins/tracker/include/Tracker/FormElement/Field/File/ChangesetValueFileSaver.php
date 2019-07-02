@@ -99,7 +99,7 @@ class ChangesetValueFileSaver
                 $previous_fileinfo_ids[] = $previous_attachment->getId();
             } else {
                 if (! empty($value['delete']) && in_array($previous_attachment->getId(), $value['delete'])) {
-                    $previous_attachment->delete();
+                    $previous_attachment->deleteFiles();
                 }
             }
         }

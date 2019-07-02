@@ -198,7 +198,7 @@ class ChangesetValueFileSaverTest extends TestCase
         $savior->shouldReceive('initFolder');
 
         $dao->shouldReceive('create')->with($changeset_value_id, [69])->andReturn(true);
-        $previous_file_2->shouldReceive('delete');
+        $previous_file_2->shouldReceive('deleteFiles');
 
         $this->assertTrue(
             $savior->saveValue(
