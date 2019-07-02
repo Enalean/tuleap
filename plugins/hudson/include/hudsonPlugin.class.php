@@ -41,7 +41,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
 
         $this->addHook('javascript_file', 'jsFile', false);
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook(Event::SERVICE_ICON);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook('project_is_deleted', 'projectIsDeleted', false);
@@ -75,8 +75,9 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         return 'hudson';
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e811';
+    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
     }
 
     function cssFile($params) {

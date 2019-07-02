@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +23,12 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
-/**
- * ServiceFile
- */
 class ServiceFile extends Service
 {
+    public function getIcon(): string
+    {
+        return $this->getFontAwesomeIcon('fa-files-o');
+    }
 
     /**
     * getPublicArea
@@ -37,7 +38,7 @@ class ServiceFile extends Service
     function getPublicArea() {
         $html  = '';
         $html .= '<p><a href="/file/showfiles.php?group_id='.$this->getGroupId().'">';
-        $html .= '<i class="tuleap-services-file tuleap-services-widget"></i>';
+        $html .= '<i class="dashboard-widget-content-projectpublicareas '.$this->getIcon().'"></i>';
         $html .= $GLOBALS['Language']->getText('include_project_home','file_releases').'</a>';
         $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home','packages',count($this->_getPackagesForUser(user_getid()))).' )';
         $html .= '</p>';

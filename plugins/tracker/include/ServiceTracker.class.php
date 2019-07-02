@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,11 @@
 class ServiceTracker extends Service {
 
     public const NAME = 'tracker';
+
+    public function getIcon(): string
+    {
+        return $this->getFontAwesomeIcon('fa-list-ol');
+    }
 
     /**
      * Display header for service tracker

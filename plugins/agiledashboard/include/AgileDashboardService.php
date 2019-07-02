@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Docman;
+declare(strict_types=1);
 
-class ServiceDocman extends \Service
+namespace Tuleap\AgileDashboard;
+
+class AgileDashboardService extends \Service
 {
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = [])
-    {
-        $GLOBALS['HTML']->includeCalendarScripts();
-
-        parent::displayHeader($title, [], $toolbar);
-    }
-
     public function getIcon(): string
     {
-        return $this->getFontAwesomeIcon('fa-folder-open');
+        return $this->getFontAwesomeIcon('fa-table');
     }
 }

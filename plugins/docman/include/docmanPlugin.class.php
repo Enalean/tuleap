@@ -147,7 +147,6 @@ class DocmanPlugin extends Plugin
         $this->addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
         $this->addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         // Stats plugin
         $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
@@ -202,13 +201,9 @@ class DocmanPlugin extends Plugin
     }
 
     /** @see Event::SERVICE_CLASSNAMES */
-    public function service_classnames($params)
+    public function service_classnames(&$params)
     {
-        $params['classnames'][self::SERVICE_SHORTNAME] = 'Tuleap\Docman\ServiceDocman';
-    }
-
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80c';
+        $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Docman\ServiceDocman::class;
     }
 
     /**
@@ -343,9 +338,10 @@ class DocmanPlugin extends Plugin
     public function service_public_areas(GetPublicAreas $event) {
         $project = $event->getProject();
         if ($project->usesService($this->getServiceShortname())) {
+            $service = $project->getService($this->getServiceShortname());
             $event->addArea(
                 '<a href="/plugins/docman/?group_id='. $project->getId() .'">' .
-                '<i class="tuleap-services-angle-double-right tuleap-services-docman tuleap-services-widget"></i>' .
+                '<i class="dashboard-widget-content-projectpublicareas '.$service->getIcon().'"></i>' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>'

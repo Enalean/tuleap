@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Service;
 
+use Mockery\MockInterface;
 use Service;
 use SvnPlugin;
 use TuleapTestCase;
@@ -32,6 +33,14 @@ class ServiceActivatorTest extends TuleapTestCase
      * @var ServiceActivator
      */
     private $activator;
+    /**
+     * @var MockInterface
+     */
+    private $svn_core_service;
+    /**
+     * @var MockInterface
+     */
+    private $svn_plugin_service;
 
     public function setUp()
     {
@@ -49,8 +58,8 @@ class ServiceActivatorTest extends TuleapTestCase
             'project_creation_data' => $this->data
         );
 
-        $this->svn_core_service   = stub('Service')->getId()->returns(101);
-        $this->svn_plugin_service = stub('Service')->getId()->returns(106);
+        $this->svn_core_service   = \Mockery::mock(Service::class, ['getId' => 101]);
+        $this->svn_plugin_service = \Mockery::mock(Service::class, ['getId' => 106]);
 
         stub($this->svn_core_service)->getShortName()->returns('svn');
         stub($this->svn_plugin_service)->getShortName()->returns('plugin_svn');
@@ -62,8 +71,8 @@ class ServiceActivatorTest extends TuleapTestCase
             array($this->svn_core_service, $this->svn_plugin_service)
         );
 
-        stub($this->svn_core_service)->isUsed()->returns(true);
-        stub($this->svn_plugin_service)->isUsed()->returns(false);
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(true);
+        $this->svn_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -78,8 +87,8 @@ class ServiceActivatorTest extends TuleapTestCase
             array($this->svn_core_service, $this->svn_plugin_service)
         );
 
-        stub($this->svn_core_service)->isUsed()->returns(true);
-        stub($this->svn_plugin_service)->isUsed()->returns(true);
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(true);
+        $this->svn_plugin_service->shouldReceive('isUsed')->andReturn(true);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -122,8 +131,8 @@ class ServiceActivatorTest extends TuleapTestCase
             array($this->svn_core_service, $this->svn_plugin_service)
         );
 
-        stub($this->svn_core_service)->isUsed()->returns(false);
-        stub($this->svn_plugin_service)->isUsed()->returns(false);
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->svn_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -138,8 +147,8 @@ class ServiceActivatorTest extends TuleapTestCase
             array($this->svn_core_service, $this->svn_plugin_service)
         );
 
-        stub($this->svn_core_service)->isUsed()->returns(false);
-        stub($this->svn_plugin_service)->isUsed()->returns(false);
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->svn_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(false);
 
         expect($this->data)->unsetProjectServiceUsage()->never();
@@ -152,6 +161,9 @@ class ServiceActivatorTest extends TuleapTestCase
     {
         $project = aMockProject()->withId(102)->build();
         $legacy  = array(Service::SVN => false);
+
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->svn_core_service->shouldReceive('isActive')->andReturn(false);
 
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->svn_core_service)
@@ -169,6 +181,11 @@ class ServiceActivatorTest extends TuleapTestCase
     {
         $project = aMockProject()->withId(102)->build();
         $legacy  = array(Service::SVN => false);
+
+        $this->svn_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->svn_core_service->shouldReceive('isActive')->andReturn(false);
+        $this->svn_plugin_service->shouldReceive('isUsed')->andReturn(false);
+        $this->svn_plugin_service->shouldReceive('isActive')->andReturn(false);
 
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->svn_core_service, $this->svn_plugin_service)

@@ -133,7 +133,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
             $this->addHook(TRACKER_USAGE);
-            $this->addHook(Event::SERVICE_ICON);
+            $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
@@ -212,8 +212,9 @@ class AgileDashboardPlugin extends Plugin
         return self::PLUGIN_SHORTNAME;
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80e';
+    public function service_classnames(&$params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
     }
 
     public function register_project_creation($params) {
