@@ -26,7 +26,7 @@ import {
     getProject,
     getItem,
     getParents,
-    patchEmbeddedFile,
+    postEmbeddedFile,
     patchUserPreferenciesForFolderInProject,
     patchWiki,
     deleteUserPreferenciesForFolderInProject,
@@ -335,7 +335,7 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("patchEmbeddedFile()", () => {
+    describe("postEmbeddedFile()", () => {
         it("", async () => {
             const item = JSON.stringify({
                 title: "Hello",
@@ -351,7 +351,7 @@ describe("rest-querier", () => {
 
             mockFetchSuccess(tlp.patch);
 
-            await patchEmbeddedFile(
+            await postEmbeddedFile(
                 item,
                 content,
                 version_title,

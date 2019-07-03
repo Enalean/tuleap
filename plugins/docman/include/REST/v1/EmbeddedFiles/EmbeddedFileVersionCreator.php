@@ -25,11 +25,8 @@ namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 use Docman_FileStorage;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanEmbeddedFileUpdator
+class EmbeddedFileVersionCreator
 {
     /**
      * @var \Docman_FileStorage
@@ -48,66 +45,36 @@ class DocmanEmbeddedFileUpdator
      */
     private $transaction_executor;
     /**
-     * @var ItemStatusMapper
-     */
-    private $status_mapper;
-    /**
-     * @var HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $date_retriever;
-    /**
      * @var \Docman_ItemFactory
      */
     private $item_factory;
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $permissions_manager;
 
     public function __construct(
         Docman_FileStorage $file_storage,
         \Docman_VersionFactory $version_factory,
         \Docman_ItemFactory $item_factory,
         DocmanItemUpdator $updator,
-        DBTransactionExecutor $transaction_executor,
-        ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
-        \Docman_PermissionsManager $permissions_manager
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->file_storage         = $file_storage;
         $this->version_factory      = $version_factory;
         $this->updator              = $updator;
-        $this->transaction_executor = $transaction_executor;
-        $this->status_mapper        = $status_mapper;
-        $this->date_retriever       = $date_retriever;
         $this->item_factory         = $item_factory;
-        $this->permissions_manager  = $permissions_manager;
+        $this->transaction_executor = $transaction_executor;
     }
 
-    /**
-     * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
-     */
-    public function updateEmbeddedFile(
+    public function createEmbeddedFileVersion(
         \Docman_File $item,
         \PFUser $current_user,
-        DocmanEmbeddedFilesPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        int $status,
+        int $obsolesence_date,
+        string $title,
+        ?string $description
     ): void {
-        if ($this->permissions_manager->_itemIsLockedForUser($current_user, (int)$item->getId())) {
-            throw new ExceptionItemIsLockedByAnotherUser();
-        }
-
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
-            $representation->status
-        );
-
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
-            $representation->obsolescence_date,
-            $current_time
-        );
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp, $current_time) {
+            function () use ($item, $current_user, $representation, $status, $obsolesence_date, $current_time, $title, $description) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
                 $created_file_path = $this->file_storage->store(
@@ -134,10 +101,10 @@ class DocmanEmbeddedFileUpdator
 
                 $new_embedded_hardcoded_metadata_row = [
                     'id'                => $item->getId(),
-                    'title'             => $representation->title,
-                    'description'       => $representation->description,
-                    'status'            => $status_id,
-                    'obsolescence_date' => $obsolescence_date_time_stamp
+                    'title'             => $title,
+                    'description'       => $description,
+                    'status'            => $status,
+                    'obsolescence_date' => $obsolesence_date
                 ];
 
                 $this->item_factory->update($new_embedded_hardcoded_metadata_row);

@@ -58,7 +58,7 @@ import {
     rewire$getItem,
     rewire$getProject,
     rewire$patchUserPreferenciesForFolderInProject,
-    rewire$patchEmbeddedFile,
+    rewire$postEmbeddedFile,
     rewire$patchWiki,
     rewire$patchLink,
     rewire$deleteFile,
@@ -116,7 +116,7 @@ describe("Store actions", () => {
         cancelUpload,
         createNewVersion,
         uploadVersion,
-        patchEmbeddedFile,
+        postEmbeddedFile,
         patchWiki,
         patchLink;
 
@@ -177,8 +177,8 @@ describe("Store actions", () => {
         );
         rewire$patchUserPreferenciesForFolderInProject(patchUserPreferenciesForFolderInProject);
 
-        patchEmbeddedFile = jasmine.createSpy("patchEmbeddedFile");
-        rewire$patchEmbeddedFile(patchEmbeddedFile);
+        postEmbeddedFile = jasmine.createSpy("postEmbeddedFile");
+        rewire$postEmbeddedFile(postEmbeddedFile);
 
         addUserLegacyUIPreferency = jasmine.createSpy("addUserLegacyUIPreferency");
         rewire$addUserLegacyUIPreferency(addUserLegacyUIPreferency);
@@ -979,7 +979,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchEmbeddedFile).toHaveBeenCalled();
+            expect(postEmbeddedFile).toHaveBeenCalled();
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 };
@@ -990,7 +990,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed the version because...";
             const is_version_locked = true;
 
-            patchEmbeddedFile.and.throwError("nope");
+            postEmbeddedFile.and.throwError("nope");
 
             await createNewEmbeddedFileVersionFromModal(context, [
                 item,
@@ -1000,7 +1000,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchEmbeddedFile).toHaveBeenCalled();
+            expect(postEmbeddedFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });

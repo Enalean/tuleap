@@ -33,7 +33,7 @@ import {
     getItem,
     getProject,
     patchUserPreferenciesForFolderInProject,
-    patchEmbeddedFile,
+    postEmbeddedFile,
     patchWiki,
     patchLink,
     deleteFile,
@@ -276,7 +276,7 @@ export const createNewEmbeddedFileVersionFromModal = async (
     [item, new_html_content, version_title, changelog, is_file_locked, approval_table_action]
 ) => {
     try {
-        await patchEmbeddedFile(
+        await postEmbeddedFile(
             item,
             new_html_content,
             version_title,

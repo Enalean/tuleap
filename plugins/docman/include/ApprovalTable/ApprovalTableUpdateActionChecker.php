@@ -38,7 +38,6 @@ class ApprovalTableUpdateActionChecker
 
     /**
      * @throws ApprovalTableException
-     * @throws ItemHasNoApprovalTableButHasApprovalActionException
      */
     public function checkApprovalTableForItem(
         ?string $approval_table_action,

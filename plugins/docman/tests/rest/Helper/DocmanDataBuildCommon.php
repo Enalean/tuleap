@@ -75,6 +75,13 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     }
 
     /**
+     * @param int    $user_id
+     * @param int    $docman_root_id
+     * @param string $title
+     * @param int    $item_type
+     * @param string $link_url
+     * @param string $wiki_page
+     *
      * @return bool|int
      */
     public function createItemWithVersion(
@@ -83,19 +90,20 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         string $title,
         int $item_type,
         string $link_url = '',
-        string $file_path = '',
         string $wiki_page = ''
     ) {
         $item_id = $this->createItem($user_id, $docman_root_id, $title, $item_type, $link_url, $wiki_page);
 
         switch ($item_type) {
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
                 $file_type = 'text/html';
                 $this->addFileVersion($item_id, $title, $file_type, $file_path);
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $file_path       = __DIR__ . '/../_fixtures/docmanFile/file.txt';
                 $file_type = 'application/pdf';
-                $this->addFileVersion($item_id, $title, $file_type, "");
+                $this->addFileVersion($item_id, $title, $file_type, $file_path);
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
                 $this->addLinkVersion($item_id);
@@ -143,7 +151,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
      */
     public function addFileVersion(int $item_id, string $title, string $item_type, string $file_path)
     {
-        $version         = array(
+        $version         = [
             'item_id'   => $item_id,
             'number'    => 1,
             'user_id'   => 102,
@@ -154,7 +162,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             'filesize'  => 3,
             'filetype'  => $item_type,
             'path'      => $file_path
-        );
+        ];
         $version_factory = new \Docman_VersionFactory();
         return $version_factory->create($version);
     }
@@ -303,7 +311,8 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             $item_type
         );
 
-        $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', "");
+        $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
+        $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', $file_path);
 
         $this->addApprovalTable($file_name, (int)$version_id, $approval_status);
     }

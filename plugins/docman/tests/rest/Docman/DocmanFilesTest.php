@@ -638,35 +638,14 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchFileDocumentWithStatusWhenStatusIsNotEnabledForProject(int $root_id): void
+    public function testPatchFileDocumentWithStatusWhenStatusIsNotEnabledForProject(array $items): void
     {
-        $query = json_encode(
-            [
-                'title'           => 'My new file with status',
-                'parent_id'       => $root_id,
-                'type'            => 'file',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
-            ]
-        );
+        $folder    = $this->findItemByTitle($items, 'File');
+        $folder_id = $folder['id'];
 
-        $response1 = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
-        );
-
-        $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
-
-        $file_item_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
-        );
-        $this->assertEquals(200, $file_item_response->getStatusCode());
-        $this->assertEquals('file', $file_item_response->json()['type']);
-
-        $file_id = $response1->json()['id'];
+        $file_id = $this->createANewFileAndGetItsId($folder_id, 'My new file with status');
 
         $file_size    = 123;
         $put_resource = json_encode(
@@ -1506,7 +1485,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testFileMetadataThrowsExceptionWhenStatusIsGiven(array $items): void
+    public function testPutFileMetadataThrowsExceptionWhenStatusIsGiven(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F Status');
         $file_to_update_id = $file_to_update['id'];
@@ -1539,7 +1518,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testFileMetadataThrowsExceptionWhenObsolescenceDateIsGiven(array $items): void
+    public function testPutFileMetadataThrowsExceptionWhenObsolescenceDateIsGiven(array $items): void
     {
         $file_to_update    = $this->findItemByTitle($items, 'PUT F OD');
         $file_to_update_id = $file_to_update['id'];

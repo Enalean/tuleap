@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Luracast\Restler\RestException;
-use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -37,32 +36,23 @@ class DocmanFileVersionCreator
      * @var VersionToUploadCreator
      */
     private $creator;
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $permissions_manager;
 
-    public function __construct(VersionToUploadCreator $creator, \Docman_PermissionsManager $permissions_manager)
+    public function __construct(VersionToUploadCreator $creator)
     {
         $this->creator = $creator;
-        $this->permissions_manager = $permissions_manager;
     }
 
     /**
      * @throws RestException
-     * @throws \Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser
      */
     public function createFileVersion(
         \Docman_Item $item,
         \PFUser $user,
         DocmanFileVersionPOSTRepresentation $representation,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
+        int $status,
+        int $obsolesence_date
     ): CreatedItemFilePropertiesRepresentation {
-
-        if ($this->permissions_manager->_itemIsLockedForUser($user, (int)$item->getId())) {
-            throw new ExceptionItemIsLockedByAnotherUser();
-        }
-
         try {
             $document_to_upload = $this->creator->create(
                 $item,
@@ -73,8 +63,8 @@ class DocmanFileVersionCreator
                 $representation->file_properties->file_name,
                 $representation->file_properties->file_size,
                 $representation->should_lock_file,
-                $item->getStatus(),
-                $item->getObsolescenceDate(),
+                $status,
+                $obsolesence_date,
                 $item->getTitle(),
                 $item->getDescription(),
                 $representation->approval_table_action
