@@ -27,7 +27,7 @@ export function validateFileField(file_value_model, text_field_value_models, fol
 
     const { field_id, value } = file_value_model;
     if (value.length === 0) {
-        return null;
+        return { field_id, value: [] };
     }
 
     const filtered_value = value.filter(file_id => {
