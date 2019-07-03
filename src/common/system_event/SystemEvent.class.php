@@ -423,7 +423,7 @@ Create Date:  {$this->getCreateDate()}
 Process Date: {$this->getProcessDate()}
 End Date:     {$this->getEndDate()}
 ---------------
-<". get_server_url() ."/admin/system_events/>
+<". HTTPRequest::instance()->getServerUrl() ."/admin/system_events/>
 ");
             $m->send();
         }

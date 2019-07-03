@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015-Present. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -24,7 +24,7 @@ function send_new_project_email(Project $project) {
 
 function send_new_user_email($to, $login, $confirm_hash) {
     //needed by new_user_email.txt
-    $base_url  = get_server_url();
+    $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
@@ -36,7 +36,7 @@ function send_new_user_email($to, $login, $confirm_hash) {
 function send_admin_new_user_email($to, $login)
 {
     //needed by new_user_email.txt
-    $base_url  = get_server_url();
+    $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
@@ -47,7 +47,7 @@ function send_admin_new_user_email($to, $login)
 
 function send_new_user_email_notification($to, $login) {
     //needed by new_user_email.txt
-    $base_url  = get_server_url();
+    $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');
@@ -58,7 +58,7 @@ function send_new_user_email_notification($to, $login) {
 
 function send_approval_new_user_email($to, $login) {
     //needed by new_user_email.txt
-    $base_url  = get_server_url();
+    $base_url  = HTTPRequest::instance()->getServerUrl();
     $presenter = new MailPresenterFactory();
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/mail/');

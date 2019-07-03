@@ -518,7 +518,7 @@ class FRSReleaseFactory {
         $body_text    = $this->getEmailBody($release, $package);
         $body_html    = '';
         $service_name = 'Files';
-        $goto_link    = get_server_url() . '/goto?key=release&val=' . $release->getReleaseID() .
+        $goto_link    = HTTPRequest::instance()->getServerUrl() . '/goto?key=release&val=' . $release->getReleaseID() .
                         '&group_id=' . $release->getProject()->getID();
 
         return new Notification(
@@ -552,9 +552,12 @@ class FRSReleaseFactory {
         return $builder->buildAndSendEmail($release->getProject(), $notification, new MailEnhancer());
     }
 
-    private function getEmailBody(FRSRelease $release, FRSPackage $package) {
-        $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
-        $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
+    private function getEmailBody(FRSRelease $release, FRSPackage $package)
+    {
+        $server_url = HTTPRequest::instance()->getServerUrl();
+
+        $fileUrl  = $server_url . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
+        $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
 
         $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
 

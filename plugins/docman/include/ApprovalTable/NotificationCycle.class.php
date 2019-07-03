@@ -210,7 +210,7 @@ class Docman_ApprovalTableNotificationCycle {
     }
 
     function getReviewUrl() {
-        $baseUrl = get_server_url().'/plugins/docman/?group_id='.$this->item->getGroupId();
+        $baseUrl = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$this->item->getGroupId();
         $reviewUrl = $baseUrl .'&action=details&section=approval&id='.$this->item->getId();
         return $reviewUrl;
     }
@@ -315,7 +315,7 @@ class Docman_ApprovalTableNotificationCycle {
         $project         = $project_manager->getProject($this->item->getGroupId());
 
         $reviewUrl = $this->getReviewUrl();
-        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$this->item->getGroupId();
+        $baseUrl   = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$this->item->getGroupId();
         $propUrl   = $baseUrl .'&action=edit&id='.$this->item->getId();
         $body      = $GLOBALS['Language']->getText(
             'plugin_docman',
@@ -557,7 +557,7 @@ class Docman_ApprovalTableNotificationCycle {
     function getNotificationBodyText() {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($this->item->getGroupId());
-        $baseUrl         = get_server_url().'/plugins/docman/?group_id='.$this->item->getGroupId();
+        $baseUrl         = HTTPRequest::instance()->getServerUrl().'/plugins/docman/?group_id='.$this->item->getGroupId();
         $itemUrl         = $baseUrl .'&action=show&id='.$this->item->getId();
         $comment         = '';
         $userComment     = $this->table->getDescription();

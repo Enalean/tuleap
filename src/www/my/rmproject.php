@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,7 +68,7 @@ if (user_isloggedin()) {
         $project_name = $project->getPublicName();
 
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-        $link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
+        $link_members = HTTPRequest::instance()->getServerUrl()."/project/memberlist.php?group_id=$group_id";
         $subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
         $body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
         $mail = new Codendi_Mail();

@@ -737,26 +737,6 @@ function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto') 
     return sprintf($retstring, $size, $sys['prefix'][$i]);
 }
 
-
-// Return a HTTP URL to a resource on the local host.
-function make_local_url($path) {
-    $info = parse_url("http://" . $GLOBALS['sys_default_domain']);
-    $port = isset($info['port'])? ":".$info['port'] : "";
-    return "http://localhost" . $port . "/" . $path;
-}
-
-/**
- * Return server URL
- * Used e.g. when inserting links in emails
- * @deprecated
- * @return String
- */
-function get_server_url() {
-    $request = HTTPRequest::instance();
-    return $request->getServerUrl();
-}
-
-
 // Return mailing list server URL
 // Used e.g. when inserting links in emails
 function get_list_server_url() {

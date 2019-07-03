@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ class MailPresenterFactory {
         $color_logo = "#000";
         $color_button = "#347DBA";
 
-        $base_url       = get_server_url();
+        $base_url       = HTTPRequest::instance()->getServerUrl();
         $this->setColorTheme($color_logo, $color_button);
 
         $attributes_presenter = array(

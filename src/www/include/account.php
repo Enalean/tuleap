@@ -97,7 +97,6 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
  */
 function account_send_add_user_to_group_email($group_id,$user_id) {
     global $Language;
-    $base_url = get_server_url();
 
     // Get email address
     $res = db_query("SELECT email FROM user WHERE user_id=".db_ei($user_id));

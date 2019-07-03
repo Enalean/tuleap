@@ -252,7 +252,7 @@ class FileModuleMonitorFactory {
 
         $emails       = array($user->getEmail());
         $service_name = 'Files';
-        $goto_link    = get_server_url().'/file/showfiles.php?group_id='. $package->getGroupID().
+        $goto_link    = HTTPRequest::instance()->getServerUrl().'/file/showfiles.php?group_id='. $package->getGroupID().
                         '&package_id='.$package->getPackageID();
 
         return new Notification($emails, $subject, $html_body, $text_body, $goto_link, $service_name);
@@ -290,7 +290,7 @@ class FileModuleMonitorFactory {
         $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail').' "'.$package->getName().'" : ';
         $txtBody .= $goto_link;
         $txtBody .= "\n\n".$GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring').': ';
-        $txtBody .= get_server_url().'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()) .'&filemodule_id='. urlencode($package->getPackageID());
+        $txtBody .= HTTPRequest::instance()->getServerUrl().'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()) .'&filemodule_id='. urlencode($package->getPackageID());
 
         $notification = $this->getNotification($package, $user, $htmlBody, $txtBody);
         $project      = ProjectManager::instance()->getProject($package->getGroupID());
@@ -321,18 +321,20 @@ class FileModuleMonitorFactory {
         );
         $purifier     = Codendi_HTMLPurifier::instance();
 
-        $request   = HTTPRequest::instance();
-        $goto_link = $request->getServerUrl() .'/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
+        $request    = HTTPRequest::instance();
+        $server_url = $request->getServerUrl();
+
+        $goto_link = $server_url .'/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
             '&package_id=' . urlencode($package->getPackageID());
         $htmlBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail');
         $htmlBody .= ' <a href="'.$purifier->purify($goto_link) .'" >'.$purifier->purify($package->getName()).'</a>';
-        $htmlBody .= '<br /><br /><a href="'. $purifier->purify(get_server_url().'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()) .'&filemodule_id='. urlencode($package->getPackageID())) .'" >'.
+        $htmlBody .= '<br /><br /><a href="'. $purifier->purify($server_url.'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()) .'&filemodule_id='. urlencode($package->getPackageID())) .'" >'.
             $GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').'</a>';
 
         $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail').' "'.$package->getName().'" : ';
         $txtBody .= $goto_link;
         $txtBody .= "\n\n".$GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').': ';
-        $txtBody .= get_server_url().'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()).'&filemodule_id='.urlencode($package->getPackageID());
+        $txtBody .= $server_url.'/file/filemodule_monitor.php?group_id='.urlencode($package->getGroupID()).'&filemodule_id='.urlencode($package->getPackageID());
 
         $notification = $this->getNotification($package, $user, $htmlBody, $txtBody);
         $project      = ProjectManager::instance()->getProject($package->getGroupID());

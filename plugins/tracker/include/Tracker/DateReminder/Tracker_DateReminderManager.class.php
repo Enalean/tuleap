@@ -228,9 +228,11 @@ class Tracker_DateReminderManager {
         $artifactId     = $artifact->getID();
         $mail_enhancer  = new MailEnhancer();
 
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
+        $server_url = HTTPRequest::instance()->getServerUrl();
+
+        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. $server_url .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
+        $breadcrumbs[] = '<a href="'. $server_url.'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
@@ -261,7 +263,7 @@ class Tracker_DateReminderManager {
             $subject,
             $htmlBody,
             $txtBody,
-            get_server_url() . $artifact->getUri(),
+            $server_url . $artifact->getUri(),
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );

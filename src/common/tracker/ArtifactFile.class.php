@@ -2,7 +2,7 @@
 /**
  * ArtifactFile.class.php - Class to handle files within an artifact
  *
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
@@ -133,7 +133,7 @@ class ArtifactFile {
             }
             $this->Artifact->addHistory('attachment',$old_value,$new_value);
 
-            $changes['attach']['href'] = get_server_url() .
+            $changes['attach']['href'] = HTTPRequest::instance()->getServerUrl() .
              "/tracker/download.php?artifact_id=".$this->Artifact->getID()."&id=$id";
 
             return $id;

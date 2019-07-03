@@ -125,7 +125,7 @@ class Tracker_ArtifactLinkInfo
     }
 
     public function getUrl() {
-        return get_server_url() . '/goto?'. http_build_query(
+        return HTTPRequest::instance()->getServerUrl() . '/goto?'. http_build_query(
             array(
                 'key'      => $this->getKeyword(),
                 'val'      => $this->getArtifactId(),

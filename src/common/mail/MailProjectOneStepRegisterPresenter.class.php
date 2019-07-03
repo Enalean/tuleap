@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,7 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter {
     }
 
     public function get_project_summary_page() {
-        return get_server_url().'/projects/'.$this->project->getUnixName();
+        return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
     }
 
     public function get_project_full_name_title() {
@@ -98,15 +98,15 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter {
     }
 
     public function getUrlSummaryLink() {
-        return get_server_url().'/projects/'.$this->project->getUnixName();
+        return HTTPRequest::instance()->getServerUrl().'/projects/'.$this->project->getUnixName();
     }
 
     private function getUrlDocumentationSite() {
-        return get_server_url().'/help/';
+        return HTTPRequest::instance()->getServerUrl().'/help/';
     }
 
     public function getUrlProjectAdministration() {
-        return get_server_url().'/project/admin/?group_id='.$this->project->getID();
+        return HTTPRequest::instance()->getServerUrl().'/project/admin/?group_id='.$this->project->getID();
     }
 
     public function getMessageText() {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,7 +80,7 @@ class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresente
     }
 
     public function get_url() {
-        return get_server_url().'/admin/approve-pending.php';
+        return HTTPRequest::instance()->getServerUrl() .'/admin/approve-pending.php';
     }
 
     public function getMessageText() {

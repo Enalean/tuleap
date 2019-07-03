@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@
 $G_SESSION=array();
 
 function session_make_url($loc) {
-    return get_server_url(). $loc;
+    return HTTPRequest::instance()->getServerUrl(). $loc;
 }
 
 function session_redirect($loc) {

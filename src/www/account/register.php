@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  *
@@ -337,7 +337,7 @@ if ($request->isPost() && $request->exist('Register')) {
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval      = get_server_url().'/admin/approve_pending_users.php?page=pending';
+            $href_approval      = HTTPRequest::instance()->getServerUrl().'/admin/approve_pending_users.php?page=pending';
             $title              = $Language->getText('account_register', 'title_approval');
             $content            = $Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'], $user_name, $href_approval));
             $redirect_url       = '/';

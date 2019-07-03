@@ -196,10 +196,11 @@ class Widget_MyProjects extends Widget {
         return true;
     }
     function displayRss() {
-        $rss = new RSS(array(
+        $server_url = HTTPRequest::instance()->getServerUrl();
+        $rss        = new RSS(array(
             'title'       => 'Codendi - MyProjects',
             'description' => 'My projects',
-            'link'        => get_server_url(),
+            'link'        => $server_url,
             'language'    => 'en-us',
             'copyright'   => 'Copyright Xerox',
             'pubDate'     => gmdate('D, d M Y G:i:s',time()).' GMT',
@@ -219,7 +220,7 @@ class Widget_MyProjects extends Widget {
             $rss->addItem(array(
                 'title'       => 'Error',
                 'description' => $GLOBALS['Language']->getText('my_index', 'not_member') . db_error(),
-                'link'        => get_server_url()
+                'link'        => $server_url
             ));
         } else {
             for ($i=0; $i<$rows; $i++) {
@@ -228,15 +229,15 @@ class Widget_MyProjects extends Widget {
                     $title .= ' (*)';
                 }
 
-                $desc = 'Project: '. get_server_url() .'/project/admin/?group_id='.db_result($result,$i,'group_id') ."<br />\n";
+                $desc = 'Project: '. $server_url .'/project/admin/?group_id='.db_result($result,$i,'group_id') ."<br />\n";
                 if ( db_result($result,$i,'admin_flags') == 'A' ) {
-                    $desc .= 'Admin: '. get_server_url() .'/project/admin/?group_id='.db_result($result,$i,'group_id');
+                    $desc .= 'Admin: '. $server_url .'/project/admin/?group_id='.db_result($result,$i,'group_id');
                 }
 
                 $rss->addItem(array(
                     'title'       => $title,
                     'description' => $desc,
-                    'link'        => get_server_url() .'/projects/'. db_result($result,$i,'unix_group_name')
+                    'link'        => $server_url .'/projects/'. db_result($result,$i,'unix_group_name')
                 ));
             }
         }

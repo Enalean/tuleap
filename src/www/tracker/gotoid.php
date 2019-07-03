@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Enalean, 2012-Present. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -48,7 +49,7 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
 
 // Start of main code
 
-$location = "Location: ".get_server_url();
+$location = 'Location: /';
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'

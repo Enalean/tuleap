@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  * 
  * 
@@ -87,12 +87,12 @@ class CrossReference {
     }
     
     function computeUrls(){
+        $server_url  = HTTPRequest::instance()->getServerUrl();
         $group_param = '';
         if ($this->refTargetGid!=100) { $group_param="&group_id=".$this->refTargetGid;}
-        $this->targetUrl=get_server_url()."/goto?key=".urlencode($this->targetKey)."&val=".urlencode($this->refTargetId).$group_param;
+        $this->targetUrl= $server_url."/goto?key=".urlencode($this->targetKey)."&val=".urlencode($this->refTargetId).$group_param;
         $group_param = '';
         if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
-        $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
-    
+        $this->sourceUrl= $server_url."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
     }
 }

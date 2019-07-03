@@ -25,6 +25,6 @@ $p = $pluginManager->getPluginByName('statistics');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->renderWSDL();
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }
 ?>

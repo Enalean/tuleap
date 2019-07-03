@@ -222,7 +222,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     $tracker_name = $this->getTrackerFactory()->getTrackerById($tracker_id)->getName();
                                     $this->restoreDeletedTracker($tracker_id);
                                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker', 'info_tracker_restored', $tracker_name));
-                                    $GLOBALS['Response']->redirect(get_server_url().'/tracker/admin/restore.php');
+                                    $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }

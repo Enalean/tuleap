@@ -1104,13 +1104,14 @@ class ArtifactHtml extends Artifact {
     *
     */
     function displayRSS() {
-        $uh = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance();
-        $group = $this->ArtifactType->getGroup();
+        $uh          = UserHelper::instance();
+        $hp         = Codendi_HTMLPurifier::instance();
+        $group      = $this->ArtifactType->getGroup();
+        $server_url = HTTPRequest::instance()->getServerUrl();
         $rss = new RSS(array(
             'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary') .' - '. $GLOBALS['Language']->getText('tracker_include_artifact','follow_ups'),
             'description' => '',
-            'link'        => '<![CDATA['.get_server_url() .'/tracker/?atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId() .']]>',
+            'link'        => '<![CDATA['.$server_url .'/tracker/?atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId() .']]>',
             'language'    => 'en-us',
             'copyright'   => $GLOBALS['Language']->getText('rss','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time()))),
             'pubDate'     => gmdate('D, d M Y h:i:s',$this->getLastUpdateDate()).' GMT',
@@ -1134,8 +1135,8 @@ class ArtifactHtml extends Artifact {
                 'description' => '<![CDATA['.$comment_type . $hp->purify(db_result($result, $i, 'new_value'), CODENDI_PURIFIER_BASIC, $group->getGroupId()).']]>',
                 'pubDate'     => gmdate('D, d M Y h:i:s',db_result($orig_date, 0, 'date')).' GMT',
                 'dc:creator'  => $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'))),
-                'link'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>',
-                'guid'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>'
+                'link'        => '<![CDATA['.$server_url .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>',
+                'guid'        => '<![CDATA['.$server_url .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>'
             ));
         }
         $rss->display();

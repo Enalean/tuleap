@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Codendi_HTMLPurifier;
 use EventManager;
+use HTTPRequest;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Tracker_Artifact_Changeset;
 use trackerPlugin;
@@ -69,9 +70,11 @@ class MailSender
             $mail_enhancer->setMessageId($message_id);
         }
 
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($changeset->getTracker()->getName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($changeset->getTracker()->getName().' #'.$artifactId) .'</a>';
+        $server_url = HTTPRequest::instance()->getServerUrl();
+
+        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. $server_url .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify($changeset->getTracker()->getName()) .'</a>';
+        $breadcrumbs[] = '<a href="'. $server_url.'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($changeset->getTracker()->getName().' #'.$artifactId) .'</a>';
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('unsubscribe_link', $this->getUnsubscribeLink($changeset->getArtifact()));
@@ -111,7 +114,7 @@ class MailSender
             $subject,
             $htmlBody,
             $txtBody,
-            get_server_url().$changeset->getUri(),
+            $server_url.$changeset->getUri(),
             trackerPlugin::TRUNCATED_SERVICE_NAME,
             $mail_enhancer
         );
@@ -140,7 +143,7 @@ class MailSender
      */
     private function getUnsubscribeLink(Tracker_Artifact $artifact)
     {
-        $link = get_server_url().'/plugins/tracker/?aid='.(int)$artifact->getId().'&func=manage-subscription';
+        $link = HTTPRequest::instance()->getServerUrl() .'/plugins/tracker/?aid='.(int)$artifact->getId().'&func=manage-subscription';
 
         return '<a href="'. $link .'" target="_blank" rel="noreferrer">' .
             $GLOBALS['Language']->getText('plugin_tracker_artifact', 'mail_unsubscribe') .

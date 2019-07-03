@@ -34,7 +34,7 @@ class XMLExport {
 
     public function createDomDocument() {
         $impl = new DOMImplementation();
-        $dtd = $impl->createDocumentType('docman', '', get_server_url().'/plugins/docman/docman-1.0.dtd');
+        $dtd = $impl->createDocumentType('docman', '', HTTPRequest::instance()->getServerUrl().'/plugins/docman/docman-1.0.dtd');
         $doc = $impl->createDocument('', '', $dtd);
         $doc->encoding     = 'UTF-8';
         $doc->standalone   = 'no';
