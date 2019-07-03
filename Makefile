@@ -195,6 +195,23 @@ simpletest-73: ## Run SimpleTest with PHP 7.3
 simpletest-73-file: ## Run SimpleTest with PHP 7.3 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
+simpletest-74-ci:
+	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-74
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-74:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
+	/tuleap/tests/simpletest \
+	/tuleap/plugins/ \
+	/tuleap/tests/integration
+
+simpletest-74: ## Run SimpleTest with PHP 7.4
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
+	/tuleap/tests/simpletest \
+	/tuleap/plugins/ \
+	/tuleap/tests/integration
+
+simpletest-74-file: ## Run SimpleTest with PHP 7.4 on a given file or directory with FILE variable
+	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
+
+
 psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
 	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
 
