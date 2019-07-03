@@ -23,6 +23,7 @@
 
 use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\DestinationCloneItem;
 
 require_once('www/news/news_utils.php');
 
@@ -838,15 +839,15 @@ class Docman_Actions extends Actions {
 
         // Action
         $itemFactory  = $this->_getItemFactory();
-        $item_mapping = $itemFactory->cloneItems($itemToPaste->getGroupId(),
-            $newParentItem->getGroupId(),
+        $item_mapping = $itemFactory->cloneItems(
             $user,
             $mdMapping,
             $ugroupsMapping,
             $dataRoot,
-            $itemToPaste->getId(),
-            $newParentItem->getId(),
-            $ordering);
+            $itemToPaste,
+            DestinationCloneItem::fromNewParentFolder($newParentItem),
+            $ordering
+        );
 
 
         $event_manager = EventManager::instance();

@@ -23,6 +23,7 @@
 
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
@@ -401,7 +402,7 @@ class Docman_ItemFactory
      */
     function isInSubTree($childId, $parentId) {
         $child = $this->getItemFromDb($childId);
-        if ($this->isRoot($child)) {
+        if ($child === null || $this->isRoot($child)) {
             return false;
         }
         $directParentId = $child->getParentId();
@@ -421,7 +422,7 @@ class Docman_ItemFactory
      */
     function getParents($childId) {
         $child = $this->getItemFromDb($childId);
-        if ($this->isRoot($child)) {
+        if ($child === null || $this->isRoot($child)) {
             return array();
         }
         $directParentId = $child->getParentId();
@@ -1091,7 +1092,11 @@ class Docman_ItemFactory
     }
 
 
-    public function getRoot($group_id) {
+    /**
+     * @return Docman_Item|null
+     */
+    public function getRoot($group_id)
+    {
         if(!isset($this->rootItems[$group_id])) {
             $dao = $this->_getItemDao();
             $id = $dao->searchRootIdForGroupId($group_id);
@@ -1099,8 +1104,12 @@ class Docman_ItemFactory
         }
         return $this->rootItems[$group_id];
     }
-    function isRoot(&$item) {
+    public function isRoot(Docman_Item $item)
+    {
         $root = $this->getRoot($item->getGroupId());
+        if ($root === null) {
+            return false;
+        }
         return $item->getId() == $root->getId();
     }
     public function createRoot($group_id, $title) {
@@ -1122,32 +1131,37 @@ class Docman_ItemFactory
     /**
      * Copy a subtree.
      */
-    function cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot, $srcItemId = 0, $dstItemId = 0, $ordering = null) {
+    public function cloneItems(
+        $user,
+        $metadataMapping,
+        $ugroupsMapping,
+        $dataRoot,
+        Docman_Item $source_item,
+        DestinationCloneItem $destination,
+        $ordering = null
+    ) {
         $itemMapping = array();
 
-        $itemFactory = new Docman_ItemFactory($srcGroupId);
-        if($srcItemId == 0) {
-            $srcItem = $this->getRoot($srcGroupId);
-        } else {
-            $srcItem = $this->getItemFromDb($srcItemId);
-        }
-        $itemTree = $itemFactory->getItemTree($srcItem, $user, false, true);
+        $itemFactory = new Docman_ItemFactory($source_item->getGroupId());
+
+        $itemTree = $itemFactory->getItemTree($source_item, $user, false, true);
 
         if ($itemTree) {
-            $rank = null;
+            $parent_id = $destination->getNewParentID();
+            $rank      = null;
             if($ordering !== null) {
                 $dao  = $this->_getItemDao();
-                $rank = $dao->_changeSiblingRanking($dstItemId, $ordering);
+                $rank = $dao->_changeSiblingRanking($parent_id, $ordering);
             }
 
-            $cloneItemsVisitor = new Docman_CloneItemsVisitor($dstGroupId);
-            $visitorParams = array('parentId' => $dstItemId,
+            $cloneItemsVisitor = $destination->getCloneItemsVisitor();
+            $visitorParams = array('parentId' => $parent_id,
                                'user' => $user,
                                'metadataMapping' => $metadataMapping,
                                'ugroupsMapping'  => $ugroupsMapping,
                                'data_root' => $dataRoot,
                                'newRank' => $rank,
-                               'srcRootId' => $srcItemId);
+                               'srcRootId' => $source_item->getId());
             $itemTree->accept($cloneItemsVisitor, $visitorParams);
             $itemMapping = $cloneItemsVisitor->getItemMapping();
         }
