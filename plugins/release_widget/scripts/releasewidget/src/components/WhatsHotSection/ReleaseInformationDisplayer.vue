@@ -30,9 +30,9 @@
                     Release %{release_label}
                 </translate>
             </h1>
-            <span class="project-release-date">
+            <span class="project-release-date" v-if="startDateExist()">
                 {{ formatDate(releaseData.start_date) }}
-                <i class="fa fa-long-arrow-right"></i>
+                <i class="fa fa-long-arrow-right" data-test="display-arrow"></i>
                 {{ formatDate(releaseData.end_date) }}
             </span>
 
@@ -91,6 +91,9 @@ export default {
                 "getNumberOfSprints",
                 this.releaseData.id
             );
+        },
+        startDateExist() {
+            return this.releaseData.start_date !== null;
         }
     }
 };

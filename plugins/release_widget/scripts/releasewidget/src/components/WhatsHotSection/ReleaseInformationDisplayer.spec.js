@@ -23,13 +23,8 @@ import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 
-const releaseData = {
-    label: "mile",
-    id: 2,
-    planning: {
-        id: 100
-    }
-};
+let releaseData = {};
+let component_options = {};
 const project_id = "102";
 
 describe("ReleaseInformationDisplayer", () => {
@@ -38,12 +33,7 @@ describe("ReleaseInformationDisplayer", () => {
     function getPersonalWidgetInstance(store_options) {
         store = createStoreMock(store_options);
 
-        const component_options = {
-            propsData: {
-                releaseData
-            },
-            mocks: { $store: store }
-        };
+        component_options.mocks = { $store: store };
 
         Vue.use(GetTextPlugin, {
             translations: {},
@@ -52,11 +42,30 @@ describe("ReleaseInformationDisplayer", () => {
 
         return shallowMount(ReleaseInformationDisplayer, component_options);
     }
+
     beforeEach(() => {
         store_options = {
-            state: {
-                is_open: false,
-                total_sprint: 0
+            state: {}
+        };
+
+        releaseData = {
+            label: "mile",
+            id: 2,
+            planning: {
+                id: 100
+            },
+            start_date: Date("2017-01-22T13:42:08+02:00")
+        };
+
+        component_options = {
+            propsData: {
+                releaseData
+            },
+            data() {
+                return {
+                    is_open: false,
+                    total_sprint: null
+                };
             }
         };
 
@@ -89,5 +98,32 @@ describe("ReleaseInformationDisplayer", () => {
                 encodeURIComponent(releaseData.id) +
                 "&pane=planning-v2"
         );
+    });
+
+    describe("Display arrow of date", () => {
+        it("When there is a start date of a release, Then an arrow is displayed", () => {
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
+        });
+
+        it("When there aren't a start date of a release, Then there isn't an arrow", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                start_date: null
+            };
+
+            component_options.propsData = {
+                releaseData
+            };
+
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
+        });
     });
 });
