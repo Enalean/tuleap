@@ -87,11 +87,11 @@ npm-build:
 	npm run build
 
 redeploy-nginx: ## Redeploy nginx configuration
-	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/tools/utils/php72/run.php --module=nginx
+	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/tools/utils/php73/run.php --module=nginx
 	@$(DOCKER_COMPOSE) exec web service nginx restart
 
 restart-services: redeploy-nginx ## Restart nginx, apache and fpm
-	@$(DOCKER_COMPOSE) exec web service php72-php-fpm restart
+	@$(DOCKER_COMPOSE) exec web service php73-php-fpm restart
 	@$(DOCKER_COMPOSE) exec web service httpd restart
 
 generate-po: ## Generate translatable strings
