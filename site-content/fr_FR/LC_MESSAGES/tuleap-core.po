@@ -113,6 +113,9 @@ msgstr ""
 "Le compte %s est restreint et le project n'autorise pas les utilisateurs "
 "restreints. L'utilisateur n'a pas été ajouté."
 
+msgid "Activate synchronized project membership management"
+msgstr "Activer la gestion synchronisée de l'appartenance au projet"
+
 msgid "Add binding"
 msgstr "Ajouter le lien"
 
@@ -1243,6 +1246,9 @@ msgstr "Mis à jour avec succès."
 
 msgid "Switching the project status back to \"pending\" is not possible."
 msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."
+
+msgid "Synchronized project membership management"
+msgstr "Gestion synchronisée de l'appartenance au projet"
 
 msgid "System groups"
 msgstr "Groupes système"
