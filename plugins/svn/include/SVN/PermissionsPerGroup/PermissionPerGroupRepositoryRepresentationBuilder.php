@@ -58,7 +58,7 @@ class PermissionPerGroupRepositoryRepresentationBuilder
 
     private function getRepositoryAdminUrl(Repository $repository)
     {
-        return SVN_BASE_URL . '?' . http_build_query(
+        return SVN_BASE_URL . '/?' . http_build_query(
             array(
                 'group_id' => $repository->getProject()->getID(),
                 'action'   => 'access-control',

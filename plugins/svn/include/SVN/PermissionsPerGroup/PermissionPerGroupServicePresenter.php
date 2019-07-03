@@ -49,7 +49,7 @@ class PermissionPerGroupServicePresenter extends PermissionPerGroupPanePresenter
 
     private function getGlobalAdminLink(Project $project)
     {
-        return SVN_BASE_URL . "?" . http_build_query(
+        return SVN_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getID(),
                 "action"   => "admin-groups"
