@@ -77,6 +77,21 @@ if (ForgeConfig::get('DEBUG_MODE')) {
     $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
 }
 
+$restler->onComplete(static function() use ($restler) {
+    \Tuleap\Request\RequestInstrumentation::incrementRest($restler->responseCode);
+
+    if ($restler->exception === null || $restler->responseCode !== 500) {
+        return;
+    }
+
+    $initial_exception = $restler->exception->getPrevious();
+    if ($initial_exception === null) {
+        return;
+    }
+    $logger = new \Tuleap\REST\RESTLogger();
+    $logger->error('Unhandled exception', $initial_exception);
+});
+
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's
 // a mess.
 $restler->setBaseUrls($http_request->getServerUrl());
@@ -99,20 +114,5 @@ $restler->addAPIClass('Explorer');
 
 $restler->addAuthenticationClass('\\' . TuleapRESTAuthentication::class);
 $restler->addAuthenticationClass('\\' . BasicAuthentication::class);
-
-$restler->onComplete(function() use ($restler) {
-    \Tuleap\Request\RequestInstrumentation::incrementRest($restler->responseCode);
-
-    if ($restler->exception === null || $restler->responseCode !== 500) {
-        return;
-    }
-
-    $initial_exception = $restler->exception->getPrevious();
-    if ($initial_exception === null) {
-        return;
-    }
-    $logger = new \Tuleap\REST\RESTLogger();
-    $logger->error('Unhandled exception', $initial_exception);
-});
 
 $restler->handle();
