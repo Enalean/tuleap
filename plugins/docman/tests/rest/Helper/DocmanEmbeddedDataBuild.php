@@ -55,10 +55,10 @@ class DocmanEmbeddedDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+-----------------+---------------+
-     *      |                  |                 |               |
-     *      +                  +                 +               +
-     * PATCH Embedded    DELETE Embedded    LOCK Embedded  POST Embedded Version
+     *      +------------------+-----------------+---------------+----------------------+
+     *      |                  |                 |               |                      |
+     *      +                  +                 +               +                      +
+     * PATCH Embedded    DELETE Embedded    LOCK Embedded  POST Embedded Version   PUT HM Embedded
      *
      * HM => Hardcoded Metadata
      *
@@ -77,6 +77,7 @@ class DocmanEmbeddedDataBuild
         $this->createDeleteFolder($folder_embedded_id);
         $this->createLockFolder($folder_embedded_id);
         $this->createPostVersionFolder($folder_embedded_id);
+        $this->createPutFolder($folder_embedded_id);
     }
 
 
@@ -321,6 +322,37 @@ class DocmanEmbeddedDataBuild
             $this->docman_user_id,
             'POST E V UL Admin',
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        PUT HM Embedded
+     *                           +
+     *                           |
+     *                           +
+     *                        PUT E
+     *
+     * F OD => The file will be updated with a new obsolescence date metadata
+     * F Status => The File will be updated with a new status metadata
+     * F O => The file will be updated with a new unexcisting owner
+     */
+    private function createPutFolder(int $folder_id): void
+    {
+        $folder_put_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PUT HM Embedded',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_put_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT E',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
     }
 }

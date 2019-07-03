@@ -87,10 +87,10 @@ class DocmanFileDataBuild
      *                           +
      *                           |
      *                           +
-     *                  +--------+-------+-------------+-----------+
-     *                  |                |             |           |
-     *                  +                +             +           +
-     *             PUT F OD         PUT F Status     PUT F      PUT F O
+     *                  +--------+-------+-------------+
+     *                  |                |             |
+     *                  +                +             +
+     *             PUT F OD         PUT F Status     PUT F
      *
      * F OD => The file will be updated with a new obsolescence date metadata
      * F Status => The File will be updated with a new status metadata
@@ -124,13 +124,6 @@ class DocmanFileDataBuild
             $this->docman_user_id,
             $folder_put_id,
             'PUT F',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->common_builder->createItemWithVersion(
-            $this->docman_user_id,
-            $folder_put_id,
-            'PUT F O',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
     }
