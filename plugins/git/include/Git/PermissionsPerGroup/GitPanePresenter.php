@@ -61,7 +61,7 @@ class GitPanePresenter
 
     private function getGlobalAdminLink(Project $project)
     {
-        return GIT_BASE_URL . "?" . http_build_query(
+        return GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getID(),
                 "action"   => "admin-git-admins"
