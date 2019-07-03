@@ -25,9 +25,8 @@ namespace Tuleap\Baseline;
 
 class BaselineTuleapService extends \Service
 {
-    public function __construct(\Project $project, array $data)
+    public function getIcon(): string
     {
-        parent::__construct($project, $data);
-        $this->data['icon'] = 'fa fa-tlp-baseline project-sidebar-nav-item-icon';
+        return $this->getFontAwesomeIcon('fa-tlp-baseline');
     }
 }
