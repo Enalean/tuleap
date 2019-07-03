@@ -1,5 +1,0 @@
-version: "2"
-
-services:
-  web:
-    image: enalean/tuleap-aio-dev:c6-php73-nginx
