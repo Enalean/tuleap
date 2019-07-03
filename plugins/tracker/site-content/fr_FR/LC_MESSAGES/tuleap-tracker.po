@@ -12,6 +12,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "\"duration\" field is empty or invalid"
+msgstr "Le champ \"duration\" est vide ou invalide"
+
+msgid "\"duration\" must be greater than 1 to display burndown graph."
+msgstr ""
+"Le champ \"duration\" doit être supérieur à 1 pour pouvoir afficher "
+"correctement le graphique."
+
+msgid "\"start date\" field is empty or invalid"
+msgstr "Le champ \"start date\" est vide ou invalide"
+
 #, php-format
 msgid "%s has been created"
 msgstr "%s a été créé"
@@ -980,6 +991,20 @@ msgid ""
 msgstr ""
 "L'outil de suivi '%s' ne peut pas être mis à jour parce qu'il n'existe pas. "
 "Réessayez sans l'option '--update'"
+
+msgid ""
+"The tracker doesn't have a \"duration\" Integer field or you don't have the "
+"permission to access it."
+msgstr ""
+"L'outil de suivi n'a pas de champ \"duration\" de type Entier ou bien vous "
+"n'avez pas la permission d'y accéder."
+
+msgid ""
+"The tracker doesn't have a \"start_date\" Date field or you don't have the "
+"permission to access it."
+msgstr ""
+"L'outil de suivi n'a pas de champ \"start_date\" de type Date ou bien vous "
+"n'avez pas la permission d'y accéder."
 
 msgid "The tracker hierarchy cannot be defined."
 msgstr "La hiérarchie entre outils de suivi ne peut être définie."

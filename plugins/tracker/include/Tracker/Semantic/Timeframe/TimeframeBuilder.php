@@ -94,12 +94,12 @@ class TimeframeBuilder
 
             if (! $start_date) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
-                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_start_date_warning')
+                    dgettext('tuleap-tracker', '"start date" field is empty or invalid')
                 );
             }
         } catch (TimeframeFieldNotFoundException $exception) {
             throw new Tracker_FormElement_Chart_Field_Exception(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "start_date" Date field or you don\'t have the permission to access it.')
             );
         } catch (TimeframeFieldNoValueException $exception) {
             $start_date = null;
@@ -110,28 +110,28 @@ class TimeframeBuilder
 
             if ($duration === null) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
-                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+                    dgettext('tuleap-tracker', '"duration" field is empty or invalid')
                 );
             }
 
             if ($duration <= 0) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
-                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+                    dgettext('tuleap-tracker', '"duration" field is empty or invalid')
                 );
             }
 
             if ($duration === 1) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
-                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
+                    dgettext('tuleap-tracker', '"duration" must be greater than 1 to display burndown graph.')
                 );
             }
         } catch (TimeframeFieldNotFoundException $exception) {
             throw new Tracker_FormElement_Chart_Field_Exception(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "duration" Integer field or you don\'t have the permission to access it.')
             );
         } catch (TimeframeFieldNoValueException $exception) {
             throw new Tracker_FormElement_Chart_Field_Exception(
-                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+                dgettext('tuleap-tracker', '"duration" field is empty or invalid')
             );
         }
 
