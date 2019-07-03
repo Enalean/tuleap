@@ -91,7 +91,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public function display() {
         $warning = '';
@@ -128,7 +128,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public function displayAdmin(
         Tracker_SemanticManager $sm,

@@ -47,7 +47,7 @@ class Tracker_Rule_Date_Factory {
         return $this->element_factory->getUsedDateFields($tracker);
     }
 
-    /** @return Tracker_FormElement_Field_Date */
+    /** @return Tracker_FormElement_Field_Date|null */
     public function getUsedDateFieldById(Tracker $tracker, $field_id) {
         return $this->element_factory->getUsedDateFieldById($tracker, $field_id);
     }
@@ -66,27 +66,23 @@ class Tracker_Rule_Date_Factory {
 
         return $date_rule;
     }
-    
+
     /**
-     * 
-     * @param int $tracker_id
-     * @param int $source_field_id
-     * @param int $target_field_id
-     * @param string $comparator
      * @throws Tracker_Rule_Date_Exception
      */
-    public function insert(Tracker_Rule_Date $rule) {
+    public function insert(Tracker_Rule_Date $rule)
+    {
         if (!in_array($rule->getComparator(), Tracker_Rule_Date::$allowed_comparators)) {
             throw new Tracker_Rule_Date_Exception('Invalid Comparator');
         }
-        
+
         $rule_id = $this->dao->insert(
-                $rule->getTrackerId(), 
-                $rule->getSourceFieldId(), 
-                $rule->getTargetFieldId(), 
+                $rule->getTrackerId(),
+                $rule->getSourceFieldId(),
+                $rule->getTargetFieldId(),
                 $rule->getComparator()
                 );
-        
+
         $rule->setId($rule_id);
     }
 
@@ -113,7 +109,7 @@ class Tracker_Rule_Date_Factory {
             $rule['id']
         );
     }
-    
+
     public function save(Tracker_Rule_Date $rule) {
         return $this->dao->save(
             $rule->getId(),
@@ -150,9 +146,9 @@ class Tracker_Rule_Date_Factory {
 
         return $rules_array;
     }
-    
+
     /**
-     * 
+     *
      * @param int $from_tracker_id
      * @param int $to_tracker_id
      * @param array $field_mapping
@@ -178,7 +174,7 @@ class Tracker_Rule_Date_Factory {
             $this->dao->insert($to_tracker_id, $duplicate_source_field_id, $duplicate_target_field_id, $comparator);
         }
     }
-    
+
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping, $tracker_id) {
         $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
@@ -213,7 +209,7 @@ class Tracker_Rule_Date_Factory {
                 ->setTargetField($target_field)
                 ->setTrackerId($tracker_id)
                 ->setComparator($comparator);
-        
+
         if($date_rule !== null) {
             $date_rule->setId($id);
         }

@@ -726,6 +726,13 @@ CREATE TABLE tracker_semantic_contributor (
   INDEX filed_id_idx(field_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_semantic_timeframe;
+CREATE TABLE tracker_semantic_timeframe (
+  tracker_id int(11) NOT NULL PRIMARY KEY,
+  start_date_field_id int(11) NOT NULL,
+  duration_field_id int(11) NULL
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,

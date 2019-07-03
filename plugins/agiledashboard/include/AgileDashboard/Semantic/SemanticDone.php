@@ -109,7 +109,7 @@ class SemanticDone extends Tracker_Semantic
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public function display()
     {
@@ -135,7 +135,7 @@ class SemanticDone extends Tracker_Semantic
      * @param Codendi_Request $request The request
      * @param PFUser $current_user The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
@@ -464,7 +464,7 @@ class SemanticDone extends Tracker_Semantic
         return false;
     }
 
-    protected static $_instances;
+    private static $instances;
     /**
      * Load an instance of a SemanticDone
      *
@@ -474,11 +474,11 @@ class SemanticDone extends Tracker_Semantic
      */
     public static function load(Tracker $tracker)
     {
-        if (! isset(self::$_instances[$tracker->getId()])) {
+        if (! isset(self::$instances[$tracker->getId()])) {
             return self::forceLoad($tracker);
         }
 
-        return self::$_instances[$tracker->getId()];
+        return self::$instances[$tracker->getId()];
     }
 
     private static function forceLoad(Tracker $tracker): SemanticDone
@@ -489,9 +489,9 @@ class SemanticDone extends Tracker_Semantic
 
         $semantic_done = (new SemanticDoneLoader($dao, $value_checker))->load($tracker, $semantic_status);
 
-        self::$_instances[$tracker->getId()] = $semantic_done;
+        self::$instances[$tracker->getId()] = $semantic_done;
 
-        return self::$_instances[$tracker->getId()];
+        return self::$instances[$tracker->getId()];
     }
 
     /**
