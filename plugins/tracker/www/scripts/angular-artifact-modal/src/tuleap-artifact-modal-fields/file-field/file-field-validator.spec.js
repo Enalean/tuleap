@@ -81,7 +81,7 @@ describe(`file-field-validator`, () => {
             expect(result).toBe(null);
         });
 
-        it(`when the file's value is empty, it will return null`, () => {
+        it(`when the file's value is empty, it will return "field_id" and empty "value"`, () => {
             file_value_model.value = [];
 
             const result = validateFileField(
@@ -90,7 +90,10 @@ describe(`file-field-validator`, () => {
                 followup_value_model
             );
 
-            expect(result).toBe(null);
+            expect(result).toEqual({
+                field_id: 6476,
+                value: []
+            });
         });
 
         it(`will return a value model with only "field_id" and "value" attributes`, () => {
