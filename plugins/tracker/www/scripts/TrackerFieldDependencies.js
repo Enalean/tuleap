@@ -111,7 +111,7 @@ tuleap.tracker.RuleNode = function(field) {
                         transitions.values[selected_value].forEach(function(target_value) {
                             new_target_options.set(
                                 parseInt(target_value, 10),
-                                Object.clone(target_options[target_value])
+                                Object.clone(target_options.get(target_value))
                             );
                         });
                     }
@@ -167,8 +167,9 @@ tuleap.tracker.Field = function(id, name, label) {
                         var opt = new Option(option.text, option.value);
                         if (new_options.get(value).selected) {
                             opt.selected = true;
+                            const option_key = parseInt(option.value, 10);
                             //Store the selected state for this option
-                            this.options.get(option.value).selected = true;
+                            this.options.get(option_key).selected = true;
                         }
                         el.options[el.options.length] = opt;
                     }
