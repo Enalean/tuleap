@@ -35,10 +35,12 @@ use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
@@ -46,6 +48,8 @@ use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -118,19 +122,14 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $this->addAllEvent($item_request->getProject());
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
 
         try {
-            $docman_settings_bo = new Docman_SettingsBo($item_request->getProject()->getID());
-            $status_mapper      = new ItemStatusMapper($docman_settings_bo);
-            $status_id          = $status_mapper->getItemStatusIdFromItemStatusString(
+            $status_id          = $this->getItemStatusMapper($project)->getItemStatusIdFromItemStatusString(
                 $representation->status
             );
-
-            $date_retriever               = new HardcodedMetadataObsolescenceDateRetriever(
-                new HardcodedMetdataObsolescenceDateChecker($docman_settings_bo)
-            );
-            $obsolescence_date_time_stamp = $obsolescence_date_time_stamp = $date_retriever->getTimeStampOfDate(
+            $obsolescence_date_time_stamp = $this->getHardcodedMetadataObsolescenceDateRetriever($project)->getTimeStampOfDate(
                 $representation->obsolescence_date,
                 new \DateTimeImmutable()
             );
@@ -324,6 +323,67 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         );
     }
 
+    /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    private function setMetadataHeaders()
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Update the embedded file metadata
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url    PUT {id}/metadata
+     * @access hybrid
+     *
+     * @param int                       $id             Id of the embedded file
+     * @param PUTMetadataRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws RestException 404
+     */
+    public function putMetadata(
+        int $id,
+        PUTMetadataRepresentation $representation
+    ): void {
+
+        $this->checkAccess();
+        $this->setMetadataHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $this->addAllEvent($project);
+
+        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator->updateDocumentMetadata(
+            $representation,
+            $item,
+            new \DateTimeImmutable(),
+            $current_user
+        );
+    }
+
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
@@ -403,6 +463,34 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new \Docman_ItemFactory(),
             $item_updator_builder->build($this->event_manager),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+    }
+
+    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
+    {
+        $user_manager = \UserManager::instance();
+        return new MetadataUpdator(
+            new \Docman_ItemFactory(),
+            $this->getItemStatusMapper($project),
+            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
+            $user_manager,
+            new OwnerRetriever($user_manager),
+            new MetadataEventProcessor($this->event_manager)
+        );
+    }
+
+    private function getItemStatusMapper(\Project $project): ItemStatusMapper
+    {
+        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
+    }
+
+    private function getHardcodedMetadataObsolescenceDateRetriever(
+        \Project $project
+    ): HardcodedMetadataObsolescenceDateRetriever {
+        return new HardcodedMetadataObsolescenceDateRetriever(
+            new HardcodedMetdataObsolescenceDateChecker(
+                new Docman_SettingsBo($project->getID())
+            )
         );
     }
 

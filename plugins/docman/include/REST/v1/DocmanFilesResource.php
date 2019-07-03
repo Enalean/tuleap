@@ -370,27 +370,12 @@ class DocmanFilesResource extends AuthenticatedResource
         $this->addAllEvent($project);
 
         $updator = $this->getHardcodedMetadataUpdator($project);
-
-        try {
-            $updator->updateDocumentMetadata(
-                $representation,
-                $item,
-                new \DateTimeImmutable(),
-                $current_user
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        } catch (\UserNotExistException $e) {
-            throw new I18nRestException(
-                400,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
-            );
-        } catch (\UserNotAuthorizedException $e) {
-            throw new I18nRestException(
-                403,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
-            );
-        }
+        $updator->updateDocumentMetadata(
+            $representation,
+            $item,
+            new \DateTimeImmutable(),
+            $current_user
+        );
     }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder

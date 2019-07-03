@@ -26,6 +26,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 use PFUser;
 use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\REST\I18NRestException;
 
 class MetadataUpdator
 {
@@ -72,9 +73,7 @@ class MetadataUpdator
     }
 
     /**
-     * @throws HardCodedMetadataException
-     * @throws \UserNotExistException
-     * @throws \UserNotAuthorizedException
+     * @throws I18nRestException
      */
     public function updateDocumentMetadata(
         PUTMetadataRepresentation $representation,
@@ -82,16 +81,35 @@ class MetadataUpdator
         \DateTimeImmutable $current_time,
         PFUser $current_user
     ): void {
-        $status            = $this->status_mapper->getItemStatusIdFromItemStatusString($representation->status);
-        $obsolescence_date = $this->date_retriever->getTimeStampOfDate(
-            $representation->obsolescence_date,
-            $current_time
-        );
+        try {
+            $status            = $this->status_mapper->getItemStatusIdFromItemStatusString($representation->status);
+            $obsolescence_date = $this->date_retriever->getTimeStampOfDate(
+                $representation->obsolescence_date,
+                $current_time
+            );
+        } catch (HardCodedMetadataException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        }
+
+        try {
+            $new_owner = $this->owner_retriever->getUserFromRepresentationId($representation->owner_id);
+        } catch (\UserNotExistException $e) {
+            throw new I18nRestException(
+                400,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
+            );
+        } catch (\UserNotAuthorizedException $e) {
+            throw new I18nRestException(
+                403,
+                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
+            );
+        }
+
         $old_owner = $this->user_manager->getUserById((int)$item->getOwnerId());
         if (! $old_owner) {
             $old_owner = $current_user;
         }
-        $new_owner = $this->owner_retriever->getUserFromRepresentationId($representation->owner_id);
+
         $row = [
             'id'                => $item->getId(),
             'title'             => $representation->title,
