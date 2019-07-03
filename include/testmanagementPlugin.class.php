@@ -78,7 +78,6 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
@@ -163,12 +162,9 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         return $project->usesService($this->getServiceShortname());
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e813';
-    }
-
-    public function service_classnames($params) {
-        $params['classnames'][$this->getServiceShortname()] = 'Tuleap\\TestManagement\\Service';
+    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
     }
 
     public function register_project_creation($params)
