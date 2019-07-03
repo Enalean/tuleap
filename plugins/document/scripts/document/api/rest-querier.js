@@ -26,7 +26,7 @@ export {
     getItem,
     getParents,
     patchUserPreferenciesForFolderInProject,
-    patchEmbeddedFile,
+    postEmbeddedFile,
     patchWiki,
     patchLink,
     deleteUserPreferenciesForFolderInProject,
@@ -187,7 +187,7 @@ async function patchUserPreferenciesForFolderInProject(user_id, project_id, fold
     });
 }
 
-function patchEmbeddedFile(
+function postEmbeddedFile(
     item,
     content,
     version_title,
@@ -195,7 +195,7 @@ function patchEmbeddedFile(
     should_lock_file,
     approval_table_action
 ) {
-    return patch(`/api/docman_embedded_files/${encodeURIComponent(item.id)}`, {
+    return post(`/api/docman_embedded_files/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -205,8 +205,6 @@ function patchEmbeddedFile(
             embedded_properties: {
                 content
             },
-            title: item.title,
-            description: item.description,
             should_lock_file,
             approval_table_action
         })

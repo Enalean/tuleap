@@ -32,22 +32,21 @@ use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Actions\OwnerRetriever;
+use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
-use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -206,56 +205,26 @@ class DocmanFilesResource extends AuthenticatedResource
         $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $project = $item_request->getProject();
-
-        $validator = $this->getValidator($project, $current_user, $item);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-
-        $docman_item_updator = $this->getFileUpdator($project);
+        $this->addAllEvent($item_request->getProject());
 
         try {
-            $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
-            $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
-            return $docman_item_updator->updateFile(
-                $item,
-                $current_user,
-                $representation,
+            $docman_settings_bo = new Docman_SettingsBo($item_request->getProject()->getID());
+            $status_mapper      = new ItemStatusMapper($docman_settings_bo);
+            $status_id          = $status_mapper->getItemStatusIdFromItemStatusString(
+                $representation->status
+            );
+
+            $date_retriever               = new HardcodedMetadataObsolescenceDateRetriever(
+                new HardcodedMetdataObsolescenceDateChecker($docman_settings_bo)
+            );
+            $obsolescence_date_time_stamp = $obsolescence_date_time_stamp = $date_retriever->getTimeStampOfDate(
+                $representation->obsolescence_date,
                 new \DateTimeImmutable()
             );
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        } catch (UploadMaxSizeExceededException $exception) {
-            throw new RestException(
-                400,
-                $exception->getMessage()
-            );
-        } catch (ApprovalTableException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getI18NExceptionMessage()
-            );
         } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
-            );
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
+        return $this->createNewFileVersion($representation, $item_request, $status_id, $obsolescence_date_time_stamp);
     }
 
     /**
@@ -286,9 +255,7 @@ class DocmanFilesResource extends AuthenticatedResource
         $validator = $this->getValidator($project, $current_user, $item_to_delete);
         $item_to_delete->accept($validator, []);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         try {
             (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
@@ -345,56 +312,14 @@ class DocmanFilesResource extends AuthenticatedResource
         int $id,
         DocmanFileVersionPOSTRepresentation $representation
     ): CreatedItemFilePropertiesRepresentation {
-
         $this->checkAccess();
         $this->setVersionHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
+        $this->addAllEvent($item_request->getProject());
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
-        $project = $item_request->getProject();
-
-        $validator = $this->getValidator($project, $current_user, $item);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-
-        $docman_item_version_creator = $this->getFileVersionCreator($project);
-
-        try {
-            $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
-            $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
-
-            return $docman_item_version_creator->createFileVersion(
-                $item,
-                $current_user,
-                $representation,
-                new \DateTimeImmutable()
-            );
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        } catch (UploadMaxSizeExceededException $exception) {
-            throw new RestException(
-                400,
-                $exception->getMessage()
-            );
-        } catch (ApprovalTableException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getI18NExceptionMessage()
-            );
-        }
+        $item = $item_request->getItem();
+        return $this->createNewFileVersion($representation, $item_request, (int)$item->getStatus(), (int)$item->getObsolescenceDate());
     }
 
     /**
@@ -442,9 +367,7 @@ class DocmanFilesResource extends AuthenticatedResource
         $validator = $this->getValidator($project, $current_user, $item);
         $item->accept($validator, []);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $updator = $this->getHardcodedMetadataUpdator($project);
 
@@ -490,46 +413,18 @@ class DocmanFilesResource extends AuthenticatedResource
         Header::allowOptionsPost();
     }
 
-    /**
-     * @param \Project               $project
-     * @param ApprovalTableRetriever $docman_approval_table_retriever
-     *
-     * @return DocmanItemFileUpdator
-     */
-    private function getFileUpdator(
-        \Project $project
-    ): DocmanItemFileUpdator {
-        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
-            $docman_setting_bo
-        );
-
-        return new DocmanItemFileUpdator(
-            new VersionToUploadCreator(
-                new DocumentOnGoingVersionToUploadDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new ItemStatusMapper($docman_setting_bo),
-            new HardcodedMetadataObsolescenceDateRetriever(
-                $hardcoded_metadata_obsolescence_date_checker
-            ),
-            $this->getPermissionManager($project)
-        );
-    }
-
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
     }
 
-    private function getFileVersionCreator(\Project $project): DocmanFileVersionCreator
+    private function getFileVersionCreator(): DocmanFileVersionCreator
     {
         return new DocmanFileVersionCreator(
             new VersionToUploadCreator(
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            $this->getPermissionManager($project)
+            )
         );
     }
 
@@ -548,6 +443,21 @@ class DocmanFilesResource extends AuthenticatedResource
         return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_File::class);
     }
 
+    private function getVersionValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeVersionCreationValidatorVisitor
+    {
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
+        $approval_check                  = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
+        return new DocumentBeforeVersionCreationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            \Docman_File::class,
+            $approval_check
+        );
+    }
 
     private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
     {
@@ -575,5 +485,63 @@ class DocmanFilesResource extends AuthenticatedResource
                 new Docman_SettingsBo($project->getID())
             )
         );
+    }
+
+    /**
+     * @param \Project $project
+     */
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+    }
+
+    /**
+     * @return CreatedItemFilePropertiesRepresentation
+     * @throws I18NRestException
+     * @throws RestException
+     */
+    private function createNewFileVersion(
+        DocmanFileVersionPOSTRepresentation $representation,
+        DocmanItemsRequest $item_request,
+        int $status,
+        int $obsolesence_date
+    ): CreatedItemFilePropertiesRepresentation {
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        try {
+            $validator = $this->getVersionValidator($project, $current_user, $item);
+            $item->accept($validator, ['user' => $current_user, 'approval_table_action' => $representation->approval_table_action]);
+        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        } catch (ApprovalTableException $exception) {
+            throw new I18NRestException(
+                400,
+                $exception->getI18NExceptionMessage()
+            );
+        }
+
+        try {
+            $docman_item_version_creator = $this->getFileVersionCreator();
+            return $docman_item_version_creator->createFileVersion(
+                $item,
+                $current_user,
+                $representation,
+                new \DateTimeImmutable(),
+                $status,
+                $obsolesence_date
+            );
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        }
     }
 }

@@ -55,10 +55,10 @@ class DocmanEmbeddedDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+-----------------+
-     *      |                  |                 |
-     *      +                  +                 +
-     * PATCH Embedded    DELETE Embedded    LOCK Embedded
+     *      +------------------+-----------------+---------------+
+     *      |                  |                 |               |
+     *      +                  +                 +               +
+     * PATCH Embedded    DELETE Embedded    LOCK Embedded  POST Embedded Version
      *
      * HM => Hardcoded Metadata
      *
@@ -76,6 +76,7 @@ class DocmanEmbeddedDataBuild
         $this->createPatchFolder($folder_embedded_id);
         $this->createDeleteFolder($folder_embedded_id);
         $this->createLockFolder($folder_embedded_id);
+        $this->createPostVersionFolder($folder_embedded_id);
     }
 
 
@@ -225,5 +226,101 @@ class DocmanEmbeddedDataBuild
         $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK E RL', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
         $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK E AL', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                     POST Embedded version
+     *                           +
+     *                           |
+     *           +---------------+-----------------+-----------------+-----------------+-----------------+
+     *           |               |                 |                 |                 |                 |
+     *           +               +                 +                 +                 +                 +
+     *       POST E V      POST E V AT C   POST E V AT R    POST E V AT E        POST E V L Admin  POST E V L
+     *
+     * F    => File
+     * V    => version
+     * AT C => Approval Table Copy action on new version
+     * AT E => Approval Table Empty action on new version
+     * AT R => Approval Table Reset action on new version
+     * No AT => No approval table
+     * L    => The item is locked by a regular user
+     * L admin => THe item is locked by an admin
+     */
+    private function createPostVersionFolder(int $folder_id): void
+    {
+        $folder_post_version_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'POST Embedded version',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $this->common_builder->addWritePermissionOnItem($folder_post_version_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST E V',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createItemWithApprovalTable(
+            $folder_post_version_id,
+            'POST E V AT C',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createItemWithApprovalTable(
+            $folder_post_version_id,
+            'POST E V AT E',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createItemWithApprovalTable(
+            $folder_post_version_id,
+            'POST E V AT R',
+            'version title',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST E V No AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->admin_user_id,
+            'POST E V L Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST E V L',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST E V UL Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
     }
 }

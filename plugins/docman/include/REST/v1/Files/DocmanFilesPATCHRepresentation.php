@@ -25,17 +25,8 @@ namespace Tuleap\Docman\REST\v1\Files;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanFilesPATCHRepresentation
+class DocmanFilesPATCHRepresentation extends DocmanFileVersionPOSTRepresentation
 {
-    /**
-     * @var string Title of version {@from body} {@required false}
-     */
-    public $version_title = "";
-
-    /**
-     * @var string Description of changes {@from body} {@required false}
-     */
-    public $change_log = '';
 
     /**
      * @var string Item title {@from body} {@required true}
@@ -46,21 +37,6 @@ class DocmanFilesPATCHRepresentation
      * @var string Item description {@from body} {@required false}
      */
     public $description = '';
-
-    /**
-     * @var bool Lock file while updating {@from body} {@required true} {@type bool}
-     */
-    public $should_lock_file;
-
-    /**
-     * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation} {@required true}
-     */
-    public $file_properties;
-
-    /**
-     * @var string | null action for approval table when an item is updated {@from body} {@required false} {@choice copy,reset,empty}
-     */
-    public $approval_table_action;
 
     /**
      * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}

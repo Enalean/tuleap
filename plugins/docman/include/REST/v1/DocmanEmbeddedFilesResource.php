@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
 use Docman_FileStorage;
 use Docman_LockFactory;
 use Docman_Log;
@@ -34,17 +35,18 @@ use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
-use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
-use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -84,7 +86,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      * Create a new version of an existing embedded file document
      *
      * <pre>
-     * /!\ This route is under construction and will be subject to changes
+     * /!\ This route is <strong> deprecated </strong> <br/>
+     * /!\ To create an embedded file version, please use the {id}/version route instead !
      * </pre>
      *
      * <br>
@@ -103,9 +106,10 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      * @param DocmanEmbeddedFilesPATCHRepresentation $representation {@from body}
      *
      * @status 200
-     * @throws I18NRestException 400
-     * @throws I18NRestException 403
-     * @throws I18NRestException 501
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 409
+     * @throws RestException 501
      */
 
     public function patch(int $id, DocmanEmbeddedFilesPATCHRepresentation $representation)
@@ -114,57 +118,33 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-
-        /** @var \Docman_EmbeddedFile $item */
-        $item = $item_request->getItem();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $project   = $item_request->getProject();
-        $validator = $this->getValidator($project, $current_user, $item);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-
-        $builder             = new DocmanItemUpdatorBuilder();
-        $docman_item_updator = $builder->build($this->event_manager);
-
-        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-        $docman_root   = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
-        $updator       = $this->getEmbeddedFileUpdator($docman_root, $docman_item_updator, $project);
+        $this->addAllEvent($item_request->getProject());
 
         try {
-            $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
-            $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
-            $updator->updateEmbeddedFile(
-                $item,
-                $current_user,
-                $representation,
+            $docman_settings_bo = new Docman_SettingsBo($item_request->getProject()->getID());
+            $status_mapper      = new ItemStatusMapper($docman_settings_bo);
+            $status_id          = $status_mapper->getItemStatusIdFromItemStatusString(
+                $representation->status
+            );
+
+            $date_retriever               = new HardcodedMetadataObsolescenceDateRetriever(
+                new HardcodedMetdataObsolescenceDateChecker($docman_settings_bo)
+            );
+            $obsolescence_date_time_stamp = $obsolescence_date_time_stamp = $date_retriever->getTimeStampOfDate(
+                $representation->obsolescence_date,
                 new \DateTimeImmutable()
             );
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        } catch (ApprovalTableException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getI18NExceptionMessage()
-            );
-        } catch (HardCodedMetadataException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getI18NExceptionMessage()
-            );
+        } catch (Metadata\HardCodedMetadataException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
+        $this->createNewEmbeddedFileVersion(
+            $representation,
+            $item_request,
+            $status_id,
+            $obsolescence_date_time_stamp,
+            $representation->title,
+            $representation->description
+        );
     }
 
     /**
@@ -187,17 +167,15 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->checkAccess();
         $this->setHeaders();
 
-        $item_request      = $this->request_builder->buildFromItemId($id);
-        $item_to_delete    = $item_request->getItem();
-        $current_user      = $this->rest_user_manager->getCurrentUser();
-        $project           = $item_request->getProject();
+        $item_request   = $this->request_builder->buildFromItemId($id);
+        $item_to_delete = $item_request->getItem();
+        $current_user   = $this->rest_user_manager->getCurrentUser();
+        $project        = $item_request->getProject();
 
         $validator = $this->getValidator($project, $current_user, $item_to_delete);
         $item_to_delete->accept($validator, []);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         try {
             (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
@@ -219,32 +197,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
-    }
-
-
-    private function getEmbeddedFileUpdator(
-        string $docman_root,
-        DocmanItemUpdator $docman_item_updator,
-        Project $project
-    ): DocmanEmbeddedFileUpdator {
-        $version_factory                              = new Docman_VersionFactory();
-        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
-            $docman_setting_bo
-        );
-
-        return new DocmanEmbeddedFileUpdator(
-            new Docman_FileStorage($docman_root),
-            $version_factory,
-            new \Docman_ItemFactory(),
-            $docman_item_updator,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper($docman_setting_bo),
-            new HardcodedMetadataObsolescenceDateRetriever(
-                $hardcoded_metadata_obsolescence_date_checker
-            ),
-            $this->getPermissionManager($project)
-        );
     }
 
     /**
@@ -320,9 +272,74 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $updator->unlockItem($item, $current_user);
     }
 
+    /**
+     * Create a version of an embedded file
+     *
+     * Create a version of an existing embedded file document
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * <pre>
+     * approval_table_action should be provided only if item has an existing approval table.<br>
+     * Possible values:<br>
+     *  * copy: Creates an approval table based on the previous one<br>
+     *  * reset: Reset the current approval table<br>
+     *  * empty: No approbation needed for the new version of this document<br>
+     * </pre>
+     *
+     * @url    POST {id}/version
+     * @access hybrid
+     *
+     * @param int                                         $id             Id of the file
+     * @param DocmanEmbeddedFileVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 409
+     * @throws RestException 501
+     */
+
+    public function postVersion(
+        int $id,
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation
+    ) {
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $this->addAllEvent($item_request->getProject());
+
+        $item = $item_request->getItem();
+
+        $this->createNewEmbeddedFileVersion(
+            $representation,
+            $item_request,
+            (int)$item->getStatus(),
+            (int)$item->getObsolescenceDate(),
+            (string)$item->getTitle(),
+            (string)$item->getDescription()
+        );
+    }
+
     private function setHeadersForLock(): void
     {
         Header::allowOptionsPostDelete();
+    }
+
+    /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsNewVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    private function setVersionHeaders(): void
+    {
+        Header::allowOptionsPost();
     }
 
     /**
@@ -346,5 +363,97 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     private function getRestLockUpdater(\Project $project): RestLockUpdater
     {
         return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
+    }
+
+    /**
+     * @param \Project $project
+     */
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+    }
+
+
+    private function getVersionValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeVersionCreationValidatorVisitor
+    {
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
+        $approval_check                  = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
+        return new DocumentBeforeVersionCreationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            Docman_EmbeddedFile::class,
+            $approval_check
+        );
+    }
+
+    private function getEmbeddedFileVersionCreator(): EmbeddedFileVersionCreator
+    {
+        $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
+        $docman_root          = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $item_updator_builder = new DocmanItemUpdatorBuilder();
+        return new EmbeddedFileVersionCreator(
+            new Docman_FileStorage($docman_root),
+            new Docman_VersionFactory(),
+            new \Docman_ItemFactory(),
+            $item_updator_builder->build($this->event_manager),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+    }
+
+    private function createNewEmbeddedFileVersion(
+        DocmanEmbeddedFileVersionPOSTRepresentation $representation,
+        DocmanItemsRequest $item_request,
+        int $status,
+        int $obsolesence_date,
+        string $title,
+        ?string $description
+    ) {
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        try {
+            $validator = $this->getVersionValidator($project, $current_user, $item);
+            $item->accept(
+                $validator,
+                ['user' => $current_user, 'approval_table_action' => $representation->approval_table_action]
+            );
+            /** @var \Docman_File $item */
+        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        } catch (ApprovalTableException $exception) {
+            throw new I18NRestException(
+                400,
+                $exception->getI18NExceptionMessage()
+            );
+        }
+
+        try {
+            $docman_item_version_creator = $this->getEmbeddedFileVersionCreator();
+            $docman_item_version_creator->createEmbeddedFileVersion(
+                $item,
+                $current_user,
+                $representation,
+                new \DateTimeImmutable(),
+                $status,
+                $obsolesence_date,
+                $title,
+                $description
+            );
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
+            );
+        }
     }
 }

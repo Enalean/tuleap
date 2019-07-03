@@ -131,10 +131,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'file DIS AT',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
-        $file_DIS_AT_version_id = $this->addFileVersion($file_DIS_AT_id, ':o !', 'application/pdf', "");
+        $file_path              = __DIR__ . '/_fixtures/docmanFile/file.txt';
+        $file_DIS_AT_version_id = $this->addFileVersion($file_DIS_AT_id, ':o !', 'application/pdf', $file_path);
         $this->addWritePermissionOnItem($file_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addApprovalTable("file_DIS_AT", (int)$file_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
-
 
         $folder_2_id = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
@@ -158,14 +158,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             "https://example.test"
         );
 
-        $item_F_path = dirname(__FILE__) . '/_fixtures/docmanFile/embeddedFile';
+
         $embedded_id = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
             $folder_id,
             'embeddedFile',
-            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
-            '',
-            $item_F_path
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
         );
 
         $wiki_id = $this->createItemWithVersion(
@@ -173,7 +171,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             $folder_id,
             'wiki',
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-            '',
             '',
             'MyWikiPage'
         );

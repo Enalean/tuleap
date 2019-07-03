@@ -87,7 +87,7 @@ class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
     {
         $folder_with_hardcoded_metadata_items_id = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
-            $docman_root->getId(),
+            (int)$docman_root->getId(),
             'Folder HM',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );

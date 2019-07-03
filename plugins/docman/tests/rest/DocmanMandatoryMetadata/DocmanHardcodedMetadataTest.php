@@ -23,13 +23,11 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Test\rest\DocmanMandatoryMetadata;
 
-
 use DateTimeZone;
 use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedBase;
-
 
 class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 {
@@ -1189,7 +1187,7 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 
         $query = json_encode(
             [
-                'title'             => 'My new file',
+                'title'             => 'An other new file',
                 'file_properties'   => ['file_name' => 'file1', 'file_size' => 0],
                 'status'            => 'rejected',
                 'obsolescence_date' => $formatted_date

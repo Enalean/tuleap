@@ -94,46 +94,13 @@ class DocmanFileVersionCreatorTest extends TestCase
             $item,
             $user,
             $representation,
-            $date
+            $date,
+            (int)$item->getStatus(),
+            (int)$item->getObsolescenceDate(),
+            $item->getTitle(),
+            $item->getDescription()
         );
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
-    }
-
-    public function testItThrowsExceptionIfTheFileIsLocked(): void
-    {
-        $item = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(4);
-        $item->shouldReceive('getStatus')->andReturn(100);
-        $item->shouldReceive('getObsolescenceDate')->andReturn(0);
-        $item->shouldReceive('getTitle')->andReturn('file');
-        $item->shouldReceive('getDescription')->andReturn('');
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-
-        $this->permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
-
-        $date = new \DateTimeImmutable();
-
-        $representation                             = new DocmanFileVersionPOSTRepresentation();
-        $representation->change_log                 = 'changelog';
-        $representation->version_title              = 'version title';
-        $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
-        $representation->file_properties->file_name = 'file';
-        $representation->file_properties->file_size = 0;
-        $representation->approval_table_action      = 'copy';
-        $representation->should_lock_file           = false;
-
-        $this->creator->shouldReceive('create')->never();
-
-        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
-
-        $this->version_creator->createFileVersion(
-            $item,
-            $user,
-            $representation,
-            $date
-        );
     }
 }
