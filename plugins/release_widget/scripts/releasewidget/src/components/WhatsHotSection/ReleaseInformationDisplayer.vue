@@ -20,10 +20,9 @@
 <template>
     <div class="project-release"
          v-bind:class="{ 'project-release-toggle-closed': !is_open }"
-         v-on:click="toggleReleaseDetails()"
     >
-        <div class="project-release-toggle">
-            <div class="project-release-icon">
+        <div class="project-release-toggle" v-on:click="toggleReleaseDetails()">
+            <div class="project-release-icon" data-test="project-release-toggle">
                 <i class="fa fa-ellipsis-h"></i>
             </div>
             <h1 class="project-release-title">
@@ -36,8 +35,17 @@
                 <i class="fa fa-long-arrow-right"></i>
                 {{ formatDate(releaseData.end_date) }}
             </span>
+
         </div>
-        <p v-if="is_open" class="empty-pane-text" v-translate>There is nothing here!</p>
+        <div v-if="is_open" class="project-release-infos" data-test="toggle_open">
+            <a class="project-release-info tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
+                <i class="fa fa-map-signs tlp-badge-icon"></i>
+                <translate v-bind:translate-n="total_sprint" translate-plural="%{ total_sprint } sprints">
+                    %{ total_sprint } sprint
+                </translate>
+            </a>
+
+        </div>
     </div>
 </template>
 
@@ -51,8 +59,25 @@ export default {
     },
     data() {
         return {
-            is_open: false
+            is_open: false,
+            total_sprint: null
         };
+    },
+    computed: {
+        getTopPlanningLink() {
+            return (
+                "/plugins/agiledashboard/?group_id=" +
+                encodeURIComponent(this.$store.state.project_id) +
+                "&planning_id=" +
+                encodeURIComponent(this.releaseData.planning.id) +
+                "&action=show&aid=" +
+                encodeURIComponent(this.releaseData.id) +
+                "&pane=planning-v2"
+            );
+        }
+    },
+    mounted() {
+        this.setTotalSprints();
     },
     methods: {
         formatDate(date) {
@@ -60,6 +85,12 @@ export default {
         },
         toggleReleaseDetails() {
             this.is_open = !this.is_open;
+        },
+        async setTotalSprints() {
+            this.total_sprint = await this.$store.dispatch(
+                "getNumberOfSprints",
+                this.releaseData.id
+            );
         }
     }
 };

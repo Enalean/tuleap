@@ -24,6 +24,7 @@
             v-for="milestone in current_milestones"
             v-bind:key="milestone.id"
             v-bind:release-data="milestone"
+            v-bind:data-test="`current-milestones-test-${milestone.label}`"
         />
     </div>
 </template>

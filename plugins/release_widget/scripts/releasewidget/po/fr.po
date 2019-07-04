@@ -12,6 +12,11 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ total_sprint } sprint"
+msgid_plural "%{ total_sprint } sprints"
+msgstr[0] "%{ total_sprint } sprint"
+msgstr[1] "%{ total_sprint } sprints"
+
 msgid ""
 "%{nb_backlog_items} items in the backlog, %{nb_upcoming_releases} upcoming "
 "releases"
@@ -24,9 +29,6 @@ msgstr "Oups, une erreur s'est produite !"
 
 msgid "Release %{release_label}"
 msgstr "Version %{release_label}"
-
-msgid "There is nothing here!"
-msgstr "Il n'y a rien ici !"
 
 msgid "What's hot"
 msgstr "En cours"

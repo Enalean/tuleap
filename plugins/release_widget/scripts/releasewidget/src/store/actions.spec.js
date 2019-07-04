@@ -22,6 +22,7 @@ import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
 import { rewire$getNumberOfBacklogItems } from "./actions.js";
 import { rewire$getNumberOfUpcomingReleases } from "./actions.js";
 import { rewire$getCurrentMilestones } from "./actions.js";
+import { rewire$handleErrorMessage } from "./actions.js";
 
 describe("Store actions", () => {
     let context;
@@ -216,6 +217,54 @@ describe("Store actions", () => {
                 expect(getNumberOfUpcomingReleases).toHaveBeenCalled();
                 expect(getCurrentMilestones).toHaveBeenCalled();
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+            });
+        });
+    });
+
+    describe("handleErrorMessage - error", () => {
+        it("Given an error, When it can't parse the error, Then the error message is empty.", async () => {
+            const error_json = "[a,b, c, d, e, f,]";
+            await actions.handleErrorMessage(context, error_json);
+
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
+        });
+    });
+
+    describe("getNumberOfSprints - rest", () => {
+        describe("getNumberOfSprints - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
+                const handleErrorMessage = jasmine.createSpy("handleErrorMessage");
+                rewire$handleErrorMessage(handleErrorMessage);
+
+                mockFetchError(tlp.get, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await actions.getNumberOfSprints(context, 102);
+
+                expect(handleErrorMessage).toHaveBeenCalled();
+            });
+        });
+        describe("getNumberOfSprints - success", () => {
+            it("Given a success response, When totals of sprints is received, Then no message error is received", async () => {
+                mockFetchSuccess(tlp.get, {
+                    headers: {
+                        get: header_name => {
+                            const headers = {
+                                "X-PAGINATION-SIZE": 1
+                            };
+
+                            return headers[header_name];
+                        }
+                    }
+                });
+
+                await expectAsync(actions.getNumberOfSprints(context, 102)).toBeResolved();
             });
         });
     });

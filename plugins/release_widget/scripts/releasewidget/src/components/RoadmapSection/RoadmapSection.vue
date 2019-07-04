@@ -25,7 +25,7 @@
             <div class="project-release-icon">
                 <i class="fa fa-angle-double-up"></i>
             </div>
-            <a class="releases-link" v-bind:href="backlog_link">
+            <a class="releases-link" v-bind:href="backlog_link" data-test="backlog-link">
                 <translate v-bind:translate-params="{nb_backlog_items: nb_backlog_items, nb_upcoming_releases: nb_upcoming_releases}">
                     %{nb_backlog_items} items in the backlog, %{nb_upcoming_releases} upcoming releases
                 </translate>
