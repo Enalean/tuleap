@@ -23,6 +23,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
+use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -436,28 +439,14 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      *
      * @param PFUser $user User to add
      *
-     * @throws UGroup_Invalid_Exception
-     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
-     *
      * @return void
+     * @throws UGroup_Invalid_Exception
+     * @throws \Tuleap\Project\UGroups\Membership\InvalidProjectException
+     * @throws \Tuleap\Project\UGroups\Membership\UserIsAnonymousException
      */
     public function addUser(PFUser $user)
     {
-        $this->assertProjectUGroupAndUserValidity($user);
-        $project = $this->getProject();
-        if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
-            $user->isRestricted()) {
-            throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
-        }
-        if ($this->is_dynamic) {
-            $this->addUserToDynamicGroup($user);
-        } else {
-            if ($this->exists($this->group_id, $this->id)) {
-                $this->addUserToStaticGroup($this->group_id, $this->id, $user->getId());
-            } else {
-                throw new UGroup_Invalid_Exception();
-            }
-        }
+        $this->getMemberAdder()->addMember($user, $this);
     }
 
     /**
@@ -480,32 +469,13 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    /**
-     * Add user to a static ugroup
-     *
-     * @param int $group_id Id of the project
-     * @param int $ugroup_id Id of the ugroup
-     * @param int $user_id Id of the user
-     *
-     * @return void
-     */
-    protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id)
+    private function getMemberAdder(): MemberAdder
     {
-        include_once 'www/project/admin/ugroup_utils.php';
-        ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
-    }
-
-    /**
-     * Add user to a dynamic ugroup
-     */
-    protected function addUserToDynamicGroup(PFUser $user) : void
-    {
-        $project = $this->getProject();
-        if ($project === null) {
-            return;
-        }
-
-        $this->getDynamicUGroupMembersUpdater()->addUser($project, $this, $user);
+        return new MemberAdder(
+            new MembershipUpdateVerifier(),
+            new StaticMemberAdder(),
+            $this->getDynamicUGroupMembersUpdater()
+        );
     }
 
     private function getDynamicUGroupMembersUpdater() : DynamicUGroupMembersUpdater

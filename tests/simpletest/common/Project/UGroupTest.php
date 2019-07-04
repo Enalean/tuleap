@@ -20,201 +20,104 @@
 require_once 'www/project/admin/ugroup_utils.php';
 require_once 'utils.php';
 
-class UGroup_AddUserTest extends TuleapTestCase {
-    
-    public function setUp() {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class UGroup_RemoveUserTest extends TuleapTestCase
+{
+    public function setUp()
+    {
         parent::setUp();
         $this->user_id = 400;
         $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
 
-    public function tearDown() : void
-    {
-        parent::tearDown();
-        ProjectManager::clearInstance();
-    }
-
-    public function itAddUserIntoStaticGroup() : void
+    public function itRemoveUserFromStaticGroup()
     {
         $ugroup_id = 200;
         $group_id  = 300;
 
-        $project_manager = Mockery::mock(ProjectManager::class);
-        ProjectManager::setInstance($project_manager);
-        $project = Mockery::mock(Project::class);
-        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
-        
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('addUserToStaticGroup', 'exists'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', ['removeUserFromStaticGroup', 'exists']);
         stub($ugroup)->exists()->returns(true);
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        $ugroup->expectOnce('addUserToStaticGroup', array($group_id, $ugroup_id, $this->user_id));
-        
-        $ugroup->addUser($this->user);
-    }
-    
-    function itThrowAnExceptionIfStaticUGroupDoesntExist() {
-        $ugroup_id = 200;
-        $group_id  = 300;
-
-        $project_manager = Mockery::mock(ProjectManager::class);
-        ProjectManager::setInstance($project_manager);
-        $project = Mockery::mock(Project::class);
-        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
-        
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('exists'));
-        stub($ugroup)->exists()->returns(false);
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        $this->expectException(new UGroup_Invalid_Exception());
-        
-        $ugroup->addUser($this->user);
-    }
-    
-    public function itAddsUserIntoDynamicGroup() : void
-    {
-        $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
-        $group_id  = 300;
-
-        $project_manager = Mockery::mock(ProjectManager::class);
-        ProjectManager::setInstance($project_manager);
-        $project = Mockery::mock(Project::class);
-        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
-        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
-
-        $ugroup = Mockery::mock(ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $ugroup->shouldReceive('addUserToDynamicGroup')->with($this->user)->once();
-        
         $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
 
-        $ugroup->addUser($this->user);
-    }
-    
-    function itThrowAnExceptionIfThereIsNoGroupId() {
-        $ugroup_id = 200;
-        
-        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroup_id));
-        
-        $this->expectException();
-        
-        $ugroup->addUser($this->user);
-    }
-    
-    function itThrowAnExceptionIfThereIsNoUGroupId() {
-        $group_id  = 300;
-        
-        $ugroup = new ProjectUGroup(array('group_id' => $group_id));
-        
-        $this->expectException();
-        
-        $ugroup->addUser($this->user);
-    }
+        $ugroup->expectOnce('removeUserFromStaticGroup', [$group_id, $ugroup_id, $this->user_id]);
 
-    function itThrowAnExceptionIfUserIsNotValid() {
-        $group_id  = 300;
-        $ugroup_id = 200;
-        
-        $ugroup = new ProjectUGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
-        
-        $this->expectException();
-        
-        $user = anAnonymousUser()->build();
-        
-        $ugroup->addUser($user);
-    }
-}
-
-class UGroup_RemoveUserTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $this->user_id = 400;
-        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
-    }
-    
-    function itRemoveUserFromStaticGroup() {
-        $ugroup_id = 200;
-        $group_id  = 300;
-        
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('removeUserFromStaticGroup', 'exists'));
-        stub($ugroup)->exists()->returns(true);
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        $ugroup->expectOnce('removeUserFromStaticGroup', array($group_id, $ugroup_id, $this->user_id));
-        
         $ugroup->removeUser($this->user);
     }
-    
-    function itThrowAnExceptionIfStaticUGroupDoesntExist() {
+
+    public function itThrowAnExceptionIfStaticUGroupDoesntExist()
+    {
         $ugroup_id = 200;
         $group_id  = 300;
-        
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('exists'));
+
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', ['exists']);
         stub($ugroup)->exists()->returns(false);
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
+        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
+
         $this->expectException(new UGroup_Invalid_Exception());
-        
+
         $ugroup->removeUser($this->user);
     }
-    
-    public function itRemovesUserFromDynamicGroup() : void
+
+    public function itRemovesUserFromDynamicGroup(): void
     {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
-        
+
         $ugroup = Mockery::mock(ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ugroup->shouldReceive('removeUserFromDynamicGroup')->with($this->user)->once();
-        
+
         $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
-        
-        $ugroup->removeUser($this->user);
-    }
-    
-    function itThrowAnExceptionIfThereIsNoGroupId() {
-        $ugroup_id = 200;
-        
-        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroup_id));
-        
-        $this->expectException();
-        
-        $ugroup->removeUser($this->user);
-    }
-    
-    function itThrowAnExceptionIfThereIsNoUGroupId() {
-        $group_id  = 300;
-        
-        $ugroup = new ProjectUGroup(array('group_id' => $group_id));
-        
-        $this->expectException();
-        
+
         $ugroup->removeUser($this->user);
     }
 
-    function itThrowAnExceptionIfUserIsNotValid() {
+    public function itThrowAnExceptionIfThereIsNoGroupId()
+    {
+        $ugroup_id = 200;
+
+        $ugroup = new ProjectUGroup(['ugroup_id' => $ugroup_id]);
+
+        $this->expectException();
+
+        $ugroup->removeUser($this->user);
+    }
+
+    public function itThrowAnExceptionIfThereIsNoUGroupId()
+    {
+        $group_id = 300;
+
+        $ugroup = new ProjectUGroup(['group_id' => $group_id]);
+
+        $this->expectException();
+
+        $ugroup->removeUser($this->user);
+    }
+
+    public function itThrowAnExceptionIfUserIsNotValid()
+    {
         $group_id  = 300;
         $ugroup_id = 200;
-        
-        $ugroup = new ProjectUGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
-        
+
+        $ugroup = new ProjectUGroup(['group_id' => $group_id, 'ugroup_id' => $ugroup_id]);
+
         $this->expectException();
-        
+
         $user = anAnonymousUser()->build();
-        
+
         $ugroup->removeUser($user);
     }
 }
 
-class UGroup_getUsersBaseTest extends TuleapTestCase {
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class UGroup_getUsersBaseTest extends TuleapTestCase
+{
     protected $garfield;
     protected $goofy;
-    protected $garfield_incomplete_row = array('user_id' => 1234, 'user_name' => 'garfield');
-    protected $goofy_incomplete_row    = array('user_id' => 5677, 'user_name' => 'goofy');
+    protected $garfield_incomplete_row = ['user_id' => 1234, 'user_name' => 'garfield'];
+    protected $goofy_incomplete_row    = ['user_id' => 5677, 'user_name' => 'goofy'];
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
@@ -225,137 +128,183 @@ class UGroup_getUsersBaseTest extends TuleapTestCase {
         stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         UserManager::clearInstance();
         parent::tearDown();
     }
 }
 
-class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class UGroup_getUsersTest extends UGroup_getUsersBaseTest
+{
 
-    public function itIsEmptyWhenTheGroupIsEmpty() {
-        $id       = 333;
-        $row      = array('ugroup_id' => $id, 'group_id' => 105);
-        $ugroup   = new ProjectUGroup($row);
+    public function itIsEmptyWhenTheGroupIsEmpty()
+    {
+        $id     = 333;
+        $row    = ['ugroup_id' => $id, 'group_id' => 105];
+        $ugroup = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
-        $this->assertEqual($ugroup->getUsers()->getNames(), array());
+        $this->assertEqual($ugroup->getUsers()->getNames(), []);
     }
 
-    public function itReturnsTheMembersOfStaticGroups() {
-        $id       = 333;
-        $row      = array('ugroup_id' => $id, 'group_id' => 105);
-        $ugroup   = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
-        
+    public function itReturnsTheMembersOfStaticGroups()
+    {
+        $id     = 333;
+        $row    = ['ugroup_id' => $id, 'group_id' => 105];
+        $ugroup = new ProjectUGroup($row);
+        $ugroup->setUGroupUserDao(
+            stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar(
+                $this->garfield_incomplete_row,
+                $this->goofy_incomplete_row
+            )
+        );
+
         $this->assertEqual($ugroup->getUsers()->getNames(), ['garfield', 'goofy']);
     }
-    
-    public function itReturnsTheMembersOfDynamicGroups() {
+
+    public function itReturnsTheMembersOfDynamicGroups()
+    {
         $id       = 1;
         $group_id = 555;
-        $row      = array('ugroup_id' => $id , 'group_id' => $group_id);
+        $row      = ['ugroup_id' => $id, 'group_id' => $group_id];
         $ugroup   = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $ugroup->setUGroupUserDao(
+            stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar(
+                $this->garfield_incomplete_row,
+                $this->goofy_incomplete_row
+            )
+        );
 
-        $this->assertEqual($ugroup->getUsers()->getNames(),  ['garfield', 'goofy']);
+        $this->assertEqual($ugroup->getUsers()->getNames(), ['garfield', 'goofy']);
     }
 }
 
-class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class UGroup_getMembersTest extends UGroup_getUsersBaseTest
+{
 
-    public function itIsEmptyWhenTheGroupIsEmpty() {
-        $id       = 333;
-        $row      = array('ugroup_id' =>$id);
-        $ugroup   = new ProjectUGroup($row);
+    public function itIsEmptyWhenTheGroupIsEmpty()
+    {
+        $id     = 333;
+        $row    = ['ugroup_id' => $id];
+        $ugroup = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
         $this->assertTrue(count($ugroup->getMembers()) == 0);
         $this->assertTrue(count($ugroup->getMembersUserName()) == 0);
     }
 
-    public function itReturnsTheMembersOfStaticGroups() {
-        $id       = 333;
-        $row      = array('ugroup_id' =>$id);
-        $ugroup   = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+    public function itReturnsTheMembersOfStaticGroups()
+    {
+        $id     = 333;
+        $row    = ['ugroup_id' => $id];
+        $ugroup = new ProjectUGroup($row);
+        $ugroup->setUGroupUserDao(
+            stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar(
+                $this->garfield_incomplete_row,
+                $this->goofy_incomplete_row
+            )
+        );
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
-        
+
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
-        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), ['garfiel', $this->goofy_incomplete_row]);
     }
 
-    public function itReturnsTheMembersOfDynamicGroups() {
+    public function itReturnsTheMembersOfDynamicGroups()
+    {
         $id       = 1;
         $group_id = 555;
-        $row      = array('ugroup_id' =>$id , 'group_id' => $group_id);
+        $row      = ['ugroup_id' => $id, 'group_id' => $group_id];
         $ugroup   = new ProjectUGroup($row);
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $ugroup->setUGroupUserDao(
+            stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar(
+                $this->garfield_incomplete_row,
+                $this->goofy_incomplete_row
+            )
+        );
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
-        
+
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
-        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), ['garfiel', $this->goofy_incomplete_row]);
     }
 }
 
-class UGroup_GetsNameTest extends TuleapTestCase {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class UGroup_GetsNameTest extends TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members'));
-        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins'));
+        $this->setText('membre_de_projet', ['project_ugroup', 'ugroup_project_members']);
+        $this->setText('administrateur_de_le_projet', ['project_ugroup', 'ugroup_project_admins']);
     }
 
-    public function itReturnsProjectMembers() {
-        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
+    public function itReturnsProjectMembers()
+    {
+        $ugroup = new ProjectUGroup(
+            ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key']
+        );
         $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
         $this->assertEqual('membre_de_projet', $ugroup->getTranslatedName());
         $this->assertEqual('project_members', $ugroup->getNormalizedName());
     }
 
-    public function itReturnsProjectAdmins() {
-        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
+    public function itReturnsProjectAdmins()
+    {
+        $ugroup = new ProjectUGroup(
+            ['ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key']
+        );
         $this->assertEqual('ugroup_project_admins_name_key', $ugroup->getName());
         $this->assertEqual('administrateur_de_le_projet', $ugroup->getTranslatedName());
         $this->assertEqual('project_admins', $ugroup->getNormalizedName());
     }
 
-    public function itReturnsAStaticGroup() {
-        $ugroup = new ProjectUGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
+    public function itReturnsAStaticGroup()
+    {
+        $ugroup = new ProjectUGroup(['ugroup_id' => 120, 'name' => 'Zoum_zoum_zen']);
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getName());
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getTranslatedName());
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
     }
 }
 
-class UGroup_SourceInitializationTest extends TuleapTestCase {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class UGroup_SourceInitializationTest extends TuleapTestCase
+{
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $this->ugroup = partial_mock('ProjectUGroup', array('getUgroupBindingSource'), array('ugroup_id' => 123));
+        $this->ugroup = partial_mock('ProjectUGroup', ['getUgroupBindingSource'], ['ugroup_id' => 123]);
     }
 
-    public function itQueriesTheDatabaseWhenDefaultValueIsFalse() {
+    public function itQueriesTheDatabaseWhenDefaultValueIsFalse()
+    {
         expect($this->ugroup)->getUgroupBindingSource()->once();
         $this->ugroup->isBound();
     }
 
-    public function itQueriesTheDatabaseOnlyOnce() {
+    public function itQueriesTheDatabaseOnlyOnce()
+    {
         expect($this->ugroup)->getUgroupBindingSource()->once();
         stub($this->ugroup)->getUgroupBindingSource()->returns(null);
         $this->ugroup->isBound();
         $this->ugroup->isBound();
     }
 
-    public function itReturnsTrueWhenTheGroupIsBound() {
+    public function itReturnsTrueWhenTheGroupIsBound()
+    {
         stub($this->ugroup)->getUgroupBindingSource()->returns(stub('ProjectUGroup')->getId()->returns(666));
         $this->assertTrue($this->ugroup->isBound());
     }
 
-    public function itReturnsFalseWhenTheGroupIsNotBound() {
+    public function itReturnsFalseWhenTheGroupIsNotBound()
+    {
         stub($this->ugroup)->getUgroupBindingSource()->returns(null);
         $this->assertFalse($this->ugroup->isBound());
     }
-
 }
-?>
