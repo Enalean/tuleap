@@ -72,9 +72,16 @@ class VelocityComputation
 
     private function getComputedVelocity(BeforeEvent $before_event, SemanticVelocity $semantic_velocity)
     {
-        $computed_velocity = $this->calculator->calculate($before_event->getArtifact());
+        $computed_velocity = $this->calculator->calculate(
+            $before_event->getArtifact(),
+            $before_event->getUser()
+        );
 
-        $this->displayUpdateMessageForUserWhoCanReadField($before_event->getUser(), $computed_velocity, $semantic_velocity->getVelocityField());
+        $this->displayUpdateMessageForUserWhoCanReadField(
+            $before_event->getUser(),
+            $computed_velocity,
+            $semantic_velocity->getVelocityField()
+        );
 
         return $computed_velocity;
     }

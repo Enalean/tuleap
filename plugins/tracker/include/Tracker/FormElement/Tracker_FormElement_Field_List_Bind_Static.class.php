@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -26,14 +26,15 @@ use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
-class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
-
+class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
+{
     public const TYPE = 'static';
 
     /**
-     * @var Array of Tracker_FormElement_Field_List_Bind_StaticValue
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     protected $values;
+
     protected $is_rank_alpha;
 
     /**
@@ -41,8 +42,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     private $value_dao = null;
 
-    public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
+    public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators)
+    {
         parent::__construct($field, $default_values, $decorators);
+
         $this->is_rank_alpha = $is_rank_alpha;
         $this->values        = $values;
     }
@@ -60,10 +63,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @param array $row The row identifying the bindvalue
      *
-     * @return Tracker_FormElement_Field_List_BindValue
+     * @return Tracker_FormElement_Field_List_Bind_StaticValue
      */
-    public function getValueFromRow($row) {
-        return new Tracker_FormElement_Field_List_Bind_StaticValue($row['id'], $row['label'], $row['description'], $row['rank'], $row['is_hidden']);
+    public function getValueFromRow($row)
+    {
+        return new Tracker_FormElement_Field_List_Bind_StaticValue(
+            $row['id'],
+            $row['label'],
+            $row['description'],
+            $row['rank'],
+            $row['is_hidden']
+        );
     }
 
     /**
@@ -645,10 +655,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 case 'edit':
                     foreach ($value as $value_id => $info) {
                         if (isset($this->values[$value_id])) {
+                            $bind_static_value = $this->values[$value_id];
+
                             $new_label       = null;
                             $new_description = null;
                             $new_is_hidden   = null;
-                            if (isset($info['label']) && trim($info['label']) != $this->values[$value_id]->getLabel()) {
+                            if (isset($info['label']) && trim($info['label']) != $bind_static_value->getLabel()) {
                                 if (empty(trim($info['label']))) {
                                     $GLOBALS['Response']->addFeedback(
                                         Feedback::WARN,
@@ -658,10 +670,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                                     $new_label = trim($info['label']);
                                 }
                             }
-                            if (isset($info['description']) && trim($info['description']) != $this->values[$value_id]->getDescription()) {
+                            if (isset($info['description']) && trim($info['description']) != $bind_static_value->getDescription()) {
                                 $new_description = trim($info['description']);
                             }
-                            if (isset($info['is_hidden']) && trim($info['is_hidden']) != $this->values[$value_id]->isHidden()) {
+                            if (isset($info['is_hidden']) && trim($info['is_hidden']) != $bind_static_value->isHidden()) {
                                 $new_is_hidden = trim($info['is_hidden']);
                             }
                             if ($new_label !== null || $new_description !== null || $new_is_hidden !== null) {
@@ -669,10 +681,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                                 $value_dao->save(
                                     $value_id,
                                     $this->field->getId(),
-                                    isset($new_label)       ? $new_label       : $this->values[$value_id]->getLabel(),
-                                    isset($new_description) ? $new_description : $this->values[$value_id]->getDescription(),
-                                    $this->values[$value_id]->getRank(),
-                                    isset($new_is_hidden)   ? $new_is_hidden   : $this->values[$value_id]->isHidden()
+                                    isset($new_label)       ? $new_label       : $bind_static_value->getLabel(),
+                                    isset($new_description) ? $new_description : $bind_static_value->getDescription(),
+                                    $bind_static_value->getRank(),
+                                    isset($new_is_hidden)   ? $new_is_hidden   : $bind_static_value->isHidden()
                                 );
                                 unset($new_label, $new_description);
                             }

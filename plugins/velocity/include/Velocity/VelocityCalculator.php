@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,10 @@
 namespace Tuleap\Velocity;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
+use PFUser;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_IComputeValues;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 
 class VelocityCalculator
@@ -56,7 +58,7 @@ class VelocityCalculator
         $this->dao                    = $dao;
     }
 
-    public function calculate(Tracker_Artifact $artifact)
+    public function calculate(Tracker_Artifact $artifact, PFUser $user)
     {
         $backlog_items = $this->getPlanningLinkedArtifact($artifact);
 
@@ -64,7 +66,7 @@ class VelocityCalculator
         foreach ($backlog_items as $item) {
             $artifact = $this->artifact_factory->getArtifactById($item['id']);
 
-            $initial_effort += $this->getEffort($artifact);
+            $initial_effort += $this->getEffort($artifact, $user);
         }
 
         return $initial_effort;
@@ -75,15 +77,10 @@ class VelocityCalculator
         return $this->dao->searchPlanningLinkedArtifact($artifact->getId());
     }
 
-    private function getEffort(Tracker_Artifact $artifact)
+    private function getEffort(Tracker_Artifact $artifact, PFUser $user)
     {
         $semantic_initial_effort = $this->initial_effort_factory->getByTracker($artifact->getTracker());
         if ($semantic_initial_effort === null) {
-            return 0;
-        }
-
-        $semantic_done = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
-        if ($semantic_done === null) {
             return 0;
         }
 
@@ -92,13 +89,13 @@ class VelocityCalculator
             return 0;
         }
 
-        $changeset = $artifact->getLastChangeset();
-        if ($changeset === null) {
+        $semantic_done = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
+        if ($semantic_done === null) {
             return 0;
         }
 
-        $initial_effort_value = $changeset->getValue($initial_effort_field);
-        if (! $initial_effort_value) {
+        $changeset = $artifact->getLastChangeset();
+        if ($changeset === null) {
             return 0;
         }
 
@@ -109,7 +106,15 @@ class VelocityCalculator
 
         $status_values = $status_value->getValue();
         if (in_array($status_values[0], $semantic_done->getDoneValuesIds())) {
-            return $initial_effort_value->getValue();
+            assert($initial_effort_field instanceof Tracker_FormElement_IComputeValues);
+
+            $initial_effort_value = $initial_effort_field->getComputedValue($user, $artifact);
+
+            if (! $initial_effort_value || ! is_numeric($initial_effort_value)) {
+                return 0;
+            }
+
+            return $initial_effort_value;
         }
 
         return 0;
