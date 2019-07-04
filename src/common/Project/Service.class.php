@@ -1,28 +1,26 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
-* Service
-*/
-class Service {
-
+class Service
+{
     public const SUMMARY   = 'summary';
     public const ADMIN     = 'admin';
     public const FORUM     = 'forum';
@@ -38,13 +36,23 @@ class Service {
     public const SCOPE_SYSTEM  = 'system';
     public const SCOPE_PROJECT = 'project';
 
+    private const ICONS = [
+        self::ADMIN     => 'fa-cogs',
+        self::FORUM     => 'fa-users',
+        self::HOMEPAGE  => 'fa-home',
+        self::ML        => 'fa-envelope',
+        self::NEWS      => 'fa-rss',
+        self::TRACKERV3 => 'fa-list-ol',
+    ];
+
     public $data;
-    
+
     /**
      * @var Project
      */
     public $project;
-    
+
+
     /**
      * Create an instance of Service
      *
@@ -228,5 +236,18 @@ class Service {
         }
 
         return $text;
+    }
+
+    public function getIcon() : string
+    {
+        if (isset(self::ICONS[$this->getShortName()])) {
+            return $this->getFontAwesomeIcon(self::ICONS[$this->getShortName()]);
+        }
+        return 'tuleap-services-angle-double-right tuleap-services-'.$this->getShortName();
+    }
+
+    protected function getFontAwesomeIcon(string $icon) : string
+    {
+        return 'fa fa-fw '.$icon;
     }
 }

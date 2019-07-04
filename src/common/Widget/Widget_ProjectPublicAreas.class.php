@@ -44,21 +44,23 @@ class Widget_ProjectPublicAreas extends Widget {
         $html = '';
 
         if ($project->usesHomePage()) {
+            $homepage_service = $project->getService(Service::HOMEPAGE);
             $html .= "<p><a ";
-            if (substr($project->getHomePage(), 0, 1)!="/") {
+            if (substr($homepage_service->getUrl(), 0, 1)!="/") {
                 // Absolute link -> open new window on click
                 $html .= 'target="_blank" rel="noreferrer" ';
             }
-            $html .= 'href="' . $project->getHomePage() . '">';
-            $html .= '<i class="tuleap-services-homepage tuleap-services-widget"></i>';
+            $html .= 'href="' . $homepage_service->getUrl() . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$homepage_service->getIcon().'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','proj_home').'</a></p>';
         }
 
         // ################## forums
 
         if ($project->usesForum()) {
-            $html .= '<p><a href="'.$project->getForumPage().'">';
-            $html .= '<i class="tuleap-services-forum tuleap-services-widget"></i>';
+            $service_forum = $project->getService(Service::FORUM);
+            $html .= '<p><a href="'.$service_forum->getUrl().'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$service_forum->getIcon().'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
 
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
@@ -79,8 +81,9 @@ class Widget_ProjectPublicAreas extends Widget {
         // ##################### Mailing lists (only for Active)
 
         if ($project->usesMail()) {
-            $html .= '<p><a href="'.$project->getMailPage().'">';
-            $html .= '<i class="tuleap-services-mail tuleap-services-widget"></i>';
+            $mail_service = $project->getService(Service::ML);
+            $html .= '<p><a href="'.$mail_service->getUrl().'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$mail_service->getIcon().'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
             $row_count = db_fetch_array($res_count);
@@ -157,8 +160,9 @@ class Widget_ProjectPublicAreas extends Widget {
 
         // ######################### Trackers (only for Active)
         if ( $project->usesTracker() ) {
-            $html .= '<p><a href="'.$project->getTrackerPage().'">';
-            $html .= '<i class="tuleap-services-tracker tuleap-services-widget"></i>';
+            $trackerv3_service = $project->getService(Service::TRACKERV3);
+            $html .= '<p><a href="'.$trackerv3_service->getUrl().'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$trackerv3_service->getIcon().'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
             //  get the Group object
             $pm = ProjectManager::instance();

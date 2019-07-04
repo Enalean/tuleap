@@ -80,19 +80,19 @@ class ProjectSidebarBuilder
         $sidebar          = array();
         $allowed_services = $this->getAllowedServicesForUser($user, $project);
 
-        foreach ($project->getServicesData() as $short_name => $service_data) {
-            if (! $this->canServiceBeAddedInSidebar($project, $user, $short_name, $service_data, $allowed_services)) {
+        foreach ($project->getServices() as $service) {
+            if (! $this->canServiceBeAddedInSidebar($project, $user, $service, $allowed_services)) {
                 continue;
             }
 
             $sidebar[] = array(
-                'link'        => $this->getLink($service_data, $project),
-                'icon'        => $this->getIcon($short_name, $service_data),
-                'name'        => $this->purifier->purify($service_data['label']),
-                'label'       => $this->getLabel($service_data),
-                'enabled'     => $this->isEnabled($toptab, $service_data, $short_name),
-                'description' => $this->purifier->purify($service_data['description']),
-                'id'          => $this->purifier->purify('sidebar-' . $short_name)
+                'link'        => $this->getLink($service, $project),
+                'icon'        => $service->getIcon(),
+                'name'        => $this->purifier->purify($service->getLabel()),
+                'label'       => $this->getLabel($service),
+                'enabled'     => $this->isEnabled($toptab, $service),
+                'description' => $this->purifier->purify($service->getDescription()),
+                'id'          => $this->purifier->purify('sidebar-' . $service->getShortName())
             );
         }
 
@@ -109,15 +109,6 @@ class ProjectSidebarBuilder
         $projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 
         return in_array($project->getID(), $projects);
-    }
-
-    private function getIcon($service_name, $service_data)
-    {
-        if (isset($service_data['icon'])) {
-            return $service_data['icon'];
-        }
-
-        return 'tuleap-services-angle-double-right tuleap-services-' . $service_name;
     }
 
     /** @return string[] */
@@ -139,14 +130,15 @@ class ProjectSidebarBuilder
     private function canServiceBeAddedInSidebar(
         Project $project,
         PFUser $user,
-        $short_name,
-        array $service_data,
+        \Service $service,
         array $allowed_services
-    ) {
-        if (! $service_data['is_used']) {
+    ) : bool {
+        $short_name = $service->getShortName();
+
+        if (! $service->isUsed()) {
             return false;
         }
-        if (! $service_data['is_active']) {
+        if (! $service->isActive()) {
             return false;
         }
 
@@ -171,24 +163,21 @@ class ProjectSidebarBuilder
         return true;
     }
 
-    /**
-     * @return string
-     */
-    private function getLink(array $service_data, Project $project)
+    private function getLink(\Service $service, Project $project) : string
     {
         $project_id = $project->getID();
 
-        if ($service_data['is_in_iframe']) {
-            $link = '/service/?group_id=' . $project_id . '&amp;id=' . $service_data['service_id'];
+        if ($service->isIFrame()) {
+            $link = '/service/?group_id=' . $project_id . '&amp;id=' . $service->getId();
         } else {
-            $service_url_collector = new ServiceUrlCollector($project, $service_data['short_name']);
+            $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
 
             $this->event_manager->processEvent($service_url_collector);
 
             if ($service_url_collector->hasUrl()) {
                 $link = $service_url_collector->getUrl();
             } else {
-                $link = $this->purifier->purify($service_data['link']);
+                $link = $this->purifier->purify($service->getUrl());
             }
         }
         if ($project_id == 100) {
@@ -216,27 +205,21 @@ class ProjectSidebarBuilder
         return $this->uri_sanitizer->sanitizeForHTMLAttribute($link);
     }
 
-    /**
-     * @return bool
-     */
-    private function isEnabled($toptab, array $service_data, $short_name)
+    private function isEnabled($toptab, \Service $service) : bool
     {
-        return (is_numeric($toptab) && $toptab == $service_data['service_id'])
-            || ($short_name && ($toptab == $short_name));
+        return (is_numeric($toptab) && $toptab == $service->getId())
+            || ($service->getShortName() && ($toptab == $service->getShortName()));
     }
 
-    /**
-     * @return string
-     */
-    private function getLabel(array $service_data)
+    private function getLabel(\Service $service) : string
     {
-        $label = '<span title="' . $this->purifier->purify($service_data['description']) . '">';
-        $label .= $this->purifier->purify($service_data['label']) . '</span>';
+        $label = '<span title="' . $this->purifier->purify($service->getInternationalizedDescription()) . '">';
+        $label .= $this->purifier->purify($service->getInternationalizedName()) . '</span>';
 
         return $label;
     }
 
-    private function userCanSeeAdminService(Project $project, PFUser $user)
+    private function userCanSeeAdminService(Project $project, PFUser $user) : bool
     {
         if (! $user->isLoggedIn()) {
             return false;

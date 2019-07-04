@@ -29,13 +29,9 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $service_git = mock('Service');
-        stub($service_git)->getId()->returns($this->service_git_id);
-        stub($service_git)->isUsed()->returns(false);
+        $service_git = Mockery::mock(Service::class, ['getId' => $this->service_git_id, 'isUsed' => false]);
 
-        $service_tracker = mock('Service');
-        stub($service_tracker)->getId()->returns($this->service_tracker_id);
-        stub($service_tracker)->isUsed()->returns(true);
+        $service_tracker = Mockery::mock(Service::class, ['getId' => $this->service_tracker_id, 'isUsed' => true]);
 
         $template = mock('Project');
         stub($template)->getServices()->returns(array($service_git, $service_tracker));

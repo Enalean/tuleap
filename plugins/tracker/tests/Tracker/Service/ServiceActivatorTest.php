@@ -52,8 +52,8 @@ class ServiceActivatorTest extends TuleapTestCase
             'project_creation_data' => $this->data
         );
 
-        $this->tracker_core_service   = stub('Service')->getId()->returns(101);
-        $this->tracker_plugin_service = stub('Service')->getId()->returns(106);
+        $this->tracker_core_service   = \Mockery::mock(Service::class, ['getId' => 101]);
+        $this->tracker_plugin_service = \Mockery::mock(Service::class, ['getId' => 106]);
 
         stub($this->tracker_core_service)->getShortName()->returns('tracker');
         stub($this->tracker_plugin_service)->getShortName()->returns('plugin_tracker');
@@ -66,8 +66,8 @@ class ServiceActivatorTest extends TuleapTestCase
         );
 
         stub($this->tracker_v3)->available()->returns(true);
-        stub($this->tracker_core_service)->isUsed()->returns(true);
-        stub($this->tracker_plugin_service)->isUsed()->returns(false);
+        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(true);
+        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -83,8 +83,8 @@ class ServiceActivatorTest extends TuleapTestCase
         );
 
         stub($this->tracker_v3)->available()->returns(true);
-        stub($this->tracker_core_service)->isUsed()->returns(true);
-        stub($this->tracker_plugin_service)->isUsed()->returns(true);
+        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(true);
+        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(true);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -100,8 +100,8 @@ class ServiceActivatorTest extends TuleapTestCase
         );
 
         stub($this->tracker_v3)->available()->returns(true);
-        stub($this->tracker_core_service)->isUsed()->returns(false);
-        stub($this->tracker_plugin_service)->isUsed()->returns(false);
+        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
 
         expect($this->data)->unsetProjectServiceUsage(101)->once();
@@ -117,8 +117,8 @@ class ServiceActivatorTest extends TuleapTestCase
         );
 
         stub($this->tracker_v3)->available()->returns(true);
-        stub($this->tracker_core_service)->isUsed()->returns(false);
-        stub($this->tracker_plugin_service)->isUsed()->returns(false);
+        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
         stub($this->data)->projectShouldInheritFromTemplate()->returns(false);
 
         expect($this->data)->unsetProjectServiceUsage()->never();
@@ -145,6 +145,11 @@ class ServiceActivatorTest extends TuleapTestCase
     {
         $project = aMockProject()->withId(106)->build();
         $legacy  = array(Service::TRACKERV3 => false);
+
+        $this->tracker_core_service->shouldReceive('isUsed')->andReturn(false);
+        $this->tracker_core_service->shouldReceive('isActive')->andReturn(false);
+        $this->tracker_plugin_service->shouldReceive('isUsed')->andReturn(false);
+        $this->tracker_plugin_service->shouldReceive('isActive')->andReturn(false);
 
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->tracker_core_service, $this->tracker_plugin_service)

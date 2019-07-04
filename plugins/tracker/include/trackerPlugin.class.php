@@ -172,7 +172,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
         $this->addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::JAVASCRIPT,                     'javascript',                        false);
         $this->addHook(Event::TOGGLE,                         'toggle',                            false);
         $this->addHook(GetPublicAreas::NAME);
@@ -188,7 +188,6 @@ class trackerPlugin extends Plugin {
         $this->addHook('url_verification_instance',           'url_verification_instance',         false);
 
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
@@ -452,9 +451,9 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function service_classnames($params) {
-        include_once 'ServiceTracker.class.php';
-        $params['classnames'][$this->getServiceShortname()] = 'ServiceTracker';
+    public function service_classnames(&$params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = ServiceTracker::class;
     }
 
     public function getServiceShortname() {
@@ -776,10 +775,6 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = TRACKER_SERVICE_ICON;
-    }
-
     public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
         $event->addWidget(Tracker_Widget_MyArtifacts::ID);
@@ -814,10 +809,11 @@ class trackerPlugin extends Plugin {
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
-    function service_public_areas(GetPublicAreas $event)
+    public function service_public_areas(GetPublicAreas $event)
     {
         $project = $event->getProject();
         if ($project->usesService($this->getServiceShortname())) {
+            $service = $project->getService($this->getServiceShortname());
             $tf = TrackerFactory::instance();
 
             // Get the artfact type list
@@ -835,7 +831,7 @@ class trackerPlugin extends Plugin {
                 if ($entries) {
                     $area = '';
                     $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $project->getGroupId() .'">';
-                    $area .= '<i class="tuleap-services-angle-double-right tuleap-services-plugin_tracker tuleap-services-widget"></i>';
+                    $area .= '<i class="dashboard-widget-content-projectpublicareas '.$service->getIcon().'"></i>';
                     $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
 
