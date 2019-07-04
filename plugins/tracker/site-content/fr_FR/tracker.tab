@@ -1553,7 +1553,6 @@ plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_generate	Reconstruire le cache
 plugin_tracker	burndown_cancel	Annuler
 plugin_tracker	force_cache_generation_info	Voulez-vous vraiment reconstruire le cache du burdown dans son intégralité? La reconstruction du cache entrainera une indisponibilité du champ durant quelques minutes.
-plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'accéder à ce champ.
 plugin_tracker	burndown_cache_generating	Le burndown est en cours de calcul. Il sera disponible dans quelques minutes.
 plugin_tracker	unsufficient_permissions_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning. Vos changements n'ont pas été pris en compte. Veuillez recharger la page.
 

@@ -31,7 +31,7 @@ use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Numeric;
-use Tracker_FormElement_Field;
+use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElementFactory;
 
@@ -52,12 +52,96 @@ class TimeframeBuilder
 
     public function buildTimePeriodWithoutWeekendForArtifact(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
-        $start_date = $this->getTimestamp($user, $artifact);
-        $duration   = $this->getDurationFieldValue($user, $artifact);
+        try {
+            $start_date = $this->getTimestamp($user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = 0;
+        }
+
+        try {
+            $duration = $this->getDurationFieldValue($user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $duration = 0;
+        }
 
         return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
 
+    public function buildTimePeriodWithoutWeekendForArtifactForREST(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = $this->getTimestamp($user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $start_date = null;
+        }
+
+        try {
+            $duration = $this->getDurationFieldValue($user, $artifact);
+        } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+            $duration = null;
+        }
+
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+    }
+
+    /**
+     * @throws Tracker_FormElement_Chart_Field_Exception
+     */
+    public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
+    {
+        try {
+            $start_date = $this->getTimestamp($user, $artifact);
+
+            if (! $start_date) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_start_date_warning')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new Tracker_FormElement_Chart_Field_Exception(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
+            );
+        } catch (TimeframeFieldNoValueException $exception) {
+            $start_date = null;
+        }
+
+        try {
+            $duration = $this->getDurationFieldValue($user, $artifact);
+
+            if ($duration === null) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+                );
+            }
+
+            if ($duration <= 0) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+                );
+            }
+
+            if ($duration === 1) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    $GLOBALS['Language']->getText('plugin_tracker', 'burndown_duration_too_short')
+                );
+            }
+        } catch (TimeframeFieldNotFoundException $exception) {
+            throw new Tracker_FormElement_Chart_Field_Exception(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
+            );
+        } catch (TimeframeFieldNoValueException $exception) {
+            throw new Tracker_FormElement_Chart_Field_Exception(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_empty_duration_warning')
+            );
+        }
+
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+    }
+
+    /**
+     * @throws TimeframeFieldNotFoundException
+     * @throws TimeframeFieldNoValueException
+     */
     private function getTimestamp(PFUser $user, Tracker_Artifact $artifact) : int
     {
         $field = $this->formelement_factory->getDateFieldByNameForUser(
@@ -67,14 +151,14 @@ class TimeframeBuilder
         );
 
         if ($field === null) {
-            return 0;
+            throw new TimeframeFieldNotFoundException();
         }
 
         assert($field instanceof Tracker_FormElement_Field_Date);
 
         $value = $field->getLastChangesetValue($artifact);
         if ($value === null) {
-            return 0;
+            throw new TimeframeFieldNoValueException();
         }
 
         assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
@@ -82,6 +166,10 @@ class TimeframeBuilder
         return (int) $value->getTimestamp();
     }
 
+    /**
+     * @throws TimeframeFieldNotFoundException
+     * @throws TimeframeFieldNoValueException
+     */
     private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact)
     {
         $field = $this->formelement_factory->getNumericFieldByNameForUser(
@@ -91,12 +179,12 @@ class TimeframeBuilder
         );
 
         if ($field === null) {
-            return 0;
+            throw new TimeframeFieldNotFoundException();
         }
 
         $last_changeset_value = $field->getLastChangesetValue($milestone_artifact);
         if ($last_changeset_value === null) {
-            return 0;
+            throw new TimeframeFieldNoValueException();
         }
 
         assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Numeric);

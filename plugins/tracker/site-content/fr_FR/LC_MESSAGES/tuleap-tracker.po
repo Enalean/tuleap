@@ -1210,6 +1210,9 @@ msgstr ""
 "Vous êtes sur le point de supprimer le webhook. Veuillez confirmer la "
 "suppression."
 
+msgid "You are not allowed to access this field."
+msgstr "Vous n'avez pas la permission d'accéder à ce champ."
+
 msgid "You can choose the notification mode you wish for this tracker."
 msgstr ""
 "Vous pouvez sélectionner le mode de notification que vous préférez pour ce "
