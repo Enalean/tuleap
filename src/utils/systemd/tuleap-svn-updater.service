@@ -7,7 +7,7 @@ PartOf=tuleap.service
 Type=simple
 User=root
 PIDFile=/var/run/svnroot_updater.pid
-ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/svnroot_updater.php
+ExecStart=/usr/bin/tuleap worker:svnroot-update
 Restart=on-failure
 
 [Install]

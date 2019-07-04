@@ -46,7 +46,6 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
     ForgeConfig::loadFromFile(dirname($local_inc).'/development.inc');
 }
 ForgeConfig::loadFromDatabase();
-ForgeConfig::loadFromFile(ForgeConfig::get('rabbitmq_config_file'));
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));

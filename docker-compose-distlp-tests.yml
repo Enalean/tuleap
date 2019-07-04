@@ -53,12 +53,12 @@ services:
     depends_on:
       - ldap
       - db
-      - rabbitmq
+      - redis
     networks:
       - tuleap
 
   backend-svn:
-    image: enalean/tuleap-dev:1.10
+    image: enalean/tuleap-dev:1.11
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
@@ -68,7 +68,7 @@ services:
     depends_on:
       - ldap
       - db
-      - rabbitmq
+      - redis
     networks:
       - tuleap
 
@@ -91,15 +91,12 @@ services:
     networks:
       - tuleap
 
-  rabbitmq:
-    image: rabbitmq:3.6
-    volumes:
-      - tests-rabbitmq-data:/var/lib/rabbitmq
+  redis:
+    image: redis:3.2
     networks:
-      - tuleap
+     - tuleap
 
 volumes:
-  tests-rabbitmq-data:
   tests-db-data:
   tests-ldap-data:
   tests-tuleap-data:

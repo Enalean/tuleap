@@ -25,15 +25,15 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     die("$errno $errstr $errfile $errline");
 }, E_ALL | E_STRICT);
 
-$logger = new Tuleap\Configuration\Logger\Console();
+$logger = new \Tuleap\Configuration\Logger\Console();
 
-$fpm      = Tuleap\Configuration\FPM\TuleapWeb::buildForPHP73($logger, 'codendiadm', true);
+$fpm      = \Tuleap\Configuration\FPM\TuleapWeb::buildForPHP73($logger, 'codendiadm', true);
 $nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
-$rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
+$redis = new \Tuleap\Configuration\Redis\BackendWeb('codendiadm');
 
 $fpm->configure();
 $nginx->configure();
-$rabbitmq->configure();
+$redis->configure();
 
 $exec = new \Tuleap\Configuration\Common\Exec();
 

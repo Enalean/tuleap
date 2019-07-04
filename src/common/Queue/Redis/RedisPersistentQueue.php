@@ -66,10 +66,13 @@ class RedisPersistentQueue implements PersistentQueue
         $processing_queue = $this->event_queue_name.'-processing-'.$worker_id;
         do {
             try {
+                $this->logger->debug('Connecting to redis server');
                 $this->connect();
+                $this->logger->debug('Connect OK');
                 if ($this->redis->echo("This is Tuleap") !== "This is Tuleap") {
                     throw new QueueServerConnectionException("Unable to echo with redis server");
                 }
+                $this->logger->debug('Echoed to redis');
                 $this->queuePastEvents($processing_queue);
                 $this->waitForEvents($processing_queue, $callback);
             } catch (RedisException $e) {
@@ -92,6 +95,7 @@ class RedisPersistentQueue implements PersistentQueue
      */
     private function queuePastEvents($processing_queue)
     {
+        $this->logger->debug('queuePastEvents');
         do {
             $value = $this->redis->rpoplpush($processing_queue, $this->event_queue_name);
         } while ($value !== false);
@@ -99,6 +103,7 @@ class RedisPersistentQueue implements PersistentQueue
 
     private function waitForEvents($processing_queue, callable $callback)
     {
+        $this->logger->debug('Wait for events');
         $message_counter = 0;
         while ($message_counter < self::MAX_MESSAGES) {
             $value = $this->redis->brpoplpush($this->event_queue_name, $processing_queue, 0);

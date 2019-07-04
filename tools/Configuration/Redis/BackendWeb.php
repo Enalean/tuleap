@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,24 +19,22 @@
  *
  */
 
-namespace Tuleap\Configuration\RabbitMQ;
+namespace Tuleap\Configuration\Redis;
 
 class BackendWeb
 {
-
-    private $conf_file = '/etc/tuleap/conf/rabbitmq.inc';
+    private $conf_file = '/etc/tuleap/conf/redis.inc';
     private $application_user;
 
     public function __construct($application_user)
     {
-
         $this->application_user = $application_user;
     }
 
     public function configure()
     {
         if (! file_exists($this->conf_file)) {
-            copy('/usr/share/tuleap/src/etc/rabbitmq.inc.dist', $this->conf_file);
+            copy('/usr/share/tuleap/src/etc/redis.inc.dist', $this->conf_file);
             chmod($this->conf_file, 0600);
             chown($this->conf_file, $this->application_user);
             chgrp($this->conf_file, $this->application_user);

@@ -63,7 +63,7 @@ class SvnrootUpdater
      */
     public function listen($server_id)
     {
-        $this->logger->info("Wait for messages");
+        $this->logger->info("Wait for messages on ".get_class($this->queue));
 
         $generate = function () {
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
@@ -77,15 +77,16 @@ class SvnrootUpdater
             $apache_conf_generator->generate();
         };
 
+        $this->logger->debug('Re-generate conf at start');
         $generate();
 
         $logger = $this->logger;
 
+        $this->logger->debug('Waiting for new events');
         $this->queue->listen(self::QUEUE_PREFIX.$server_id, self::TOPIC, function ($msg) use ($logger, $generate) {
             try {
-                $logger->info("Received ", $msg->body);
+                $logger->info("Received ", $msg);
                 $generate();
-                $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
                 $logger->info("Update completed");
             } catch (Exception $e) {
                 $logger->error("Caught exception ".get_class($e).": ".$e->getMessage());
