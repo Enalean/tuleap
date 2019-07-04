@@ -35,41 +35,45 @@
                 <i class="fa fa-long-arrow-right" data-test="display-arrow"></i>
                 {{ formatDate(releaseData.end_date) }}
             </span>
-
         </div>
-        <div v-if="is_open" class="project-release-infos" data-test="toggle_open">
-            <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
-                <i class="fa fa-map-signs tlp-badge-icon"></i>
-                <translate v-bind:translate-n="total_sprint" translate-plural="%{ total_sprint } sprints">
-                    %{ total_sprint } sprint
-                </translate>
-            </a>
-            <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
-                <translate v-if="capacityExist()" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
-                    Capacity: %{capacity}
-                </translate>
-                <translate v-else data-test="capacity-empty">
-                    Capacity: N/A
-                </translate>
-            </div>
-            <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
-                <translate v-if="initialEffortExist()" v-bind:translate-params="{initial_effort: initial_effort}" data-test="initial-effort-not-empty">
-                    Initial effort: %{initial_effort}
-                </translate>
-                <translate v-else data-test="initial-effort-empty">
-                    Initial effort: N/A
-                </translate>
-            </div>
 
+        <div v-if="is_open" data-test="toggle_open">
+            <div class="project-release-infos">
+                <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
+                    <i class="fa fa-map-signs tlp-badge-icon"></i>
+                    <translate v-bind:translate-n="total_sprint" translate-plural="%{ total_sprint } sprints">
+                        %{ total_sprint } sprint
+                    </translate>
+                </a>
+                <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
+                    <translate v-if="capacityExist()" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
+                        Capacity: %{capacity}
+                    </translate>
+                    <translate v-else data-test="capacity-empty">
+                        Capacity: N/A
+                    </translate>
+                </div>
+                <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
+                    <translate v-if="initialEffortExist()" v-bind:translate-params="{initial_effort: initial_effort}" data-test="initial-effort-not-empty">
+                        Initial effort: %{initial_effort}
+                    </translate>
+                    <translate v-else data-test="initial-effort-empty">
+                        Initial effort: N/A
+                    </translate>
+                </div>
+            </div>
+            <release-description-displayer v-bind:release-data="releaseData"/>
         </div>
     </div>
 </template>
 
 <script>
 import { formatDateYearMonthDay } from "../../helpers/date-formatters";
+import ReleaseDescriptionDisplayer from "./ReleaseDescriptionDisplayer.vue";
 
 export default {
     name: "ReleaseInformationDisplayer",
+    components: { ReleaseDescriptionDisplayer },
     props: {
         releaseData: Object
     },

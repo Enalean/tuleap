@@ -209,3 +209,12 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     height: 2px;
     background: $tlp-theme-color;
 }
+
+.release-description {
+    padding: 0 0 $tlp-spacing 0;
+}
+
+.project-release-description .fa-long-arrow-right {
+    margin: 0 5px 0 0;
+    font-size: 12px;
+}
