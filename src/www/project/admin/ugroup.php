@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
-use Tuleap\User\UserGroup\NameTranslator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
@@ -79,9 +79,9 @@ $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('proje
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'groups');
 
-$presenter_builder = new UGroupListPresenterBuilder(new UGroupManager());
+$presenter_builder = new UGroupListPresenterBuilder(new UGroupManager(), new SynchronizedProjectMembershipDao());
 
-$templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/';
+$templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/user_groups';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
     ->renderToPage('list-groups', $presenter_builder->build($project, $csrf));

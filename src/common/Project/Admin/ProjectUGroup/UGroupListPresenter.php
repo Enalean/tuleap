@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,10 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
 use Project;
+use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\SynchronizedProjectMembershipPresenter;
 
 class UGroupListPresenter
 {
-
     public $dynamic_ugroups;
     public $template_ugroups;
     public $project_id;
@@ -34,21 +34,27 @@ class UGroupListPresenter
     public $has_dynamic_ugroups;
     public $has_ugroups;
     public $has_static_ugroups;
+    /**
+     * @var ?SynchronizedProjectMembershipPresenter
+     */
+    public $synchronized_project_membership_presenter;
 
     public function __construct(
         Project $project,
         array $dynamic_ugroups,
         array $static_ugroups,
         array $template_ugroups,
-        CSRFSynchronizerToken $csrf
+        CSRFSynchronizerToken $csrf,
+        ?SynchronizedProjectMembershipPresenter $synchronized_project_membership_presenter
     ) {
-        $this->dynamic_ugroups     = $dynamic_ugroups;
-        $this->static_ugroups      = $static_ugroups;
-        $this->template_ugroups    = $template_ugroups;
-        $this->project_id          = $project->getID();
-        $this->csrf                = $csrf;
-        $this->has_dynamic_ugroups = ! empty($dynamic_ugroups);
-        $this->has_static_ugroups  = ! empty($static_ugroups);
-        $this->has_ugroups         = $this->has_dynamic_ugroups || $this->has_static_ugroups;
+        $this->dynamic_ugroups                           = $dynamic_ugroups;
+        $this->static_ugroups                            = $static_ugroups;
+        $this->template_ugroups                          = $template_ugroups;
+        $this->project_id                                = $project->getID();
+        $this->csrf                                      = $csrf;
+        $this->has_dynamic_ugroups                       = ! empty($dynamic_ugroups);
+        $this->has_static_ugroups                        = ! empty($static_ugroups);
+        $this->has_ugroups                               = $this->has_dynamic_ugroups || $this->has_static_ugroups;
+        $this->synchronized_project_membership_presenter = $synchronized_project_membership_presenter;
     }
 }

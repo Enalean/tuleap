@@ -1,0 +1,33 @@
+{{# synchronized_project_membership_presenter }}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <div class="tlp-pane-title">
+                <i class="fa fa-cog tlp-pane-title-icon"></i>
+                {{# gettext }}Synchronized project membership management{{/ gettext }}
+            </div>
+        </div>
+        <section class="tlp-pane-section">
+                <div class="tlp-form-element tlp-form-element-disabled">
+                    <label for="toggle-synchronized-project-membership" class="tlp-label">
+                        {{# gettext }}Activate synchronized project membership management{{/ gettext }}
+                    </label>
+                    <div class="tlp-switch">
+                        <input
+                            type="checkbox"
+                            id="toggle-synchronized-project-membership"
+                            class="tlp-switch-checkbox"
+                            {{# is_enabled }}checked="checked"{{/ is_enabled }}
+                            disabled
+                        />
+                        <label
+                            for="toggle-synchronized-project-membership"
+                            class="tlp-switch-button"
+                            aria-hidden="true"
+                        ></label>
+                    </div>
+                </div>
+        </section>
+    </div>
+</section>
+{{/ synchronized_project_membership_presenter }}

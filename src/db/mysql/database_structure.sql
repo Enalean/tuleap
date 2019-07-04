@@ -1692,6 +1692,12 @@ DROP TABLE IF EXISTS project_membership_delegation;
 CREATE TABLE project_membership_delegation (
     ugroup_id INT(11) NOT NULL PRIMARY KEY
 );
+
+DROP TABLE IF EXISTS project_ugroup_synchronized_membership;
+CREATE TABLE project_ugroup_synchronized_membership (
+    project_id INT(11) NOT NULL PRIMARY KEY,
+    is_activated TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB;
 #
 # EOF
 #
