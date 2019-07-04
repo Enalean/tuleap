@@ -45,6 +45,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $patch_items   = $this->loadFolderContent($items_id, 'PATCH Link');
         $deleted_items = $this->loadFolderContent($items_id, 'DELETE Link');
         $lock_items    = $this->loadFolderContent($items_id, 'LOCK Link');
+        $post_version  = $this->loadFolderContent($items_id, 'POST Link version');
 
         return array_merge(
             $root_folder,
@@ -52,7 +53,8 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             $items,
             $patch_items,
             $deleted_items,
-            $lock_items
+            $lock_items,
+            $post_version
         );
     }
 
@@ -564,6 +566,256 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionItCreatesAnEmbeddedFile(array $items): void
+    {
+        $title             = 'POST L V';
+        $item_to_update    = $this->findItemByTitle($items, $title);
+        $item_to_update_id = $item_to_update['id'];
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'       => 'My new versionnn',
+                'description'         => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"    => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+        $this->checkItemHasADisabledApprovalTable($items, $title);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionCopyThePreviousApprovalTableStatus(array $items): void
+    {
+        $title             = 'POST L V AT C';
+        $item_to_update    = $this->findItemByTitle($items, $title);
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->checkItemHasAnApprovalTable($items, $title, 'Approved');
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'copy'
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+
+        $this->checkItemHasAnApprovalTable($items, $title, 'Approved');
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionResetTheApprovalTableStatus(array $items): void
+    {
+        $title             = 'POST L V AT R';
+        $item_to_update    = $this->findItemByTitle($items, $title);
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->checkItemHasAnApprovalTable($items, $title, 'Approved');
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'reset'
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+        $this->checkItemHasAnApprovalTable($items, $title, 'Not yet');
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionDisableApprovalTable(array $items): void
+    {
+        $title             = 'POST L V AT E';
+        $item_to_update    = $this->findItemByTitle(
+            $items,
+            $title
+        );
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->checkItemHasAnApprovalTable($items, $title, 'Approved');
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'empty'
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $item_to_update_id)
+        );
+        $this->assertEquals($new_version_response->getStatusCode(), 200);
+
+        $this->checkItemHasADisabledApprovalTable($items, $title);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionItThrowsExceptionWhenUserSetApprovalTableOnItemWithoutApprovalTable(
+        array $items
+    ): void {
+        $item_to_update    = $this->findItemByTitle($items, 'POST L V No AT');
+        $item_to_update_id = $item_to_update['id'];
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'         => 'My new versionnn',
+                'description'           => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"      => false,
+                'approval_table_action' => 'reset'
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(400, $new_version_response->getStatusCode());
+        $this->assertStringContainsString(
+            "does not have an approval table",
+            $new_version_response->json()["error"]['i18n_error_message']
+        );
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionCanUnlockAFile(array $items): void
+    {
+        $item_to_update    = $this->findItemByTitle($items, 'POST L V L');
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->assertNotNull($item_to_update['lock_info']);
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'       => 'My new versionnn',
+                'description'         => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"    => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $item_to_update_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $this->assertNull($response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionAdminAlwaysCanUnlockAFile(array $items): void
+    {
+        $item_to_update    = $this->findItemByTitle($items, 'POST L V UL Admin');
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->assertNotNull($item_to_update['lock_info']);
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'       => 'My new versionnn',
+                'description'         => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"    => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(200, $new_version_response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $item_to_update_id)
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $this->assertNull($response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testPostVersionRegularUserCanNotUnlockFileLockedByOtherUser(array $items): void
+    {
+        $item_to_update    = $this->findItemByTitle($items, 'POST L V L Admin');
+        $item_to_update_id = $item_to_update['id'];
+
+        $this->assertNotNull($item_to_update['lock_info']);
+
+        $new_version_resource = json_encode(
+            [
+                'version_title'       => 'My new versionnn',
+                'description'         => 'whatever',
+                'link_properties'  => ['link_url' => 'https://example.com'],
+                "should_lock_file"    => false
+            ]
+        );
+        $new_version_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_links/' . $item_to_update_id . "/version", null, $new_version_resource)
+        );
+
+        $this->assertEquals(403, $new_version_response->getStatusCode());
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testOptions(int $id): void
@@ -586,6 +838,20 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testOptionsVersion(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_links/' . $id . '/version'),
+            REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
      * @param int    $root_id
      * @param string $query
      *
@@ -600,12 +866,12 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(201, $response1->getStatusCode());
 
-        $embedded_item_response = $this->getResponseByName(
+        $item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get($response1->json()['uri'])
         );
-        $this->assertEquals(200, $embedded_item_response->getStatusCode());
-        $this->assertEquals('link', $embedded_item_response->json()['type']);
+        $this->assertEquals(200, $item_response->getStatusCode());
+        $this->assertEquals('link', $item_response->json()['type']);
 
         return $response1->json()['id'];
     }

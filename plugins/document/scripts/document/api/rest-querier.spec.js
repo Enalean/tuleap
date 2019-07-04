@@ -31,7 +31,8 @@ import {
     patchWiki,
     deleteUserPreferenciesForFolderInProject,
     addUserLegacyUIPreferency,
-    createNewVersion
+    createNewVersion,
+    postLinkVersion
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -381,7 +382,7 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("patchLink()", () => {
+    describe("postLinkVersion()", () => {
         it("", async () => {
             const item = JSON.stringify({
                 title: "A link to the past",
@@ -397,7 +398,7 @@ describe("rest-querier", () => {
 
             mockFetchSuccess(tlp.patch);
 
-            await patchWiki(
+            await postLinkVersion(
                 item,
                 link_url,
                 version_title,

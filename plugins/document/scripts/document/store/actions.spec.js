@@ -62,7 +62,7 @@ import {
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$postEmbeddedFile,
     rewire$patchWiki,
-    rewire$patchLink,
+    rewire$postLinkVersion,
     rewire$deleteFile,
     rewire$deleteLink,
     rewire$deleteEmbeddedFile,
@@ -122,7 +122,7 @@ describe("Store actions", () => {
         uploadVersion,
         postEmbeddedFile,
         patchWiki,
-        patchLink;
+        postLinkVersion;
 
     beforeEach(() => {
         const project_id = 101;
@@ -190,8 +190,8 @@ describe("Store actions", () => {
         patchWiki = jasmine.createSpy("patchWiki");
         rewire$patchWiki(patchWiki);
 
-        patchLink = jasmine.createSpy("patchLink");
-        rewire$patchLink(patchLink);
+        postLinkVersion = jasmine.createSpy("postLinkVersion");
+        rewire$postLinkVersion(postLinkVersion);
     });
 
     describe("loadRootFolder()", () => {
@@ -1071,7 +1071,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchLink).toHaveBeenCalled();
+            expect(postLinkVersion).toHaveBeenCalled();
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 };
@@ -1082,7 +1082,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed the version because...";
             const is_version_locked = true;
 
-            patchLink.and.throwError("nope");
+            postLinkVersion.and.throwError("nope");
 
             await createNewLinkVersionFromModal(context, [
                 item,
@@ -1092,7 +1092,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchLink).toHaveBeenCalled();
+            expect(postLinkVersion).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });
