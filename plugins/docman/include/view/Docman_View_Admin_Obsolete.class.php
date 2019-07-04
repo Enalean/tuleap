@@ -39,11 +39,19 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 
         $nbItemsFound = 0;
 
-        $itemIterator = $itemFactory->getItemList($rootItem->getId(),
-                                              $nbItemsFound,
-                                              array('user' => $params['user'],
-                                                    'ignore_collapse' => true,
-                                                    'obsolete_only' => true));
+        if ($rootItem !== null) {
+            $itemIterator = $itemFactory->getItemList(
+                $rootItem->getId(),
+                $nbItemsFound,
+                [
+                    'user' => $params['user'],
+                    'ignore_collapse' => true,
+                    'obsolete_only' => true
+                ]
+            );
+        } else {
+            $itemIterator = new ArrayIterator([]);
+        }
 
         $table = html_build_list_table_top(array('Title', 'Obsolete date'));
 
