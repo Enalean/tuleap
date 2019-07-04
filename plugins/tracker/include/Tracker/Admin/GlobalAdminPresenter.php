@@ -79,6 +79,10 @@ class GlobalAdminPresenter
      * @var string
      */
     public $has_at_least_one_disabled_type;
+    /**
+     * @var string
+     */
+    public $global_admin_url;
 
     public function __construct(
         Project $project,
@@ -92,6 +96,7 @@ class GlobalAdminPresenter
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
 
         $base_url = GlobalAdminController::getTrackerGlobalAdministrationURL($project);
+        $this->global_admin_url = $base_url;
         $this->form_url = $base_url . '?' . http_build_query(
             [
                 'func' => 'edit-global-admin'
