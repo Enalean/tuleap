@@ -35,12 +35,31 @@ class BurnupDao extends DataAccessObject
             FROM tracker_field AS burnup_field
             INNER JOIN tracker
               ON tracker.id = burnup_field.tracker_id
+            LEFT JOIN (
+                SELECT timeframe.tracker_id,
+                       start_date_field.name as start_date_field_name,
+                       duration_field.name   as duration_field_name
+                FROM tracker_semantic_timeframe AS timeframe
+                     INNER JOIN tracker_field AS start_date_field
+                        ON (
+                                timeframe.tracker_id = start_date_field.tracker_id
+                            AND timeframe.start_date_field_id = start_date_field.id
+                        )
+                     INNER JOIN tracker_field AS duration_field
+                        ON (
+                                timeframe.tracker_id = duration_field.tracker_id
+                            AND timeframe.duration_field_id = duration_field.id
+                        )
+            ) AS tracker_with_timeframe_semantic
+                ON (
+                    tracker.id = tracker_with_timeframe_semantic.tracker_id
+                )
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = 'start_date'
+              AND tracker_field_for_start_date.name = IFNULL(tracker_with_timeframe_semantic.start_date_field_name, 'start_date')
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = 'duration'
+              AND tracker_field_for_duration.name = IFNULL(tracker_with_timeframe_semantic.duration_field_name, 'duration')
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
