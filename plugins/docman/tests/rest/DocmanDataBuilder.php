@@ -29,6 +29,7 @@ use ProjectUGroup;
 use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 use Tuleap\Docman\Test\rest\Helper\DocmanEmbeddedDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanFileDataBuild;
+use Tuleap\Docman\Test\rest\Helper\DocmanLinkDataBuild;
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
@@ -53,10 +54,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+------------------+--------------+------------+-------+
-     *    |           |                  |              |            |       |
-     *    +           +                  +              +            +       +
-     * folder 1   Folder C wiki   Folder D Link   Trash (Folder)    File   Embedded
+     *    +-----+-----+------------------+--------------+------------+-------+---------+
+     *    |           |                  |              |            |       |         |
+     *    +           +                  +              +            +       +         +
+     * folder 1   Folder C wiki   Folder D Link   Trash (Folder)    File   Embedded   Link
      *    +          +                     +
      *    |          |                     |
      *   ...        ...                   ...
@@ -67,13 +68,17 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     {
         $docman_root = $this->docman_item_factory->getRoot($this->project->getID());
 
-        $file_builder = new DocmanFileDataBuild(new DocmanDataBuildCommon(self::PROJECT_NAME));
+        $common_builder = new DocmanDataBuildCommon(self::PROJECT_NAME);
+
+        $file_builder   = new DocmanFileDataBuild($common_builder);
         $file_builder->createFolderFileWithContent($docman_root);
 
-        $file_builder = new DocmanEmbeddedDataBuild(new DocmanDataBuildCommon(self::PROJECT_NAME));
+        $file_builder = new DocmanEmbeddedDataBuild($common_builder);
         $file_builder->createEmbeddedFileWithContent($docman_root);
 
-        $this->createFolderLinkWithContent($docman_root);
+        $link_builder = new DocmanLinkDataBuild($common_builder);
+        $link_builder->createLinkFileWithContent($docman_root);
+
         $this->createFolder1WithSubContent($docman_root);
         $this->createFolderWikiWithContent($docman_root);
         $this->createFolderContentToDelete($docman_root);
@@ -278,111 +283,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
-     *                                      Folder D link
-     *                                            +
-     *                                            |
-     *                                            +
-     *                  +------------+------------+--------------+-----------+----------+-------------+
-     *                  |            |            |              |           |          |             |
-     *                  +            +            +              +           +          +             +
-     *          link AT C        link AT R    link AT E   link DIS AT    link NO AT   link L       link POST L
-     *
-     * (L)    => Lock on this item
-     * (AT)   => Approval table on this item
-     * (AT C) => Copy Approval table on this item
-     * (AT R) => Reset Approval table on this item
-     * (AT E) => Empty Approval table on this item
-     * (DIS AT) => Disabled Approval table on this item
-     *
-     */
-    private function createFolderLinkWithContent($docman_root)
-    {
-        $folder_link_id = $this->createItemWithVersion(
-            self::REGULAR_USER_ID,
-            $docman_root->getId(),
-            'Folder D Link',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-
-        $link_ATC_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link AT C',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $link_ATC_version_id = 500;
-        $this->addLinkWithCustomVersionNumber($link_ATC_id, $link_ATC_version_id);
-
-        $this->addWritePermissionOnItem($link_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
-        $link_ATR_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link AT R',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $link_ATR_version_id = 501;
-        $this->addLinkWithCustomVersionNumber($link_ATR_id, $link_ATR_version_id);
-        $this->addWritePermissionOnItem($link_ATR_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $link_ATE_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link AT E',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $link_ATE_version_id = 502;
-        $this->addLinkWithCustomVersionNumber($link_ATE_id, $link_ATE_version_id);
-        $this->addWritePermissionOnItem($link_ATE_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $link_DIS_AT_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link DIS AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $link_DIS_AT_version_id = 503;
-        $this->addLinkWithCustomVersionNumber($link_DIS_AT_id, $link_DIS_AT_version_id);
-        $this->addWritePermissionOnItem($link_DIS_AT_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addApprovalTable("link_DIS_AT", (int)$link_DIS_AT_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link NO AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $link_L_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link L',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_link_id,
-            'link POST L',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $this->addApprovalTable("link_ATC", (int)$link_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("link_ATE", (int)$link_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addApprovalTable("link_ATR", (int)$link_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-
-        $this->lockItem($link_L_id, self::REGULAR_USER_ID);
-
-        $this->appendCustomMetadataValueToItem($folder_link_id, "custom value for folder_3");
-
-        $this->appendCustomMetadataValueToItem($link_ATC_id, "custom value for link ATC");
-        $this->appendCustomMetadataValueToItem($link_ATR_id, "custom value for link ATR");
-        $this->appendCustomMetadataValueToItem($link_ATE_id, "custom value for link ATE");
-    }
-
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
      *                                    Trash
      *                                      +
      *                                      |
@@ -403,15 +303,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             'Trash',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-
-        $link_L_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "old link L",
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $this->addReadPermissionOnItem($link_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
         $wiki_L_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
@@ -446,12 +337,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $dao = new \Docman_LockDao();
 
         $dao->addLock(
-            $link_L_id,
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            time()
-        );
-
-        $dao->addLock(
             $wiki_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
@@ -467,13 +352,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             $empty_doc_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
-        );
-
-        $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "another old link",
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
 
         $another_wiki_id = $this->createItem(
