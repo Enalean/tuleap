@@ -91,7 +91,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public function display() {
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','title_long_desc');
@@ -114,7 +114,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();

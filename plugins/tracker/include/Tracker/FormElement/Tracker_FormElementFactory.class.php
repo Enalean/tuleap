@@ -601,8 +601,18 @@ class Tracker_FormElementFactory {
         return $this->getFormElementsByType($tracker, array('lud', 'subon'), false);
     }
 
-    public function getUsedDateFieldById(Tracker $tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('date','subon','lud'));
+    /**
+     * @param Tracker $tracker
+     * @param int     $field_id
+     *
+     * @return Tracker_FormElement_Field_Date|null
+     */
+    public function getUsedDateFieldById(Tracker $tracker, $field_id)
+    {
+        $date_field = $this->getUsedFieldByIdAndType($tracker, $field_id, ['date', 'subon', 'lud']);
+        assert($date_field === null || $date_field instanceof Tracker_FormElement_Field_Date);
+
+        return $date_field;
     }
 
 

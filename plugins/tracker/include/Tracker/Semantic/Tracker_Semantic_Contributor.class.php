@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic
 {
@@ -29,7 +29,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      * @var Tracker_FormElement_Field_List
      */
     protected $list_field;
-    
+
     /**
      * Cosntructor
      *
@@ -40,7 +40,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         parent::__construct($tracker);
         $this->list_field = $list_field;
     }
-    
+
     /**
      * The short name of the semantic: tooltip, title, status, owner, ...
      *
@@ -50,7 +50,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     {
         return self::CONTRIBUTOR_SEMANTIC_SHORTNAME;
     }
-    
+
     /**
      * The label of the semantic: Tooltip, ...
      *
@@ -59,19 +59,19 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     public function getLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_label');
     }
-    
+
     /**
      * The description of the semantics. Used for breadcrumbs
-     * 
+     *
      * @return string
      */
     public function getDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_description');
     }
-    
+
     /**
      * The Id of the (list) field used for contributor semantic
-     * 
+     *
      * @return int The Id of the (list) field used for contributor semantic, or 0 if no field
      */
     public function getFieldId() {
@@ -81,20 +81,20 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             return 0;
         }
     }
-    
+
     /**
      * The (list) field used for contributor semantic
-     * 
+     *
      * @return Tracker_FormElement_Field_List The (list) field used for contributor semantic, or null if no field
      */
     public function getField() {
         return $this->list_field;
     }
-    
+
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public function display() {
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_long_desc');
@@ -109,7 +109,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_no_field');
         }
     }
-    
+
     /**
      * Display the form to let the admin change the semantic
      *
@@ -118,7 +118,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -126,7 +126,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedUserSbFields($this->tracker)) {
-            
+
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
@@ -143,13 +143,13 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
                 $select .= '<option value="' . $purifier->purify($list_field->getId()) . '" ' . $selected . '>' . $purifier->purify($list_field->getLabel()) . '</option>';
             }
             $select .= '</select>';
-            
+
             $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
             $unset_btn .= $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unset')) .'</button>';
 
             $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
             $submit_btn .= $purifier->purify($GLOBALS['Language']->getText('global', 'save_change')) .'</button>';
-            
+
             if (!$this->getFieldId()) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_no_field');
                 $html .= '<p>' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice'));
@@ -161,13 +161,13 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             }
             $html .= '</form>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_impossible'); 
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_impossible');
         }
         $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
-    
+
     /**
      * Process the form
      *
@@ -232,7 +232,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         $dao = new Tracker_Semantic_ContributorDao();
         return $dao->delete($this->tracker->getId());
     }
-    
+
     /**
      * Load an instance of a Tracker_Semantic_Contributor
      *
@@ -252,7 +252,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         }
         return new Tracker_Semantic_Contributor($tracker, $field);
     }
-    
+
     /**
      * Export semantic to XML
      *
@@ -269,10 +269,10 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             $child->addChild('label', $this->getLabel());
             $child->addChild('description', $this->getDescription());
             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
-             
+
         }
     }
-     
+
      /**
      * Is the field used in semantics?
      *

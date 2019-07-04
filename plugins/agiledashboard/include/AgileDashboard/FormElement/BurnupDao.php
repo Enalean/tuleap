@@ -64,10 +64,12 @@ class BurnupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getBurnupInformation($artifact_id)
+    public function getBurnupInformation($artifact_id, $start_date_field_name, $duration_field_name)
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $type        = $this->da->quoteSmart(Burnup::TYPE);
+        $artifact_id           = $this->da->escapeInt($artifact_id);
+        $type                  = $this->da->quoteSmart(Burnup::TYPE);
+        $start_date_field_name = $this->da->quoteSmart($start_date_field_name);
+        $duration_field_name   = $this->da->quoteSmart($duration_field_name);
 
         $sql = "SELECT
                   tracker_artifact.id,
@@ -78,10 +80,10 @@ class BurnupDao extends DataAccessObject
               ON tracker.id = burnup_field.tracker_id
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = 'start_date'
+              AND tracker_field_for_start_date.name = $start_date_field_name
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = 'duration'
+              AND tracker_field_for_duration.name = $duration_field_name
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset

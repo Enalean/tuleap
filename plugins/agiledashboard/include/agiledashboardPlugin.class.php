@@ -77,6 +77,8 @@ use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetri
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
 
@@ -1463,6 +1465,8 @@ class AgileDashboardPlugin extends Plugin
             case SystemEvent_BURNUP_GENERATE::class:
                 $params['class']        = SystemEvent_BURNUP_GENERATE::class;
                 $params['dependencies'] = array(
+                    Tracker_ArtifactFactory::instance(),
+                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
                     new BurnupCacheDao(),

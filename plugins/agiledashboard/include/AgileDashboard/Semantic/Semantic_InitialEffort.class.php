@@ -95,7 +95,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public function display() {
         echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic','initial_effort_long_desc');
@@ -120,7 +120,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Codendi_Request         $request          The request
      * @param PFUser                  $current_user     The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $purify = Codendi_HTMLPurifier::instance();

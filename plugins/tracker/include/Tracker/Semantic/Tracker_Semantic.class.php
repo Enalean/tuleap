@@ -29,19 +29,13 @@ abstract class Tracker_Semantic {
     protected $tracker;
 
     /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-
-    /**
      * Cosntructor
      *
      * @param Tracker $tracker    The tracker
      */
     public function __construct(Tracker $tracker)
     {
-        $this->tracker    = $tracker;
-        $this->csrf_token = new CSRFSynchronizerToken($this->getUrl());
+        $this->tracker = $tracker;
     }
 
     /**
@@ -68,7 +62,7 @@ abstract class Tracker_Semantic {
      */
     protected function getCSRFToken()
      {
-        return $this->csrf_token;
+        return new CSRFSynchronizerToken($this->getUrl());
     }
 
     /**
@@ -95,7 +89,7 @@ abstract class Tracker_Semantic {
     /**
      * Display the basic info about this semantic
      *
-     * @return string html
+     * @return void
      */
     public abstract function display();
 
@@ -107,7 +101,7 @@ abstract class Tracker_Semantic {
      * @param Codendi_Request         $request         The request
      * @param PFUser                    $current_user    The user who made the request
      *
-     * @return string html
+     * @return void
      */
     public abstract function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 

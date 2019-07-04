@@ -24,10 +24,12 @@ use BackendLogger;
 use DateTime;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreLine
 {
@@ -56,18 +58,32 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
      */
     private $date_retriever;
 
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    /**
+     * @var SemanticTimeframeBuilder
+     */
+    private $semantic_timeframe_builder;
+
     public function injectDependencies(
+        Tracker_ArtifactFactory $artifact_factory,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
         BurnupDao $burnup_dao,
         BurnupCalculator $burnup_calculator,
         BurnupCacheDao $cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao        = $burnup_dao;
-        $this->logger            = $logger;
-        $this->burnup_calculator = $burnup_calculator;
-        $this->cache_dao         = $cache_dao;
-        $this->date_retriever    = $date_retriever;
+        $this->artifact_factory           = $artifact_factory;
+        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
+        $this->burnup_dao                 = $burnup_dao;
+        $this->logger                     = $logger;
+        $this->burnup_calculator          = $burnup_calculator;
+        $this->cache_dao                  = $cache_dao;
+        $this->date_retriever             = $date_retriever;
     }
 
     private function getArtifactIdFromParameters()
@@ -84,8 +100,20 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
 
     public function process()
     {
-        $artifact_id        = $this->getArtifactIdFromParameters();
-        $burnup_information = $this->burnup_dao->getBurnupInformation($artifact_id);
+        $artifact_id = $this->getArtifactIdFromParameters();
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        if ($artifact === null) {
+            $this->warning("Unable to find artifact ". $artifact_id);
+
+            return false;
+        }
+
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
+        $burnup_information = $this->burnup_dao->getBurnupInformation(
+            $artifact_id,
+            $semantic_timeframe->getStartDateFieldName(),
+            $semantic_timeframe->getDurationFieldName()
+        );
 
         $this->logger->debug("Calculating burnup for artifact #" . $artifact_id);
         if (! $burnup_information) {
