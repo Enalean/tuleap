@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Metadata;
 
 use PFUser;
-use Tuleap\Docman\Actions\OwnerRetriever;
+use RuntimeException;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\REST\I18NRestException;
 
@@ -91,27 +92,34 @@ class MetadataUpdator
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
 
-        try {
-            $new_owner = $this->owner_retriever->getUserFromRepresentationId($representation->owner_id);
-        } catch (\UserNotExistException $e) {
+        $new_owner_id = $representation->owner_id;
+        $new_owner    = $this->owner_retriever->getUserFromRepresentationId($new_owner_id);
+        if ($new_owner === null) {
             throw new I18nRestException(
                 400,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
-            );
-        } catch (\UserNotAuthorizedException $e) {
-            throw new I18nRestException(
-                403,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
+                sprintf(
+                    dgettext('tuleap-docman', 'The specified owner ID #%d does not match a valid user.'),
+                    $new_owner_id
+                )
             );
         }
 
-        $old_owner = $this->user_manager->getUserById((int)$item->getOwnerId());
-        if (! $old_owner) {
-            $old_owner = $current_user;
+        $item_id = $item->getId();
+
+        $previous_owner_id = (int) $item->getOwnerId();
+        $previous_owner    = $this->user_manager->getUserById($previous_owner_id);
+        if ($previous_owner === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'Previous owner ID #%d of item #%d does not seems to exist',
+                    $previous_owner_id,
+                    $item_id
+                )
+            );
         }
 
         $row = [
-            'id'                => $item->getId(),
+            'id'                => $item_id,
             'title'             => $representation->title,
             'description'       => $representation->description,
             'status'            => $status,
@@ -123,8 +131,8 @@ class MetadataUpdator
             $this->event_processor->raiseUpdateEvent(
                 $item,
                 $current_user,
-                $old_owner->getName(),
-                $new_owner->getUnixName(),
+                $previous_owner->getUserName(),
+                $new_owner->getUserName(),
                 'owner'
             );
         }

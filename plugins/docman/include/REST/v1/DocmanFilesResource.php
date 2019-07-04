@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Docman\Actions\OwnerRetriever;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;

@@ -21,15 +21,18 @@
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use RuntimeException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Actions\OwnerRetriever;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\REST\I18NRestException;
 
-class MetadataUpdatorTest extends TestCase
+final class MetadataUpdatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
     /**
      * @var \Mockery\MockInterface|MetadataEventProcessor
      */
@@ -60,7 +63,7 @@ class MetadataUpdatorTest extends TestCase
      */
     private $user_manager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -95,10 +98,10 @@ class MetadataUpdatorTest extends TestCase
 
         $old_user = \Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->andReturn($old_user);
-        $old_user->shouldReceive('getName')->andReturn('old user name');
+        $old_user->shouldReceive('getUserName')->andReturn('old user name');
 
         $new_user = \Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive('getUnixName')->andReturn('new user name');
+        $new_user->shouldReceive('getUserName')->andReturn('new user name');
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($new_user);
 
         $representation                    = new PUTMetadataRepresentation();
@@ -119,7 +122,36 @@ class MetadataUpdatorTest extends TestCase
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
     }
 
-    public function testOwnerIsChangedToMyselfIfPreviousUserNotFound(): void
+    public function testUpdateIsRejectedIfNewOwnerCanNotBeFound() : void
+    {
+        $date = new \DateTimeImmutable();
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $this->obsolescence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn($date->getTimestamp());
+
+        $item = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getOwnerId')->andReturn(101);
+
+        $representation                    = new PUTMetadataRepresentation();
+        $representation->title             = 'title';
+        $representation->description       = '';
+        $representation->owner_id          = 0;
+        $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
+        $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn(null);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->updator->updateDocumentMetadata(
+            $representation,
+            $item,
+            new \DateTimeImmutable(),
+            \Mockery::mock(\PFUser::class)
+        );
+    }
+
+    public function testUpdateIsInterruptedWhenThePreviousOwnerCanNotBeFoundAsTheWholeDocumentIsLikelyToBeBroken(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
@@ -134,8 +166,8 @@ class MetadataUpdatorTest extends TestCase
         $this->user_manager->shouldReceive('getUserById')->andReturn(null);
 
         $new_user = \Mockery::mock(\PFUser::class);
-        $new_user->shouldReceive('getUnixName')->andReturn('new user name');
-        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andThrow($new_user);
+        $new_user->shouldReceive('getUserName')->andReturn('new user name');
+        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($new_user);
 
         $representation                    = new PUTMetadataRepresentation();
         $representation->title             = "title";
@@ -144,16 +176,9 @@ class MetadataUpdatorTest extends TestCase
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 
-        $current_user = \Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive('getName')->andReturn('current user name');
+        $this->expectException(RuntimeException::class);
 
-        $this->event_processor->shouldReceive('raiseUpdateEvent')
-                              ->withArgs([$item, $current_user, 'current user name', 'new user name', 'owner'])
-                              ->once();
-
-        $this->item_factory->shouldReceive('update')->once();
-
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
+        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
     }
 
     public function testStatusIsUpdated(): void
@@ -170,10 +195,10 @@ class MetadataUpdatorTest extends TestCase
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
         $old_user = \Mockery::mock(\PFUser::class);
-        $old_user->shouldReceive('getUnixName')->andReturn('owner name');
+        $old_user->shouldReceive('getUserName')->andReturn('owner name');
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($old_user);
         $this->user_manager->shouldReceive('getUserById')->andReturn($old_user);
-        $old_user->shouldReceive('getName')->andReturn('user name');
+        $old_user->shouldReceive('getUserName')->andReturn('user name');
 
         $representation                    = new PUTMetadataRepresentation();
         $representation->title             = "title";
