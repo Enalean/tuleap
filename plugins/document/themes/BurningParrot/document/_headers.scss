@@ -22,21 +22,23 @@
 .document-header {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    margin: 0 0 $tlp-spacing;
 }
 
 .document-header-title {
-    margin: 0 $tlp-spacing $tlp-spacing 0;
+    margin: 0 $tlp-spacing 0 0;
 }
 
 .document-header-actions {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    margin: 0 0 $tlp-spacing;
 }
 
 .document-header-spacer {
     flex: 1 1 auto;
+    min-width: $tlp-spacing;
 }
 
 .document-header-global-progress {
@@ -71,7 +73,7 @@
 .document-display-lock {
     display: flex;
     position: relative;
-    top: 5px;
+    top: 2px;
     align-items: center;
     justify-content: center;
     width: 36px;
@@ -91,4 +93,8 @@
 .document-approval-badge {
     align-self: center;
     height: 25px;
+}
+
+.document-view-switcher {
+    margin: 0 0 0 $tlp-half-spacing;
 }

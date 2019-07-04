@@ -53,7 +53,10 @@ import {
     postLockLink,
     deleteLockLink,
     postLockEmpty,
-    deleteLockEmpty
+    deleteLockEmpty,
+    setNarrowModeForEmbeddedDisplay,
+    removeUserPreferenceForEmbeddedDisplay,
+    getPreferenceForEmbeddedDisplay
 } from "../api/rest-querier.js";
 
 import {
@@ -639,5 +642,43 @@ export const unlockDocument = async (context, item) => {
         context.commit("replaceLockInfoWithNewVersion", [item, updated_item.lock_info]);
     } catch (exception) {
         return handleErrorsForLock(context, exception);
+    }
+};
+
+export const displayEmbeddedInNarrowMode = async (context, item) => {
+    try {
+        await setNarrowModeForEmbeddedDisplay(
+            context.state.user_id,
+            context.state.project_id,
+            item.id
+        );
+        context.commit("shouldDisplayEmbeddedInLargeMode", false);
+    } catch (exception) {
+        return handleErrors(context, exception);
+    }
+};
+
+export const displayEmbeddedInLargeMode = async (context, item) => {
+    try {
+        await removeUserPreferenceForEmbeddedDisplay(
+            context.state.user_id,
+            context.state.project_id,
+            item.id
+        );
+        context.commit("shouldDisplayEmbeddedInLargeMode", true);
+    } catch (exception) {
+        return handleErrors(context, exception);
+    }
+};
+
+export const getEmbeddedFileDisplayPreference = async (context, item) => {
+    try {
+        return await getPreferenceForEmbeddedDisplay(
+            context.state.user_id,
+            context.state.project_id,
+            item.id
+        );
+    } catch (exception) {
+        return handleErrors(context, exception);
     }
 };

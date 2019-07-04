@@ -38,7 +38,9 @@ import {
     deleteItem,
     getWikisReferencingSameWikiPage,
     lockDocument,
-    unlockDocument
+    unlockDocument,
+    displayEmbeddedInLargeMode,
+    displayEmbeddedInNarrowMode
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -72,7 +74,9 @@ import {
     rewire$postLockFile,
     rewire$deleteLockFile,
     rewire$postLockEmbedded,
-    rewire$deleteLockEmbedded
+    rewire$deleteLockEmbedded,
+    rewire$setNarrowModeForEmbeddedDisplay,
+    rewire$removeUserPreferenceForEmbeddedDisplay
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1553,6 +1557,64 @@ describe("Store actions", () => {
                 item_to_lock,
                 { user_id: 123 }
             ]);
+        });
+    });
+
+    describe("displayEmbeddedInLargeMode", () => {
+        let setNarrowModeForEmbeddedDisplay, context;
+
+        beforeEach(() => {
+            context = {
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                },
+                commit: jasmine.createSpy("commit")
+            };
+
+            setNarrowModeForEmbeddedDisplay = jasmine.createSpy("setNarrowModeForEmbeddedDisplay");
+            rewire$setNarrowModeForEmbeddedDisplay(setNarrowModeForEmbeddedDisplay);
+        });
+
+        it("it should store in user preferences the new mode and then update the store value", async () => {
+            const item = {
+                id: 123,
+                title: "My embedded"
+            };
+
+            await displayEmbeddedInLargeMode(context, item);
+
+            expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", true);
+        });
+    });
+
+    describe("displayEmbeddedInNarrowMode", () => {
+        let removeUserPreferenceForEmbeddedDisplay, context;
+
+        beforeEach(() => {
+            context = {
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                },
+                commit: jasmine.createSpy("commit")
+            };
+
+            removeUserPreferenceForEmbeddedDisplay = jasmine.createSpy(
+                "removeUserPreferenceForEmbeddedDisplay"
+            );
+            rewire$removeUserPreferenceForEmbeddedDisplay(removeUserPreferenceForEmbeddedDisplay);
+        });
+
+        it("it should store in user preferences the new mode and then update the store value", async () => {
+            const item = {
+                id: 123,
+                title: "My embedded"
+            };
+
+            await displayEmbeddedInNarrowMode(context, item);
+
+            expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", false);
         });
     });
 });

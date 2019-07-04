@@ -56,7 +56,10 @@ export {
     postLockLink,
     deleteLockLink,
     postLockEmpty,
-    deleteLockEmpty
+    deleteLockEmpty,
+    setNarrowModeForEmbeddedDisplay,
+    removeUserPreferenceForEmbeddedDisplay,
+    getPreferenceForEmbeddedDisplay
 };
 
 async function getProject(project_id) {
@@ -412,4 +415,36 @@ function deleteLockEmpty(item) {
     const escaped_item_id = encodeURIComponent(item.id);
 
     return del(`/api/docman_empty_documents/${escaped_item_id}/lock`);
+}
+
+async function setNarrowModeForEmbeddedDisplay(user_id, project_id, document_id) {
+    await patch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            key: `plugin_docman_display_embedded_${project_id}_${document_id}`,
+            value: "narrow"
+        })
+    });
+}
+
+async function removeUserPreferenceForEmbeddedDisplay(user_id, project_id, document_id) {
+    const key = `plugin_docman_display_embedded_${project_id}_${document_id}`;
+
+    await del(
+        `/api/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(key)}`
+    );
+}
+
+async function getPreferenceForEmbeddedDisplay(user_id, project_id, document_id) {
+    const escaped_user_id = encodeURIComponent(user_id);
+    const escaped_preference_key = encodeURIComponent(
+        `plugin_docman_display_embedded_${project_id}_${document_id}`
+    );
+    const response = await get(
+        `/api/users/${escaped_user_id}/preferences?key=${escaped_preference_key}`
+    );
+
+    return response.json();
 }

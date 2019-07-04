@@ -40,7 +40,8 @@ const state = {
     currently_displayed_item: null,
     is_item_status_metadata_used: false,
     is_obsolescence_date_metadata_used: false,
-    show_post_deletion_notification: false
+    show_post_deletion_notification: false,
+    is_embedded_in_large_view: true
 };
 
 export default state;

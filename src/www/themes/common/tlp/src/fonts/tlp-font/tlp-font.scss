@@ -34,7 +34,9 @@ $tlp-fontawesome-icons: (
     gavel-pending: '\f004',
     gavel-approved: '\f005',
     gavel-rejected: '\f006',
-    gavel-comment: '\f007'
+    gavel-comment: '\f007',
+    text-large: '\f008',
+    text-narrow: '\f009'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
