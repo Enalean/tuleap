@@ -38,6 +38,7 @@ be added.
 * Thomas Gorka
 * Martin Goyot
 * Joris Masson
+* Clarck Robinson
 * Yannis Rossetto
 * Nicolas Terray
 * Manuel Vacelet
@@ -48,7 +49,6 @@ be added.
 * Thomas Cottier
 * Lydéric Dubut
 * Romain Lorentz
-* Clarck Robinson
 * Aurélien Tisné
 * Karim Beji
 * Seif Eddine Gamoudi
