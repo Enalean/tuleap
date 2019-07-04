@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -21,11 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Metadata.class.php');
-require_once('Docman_MetadataDao.class.php');
-require_once('Docman_SettingsBo.class.php');
-require_once('Docman_MetadataListOfValuesElementFactory.class.php');
-
 
 /**
  * MetadataFactory give access to metadata fields
@@ -38,17 +33,24 @@ require_once('Docman_MetadataListOfValuesElementFactory.class.php');
  * * HardCoded metadata: stored as columns of docman tables.
  * * Real metadata: stored as entry of docman_field table.
  */
-class Docman_MetadataFactory {
-    var $hardCodedMetadata;
+class Docman_MetadataFactory
+{
+    public const HARDCODED_METADATA_OWNER_LABEL = 'owner';
+    public const HARDCODED_METADATA_LABELS      = [
+        'title',
+        'description',
+        self::HARDCODED_METADATA_OWNER_LABEL,
+        'create_date',
+        'update_date',
+        'status',
+        'obsolescence_date'
+    ];
+
+
     var $modifiableMetadata;
     var $groupId;
     
     function __construct($groupId) {
-        // Metadata hard coded as table columns
-        $this->hardCodedMetadata = array('title', 'description', 'owner'
-                                         , 'create_date', 'update_date'
-                                         , 'status', 'obsolescence_date');
-
         // Metadata hard coded as table columns but with some user-defined
         // states such as 'useIt' in a dedicated table       
         $this->modifiableMetadata = array('obsolescence_date', 'status');
@@ -161,7 +163,7 @@ class Docman_MetadataFactory {
      */
     public function getHardCodedMetadataList($onlyUsed = false) {
         $mda = array();
-        foreach($this->hardCodedMetadata as $mdLabel) {
+        foreach(self::HARDCODED_METADATA_LABELS as $mdLabel) {
             $md = $this->getHardCodedMetadataFromLabel($mdLabel);
             if(in_array($md->getLabel(), $this->modifiableMetadata)) {
                 $this->appendHardCodedMetadataParams($md);
@@ -362,7 +364,7 @@ class Docman_MetadataFactory {
      * Return the Metadata corresponding to the given label.
      */
     public function getFromLabel($label) {
-        if(in_array($label, $this->hardCodedMetadata)) {
+        if(in_array($label, self::HARDCODED_METADATA_LABELS)) {
             $md = $this->getHardCodedMetadataFromLabel($label);
 
             if($this->groupId !== null) {
@@ -387,7 +389,7 @@ class Docman_MetadataFactory {
     }
 
     function isHardCodedMetadata($label) {
-        return in_array($label, $this->hardCodedMetadata);
+        return in_array($label, self::HARDCODED_METADATA_LABELS);
     }
 
     function isRealMetadata($label) {
@@ -537,7 +539,7 @@ class Docman_MetadataFactory {
                 $md->setCanChangeValue(true);
             break;
 
-            case 'owner':
+            case self::HARDCODED_METADATA_OWNER_LABEL:
                 $md = new Docman_Metadata();
                 $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_owner_name'));
                 $md->setLabel('owner');

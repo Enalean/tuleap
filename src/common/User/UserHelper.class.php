@@ -210,6 +210,7 @@ class UserHelper {
      *
      * @param int the user_id of the user to display
      * @see getDisplayName
+     * @return string
      */
     function getDisplayNameFromUserId($user_id) {
         $um = $this->_getUserManager();
@@ -267,7 +268,7 @@ class UserHelper {
      * 
      * @param int $user_id User id
      * 
-     * @return String
+     * @return string
      */
     public function getLinkOnUserFromUserId($user_id) {
         return $this->getLinkOnUser($this->_getUserManager()->getUserById($user_id));

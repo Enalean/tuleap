@@ -1,30 +1,25 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('Docman_Filter.class.php');
-require_once('Docman_ValidateFilter.class.php');
-require_once('Docman_SqlFilter.class.php');
-require_once('Docman_HtmlFilter.class.php');
-require_once('Docman_FilterDao.class.php');
 
 class Docman_FilterFactory {
     var $dynTextFields;
@@ -80,7 +75,7 @@ class Docman_FilterFactory {
         // url, we have to use the MD order returned by getMetadataForGroup
         // method of metadataFactory: first the hardcoded md like defined in
         // the class and then the real metadata ordered by label ASC.
-        foreach($metadataFactory->hardCodedMetadata as $mdLabel) {
+        foreach(Docman_MetadataFactory::HARDCODED_METADATA_LABELS as $mdLabel) {
             if(isset($filtersArray[$mdLabel])) {
                 $report->addFilter($filtersArray[$mdLabel]);
                 unset($filtersArray[$mdLabel]);

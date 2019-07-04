@@ -1267,7 +1267,9 @@ class DocmanPlugin extends Plugin
             $this->getDocmanLockFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
-                new Docman_MetadataFactory($project->getID())
+                new Docman_MetadataFactory($project->getID()),
+                Codendi_HTMLPurifier::instance(),
+                UserHelper::instance()
             ),
             new ApprovalTableRetriever(
                 new Docman_ApprovalTableFactoriesFactory(),
