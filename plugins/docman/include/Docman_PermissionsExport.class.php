@@ -83,9 +83,11 @@ class Docman_PermissionsExport {
         // Collect data
         $itemFactory    = new Docman_ItemFactory($this->group->getId());
         $rootItem       = $itemFactory->getRoot($this->group->getId());
-        $this->parentTitles[$rootItem->getId()] = '';
         $output         = array();
-        $this->fetchPerms(array($rootItem->getId()), $output);
+        if ($rootItem !== null) {
+            $this->parentTitles[$rootItem->getId()] = '';
+            $this->fetchPerms(array($rootItem->getId()), $output);
+        }
         return $output;
     }
 

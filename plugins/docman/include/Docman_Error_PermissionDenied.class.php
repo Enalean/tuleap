@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * 
@@ -137,11 +137,10 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
                 if (isset($query['group_id'])) {
                     $itemFactory = $this->_getItemFactoryInstance($project->getId());
                     $res = $itemFactory->getRoot($project->getId());
-                    $row = $res->toRow();
-                    $query['id'] = $row['item_id'];
-
-                } else {
-                    array('admins' => array(), 'status' => false);
+                    if ($res !== null) {
+                        $row = $res->toRow();
+                        $query['id'] = $row['item_id'];
+                    }
                 }
             }
         }
