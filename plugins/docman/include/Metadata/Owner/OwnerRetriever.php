@@ -21,12 +21,10 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\Actions;
+namespace Tuleap\Docman\Metadata\Owner;
 
 use PFUser;
 use UserManager;
-use UserNotAuthorizedException;
-use UserNotExistException;
 
 class OwnerRetriever
 {
@@ -41,47 +39,37 @@ class OwnerRetriever
     }
 
     /**
-     * @throws UserNotExistException
-     * @throws UserNotAuthorizedException
-     *
      * @deprecated should be used only in core context
      */
-    public function getOwnerIdFromLoginName(string $candidate_owner): int
+    public function getOwnerIdFromLoginName(string $candidate_owner): ?int
     {
         $candidate_owner = $this->user_manager->findUser($candidate_owner);
 
-        return (int)$this->checkUser($candidate_owner)->getId();
+        $owner = $this->checkUser($candidate_owner);
+        if ($owner === null) {
+            return null;
+        }
+
+        return (int) $owner->getId();
     }
 
-    /**
-     * @throws UserNotExistException
-     * @throws UserNotAuthorizedException
-     */
-    public function getUserFromRepresentationId(int $owner_id): PFUser
+    public function getUserFromRepresentationId(int $owner_id): ?PFUser
     {
         $candidate_owner = $this->user_manager->getUserById($owner_id);
 
         return $this->checkUser($candidate_owner);
     }
 
-    /**
-     * @throws UserNotAuthorizedException
-     * @throws UserNotExistException
-     */
-    private function checkUser(?PFUser $candidate_owner): PFUser
+    private function checkUser(?PFUser $candidate_owner): ?PFUser
     {
-        if (! $candidate_owner) {
-            throw new UserNotExistException();
+        if ($candidate_owner === null) {
+            return null;
         }
 
-        if ($candidate_owner->isAnonymous()) {
-            throw new UserNotAuthorizedException();
+        if (! $candidate_owner->isAlive()) {
+            return null;
         }
 
-        if ($candidate_owner->isActive() || $candidate_owner->isRestricted()) {
-            return $candidate_owner;
-        }
-
-        throw new UserNotAuthorizedException();
+        return $candidate_owner;
     }
 }

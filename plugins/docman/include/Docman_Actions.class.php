@@ -21,9 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 
 require_once('www/news/news_utils.php');
 
@@ -66,22 +66,17 @@ class Docman_Actions extends Actions {
     /**
      * protected for testing purpose (SOAP)
      */
-    protected function _checkOwnerChange($owner, &$user) {
-        try {
-            return (new OwnerRetriever(UserManager::instance()))->getOwnerIdFromLoginName($owner);
-        } catch (UserNotExistException $e) {
+    protected function _checkOwnerChange(string $new_owner_name, PFUser $change_requestor)
+    {
+        $new_owner_id = (new OwnerRetriever($this->_getUserManagerInstance()))->getOwnerIdFromLoginName($new_owner_name);
+        if ($new_owner_id === null) {
             $this->_controler->feedback->log(
                 Feedback::WARN,
                 $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
             );
-            return $user->getId();
-        } catch (UserNotAuthorizedException $e) {
-            $this->_controler->feedback->log(
-                Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner')
-            );
-            return $user->getId();
+            return $change_requestor->getId();
         }
+        return $new_owner_id;
     }
 
     private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {

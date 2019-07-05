@@ -169,6 +169,12 @@ msgid "The resource %d does not exist."
 msgstr "La ressource %d n'existe pas."
 
 #, php-format
+msgid "The specified owner ID #%d does not match a valid user."
+msgstr ""
+"L'ID #%d spécifié pour le propriétaire ne correspond pas un "
+"utilisateur valide."
+
+#, php-format
 msgid "The status \"%s\" is invalid."
 msgstr "Le statut \"%s\" est invalide."
 
