@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global $:readonly */
+
 var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly Class:readonly $:readonly $$:readonly */
+
 codendi.Tree = {};
 codendi.Tree.nodes = {};
 

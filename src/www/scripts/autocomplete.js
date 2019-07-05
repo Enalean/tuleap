@@ -1,3 +1,4 @@
+/* global Class:readonly Prototype:readonly $:readonly Builder:readonly Ajax:readonly */
 /*
  * Abstract class to manage autocompletion, see after for concret classes
  */
@@ -97,7 +98,7 @@ var AutoCompleter = Class.create({
  * new UserAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
 
  */
-var UserAutoCompleter = Class.create(AutoCompleter, {
+window.UserAutoCompleter = Class.create(AutoCompleter, {
     /**
      * Constructor
      */
@@ -115,7 +116,7 @@ var UserAutoCompleter = Class.create(AutoCompleter, {
  * new ProjectAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
 
  */
-var ProjectAutoCompleter = Class.create(AutoCompleter, {
+window.ProjectAutoCompleter = Class.create(AutoCompleter, {
     /**
      * Constructor
      */

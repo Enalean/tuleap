@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global CKEDITOR:readonly tuleap:readonly */
+
 !(function($) {
     $(function() {
         var selector = $("#admin-headline-select-language");

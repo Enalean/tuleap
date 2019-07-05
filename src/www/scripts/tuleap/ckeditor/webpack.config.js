@@ -30,6 +30,10 @@ module.exports = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, public_assets_path),
+    externals: {
+        ckeditor: "CKEDITOR",
+        tuleap: "tuleap"
+    },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),

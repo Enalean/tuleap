@@ -15,9 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tlp:readonly tuleap:readonly */
 !(function($) {
-    var ESC_KEYCODE = 27;
-
     $(function() {
         bindAllowAllEvent();
         bindFilterEvent();

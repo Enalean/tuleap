@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jstz:readonly */
 !(function($) {
     $(document).ready(function() {
         if (!$("#timezone option[selected]").val()) {

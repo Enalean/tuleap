@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global module:readonly require:readonly */
+
 var codendi;
 
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
@@ -93,7 +95,7 @@ function tooltipModule($, codendi) {
         }
     };
 
-    codendi.Tooltip.prototype.hide = function(evt) {
+    codendi.Tooltip.prototype.hide = function() {
         this.show_tooltip = false;
         if (this.tooltip) {
             this.timeout = setTimeout(

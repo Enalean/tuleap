@@ -25,9 +25,11 @@ src/www/scripts/select2/
 src/www/scripts/tablekit/
 src/www/scripts/textboxlist/
 src/www/scripts/vendor/
+src/www/scripts/fieldDependencies.js
+src/www/scripts/filterlist.js
+src/www/scripts/user.js
 src/www/themes/common/tlp/doc/codemirror/
 src/www/themes/common/tlp/src/vendor-i18n/
-src/www/viewportchecker/
 tests/simpletest/common/include/_fixtures
 plugins/mediawiki/www/
 plugins/tracker/www/scripts/LoadTrackerArtifactLink.js

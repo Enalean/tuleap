@@ -88,7 +88,7 @@ function updateNavbarLogo(new_width) {
     }
 }
 
-function updateSidebarIcon(direction, show_only_icon) {
+function updateSidebarIcon(direction) {
     $(".sidebar-collapse")
         .removeClass("fa-chevron-left fa-chevron-right")
         .addClass("fa-chevron-" + direction);
@@ -178,10 +178,10 @@ $(document).ready(function() {
         });
 
         if (current_size == null || current_size == width_expanded) {
-            updateSidebarIcon("left", false);
+            updateSidebarIcon("left");
             updateSidebarServices(false, 100);
         } else {
-            updateSidebarIcon("right", true);
+            updateSidebarIcon("right");
             updateSidebarServices(true, 100);
         }
 

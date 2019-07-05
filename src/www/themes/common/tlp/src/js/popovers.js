@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,8 +139,8 @@ function buildDocumentClickListener(popover_trigger, popover_content) {
         handler(event) {
             if (
                 popover_content.classList.contains(CLASS_TLP_POPOVER_SHOWN) &&
-                !findClosestElement(event.target, popover_content) &&
-                !findClosestElement(event.target, popover_trigger)
+                findClosestElement(event.target, popover_content) === null &&
+                findClosestElement(event.target, popover_trigger) === null
             ) {
                 hideAllShownPopovers();
             }

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tuleap:readonly codendi:readonly */
+
 !(function($) {
     var themes_list,
         popover_is_displayed = false;
@@ -191,8 +193,6 @@
                 return;
             }
         });
-
-        var nb_checked = $('input[type="checkbox"][name="ssh_key_selected[]"]:checked').length;
 
         if (at_least_one_checkbox_is_checked) {
             button.removeAttr("disabled");

@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global module:readonly */
+
 /**
  * Handle lists filtering
  */
-
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = {
         listFilter: listFilterFactory
@@ -35,7 +36,6 @@ function listFilterFactory() {
     var esc_keycode = 27;
     var list_element;
     var filter_element;
-    var excluded_element;
 
     var filterProjects = function(value) {
         var matching_elements = document.querySelectorAll(list_element);
@@ -97,10 +97,9 @@ function listFilterFactory() {
         }
     };
 
-    var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
+    var init = function(filter_element_selected, list_element_selector) {
         filter_element = filter_element_selected;
         list_element = list_element_selector;
-        excluded_element = excluded_element_selector;
 
         bindClickEventOnFilter(filter_element_selected);
         bindKeyUpEventOnFilter(filter_element_selected);

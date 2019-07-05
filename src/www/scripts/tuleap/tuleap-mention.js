@@ -15,6 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly tuleap:readonly */
 /**
  * Handle @user
  */
@@ -23,8 +24,10 @@
         init: function(selector) {
             $(selector).atwho({
                 at: "@",
+                /* eslint-disable no-template-curly-in-string */
                 tpl:
                     '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
+                /* eslint-enable no-template-curly-in-string */
                 callbacks: {
                     remote_filter: function(query, callback) {
                         if (query.length > 2) {
@@ -42,7 +45,7 @@
                             });
                         }
                     },
-                    sorter: function(query, items, search_key) {
+                    sorter: function(query, items) {
                         if (!query) {
                             return items;
                         }

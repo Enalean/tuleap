@@ -15,6 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly $clamp:readonly */
 (function($) {
     $(document).ready(function() {
         $(".news blockquote > div").each(function() {

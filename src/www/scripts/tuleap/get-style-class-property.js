@@ -20,10 +20,11 @@ var tuleap = tuleap || {};
 
 // Search for a class in loaded stylesheets
 tuleap.getStyleClass = function(className) {
+    var s, r;
     var re = new RegExp("\\." + className + "$", "gi");
     if (document.all) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].rules.length; r++) {
+        for (s = 0; s < document.styleSheets.length; s++) {
+            for (r = 0; r < document.styleSheets[s].rules.length; r++) {
                 if (
                     document.styleSheets[s].rules[r].selectorText &&
                     document.styleSheets[s].rules[r].selectorText.search(re) != -1
@@ -33,8 +34,8 @@ tuleap.getStyleClass = function(className) {
             }
         }
     } else if (document.getElementById) {
-        for (var s = 0; s < document.styleSheets.length; s++) {
-            for (var r = 0; r < document.styleSheets[s].cssRules.length; r++) {
+        for (s = 0; s < document.styleSheets.length; s++) {
+            for (r = 0; r < document.styleSheets[s].cssRules.length; r++) {
                 if (
                     document.styleSheets[s].cssRules[r].selectorText &&
                     document.styleSheets[s].cssRules[r].selectorText.search(re) != -1
@@ -54,6 +55,8 @@ tuleap.getStyleClass = function(className) {
 // Search for a property for a class in loaded stylesheets
 tuleap.getStyleClassProperty = function(className, propertyName) {
     var styleClass = tuleap.getStyleClass(className);
-    if (styleClass) return styleClass[propertyName];
-    else return null;
+    if (styleClass) {
+        return styleClass[propertyName];
+    }
+    return null;
 };

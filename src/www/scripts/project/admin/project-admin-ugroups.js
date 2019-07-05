@@ -98,7 +98,7 @@ function updateDeleteModalDescription(button) {
     );
 }
 
-async function initModalAddDynamicUserToUGroup() {
+function initModalAddDynamicUserToUGroup() {
     const button = document.getElementById("project-admin-add-dynamic-modal");
     if (!button) {
         return;

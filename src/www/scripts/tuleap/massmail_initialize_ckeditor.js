@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* global jQuery:readonly codendi:readonly */
 (function($, codendi) {
     $(document).ready(function() {
         $(".widget_myprojects_editor").each(function() {
@@ -23,8 +25,8 @@
                     onLoad: $.noop(),
                     toggle: false,
                     default_in_html: true
-                },
-                rte = new codendi.RTE(element.attr("id"), options);
+                };
+            new codendi.RTE(element.attr("id"), options);
         });
     });
 })(jQuery, codendi || {});

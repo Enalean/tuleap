@@ -18,7 +18,7 @@
 var tuleap = tuleap || {};
 
 // Search for a class in loaded stylesheets
-(function($) {
+(function() {
     tuleap.browserCompatibility = {
         isIE7: function() {
             if (
@@ -53,4 +53,4 @@ var tuleap = tuleap || {};
             return false;
         }
     };
-})(jQuery);
+})();

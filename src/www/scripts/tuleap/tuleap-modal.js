@@ -15,6 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly tuleap:readonly */
 /**
  * Handle Tuleap modal
  */
@@ -63,16 +64,17 @@
         toggleLeftSidePanel: function(grip) {
             var panel_content = grip.siblings(".tuleap-modal-side-panel-content");
             panel_content.toggle();
+            var new_margin_left;
 
             if (panel_content.css("display") === "block") {
-                var new_margin_left =
-                    parseInt($(".tuleap-modal").css("margin-left")) -
-                    parseInt(panel_content.css("width"));
+                new_margin_left =
+                    parseInt($(".tuleap-modal").css("margin-left"), 10) -
+                    parseInt(panel_content.css("width"), 10);
                 $(".tuleap-modal").css("margin-left", new_margin_left + "px");
             } else {
-                var new_margin_left =
-                    parseInt($(".tuleap-modal").css("margin-left")) +
-                    parseInt(panel_content.css("width"));
+                new_margin_left =
+                    parseInt($(".tuleap-modal").css("margin-left"), 10) +
+                    parseInt(panel_content.css("width"), 10);
                 $(".tuleap-modal").css("margin-left", new_margin_left + "px");
             }
         },
@@ -109,7 +111,7 @@
                     computed_height -
                     $(".tuleap-modal-actions").outerHeight() -
                     $(".tuleap-modal-title").outerHeight() -
-                    2 * parseInt($(".tuleap-modal-actions").css("padding-left"));
+                    2 * parseInt($(".tuleap-modal-actions").css("padding-left"), 10);
                 $(".tuleap-modal-content, .tuleap-modal-side-panel-content-content").css({
                     height: content_height + "px"
                 });

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global CodeMirror:readonly tlp:readonly */
+
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
 
