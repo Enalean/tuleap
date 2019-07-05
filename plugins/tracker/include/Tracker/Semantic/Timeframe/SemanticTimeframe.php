@@ -26,6 +26,7 @@ use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use Tracker;
+use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_Semantic;
@@ -35,7 +36,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
 class SemanticTimeframe extends Tracker_Semantic
 {
-    private const NAME = 'timeframe';
+    public const NAME = 'timeframe';
 
     private const HARD_CODED_START_DATE_FIELD_NAME = ChartConfigurationFieldRetriever::START_DATE_FIELD_NAME;
     private const HARD_CODED_DURATION_FIELD_NAME   = ChartConfigurationFieldRetriever::DURATION_FIELD_NAME;
@@ -66,7 +67,7 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function getLabel(): string
     {
-        throw new \RuntimeException('Not implemented yet');
+        return dgettext('tuleap-tracker', 'Timeframe');
     }
 
     public function getDescription(): string
@@ -76,7 +77,15 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function display(): void
     {
-        throw new \RuntimeException('Not implemented yet');
+        if ($this->start_date_field === null || $this->duration_field === null) {
+            return;
+        }
+
+        echo sprintf(
+            dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
+            $this->start_date_field->getLabel(),
+            $this->duration_field->getLabel()
+        );
     }
 
     public function displayAdmin(
@@ -99,12 +108,18 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
     {
-        throw new \RuntimeException('Not implemented yet');
+        // Not yet implemented
     }
 
-    public function isUsedInSemantics($field): bool
+    public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        throw new \RuntimeException('Not implemented yet');
+        $is_start_date = $this->start_date_field !== null
+            && (int) $field->getId() === (int) $this->start_date_field->getId();
+
+        $is_duration = $this->duration_field !== null
+            && (int) $field->getId() === (int) $this->duration_field->getId();
+
+        return $is_start_date || $is_duration;
     }
 
     public function save(): bool
@@ -128,5 +143,14 @@ class SemanticTimeframe extends Tracker_Semantic
         }
 
         return $this->duration_field->getName();
+    }
+
+    public function isDefined(): bool
+    {
+        return $this->start_date_field !== null && $this->duration_field !== null;
+    }
+
+    public function exportToREST(PFUser $user): void
+    {
     }
 }

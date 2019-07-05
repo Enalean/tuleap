@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+
 class Tracker_SemanticManager
 {
     /** @var Tracker */
@@ -93,7 +97,7 @@ class Tracker_SemanticManager
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics($field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
         $semantics = $this->getSemantics();
         foreach ($semantics as $semantic) {
             if ($semantic->isUsedInSemantics($field)) {
@@ -113,6 +117,16 @@ class Tracker_SemanticManager
         $semantics->add(Tracker_Semantic_Description::load($this->tracker));
         $semantics->add(Tracker_Semantic_Status::load($this->tracker));
         $semantics->add(Tracker_Semantic_Contributor::load($this->tracker));
+
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            Tracker_FormElementFactory::instance()
+        );
+        $semantic_timeframe = $semantic_timeframe_builder->getSemantic($this->tracker);
+        if ($semantic_timeframe->isDefined()) {
+            $semantics->add($semantic_timeframe);
+        }
+
         $semantics->add($this->tracker->getTooltip());
 
         $this->addOtherSemantics($semantics);
@@ -165,7 +179,7 @@ class Tracker_SemanticManager
     }
 
     protected function getSemanticOrder() {
-        $order = array('title', 'description', 'status', 'contributor');
+        $order = array('title', 'description', 'status', 'contributor', SemanticTimeframe::NAME);
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTICS_NAMES,
             array(

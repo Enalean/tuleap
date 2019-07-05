@@ -227,7 +227,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         return self::NAME;
     }
 
-    public function isUsedInSemantics($field)
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
     {
         return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
     }

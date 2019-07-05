@@ -42,7 +42,7 @@ class SemanticTimeframeBuilder
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function getSemantic(Tracker $tracker)
+    public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
         $row = $this->dao->searchByTrackerId((int) $tracker->getId());
         if ($row === null) {

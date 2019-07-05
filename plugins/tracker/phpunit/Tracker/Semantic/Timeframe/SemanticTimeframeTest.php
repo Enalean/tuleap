@@ -56,12 +56,51 @@ class SemanticTimeframeTest extends TestCase
     {
         $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $duration->shouldReceive('getName')
-                   ->once()
-                   ->andReturn('my_custom_duration');
+                 ->once()
+                 ->andReturn('my_custom_duration');
 
         $timeframe = new SemanticTimeframe(Mockery::mock(Tracker::class), null, $duration);
 
         $this->assertEquals('start_date', $timeframe->getStartDateFieldName());
         $this->assertEquals('my_custom_duration', $timeframe->getDurationFieldName());
+    }
+
+    public function testIsDefined(): void
+    {
+        $tracker    = Mockery::mock(Tracker::class);
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $duration   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $this->assertFalse(
+            (new SemanticTimeframe($tracker, null, null))->isDefined()
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($tracker, $start_date, null))->isDefined()
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($tracker, $start_date, $duration))->isDefined()
+        );
+    }
+
+    public function testIsUsedInSemantic(): void
+    {
+        $tracker    = Mockery::mock(Tracker::class);
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date->shouldReceive(['getId' => 42]);
+        $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $duration->shouldReceive(['getId' => 43]);
+        $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $a_field->shouldReceive(['getId' => 44]);
+        $this->assertFalse(
+            (new SemanticTimeframe($tracker, null, null))->isUsedInSemantics($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($tracker, $start_date, $duration))->isUsedInSemantics($a_field)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($tracker, $start_date, $duration))->isUsedInSemantics($start_date)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($tracker, $start_date, $duration))->isUsedInSemantics($duration)
+        );
     }
 }

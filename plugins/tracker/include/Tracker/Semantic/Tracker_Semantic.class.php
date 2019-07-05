@@ -134,7 +134,7 @@ abstract class Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public abstract function isUsedInSemantics($field);
+    public abstract function isUsedInSemantics(Tracker_FormElement_Field $field);
 
     /**
      * Get the url to this semantic

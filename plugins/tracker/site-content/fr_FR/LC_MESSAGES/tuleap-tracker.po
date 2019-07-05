@@ -1098,6 +1098,16 @@ msgstr ""
 msgid "Time"
 msgstr "Date"
 
+msgid "Timeframe"
+msgstr "Plage de temps"
+
+#, php-format
+msgid ""
+"Timeframe is based on start date field \"%s\" and duration field \"%s\"."
+msgstr ""
+"La plage de temps est définie par le champ date de début \"%s\" et le champ "
+"durée \"%s\"."
+
 msgid "Tracker"
 msgstr "Tracker"
 

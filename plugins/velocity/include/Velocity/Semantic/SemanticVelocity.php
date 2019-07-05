@@ -209,7 +209,7 @@ class SemanticVelocity extends Tracker_Semantic
         }
     }
 
-    public function isUsedInSemantics($field)
+    public function isUsedInSemantics(Tracker_FormElement_Field $field)
     {
         return $this->getFieldId() == $field->getId();
     }
@@ -233,14 +233,14 @@ class SemanticVelocity extends Tracker_Semantic
         );
     }
 
-    protected static $_instances;
+    private static $instances;
 
     /**
      * @return SemanticVelocity
      */
     public static function load(Tracker $tracker)
     {
-        if (! isset(self::$_instances[$tracker->getId()])) {
+        if (! isset(self::$instances[$tracker->getId()])) {
             $semantic_dao   = new SemanticVelocityDao();
             $field_velocity = $semantic_dao->searchUsedVelocityField($tracker->getId());
             $field_id = isset($field_velocity['field_id'])? $field_velocity['field_id'] : 0;
@@ -251,16 +251,16 @@ class SemanticVelocity extends Tracker_Semantic
             return self::forceLoad($tracker, $field);
         }
 
-        return self::$_instances[$tracker->getId()];
+        return self::$instances[$tracker->getId()];
     }
 
     private static function forceLoad(Tracker $tracker, ?Tracker_FormElement_Field $field = null)
     {
-        $semantic_done                       = SemanticDone::load($tracker);
-        $semantic_formatter                  = new BacklogRequiredTrackerCollectionFormatter();
-        self::$_instances[$tracker->getId()] = new SemanticVelocity($tracker, $semantic_done, $semantic_formatter, $field);
+        $semantic_done                      = SemanticDone::load($tracker);
+        $semantic_formatter                 = new BacklogRequiredTrackerCollectionFormatter();
+        self::$instances[$tracker->getId()] = new SemanticVelocity($tracker, $semantic_done, $semantic_formatter, $field);
 
-        return self::$_instances[$tracker->getId()];
+        return self::$instances[$tracker->getId()];
     }
 
     /**
