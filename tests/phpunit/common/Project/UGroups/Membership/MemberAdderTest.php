@@ -33,7 +33,9 @@ use ProjectUGroup;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 final class MemberAdderTest extends TestCase
 {
@@ -55,6 +57,14 @@ final class MemberAdderTest extends TestCase
      * @var Mockery\MockInterface|DynamicUGroupMembersUpdater
      */
     private $dynamic_member_updater;
+    /**
+     * @var Mockery\MockInterface|ProjectMemberAdderWithoutStatusCheckAndNotifications
+     */
+    private $project_member_adder;
+    /**
+     * @var Mockery\MockInterface|SynchronizedProjectMembershipDetector
+     */
+    private $detector;
 
     protected function setUp(): void
     {
@@ -62,10 +72,14 @@ final class MemberAdderTest extends TestCase
         $this->verifier->shouldReceive('assertUGroupAndUserValidity')->andReturnNull();
         $this->static_member_adder    = Mockery::mock(StaticMemberAdder::class);
         $this->dynamic_member_updater = Mockery::mock(DynamicUGroupMembersUpdater::class);
+        $this->project_member_adder   = Mockery::mock(ProjectMemberAdderWithoutStatusCheckAndNotifications::class);
+        $this->detector = Mockery::mock(SynchronizedProjectMembershipDetector::class);
         $this->adder                  = new MemberAdder(
             $this->verifier,
             $this->static_member_adder,
-            $this->dynamic_member_updater
+            $this->dynamic_member_updater,
+            $this->project_member_adder,
+            $this->detector
         );
     }
 
@@ -102,7 +116,10 @@ final class MemberAdderTest extends TestCase
         $project = Mockery::mock(Project::class, ['getAccess' => Project::ACCESS_PUBLIC]);
         $ugroup  = Mockery::mock(ProjectUGroup::class, ['getProject' => $project, 'isStatic' => false]);
 
-        $this->dynamic_member_updater->shouldReceive('addUser')->with($project, $ugroup, $user);
+        $this->dynamic_member_updater
+            ->shouldReceive('addUser')
+            ->with($project, $ugroup, $user)
+            ->once();
 
         $this->adder->addMember($user, $ugroup);
     }
@@ -111,12 +128,11 @@ final class MemberAdderTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $user    = Mockery::mock(PFUser::class, ['isRestricted' => false, 'getId' => 217]);
-        $project = Mockery::mock(Project::class, ['getAccess' => Project::ACCESS_PUBLIC]);
+        $project = Mockery::mock(Project::class, ['getAccess' => Project::ACCESS_PUBLIC, 'getID' => 168]);
         $ugroup  = Mockery::mock(
             ProjectUGroup::class,
             [
                 'getProject' => $project,
-                'getProjectId' => 168,
                 'isStatic'   => true,
                 'getId'      => 24,
                 'exists'     => false
@@ -128,23 +144,106 @@ final class MemberAdderTest extends TestCase
         $this->adder->addMember($user, $ugroup);
     }
 
-    public function testAddMemberToStaticUGroupDelegates(): void
+    public function testAddMemberToStaticUGroupInNonSynchronizedProjectDoesNotAddToProjectMembers(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $user    = Mockery::mock(PFUser::class, ['isRestricted' => false, 'getId' => 217]);
-        $project = Mockery::mock(Project::class, ['getAccess' => Project::ACCESS_PUBLIC]);
+        $project = Mockery::mock(
+            Project::class,
+            ['getAccess' => Project::ACCESS_PUBLIC, 'getID' => 168]
+        );
         $ugroup  = Mockery::mock(
             ProjectUGroup::class,
             [
                 'getProject' => $project,
-                'getProjectId' => 168,
                 'isStatic'   => true,
                 'getId'      => 24,
                 'exists'     => true
             ]
         );
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
+            ->with($ugroup)
+            ->once()
+            ->andReturnFalse();
 
-        $this->static_member_adder->shouldReceive('addUserToStaticGroup')->with(168, 24, 217);
+        $this->static_member_adder
+            ->shouldReceive('addUserToStaticGroup')
+            ->with(168, 24, 217)
+            ->once();
+        $this->project_member_adder->shouldNotReceive('addProjectMember');
+
+        $this->adder->addMember($user, $ugroup);
+    }
+
+    public function testAddMemberToStaticUGroupDoesNotAddToProjectMembersWhenTheyAlreadyAre(): void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        $user    = Mockery::mock(PFUser::class, ['isRestricted' => false, 'getId' => 217]);
+        $project = Mockery::mock(
+            Project::class,
+            ['getAccess' => Project::ACCESS_PRIVATE, 'getID' => 168]
+        );
+        $user->shouldReceive('isMember')
+            ->with(168)
+            ->once()
+            ->andReturnTrue();
+        $ugroup  = Mockery::mock(
+            ProjectUGroup::class,
+            [
+                'getProject' => $project,
+                'isStatic'   => true,
+                'getId'      => 24,
+                'exists'     => true
+            ]
+        );
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
+            ->with($ugroup)
+            ->once()
+            ->andReturnTrue();
+
+        $this->static_member_adder
+            ->shouldReceive('addUserToStaticGroup')
+            ->with(168, 24, 217)
+            ->once();
+        $this->project_member_adder->shouldNotReceive('addProjectMember');
+
+        $this->adder->addMember($user, $ugroup);
+    }
+
+    public function testAddMemberToStaticUGroupInSynchronizedProjectAlsoAddsToProjectMembers(): void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        $user    = Mockery::mock(PFUser::class, ['isRestricted' => false, 'getId' => 217]);
+        $project = Mockery::mock(
+            Project::class,
+            ['getAccess' => Project::ACCESS_PRIVATE_WO_RESTRICTED, 'getID' => 168]
+        );
+        $user->shouldReceive('isMember')
+            ->with(168)
+            ->once()
+            ->andReturnFalse();
+        $ugroup  = Mockery::mock(
+            ProjectUGroup::class,
+            [
+                'getProject' => $project,
+                'isStatic'   => true,
+                'getId'      => 24,
+                'exists'     => true
+            ]
+        );
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
+            ->with($ugroup)
+            ->once()
+            ->andReturnTrue();
+
+        $this->static_member_adder
+            ->shouldReceive('addUserToStaticGroup')
+            ->with(168, 24, 217)
+            ->once();
+        $this->project_member_adder
+            ->shouldReceive('addProjectMember')
+            ->with($user, $project)
+            ->once();
 
         $this->adder->addMember($user, $ugroup);
     }

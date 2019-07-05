@@ -130,6 +130,6 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     private function getResponseForNonProjectMember($request)
     {
-        return $this->getResponse($request, \REST_TestDataBuilder::TEST_USER_5_NAME);
+        return $this->getResponse($request, \REST_TestDataBuilder::TEST_USER_4_NAME);
     }
 }

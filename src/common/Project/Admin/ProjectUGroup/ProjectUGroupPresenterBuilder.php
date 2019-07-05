@@ -28,6 +28,7 @@ use FRSReleaseFactory;
 use PermissionsManager;
 use PFUser;
 use ProjectUGroup;
+use Tuleap\Project\Admin\ProjectUGroup\Details\MembersPresenterBuilder;
 
 class ProjectUGroupPresenterBuilder
 {

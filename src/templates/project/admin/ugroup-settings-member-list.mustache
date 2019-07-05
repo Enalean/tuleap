@@ -9,12 +9,12 @@
             <section class="tlp-pane-section">
                 <div class="tlp-table-actions">
                     {{# can_be_updated }}
-                        {{^ is_dynamic_group }}
+                        {{^ is_synchronized_with_project_members }}
                             <form action="?group_id={{ project_id }}&ugroup_id={{ id }}"
                                   method="post"
                                   class="project-admin-members-form"
                             >
-                        {{/ is_dynamic_group }}
+                        {{/ is_synchronized_with_project_members }}
                             {{# csrf_token }}
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
@@ -29,25 +29,24 @@
                                 ></select>
                                 <button
                                     class="tlp-append tlp-button-primary"
-                                    {{# is_dynamic_group }}
-                                        id="project-admin-add-dynamic-modal"
-                                        data-is-dynamic-group="{{ is_dynamic_group }}"
-                                        data-target-modal-id="add-user-to-dynamic-ugroup"
+                                    {{# is_synchronized_with_project_members }}
+                                        id="project-admin-add-to-ugroup-and-project-members-modal"
+                                        data-target-modal-id="add-user-to-ugroup-and-project-members"
                                         data-project-id="{{ project_id }}"
                                         data-ugroup-id="{{ id }}"
-                                    {{/ is_dynamic_group }}
+                                    {{/ is_synchronized_with_project_members }}
                                 >
-                                    <i class="fa fa-plus tlp-button-icon" id="project-administration-add-dynamic-ugroup-icon"></i> {{# gettext }}
+                                    <i class="fa fa-plus tlp-button-icon" id="project-administration-add-to-ugroup-and-project-members-icon"></i> {{# gettext }}
                                     Add member{{/ gettext }}
                                 </button>
                             </div>
-                        {{^ is_dynamic_group }}
+                        {{^ is_synchronized_with_project_members }}
                             <input type="hidden" name="action" value="edit_ugroup_members">
                             </form>
-                        {{/ is_dynamic_group }}
-                        {{# is_dynamic_group}}
-                            {{> ugroup-add-project-administrator-modal }}
-                        {{/ is_dynamic_group }}
+                        {{/ is_synchronized_with_project_members }}
+                        {{# is_synchronized_with_project_members}}
+                            {{> ugroup-add-member-modal }}
+                        {{/ is_synchronized_with_project_members }}
                     {{/ can_be_updated }}
                     <div class="tlp-table-actions-spacer"></div>
                     <div class="tlp-form-element tlp-table-actions-element">

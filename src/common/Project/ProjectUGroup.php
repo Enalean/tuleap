@@ -22,10 +22,11 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -474,7 +475,11 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return new MemberAdder(
             new MembershipUpdateVerifier(),
             new StaticMemberAdder(),
-            $this->getDynamicUGroupMembersUpdater()
+            $this->getDynamicUGroupMembersUpdater(),
+            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
+            ),
+            new SynchronizedProjectMembershipDetector()
         );
     }
 
@@ -483,7 +488,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return new DynamicUGroupMembersUpdater(
             new UserPermissionsDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ProjectMemberAdder(new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())),
+            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
+            ),
             EventManager::instance()
         );
     }

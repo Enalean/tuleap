@@ -27,16 +27,20 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
 use Tuleap\Project\Admin\ProjectUGroup\BindingPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\DelegationController;
+use Tuleap\Project\Admin\ProjectUGroup\Details\MembersPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
 use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
-use Tuleap\Project\Admin\ProjectUGroup\MembersPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\PermissionsDelegationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
+use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 
 require_once('pre.php');
@@ -46,12 +50,12 @@ $request = HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-$event_manager       = EventManager::instance();
-$ugroup_manager      = new UGroupManager();
-$ugroup_binding      = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
-$project_manager     = ProjectManager::instance();
-$edit_event_launcher = new EditBindingUGroupEventLauncher($event_manager);
-$binding_controller  = new BindingController(
+$event_manager          = EventManager::instance();
+$ugroup_manager         = new UGroupManager();
+$ugroup_binding         = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+$project_manager        = ProjectManager::instance();
+$edit_event_launcher    = new EditBindingUGroupEventLauncher($event_manager);
+$binding_controller     = new BindingController(
     new ProjectHistoryDao(),
     $project_manager,
     $ugroup_manager,
@@ -59,17 +63,25 @@ $binding_controller  = new BindingController(
     $request,
     $edit_event_launcher
 );
-$user_manager        = UserManager::instance();
-$members_controller  = new MembersController(
+$user_manager           = UserManager::instance();
+$project_member_adder   = new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding);
+$dynamic_member_updater = new DynamicUGroupMembersUpdater(
+    new UserPermissionsDao(),
+    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+    $project_member_adder,
+    $event_manager
+);
+$members_controller     = new MembersController(
     $request,
     $user_manager,
-    new DynamicUGroupMembersUpdater(
-        new UserPermissionsDao(),
-        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-        new ProjectMemberAdder($ugroup_binding),
-        $event_manager
+    $dynamic_member_updater,
+    new MemberAdder(
+        new MembershipUpdateVerifier(),
+        new StaticMemberAdder(),
+        $dynamic_member_updater,
+        $project_member_adder,
+        new SynchronizedProjectMembershipDetector()
     )
-
 );
 
 $membership_delegation_dao = new MembershipDelegationDao();
@@ -85,7 +97,7 @@ $index_controller = new IndexController(
             $user_manager,
             $event_manager
         ),
-        new MembersPresenterBuilder($event_manager, new UserHelper()),
+        new MembersPresenterBuilder($event_manager, new UserHelper(), new SynchronizedProjectMembershipDetector()),
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
     new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,15 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
  * @group UserGroupTests
  */
-class UserGroupTest extends RestBase {
-
+class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
     private function getResponseWithUser2($request) {
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
@@ -96,14 +95,17 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetUsersFromADynamicGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_3/users'));
+    public function testGetUsersFromADynamicGroup(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('user_groups/' . $this->project_private_member_id . '_3/users')
+        );
         $this->assertEquals(
             $response->json(),
-            array(
-                array(
+            [
+                [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
-                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
                     'user_url'     => '/users/rest_api_restricted_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_EMAIL,
                     'real_name'    => '',
@@ -113,11 +115,26 @@ class UserGroupTest extends RestBase {
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'R',
                     'is_anonymous' => false,
-                    'has_avatar' => false
-                ),
-                array(
+                    'has_avatar'   => false
+                ],
+                //rest_api_restricted_2 is project_member because he is also member of "Developpers"
+                [
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME],
+                    'user_url'     => '/users/rest_api_restricted_2',
+                    'email'        => REST_TestDataBuilder::TEST_USER_RESTRICTED_2_EMAIL,
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_RESTRICTED_2_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME,
+                    'ldap_id'      => '',
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                    'status'       => 'R',
+                    'is_anonymous' => false,
+                    'has_avatar'   => false
+                ],
+                [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
-                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
                     'user_url'     => '/users/rest_api_tester_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
                     'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
@@ -127,11 +144,11 @@ class UserGroupTest extends RestBase {
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
-                ),
-                array(
+                    'has_avatar'   => false
+                ],
+                [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
-                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
                     'user_url'     => '/users/rest_api_tester_2',
                     'email'        => REST_TestDataBuilder::TEST_USER_2_EMAIL,
                     'real_name'    => '',
@@ -141,11 +158,11 @@ class UserGroupTest extends RestBase {
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
-                ),
-                array(
+                    'has_avatar'   => false
+                ],
+                [
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
-                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
                     'user_url'     => '/users/rest_api_tester_3',
                     'email'        => REST_TestDataBuilder::TEST_USER_3_EMAIL,
                     'real_name'    => '',
@@ -155,9 +172,24 @@ class UserGroupTest extends RestBase {
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
                     'is_anonymous' => false,
-                    'has_avatar' => false
-                )
-            )
+                    'has_avatar'   => false
+                ],
+                //rest_api_tester_5 is project_member because he is also member of "Developpers"
+                [
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME],
+                    'uri'          => 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME],
+                    'user_url'     => '/users/rest_api_tester_5',
+                    'email'        => REST_TestDataBuilder::TEST_USER_5_EMAIL,
+                    'real_name'    => '',
+                    'display_name' => REST_TestDataBuilder::TEST_USER_5_DISPLAYNAME,
+                    'username'     => REST_TestDataBuilder::TEST_USER_5_NAME,
+                    'ldap_id'      => null,
+                    'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                    'status'       => 'A',
+                    'is_anonymous' => false,
+                    'has_avatar'   => false
+                ]
+            ]
         );
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -189,7 +221,6 @@ class UserGroupTest extends RestBase {
 
     public function testGetMultipleUsersFromAStaticGroup() {
         $response = $this->getResponse($this->client->get('user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
-
         $this->assertEquals(
             $response->json(),
             array(

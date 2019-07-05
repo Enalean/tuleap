@@ -26,6 +26,9 @@ use Feedback;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\InvalidProjectException;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Project\UGroups\Membership\UserIsAnonymousException;
 use UserManager;
 
 class MembersController
@@ -42,15 +45,21 @@ class MembersController
      * @var DynamicUGroupMembersUpdater
      */
     private $dynamic_ugroup_members_updater;
+    /**
+     * @var MemberAdder
+     */
+    private $member_adder;
 
     public function __construct(
         Codendi_Request $request,
         UserManager $user_manager,
-        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater
+        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater,
+        MemberAdder $member_adder
     ) {
         $this->request                        = $request;
         $this->user_manager                   = $user_manager;
         $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
+        $this->member_adder                   = $member_adder;
     }
 
     public function editMembers(Project $project, ProjectUGroup $ugroup)
@@ -64,6 +73,11 @@ class MembersController
         $this->addUserToUGroup($ugroup);
     }
 
+    /**
+     * @throws InvalidProjectException
+     * @throws UserIsAnonymousException
+     * @throws \UGroup_Invalid_Exception
+     */
     private function addUserToUGroup(ProjectUGroup $ugroup)
     {
         $add_user_name = $this->request->get('add_user_name');
@@ -78,7 +92,7 @@ class MembersController
             );
         }
         try {
-            $ugroup->addUser($user);
+            $this->member_adder->addMember($user, $ugroup);
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,

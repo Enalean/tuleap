@@ -28,7 +28,9 @@ use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use UGroup_Invalid_Exception;
 
 class MemberAdder
@@ -39,15 +41,23 @@ class MemberAdder
     private $static_member_adder;
     /** @var DynamicUGroupMembersUpdater */
     private $dynamic_member_updater;
+    /** @var ProjectMemberAdder */
+    private $project_member_adder;
+    /** @var SynchronizedProjectMembershipDetector */
+    private $synchronized_project_membership_detector;
 
     public function __construct(
         MembershipUpdateVerifier $membership_update_verifier,
         StaticMemberAdder $static_member_adder,
-        DynamicUGroupMembersUpdater $dynamic_member_updater
+        DynamicUGroupMembersUpdater $dynamic_member_updater,
+        ProjectMemberAdder $project_member_adder,
+        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector
     ) {
-        $this->membership_update_verifier = $membership_update_verifier;
-        $this->static_member_adder        = $static_member_adder;
-        $this->dynamic_member_updater     = $dynamic_member_updater;
+        $this->membership_update_verifier               = $membership_update_verifier;
+        $this->static_member_adder                      = $static_member_adder;
+        $this->dynamic_member_updater                   = $dynamic_member_updater;
+        $this->project_member_adder                     = $project_member_adder;
+        $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
     }
 
     /**
@@ -75,12 +85,25 @@ class MemberAdder
             return;
         }
 
-        $project_id = $ugroup->getProjectId();
+        $this->addToStaticUGroup($user, $ugroup, $project);
+    }
+
+    /**
+     * @throws UGroup_Invalid_Exception
+     */
+    private function addToStaticUGroup(PFUser $user, ProjectUGroup $ugroup, Project $project): void
+    {
+        $project_id = $project->getID();
         $ugroup_id  = $ugroup->getId();
-        if ($ugroup->exists($project_id, $ugroup_id)) {
-            $this->static_member_adder->addUserToStaticGroup($project_id, $ugroup_id, $user->getId());
-        } else {
+        if (! $ugroup->exists($project_id, $ugroup_id)) {
             throw new UGroup_Invalid_Exception();
+        }
+        $this->static_member_adder->addUserToStaticGroup($project_id, $ugroup_id, $user->getId());
+
+        if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($ugroup)
+            && ! $user->isMember($project_id)
+        ) {
+            $this->project_member_adder->addProjectMember($user, $project);
         }
     }
 }
