@@ -140,9 +140,7 @@ export default {
                 "description",
                 "owner",
                 "create_date",
-                "update_date",
-                "status",
-                "obsolescence_date"
+                "update_date"
             ];
 
             return this.item.metadata.filter(
