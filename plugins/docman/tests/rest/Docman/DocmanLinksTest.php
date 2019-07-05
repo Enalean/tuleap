@@ -176,14 +176,15 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
      */
     public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
     {
-        $link = $this->findItemByTitle($items, 'PATCH L NO AT');
+        $item_name = 'PATCH L NO AT';
+        $link  = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'title'                 => 'PATCH L NO AT',
+                'title'                 => $item_name,
                 'link_properties'       => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'copy'
             ]
@@ -202,13 +203,14 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
      */
     public function testPATCHThrowsAnExceptionWhenPatchIsCalledOnANonLinkItem(array $items): void
     {
-        $item = $this->findItemByTitle($items, 'PATCH Link');
+        $item_name = 'PATCH Link';
+        $item  = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
-                'title'            => 'empty',
+                'title'            => $item_name,
                 'should_lock_file' => false,
                 'link_properties'  => ['link_url' => 'https://example.com']
             ]
@@ -230,14 +232,15 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
      */
     public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
     {
-        $item = $this->findItemByTitle($items, 'PATCH L RL');
+        $item_name  = 'PATCH L RL';
+        $item = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'title'            => 'PATCH L RL',
+                'title'            => $item_name,
                 'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
@@ -258,13 +261,14 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
      */
     public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH L AL');
+        $item_name  = 'PATCH L AL';
+        $file = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
-                'title'            => 'PATCH L AL',
+                'title'            => $item_name,
                 'should_lock_file' => false,
                 'link_properties'  => ['link_url' => 'https://example.com']
             ]

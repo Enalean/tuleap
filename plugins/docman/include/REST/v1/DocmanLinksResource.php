@@ -27,15 +27,12 @@ use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
-use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
@@ -434,22 +431,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
     }
 
-    private function getVersionValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeVersionCreationValidatorVisitor
-    {
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-        $approval_check                  = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
-        return new DocumentBeforeVersionCreationValidatorVisitor(
-            $this->getPermissionManager($project),
-            $current_user,
-            $item,
-            \Docman_Link::class,
-            $approval_check
-        );
-    }
-
     private function getItemStatusMapper(\Project $project): ItemStatusMapper
     {
         return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
@@ -494,25 +475,26 @@ class DocmanLinksResource extends AuthenticatedResource
         $project      = $item_request->getProject();
         $item         = $item_request->getItem();
         $current_user = $this->rest_user_manager->getCurrentUser();
-
         try {
-            $validator = $this->getVersionValidator($project, $current_user, $item);
+            $validator = DocumentBeforeVersionCreationValidatorVisitorBuilder::build($project);
             $item->accept(
                 $validator,
-                ['user' => $current_user, 'approval_table_action' => $representation->approval_table_action]
+                [
+                    'user'                  => $current_user,
+                    'approval_table_action' => $representation->approval_table_action,
+                    'document_type'         => \Docman_Link::class,
+                    'title'                 => $title,
+                    'project'               => $project
+                ]
             );
             /** @var \Docman_Link $item */
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
         } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,
                 $exception->getI18NExceptionMessage()
             );
         }
+
 
         (new DocmanLinksValidityChecker())->checkLinkValidity($representation->link_properties->link_url);
 

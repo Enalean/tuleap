@@ -73,7 +73,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
-                'title'                 => 'embedded AT C',
+                'title'                 => $item_name,
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'copy'
@@ -101,7 +101,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
-                'title'                 => 'embedded AT R',
+                'title'                 => $item_name,
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'reset'
@@ -129,7 +129,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
-                'title'                 => 'embedded AT E',
+                'title'                 => $item_name,
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'empty'
@@ -157,7 +157,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
-                'title'               => 'embedded AT C',
+                'title'               => $item_name,
                 'should_lock_file'    => false,
                 'embedded_properties' => ['content' => 'my new content']
             ]
@@ -176,14 +176,15 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
      */
     public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'PATCH E NO AT');
+        $item_name = 'PATCH E NO AT';
+        $embedded  = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'title'                 => 'embedded NO AT',
+                'title'                 => $item_name,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'copy'
             ]
@@ -202,14 +203,15 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
      */
     public function testPATCHThrowsAnExceptionWhenPatchIsCalledOnANonEmbeddedItem(array $items): void
     {
-        $item = $this->findItemByTitle($items, 'PATCH Embedded');
+        $item_name = 'PATCH Embedded';
+        $item      = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
-                'title'               => 'empty',
+                'title'               => $item_name,
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -230,14 +232,15 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
      */
     public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
     {
-        $locked_embedded = $this->findItemByTitle($items, 'PATCH E RL');
+        $item_name       = 'PATCH E RL';
+        $locked_embedded = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
-                'title'               => 'embedded L',
+                'title'               => $item_name,
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -258,14 +261,15 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
      */
     public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH E AL');
+        $item_name = 'PATCH E AL';
+        $item      = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
-                'title'               => 'embedded L',
+                'title'               => $item_name,
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -274,7 +278,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $response = $this->getResponseByName(
             DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch(
-                'docman_embedded_files/' . $file['id'],
+                'docman_embedded_files/' . $item['id'],
                 null,
                 $put_resource
             )
@@ -855,9 +859,10 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $date_before_update_timestamp = $date_before_update->getTimestamp();
 
+        $new_title    = 'PUT E New Title';
         $put_resource = [
             'id'                => $item_to_update_id,
-            'title'             => 'PUT E New Title',
+            'title'             => $new_title,
             'description'       => 'Danger ! Danger !',
             'owner_id'          => 101,
             'obsolescence_date' => '0',
@@ -866,7 +871,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->put('docman_files/' . $item_to_update_id . '/metadata', null, $put_resource)
+            $this->client->put('docman_embedded_files/' . $item_to_update_id . '/metadata', null, $put_resource)
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
@@ -887,7 +892,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $last_update_date_timestamp = $date_after_update->getTimestamp();
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $last_update_date_timestamp);
 
-        $this->assertEquals('PUT E New Title', $new_version['title']);
+        $this->assertEquals($new_title, $new_version['title']);
         $this->assertEquals('Danger ! Danger !', $new_version['description']);
         $this->assertEquals(101, $new_version['owner']['id']);
     }
@@ -898,7 +903,7 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     public function testOptionsMetadata(int $id): void
     {
         $response = $this->getResponse(
-            $this->client->options('docman_files/' . $id . '/metadata'),
+            $this->client->options('docman_embedded_files/' . $id . '/metadata'),
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
