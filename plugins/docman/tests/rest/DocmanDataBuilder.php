@@ -30,6 +30,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 use Tuleap\Docman\Test\rest\Helper\DocmanEmbeddedDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanFileDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanLinkDataBuild;
+use Tuleap\Docman\Test\rest\Helper\DocmanWikiDataBuild;
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
@@ -54,13 +55,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+------------------+--------------+------------+-------+---------+
-     *    |           |                  |              |            |       |         |
-     *    +           +                  +              +            +       +         +
-     * folder 1   Folder C wiki   Folder D Link   Trash (Folder)    File   Embedded   Link
-     *    +          +                     +
-     *    |          |                     |
-     *   ...        ...                   ...
+     *    +-----+-----+--------------+--------+-------+---------+
+     *    |           |              |        |       |         |
+     *    +           +              +        +       +         +
+     * folder 1   Trash (Folder)   File   Embedded   Link      Wiki
+     *    +           +              +        +       +         +
+     *    |           |              |        |       |         |
+     *   ...         ...            ...      ...     ...       ...
      *
      * * HM => Hardcoded Metadata
      */
@@ -79,8 +80,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $link_builder = new DocmanLinkDataBuild($common_builder);
         $link_builder->createLinkFileWithContent($docman_root);
 
+        $wiki_builder = new DocmanWikiDataBuild($common_builder);
+        $wiki_builder->createWikiWithContent($docman_root);
+
         $this->createFolder1WithSubContent($docman_root);
-        $this->createFolderWikiWithContent($docman_root);
         $this->createFolderContentToDelete($docman_root);
     }
 
@@ -205,81 +208,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->appendCustomMetadataValueToItem($wiki_id, "custom value for item_G");
     }
 
-     /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *                     Folder C Wiki
-     *                          +
-     *                          |
-     *                          +
-     *             +------------------------+-------------------+
-     *             |                        |                   |
-     *             +                        +                   +
-     *          wiki AT                   wiki L           wiki POST L
-     *
-     * (L)    => Lock on this item
-     * (AT)   => Approval table on this item
-     *
-     */
-    private function createFolderWikiWithContent($docman_root): void
-    {
-        $folder_wiki_id = $this->createItemWithVersion(
-            self::REGULAR_USER_ID,
-            $docman_root->getId(),
-            'Folder C Wiki',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-
-        $wiki_ATC_id         = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_wiki_id,
-            'wiki AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addWritePermissionOnItem($wiki_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $wiki_L_id = $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_wiki_id,
-            'wiki L',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->createItem(
-            self::REGULAR_USER_ID,
-            $folder_wiki_id,
-            'wiki POST L',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addApprovalTableForWiki((int)$wiki_ATC_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
-        $this->addReadPermissionOnItem($folder_wiki_id, \ProjectUGroup::PROJECT_ADMIN);
-
-        $this->lockItem($wiki_L_id, self::REGULAR_USER_ID);
-
-        $this->appendCustomMetadataValueToItem($folder_wiki_id, "custom value for folder_3");
-        $this->appendCustomMetadataValueToItem($wiki_ATC_id, "custom value for wiki AT");
-    }
-
-    private function addApprovalTableForWiki(int $item_id, int $status): void
-    {
-        $dao = new Docman_ApprovalTableWikiDao();
-        $table_id = $dao->createTable(
-            $item_id,
-            0,
-            self::REGULAR_USER_ID,
-            "",
-            time(),
-            $status,
-            false
-        );
-
-        $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
-        $reviewer_dao-> addUser($table_id, self::REGULAR_USER_ID);
-        $reviewer_dao->updateReview($table_id, self::REGULAR_USER_ID, time(), 1, "", 1);
-    }
-
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
@@ -304,15 +232,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $wiki_L_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "old wiki L",
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addReadPermissionOnItem($wiki_L_id, ProjectUGroup::DOCUMENT_ADMIN);
-
         $folder_L_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
@@ -320,7 +239,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $folder_with_content_you_cannot_delete = $this->createItem(
+        $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
             "folder with content you cannot delete",
@@ -337,12 +256,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $dao = new \Docman_LockDao();
 
         $dao->addLock(
-            $wiki_L_id,
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            time()
-        );
-
-        $dao->addLock(
             $folder_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
@@ -354,30 +267,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             time()
         );
 
-        $another_wiki_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "another old wiki",
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addReadPermissionOnItem($another_wiki_id, self::REGULAR_USER_ID);
-
         $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
             "another old folder",
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-
-        $wiki_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_with_content_you_cannot_delete,
-            "wiki",
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addReadPermissionOnItem($wiki_id, self::REGULAR_USER_ID);
 
         $another_empty_doc_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
