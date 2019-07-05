@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -108,9 +108,16 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      *
      * @return void
      */
-    public function augmentDataFromRequest(&$fields_data) {
-
+    public function augmentDataFromRequest(&$fields_data)
+    {
         if (! $this->canAugmentData($fields_data)) {
+            return;
+        }
+
+        if (isset($fields_data['request_method_called']) &&
+            $fields_data['request_method_called'] === 'submit-artifact' &&
+            ! $this->userCanSubmit()
+        ) {
             return;
         }
 
