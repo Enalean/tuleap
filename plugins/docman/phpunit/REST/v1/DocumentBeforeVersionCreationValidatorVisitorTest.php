@@ -27,9 +27,11 @@ use Docman_Empty;
 use Docman_File;
 use Docman_Folder;
 use Docman_Item;
+use Docman_ItemFactory;
 use Docman_Link;
 use Docman_PermissionsManager;
 use Docman_Wiki;
+use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -37,22 +39,19 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
+use Tuleap\REST\I18NRestException;
 
 class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
+     * @var Docman_ItemFactory|Mockery\MockInterface
+     */
+    private $docamn_factory;
+    /**
      * @var \Mockery\MockInterface|ApprovalTableUpdateActionChecker
      */
     private $approval_checker;
-    /**
-     * @var Docman_Item|\Mockery\MockInterface
-     */
-    private $item;
-    /**
-     * @var \Mockery\MockInterface|PFUser
-     */
-    private $current_user;
     /**
      * @var Docman_PermissionsManager|\Mockery\MockInterface
      */
@@ -68,15 +67,11 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $this->approval_checker   = Mockery::mock(ApprovalTableUpdateActionChecker::class);
         $this->permission_manager = Mockery::mock(Docman_PermissionsManager::class);
-        $this->current_user       = Mockery::mock(PFUser::class);
-        $this->item               = Mockery::mock(Docman_Item::class);
-        $this->item->shouldReceive('getId')->andReturn(1);
+        $this->docamn_factory = Mockery::mock(Docman_ItemFactory::class);
         $this->validator_visitor = new  DocumentBeforeVersionCreationValidatorVisitor(
             $this->permission_manager,
-            $this->current_user,
-            $this->item,
-            Docman_File::class,
-            $this->approval_checker
+            $this->approval_checker,
+            $this->docamn_factory
         );
     }
 
@@ -88,7 +83,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $link_item->accept($this->validator_visitor, $params);
     }
@@ -101,7 +99,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $embedded_file_item->accept($this->validator_visitor, $params);
     }
@@ -114,7 +115,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $empty_item->accept($this->validator_visitor, $params);
     }
@@ -127,7 +131,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $wiki_item->accept($this->validator_visitor, $params);
     }
@@ -140,7 +147,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $folder_item->accept($this->validator_visitor, $params);
     }
@@ -153,7 +163,10 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $item->accept($this->validator_visitor, $params);
     }
@@ -163,11 +176,15 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(false);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->expectException(\Tuleap\REST\I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -177,6 +194,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
             ApprovalTableException::approvalTableActionIsMandatory("item title")
         );
@@ -186,7 +204,56 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
+        ];
+        $file_item->accept($this->validator_visitor, $params);
+    }
+
+    public function testItThrowExceptionWhenItemNameAlreadyExistsInParent(): void
+    {
+        $file_item = new Docman_File();
+
+        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
+            ApprovalTableException::approvalTableActionIsMandatory("item title")
+        );
+        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+
+        $this->expectException(RestException::class);
+
+        $params = [
+            'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
+        ];
+        $file_item->accept($this->validator_visitor, $params);
+    }
+
+    public function testItThrowExceptionWhenFolderNameAlreadyExistsInParent(): void
+    {
+        $file_item = new Docman_Folder();
+
+        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
+        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
+            ApprovalTableException::approvalTableActionIsMandatory("item title")
+        );
+        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+
+        $this->expectException(RestException::class);
+
+        $params = [
+            'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_Folder::class,
+            'item'                  => Mockery::mock(Docman_Folder::class),
+            'title'                 => 'my document title'
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -196,14 +263,18 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
         $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
 
-        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $file_item->accept($this->validator_visitor, $params);
     }
@@ -213,12 +284,16 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $file_item = new Docman_File();
 
         $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
         $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class)
+            'user'                  => Mockery::mock(PFUser::class),
+            'document_type'         => Docman_File::class,
+            'item'                  => Mockery::mock(Docman_File::class),
+            'title'                 => 'my document title'
         ];
         $file_item->accept($this->validator_visitor, $params);
     }

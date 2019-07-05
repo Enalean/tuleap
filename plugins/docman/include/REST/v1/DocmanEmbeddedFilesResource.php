@@ -35,12 +35,10 @@ use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
@@ -435,23 +433,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
     }
 
-
-    private function getVersionValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeVersionCreationValidatorVisitor
-    {
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-        $approval_check                  = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
-        return new DocumentBeforeVersionCreationValidatorVisitor(
-            $this->getPermissionManager($project),
-            $current_user,
-            $item,
-            Docman_EmbeddedFile::class,
-            $approval_check
-        );
-    }
-
     private function getEmbeddedFileVersionCreator(): EmbeddedFileVersionCreator
     {
         $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
@@ -507,23 +488,25 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         try {
-            $validator = $this->getVersionValidator($project, $current_user, $item);
+            $validator = DocumentBeforeVersionCreationValidatorVisitorBuilder::build($project);
             $item->accept(
                 $validator,
-                ['user' => $current_user, 'approval_table_action' => $representation->approval_table_action]
+                [
+                    'user'                  => $current_user,
+                    'approval_table_action' => $representation->approval_table_action,
+                    'document_type'         => Docman_EmbeddedFile::class,
+                    'title'                 => $title,
+                    'project'               => $project
+                ]
             );
-            /** @var \Docman_File $item */
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
+            /** @var \Docman_EmbeddedFile $item */
         } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,
                 $exception->getI18NExceptionMessage()
             );
         }
+
 
         try {
             $docman_item_version_creator = $this->getEmbeddedFileVersionCreator();

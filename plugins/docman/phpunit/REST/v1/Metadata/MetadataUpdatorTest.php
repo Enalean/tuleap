@@ -21,18 +21,18 @@
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-use RuntimeException;
+use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
+use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
 
 final class MetadataUpdatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
     /**
      * @var \Mockery\MockInterface|MetadataEventProcessor
      */
@@ -95,6 +95,8 @@ final class MetadataUpdatorTest extends TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->andReturn($old_user);
@@ -117,6 +119,7 @@ final class MetadataUpdatorTest extends TestCase
                               ->withArgs([$item, $current_user, 'old user name', 'new user name', 'owner'])
                               ->once();
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();
 
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
@@ -162,6 +165,8 @@ final class MetadataUpdatorTest extends TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
 
         $this->user_manager->shouldReceive('getUserById')->andReturn(null);
 
@@ -178,6 +183,7 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
     }
 
@@ -193,6 +199,8 @@ final class MetadataUpdatorTest extends TestCase
         $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
         $item->shouldReceive('getId')->andReturn(10);
         $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
 
         $old_user = \Mockery::mock(\PFUser::class);
         $old_user->shouldReceive('getUserName')->andReturn('owner name');
@@ -213,8 +221,41 @@ final class MetadataUpdatorTest extends TestCase
                               ->withArgs([$item, $current_user, ItemStatusMapper::ITEM_STATUS_APPROVED, ItemStatusMapper::ITEM_STATUS_DRAFT, 'status'])
                               ->once();
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();
 
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
+    }
+
+    public function testUpdateIsInterruptedWhenAnOtherItemHasTheSameTitle(): void
+    {
+        $date = new \DateTimeImmutable();
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $this->obsolescence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn($date->getTimestamp());
+
+        $old_user_id = 101;
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
+        $item->shouldReceive('getId')->andReturn(10);
+        $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getUserName')->andReturn('new user name');
+        $this->user_manager->shouldReceive('getUserById')->andReturn($user);
+        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($user);
+
+        $representation                    = new PUTMetadataRepresentation();
+        $representation->title             = "title";
+        $representation->description       = "";
+        $representation->owner_id          = 102;
+        $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
+        $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+        $this->expectException(RestException::class);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
     }
 }

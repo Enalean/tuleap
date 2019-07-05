@@ -29,20 +29,14 @@ use Docman_Folder;
 use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
+use Luracast\Restler\RestException;
+use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\REST\I18NRestException;
 
 class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 {
-    /**
-     * @var String
-     */
-    private $document_type;
-    /**
-     * @var \PFUser
-     */
-    private $current_user;
     /**
      * @var Docman_Item
      */
@@ -55,41 +49,57 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
      * @var ApprovalTableUpdateActionChecker
      */
     private $approval_table_update_action_checker;
+    /**
+     * @var \Docman_ItemFactory
+     */
+    private $item_factory;
 
     public function __construct(
         \Docman_PermissionsManager $permission_manager,
-        \PFUser $current_user,
-        Docman_Item $item,
-        string $document_type,
-        ApprovalTableUpdateActionChecker $approval_table_update_action_checker
+        ApprovalTableUpdateActionChecker $approval_table_update_action_checker,
+        \Docman_ItemFactory $item_factory
     ) {
-        $this->document_type                        = $document_type;
-        $this->current_user                         = $current_user;
-        $this->item                                 = $item;
         $this->permission_manager                   = $permission_manager;
         $this->approval_table_update_action_checker = $approval_table_update_action_checker;
+        $this->item_factory                         = $item_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_Folder::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_Folder::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
+        }
+
+        if ($item->getTitle() !== $params['title']
+            && $this->item_factory->doesTitleCorrespondToExistingFolder($params['title'], (int)$item->getParentId())) {
+            throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_Wiki::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_Wiki::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
         $this->checkItemCanBeUpdated($item, $params);
+
+        /**
+         * @var Project $project
+         */
+        $project = $params['project'];
+        if (! $project->usesWiki()) {
+            throw new RestException(
+                400,
+                sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
+            );
+        }
     }
 
     public function visitLink(Docman_Link $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_Link::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_Link::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
         $this->checkItemCanBeUpdated($item, $params);
@@ -97,8 +107,8 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitFile(Docman_File $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_File::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_File::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
         $this->checkItemCanBeUpdated($item, $params);
@@ -106,8 +116,8 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_EmbeddedFile::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_EmbeddedFile::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
         $this->checkItemCanBeUpdated($item, $params);
@@ -115,8 +125,8 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
-        if ($this->document_type !== Docman_Empty::class) {
-            $this->throwItemHasNotTheRightType();
+        if ($params['document_type'] !== Docman_Empty::class) {
+            $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
         $this->checkItemCanBeUpdated($item, $params);
@@ -124,19 +134,19 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = []): void
     {
-        $this->throwItemHasNotTheRightType();
+        $this->throwItemHasNotTheRightType($params['document_type']);
     }
 
     /**
      * @throws I18NRestException
      */
-    private function throwItemHasNotTheRightType(): void
+    private function throwItemHasNotTheRightType(string $document_type): void
     {
         throw new I18NRestException(
             400,
             sprintf(
                 'The provided item id references an item which is not a %s',
-                $this->document_type
+                $document_type
             )
         );
     }
@@ -158,10 +168,12 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
      * @throws ExceptionItemIsLockedByAnotherUser
      * @throws I18NRestException
      * @throws \Tuleap\Docman\ApprovalTable\ApprovalTableException
+     * @throws RestException
      */
     private function checkItemCanBeUpdated(Docman_Item $item, array $params): void
     {
-        $this->checkUserCanWrite($this->current_user, $this->item);
+        $this->checkItemNameDoesNotAlreadyExistsInParent($item, $params['title']);
+        $this->checkUserCanWrite($params['user'], $item);
         $this->checkOptionForApprovalTableAreCorrect($item, $params);
         $this->checkDocumentIsNotAlreadyLocked($item, $params);
     }
@@ -183,7 +195,21 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
     private function checkDocumentIsNotAlreadyLocked(Docman_Item $item, array $params): void
     {
         if ($this->permission_manager->_itemIsLockedForUser($params['user'], (int)$item->getId())) {
-            throw new ExceptionItemIsLockedByAnotherUser();
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        }
+    }
+
+    private function checkItemNameDoesNotAlreadyExistsInParent(Docman_Item $item, string $new_title): void
+    {
+        if ($new_title === $item->getTitle()) {
+            return;
+        }
+
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($new_title, (int)$item->getParentId())) {
+            throw new RestException(400, "A file with same title already exists in the given folder.");
         }
     }
 }

@@ -352,7 +352,7 @@ class DocmanEmbeddedDataBuild
             $this->docman_user_id,
             $folder_put_id,
             'PUT E',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
         );
     }
 }

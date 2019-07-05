@@ -238,7 +238,8 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPatchThrowsExceptionWhenItemHasNoApprovalTableButApprovalTableActionIsProvidedInRepresentation(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH F NO AT');
+        $item_name = 'PATCH F NO AT';
+        $file  = $this->findItemByTitle($items, $item_name);
 
         $file_size    = 305;
         $put_resource = json_encode(
@@ -248,7 +249,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'should_lock_file'      => false,
                 'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
                 'approval_table_action' => 'copy',
-                'title'                 => 'new title'
+                'title'                 => $item_name
             ]
         );
 
@@ -265,17 +266,18 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPATCHThrowsAnExceptionWhenPatchIsCalledOnANonFileItem(array $items): void
     {
+        $item_name       = 'PATCH File';
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
+                'title'            => $item_name
             ]
         );
 
-        $folder_item = $this->findItemByTitle($items, 'PATCH File');
+        $folder_item = $this->findItemByTitle($items, $item_name);
         $response    = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch(
@@ -293,7 +295,8 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH F RL');
+        $item_name = 'PATCH F RL';
+        $file  = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
@@ -301,7 +304,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
+                'title'            => $item_name
             ]
         );
 
@@ -321,7 +324,8 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
     {
-        $file = $this->findItemByTitle($items, 'PATCH F AL');
+        $item_name = 'PATCH F AL';
+        $file  = $this->findItemByTitle($items, $item_name);
 
         $put_resource = json_encode(
             [
@@ -329,7 +333,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
+                'title'            => $item_name
             ]
         );
 
@@ -350,14 +354,15 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPatchFileDocumentIsRejectedIfFileIsTooBig(array $items): void
     {
-        $file         = $this->findItemByTitle($items, 'PATCH F KO');
+        $item_name        = 'PATCH F KO';
+        $file         = $this->findItemByTitle($items, $item_name);
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 999999999999],
-                'title'            => 'PATCH F'
+                'title'            => $item_name
             ]
         );
 
@@ -374,14 +379,15 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPATCHIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(array $items): void
     {
-        $file         = $this->findItemByTitle($items, 'PATCH F KO');
+        $item_name        = 'PATCH F KO';
+        $file         = $this->findItemByTitle($items, $item_name);
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
+                'title'            => $item_name
             ]
         );
 
@@ -391,17 +397,6 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("/uploads/docman/version/5", $response->json()['upload_href']);
-
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
-            ]
-        );
 
         $response = $this->getResponse(
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
@@ -415,14 +410,15 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
      */
     public function testPatchFileDocumentReturnsFileRepresentation(array $items): void
     {
-        $file         = $this->findItemByTitle($items, 'PATCH F NO AT');
+        $item_name        = 'PATCH F NO AT';
+        $file         = $this->findItemByTitle($items, $item_name);
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
                 'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
-                'title'            => 'new title'
+                'title'            => $item_name
             ]
         );
 
@@ -443,7 +439,8 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $folder    = $this->findItemByTitle($items, 'File');
         $folder_id = $folder['id'];
 
-        $file_id = $this->createANewFileAndGetItsId($folder_id, "My new file");
+        $item_name   = "My new file";
+        $file_id = $this->createANewFileAndGetItsId($folder_id, $item_name);
 
         $file_size    = 123;
         $put_resource = json_encode(
@@ -451,8 +448,8 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size],
-                'title'            => 'new title'
+                'file_properties'  => ['file_name' => $item_name, 'file_size' => $file_size],
+                'title'            => $item_name
             ]
         );
 

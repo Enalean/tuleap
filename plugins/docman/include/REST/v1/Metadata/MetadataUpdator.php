@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use RuntimeException;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
@@ -102,6 +103,11 @@ class MetadataUpdator
                     $new_owner_id
                 )
             );
+        }
+
+        if ($representation->title !== $item->getTitle() &&
+            $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int)$item->getParentId())) {
+            throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
         $item_id = $item->getId();
