@@ -23,8 +23,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-use Tuleap\REST\JsonCast;
-
 class MetadataRepresentation
 {
     /**
@@ -36,9 +34,13 @@ class MetadataRepresentation
      */
     public $type;
     /**
-     * @var string|int|null
+     * @var string|null
      */
     public $value;
+    /**
+     * @var string|null
+     */
+    public $post_processed_value;
     /**
      * @var array|null {@type Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation}
      */
@@ -56,25 +58,20 @@ class MetadataRepresentation
      */
     public $short_name;
 
-    /**
-     * @param string|int|null $value
-     */
     public function __construct(
         string $name,
         string $type,
         bool $is_multiple_value_allowed,
-        $value,
+        ?string $value,
+        ?string $post_processed_value,
         ?array $list_value,
         bool $is_required,
         string $short_name
     ) {
-        $this->name = $name;
-        $this->type = $type;
-        if ($type === PLUGIN_DOCMAN_METADATA_TYPE_DATE_LABEL && $value) {
-            $this->value = JsonCast::toDate($value);
-        } else {
-            $this->value = $value;
-        }
+        $this->name                      = $name;
+        $this->type                      = $type;
+        $this->value                     = $value;
+        $this->post_processed_value      = $post_processed_value;
         $this->is_required               = $is_required;
         $this->is_multiple_value_allowed = $is_multiple_value_allowed;
         $this->list_value                = $list_value;

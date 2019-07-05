@@ -24,6 +24,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
@@ -41,6 +42,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserHelper;
 
 class DocmanItemsResource extends AuthenticatedResource
 {
@@ -297,7 +299,9 @@ class DocmanItemsResource extends AuthenticatedResource
             new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log()),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
-                new \Docman_MetadataFactory($project->getID())
+                new \Docman_MetadataFactory($project->getID()),
+                Codendi_HTMLPurifier::instance(),
+                UserHelper::instance()
             ),
             new ApprovalTableRetriever(
                 new \Docman_ApprovalTableFactoriesFactory(),

@@ -573,7 +573,7 @@ class ArtifactField {
      * 
      * WARNING: the value is not escaped for any output. Please purify it before usage
      *
-     * @return bool
+     * @return bool|string
      */
     function getValue($group_artifact_id,$value_id,$by_field_id=false) {
         global $Language;

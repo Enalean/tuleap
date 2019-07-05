@@ -293,6 +293,9 @@ class Codendi_HTMLPurifier {
         return $this->purify($html, CODENDI_PURIFIER_FULL);
     }
 
+    /**
+     * @return string
+     */
     public function purifyTextWithReferences($html, $group_id) {
         return $this->purify($html, CODENDI_PURIFIER_BASIC, $group_id);
     }

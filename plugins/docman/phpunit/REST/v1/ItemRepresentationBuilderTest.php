@@ -128,13 +128,12 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($current_user);
         $current_user->shouldReceive('getPreference')->with('username_display')->andReturns('toto');
 
-        $timestamp = "1549461600";
-
         $metadata_representation = new MetadataRepresentation(
             "metadata name",
             'date',
             false,
-            $timestamp,
+            '2019-02-06T15:00:00+01:00',
+            '2019-02-06T15:00:00+01:00',
             [],
             false,
             "metadata"
@@ -200,6 +199,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($representation->approval_table->approval_request_date, '2019-02-06T15:16:40+01:00');
         $this->assertEquals($representation->approval_table->has_been_approved, false);
         $this->assertEquals($representation->metadata[0]->value, '2019-02-06T15:00:00+01:00');
+        $this->assertEquals($representation->metadata[0]->post_processed_value, '2019-02-06T15:00:00+01:00');
         $this->assertEquals($representation->metadata[0]->name, 'metadata name');
         $this->assertEquals($representation->metadata[0]->type, 'date');
     }

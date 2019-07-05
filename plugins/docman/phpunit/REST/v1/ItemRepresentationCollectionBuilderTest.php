@@ -173,6 +173,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
                     'value',
+                    'processed value',
                     [],
                     true,
                     "name"
@@ -218,6 +219,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
                     'value',
+                    'processed value',
                     [],
                     true,
                     'name'
@@ -310,6 +312,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
                     'value',
+                    'processed value',
                     [],
                     true,
                     "name"
@@ -332,6 +335,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
                     'value',
+                    'processed value',
                     [],
                     true,
                     'name'

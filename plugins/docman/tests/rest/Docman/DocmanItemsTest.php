@@ -259,6 +259,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($metadata['name'], 'Custom metadata');
         $this->assertEquals($metadata['type'], 'string');
         $this->assertEquals($metadata['value'], $title);
+        $this->assertEquals($metadata['post_processed_value'], $title);
         $this->assertEquals($metadata['list_value'], null);
         $this->assertEquals($metadata['is_required'], true);
         $this->assertEquals($metadata['is_multiple_value_allowed'], false);
