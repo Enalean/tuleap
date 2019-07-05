@@ -32,7 +32,7 @@ use Project;
 use ProjectUGroup;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
 
 final class MemberAdderTest extends TestCase

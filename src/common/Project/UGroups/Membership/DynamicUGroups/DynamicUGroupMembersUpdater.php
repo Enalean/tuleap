@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\ProjectUGroup;
+namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 use EventManager;
 use ForgeConfig;
@@ -26,8 +26,21 @@ use PFUser;
 use Project;
 use ProjectUGroup;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsAdministrator;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsWriter;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesWikiAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerForumAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsAdministrator;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Project\UserPermissionsDao;
-use UGroupBinding;
 
 class DynamicUGroupMembersUpdater
 {
@@ -40,9 +53,9 @@ class DynamicUGroupMembersUpdater
      */
     private $transaction_executor;
     /**
-     * @var UGroupBinding
+     * @var ProjectMemberAdder
      */
-    private $ugroup_binding;
+    private $project_member_adder;
     /**
      * @var EventManager
      */
@@ -51,12 +64,12 @@ class DynamicUGroupMembersUpdater
     public function __construct(
         UserPermissionsDao $user_permissions_dao,
         DBTransactionExecutor $transaction_executor,
-        UGroupBinding $ugroup_binding,
+        ProjectMemberAdder $project_member_adder,
         EventManager $event_manager
     ) {
         $this->user_permissions_dao = $user_permissions_dao;
         $this->transaction_executor = $transaction_executor;
-        $this->ugroup_binding       = $ugroup_binding;
+        $this->project_member_adder = $project_member_adder;
         $this->event_manager        = $event_manager;
     }
 
@@ -155,10 +168,7 @@ class DynamicUGroupMembersUpdater
     private function ensureUserIsProjectMember(Project $project, PFUser $user)
     {
         if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
-            $username = $user->getUserName();
-            require_once __DIR__ . '/../../../../www/include/account.php';
-            \account_add_user_to_group($project->getID(), $username);
-            $this->ugroup_binding->reloadUgroupBindingInProject($project);
+            $this->project_member_adder->addProjectMember($user, $project);
         }
     }
 

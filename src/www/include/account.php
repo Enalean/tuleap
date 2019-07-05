@@ -78,6 +78,7 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
         if ($send_notifications) {
             account_send_add_user_to_group_email($group_id, $user->getId());
         }
+        /** @psalm-suppress DeprecatedFunction */
         group_add_history('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
 
         return true;

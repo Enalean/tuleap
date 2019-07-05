@@ -31,7 +31,7 @@ use Project;
 use ProjectUGroup;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;

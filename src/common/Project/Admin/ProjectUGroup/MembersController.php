@@ -25,6 +25,7 @@ use Codendi_Request;
 use Feedback;
 use Project;
 use ProjectUGroup;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use UserManager;
 
 class MembersController
