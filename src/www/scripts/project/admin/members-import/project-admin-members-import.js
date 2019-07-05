@@ -127,7 +127,7 @@ async function uploadFile() {
 
     const form = document.getElementById("project-admin-user-import-form");
     const form_data = new FormData(form);
-    const response = await post("userimport.php", {
+    const response = await post("/project/admin/userimport.php", {
         body: form_data
     });
 

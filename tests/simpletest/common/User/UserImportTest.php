@@ -59,7 +59,7 @@ class UserImportTest extends TuleapTestCase
         $this->user_manager        = mock('UserManager');
         $this->user_filename       = __DIR__.'/_fixtures/user_import.txt';
         $this->user_email_filename = __DIR__.'/_fixtures/user_email_import.txt';
-        $this->user_import         = new UserImport($this->project->getID(), $this->user_manager, $this->user_helper);
+        $this->user_import         = new UserImport($this->user_manager, $this->user_helper);
     }
 
     public function tearDown()
@@ -75,7 +75,7 @@ class UserImportTest extends TuleapTestCase
 
         stub($this->user_manager)->findUser('zurg')->returns($user);
 
-        $user_collection = $this->user_import->parse($this->user_filename);
+        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
         $expected_user = array(
             'has_avatar'       => 'false',
@@ -96,7 +96,7 @@ class UserImportTest extends TuleapTestCase
 
         stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user));
 
-        $user_collection = $this->user_import->parse($this->user_email_filename);
+        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
         $expected_user = array(
             'has_avatar'       => 'false',
@@ -118,7 +118,7 @@ class UserImportTest extends TuleapTestCase
 
         stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user, $user2));
 
-        $user_collection = $this->user_import->parse($this->user_email_filename);
+        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
         $this->assertEqual($user_collection->getFormattedUsers(), null);
         $this->assertEqual(
@@ -135,7 +135,7 @@ class UserImportTest extends TuleapTestCase
         stub($this->user_manager)->findUser('zurg')->returns(null);
         stub($this->user_manager)->getAllUsersByEmail()->returns([]);
 
-        $user_collection = $this->user_import->parse($this->user_filename);
+        $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
         $this->assertEqual($user_collection->getFormattedUsers(), null);
         $this->assertEqual($user_collection->getWarningsMultipleUsers(), null);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
@@ -24,9 +24,8 @@
 
 use Tuleap\User\UserImportCollection;
 
-class UserImport
+class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private $project_id;
     /**
      * @var UserManager
      */
@@ -36,14 +35,13 @@ class UserImport
      */
     private $user_helper;
 
-    public function __construct($group_id, UserManager $user_manager, UserHelper $user_helper)
+    public function __construct(UserManager $user_manager, UserHelper $user_helper)
     {
-        $this->project_id      = $group_id;
         $this->user_manager    = $user_manager;
         $this->user_helper = $user_helper;
     }
 
-    public function parse($user_filename)
+    public function parse(int $project_id, $user_filename)
     {
         $user_collection = new UserImportCollection($this->user_helper);
         if (! $user_filename) {
@@ -81,7 +79,7 @@ class UserImport
                 continue;
             }
 
-            if (! $user->isMember($this->project_id)) {
+            if (! $user->isMember($project_id)) {
                 $user_collection->addUser($user);
             }
         }
@@ -89,14 +87,16 @@ class UserImport
         return $user_collection;
     }
 
-    public function updateDB(array $parsed_users)
+    public function updateDB(int $project_id, array $parsed_users)
     {
+        include_once __DIR__ . '/../../www/include/account.php';
+
         $res                = true;
         $send_notifications = true;
         $check_user_status  = true;
 
         foreach ($parsed_users as $user) {
-            $res &= account_add_user_obj_to_group($this->project_id, $user, $check_user_status, $send_notifications);
+            $res &= account_add_user_obj_to_group($project_id, $user, $check_user_status, $send_notifications);
         }
         return $res;
     }

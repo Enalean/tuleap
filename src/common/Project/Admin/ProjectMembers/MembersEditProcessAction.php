@@ -52,10 +52,11 @@ class MembersEditProcessAction implements Dispatchable
 
     public function __construct(
         Codendi_Request $request,
+        Project $project,
         CSRFSynchronizerToken $csrf
     ) {
         $this->request          = $request;
-        $this->project          = $request->getProject();
+        $this->project          = $project;
         $this->csrf             = $csrf;
         $this->has_been_handled = false;
     }

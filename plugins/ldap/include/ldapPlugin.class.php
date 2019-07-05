@@ -804,6 +804,22 @@ class LdapPlugin extends Plugin {
             $collector->addModalButton($modal_button);
 
             $collector->addModalContent($modal_content);
+
+            $include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $collector->setJavascriptFile($include_assets->getFileURL('project-admin-members.js'));
+            $collector->setCssAsset(
+                new \Tuleap\Layout\CssAsset(
+                    new IncludeAssets(
+                        $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
+                        $this->getThemePath() . '/assets'
+                    ),
+                    'style'
+                )
+            );
         }
     }
 
@@ -814,16 +830,14 @@ class LdapPlugin extends Plugin {
             $this->getPluginPath() . '/assets'
         );
 
-        if ($this->currentRequestIsForProjectMembersAdmin()) {
-            $params['javascript_files'][] = $include_assets->getFileURL('project-admin-members.js');
-        } else if ($this->currentRequestIsForProjectUgroupAdmin()) {
+        if ($this->currentRequestIsForProjectUgroupAdmin()) {
             $params['javascript_files'][] = $include_assets->getFileURL('project-admin-ugroups.js');
         }
     }
 
     public function burningParrotGetStylesheets(array $params)
     {
-        if ($this->currentRequestIsForProjectMembersAdmin() || $this->currentRequestIsForProjectUgroupAdmin()) {
+        if ($this->currentRequestIsForProjectUgroupAdmin()) {
             $theme_include_assets = new IncludeAssets(
                 $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
                 $this->getThemePath() . '/assets'
@@ -1251,11 +1265,6 @@ class LdapPlugin extends Plugin {
             new ProjectHistoryDao(),
             new UGroupManager()
         );
-    }
-
-    private function currentRequestIsForProjectMembersAdmin()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/members') === 0;
     }
 
     private function currentRequestIsForProjectUgroupAdmin()

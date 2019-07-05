@@ -21,12 +21,15 @@
 
 namespace Tuleap\Request;
 
+use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
 use ConfigDao;
+use CSRFSynchronizerToken;
 use EventManager;
 use FastRoute;
 use FRSFileFactory;
 use ProjectHistoryDao;
+use ProjectManager;
 use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
@@ -63,7 +66,11 @@ use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Home;
+use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
@@ -78,7 +85,12 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use UGroupBinding;
+use UGroupManager;
+use UGroupUserDao;
 use URLVerification;
+use UserHelper;
+use UserImport;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
@@ -315,6 +327,40 @@ class RouteCollector
         return new PermissionsPerGroup();
     }
 
+    public static function getProjectAdminMembersController() : DispatchableWithRequest
+    {
+        $event_manager   = EventManager::instance();
+        $user_manager    = \UserManager::instance();
+        $user_helper     = new UserHelper();
+        $ugroup_manager  = new UGroupManager();
+        $project_manager = ProjectManager::instance();
+
+        return new ProjectMembersController(
+            new ProjectMembersDAO(),
+            $user_helper,
+            new UGroupBinding(
+                new UGroupUserDao(),
+                $ugroup_manager
+            ),
+            new UserRemover(
+                $project_manager,
+                $event_manager,
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                $ugroup_manager
+            ),
+            $event_manager,
+            $ugroup_manager,
+            new UserImport(
+                $user_manager,
+                $user_helper
+            ),
+            $project_manager
+        );
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -344,6 +390,8 @@ class RouteCollector
         $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [self::class, 'getProjectAdminIndexCategories']);
             $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
+
+            $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
