@@ -27,21 +27,19 @@ use Docman_ItemFactory;
 use Docman_Link;
 use Docman_VersionFactory;
 use EventManager;
-use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
-use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanLinkUpdatorTest extends TestCase
+class DocmanLinkVersionCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -87,9 +85,9 @@ class DocmanLinkUpdatorTest extends TestCase
      */
     private $docman_permissions_manager;
     /**
-     * @var DocmanLinkUpdator
+     * @var DocmanLinkVersionCreator
      */
-    private $link_updator;
+    private $version_creator;
 
     protected function setUp(): void
     {
@@ -99,24 +97,16 @@ class DocmanLinkUpdatorTest extends TestCase
         $this->updator                     = Mockery::mock(DocmanItemUpdator::class);
         $this->item_factory                = Mockery::mock(Docman_ItemFactory::class);
         $this->event_manager               = Mockery::mock(EventManager::class);
-        $this->links_validity_checker      = new DocmanLinksValidityChecker();
         $this->docman_link_version_factory = Mockery::mock(\Docman_LinkVersionFactory::class);
         $this->transaction_executor        = Mockery::mock(DBTransactionExecutor::class);
-        $this->status_mapper               = Mockery::mock(ItemStatusMapper::class);
-        $this->date_retriever              = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
-        $this->docman_permissions_manager  = Mockery::mock(\Docman_PermissionsManager::class);
 
-        $this->link_updator = new DocmanLinkUpdator(
+        $this->version_creator = new DocmanLinkVersionCreator(
             $this->version_factory,
             $this->updator,
             $this->item_factory,
             $this->event_manager,
-            $this->links_validity_checker,
             $this->docman_link_version_factory,
-            $this->transaction_executor,
-            $this->status_mapper,
-            $this->date_retriever,
-            $this->docman_permissions_manager
+            $this->transaction_executor
         );
     }
 
@@ -127,19 +117,11 @@ class DocmanLinkUpdatorTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
-        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-
         $date                        = new \DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
         $date                        = $date->setTime(0, 0, 0);
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
-
-        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->with('rejected')->andReturn(103);
-
-        $this->date_retriever->shouldReceive('getTimeStampOfDate')->withArgs(
-            [$obsolescence_date_formatted, $date]
-        )->andReturn($obsolescence_date->getTimestamp());
 
         $this->docman_link_version_factory->shouldReceive('getLatestVersion')->once();
         $this->version_factory->shouldReceive('getCurrentVersionForItem')->once();
@@ -158,73 +140,15 @@ class DocmanLinkUpdatorTest extends TestCase
         $this->updator->shouldReceive('updateCommonData')->once();
         $this->transaction_executor->shouldReceive('execute')->once();
 
-        $this->link_updator->updateLink($item, $user, $representation, $date);
-    }
-
-    public function testItThrowAnExceptionWhenLinkURlIsIncorrect(): void
-    {
-        $item = Mockery::mock(Docman_Link::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-
-        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-
-        $date                        = new \DateTimeImmutable();
-        $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
-        $date                        = $date->setTime(0, 0, 0);
-        $obsolescence_date           = $date->modify('+1 day');
-        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
-
-        $representation                            = new DocmanLinkPATCHRepresentation();
-        $representation->change_log                = 'changelog';
-        $representation->version_title             = 'version title';
-        $representation->should_lock_file          = false;
-        $representation->link_properties           = new LinkPropertiesRepresentation();
-        $representation->link_properties->link_url = 'example.com';
-        $representation->approval_table_action     = 'copy';
-        $representation->status                    = 'rejected';
-        $representation->obsolescence_date         = $obsolescence_date_formatted;
-
-        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->never();
-        $this->transaction_executor->shouldReceive('execute')->never();
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->link_updator->updateLink($item, $user, $representation, $date);
-    }
-
-    public function testItThrowsAnExceptionWhenItemIsLocked(): void
-    {
-        $item = Mockery::mock(Docman_Link::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-
-        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
-
-        $date                        = new \DateTimeImmutable();
-        $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
-        $date                        = $date->setTime(0, 0, 0);
-        $obsolescence_date           = $date->modify('+1 day');
-        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
-
-        $representation                            = new DocmanLinkPATCHRepresentation();
-        $representation->change_log                = 'changelog';
-        $representation->version_title             = 'version title';
-        $representation->should_lock_file          = false;
-        $representation->link_properties           = new LinkPropertiesRepresentation();
-        $representation->link_properties->link_url = 'https://example.com';
-        $representation->approval_table_action     = 'copy';
-        $representation->status                    = 'rejected';
-        $representation->obsolescence_date         = $obsolescence_date_formatted;
-
-        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->never();
-        $this->transaction_executor->shouldReceive('execute')->never();
-
-        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
-
-        $this->link_updator->updateLink($item, $user, $representation, $date);
+        $this->version_creator->createLinkVersion(
+            $item,
+            $user,
+            $representation,
+            $date,
+            103,
+            $obsolescence_date->getTimestamp(),
+            "title",
+            "description"
+        );
     }
 }

@@ -56,10 +56,10 @@ class DocmanLinkDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+
-     *      |                  |         |
-     *      +                  +         +
-     * PATCH Link    DELETE Link    LOCK Link
+     *      +------------------+---------+---------------+
+     *      |                  |         |               |
+     *      +                  +         +               +
+     * PATCH Link    DELETE Link    LOCK Link   POST Link Version
      *
      * HM => Hardcoded Metadata
      *
@@ -77,6 +77,7 @@ class DocmanLinkDataBuild
         $this->createPatchFolder($folder_link_id);
         $this->createDeleteFolder($folder_link_id);
         $this->createLockFolder($folder_link_id);
+        $this->createPostVersionFolder($folder_link_id);
     }
 
 
@@ -226,6 +227,102 @@ class DocmanLinkDataBuild
         $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->docman_user_id, 'LOCK L RL', PLUGIN_DOCMAN_ITEM_TYPE_LINK);
 
         $this->common_builder->createAndLockItem($folder_lock_id, $this->admin_user_id, $this->admin_user_id, 'LOCK L AL', PLUGIN_DOCMAN_ITEM_TYPE_LINK);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                     POST Link version
+     *                           +
+     *                           |
+     *           +---------------+-----------------+-----------------+-----------------+-----------------+
+     *           |               |                 |                 |                 |                 |
+     *           +               +                 +                 +                 +                 +
+     *       POST L V      POST L V AT C   POST L V AT R    POST L V AT E        POST L V L Admin  POST L V L
+     *
+     * F    => File
+     * V    => version
+     * AT C => Approval Table Copy action on new version
+     * AT E => Approval Table Empty action on new version
+     * AT R => Approval Table Reset action on new version
+     * No AT => No approval table
+     * L    => The item is locked by a regular user
+     * L admin => THe item is locked by an admin
+     */
+    private function createPostVersionFolder(int $folder_id): void
+    {
+        $folder_post_version_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'POST Link version',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $this->common_builder->addWritePermissionOnItem($folder_post_version_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST L V',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
+        $this->createLinkWithApprovalTable(
+            $folder_post_version_id,
+            'POST L V AT C',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            10000
+        );
+
+        $this->createLinkWithApprovalTable(
+            $folder_post_version_id,
+            'POST L V AT E',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            10001
+        );
+
+        $this->createLinkWithApprovalTable(
+            $folder_post_version_id,
+            'POST L V AT R',
+            PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
+            $this->docman_user_id,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            10002
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_post_version_id,
+            'POST L V No AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->admin_user_id,
+            'POST L V L Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST L V L',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+        $this->common_builder->createAndLockItem(
+            $folder_post_version_id,
+            $this->admin_user_id,
+            $this->docman_user_id,
+            'POST L V UL Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
     }
 
     private function addLinkWithCustomVersionNumber(int $item_id, int $version): int

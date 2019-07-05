@@ -35,7 +35,7 @@ import {
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     patchWiki,
-    patchLink,
+    postLinkVersion,
     deleteFile,
     deleteLink,
     deleteEmbeddedFile,
@@ -310,7 +310,7 @@ export const createNewLinkVersionFromModal = async (
     [item, new_link_url, version_title, changelog, is_file_locked, approval_table_action]
 ) => {
     try {
-        await patchLink(
+        await postLinkVersion(
             item,
             new_link_url,
             version_title,

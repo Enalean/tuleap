@@ -28,7 +28,7 @@ export {
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     patchWiki,
-    patchLink,
+    postLinkVersion,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     addUserLegacyUIPreferency,
@@ -230,7 +230,7 @@ function patchWiki(item, page_name, version_title, change_log, should_lock_file)
     });
 }
 
-function patchLink(
+function postLinkVersion(
     item,
     link_url,
     version_title,
@@ -238,15 +238,13 @@ function patchLink(
     should_lock_file,
     approval_table_action
 ) {
-    return patch(`/api/docman_links/${encodeURIComponent(item.id)}`, {
+    return post(`/api/docman_links/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             version_title,
             change_log,
-            title: item.title,
-            description: item.description,
             link_properties: {
                 link_url
             },
