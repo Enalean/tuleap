@@ -367,6 +367,14 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    /**
      * @url OPTIONS {id}/version
      */
     public function optionsNewVersion(int $id): void
