@@ -21,8 +21,8 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
@@ -478,12 +478,12 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    private function getDynamicUGroupMembersUpdater() : DynamicUGroupMembersUpdater
+    private function getDynamicUGroupMembersUpdater(): DynamicUGroupMembersUpdater
     {
         return new DynamicUGroupMembersUpdater(
             new UserPermissionsDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new UGroupBinding($this->getUGroupUserDao(), new UGroupManager()),
+            new ProjectMemberAdder(new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())),
             EventManager::instance()
         );
     }

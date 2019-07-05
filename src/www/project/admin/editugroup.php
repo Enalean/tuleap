@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -28,7 +28,6 @@ use Tuleap\Project\Admin\ProjectUGroup\BindingController;
 use Tuleap\Project\Admin\ProjectUGroup\BindingPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\DelegationController;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
-use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
@@ -36,6 +35,8 @@ use Tuleap\Project\Admin\ProjectUGroup\MembersPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\PermissionsDelegationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UserPermissionsDao;
 
 require_once('pre.php');
@@ -65,7 +66,7 @@ $members_controller  = new MembersController(
     new DynamicUGroupMembersUpdater(
         new UserPermissionsDao(),
         new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-        $ugroup_binding,
+        new ProjectMemberAdder($ugroup_binding),
         $event_manager
     )
 
