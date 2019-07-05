@@ -268,4 +268,57 @@ describe("Store actions", () => {
             });
         });
     });
+
+    describe("getInitialEffortOfRelease - rest", () => {
+        describe("getInitialEffortOfRelease - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
+                const handleErrorMessage = jasmine.createSpy("handleErrorMessage");
+                rewire$handleErrorMessage(handleErrorMessage);
+
+                mockFetchError(tlp.get, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await actions.getInitialEffortOfRelease(context, 102);
+
+                expect(handleErrorMessage).toHaveBeenCalled();
+            });
+        });
+        describe("getInitialEffortOfRelease - success", () => {
+            it("Given a success response, When capacity of release is received, Then no message error is received", async () => {
+                let user_stories = [
+                    {
+                        initial_effort: 10
+                    },
+                    {
+                        initial_effort: null
+                    },
+                    {
+                        initial_effort: 2
+                    }
+                ];
+
+                mockFetchSuccess(tlp.get, {
+                    headers: {
+                        get: header_name => {
+                            const headers = {
+                                "X-PAGINATION-SIZE": 1
+                            };
+
+                            return headers[header_name];
+                        }
+                    },
+                    return_json: user_stories
+                });
+
+                await expectAsync(actions.getInitialEffortOfRelease(context, 102)).toBeResolved();
+                expect(await actions.getInitialEffortOfRelease(context, 102)).toEqual(12);
+            });
+        });
+    });
 });

@@ -24,6 +24,18 @@ msgstr ""
 "%{nb_backlog_items} items dans le backlog, %{nb_upcoming_releases} "
 "prochaines versions"
 
+msgid "Capacity: %{capacity}"
+msgstr "Capacité : %{capacity}"
+
+msgid "Capacity: N/A"
+msgstr "Capacité : N/A"
+
+msgid "Initial effort: %{initial_effort}"
+msgstr "Effort estimé : %{initial_effort}"
+
+msgid "Initial effort: N/A"
+msgstr "Effort estimé : N/A"
+
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
 
