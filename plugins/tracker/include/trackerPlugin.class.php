@@ -126,6 +126,8 @@ use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
@@ -439,6 +441,8 @@ class trackerPlugin extends Plugin {
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME:
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
                 $params['dependencies'] = array(
+                    Tracker_ArtifactFactory::instance(),
+                    new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
                     new Tracker_FormElement_Field_BurndownDao(),
                     new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
