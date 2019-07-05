@@ -25,6 +25,7 @@ use Tuleap\Configuration\Logger\Wrapper;
 
 class TuleapWeb
 {
+    private const FPM_CONFIGURATION_TO_DEPLOY = ['tuleap.conf', 'tuleap-long-running-request.conf'];
 
     private $application_user;
     private $logger;
@@ -82,7 +83,7 @@ class TuleapWeb
         );
     }
 
-    public function configure()
+    public function configure() : void
     {
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");
         if (file_exists("$this->php_configuration_folder/php-fpm.d/www.conf") &&
@@ -91,11 +92,14 @@ class TuleapWeb
             rename("$this->php_configuration_folder/php-fpm.d/www.conf", "$this->php_configuration_folder/php-fpm.d/www.conf.orig");
             touch("$this->php_configuration_folder/php-fpm.d/www.conf");
         }
-        if (! file_exists("$this->php_configuration_folder/php-fpm.d/tuleap.conf")) {
-            $this->moveExistingConfigurationFromOldConfigurationFolders();
-        }
-        if (! file_exists("$this->php_configuration_folder/php-fpm.d/tuleap.conf")) {
-            $this->deployFreshTuleapConf();
+
+        foreach (self::FPM_CONFIGURATION_TO_DEPLOY as $fpm_configuration_to_deploy) {
+            if (! file_exists("$this->php_configuration_folder/php-fpm.d/$fpm_configuration_to_deploy")) {
+                $this->moveExistingConfigurationFromOldConfigurationFolders($fpm_configuration_to_deploy);
+            }
+            if (! file_exists("$this->php_configuration_folder/php-fpm.d/$fpm_configuration_to_deploy")) {
+                $this->deployFreshTuleapConf($fpm_configuration_to_deploy);
+            }
         }
 
         if (! is_dir('/var/tmp/tuleap_cache/php/session') || ! is_dir('/var/tmp/tuleap_cache/php/wsdlcache')) {
@@ -109,7 +113,7 @@ class TuleapWeb
         $this->logger->info("Configuration done!");
     }
 
-    private function createDirectoryForAppUser($path)
+    private function createDirectoryForAppUser($path) : void
     {
         if (! is_dir($path)) {
             mkdir($path, 0700);
@@ -118,19 +122,19 @@ class TuleapWeb
         chgrp($path, $this->application_user);
     }
 
-    private function moveExistingConfigurationFromOldConfigurationFolders()
+    private function moveExistingConfigurationFromOldConfigurationFolders(string $configuration_name) : void
     {
         foreach ($this->previous_php_configuration_folders as $previous_php_configuration_folder) {
-            if (file_exists("$previous_php_configuration_folder/php-fpm.d/tuleap.conf")) {
-                rename("$previous_php_configuration_folder/php-fpm.d/tuleap.conf", "$this->php_configuration_folder/php-fpm.d/tuleap.conf");
+            if (file_exists("$previous_php_configuration_folder/php-fpm.d/$configuration_name")) {
+                rename("$previous_php_configuration_folder/php-fpm.d/$configuration_name", "$this->php_configuration_folder/php-fpm.d/$configuration_name");
                 return;
             }
         }
     }
 
-    private function deployFreshTuleapConf()
+    private function deployFreshTuleapConf(string $configuration_name) : void
     {
-        $this->logger->info("Deploy $this->php_configuration_folder/php-fpm.d/tuleap.conf");
+        $this->logger->info("Deploy $this->php_configuration_folder/php-fpm.d/$configuration_name");
 
         $variables = array(
             '%application_user%',
@@ -148,14 +152,14 @@ class TuleapWeb
         }
 
         $this->replacePlaceHolderInto(
-            "$this->tuleap_php_configuration_folder/tuleap.conf",
-            "$this->php_configuration_folder/php-fpm.d/tuleap.conf",
+            "$this->tuleap_php_configuration_folder/$configuration_name",
+            "$this->php_configuration_folder/php-fpm.d/$configuration_name",
             $variables,
             $replacement
         );
     }
 
-    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values)
+    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values) : void
     {
         file_put_contents(
             $target_path,

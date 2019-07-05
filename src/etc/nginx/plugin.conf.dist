@@ -10,7 +10,7 @@ location ^~ /plugins/%name%/ {
         if (!-f $request_filename) {
             rewrite ^ /plugins/%name%/index.php last;
         }
-        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_pass tuleap-php-fpm;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
