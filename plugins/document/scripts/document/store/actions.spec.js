@@ -61,7 +61,7 @@ import {
     rewire$getProject,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$postEmbeddedFile,
-    rewire$patchWiki,
+    rewire$postWiki,
     rewire$postLinkVersion,
     rewire$deleteFile,
     rewire$deleteLink,
@@ -121,7 +121,7 @@ describe("Store actions", () => {
         createNewVersion,
         uploadVersion,
         postEmbeddedFile,
-        patchWiki,
+        postWiki,
         postLinkVersion;
 
     beforeEach(() => {
@@ -187,8 +187,8 @@ describe("Store actions", () => {
         addUserLegacyUIPreferency = jasmine.createSpy("addUserLegacyUIPreferency");
         rewire$addUserLegacyUIPreferency(addUserLegacyUIPreferency);
 
-        patchWiki = jasmine.createSpy("patchWiki");
-        rewire$patchWiki(patchWiki);
+        postWiki = jasmine.createSpy("postWiki");
+        rewire$postWiki(postWiki);
 
         postLinkVersion = jasmine.createSpy("postLinkVersion");
         rewire$postLinkVersion(postLinkVersion);
@@ -1027,7 +1027,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchWiki).toHaveBeenCalled();
+            expect(postWiki).toHaveBeenCalled();
         });
         it("throws an error when there is a problem with the update", async () => {
             const item = { id: 45 };
@@ -1038,7 +1038,7 @@ describe("Store actions", () => {
             const version_changelog = "Changed title to NSFW";
             const is_version_locked = true;
 
-            patchWiki.and.throwError("nope");
+            postWiki.and.throwError("nope");
 
             await createNewWikiVersionFromModal(context, [
                 item,
@@ -1048,7 +1048,7 @@ describe("Store actions", () => {
                 is_version_locked
             ]);
 
-            expect(patchWiki).toHaveBeenCalled();
+            expect(postWiki).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });

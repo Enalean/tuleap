@@ -31,6 +31,7 @@ use Docman_Link;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Project;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\REST\I18NRestException;
@@ -53,15 +54,21 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
      * @var \Docman_ItemFactory
      */
     private $item_factory;
+    /**
+     * @var ApprovalTableRetriever
+     */
+    private $approval_table_retriever;
 
     public function __construct(
         \Docman_PermissionsManager $permission_manager,
         ApprovalTableUpdateActionChecker $approval_table_update_action_checker,
-        \Docman_ItemFactory $item_factory
+        \Docman_ItemFactory $item_factory,
+        ApprovalTableRetriever $approval_table_retriever
     ) {
         $this->permission_manager                   = $permission_manager;
         $this->approval_table_update_action_checker = $approval_table_update_action_checker;
         $this->item_factory                         = $item_factory;
+        $this->approval_table_retriever             = $approval_table_retriever;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []): void
@@ -82,8 +89,6 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
             $this->throwItemHasNotTheRightType($params['document_type']);
         }
 
-        $this->checkItemCanBeUpdated($item, $params);
-
         /**
          * @var Project $project
          */
@@ -94,7 +99,20 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
                 sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
             );
         }
+
+        $this->checkItemNameDoesNotAlreadyExistsInParent($item, $params['title']);
+        $this->checkUserCanWrite($params['user'], $item);
+        $this->checkDocumentIsNotAlreadyLocked($item, $params);
+
+        if ($this->approval_table_retriever->hasApprovalTable($item)) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'It is not possible to update a wiki page with approval table.')
+            );
+        }
     }
+
+
 
     public function visitLink(Docman_Link $item, array $params = []): void
     {

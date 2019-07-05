@@ -28,7 +28,7 @@ import {
     getParents,
     postEmbeddedFile,
     patchUserPreferenciesForFolderInProject,
-    patchWiki,
+    postWiki,
     deleteUserPreferenciesForFolderInProject,
     addUserLegacyUIPreferency,
     createNewVersion,
@@ -363,7 +363,7 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("patchWiki()", () => {
+    describe("postWiki()", () => {
         it("", async () => {
             const item = JSON.stringify({
                 title: "Kinky wiki",
@@ -378,7 +378,7 @@ describe("rest-querier", () => {
 
             mockFetchSuccess(tlp.patch);
 
-            await patchWiki(item, page_name, version_title, change_log, should_lock_file);
+            await postWiki(item, page_name, version_title, change_log, should_lock_file);
         });
     });
 
