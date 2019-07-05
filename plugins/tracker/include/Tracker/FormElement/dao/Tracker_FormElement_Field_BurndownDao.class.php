@@ -82,12 +82,31 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
             FROM tracker_field AS burndown_field
             INNER JOIN tracker
               ON tracker.id = burndown_field.tracker_id
+            LEFT JOIN (
+                SELECT timeframe.tracker_id,
+                       start_date_field.name as start_date_field_name,
+                       duration_field.name   as duration_field_name
+                FROM tracker_semantic_timeframe AS timeframe
+                     INNER JOIN tracker_field AS start_date_field
+                        ON (
+                                timeframe.tracker_id = start_date_field.tracker_id
+                            AND timeframe.start_date_field_id = start_date_field.id
+                        )
+                     INNER JOIN tracker_field AS duration_field
+                        ON (
+                                timeframe.tracker_id = duration_field.tracker_id
+                            AND timeframe.duration_field_id = duration_field.id
+                        )
+            ) AS tracker_with_timeframe_semantic
+                ON (
+                    tracker.id = tracker_with_timeframe_semantic.tracker_id
+                )
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = 'start_date'
+              AND tracker_field_for_start_date.name = IFNULL(tracker_with_timeframe_semantic.start_date_field_name, 'start_date')
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = 'duration'
+              AND tracker_field_for_duration.name = IFNULL(tracker_with_timeframe_semantic.duration_field_name, 'duration')
             INNER JOIN tracker_field AS tracker_field_for_remaining_effort
               ON tracker.id = tracker_field_for_remaining_effort.tracker_id
               AND tracker_field_for_remaining_effort.name = 'remaining_effort'
@@ -121,9 +140,11 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
      *
      * @return array|false
      */
-    public function getBurndownInformation($artifact_id)
+    public function getBurndownInformation($artifact_id, $start_date_field_name, $duration_field_name)
     {
-        $artifact_id = $this->da->escapeInt($artifact_id);
+        $artifact_id           = $this->da->escapeInt($artifact_id);
+        $start_date_field_name = $this->da->quoteSmart($start_date_field_name);
+        $duration_field_name   = $this->da->quoteSmart($duration_field_name);
 
         $sql = "SELECT
                   tracker_artifact.id,
@@ -145,10 +166,10 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
               ON tracker.id = burndown_field.tracker_id
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = 'start_date'
+              AND tracker_field_for_start_date.name = $start_date_field_name
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = 'duration'
+              AND tracker_field_for_duration.name = $duration_field_name
             INNER JOIN tracker_field AS tracker_field_for_remaining_effort
               ON tracker.id = tracker_field_for_remaining_effort.tracker_id
               AND tracker_field_for_remaining_effort.name = 'remaining_effort'
