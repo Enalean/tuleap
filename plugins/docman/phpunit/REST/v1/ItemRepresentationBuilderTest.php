@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Mockery;
@@ -30,10 +31,11 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\GlobalLanguageMock;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
     /**
      * @var Mockery\MockInterface|ApprovalTableRetriever
      */
@@ -74,6 +76,11 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $approval_table_state_mapper;
 
+    /**
+     * @var Codendi_HTMLPurifier|Mockery\MockInterface
+     */
+    private $html_purifier;
+
     protected function setUp() : void
     {
         parent::setUp();
@@ -85,13 +92,12 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->lock_factory                = Mockery::Mock(\Docman_LockFactory::class);
         $this->approval_table_state_mapper = new ApprovalTableStateMapper();
 
-        \UserManager::setInstance($this->user_manager);
-        \CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
         $this->docman_item_factory             = Mockery::Mock(Docman_ItemFactory::class);
         $this->permissions_manager             = Mockery::Mock(\Docman_PermissionsManager::class);
         $this->lock_factory                    = Mockery::Mock(\Docman_LockFactory::class);
         $this->metadata_representation_builder = Mockery::mock(MetadataRepresentationBuilder::class);
         $this->approval_table_retriever        = Mockery::mock(ApprovalTableRetriever::class);
+        $this->html_purifier                   = Mockery::mock(Codendi_HTMLPurifier::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->dao,
@@ -101,14 +107,9 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             $this->lock_factory,
             $this->approval_table_state_mapper,
             $this->metadata_representation_builder,
-            $this->approval_table_retriever
+            $this->approval_table_retriever,
+            $this->html_purifier
         );
-    }
-
-    protected function tearDown() : void
-    {
-        \UserManager::clearInstance();
-        \CodendiDataAccess::clearInstance();
     }
 
     public function testItBuildsAnItemRepresentationOfAnItem() : void
@@ -127,6 +128,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $current_user->shouldReceive('hasAvatar')->andReturns(false);
         $this->user_manager->shouldReceive('getCurrentUser')->andReturns($current_user);
         $current_user->shouldReceive('getPreference')->with('username_display')->andReturns('toto');
+        $this->html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('description with processed ref');
 
         $metadata_representation = new MetadataRepresentation(
             "metadata name",

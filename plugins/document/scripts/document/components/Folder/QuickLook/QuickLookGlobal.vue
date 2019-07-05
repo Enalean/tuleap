@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -42,8 +42,7 @@
                 <label class="tlp-label" for="item-description" v-translate>
                     Description
                 </label>
-                <p id="item-description">
-                    {{ currently_previewed_item.description }}
+                <p id="item-description" v-dompurify-html="currently_previewed_item.post_processed_description">
                 </p>
             </div>
         </section>

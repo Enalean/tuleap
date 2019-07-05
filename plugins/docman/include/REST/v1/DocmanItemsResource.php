@@ -291,6 +291,8 @@ class DocmanItemsResource extends AuthenticatedResource
 
     private function getItemRepresentationBuilder(Docman_Item $item, Project $project)
     {
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
         $item_representation_builder = new ItemRepresentationBuilder(
             $this->item_dao,
             \UserManager::instance(),
@@ -300,13 +302,14 @@ class DocmanItemsResource extends AuthenticatedResource
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new \Docman_MetadataFactory($project->getID()),
-                Codendi_HTMLPurifier::instance(),
+                $html_purifier,
                 UserHelper::instance()
             ),
             new ApprovalTableRetriever(
                 new \Docman_ApprovalTableFactoriesFactory(),
                 new Docman_VersionFactory()
-            )
+            ),
+            $html_purifier
         );
         return $item_representation_builder;
     }
