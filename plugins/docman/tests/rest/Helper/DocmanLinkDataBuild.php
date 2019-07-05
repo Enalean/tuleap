@@ -56,10 +56,10 @@ class DocmanLinkDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+---------------+
-     *      |                  |         |               |
-     *      +                  +         +               +
-     * PATCH Link    DELETE Link    LOCK Link   POST Link Version
+     *      +------------------+---------+---------------+---------------+
+     *      |                  |         |               |               |
+     *      +                  +         +               +               +
+     * PATCH Link    DELETE Link    LOCK Link   POST Link Version   PUT HM Link
      *
      * HM => Hardcoded Metadata
      *
@@ -78,6 +78,7 @@ class DocmanLinkDataBuild
         $this->createDeleteFolder($folder_link_id);
         $this->createLockFolder($folder_link_id);
         $this->createPostVersionFolder($folder_link_id);
+        $this->createPutFolder($folder_link_id);
     }
 
 
@@ -321,6 +322,37 @@ class DocmanLinkDataBuild
             $this->admin_user_id,
             $this->docman_user_id,
             'POST L V UL Admin',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        PUT HM Link
+     *                           +
+     *                           |
+     *                           +
+     *                        PUT L
+     *
+     * F OD => The file will be updated with a new obsolescence date metadata
+     * F Status => The File will be updated with a new status metadata
+     * F O => The file will be updated with a new unexcisting owner
+     */
+    private function createPutFolder(int $folder_id): void
+    {
+        $folder_put_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PUT HM Link',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_put_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT L',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
     }
