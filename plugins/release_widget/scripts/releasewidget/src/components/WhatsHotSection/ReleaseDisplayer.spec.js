@@ -53,7 +53,9 @@ describe("ReleaseDisplayer", () => {
             label: "mile",
             id: 2,
             start_date: Date("2017-01-22T13:42:08+02:00"),
-            capacity: 10
+            capacity: 10,
+            total_sprint: 20,
+            initial_effort: 10
         };
 
         component_options = {
@@ -62,27 +64,12 @@ describe("ReleaseDisplayer", () => {
             },
             data() {
                 return {
-                    is_open: false,
-                    totalSprint: 20,
-                    initialEffort: 10
+                    is_open: false
                 };
             }
         };
 
         getPersonalWidgetInstance(store_options);
-    });
-
-    it("When the releaseHeader is toggled, the component is called with good args", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
-
-        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();
-
-        let elementsDisplayReleases = wrapper.find("[data-test=display-releases-badges]").element;
-
-        expect(elementsDisplayReleases.getAttribute("totalSprint")).toContain(20);
-        expect(elementsDisplayReleases.getAttribute("initialEffort")).toContain(10);
-        expect(elementsDisplayReleases.getAttribute("releaseData")).toContain(releaseData);
     });
 
     it("When the user toggle twice a release, the content widget is displayed first and hidden after", () => {

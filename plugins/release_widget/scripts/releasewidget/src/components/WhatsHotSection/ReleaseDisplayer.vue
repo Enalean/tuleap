@@ -27,11 +27,9 @@
             data-test="project-release-toggle"
         />
 
-        <div v-if="is_open" data-test="toggle_open">
+        <div v-if="is_open" data-test="toggle_open" class="release-toggle">
             <release-badges
                 v-bind:release-data="releaseData"
-                v-bind:total-sprint="totalSprint"
-                v-bind:initial-effort="initialEffort"
                 data-test="display-releases-badges"
             />
             <release-description v-bind:release-data="releaseData"/>
@@ -56,29 +54,10 @@ export default {
     },
     data() {
         return {
-            is_open: false,
-            totalSprint: null,
-            initialEffort: null
+            is_open: false
         };
     },
-    mounted() {
-        this.setInitialEffort();
-        this.setTotalSprints();
-    },
-
     methods: {
-        async setTotalSprints() {
-            this.totalSprint = await this.$store.dispatch(
-                "getNumberOfSprints",
-                this.releaseData.id
-            );
-        },
-        async setInitialEffort() {
-            this.initialEffort = await this.$store.dispatch(
-                "getInitialEffortOfRelease",
-                this.releaseData.id
-            );
-        },
         toggleReleaseDetails() {
             this.is_open = !this.is_open;
         }

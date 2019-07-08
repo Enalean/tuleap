@@ -18,10 +18,8 @@
   -->
 
 <template>
-    <div class="project-release-toggle" v-on:click="$emit('toggleReleaseDetails')">
-        <div class="project-release-icon">
-            <i class="fa fa-ellipsis-h"></i>
-        </div>
+    <div class="project-release-header" v-on:click="$emit('toggleReleaseDetails')">
+        <i class="project-release-whats-hot-icon fa"></i>
         <h1 class="project-release-title">
             <translate v-bind:translate-params="{ release_label: releaseData.label }">
                 Release %{release_label}
@@ -29,17 +27,21 @@
         </h1>
         <span class="project-release-date" v-if="startDateExist()">
             {{ formatDate(releaseData.start_date) }}
-            <i class="fa fa-long-arrow-right" data-test="display-arrow"></i>
+            <i class="release-date-icon fa fa-long-arrow-right" data-test="display-arrow"></i>
             {{ formatDate(releaseData.end_date) }}
         </span>
+        <div class="release-spacer"></div>
+        <release-header-remaining-effort v-bind:release-data="releaseData" data-test="display-remaining-effort"/>
     </div>
 </template>
 
 <script>
 import { formatDateYearMonthDay } from "../../helpers/date-formatters";
+import ReleaseHeaderRemainingEffort from "./ReleaseHeaderRemainingEffort.vue";
 
 export default {
     name: "ReleaseHeader",
+    components: { ReleaseHeaderRemainingEffort },
     props: {
         releaseData: Object
     },

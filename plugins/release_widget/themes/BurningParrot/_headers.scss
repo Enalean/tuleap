@@ -1,0 +1,139 @@
+/*!
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+
+.project-release-toggle-closed > .project-release-header {
+    background: none;
+}
+
+.project-release-whats-hot-icon::before {
+    content: '\f141'; // fa-ellipsis-h
+}
+
+.project-release-toggle-closed > .project-release-header:hover > .project-release-whats-hot-icon::before {
+    content: '\f0da'; // fa-caret-right
+}
+
+.project-release-header:hover > .project-release-whats-hot-icon::before {
+    content: '\f0d7'; // fa-caret-down
+}
+
+.project-release-header {
+    display: flex;
+    align-items: baseline;
+    padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    background: linear-gradient(to right, #ffffff 0%, #fafafa 50%);
+    cursor: pointer;
+}
+
+.project-release-whats-hot-icon {
+    display: flex;
+    z-index: 2;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+    color: $tlp-ui-white;
+    font-size: 100%;
+}
+
+.project-release-title {
+    display: inline-block;
+    margin: 0 $tlp-half-spacing 0 0;
+    font-size: 26px;
+    line-height: 28px;
+}
+
+.project-release-date {
+    display: inline-block;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.release-date-icon {
+    margin: 0 5px;
+}
+
+.release-spacer {
+    flex: 1 0 auto;
+}
+
+.release-remaining-badges {
+    display: flex;
+}
+
+.release-remaining {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.release-remaining-value {
+    margin: 0 3px 0 0;
+    color: $tlp-theme-color;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.release-remaining-value-danger {
+    color: $tlp-ui-danger;
+}
+
+.release-remaining-value-disabled {
+    color: $tlp-ui-dimmed;
+}
+
+.release-remaining-value-success {
+    color: $tlp-ui-success;
+}
+
+.release-remaining-header {
+    display: flex;
+    align-items: baseline;
+    width: 110px;
+    margin: 0 0 5px;
+    padding: 0 2px;
+}
+
+.release-remaining-icon {
+    align-self: center;
+    margin: 0 7px 0 0;
+    opacity: .9;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.release-remaining-text {
+    padding: 0 0 2px;
+    overflow: hidden;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.release-remaining.tlp-tooltip.tlp-tooltip-bottom::before {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

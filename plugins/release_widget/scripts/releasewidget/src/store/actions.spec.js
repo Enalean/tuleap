@@ -18,30 +18,11 @@
  */
 
 import * as actions from "./actions.js";
-import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
-import { rewire$getNumberOfBacklogItems } from "./actions.js";
-import { rewire$getNumberOfUpcomingReleases } from "./actions.js";
-import { rewire$getCurrentMilestones } from "./actions.js";
-import { rewire$handleErrorMessage } from "./actions.js";
+import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
 
 describe("Store actions", () => {
     let context;
-    const milestones = [
-        [
-            {
-                start_date: {},
-                end_date: {},
-                project: {}
-            }
-        ],
-        [
-            {
-                start_date: {},
-                end_date: {},
-                project: {}
-            }
-        ]
-    ];
+
     beforeEach(() => {
         context = {
             commit: jasmine.createSpy("commit"),
@@ -54,110 +35,6 @@ describe("Store actions", () => {
                 current_milestones: []
             }
         };
-    });
-
-    describe("getNumberOfBacklogItems - rest", () => {
-        describe("getNumberOfBacklogItems - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then an exception is caught.", async () => {
-                mockFetchError(tlp.get, {
-                    error_json: {
-                        error: {
-                            code: 403,
-                            message: "Forbidden"
-                        }
-                    }
-                });
-
-                await expectAsync(actions.getNumberOfBacklogItems(context)).toBeRejected();
-            });
-        });
-        describe("getNumberOfBacklogItems - success", () => {
-            it("Given a success response, When total of backlog are received, Then no message error is received", async () => {
-                context.state.project_id = 102;
-
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    }
-                });
-
-                await actions.getNumberOfBacklogItems(context);
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setNbBacklogItem", 1);
-            });
-        });
-    });
-
-    describe("getNumberOfUpcomingReleases - rest", () => {
-        describe("getNumberOfUpcomingReleases - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then an exception is caught.", async () => {
-                mockFetchError(tlp.recursiveGet, {
-                    error_json: {
-                        error: {
-                            code: 403,
-                            message: "Forbidden"
-                        }
-                    }
-                });
-
-                await expectAsync(actions.getNumberOfUpcomingReleases(context)).toBeRejected();
-            });
-        });
-        describe("getNumberOfUpcomingReleases - success", () => {
-            it("Given a success response, When total of backlog are received, Then no message error is received", async () => {
-                context.state.project_id = 102;
-
-                tlp.recursiveGet.and.returnValue(milestones);
-
-                await actions.getNumberOfUpcomingReleases(context);
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 2);
-            });
-        });
-    });
-
-    describe("getCurrentMilestones - rest", () => {
-        describe("getCurrentMilestones - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
-                mockFetchError(tlp.recursiveGet, {
-                    error_json: {
-                        error: {
-                            code: 403,
-                            message: "Forbidden"
-                        }
-                    }
-                });
-
-                await expectAsync(actions.getCurrentMilestones(context)).toBeRejected();
-            });
-        });
-
-        describe("getCurrentMilestones - success", () => {
-            it("Given a success response, When all current milestones are received, Then no message error is received", async () => {
-                const milestones = [
-                    [
-                        {
-                            start_date: {},
-                            end_date: {},
-                            project: {}
-                        }
-                    ]
-                ];
-
-                tlp.recursiveGet.and.returnValue(milestones);
-
-                await actions.getCurrentMilestones(context);
-
-                expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
-            });
-        });
     });
 
     describe("getMilestones - rest", () => {
@@ -181,36 +58,60 @@ describe("Store actions", () => {
         });
         describe("getMilestones - success", () => {
             it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
-                const getNumberOfBacklogItems = jasmine.createSpy("getNumberOfBacklogItems");
-                rewire$getNumberOfBacklogItems(getNumberOfBacklogItems);
+                context.state = {
+                    project_id: null,
+                    nb_backlog_items: 0,
+                    nb_upcoming_releases: 0,
+                    error_message: null,
+                    pagination_offset: 0,
+                    pagination_limit: 50,
+                    is_loading: false,
+                    current_milestones: {}
+                };
 
-                const getNumberOfUpcomingReleases = jasmine.createSpy(
-                    "getNumberOfUpcomingReleases"
-                );
-                rewire$getNumberOfUpcomingReleases(getNumberOfUpcomingReleases);
-
-                const getCurrentMilestones = jasmine.createSpy("getCurrentMilestones");
-                rewire$getCurrentMilestones(getCurrentMilestones);
-
-                context.state.project_id = 102;
+                let milestones = [
+                    {
+                        initial_effort: null
+                    },
+                    {
+                        initial_effort: 5
+                    }
+                ];
 
                 mockFetchSuccess(tlp.get, {
                     headers: {
                         get: header_name => {
                             const headers = {
-                                "X-PAGINATION-SIZE": 1
+                                "X-PAGINATION-SIZE": 2
                             };
 
                             return headers[header_name];
                         }
-                    }
+                    },
+                    return_json: milestones
                 });
+
+                tlp.recursiveGet.and.returnValue(milestones);
+
+                let state_milestones = [
+                    {
+                        total_sprint: 2,
+                        initial_effort: 5
+                    },
+                    {
+                        total_sprint: 2,
+                        initial_effort: 10
+                    }
+                ];
 
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-                expect(getNumberOfBacklogItems).toHaveBeenCalled();
-                expect(getNumberOfUpcomingReleases).toHaveBeenCalled();
-                expect(getCurrentMilestones).toHaveBeenCalled();
+                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 2);
+                expect(context.commit).toHaveBeenCalledWith("setNbBacklogItem", 2);
+                expect(context.commit).toHaveBeenCalledWith(
+                    "setCurrentMilestones",
+                    state_milestones
+                );
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });
@@ -222,98 +123,6 @@ describe("Store actions", () => {
             await actions.handleErrorMessage(context, error_json);
 
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "");
-        });
-    });
-
-    describe("getNumberOfSprints - rest", () => {
-        describe("getNumberOfSprints - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
-                const handleErrorMessage = jasmine.createSpy("handleErrorMessage");
-                rewire$handleErrorMessage(handleErrorMessage);
-
-                mockFetchError(tlp.get, {
-                    error_json: {
-                        error: {
-                            code: 403,
-                            message: "Forbidden"
-                        }
-                    }
-                });
-
-                await actions.getNumberOfSprints(context, 102);
-
-                expect(handleErrorMessage).toHaveBeenCalled();
-            });
-        });
-        describe("getNumberOfSprints - success", () => {
-            it("Given a success response, When totals of sprints is received, Then no message error is received", async () => {
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    }
-                });
-
-                await expectAsync(actions.getNumberOfSprints(context, 102)).toBeResolved();
-            });
-        });
-    });
-
-    describe("getInitialEffortOfRelease - rest", () => {
-        describe("getInitialEffortOfRelease - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
-                const handleErrorMessage = jasmine.createSpy("handleErrorMessage");
-                rewire$handleErrorMessage(handleErrorMessage);
-
-                mockFetchError(tlp.get, {
-                    error_json: {
-                        error: {
-                            code: 403,
-                            message: "Forbidden"
-                        }
-                    }
-                });
-
-                await actions.getInitialEffortOfRelease(context, 102);
-
-                expect(handleErrorMessage).toHaveBeenCalled();
-            });
-        });
-        describe("getInitialEffortOfRelease - success", () => {
-            it("Given a success response, When capacity of release is received, Then no message error is received", async () => {
-                const user_stories = [
-                    {
-                        initial_effort: 10
-                    },
-                    {
-                        initial_effort: null
-                    },
-                    {
-                        initial_effort: 2
-                    }
-                ];
-
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    },
-                    return_json: user_stories
-                });
-
-                await expectAsync(actions.getInitialEffortOfRelease(context, 102)).toBeResolved();
-                expect(await actions.getInitialEffortOfRelease(context, 102)).toEqual(12);
-            });
         });
     });
 });

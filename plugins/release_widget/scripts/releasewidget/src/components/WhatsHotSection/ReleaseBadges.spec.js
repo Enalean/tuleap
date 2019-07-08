@@ -24,8 +24,8 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 
 let releaseData = {};
-let totalSprint = 10;
-let initialEffort = 10;
+let total_sprint = 10;
+let initial_effort = 10;
 let component_options = {};
 const project_id = "102";
 
@@ -57,14 +57,14 @@ describe("ReleaseBadges", () => {
             planning: {
                 id: 100
             },
-            capacity: 10
+            capacity: 10,
+            total_sprint,
+            initial_effort
         };
 
         component_options = {
             propsData: {
-                releaseData,
-                totalSprint,
-                initialEffort
+                releaseData
             }
         };
 
@@ -87,52 +87,113 @@ describe("ReleaseBadges", () => {
         );
     });
 
-    it("When there is an initial effort, Then the points of initial effort are displayed", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    describe("Display points of initial effort", () => {
+        it("When there is an initial effort, Then the points of initial effort are displayed", () => {
+            const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeFalsy();
+        });
+
+        it("When there is initial effort but null, Then the points of initial effort are 'N/A'", () => {
+            initial_effort = null;
+
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                capacity: 10,
+                total_sprint,
+                initial_effort
+            };
+
+            component_options = {
+                propsData: {
+                    releaseData
+                }
+            };
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
+        });
+
+        it("When there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
+            initial_effort = null;
+
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                capacity: 10,
+                total_sprint
+            };
+
+            component_options = {
+                propsData: {
+                    releaseData
+                }
+            };
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
+        });
     });
 
-    it("When there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
-        initialEffort = null;
+    describe("Display points of capacity", () => {
+        it("When there are points of capacity, Then the points of capacity are displayed", () => {
+            const wrapper = getPersonalWidgetInstance(store_options);
 
-        component_options = {
-            propsData: {
-                releaseData,
-                initialEffort
-            }
-        };
-        const wrapper = getPersonalWidgetInstance(store_options);
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBeFalsy();
+        });
 
-        expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
-    });
+        it("When there are points of capacity but null, Then the points of capacity are 'N/A'", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                capacity: null,
+                total_sprint,
+                initial_effort
+            };
 
-    it("When there are points of capacity, Then the points of capacity are displayed", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+            component_options.propsData = {
+                releaseData
+            };
 
-        expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=capacity-empty]")).toBeFalsy();
-    });
+            const wrapper = getPersonalWidgetInstance(store_options);
 
-    it("When there aren't points of capacity, Then the points of capacity are 'N/A'", () => {
-        releaseData = {
-            label: "mile",
-            id: 2,
-            planning: {
-                id: 100
-            },
-            capacity: null
-        };
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
+        });
 
-        component_options.propsData = {
-            releaseData
-        };
+        it("When there aren't points of capacity, Then the points of capacity are 'N/A'", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                total_sprint,
+                initial_effort
+            };
 
-        const wrapper = getPersonalWidgetInstance(store_options);
+            component_options.propsData = {
+                releaseData
+            };
 
-        expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
+        });
     });
 });

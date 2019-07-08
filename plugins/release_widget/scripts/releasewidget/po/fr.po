@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "%{ totalSprint } sprint"
-msgid_plural "%{ totalSprint } sprints"
-msgstr[0] "%{ totalSprint } sprint"
-msgstr[1] "%{ totalSprint } sprints"
+msgid "%{ releaseData.total_sprint } sprint"
+msgid_plural "%{ releaseData.total_sprint } sprints"
+msgstr[0] "%{ releaseData.total_sprint } sprint"
+msgstr[1] "%{ releaseData.total_sprint } sprints"
 
 msgid ""
 "%{nb_backlog_items} items in the backlog, %{nb_upcoming_releases} upcoming "
@@ -33,11 +33,26 @@ msgstr "Capacité : N/A"
 msgid "Go to release overview"
 msgstr "Aller au résumé de la version"
 
+msgid "Initial effort equal at 0."
+msgstr "Effort estimé égal à 0."
+
 msgid "Initial effort: %{initialEffort}"
 msgstr "Effort estimé : %{initialEffort}"
 
 msgid "Initial effort: N/A"
 msgstr "Effort estimé : N/A"
+
+msgid "No end date defined."
+msgstr "Aucune date de fin définie."
+
+msgid "No initial effort defined."
+msgstr "Aucun effort estimé défini."
+
+msgid "No remaining effort defined."
+msgstr "Aucun effort restant défini."
+
+msgid "No start date defined."
+msgstr "Aucune date de début définie."
 
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
@@ -47,3 +62,13 @@ msgstr "Version %{release_label}"
 
 msgid "What's hot"
 msgstr "En cours"
+
+msgid "day to go"
+msgid_plural "days to go"
+msgstr[0] "jour restant"
+msgstr[1] "jours restants"
+
+msgid "pt to go"
+msgid_plural "pts to go"
+msgstr[0] "pt restant"
+msgstr[1] "pts restants"

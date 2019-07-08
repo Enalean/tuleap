@@ -22,7 +22,7 @@
     <div class="project-release-timeframe">
         <span class="project-release-label">Roadmap</span>
         <div class="project-other-releases">
-            <div class="project-release-icon">
+            <div class="project-release-roadmap-icon">
                 <i class="fa fa-angle-double-up"></i>
             </div>
             <a class="releases-link" v-bind:href="backlog_link" data-test="backlog-link">

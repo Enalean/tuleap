@@ -29,6 +29,7 @@ import "./components/WhatsHotSection/ReleaseBadges.spec.js";
 import "./components/WhatsHotSection/ReleaseDescription.spec.js";
 import "./components/WhatsHotSection/ReleaseDisplayer.spec.js";
 import "./components/WhatsHotSection/ReleaseHeader.spec.js";
+import "./components/WhatsHotSection/ReleaseHeaderRemainingEffort.spec.js";
 import "./components/RoadmapSection/RoadmapSection.spec.js";
 
 import "./helpers/date-formatters.spec.js";

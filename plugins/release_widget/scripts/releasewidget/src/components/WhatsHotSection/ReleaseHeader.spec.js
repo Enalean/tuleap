@@ -87,4 +87,20 @@ describe("ReleaseHeader", () => {
             expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
         });
     });
+
+    it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", () => {
+        releaseData = {
+            label: "mile",
+            id: 2,
+            start_date: null
+        };
+
+        component_options.propsData = {
+            releaseData
+        };
+
+        const wrapper = getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.contains("[data-test=display-remaining-effort]")).toBeTruthy();
+    });
 });
