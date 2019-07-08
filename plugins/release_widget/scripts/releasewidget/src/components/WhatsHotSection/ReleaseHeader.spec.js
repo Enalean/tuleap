@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import ReleaseDescriptionDisplayer from "./ReleaseDescriptionDisplayer.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import VueDOMPurifyHTML from "vue-dompurify-html";
+import { shallowMount } from "@vue/test-utils";
+import ReleaseHeader from "./ReleaseHeader.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 let releaseData = {};
 let component_options = {};
-const project_id = "102";
 
-describe("ReleaseDescriptionDisplayer", () => {
+describe("ReleaseHeader", () => {
     let store_options;
     let store;
 
@@ -42,9 +40,7 @@ describe("ReleaseDescriptionDisplayer", () => {
             silent: true
         });
 
-        Vue.use(VueDOMPurifyHTML);
-
-        return shallowMount(ReleaseDescriptionDisplayer, component_options);
+        return shallowMount(ReleaseHeader, component_options);
     }
 
     beforeEach(() => {
@@ -53,10 +49,10 @@ describe("ReleaseDescriptionDisplayer", () => {
         };
 
         releaseData = {
+            label: "mile",
             id: 2,
-            planning: {
-                id: 100
-            }
+            start_date: Date("2017-01-22T13:42:08+02:00"),
+            capacity: 10
         };
 
         component_options = {
@@ -68,19 +64,27 @@ describe("ReleaseDescriptionDisplayer", () => {
         getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then a good link to top planning of the release is rendered", () => {
-        store_options.state.project_id = project_id;
+    describe("Display arrow between dates", () => {
+        it("When there is a start date of a release, Then an arrow is displayed", () => {
+            const wrapper = getPersonalWidgetInstance(store_options);
 
-        const wrapper = getPersonalWidgetInstance(store_options);
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
+        });
 
-        expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
-            "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(project_id) +
-                "&planning_id=" +
-                encodeURIComponent(releaseData.planning.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(releaseData.id) +
-                "&pane=details"
-        );
+        it("When there isn't a start date of a release, Then there isn't an arrow", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                start_date: null
+            };
+
+            component_options.propsData = {
+                releaseData
+            };
+
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
+        });
     });
 });

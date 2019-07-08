@@ -20,7 +20,7 @@
 <template>
     <div class="project-release-timeframe">
         <span class="project-release-label" v-translate>What's hot</span>
-        <release-information-displayer
+        <release-displayer
             v-for="milestone in current_milestones"
             v-bind:key="milestone.id"
             v-bind:release-data="milestone"
@@ -31,11 +31,11 @@
 
 <script>
 import { mapState } from "vuex";
-import ReleaseInformationDisplayer from "./ReleaseInformationDisplayer.vue";
+import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 
 export default {
     name: "WhatsHotSection",
-    components: { ReleaseInformationDisplayer },
+    components: { ReleaseDisplayer },
     computed: {
         ...mapState(["current_milestones"])
     }

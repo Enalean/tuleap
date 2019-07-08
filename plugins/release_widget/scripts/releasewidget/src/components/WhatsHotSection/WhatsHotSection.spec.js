@@ -40,7 +40,7 @@ function getPersonalWidgetInstance(store_options) {
     return shallowMount(WhatsHotSection, component_options);
 }
 
-describe("Given a release widget", () => {
+describe("What'sHotSection", () => {
     let store_options;
     beforeEach(() => {
         store_options = {
@@ -56,13 +56,13 @@ describe("Given a release widget", () => {
         getPersonalWidgetInstance(store_options);
     });
 
-    it("When there are no current milestones, then ReleaseInformationDisplayer Component is not allowed", () => {
+    it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=current-milestones-test]")).toBeFalsy();
     });
 
-    it("When there are some current_milestones, then ReleaseInformationDisplayer Component is displayed", () => {
+    it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", () => {
         const release1 = {
             label: "release_1",
             id: 1
