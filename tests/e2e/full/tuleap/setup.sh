@@ -116,7 +116,7 @@ seed_data() {
 
 setup_lhs
 setup_tuleap
-/usr/share/tuleap/tools/utils/php72/run.php --modules=nginx,fpm
+/usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
 setup_database
 seed_data
 
@@ -124,7 +124,7 @@ seed_data
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set project_admin_can_choose_visibility 1
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php set-user-password admin welcome0
 
-service php72-php-fpm start
+service php73-php-fpm start
 service nginx start
 
 exec tail -f /var/log/nginx/error.log
