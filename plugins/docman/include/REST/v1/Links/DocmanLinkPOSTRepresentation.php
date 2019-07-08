@@ -44,7 +44,7 @@ class DocmanLinkPOSTRepresentation
      */
     public $status = ItemStatusMapper::ITEM_STATUS_NONE;
     /**
-     * @var string Obsolescence date {@from body} {@required false}
+     * @var string | null Obsolescence date {@from body} {@required false}
      */
     public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 }

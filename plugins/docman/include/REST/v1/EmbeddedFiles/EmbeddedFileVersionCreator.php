@@ -69,7 +69,7 @@ class EmbeddedFileVersionCreator
         DocmanEmbeddedFileVersionPOSTRepresentation $representation,
         \DateTimeImmutable $current_time,
         int $status,
-        int $obsolesence_date,
+        ?int $obsolesence_date,
         string $title,
         ?string $description
     ): void {

@@ -1731,7 +1731,7 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 
         $obsolescence_date_string = $obsolescence_date_metadata['value'];
 
-        $this->assertEquals($obsolescence_date_string, '0');
+        $this->assertEquals($obsolescence_date_string, null);
     }
 
     /**

@@ -105,11 +105,11 @@ class MetadataRepresentationBuilder
         }
 
         if ($metadata_type === PLUGIN_DOCMAN_METADATA_TYPE_DATE) {
-            if ($value) {
+            if ($value !== 0 && $value !== '0') {
                 $date = JsonCast::toDate($value);
                 return ['value' => $date, 'post_processed_value' => $date, 'list_value' => null];
             }
-            return ['value' => (string) $value, 'post_processed_value' => (string) $value, 'list_value' => null];
+            return ['value' => null, 'post_processed_value' => null, 'list_value' => null];
         }
 
         if ($metadata->getLabel() === Docman_MetadataFactory::HARDCODED_METADATA_OWNER_LABEL) {

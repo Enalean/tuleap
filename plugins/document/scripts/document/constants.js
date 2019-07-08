@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,7 @@ export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";
 
 export const ITEM_STATUS_NONE = "none";
 
-export const OBSOLESCENCE_DATE_NONE = "0";
+export const OBSOLESCENCE_DATE_NONE = null;
 
 export const APPROVAL_NOT_YET = "Not yet";
 export const APPROVAL_APPROVED = "Approved";

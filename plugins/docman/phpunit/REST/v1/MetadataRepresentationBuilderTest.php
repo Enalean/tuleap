@@ -149,6 +149,48 @@ class MetadataRepresentationBuilderTest extends TestCase
         $this->assertEquals([$expected_representation], $representation);
     }
 
+    /**
+     * @testWith [0]
+     *           ["0"]
+     */
+    public function testMetadataWithDatePropertyButWithoutActualValueIsCorrectlyBuilt($value) : void
+    {
+        $item = Mockery::mock(\Docman_Item::class);
+
+        $factory = Mockery::mock(Docman_MetadataFactory::class);
+        $builder = new MetadataRepresentationBuilder(
+            $factory,
+            Mockery::mock(Codendi_HTMLPurifier::class),
+            Mockery::mock(UserHelper::class)
+        );
+
+        $date_metadata = Mockery::mock(Docman_Metadata::class);
+        $date_metadata->shouldReceive('getValue')->andReturn($value);
+        $date_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
+        $date_metadata->shouldReceive('getName')->andReturn('date metadata name');
+        $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $date_metadata->shouldReceive('isRequired')->andReturn(false);
+        $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
+
+        $factory->shouldReceive('appendItemMetadataList');
+
+        $item->shouldReceive('getMetadata')->andReturn([$date_metadata]);
+
+        $representation          = $builder->build($item);
+        $expected_representation = new MetadataRepresentation(
+            'date metadata name',
+            'date',
+            false,
+            null,
+            null,
+            null,
+            false,
+            'date metadata label'
+        );
+
+        $this->assertEquals([$expected_representation], $representation);
+    }
+
     public function testMetadataOwnerPropertyIsCorrectlyBuilt() : void
     {
         $item = Mockery::mock(\Docman_Item::class);

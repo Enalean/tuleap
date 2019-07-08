@@ -64,7 +64,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
     });
     describe(`List type metadata `, () => {
         it(`Given a list value with several value
-             Then it displays the list value in a ul balise`, () => {
+             Then it displays the list value in a ul tag`, () => {
             const metadata_list = {
                 id: 100,
                 name: "original name",
@@ -125,6 +125,21 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             expect(wrapper.text()).not.toEqual("Permanent");
             expect(wrapper.text()).not.toEqual(metadata_date.value);
         });
+        it(`Given a date without value
+        Then it displays it as empty`, () => {
+            const metadata_date = {
+                id: 100,
+                name: "original date",
+                type: "date",
+                list_value: null,
+                value: null,
+                post_processed_value: null
+            };
+
+            const wrapper = metadata_factory(metadata_date);
+            const displayed_metadata = wrapper.find("[id=document-original-date]");
+            expect(displayed_metadata.text()).toEqual("Empty");
+        });
         it(`Given an obsolescence date
         Then it displays the formatted date like a regular date type metadata`, () => {
             const metadata_date = {
@@ -147,6 +162,21 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             expect(wrapper.text()).not.toEqual("Empty");
             expect(wrapper.text()).not.toEqual("Permanent");
             expect(wrapper.text()).not.toEqual(metadata_date.value);
+        });
+        it(`Given an obsolescence date without value
+        Then it displays it as permanent`, () => {
+            const metadata_date = {
+                id: 100,
+                name: "Obsolescence Date",
+                type: "date",
+                list_value: null,
+                value: null,
+                post_processed_value: null
+            };
+
+            const wrapper = metadata_factory(metadata_date);
+            const displayed_metadata = wrapper.find("[id=document-obsolescence-date]");
+            expect(displayed_metadata.text()).toEqual("Permanent");
         });
         describe("Metadata simple string value", () => {
             it(`Given text type value

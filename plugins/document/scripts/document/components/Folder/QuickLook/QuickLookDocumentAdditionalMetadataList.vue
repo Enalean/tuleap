@@ -43,7 +43,7 @@
                 Empty
             </span>
             <span class="document-quick-look-property-empty"
-                  v-else-if=" has_obsolescence_date_metadata_unlimited_validity" v-translate>
+                  v-else-if="has_obsolescence_date_metadata_unlimited_validity" v-translate>
                 Permanent
             </span>
             <template v-else>
@@ -104,7 +104,7 @@ export default {
         has_obsolescence_date_metadata_unlimited_validity() {
             return (
                 this.metadata.name === this.$gettext("Obsolescence Date") &&
-                this.metadata.value === "0"
+                this.metadata.value === null
             );
         }
     },
