@@ -29,6 +29,8 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
@@ -47,13 +49,14 @@ class PlanningResource extends AuthenticatedResource {
 
     public function __construct()
     {
-        $artifact_factory = \Tracker_ArtifactFactory::instance();
-        $status_counter   = new AgileDashboard_Milestone_MilestoneStatusCounter(
+        $artifact_factory        = \Tracker_ArtifactFactory::instance();
+        $status_counter          = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
             $artifact_factory
         );
-        $planning_factory = PlanningFactory::build();
+        $planning_factory        = PlanningFactory::build();
+        $form_element_factory    = Tracker_FormElementFactory::instance();
         $this->milestone_factory = new \Planning_MilestoneFactory(
             $planning_factory,
             $artifact_factory,
@@ -64,7 +67,8 @@ class PlanningResource extends AuthenticatedResource {
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
             )
         );
     }

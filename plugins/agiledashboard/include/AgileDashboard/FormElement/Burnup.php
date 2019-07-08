@@ -50,6 +50,8 @@ use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
@@ -430,10 +432,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getConfigurationValueRetriever()
     {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         return new ChartConfigurationValueRetriever(
             $this->getConfigurationFieldRetriever(),
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
             ),
             $this->getLogger()
         );

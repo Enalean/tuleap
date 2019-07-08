@@ -28,6 +28,8 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\BacklogRequiredTrackerCollectionFormatter;
@@ -248,6 +250,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function detailsChartPresentersRetriever(DetailsChartPresentersRetriever $event)
     {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         $builder = new VelocityRepresentationBuilder(
             new SemanticVelocityFactory(
                 new BacklogRequiredTrackerCollectionFormatter()
@@ -259,7 +263,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             new Planning_MilestoneFactory(
                 PlanningFactory::build(),
                 Tracker_ArtifactFactory::instance(),
-                Tracker_FormElementFactory::instance(),
+                $form_element_factory,
                 TrackerFactory::instance(),
                 new AgileDashboard_Milestone_MilestoneStatusCounter(
                     new AgileDashboard_BacklogItemDao(),
@@ -273,7 +277,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                     PlanningFactory::build()
                 ),
                 new TimeframeBuilder(
-                    Tracker_FormElementFactory::instance()
+                    $form_element_factory,
+                    new SemanticTimeframeBuilder(
+                        new SemanticTimeframeDao(),
+                        $form_element_factory
+                    )
                 )
             )
         );

@@ -47,6 +47,8 @@ use AgileDashboard_Milestone_MilestoneRepresentationBuilder;
 use EventManager;
 use AgileDashboard_Milestone_MilestoneDao;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\AgileDashboard\REST\QueryToPeriodMilestoneRepresentationBuilderConverter;
 
@@ -108,7 +110,8 @@ class ProjectMilestonesResource {
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $this->tracker_form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory)
             )
         );
 

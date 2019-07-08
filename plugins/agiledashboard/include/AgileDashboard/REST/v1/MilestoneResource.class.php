@@ -62,6 +62,8 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use URLVerification;
 use UserManager;
@@ -143,7 +145,8 @@ class MilestoneResource extends AuthenticatedResource {
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_for_mono_milestone_checker,
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $this->tracker_form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory)
             )
         );
 
