@@ -28,6 +28,7 @@ use Docman_ApprovalTableWikiDao;
 use ProjectUGroup;
 use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 use Tuleap\Docman\Test\rest\Helper\DocmanEmbeddedDataBuild;
+use Tuleap\Docman\Test\rest\Helper\DocmanEmptyDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanFileDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanLinkDataBuild;
 use Tuleap\Docman\Test\rest\Helper\DocmanWikiDataBuild;
@@ -55,13 +56,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+--------------+--------+-------+---------+
-     *    |           |              |        |       |         |
-     *    +           +              +        +       +         +
-     * folder 1   Trash (Folder)   File   Embedded   Link      Wiki
-     *    +           +              +        +       +         +
-     *    |           |              |        |       |         |
-     *   ...         ...            ...      ...     ...       ...
+     *    +-----+-----+--------------+--------+-------+---------+---------+
+     *    |           |              |        |       |         |         |
+     *    +           +              +        +       +         +         +
+     * folder 1   Trash (Folder)   File   Embedded   Link      Wiki      Empty
+     *    +           +              +        +       +         +         +
+     *    |           |              |        |       |         |         |
+     *   ...         ...            ...      ...     ...       ...       ...
      *
      * * HM => Hardcoded Metadata
      */
@@ -82,6 +83,9 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $wiki_builder = new DocmanWikiDataBuild($common_builder);
         $wiki_builder->createWikiWithContent($docman_root);
+
+        $empty_builder = new DocmanEmptyDataBuild($common_builder);
+        $empty_builder->createEmptyWithContent($docman_root);
 
         $this->createFolder1WithSubContent($docman_root);
         $this->createFolderContentToDelete($docman_root);
@@ -246,23 +250,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
-        $empty_doc_L_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "old empty doc L",
-            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
-        );
-
         $dao = new \Docman_LockDao();
 
         $dao->addLock(
             $folder_L_id,
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            time()
-        );
-
-        $dao->addLock(
-            $empty_doc_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
         );
@@ -273,14 +264,5 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             "another old folder",
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-
-        $another_empty_doc_id = $this->createItem(
-            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
-            $folder_delete_id,
-            "another old empty doc",
-            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
-        );
-
-        $this->addReadPermissionOnItem($another_empty_doc_id, self::REGULAR_USER_ID);
     }
 }
