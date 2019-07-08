@@ -231,7 +231,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics($field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
         $fields = $this->getFields();
         foreach ($fields as $f) {
             if ($f->getId() == $field->getId()) {

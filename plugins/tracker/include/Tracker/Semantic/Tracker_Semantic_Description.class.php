@@ -289,7 +289,7 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics($field) {
+    public function isUsedInSemantics(Tracker_FormElement_Field $field) {
         return $this->getFieldId() == $field->getId();
     }
 
