@@ -56,10 +56,10 @@ class DocmanWikiDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+------------------+
-     *      |                  |         |                  |
-     *      +                  +         +                  +
-     * PATCH Wiki    DELETE Wiki    LOCK Wiki         POST Wiki
+     *      +------------------+---------+------------------+------------------+
+     *      |                  |         |                  |                  |
+     *      +                  +         +                  +                  +
+     * PATCH Wiki    DELETE Wiki    LOCK Wiki         POST Wiki            PUT HM WIKI
      *
      * HM => Hardcoded Metadata
      *
@@ -78,6 +78,7 @@ class DocmanWikiDataBuild
         $this->createDeleteFolder($folder_id);
         $this->createLockFolder($folder_id);
         $this->createPostFolder($folder_id);
+        $this->createPutFolder($folder_id);
     }
 
     /**
@@ -246,6 +247,37 @@ class DocmanWikiDataBuild
         );
 
         $this->addApprovalTableForWiki($wiki_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        PUT HM Wiki
+     *                           +
+     *                           |
+     *                           +
+     *                        PUT W
+     *
+     * F OD => The file will be updated with a new obsolescence date metadata
+     * F Status => The File will be updated with a new status metadata
+     * F O => The file will be updated with a new unexcisting owner
+     */
+    private function createPutFolder(int $folder_id): void
+    {
+        $folder_put_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PUT HM Wiki',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_put_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT W',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
     }
 
     private function addApprovalTableForWiki(int $item_id, int $status): void

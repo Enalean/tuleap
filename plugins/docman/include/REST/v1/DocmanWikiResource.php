@@ -32,11 +32,15 @@ use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionPOSTRepresentation;
@@ -235,6 +239,68 @@ class DocmanWikiResource extends AuthenticatedResource
         Header::allowOptionsPost();
     }
 
+
+    /**
+     * Update the wiki metadata
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url    PUT {id}/metadata
+     * @access hybrid
+     *
+     * @param int                       $id             Id of the wiki
+     * @param PUTMetadataRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws RestException 404
+     */
+    public function putMetadata(
+        int $id,
+        PUTMetadataRepresentation $representation
+    ): void {
+
+        $this->checkAccess();
+        $this->setMetadataHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $this->addAllEvent($project);
+
+        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator->updateDocumentMetadata(
+            $representation,
+            $item,
+            new \DateTimeImmutable(),
+            $current_user
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    private function setMetadataHeaders()
+    {
+        Header::allowOptionsPut();
+    }
+
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
@@ -387,6 +453,19 @@ class DocmanWikiResource extends AuthenticatedResource
             \EventManager::instance(),
             $updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+    }
+
+    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
+    {
+        $user_manager = \UserManager::instance();
+        return new MetadataUpdator(
+            new \Docman_ItemFactory(),
+            $this->getItemStatusMapper($project),
+            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
+            $user_manager,
+            new OwnerRetriever($user_manager),
+            new MetadataEventProcessor($this->event_manager)
         );
     }
 
