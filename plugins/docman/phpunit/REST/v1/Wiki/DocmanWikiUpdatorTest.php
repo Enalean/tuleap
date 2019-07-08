@@ -35,7 +35,7 @@ use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiUpdator;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 
 class DocmanWikiUpdatorTest extends TestCase
@@ -75,7 +75,7 @@ class DocmanWikiUpdatorTest extends TestCase
      */
     private $docman_permissions_manager;
     /**
-     * @var DocmanWikiUpdator
+     * @var DocmanWikiVersionCreator
      */
     public $wiki_updator;
 
@@ -92,15 +92,12 @@ class DocmanWikiUpdatorTest extends TestCase
         $this->date_retriever             = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
         $this->docman_permissions_manager = Mockery::mock(\Docman_PermissionsManager::class);
 
-        $this->wiki_updator = new DocmanWikiUpdator(
+        $this->wiki_updator = new DocmanWikiVersionCreator(
             $this->version_factory,
             $this->docman_item_factory,
             $this->event_manager,
             $this->updator,
-            $this->transaction_executor,
-            $this->status_mapper,
-            $this->date_retriever,
-            $this->docman_permissions_manager
+            $this->transaction_executor
         );
     }
 
@@ -111,19 +108,11 @@ class DocmanWikiUpdatorTest extends TestCase
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn(101);
 
-        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-
         $date                        = new \DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
         $date                        = $date->setTime(0, 0, 0);
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
-
-        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->with('rejected')->andReturn(103);
-
-        $this->date_retriever->shouldReceive('getTimeStampOfDate')->withArgs(
-            [$obsolescence_date_formatted, $date]
-        )->andReturn($obsolescence_date->getTimestamp());
 
         $representation                             = new DocmanWikiPATCHRepresentation();
         $representation->should_lock_file           = false;
@@ -134,34 +123,6 @@ class DocmanWikiUpdatorTest extends TestCase
 
         $this->transaction_executor->shouldReceive('execute')->once();
 
-        $this->wiki_updator->updateWiki($item, $user, $representation, $date);
-    }
-
-    public function testItThrowsAnExceptionWhenItemIsLocked(): void
-    {
-        $item = Mockery::mock(Docman_Wiki::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-
-        $this->docman_permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
-
-        $date                        = new \DateTimeImmutable();
-        $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
-        $date                        = $date->setTime(0, 0, 0);
-        $obsolescence_date           = $date->modify('+1 day');
-        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
-
-        $representation                             = new DocmanWikiPATCHRepresentation();
-        $representation->should_lock_file           = false;
-        $representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
-        $representation->wiki_properties->page_name = 'wiki name';
-        $representation->status                     = 'rejected';
-        $representation->obsolescence_date          = $obsolescence_date_formatted;
-
-        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
-        $this->transaction_executor->shouldReceive('execute')->never();
-
-        $this->wiki_updator->updateWiki($item, $user, $representation, $date);
+        $this->wiki_updator->createWikiVersion($item, $user, $representation, 102, $date->getTimestamp(), 'title', '');
     }
 }

@@ -22,25 +22,25 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
-use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-
-class DocmanWikiPATCHRepresentation extends DocmanWikiVersionPOSTRepresentation
+class DocmanWikiVersionPOSTRepresentation
 {
     /**
-     * @var string Title of the wiki {@from body} {@required true} {@type string}
+     * @var string Title of version {@from body} {@required false}
      */
-    public $title = '';
+    public $version_title = '';
+
     /**
-     * @var string Description of the wiki {@from body} {@required false} {@type string}
+     * @var string Description of changes {@from body} {@required false}
      */
-    public $description;
+    public $change_log = '';
+
     /**
-     * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     * @var WikiPropertiesPOSTPATCHRepresentation Link properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation} {@required true}
      */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public $wiki_properties;
+
     /**
-     * @var string Obsolescence date {@from body} {@required false}
+     * @var bool Lock file while updating {@from body} {@required true} {@type bool}
      */
-    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+    public $should_lock_file;
 }

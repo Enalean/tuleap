@@ -34,7 +34,7 @@ import {
     getProject,
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
-    patchWiki,
+    postWiki,
     postLinkVersion,
     deleteFile,
     deleteLink,
@@ -298,7 +298,7 @@ export const createNewWikiVersionFromModal = async (
     [item, new_wiki_page, version_title, changelog, is_file_locked]
 ) => {
     try {
-        await patchWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
+        await postWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
         Vue.set(item, "updated", true);
     } catch (exception) {
         return handleErrorsForModal(context, exception);

@@ -27,7 +27,7 @@ export {
     getParents,
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
-    patchWiki,
+    postWiki,
     postLinkVersion,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
@@ -214,8 +214,8 @@ function postEmbeddedFile(
     });
 }
 
-function patchWiki(item, page_name, version_title, change_log, should_lock_file) {
-    return patch(`/api/docman_wikis/${encodeURIComponent(item.id)}`, {
+function postWiki(item, page_name, version_title, change_log, should_lock_file) {
+    return post(`/api/docman_wikis/${encodeURIComponent(item.id)}/version`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -223,8 +223,6 @@ function patchWiki(item, page_name, version_title, change_log, should_lock_file)
             wiki_properties: {
                 page_name
             },
-            title: item.title,
-            description: item.description,
             should_lock_file
         })
     });

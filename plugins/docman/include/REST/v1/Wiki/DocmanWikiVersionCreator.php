@@ -25,11 +25,8 @@ namespace Tuleap\Docman\REST\v1\Wiki;
 use Docman_ItemFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanWikiUpdator
+class DocmanWikiVersionCreator
 {
     /**
      * @var \Docman_VersionFactory
@@ -51,76 +48,44 @@ class DocmanWikiUpdator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
-    /**
-     * @var ItemStatusMapper
-     */
-    private $status_mapper;
-    /**
-     * @var HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $date_retriever;
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $docman_permissions_manager;
 
     public function __construct(
         \Docman_VersionFactory $version_factory,
         Docman_ItemFactory $docman_item_factory,
         \EventManager $event_manager,
         DocmanItemUpdator $updator,
-        DBTransactionExecutor $transaction_executor,
-        ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
-        \Docman_PermissionsManager $docman_permissions_manager
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->version_factory            = $version_factory;
         $this->docman_item_factory        = $docman_item_factory;
         $this->event_manager              = $event_manager;
         $this->updator                    = $updator;
         $this->transaction_executor       = $transaction_executor;
-        $this->status_mapper              = $status_mapper;
-        $this->date_retriever             = $date_retriever;
-        $this->docman_permissions_manager = $docman_permissions_manager;
     }
 
-    /**
-     * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
-     */
-    public function updateWiki(
+    public function createWikiVersion(
         \Docman_Wiki $item,
         \PFUser $current_user,
-        DocmanWikiPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
+        DocmanWikiVersionPOSTRepresentation $representation,
+        int $status_id,
+        int $obsolescence_date_timestamp,
+        string $title,
+        ?string $description
+
     ): void {
-        if ($this->docman_permissions_manager->_itemIsLockedForUser($current_user, (int)$item->getId())) {
-            throw new ExceptionItemIsLockedByAnotherUser();
-        }
-
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
-            $representation->status
-        );
-
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
-            $representation->obsolescence_date,
-            $current_time
-        );
-
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp) {
+            function() use ($item, $current_user, $representation, $status_id, $obsolescence_date_timestamp, $title, $description) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
                 $new_wiki_version_row = [
                     'id'                => $item->getId(),
                     'user_id'           => $current_user->getId(),
                     'wiki_page'         => $representation->wiki_properties->page_name,
-                    'title'             => $representation->title,
-                    'description'       => $representation->description,
+                    'title'             => $title,
+                    'description'       => $description,
                     'status'            => $status_id,
-                    'obsolescence_date' => $obsolescence_date_time_stamp
+                    'obsolescence_date' => $obsolescence_date_timestamp
                 ];
-
 
                 $this->docman_item_factory->update($new_wiki_version_row);
 

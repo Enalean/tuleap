@@ -56,27 +56,28 @@ class DocmanWikiDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+
-     *      |                  |         |
-     *      +                  +         +
-     * PATCH Wiki    DELETE Wiki    LOCK Wiki
+     *      +------------------+---------+------------------+
+     *      |                  |         |                  |
+     *      +                  +         +                  +
+     * PATCH Wiki    DELETE Wiki    LOCK Wiki         POST Wiki
      *
      * HM => Hardcoded Metadata
      *
      */
     public function createWikiWithContent($docman_root): void
     {
-        $folder_link_id = $this->common_builder->createItemWithVersion(
+        $folder_id = $this->common_builder->createItemWithVersion(
             $this->docman_user_id,
             $docman_root->getId(),
             'Wiki',
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
-        $this->common_builder->addWritePermissionOnItem($folder_link_id, ProjectUGroup::PROJECT_MEMBERS);
+        $this->common_builder->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createPatchFolder($folder_link_id);
-        $this->createDeleteFolder($folder_link_id);
-        $this->createLockFolder($folder_link_id);
+        $this->createPatchFolder($folder_id);
+        $this->createDeleteFolder($folder_id);
+        $this->createLockFolder($folder_id);
+        $this->createPostFolder($folder_id);
     }
 
     /**
@@ -202,6 +203,49 @@ class DocmanWikiDataBuild
             'LOCK W',
             PLUGIN_DOCMAN_ITEM_TYPE_WIKI
         );
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *              POST Wiki
+     *                  +
+     *                  |
+     *                  +
+     *    +-------------+
+     *    |             |
+     *    +             +
+     *    POST W     POST AT W
+     *
+     *
+     * (RL)   => Docman Regular user Lock on this item
+     * (AL)   => Docman Admin Lock on this item
+     */
+    private function createPostFolder(int $folder_id): void
+    {
+        $folder_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'POST Wiki',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItem(
+            $this->docman_user_id,
+            $folder_id,
+            'POST W',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $wiki_id = $this->common_builder->createItem(
+            $this->docman_user_id,
+            $folder_id,
+            'POST AT W',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addApprovalTableForWiki($wiki_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
     }
 
     private function addApprovalTableForWiki(int $item_id, int $status): void

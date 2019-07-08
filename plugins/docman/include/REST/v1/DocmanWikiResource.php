@@ -26,20 +26,20 @@ use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
-use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiUpdator;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionPOSTRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -84,7 +84,8 @@ class DocmanWikiResource extends AuthenticatedResource
      * Create a new version of an existing wiki document
      *
      * <pre>
-     * /!\ This route is under construction and will be subject to changes
+     * /!\ This route is <strong> deprecated </strong> <br/>
+     * /!\ To create a wiki file version, please use the {id}/version route instead !
      * </pre>
      *
      * <br>
@@ -106,55 +107,29 @@ class DocmanWikiResource extends AuthenticatedResource
         $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-
-        /** @var \Docman_Wiki $item */
-        $item = $item_request->getItem();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $project = $item_request->getProject();
-        $validator = $this->getValidator($project, $current_user, $item);
-        $item->accept($validator, []);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-
-        $builder             = new DocmanItemUpdatorBuilder();
-        $docman_item_updator = $builder->build($this->event_manager);
-
-        $updator = $this->getDocmanWikiUpdator($docman_item_updator, $project);
-
-        if ($docman_approval_table_retriever->hasApprovalTable($item)) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'It is not possible to update a wiki page with approval table.')
-            );
-        }
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
 
         try {
-            $updator->updateWiki(
-                $item,
-                $current_user,
-                $representation,
+            $status_id                    = $this->getItemStatusMapper($project)->getItemStatusIdFromItemStatusString(
+                $representation->status
+            );
+            $obsolescence_date_time_stamp = $this->getHardcodedMetadataObsolescenceDateRetriever($project)->getTimeStampOfDate(
+                $representation->obsolescence_date,
                 new \DateTimeImmutable()
             );
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
         } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
-            );
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
+
+        $this->createNewWikiVersion(
+            $representation,
+            $item_request,
+            $status_id,
+            $obsolescence_date_time_stamp,
+            $representation->title,
+            $representation->description
+        );
     }
 
     /**
@@ -203,6 +178,63 @@ class DocmanWikiResource extends AuthenticatedResource
         $this->event_manager->processEvent('send_notifications', []);
     }
 
+    /**
+     * Create a version of a wiki
+     *
+     * Create a version of an existing wiki document
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url    POST {id}/version
+     * @access hybrid
+     *
+     * @param int                                 $id             Id of the file
+     * @param DocmanWikiVersionPOSTRepresentation $representation {@from body}
+     *
+     * @status 200
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 409
+     * @throws RestException 501
+     */
+
+    public function postVersion(
+        int $id,
+        DocmanWikiVersionPOSTRepresentation $representation
+    ) {
+        $this->checkAccess();
+        $this->setVersionHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $this->addAllEvent($item_request->getProject());
+
+        $item = $item_request->getItem();
+
+        $this->createNewWikiVersion(
+            $representation,
+            $item_request,
+            (int)$item->getStatus(),
+            (int)$item->getObsolescenceDate(),
+            (string)$item->getTitle(),
+            (string)$item->getDescription()
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/version
+     */
+    public function optionsNewVersion(int $id): void
+    {
+        $this->setVersionHeaders();
+    }
+
+    private function setVersionHeaders(): void
+    {
+        Header::allowOptionsPost();
+    }
+
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
@@ -211,27 +243,6 @@ class DocmanWikiResource extends AuthenticatedResource
     private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
-    }
-
-    private function getDocmanWikiUpdator(DocmanItemUpdator $docman_item_updator, Project $project): DocmanWikiUpdator
-    {
-
-        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
-        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
-            $docman_setting_bo
-        );
-        return new DocmanWikiUpdator(
-            new \Docman_VersionFactory(),
-            new \Docman_ItemFactory(),
-            $this->event_manager,
-            $docman_item_updator,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper($docman_setting_bo),
-            new HardcodedMetadataObsolescenceDateRetriever(
-                $hardcoded_metadata_obsolescence_date_checker
-            ),
-            $this->getPermissionManager($project)
-        );
     }
 
     /**
@@ -340,5 +351,78 @@ class DocmanWikiResource extends AuthenticatedResource
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
         return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Wiki::class);
+    }
+
+    /**
+     * @param \Project $project
+     */
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+    }
+
+    private function getItemStatusMapper(\Project $project): ItemStatusMapper
+    {
+        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
+    }
+
+    private function getHardcodedMetadataObsolescenceDateRetriever(\Project $project): HardcodedMetadataObsolescenceDateRetriever
+    {
+        return new HardcodedMetadataObsolescenceDateRetriever(
+            new HardcodedMetdataObsolescenceDateChecker(
+                new Docman_SettingsBo($project->getID())
+            )
+        );
+    }
+
+    private function getWikiVersionCreator(): DocmanWikiVersionCreator
+    {
+        $updator = (new DocmanItemUpdatorBuilder())->build($this->event_manager);
+
+        return new DocmanWikiVersionCreator(
+            new \Docman_VersionFactory(),
+            new \Docman_ItemFactory(),
+            \EventManager::instance(),
+            $updator,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+    }
+
+    private function createNewWikiVersion(
+        DocmanWikiVersionPOSTRepresentation $representation,
+        DocmanItemsRequest $item_request,
+        int $status,
+        int $obsolesence_date,
+        string $title,
+        ?string $description
+    ): void {
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $validator = DocumentBeforeVersionCreationValidatorVisitorBuilder::build($project);
+        $item->accept(
+            $validator,
+            [
+                'user'          => $current_user,
+                'document_type' => \Docman_Wiki::class,
+                'title'         => $title,
+                'project'       => $project
+            ]
+        );
+        /** @var \Docman_Wiki $item */
+
+        $docman_item_version_creator = $this->getWikiVersionCreator();
+        $docman_item_version_creator->createWikiVersion(
+            $item,
+            $current_user,
+            $representation,
+            $status,
+            $obsolesence_date,
+            $title,
+            $description
+        );
     }
 }

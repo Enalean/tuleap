@@ -40,7 +40,8 @@ final class DocumentBeforeVersionCreationValidatorVisitorBuilder
         return new DocumentBeforeVersionCreationValidatorVisitor(
             Docman_PermissionsManager::instance($project->getGroupId()),
             $approval_check,
-            new \Docman_ItemFactory()
+            new \Docman_ItemFactory(),
+            $docman_approval_table_retriever
         );
     }
 }
