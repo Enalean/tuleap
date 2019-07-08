@@ -22,6 +22,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_Item;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
@@ -99,13 +100,15 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         );
     }
 
-    public function testItReturnsRepresentationOfItemUserCanSee()
+    public function testItReturnsRepresentationOfItemUserCanSee() : void
     {
         $item = Mockery::mock(Docman_Item::class);
         $item->shouldReceive('getId')->andReturn(3);
         $item->shouldReceive('getGroupId')->andReturn(101);
-        $user = Mockery::mock(PFUser::class);
-
+        $user          = Mockery::mock(PFUser::class);
+        $html_purifier = Mockery::mock(Codendi_HTMLPurifier::class);
+        $html_purifier->shouldReceive('purifyTextWithReferences')->atLeast()->once()
+            ->andReturn('description with processed ref');
 
         $dar_item_1 = [
             'item_id'     => 1,
@@ -162,6 +165,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation1     = new ItemRepresentation();
         $representation1->build(
             $docman_item1,
+            $html_purifier,
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
@@ -208,6 +212,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation2 = new ItemRepresentation();
         $representation2->build(
             $docman_item3,
+            $html_purifier,
             $user_representation,
             true,
             ItemRepresentation::TYPE_FILE,
@@ -256,7 +261,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->assertEquals($expected_representation, $representation);
     }
 
-    public function testItReturnsRepresentationOfParentsItems()
+    public function testItReturnsRepresentationOfParentsItems() : void
     {
         $dar_folder_1    = [
             'item_id'     => 2,
@@ -296,11 +301,16 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$item->getParentId()])->andReturn($docman_folder2);
         $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$docman_folder2->getParentId()])->andReturn($docman_folder1);
 
+        $html_purifier = Mockery::mock(Codendi_HTMLPurifier::class);
+        $html_purifier->shouldReceive('purifyTextWithReferences')->atLeast()->once()
+            ->andReturn('description with processed ref');
+
         $project         = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
         $representation1 = new ItemRepresentation();
         $representation1->build(
             $docman_folder1,
+            $html_purifier,
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
@@ -324,6 +334,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation2 = new ItemRepresentation();
         $representation2->build(
             $docman_folder2,
+            $html_purifier,
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,

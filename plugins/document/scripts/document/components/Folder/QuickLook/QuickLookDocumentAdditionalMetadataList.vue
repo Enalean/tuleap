@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -47,7 +47,7 @@
                 Permanent
             </span>
             <template v-else>
-                {{ metadata.value }}
+                <div v-dompurify-html="metadata.post_processed_value"></div>
             </template>
         </p>
     </div>

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
@@ -52,6 +53,11 @@ class ItemRepresentation
      * @var string {@type string}
      */
     public $description;
+
+    /**
+     * @var string
+     */
+    public $post_processed_description;
 
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
@@ -138,6 +144,7 @@ class ItemRepresentation
 
     public function build(
         \Docman_Item $item,
+        Codendi_HTMLPurifier $purifier,
         MinimalUserRepresentation $owner,
         $user_can_write,
         $type,
@@ -153,25 +160,26 @@ class ItemRepresentation
         ?LinkPropertiesRepresentation $link_properties = null,
         ?WikiPropertiesRepresentation $wiki_properties = null
     ) {
-        $this->id                        = JsonCast::toInt($item->getId());
-        $this->title                     = $item->getTitle();
-        $this->description               = $item->getDescription();
-        $this->owner                     = $owner;
-        $this->last_update_date          = JsonCast::toDate($item->getUpdateDate());
-        $this->creation_date             = JsonCast::toDate($item->getCreateDate());
-        $this->user_can_write            = $user_can_write;
-        $this->can_user_manage           = $can_user_manage;
-        $this->type                      = $type;
-        $this->file_properties           = $file_properties;
-        $this->embedded_file_properties  = $embedded_file_properties;
-        $this->link_properties           = $link_properties;
-        $this->wiki_properties           = $wiki_properties;
-        $this->is_expanded               = $is_expanded;
-        $this->approval_table            = $approval_table;
-        $this->lock_info                 = $lock_info;
-        $this->metadata                  = $metadata_representations;
-        $this->has_approval_table        = $has_approval_table;
-        $this->is_approval_table_enabled = $is_approval_table_enabled;
+        $this->id                         = JsonCast::toInt($item->getId());
+        $this->title                      = $item->getTitle();
+        $this->description                = $item->getDescription();
+        $this->post_processed_description = $purifier->purifyTextWithReferences($this->description, $item->getGroupId());
+        $this->owner                      = $owner;
+        $this->last_update_date           = JsonCast::toDate($item->getUpdateDate());
+        $this->creation_date              = JsonCast::toDate($item->getCreateDate());
+        $this->user_can_write             = $user_can_write;
+        $this->can_user_manage            = $can_user_manage;
+        $this->type                       = $type;
+        $this->file_properties            = $file_properties;
+        $this->embedded_file_properties   = $embedded_file_properties;
+        $this->link_properties            = $link_properties;
+        $this->wiki_properties            = $wiki_properties;
+        $this->is_expanded                = $is_expanded;
+        $this->approval_table             = $approval_table;
+        $this->lock_info                  = $lock_info;
+        $this->metadata                   = $metadata_representations;
+        $this->has_approval_table         = $has_approval_table;
+        $this->is_approval_table_enabled  = $is_approval_table_enabled;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

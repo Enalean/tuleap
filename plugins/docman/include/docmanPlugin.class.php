@@ -1259,6 +1259,8 @@ class DocmanPlugin extends Plugin
             return;
         }
 
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
         $item_representation_builder = new ItemRepresentationBuilder(
             new Docman_ItemDao(),
             $this->getUserManager(),
@@ -1268,13 +1270,14 @@ class DocmanPlugin extends Plugin
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new Docman_MetadataFactory($project->getID()),
-                Codendi_HTMLPurifier::instance(),
+                $html_purifier,
                 UserHelper::instance()
             ),
             new ApprovalTableRetriever(
                 new Docman_ApprovalTableFactoriesFactory(),
                 new Docman_VersionFactory()
-            )
+            ),
+            $html_purifier
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Project;
@@ -67,6 +68,10 @@ class ItemRepresentationBuilder
      * @var ApprovalTableRetriever
      */
     private $approval_table_retriever;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $purifier;
 
     public function __construct(
         Docman_ItemDao $dao,
@@ -76,7 +81,8 @@ class ItemRepresentationBuilder
         \Docman_LockFactory $lock_factory,
         ApprovalTableStateMapper $approval_table_state_mapper,
         MetadataRepresentationBuilder $metadata_representation_builder,
-        ApprovalTableRetriever $approval_table_retriever
+        ApprovalTableRetriever $approval_table_retriever,
+        Codendi_HTMLPurifier $purifier
     ) {
         $this->dao                             = $dao;
         $this->user_manager                    = $user_manager;
@@ -86,6 +92,7 @@ class ItemRepresentationBuilder
         $this->approval_table_state_mapper     = $approval_table_state_mapper;
         $this->metadata_representation_builder = $metadata_representation_builder;
         $this->approval_table_retriever        = $approval_table_retriever;
+        $this->purifier                        = $purifier;
     }
 
     /**
@@ -148,6 +155,7 @@ class ItemRepresentationBuilder
 
         $item_representation->build(
             $item,
+            $this->purifier,
             $owner_representation,
             $user_can_write,
             $type,
