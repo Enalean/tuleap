@@ -30,6 +30,8 @@ class ItemCanHaveSubItemsChecker
 {
     /**
      * @throws I18NRestException
+     *
+     * @psalm-assert \Docman_Folder $item
      */
     public function checkItemCanHaveSubitems(\Docman_Item $item)
     {

@@ -22,14 +22,21 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
 use Docman_Item;
+use Docman_ItemFactory;
 use Docman_PermissionsManager;
+use DocmanPlugin;
 use EventManager;
 use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
+use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanValidateRepresentationForCopy;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
@@ -307,7 +314,6 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @param int                              $id   Id of the parent folder
      * @param DocmanEmbeddedPOSTRepresentation $embeds_representation {@from body}
-     *                                               {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation}
      *
      * @url    POST {id}/embedded_files
      * @access hybrid
@@ -338,30 +344,57 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-
-        /** @var \DocmanPlugin $docman_plugin */
-        $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
-        $are_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
+        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof DocmanPlugin);
+        $docman_plugin_info   = $docman_plugin->getPluginInfo();
+        $are_embedded_allowed = $docman_plugin_info->getPropertyValueForName('embedded_are_allowed');
 
         if ($are_embedded_allowed === false) {
             throw new RestException(403, 'Embedded files are not allowed');
         }
 
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
+
         try {
-            return $docman_item_creator->createEmbedded(
-                $parent,
-                $current_user,
-                $embeds_representation,
-                new \DateTimeImmutable(),
-                $project
-            );
+            if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($embeds_representation)) {
+                $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+                return $docman_item_creator->createEmbedded(
+                    $parent,
+                    $current_user,
+                    $embeds_representation,
+                    new \DateTimeImmutable(),
+                    $project
+                );
+            }
+            if ($representation_for_copy_validation->isValidAsACopyRepresentation($embeds_representation)) {
+                $item_factory        = new Docman_ItemFactory();
+                $docman_item_copier  = new DocmanItemCopier(
+                    $item_factory,
+                    new BeforeCopyVisitor(Docman_EmbeddedFile::class, $item_factory),
+                    $this->getPermissionManager($project),
+                    new MetadataFactoryBuilder(),
+                    EventManager::instance(),
+                    $docman_plugin_info->getPropertyValueForName('docman_root')
+                );
+                return $docman_item_copier->copyItem(
+                    $parent,
+                    $current_user,
+                    $embeds_representation->copy
+                );
+            }
         } catch (Metadata\HardCodedMetadataException $e) {
             throw new I18NRestException(
                 400,
                 $e->getI18NExceptionMessage()
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create an embedded document (the properties %s are required for the creation)',
+                implode(', ', $embeds_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -462,7 +495,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         }
 
         try {
-            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
+            (new Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
         } catch (DeleteFailedException $exception) {
             throw new I18NRestException(
                 403,
@@ -480,6 +513,8 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     /**
      * @throws I18NRestException
+     *
+     * @psalm-assert \Docman_Folder $item
      */
     private function checkItemCanHaveSubitems(Docman_Item $item): void
     {
