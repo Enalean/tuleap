@@ -26,6 +26,7 @@ import "./store/actions.spec.js";
 import "./components/App.spec.js";
 import "./components/WhatsHotSection/WhatsHotSection.spec.js";
 import "./components/WhatsHotSection/ReleaseInformationDisplayer.spec.js";
+import "./components/WhatsHotSection/ReleaseDescriptionDisplayer.spec.js";
 import "./components/RoadmapSection/RoadmapSection.spec.js";
 
 import "./helpers/date-formatters.spec.js";

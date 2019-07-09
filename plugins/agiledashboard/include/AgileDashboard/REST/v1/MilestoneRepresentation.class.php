@@ -66,6 +66,8 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
         $this->artifact = new ArtifactReference();
         $this->artifact->build($milestone->getArtifact());
 
+        $this->description = $milestone->getArtifact()->getDescription();
+
         $this->start_date = null;
         if ($milestone->getStartDate()) {
             $this->start_date              = JsonCast::toDate($milestone->getStartDate());

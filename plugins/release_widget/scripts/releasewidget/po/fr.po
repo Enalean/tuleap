@@ -30,6 +30,9 @@ msgstr "Capacité : %{capacity}"
 msgid "Capacity: N/A"
 msgstr "Capacité : N/A"
 
+msgid "Go to release overview"
+msgstr "Aller au résumé de la version"
+
 msgid "Initial effort: %{initial_effort}"
 msgstr "Effort estimé : %{initial_effort}"
 

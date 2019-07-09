@@ -542,7 +542,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             return null;
         }
 
-        return $description_field_value->getContentAsText();
+        return $description_field_value->getValue();
     }
 
     public function getCachedTitle() {

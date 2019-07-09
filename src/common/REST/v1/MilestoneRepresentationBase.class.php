@@ -34,6 +34,11 @@ class MilestoneRepresentationBase {
     public $id;
 
     /**
+     * @var string
+     */
+    public $description;
+
+    /**
      * @var String
      */
     public $uri;

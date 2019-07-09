@@ -20,6 +20,7 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
@@ -33,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         silent: true
     });
+
+    Vue.use(VueDOMPurifyHTML);
 
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
