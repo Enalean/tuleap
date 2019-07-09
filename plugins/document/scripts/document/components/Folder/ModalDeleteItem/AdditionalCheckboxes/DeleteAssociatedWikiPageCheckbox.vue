@@ -28,9 +28,8 @@
                 >
                 <span v-translate>Propagate deletion to wiki service</span>
             </label>
-            <p class="tlp-text-info">
-                <i class="fa fa-exclamation-triangle"></i>
-                <span v-translate>Please note that if you check the option above, the referenced wiki page will no longer exist in the wiki service too.</span>
+            <p class="tlp-text-warning">
+                <translate>Please note that if you check this option, the referenced wiki page will no longer exist in the wiki service too.</translate>
             </p>
         </div>
         <div
@@ -38,10 +37,10 @@
             v-if="is_option_checked && wikiPageReferencers.length > 0"
             data-test="delete-associated-wiki-page-warning-message"
         >
-            {{ wiki_deletion_warning }}
+            <p>{{ wiki_deletion_warning }}</p>
             <ul>
                 <li v-for="referencer in wikiPageReferencers" v-bind:key="referencer.id">
-                    <a v-bind:href="getWikiPageUrl(referencer)" data-test="wiki-page-referencer-link">{{ referencer.path }}</a>
+                    <a v-bind:href="getWikiPageUrl(referencer)" class="wiki-page-referencer-link" data-test="wiki-page-referencer-link">{{ referencer.path }}</a>
                 </li>
             </ul>
         </div>
