@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.document-modal-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .docman-item-title-update-property {
     display: flex;
     justify-content: space-between;

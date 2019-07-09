@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" v-bind:id="ariaLabelledBy">
+        <h1 class="tlp-modal-title document-modal-title" v-bind:id="ariaLabelledBy">
             <i class="fa fa-plus tlp-modal-title-icon"></i>
             {{ modalTitle }}
         </h1>

@@ -67,7 +67,7 @@ export default {
             return "tlp-dropdown-menu-item";
         },
         icon_classes() {
-            return "fa fa-mail-forward tlp-dropdown-menu-item-icon";
+            return "fa fa-fw fa-mail-forward tlp-dropdown-menu-item-icon";
         }
     },
     methods: {
