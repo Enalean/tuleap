@@ -30,46 +30,19 @@
 # run with delay (cron) or without (CLI). This way the concurrent process check will work
 TLP_DELAY_CRON_CMD=1
 
-#
-# Tuleap root
-#
-
 # Once a minute, process Tuleap system events
 * * * * * root /usr/bin/tuleap process-system-event default
+* * * * * root /usr/bin/tuleap process-system-event statistics
 * * * * * codendiadm /usr/bin/tuleap process-system-event tv3_tv5_migration
 * * * * * codendiadm /usr/bin/tuleap process-system-event git
 * * * * * codendiadm /usr/bin/tuleap process-system-event grokmirror
-* * * * * root /usr/bin/tuleap process-system-event statistics
-
-#
-# Regularly launch a system_check event (e.g. every half-hour)
-0,30 * * * * codendiadm /usr/bin/tuleap queue-system-check
-
-#
-# run the daily statistics script just a little bit after
-# midnight so that it computes stats for the day before
-# Run at 0:30 am
-30 0 * * * root php -r 'sleep(mt_rand(0,1799));' && /usr/share/codendi/src/utils/compute_all_daily_stats.sh >/dev/null 2>&1
-
-#
-# run the weekly stats for projects. Run it on Monday morning so that
-# it computes the stats for the week before
-# Run on Monday at 1am
-0 1 * * Mon root php -r 'sleep(mt_rand(0,1799));' && (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl >/dev/null 2>&1)
-
-# Delete all files in FTP incoming that are older than 2 weeks (336 hours)
-#
-0 3 * * * root php -r 'sleep(mt_rand(0,1799));' && /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
-
-# Delete all forumml files older than 24 hours
-45 20 * * * root php -r 'sleep(mt_rand(0,1799));' && (test -d /var/run/forumml && /usr/sbin/tmpwatch -f 24 /var/run/forumml)
-
-#
-# Codendiadm
-#
-
-# Daily Tuleap PHP cron (obsolete documents...)
-10 0 * * * codendiadm php -r 'sleep(mt_rand(0,1799));' && /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
 
 # Ask plugins if they have something to execute each minute
 * * * * * codendiadm /usr/bin/tuleap launch-every-minute-job
+
+# Regularly launch a system_check event (e.g. every half-hour)
+0,30 * * * * codendiadm /usr/bin/tuleap queue-system-check
+
+# Daily Tuleap PHP cron (obsolete documents...)
+10 0 * * * codendiadm /usr/bin/tuleap daily-job
+

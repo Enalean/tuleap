@@ -43,7 +43,7 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 
 AutoReqProv: no
 
-Requires: vixie-cron >= 4.1-9, tmpwatch
+Requires: vixie-cron >= 4.1-9
 # Php and web related stuff
 Requires: php72-php-mysqlnd, php72-php-pdo, php72-php-xml, php72-php-mbstring, php72-php-gd
 Requires: php72-php-soap, php72-php-intl, php72-php-process, php72-php-cli
