@@ -33,10 +33,15 @@ final class SynchronizedProjectMembershipDetectorTest extends TestCase
 
     /** @var SynchronizedProjectMembershipDetector */
     private $detector;
+    /**
+     * @var Mockery\MockInterface|SynchronizedProjectMembershipDao
+     */
+    private $dao;
 
     protected function setUp(): void
     {
-        $this->detector = new SynchronizedProjectMembershipDetector();
+        $this->dao = Mockery::mock(SynchronizedProjectMembershipDao::class);
+        $this->detector = new SynchronizedProjectMembershipDetector($this->dao);
     }
 
     public function testItReturnsTrueWhenTheUGroupsProjectIsPrivate(): void
@@ -49,12 +54,30 @@ final class SynchronizedProjectMembershipDetectorTest extends TestCase
         $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($ugroup));
     }
 
-    public function testItReturnsFalseWhenTheUGroupsProjectIsPublic(): void
+    public function testItReturnsTrueWhenTheUGroupsProjectIsPublicAndHasSynchronizedManagementEnabled(): void
     {
-        $project = Mockery::mock(Project::class);
+        $project = Mockery::mock(Project::class, ['getID' => 165]);
         $project->shouldReceive('isPublic')->andReturnTrue();
         $ugroup = Mockery::mock(\ProjectUGroup::class);
         $ugroup->shouldReceive('getProject')->andReturn($project);
+        $this->dao->shouldReceive('isEnabled')
+            ->with(165)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($ugroup));
+    }
+
+    public function testItReturnsFalseWhenTheUGroupsProjectIsPublicAndHasSynchronizedManagementDisabled(): void
+    {
+        $project = Mockery::mock(Project::class, ['getID' => 165]);
+        $project->shouldReceive('isPublic')->andReturnTrue();
+        $ugroup = Mockery::mock(\ProjectUGroup::class);
+        $ugroup->shouldReceive('getProject')->andReturn($project);
+        $this->dao->shouldReceive('isEnabled')
+            ->with(165)
+            ->once()
+            ->andReturnFalse();
 
         $this->assertFalse($this->detector->isSynchronizedWithProjectMembers($ugroup));
     }

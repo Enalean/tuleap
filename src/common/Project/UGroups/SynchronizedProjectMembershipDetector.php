@@ -24,9 +24,17 @@ namespace Tuleap\Project\UGroups;
 
 class SynchronizedProjectMembershipDetector
 {
+    /** @var SynchronizedProjectMembershipDao */
+    private $dao;
+
+    public function __construct(SynchronizedProjectMembershipDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
     public function isSynchronizedWithProjectMembers(\ProjectUGroup $ugroup): bool
     {
         $project = $ugroup->getProject();
-        return ! $project->isPublic();
+        return (! $project->isPublic() || $this->dao->isEnabled((int) $project->getID()));
     }
 }

@@ -26,6 +26,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutSt
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
@@ -479,7 +480,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
             new ProjectMemberAdderWithoutStatusCheckAndNotifications(
                 new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
             ),
-            new SynchronizedProjectMembershipDetector()
+            new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
         );
     }
 
