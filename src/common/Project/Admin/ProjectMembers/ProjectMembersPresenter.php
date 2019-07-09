@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -43,20 +43,26 @@ class ProjectMembersPresenter
     public $additional_modals;
     public $user_locale;
     public $can_see_ugroups;
+    /**
+     * @var bool
+     */
+    public $is_synchronized_with_ugroups;
 
     public function __construct(
         array $project_members_list,
         CSRFSynchronizerToken $csrf_token,
         Project $project,
         ProjectMembersAdditionalModalCollectionPresenter $additional_modals,
-        $user_locale,
-        $can_see_ugroups
+        string $user_locale,
+        bool $can_see_ugroups,
+        bool $is_synchronized_with_ugroups
     ) {
-        $this->project_members_list = $project_members_list;
-        $this->csrf_token           = $csrf_token;
-        $this->project_id           = $project->getID();
-        $this->additional_modals    = $additional_modals;
-        $this->user_locale          = $user_locale;
-        $this->can_see_ugroups      = $can_see_ugroups;
+        $this->project_members_list         = $project_members_list;
+        $this->csrf_token                   = $csrf_token;
+        $this->project_id                   = $project->getID();
+        $this->additional_modals            = $additional_modals;
+        $this->user_locale                  = $user_locale;
+        $this->can_see_ugroups              = $can_see_ugroups;
+        $this->is_synchronized_with_ugroups = $is_synchronized_with_ugroups;
     }
 }

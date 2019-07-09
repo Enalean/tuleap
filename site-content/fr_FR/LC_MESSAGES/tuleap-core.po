@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #, php-format
 msgid ""
@@ -1032,6 +1032,14 @@ msgstr "Les marqueurs de projet sont affichés dans la barre de navigation."
 
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
+
+msgid ""
+"Project members and group members are synchronized. Whenever you add someone "
+"in a user group, they are automatically added here in project members."
+msgstr ""
+"Les membres de projet et de groupes utilisateurs sont synchronisés. Dès lors "
+"que vous ajoutez un utilisateur dans un groupe, il est automatiquement "
+"ajouté en tant que membre de projet."
 
 msgid "Project must be approved by administrators"
 msgstr "Les projets doivent être approuvés par les administrateurs"
