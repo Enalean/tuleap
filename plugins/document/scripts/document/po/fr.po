@@ -285,9 +285,6 @@ msgstr "Notifications"
 msgid "OK, got it"
 msgstr "OK, compris"
 
-msgid "Obsolescence Date"
-msgstr "Date d'obsolescence"
-
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
 

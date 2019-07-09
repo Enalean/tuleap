@@ -47,6 +47,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
              Then it displays "Validity" for the label`, () => {
             const metadata_date = {
                 id: 100,
+                short_name: "obsolescence_date",
                 name: "Obsolescence Date",
                 type: "date",
                 list_value: null,
@@ -167,6 +168,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
         Then it displays it as permanent`, () => {
             const metadata_date = {
                 id: 100,
+                short_name: "obsolescence_date",
                 name: "Obsolescence Date",
                 type: "date",
                 list_value: null,
