@@ -25,156 +25,107 @@ namespace Tuleap\Docman\Test\rest\Docman;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use REST_TestDataBuilder;
-use Tuleap\Docman\Test\rest\DocmanBase;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
-class DocmanEmptyTest extends DocmanBase
+class DocmanEmptyTest extends DocmanTestExecutionHelper
 {
-    public function testGetRootId()
-    {
-        $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
-
-        $this->assertSame(200, $project_response->getStatusCode());
-
-        $json_projects = $project_response->json();
-        return $json_projects['additional_informations']['docman']['root_item']['id'];
-    }
-
     /**
      * @depends testGetRootId
      */
-    public function testGetDocumentItemsForAdminUser($root_id): array
+    public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        $this->getDocmanRegularUser();
+        $root_folder = $this->loadRootFolderContent($root_id);
+
+        $items         = $this->loadFolderContent($root_id, 'Empty');
+        $folder        = $this->findItemByTitle($root_folder, 'Empty');
+        $items_id      = $folder['id'];
+        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Empty');
+        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Empty');
+
+        return array_merge(
+            $root_folder,
+            $folder,
+            $items,
+            $deleted_items,
+            $lock_items
         );
-        $folder   = $response->json();
-
-        $folder_1 = $this->findItemByTitle($folder, 'folder 1');
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder_1['id'] . '/docman_items')
-        );
-        $items   = $response->json();
-
-        $this->assertGreaterThan(0, count($items));
-
-        return $items;
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testGetTrashFolderContent(int $root_id): array
+    public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheEmpty(array $items): void
     {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $trash_folder    = $this->findItemByTitle($folder, "Trash");
-        $trash_folder_id = $trash_folder['id'];
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
-        );
-
-        $items_to_delete = $response->json();
-
-        $this->assertGreaterThan(0, count($items_to_delete));
-
-        return $items_to_delete;
-    }
-
-    /**
-     * Find first item in given array of items which has given title.
-     * @return array|null Found item. null otherwise.
-     */
-    private function findItemByTitle(array $items, $title)
-    {
-        $index = array_search($title, array_column($items, 'title'));
-        if ($index === false) {
-            return null;
-        }
-        return $items[$index];
-    }
-
-    /**
-     * @depends testGetTrashFolderContent
-     */
-    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheEmptyDoc(array $items): void
-    {
-        $empty_doc_to_delete    = $this->findItemByTitle($items, 'old empty doc L');
-        $empty_doc_to_delete_id = $empty_doc_to_delete['id'];
+        $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM RO');
+        $item_to_delete_id = $item_to_delete['id'];
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $empty_doc_to_delete_id)
+            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+
+        $this->checkItemHasNotBeenDeleted($item_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testDeleteThrowAPermissionErrorWhenTheEmptyIsLockedByAnotherUser(array $items): void
+    {
+        $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM L');
+        $item_to_delete_id = $item_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
 
-        $this->checkEmptyDocHasNotBeenDeleted($empty_doc_to_delete_id);
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
+
+        $this->checkItemHasNotBeenDeleted($item_to_delete_id);
     }
 
     /**
-     * @depends testGetTrashFolderContent
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testItShouldDeleteWhenEmptyDocIsLockedAndUserIsAdmin(array $items): void
+    public function testDeleteIsProceedWhenItemIsLockedAndUserIsAdmin(array $items): void
     {
-        $empty_doc_to_delete    = $this->findItemByTitle($items, 'old empty doc L');
-        $empty_doc_to_delete_id = $empty_doc_to_delete['id'];
+        $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM L');
+        $item_to_delete_id = $item_to_delete['id'];
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $empty_doc_to_delete_id)
+            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->checkEmptyDocHasBeenDeleted($empty_doc_to_delete_id);
+        $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
     /**
-     * @depends testGetTrashFolderContent
+     * @depends testGetDocumentItemsForAdminUser
      */
     public function testItDeletesAnEmptyDoc(array $items): void
     {
-        $empty_doc_to_delete    = $this->findItemByTitle($items, 'another old empty doc');
-        $empty_doc_to_delete_id = $empty_doc_to_delete['id'];
+        $item_to_delete    = $this->findItemByTitle($items, 'DELETE EM');
+        $item_to_delete_id = $item_to_delete['id'];
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' . $empty_doc_to_delete_id)
+            $this->client->delete('docman_empty_documents/' . $item_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->checkEmptyDocHasBeenDeleted($empty_doc_to_delete_id);
-    }
-
-    private function checkEmptyDocHasNotBeenDeleted(int $empty_doc_to_delete_id) : void
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $empty_doc_to_delete_id)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    private function checkEmptyDocHasBeenDeleted(int $empty_doc_to_delete_id) : void
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $empty_doc_to_delete_id)
-        );
-
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->checkItemHasBeenDeleted($item_to_delete_id);
     }
 
     /**
@@ -182,7 +133,7 @@ class DocmanEmptyTest extends DocmanBase
      */
     public function testPostLocksAnEmpty(array $items): void
     {
-        $locked_document    = $this->findItemByTitle($items, 'Empty POST L');
+        $locked_document    = $this->findItemByTitle($items, 'LOCK EM');
         $locked_document_id = $locked_document['id'];
 
         $response = $this->getResponseByName(
@@ -206,7 +157,7 @@ class DocmanEmptyTest extends DocmanBase
      */
     public function testDeleteLockAnEmpty(array $items): void
     {
-        $locked_document    = $this->findItemByTitle($items, 'Empty POST L');
+        $locked_document    = $this->findItemByTitle($items, 'LOCK EM');
         $locked_document_id = $locked_document['id'];
 
         $response = $this->getResponseByName(
