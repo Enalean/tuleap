@@ -40,6 +40,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatu
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 
@@ -50,12 +51,12 @@ $request = HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-$event_manager          = EventManager::instance();
-$ugroup_manager         = new UGroupManager();
-$ugroup_binding         = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
-$project_manager        = ProjectManager::instance();
+$event_manager                            = EventManager::instance();
+$ugroup_manager                           = new UGroupManager();
+$ugroup_binding                           = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+$project_manager                          = ProjectManager::instance();
 $edit_event_launcher    = new EditBindingUGroupEventLauncher($event_manager);
-$binding_controller     = new BindingController(
+$binding_controller                       = new BindingController(
     new ProjectHistoryDao(),
     $project_manager,
     $ugroup_manager,
@@ -63,15 +64,18 @@ $binding_controller     = new BindingController(
     $request,
     $edit_event_launcher
 );
-$user_manager           = UserManager::instance();
-$project_member_adder   = new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding);
-$dynamic_member_updater = new DynamicUGroupMembersUpdater(
+$user_manager                             = UserManager::instance();
+$project_member_adder                     = new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding);
+$dynamic_member_updater                   = new DynamicUGroupMembersUpdater(
     new UserPermissionsDao(),
     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
     $project_member_adder,
     $event_manager
 );
-$members_controller     = new MembersController(
+$synchronized_project_membership_detector = new SynchronizedProjectMembershipDetector(
+    new SynchronizedProjectMembershipDao()
+);
+$members_controller                       = new MembersController(
     $request,
     $user_manager,
     $dynamic_member_updater,
@@ -80,7 +84,7 @@ $members_controller     = new MembersController(
         new StaticMemberAdder(),
         $dynamic_member_updater,
         $project_member_adder,
-        new SynchronizedProjectMembershipDetector()
+        $synchronized_project_membership_detector
     )
 );
 
@@ -97,7 +101,7 @@ $index_controller = new IndexController(
             $user_manager,
             $event_manager
         ),
-        new MembersPresenterBuilder($event_manager, new UserHelper(), new SynchronizedProjectMembershipDetector()),
+        new MembersPresenterBuilder($event_manager, new UserHelper(), $synchronized_project_membership_detector),
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
     new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
