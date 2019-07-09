@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    unix-name="public-sync-project-member" full-name="Public with Sync Project Membership"
+    description="For test" access="public">
+    <long-description>A test project with Synchronized Project Membership</long-description>
+    <services>
+    </services>
+    <ugroups mode="synchronized">
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="developers" description="">
+            <members/>
+        </ugroup>
+    </ugroups>
+</project>

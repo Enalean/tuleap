@@ -553,4 +553,78 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->assertTrue($ugroup['id'] > 0);
         $this->assertEquals($ugroup['short_name'], 'static_ugroup_rest_1');
     }
+
+    public function testGetProjectUserGroups(): array
+    {
+        $project_id = urlencode($this->project_public_with_membership_id);
+        $response   = $this->getResponse($this->client->get("projects/$project_id/user_groups"));
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $user_groups = $response->json();
+
+        return $user_groups;
+    }
+
+    /**
+     * @depends testGetProjectUserGroups
+     */
+    public function testPutUsersInStaticUserGroupInPublicSynchronizedProjectAlsoAddsThemToProjectMembers(array $user_groups)
+    {
+        $developpers = $this->findDeveloppers($user_groups);
+
+        $body = json_encode(
+            [
+                ['username' => REST_TestDataBuilder::TEST_USER_4_NAME]
+            ]
+        );
+
+        $developpers_id = urlencode($developpers['id']);
+        $response_put   = $this->getResponse($this->client->put("user_groups/$developpers_id/users", null, $body));
+
+        $this->assertEquals(200, $response_put->getStatusCode());
+
+        $project_members_id = urlencode($this->project_public_with_membership_id . '_3');
+        $response_get       = $this->getResponse($this->client->get("user_groups/$project_members_id/users"));
+
+        $this->assertEquals(200, $response_get->getStatusCode());
+
+        $members                  = $response_get->json();
+        $user_4_is_project_member = false;
+        foreach ($members as $member) {
+            if ($member["username"] === REST_TestDataBuilder::TEST_USER_4_NAME) {
+                $user_4_is_project_member = true;
+            }
+        }
+
+        $this->assertTrue(
+            $user_4_is_project_member,
+            sprintf(
+                "Expected to find user %s in the project members of project %s.",
+                REST_TestDataBuilder::TEST_USER_4_NAME,
+                REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
+            )
+
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function findDeveloppers(array $user_groups): array
+    {
+        foreach ($user_groups as $user_group) {
+            if ($user_group["short_name"] === REST_TestDataBuilder::STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL) {
+                return $user_group;
+            }
+        }
+        throw new Exception(
+            sprintf(
+                "Could not find the %s user group in project %s",
+                REST_TestDataBuilder::STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL,
+                REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
+            )
+
+        );
+    }
 }

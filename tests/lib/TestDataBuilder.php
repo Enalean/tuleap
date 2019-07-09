@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,14 +11,14 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TestDataBuilder
+class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const ADMIN_USER_NAME      = 'admin';
     public const ADMIN_REAL_NAME      = 'Site Administrator';
@@ -73,18 +73,19 @@ class TestDataBuilder
 
     public const ADMIN_PROJECT_ID = 100;
 
-    public const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
-    public const PROJECT_PRIVATE_MEMBER_LABEL     = 'Private member';
-    public const PROJECT_PRIVATE_SHORTNAME        = 'private';
-    public const PROJECT_PUBLIC_SHORTNAME         = 'public';
-    public const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
-    public const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
-    public const PROJECT_BACKLOG_DND              = 'dragndrop';
-    public const PROJECT_COMPUTED_FIELDS          = 'computedfields';
-    public const PROJECT_BURNDOWN                 = 'burndown-generation';
-    public const PROJECT_DELETED_SHORTNAME        = 'deleted-project';
-    public const PROJECT_SUSPENDED_SHORTNAME      = 'suspended-project';
-    public const PROJECT_SERVICES          = 'project-services';
+    public const PROJECT_PRIVATE_MEMBER_SHORTNAME         = 'private-member';
+    public const PROJECT_PRIVATE_MEMBER_LABEL             = 'Private member';
+    public const PROJECT_PRIVATE_SHORTNAME                = 'private';
+    public const PROJECT_PUBLIC_SHORTNAME                 = 'public';
+    public const PROJECT_PUBLIC_MEMBER_SHORTNAME          = 'public-member';
+    public const PROJECT_PBI_SHORTNAME                    = 'pbi-6348';
+    public const PROJECT_BACKLOG_DND                      = 'dragndrop';
+    public const PROJECT_COMPUTED_FIELDS                  = 'computedfields';
+    public const PROJECT_BURNDOWN                         = 'burndown-generation';
+    public const PROJECT_DELETED_SHORTNAME                = 'deleted-project';
+    public const PROJECT_SUSPENDED_SHORTNAME              = 'suspended-project';
+    public const PROJECT_SERVICES                         = 'project-services';
+    public const PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME = 'public-sync-project-member';
 
     public const STATIC_UGROUP_1_ID    = 101;
     public const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
@@ -98,6 +99,8 @@ class TestDataBuilder
     public const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID    = 104;
 
     public const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID    = 105;
+
+    public const STATIC_PUBLIC_WITH_MEMBERSHIP_UGROUP_DEVS_LABEL = 'developers';
 
     public const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID        = 3;
     public const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY       = 'ugroup_project_members_name_key';
