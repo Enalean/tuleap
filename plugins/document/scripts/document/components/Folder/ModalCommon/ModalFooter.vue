@@ -33,7 +33,7 @@
             class="tlp-button-primary tlp-modal-action"
             v-bind:disabled="props.isLoading"
         >
-            <i v-if="props.isLoading" class="tlp-button-icon fa-spin fa-circle-o-notch"></i>
+            <i v-if="props.isLoading" class="tlp-button-icon fa fa-spin fa-circle-o-notch"></i>
             <i v-else class="fa fa-plus tlp-button-icon"></i>
             {{ props.submitButtonLabel }}
         </button>

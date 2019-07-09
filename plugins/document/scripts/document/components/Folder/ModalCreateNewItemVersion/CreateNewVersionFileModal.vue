@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="createNewFileVersion">
+    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="createNewFileVersion">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
@@ -34,6 +34,7 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
+import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
@@ -67,7 +68,7 @@ export default {
             return this.$gettext("Create new version");
         },
         modal_title() {
-            return this.$gettext("Create a new file version");
+            return sprintf(this.$gettext('New version for "%s"'), this.item.title);
         },
         aria_labelled_by() {
             return "document-new-item-version-modal";
