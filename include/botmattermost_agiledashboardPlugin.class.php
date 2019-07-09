@@ -38,6 +38,8 @@ use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once 'autoload.php';
@@ -131,6 +133,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $planning_factory = PlanningFactory::build();
         $logger = new BotMattermostLogger();
 
+        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $stand_up_notification_sender = new StandUpNotificationSender(
             new Factory(
                 new Dao,
@@ -146,14 +149,18 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
                 new Planning_MilestoneFactory(
                     $planning_factory,
                     $artifact_factory,
-                    Tracker_FormElementFactory::instance(),
+                    $tracker_form_element_factory,
                     TrackerFactory::instance(),
                     $milestone_status_counter,
                     new PlanningPermissionsManager(),
                     new AgileDashboard_Milestone_MilestoneDao(),
                     new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
                     new TimeframeBuilder(
-                        Tracker_FormElementFactory::instance()
+                        $tracker_form_element_factory,
+                        new SemanticTimeframeBuilder(
+                            new SemanticTimeframeDao(),
+                            $tracker_form_element_factory
+                        )
                     )
                 ),
                 $milestone_status_counter,
