@@ -340,8 +340,8 @@ class DocmanPlugin extends Plugin
         if ($project->usesService($this->getServiceShortname())) {
             $service = $project->getService($this->getServiceShortname());
             $event->addArea(
-                '<a href="/plugins/docman/?group_id='. $project->getId() .'">' .
-                '<i class="dashboard-widget-content-projectpublicareas '.$service->getIcon().'"></i>' .
+                '<a href="/plugins/docman/?group_id='. urlencode((string) $project->getId()) .'">' .
+                '<i class="dashboard-widget-content-projectpublicareas '.Codendi_HTMLPurifier::instance()->purify($service->getIcon()).'"></i>' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>'

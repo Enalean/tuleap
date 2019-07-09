@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -36,12 +36,14 @@ class Widget_ProjectPublicAreas extends Widget {
     function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','public_areas');
     }
-    function getContent() {
-        $request = HTTPRequest::instance();
+    function getContent()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $request  = HTTPRequest::instance();
         $group_id = db_ei($request->get('group_id'));
-        $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
-        $html = '';
+        $pm       = ProjectManager::instance();
+        $project  = $pm->getProject($group_id);
+        $html     = '';
 
         if ($project->usesHomePage()) {
             $homepage_service = $project->getService(Service::HOMEPAGE);
@@ -50,8 +52,8 @@ class Widget_ProjectPublicAreas extends Widget {
                 // Absolute link -> open new window on click
                 $html .= 'target="_blank" rel="noreferrer" ';
             }
-            $html .= 'href="' . $homepage_service->getUrl() . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$homepage_service->getIcon().'"></i>';
+            $html .= 'href="' . $purifier->purify($homepage_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($homepage_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','proj_home').'</a></p>';
         }
 
@@ -59,8 +61,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesForum()) {
             $service_forum = $project->getService(Service::FORUM);
-            $html .= '<p><a href="'.$service_forum->getUrl().'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$service_forum->getIcon().'"></i>';
+            $html .= '<p><a href="'.$purifier->purify($service_forum->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service_forum->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
 
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
@@ -82,8 +84,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesMail()) {
             $mail_service = $project->getService(Service::ML);
-            $html .= '<p><a href="'.$mail_service->getUrl().'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$mail_service->getIcon().'"></i>';
+            $html .= '<p><a href="'.$purifier->purify($mail_service->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($mail_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
             $row_count = db_fetch_array($res_count);
@@ -93,7 +95,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Wiki (only for Active)
 
         if ($project->usesWiki()) {
-            $html .= '<p><a href="'.$project->getWikiPage().'">';
+            $html .= '<p><a href="'.$purifier->purify($project->getWikiPage()).'">';
             $html .= '<i class="tuleap-services-wiki tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
@@ -107,7 +109,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### CVS (only for Active)
 
         if ($project->usesCVS()) {
-            $html .= '<p><a href="' . $project->getCvsPage() . '">';
+            $html .= '<p><a href="' . $purifier->purify($project->getCvsPage()) . '">';
             $html .= '<i class="tuleap-services-cvs tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
             // LJ Cvs checkouts added
@@ -122,12 +124,12 @@ class Widget_ProjectPublicAreas extends Widget {
                 $cvs_add_num = 0;
             if (!$cvs_co_num)
                 $cvs_co_num = 0;
-            $uri = session_make_url('/cvs/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=cvs');
+            $uri = session_make_url('/cvs/viewvc.php/?root=' . urlencode($project->getUnixName(false)) . '&roottype=cvs');
 
             $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'commits', $cvs_commit_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'adds', $cvs_add_num) . ', ' . $GLOBALS['Language']->getText('include_project_home', 'co', $cvs_co_num) . ' )';
             if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
 
-                $html .= '<br> &nbsp; - <a href="' . $uri . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_cvs') . '</a>';
+                $html .= '<br> &nbsp; - <a href="' . $purifier->purify($uri) . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_cvs') . '</a>';
             }
             $html .= '</p>';
         }
@@ -135,7 +137,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Subversion (only for Active)
 
         if ($project->usesService('svn')) {
-            $html .= '<p><a href="' . $project->getSvnPage() . '">';
+            $html .= '<p><a href="' . $purifier->purify($project->getSvnPage()) . '">';
             $html .= '<i class="tuleap-services-svn tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
@@ -146,8 +148,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
             $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'accesses', $svn_accesses) . ' )';
             if ($svn_accesses) {
-                $uri = session_make_url('/svn/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=svn');
-                $html .= '<br> &nbsp; - <a href="' . $uri . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_svn') . '</a>';
+                $uri = session_make_url('/svn/viewvc.php/?root=' . urlencode($project->getUnixName(false)) . '&roottype=svn');
+                $html .= '<br> &nbsp; - <a href="' . $purifier->purify($uri) . '">' . $GLOBALS['Language']->getText('include_project_home', 'browse_svn') . '</a>';
             }
             $html .= '</p>';
         }
@@ -161,8 +163,8 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Trackers (only for Active)
         if ( $project->usesTracker() ) {
             $trackerv3_service = $project->getService(Service::TRACKERV3);
-            $html .= '<p><a href="'.$trackerv3_service->getUrl().'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$trackerv3_service->getIcon().'"></i>';
+            $html .= '<p><a href="'.$purifier->purify($trackerv3_service->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($trackerv3_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
             //  get the Group object
             $pm = ProjectManager::instance();
@@ -185,8 +187,8 @@ class Widget_ProjectPublicAreas extends Widget {
                 for ($j = 0; $j < count($at_arr); $j++) {
                     if ($at_arr[$j]->userCanView()) {
                         $html .= '<li>
-                        <a href="/tracker/?atid=' . $at_arr[$j]->getID().'&group_id=' . $group_id . '&func=browse">' .
-                        $at_arr[$j]->getName() . '</a></li>';
+                        <a href="/tracker/?atid=' . urlencode($at_arr[$j]->getID()).'&group_id=' . urlencode($group_id) . '&func=browse">' .
+                            $purifier->purify($at_arr[$j]->getName()) . '</a></li>';
                     }
                 }
                 $html .= '</ul>';
@@ -206,7 +208,7 @@ class Widget_ProjectPublicAreas extends Widget {
             } else {
                 $ftp_subdomain = $project->getUnixName() . ".";
             }
-            $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
+            $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". urlencode($project->getUnixName(false)) ."/\">";    // keep the first occurence in lower case
             $html .= '<i class="tuleap-services-ftp tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</a>';
             $html .= '</p>';

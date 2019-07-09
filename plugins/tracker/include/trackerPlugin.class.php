@@ -834,8 +834,8 @@ class trackerPlugin extends Plugin {
                 }
                 if ($entries) {
                     $area = '';
-                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $project->getGroupId() .'">';
-                    $area .= '<i class="dashboard-widget-content-projectpublicareas '.$service->getIcon().'"></i>';
+                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. urlencode($project->getGroupId()) .'">';
+                    $area .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service->getIcon()).'"></i>';
                     $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
 
