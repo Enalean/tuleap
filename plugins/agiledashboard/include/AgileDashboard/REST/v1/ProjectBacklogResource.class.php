@@ -51,6 +51,8 @@ use Tuleap\REST\Header;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use UserManager;
 
@@ -117,14 +119,15 @@ class ProjectBacklogResource
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance(),
+            $tracker_form_element_factory,
             TrackerFactory::instance(),
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $tracker_form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory)
             )
         );
 

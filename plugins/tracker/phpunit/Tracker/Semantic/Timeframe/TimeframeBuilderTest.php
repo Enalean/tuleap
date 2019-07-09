@@ -54,13 +54,19 @@ final class TimeframeBuilderTest extends TestCase
     private $artifact;
     private $user;
 
+    private $semantic_timeframe_builder;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
-        $this->builder = new TimeframeBuilder($this->formelement_factory);
+        $this->builder = new TimeframeBuilder(
+            $this->formelement_factory,
+            $this->semantic_timeframe_builder
+        );
 
         $this->tracker  = Mockery::mock(Tracker::class);
         $this->artifact = Mockery::mock(Tracker_Artifact::class);
@@ -68,8 +74,6 @@ final class TimeframeBuilderTest extends TestCase
 
         $this->tracker->shouldReceive('getId')->andReturn(1);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('');
     }
 
     public function testItBuildATimePeriodWithoutWeekObjectForArtifact(): void
@@ -78,6 +82,12 @@ final class TimeframeBuilderTest extends TestCase
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
+        $start_date_field  = null;
+        $duration_field    = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -91,7 +101,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoFieldStartDate(): void
     {
-        $duration = 10;
+        $duration         = 10;
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
             ->with(
@@ -111,7 +127,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectWithDurationAsZeroForArtifactIfNoFieldDuration(): void
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
@@ -127,7 +149,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectWithStartDateAsZeroForArtifactIfNoLastChangesetValueForStartDate(): void
     {
-        $duration = 10;
+        $duration         = 10;
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -153,7 +181,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithZeroDurationWhenDurationFieldHasNoLastChangeset(): void
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
@@ -178,6 +212,13 @@ final class TimeframeBuilderTest extends TestCase
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
+        $start_date_field  = null;
+        $duration_field    = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -194,6 +235,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenNoStartDateFieldInChartContext()
     {
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
         $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
             ->with(
                 $this->tracker,
@@ -212,6 +260,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenStartDateIsEmptyInChartContext()
     {
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
         $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
         $start_date_changeset->shouldReceive('getTimestamp')->andReturnNull();
 
@@ -238,7 +293,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodForChartWhenStartDateHasNoLastChangesetValueAndDurationIsSet()
     {
-        $duration = 10;
+        $duration         = 10;
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -265,7 +326,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenNoDurationFieldInChartContext()
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
 
@@ -283,8 +350,15 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDurationIsMinorThanZeroInChartContext()
     {
-        $duration   = -1;
-        $start_date = '07/01/2013';
+        $duration         = -1;
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -299,8 +373,15 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDurationIsEqualToZeroInChartContext()
     {
-        $duration   = 0;
-        $start_date = '07/01/2013';
+        $duration         = 0;
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -315,8 +396,14 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDurationIsEqualToOneInChartContext()
     {
-        $duration   = 1;
-        $start_date = '07/01/2013';
+        $duration         = 1;
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -331,8 +418,14 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDurationIsNullInChartContext()
     {
-        $duration   = null;
-        $start_date = '07/01/2013';
+        $duration         = null;
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -347,7 +440,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDurationHasNoLastChangesetValueInChartContext()
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
@@ -373,6 +472,12 @@ final class TimeframeBuilderTest extends TestCase
         $duration          = 10;
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
+        $start_date_field  = null;
+        $duration_field    = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->mockDurationFieldWithValue($duration);
@@ -386,7 +491,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoFieldStartDate(): void
     {
-        $duration = 10;
+        $duration         = 10;
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
             ->with(
@@ -406,7 +517,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithDurationAsNullForArtifactIfNoFieldDuration(): void
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
@@ -422,7 +539,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodWithoutWeekObjectForRESTWithStartDateAsNullForArtifactIfNoLastChangesetValueForStartDate(): void
     {
-        $duration = 10;
+        $duration         = 10;
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -448,7 +571,13 @@ final class TimeframeBuilderTest extends TestCase
 
     public function testItBuildsATimePeriodForRESTWithNullDurationWhenDurationFieldHasNoLastChangeset(): void
     {
-        $start_date = '07/01/2013';
+        $start_date       = '07/01/2013';
+        $start_date_field = null;
+        $duration_field   = null;
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
 
         $this->mockStartDateFieldWithValue($start_date);
         $duration_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
@@ -465,6 +594,38 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(strtotime($start_date), $time_period->getStartDate());
         $this->assertSame(strtotime($start_date), $time_period->getEndDate());
         $this->assertNull($time_period->getDuration());
+    }
+
+    public function testItUsesTimeframeSemanticBoundFieldsIfItIsSet() : void
+    {
+        $duration                     = 10;
+        $start_date_field             = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $duration_field               = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $custom_start_date_field_name = 'my_custom_start_date_field';
+        $custom_duration_field_name   = 'my_custom_duration_field';
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+        );
+
+        $start_date_field->shouldReceive('getName')->andReturn($custom_start_date_field_name);
+        $duration_field->shouldReceive('getName')->andReturn($custom_duration_field_name);
+
+        $this->formelement_factory->shouldReceive('getDateFieldByNameForUser')
+            ->with(
+                $this->tracker,
+                $this->user,
+                $custom_start_date_field_name
+            )
+            ->andReturnNull();
+
+        $this->mockDurationFieldWithValue($duration, $custom_duration_field_name);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
+
+        $this->assertNull($time_period->getStartDate());
+        $this->assertSame(1209600, $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
     }
 
     private function mockStartDateFieldWithValue(string $start_date): void
@@ -486,7 +647,7 @@ final class TimeframeBuilderTest extends TestCase
             ->andReturn($start_date_field);
     }
 
-    private function mockDurationFieldWithValue(?int $duration): void
+    private function mockDurationFieldWithValue(?int $duration, string $duration_field_name = 'duration'): void
     {
         $duration_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_Integer::class);
         $duration_changeset_value->shouldReceive('getNumeric')->andReturn($duration);
@@ -497,7 +658,7 @@ final class TimeframeBuilderTest extends TestCase
             ->andReturn($duration_changeset_value);
 
         $this->formelement_factory->shouldReceive('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, 'duration')
+            ->with($this->tracker, $this->user, $duration_field_name)
             ->andReturn($duration_field);
     }
 }

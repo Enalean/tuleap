@@ -57,6 +57,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -2036,6 +2038,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $field_retriever = new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $logger);
         $computed_dao    = new Tracker_FormElement_Field_ComputedDao();
 
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         return new BurndownCacheGenerationChecker(
             $logger,
             new BurndownCacheGenerator($event_manager),
@@ -2046,7 +2050,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 new ChartConfigurationValueRetriever(
                     $field_retriever,
                     new TimeframeBuilder(
-                        Tracker_FormElementFactory::instance()
+                        $form_element_factory,
+                        new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
                     ),
                     $logger
                 )

@@ -715,17 +715,20 @@ class AgileDashboardPlugin extends Plugin
      * @return Planning_MilestoneFactory
      */
     protected function getMilestoneFactory() {
+        $form_element_factory = $this->getFormElementFactory();
+
         return new Planning_MilestoneFactory(
             $this->getPlanningFactory(),
             $this->getArtifactFactory(),
-            $this->getFormElementFactory(),
+            $form_element_factory,
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             $this->getMonoMilestoneChecker(),
             new TimeframeBuilder(
-                $this->getFormElementFactory()
+                $form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
             )
         );
     }

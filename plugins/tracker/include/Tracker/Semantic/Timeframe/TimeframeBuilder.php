@@ -37,29 +37,36 @@ use Tracker_FormElementFactory;
 
 class TimeframeBuilder
 {
-    private const START_DATE_FIELD_NAME = 'start_date';
-    private const DURATION_FIELD_NAME   = 'duration';
-
     /**
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory)
-    {
-        $this->formelement_factory = $formelement_factory;
+    /**
+     * @var SemanticTimeframeBuilder
+     */
+    private $semantic_timeframe_builder;
+
+    public function __construct(
+        Tracker_FormElementFactory $formelement_factory,
+        SemanticTimeframeBuilder $semantic_timeframe_builder
+    ) {
+        $this->formelement_factory        = $formelement_factory;
+        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
     }
 
     public function buildTimePeriodWithoutWeekendForArtifact(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
+
         try {
-            $start_date = $this->getTimestamp($user, $artifact);
+            $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = 0;
         }
 
         try {
-            $duration = $this->getDurationFieldValue($user, $artifact);
+            $duration = $this->getDurationFieldValue($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $duration = 0;
         }
@@ -69,14 +76,16 @@ class TimeframeBuilder
 
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
+
         try {
-            $start_date = $this->getTimestamp($user, $artifact);
+            $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = null;
         }
 
         try {
-            $duration = $this->getDurationFieldValue($user, $artifact);
+            $duration = $this->getDurationFieldValue($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $duration = null;
         }
@@ -89,8 +98,10 @@ class TimeframeBuilder
      */
     public function buildTimePeriodWithoutWeekendForArtifactChartRendering(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
     {
+        $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
+
         try {
-            $start_date = $this->getTimestamp($user, $artifact);
+            $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
 
             if (! $start_date) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
@@ -106,7 +117,7 @@ class TimeframeBuilder
         }
 
         try {
-            $duration = $this->getDurationFieldValue($user, $artifact);
+            $duration = $this->getDurationFieldValue($user, $artifact, $semantic_timeframe);
 
             if ($duration === null) {
                 throw new Tracker_FormElement_Chart_Field_Exception(
@@ -142,12 +153,12 @@ class TimeframeBuilder
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    private function getTimestamp(PFUser $user, Tracker_Artifact $artifact) : int
+    private function getTimestamp(PFUser $user, Tracker_Artifact $artifact, SemanticTimeframe $semantic_timeframe) : int
     {
         $field = $this->formelement_factory->getDateFieldByNameForUser(
             $artifact->getTracker(),
             $user,
-            self::START_DATE_FIELD_NAME
+            $semantic_timeframe->getStartDateFieldName()
         );
 
         if ($field === null) {
@@ -170,12 +181,12 @@ class TimeframeBuilder
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact)
+    private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe)
     {
         $field = $this->formelement_factory->getNumericFieldByNameForUser(
             $milestone_artifact->getTracker(),
             $user,
-            self::DURATION_FIELD_NAME
+            $semantic_timeframe->getDurationFieldName()
         );
 
         if ($field === null) {

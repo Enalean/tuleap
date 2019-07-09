@@ -37,6 +37,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLeg
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
@@ -351,7 +353,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function getTimePeriodForRESTRepresentation(Tracker_Artifact $artifact, PFUser $user)
     {
-        $builder = new TimeframeBuilder($this->getFormElementFactory());
+        $builder = $this->getTimeframeBuilder();
 
         return $builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
     }
@@ -650,9 +652,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new ChartConfigurationValueRetriever(
             $this->getBurdownConfigurationFieldRetriever(),
-            new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
-            ),
+            $this->getTimeframeBuilder(),
             $this->getLogger()
         );
     }
@@ -795,6 +795,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new BurndownRemainingEffortAdderForLegacy(
             $this->getBurdownConfigurationFieldRetriever(),
             new UserWithReadAllPermissionBuilder()
+        );
+    }
+
+    private function getTimeframeBuilder() : TimeframeBuilder
+    {
+        $form_element_factory = $this->getFormElementFactory();
+
+        return new TimeframeBuilder(
+            $form_element_factory,
+            new SemanticTimeframeBuilder(
+                 new SemanticTimeframeDao(), $form_element_factory
+            )
         );
     }
 }

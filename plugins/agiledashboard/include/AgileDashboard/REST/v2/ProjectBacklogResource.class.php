@@ -45,6 +45,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\REST\Header;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
@@ -97,14 +99,15 @@ class ProjectBacklogResource {
         $this->milestone_factory      = new Planning_MilestoneFactory(
             $this->planning_factory,
             Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance(),
+            $tracker_form_element_factory,
             TrackerFactory::instance(),
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_mono_milestone_checker,
             new TimeframeBuilder(
-                Tracker_FormElementFactory::instance()
+                $tracker_form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory)
             )
         );
 
