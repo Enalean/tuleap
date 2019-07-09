@@ -79,7 +79,7 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
 
-        $time_stamp = $retriever->getTimeStampOfDate('0', new \DateTimeImmutable());
+        $time_stamp = $retriever->getTimeStampOfDate(null, new \DateTimeImmutable());
 
         $this->assertEquals(0, $time_stamp);
     }

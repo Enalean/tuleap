@@ -48,8 +48,8 @@ class HardcodedMetadataObsolescenceDateRetriever
             $date
         );
 
-        if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE  || $date === null) {
-            return (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+        if ($date === null) {
+            return (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE;
         }
 
         $formatted_date = \DateTimeImmutable::createFromFormat('Y-m-d', $date);

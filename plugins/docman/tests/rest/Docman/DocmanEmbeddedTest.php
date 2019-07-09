@@ -865,7 +865,6 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             'title'             => $new_title,
             'description'       => 'Danger ! Danger !',
             'owner_id'          => 101,
-            'obsolescence_date' => '0',
             'status'            => 'none'
         ];
 

@@ -849,7 +849,7 @@ class Docman_ItemFactory
         $description,
         $parent_id,
         $status_id,
-        int $obsolescence_date,
+        ?int $obsolescence_date,
         $user_id,
         $item_type_id,
         $wiki_page = null,
