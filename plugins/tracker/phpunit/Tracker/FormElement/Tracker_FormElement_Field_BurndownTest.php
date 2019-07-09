@@ -88,17 +88,10 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
      * @var Mockery\MockInterface|\Tracker_FormElement_Field_Date
      */
     private $start_date_field;
-    private $backup_globals;
-    private $backup_server;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->backup_globals      = array_merge([], $GLOBALS);
-        $this->backup_server       = array_merge([], $_SERVER);
-        $GLOBALS['sys_user_theme'] = 'BurningParrot';
-        $_SERVER['REQUEST_URI']    = '/plugins/tracker';
 
         $this->tracker    = \Mockery::spy(\Tracker::class);
         $this->tracker_id = 101;
@@ -134,8 +127,6 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
 
     protected function tearDown(): void
     {
-        $GLOBALS = $this->backup_globals;
-        $_SERVER = $this->backup_server;
         SystemEventManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
         parent::tearDown();
