@@ -254,10 +254,10 @@ class cardwallPlugin extends Plugin
     private function getCSSURL()
     {
         $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
-            '/assets/cardwall/FlamingParrot'
+            __DIR__ . '/../../../src/www/assets/cardwall/themes',
+            '/assets/cardwall/themes'
         );
-        return $theme_include_assets->getFileURL('style.css');
+        return $theme_include_assets->getFileURL('flamingparrot-theme.css');
     }
 
     private function canIncludeStylesheets()

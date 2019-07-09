@@ -323,12 +323,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
         );
         $cardwall_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
-            '/assets/cardwall/FlamingParrot'
+            __DIR__ . '/../../../src/www/assets/cardwall/themes',
+            '/assets/cardwall/themes'
         );
         return new CssAssetCollection([
             new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style'),
-            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'style')
+            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme')
         ]);
     }
 }

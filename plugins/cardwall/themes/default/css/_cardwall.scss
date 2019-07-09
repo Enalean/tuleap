@@ -1,5 +1,7 @@
-@import '../../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
-@import '../../../../../tracker/www/themes/default/css/includes/columns-colors';
+@import '../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
+@import '../../../../tracker/www/themes/default/css/includes/columns-colors';
+
+$cardwall-font-basepath: '../fonts/' !default;
 
 // scss-lint:disable all
 #cardwall {
@@ -191,7 +193,7 @@
     font-family: 'Reenie Beanie';
     font-style: normal;
     font-weight: normal;
-    src: local('Reenie Beanie'), local('ReenieBeanie'), url('../fonts/Reenie-Beanie-regular.woff') format('woff');
+    src: local('Reenie Beanie'), local('ReenieBeanie'), url('#{$cardwall-font-basepath}/Reenie-Beanie-regular.woff') format('woff');
 }
 
 .card_element_edit_form > input[type=text] {
