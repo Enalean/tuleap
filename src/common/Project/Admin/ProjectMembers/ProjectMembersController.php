@@ -39,6 +39,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -97,6 +98,10 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var SynchronizedProjectMembershipDetector
+     */
+    private $synchronized_project_membership_detector;
 
     public function __construct(
         ProjectMembersDAO     $members_dao,
@@ -106,7 +111,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         EventManager          $event_manager,
         UGroupManager         $ugroup_manager,
         UserImport            $user_importer,
-        ProjectManager        $project_manager
+        ProjectManager        $project_manager,
+        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector
     ) {
         $this->members_dao         = $members_dao;
         $this->user_helper         = $user_helper;
@@ -116,6 +122,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         $this->ugroup_manager      = $ugroup_manager;
         $this->user_importer       = $user_importer;
         $this->project_manager     = $project_manager;
+        $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -181,7 +188,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
     {
         $title   = _('Members');
 
-
         $project_members_list = $this->getFormattedProjectMembers($project);
         $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
@@ -204,7 +210,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 $project,
                 $additional_modals,
                 $user_locale,
-                $this->canUserSeeUGroups($request->getCurrentUser(), $project)
+                $this->canUserSeeUGroups($request->getCurrentUser(), $project),
+                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_MEMBERS))
             )
         );
 

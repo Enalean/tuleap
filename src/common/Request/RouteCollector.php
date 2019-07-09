@@ -69,6 +69,8 @@ use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Home;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\REST\BasicAuthentication;
@@ -357,7 +359,10 @@ class RouteCollector
                 $user_manager,
                 $user_helper
             ),
-            $project_manager
+            $project_manager,
+            new SynchronizedProjectMembershipDetector(
+                new SynchronizedProjectMembershipDao()
+            )
         );
     }
 
