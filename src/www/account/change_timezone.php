@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -41,7 +41,7 @@ if ($request->isPost()) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'choose_tz'));
     } else {
         // if we got this far, it must be good
-        db_query("UPDATE user SET timezone='" . db_es($request->get('timezone')) . "' WHERE user_id=" . user_getid());
+        db_query("UPDATE user SET timezone='" . db_es($request->get('timezone')) . "' WHERE user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()));
         session_redirect("/account/");
     }
 }

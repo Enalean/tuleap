@@ -122,7 +122,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
 
                     if ($is_monitored) {
-                        forum_add_monitor($fid, user_getid());
+                        forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
                     }
                 }
             }

@@ -24,7 +24,7 @@ require_once('www/include/account.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 if (user_isloggedin()) {
-    $user_id = user_getid();
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
 
     $vGroupId = new Valid_GroupId();
     $vGroupId->required();

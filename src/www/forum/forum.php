@@ -141,8 +141,9 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         
         if($request->valid($vMonitor) && $request->valid($vThreadId)) {
             if(user_isloggedin()) {
-                if(!user_monitor_forum($forum_id, user_getid())) {
-                    if (! forum_thread_add_monitor ($forum_id, $request->get('thread_id'),user_getid()) ) {
+                $user_id = UserManager::instance()->getCurrentUser()->getId();
+                if(!user_monitor_forum($forum_id, $user_id)) {
+                    if (! forum_thread_add_monitor ($forum_id, $request->get('thread_id'), $user_id) ) {
                         $feedback .= $Language->getText('forum_forum_utils','insert_err');
                     }
                 }

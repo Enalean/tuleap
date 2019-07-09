@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -670,7 +670,7 @@ class ArtifactType {
         if (!$my_user_id) {
             // Super-user has all rights...
             if (user_is_super_user()) return true;
-            $my_user_id=user_getid();
+            $my_user_id = UserManager::instance()->getCurrentUser()->getId();
         } else {
             $u = UserManager::instance()->getUserById($my_user_id);
             if ($u->isSuperUser()) return true;
@@ -711,7 +711,7 @@ class ArtifactType {
         if (!$my_user_id) {
             // Super-user has all rights...
             if (user_is_super_user()) return true;
-            $my_user_id=user_getid();
+            $my_user_id = UserManager::instance()->getCurrentUser()->getId();
         } else {
             $u = UserManager::instance()->getUserById($my_user_id);
             if ($u->isSuperUser()) return true;
@@ -770,7 +770,7 @@ class ArtifactType {
         if (!$my_user_id) {
             // Super-user has all rights...
             if (user_is_super_user()) return true;
-            $my_user_id=user_getid();
+            $my_user_id = UserManager::instance()->getCurrentUser()->getId();
         } else {
             $u = UserManager::instance()->getUserById($my_user_id);
             if ($u->isSuperUser()) return true;
@@ -809,7 +809,7 @@ class ArtifactType {
                 $sql="select perm_level
 				FROM artifact_perm
 				WHERE group_artifact_id='".  db_ei($this->getID())  ."'
-				AND user_id='". db_ei(user_getid()) ."'";
+				AND user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."'";
                 //echo $sql;
                 $this->current_user_perm=db_result(db_query($sql),0,0);
             }
@@ -1343,7 +1343,7 @@ class ArtifactType {
         //Check: I_MADE_IT  (I am the author of the change )
         // Check this one first because if the user said no she doesn't want to be 
         // aware of any of her change in this role and we can return immediately.
-        if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
+        if (($user_id == UserManager::instance()->getCurrentUser()->getId()) && !$arr_notif[$role]['I_MADE_IT']) {
        //echo "DBG Dont want to receive my own changes<br>";
             return false;
         }

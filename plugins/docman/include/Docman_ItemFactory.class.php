@@ -353,7 +353,7 @@ class Docman_ItemFactory
      * This function retreive collapsed folders from user preferences
      *
      * @param $parentId Id of the "current" root node (cannot be excluded).
-     * @param $userId Id of current user.
+     * @param int $userId Id of current user.
      * @return Array List of items to exclude for a search
      **/
     private function _getExpandedUserPrefs($parentId, $userId) {
@@ -447,7 +447,7 @@ class Docman_ItemFactory
         // {{1}} Exclude collapsed items
         $expandedFolders = array();
         if(!$expandAll) {
-            $fld = $this->_getExpandedUserPrefs($rootItem->getId(), user_getid());
+            $fld = $this->_getExpandedUserPrefs($rootItem->getId(), $user->getId());
             foreach($fld as $v) {
                 $expandedFolders[$v] = true;
             }

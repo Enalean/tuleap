@@ -43,7 +43,7 @@ $ath->header($params);
 
 
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display($ro,$pv,user_getid());
+$ah->display($ro,$pv,UserManager::instance()->getCurrentUser()->getId());
 
 echo '<script type="text/javascript">'. "\n";
 $armh = new ArtifactRulesManagerHtml($ath);

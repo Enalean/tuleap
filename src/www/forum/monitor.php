@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -39,24 +39,25 @@ if (user_isloggedin()) {
         if (!forum_utils_access_allowed($forum_id)) {
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
         }
-        
+
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
         //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
         // but they should be able to disable monitoring news that have been set from public to private
         $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
-            if (!forum_utils_news_access($forum_id) && !user_monitor_forum($forum_id, user_getid())) {        
+            if (!forum_utils_news_access($forum_id) && !user_monitor_forum($forum_id, $user_id)) {
                 exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
             }
         }
         
         $forum_monitor_error = false;
-        if (user_monitor_forum($forum_id, user_getid())) {
+        if (user_monitor_forum($forum_id, $user_id)) {
             // If already monitored then stop monitoring
-            forum_delete_monitor($forum_id, user_getid());
+            forum_delete_monitor($forum_id, $user_id);
         } else {
             // Not yet monitored so add it
-            $forum_monitor_error = !forum_add_monitor($forum_id, user_getid());
+            $forum_monitor_error = !forum_add_monitor($forum_id, $user_id);
         }
 
      /*
@@ -72,7 +73,7 @@ if (user_isloggedin()) {
         echo '
 			<H2>'.$Language->getText('forum_monitor','monitor').'</H2>';
 
-        if (user_monitor_forum($forum_id, user_getid())) {
+        if (user_monitor_forum($forum_id, $user_id)) {
             echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
             echo '<P>'.$Language->getText('forum_monitor','get_followups').'</p>';
             echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off').'</p>';

@@ -113,7 +113,7 @@ $event_manager->processEvent(
 );
 
 // ###### first check for valid login, if so, congratulate
-$user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : user_getid();
+$user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : UserManager::instance()->getCurrentUser()->getId();
 if (register_valid($user_id, $csrf, $old_password_required)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
     ?>

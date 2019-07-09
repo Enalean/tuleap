@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart
     {
         parent::__construct(
             'my_plugin_graphontrackersv5_chart',
-            user_getid(),
+            UserManager::instance()->getCurrentUser()->getId(),
             UserDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }

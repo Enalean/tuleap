@@ -102,7 +102,7 @@ class ArtifactFile {
         }
 
         if (user_isloggedin()) {
-            $userid=user_getid();
+            $userid = UserManager::instance()->getCurrentUser()->getId();
         } else {
             $userid=100;
         }

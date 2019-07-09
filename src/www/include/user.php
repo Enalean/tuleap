@@ -45,13 +45,6 @@ function user_ismember($group_id,$type=0) {
     return UserManager::instance()->getCurrentUser()->isMember($group_id,$type);
 }
 
-/**
- * @deprecated
- */
-function user_getid() {
-    return UserManager::instance()->getCurrentUser()->getId();
-}
-
 //Deprecated. Use User->getName() instead
 function user_getname($user_id = 0) {
     global $USER_NAMES,$Language;
@@ -177,13 +170,14 @@ function user_get_timezone() {
 function user_set_preference($preference_name,$value) {
     GLOBAL $user_pref;
     if (user_isloggedin()) {
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
         $preference_name=strtolower(trim($preference_name));
         $result=db_query("UPDATE user_preferences SET preference_value='".db_es($value)."' ".
-        "WHERE user_id='".user_getid()."' AND preference_name='".db_es($preference_name)."'");
+        "WHERE user_id='".$db_escaped_user_id."' AND preference_name='".db_es($preference_name)."'");
         if (db_affected_rows($result) < 1) {
             echo db_error();
             $result=db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) ".
-             "VALUES ('".user_getid()."','".db_es($preference_name)."','".db_es($value)."')");
+             "VALUES ('".$db_escaped_user_id."','".db_es($preference_name)."','".db_es($value)."')");
         }
 
      // Update the Preference cache if it was setup by a user_get_preference
@@ -213,9 +207,10 @@ function user_get_preference($preference_name) {
                 return false;
             }
         } else {
+            $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
          //we haven't returned prefs - go to the db
             $result=db_query("SELECT preference_name,preference_value FROM user_preferences ".
-            "WHERE user_id='".user_getid()."'");
+            "WHERE user_id='".$db_escaped_user_id."'");
 
             if (db_numrows($result) < 1) {
                 return false;
@@ -245,9 +240,10 @@ function user_del_preference($preference_name) {
         if ($user_pref && array_key_exists($preference_name, $user_pref)) {
             unset($user_pref[$preference_name]);
         }
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
         $sql = 'DELETE FROM user_preferences'
             .' WHERE preference_name="'.db_es($preference_name).'"'
-            .' AND user_id='.user_getid();
+            .' AND user_id='.$db_escaped_user_id;
         $res = db_query($sql);
         if(db_affected_rows($res) != 1) {
             return false;

@@ -730,7 +730,7 @@ class ReferenceManager {
         }
 
         if (! $user_id) {
-            $user_id = user_getid();
+            $user_id = UserManager::instance()->getCurrentUser()->getId();
         }
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {

@@ -388,7 +388,7 @@ class LdapPlugin extends Plugin {
     function account_redirect_after_login($params) {
         if ($this->isLdapAuthType()) {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
-            if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
+            if(!$ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
                 $return_to_arg = "";
                 if($params['return_to']) {
                     $return_to_arg ='?return_to='.urlencode($params['return_to']);

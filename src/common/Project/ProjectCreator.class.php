@@ -542,7 +542,7 @@ class ProjectCreator {
             $fid = forum_create_forum($group_id,$arr['forum_name'],$arr['is_public'],1,
                       $arr['description'], $need_feedback = false);
             if ($fid != -1) {
-                forum_add_monitor($fid, user_getid());
+                forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
             }
         }
     }

@@ -1066,7 +1066,7 @@ class ArtifactHtml extends Artifact {
         $summary           = $this->getValue('summary');
         $artTitle          = '[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
         $field_artifact_id = $result_fields['artifact_id'];
-        if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, user_getid())) {
+        if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, UserManager::instance()->getCurrentUser()->getId())) {
             $artTitle .= " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
         }
         $artTitle .= ' ] '.$hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);

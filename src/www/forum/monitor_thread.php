@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
@@ -106,8 +106,10 @@ if ($request->valid($vFrm)) {
         $title_arr[]=$GLOBALS['Language']->getText('forum_forum','date');
 
         $ret_val = html_build_list_table_top ($title_arr);
+
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
     
-        if (user_monitor_forum ($forum_id, user_getid())) {
+        if (user_monitor_forum ($forum_id, $user_id)) {
             $disabled = "disabled";
         } else {
             $disabled = "";
@@ -116,7 +118,7 @@ if ($request->valid($vFrm)) {
         $i=0;
         while ($i < $rows) {
             $thr_id = db_result($result, $i, 'thread_id');
-            if (user_monitor_forum_thread($thr_id, user_getid())) {
+            if (user_monitor_forum_thread($thr_id, $user_id)) {
                 $monitored = "CHECKED";
             } else {
                 $monitored = "";
@@ -139,7 +141,7 @@ if ($request->valid($vFrm)) {
 		    	    <TR class="'. util_get_alt_row_color($i) .'">'.
             '<TD align="center"><FORM NAME="thread_monitor" action="?" METHOD="POST">'.
             '<INPUT TYPE="hidden" NAME="thread_id" VALUE="'.$thr_id.'">'.
-            '<INPUT TYPE="hidden" NAME="user_id" VALUE="'.user_getid().'">'.
+            '<INPUT TYPE="hidden" NAME="user_id" VALUE="'.Codendi_HTMLPurifier::instance()->purify($user_id).'">'.
             '<INPUT TYPE="hidden" NAME="forum_id" VALUE="'.$forum_id.'">'.
             '<INPUT TYPE="checkbox" '.$disabled.' NAME="mthread[]" VALUE="'.$thr_id.'" '.$monitored.'></TD>'.
             '<TD><A HREF="/forum/message.php?msg_id='.
@@ -158,7 +160,7 @@ if ($request->valid($vFrm)) {
     
     echo $ret_val;
     
-    if (user_monitor_forum ($forum_id, user_getid())) {  
+    if (user_monitor_forum ($forum_id, $user_id)) {
         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','notice');
     }
     

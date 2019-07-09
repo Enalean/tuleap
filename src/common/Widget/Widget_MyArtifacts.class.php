@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -112,7 +112,7 @@ class Widget_MyArtifacts extends Widget {
     function getContent() {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
-            $my_artifacts = $atf->getMyArtifacts(user_getid(), $this->_artifact_show);
+            $my_artifacts = $atf->getMyArtifacts(UserManager::instance()->getCurrentUser()->getId(), $this->_artifact_show);
             if (db_numrows($my_artifacts) > 0) {
                 $html_my_artifacts .= $this->_display_artifacts($my_artifacts, 0);
             }
