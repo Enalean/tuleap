@@ -46,14 +46,14 @@ if (! $user->isAdmin($project_id) && ! $membership_delegation_dao->doesUserHasMe
 }
 
 $user_manager  = UserManager::instance();
-$import        = new UserImport($request->get('project_id'), $user_manager, new UserHelper());
+$import        = new UserImport($user_manager, new UserHelper());
 $user_filename = $_FILES['user_filename']['tmp_name'];
 
 if (!file_exists($user_filename) || !is_readable($user_filename)) {
     return $GLOBALS['Response']->send400JSONErrors(array('error' => _('You should provide a file in entry.')));
 }
 
-$user_collection = $import->parse($user_filename);
+$user_collection = $import->parse($request->get('project_id'), $user_filename);
 
 $GLOBALS['Response']->sendJSON(
     array(

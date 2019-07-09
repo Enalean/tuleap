@@ -195,7 +195,7 @@ class NavigationPresenterBuilder
     {
         return new NavigationItemPresenter(
             _('Members'),
-            '/project/admin/members.php?' . http_build_query(array('group_id' => $project_id)),
+            '/project/'.urlencode((string) $project_id).'/admin/members',
             'members',
             $current_pane_shortname
         );
