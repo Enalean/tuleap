@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\ProjectUGroup;
+declare(strict_types=1);
 
-class MembersPresenter
+namespace Tuleap\Project\UGroups;
+
+class SynchronizedProjectMembershipDetector
 {
-    public $members;
-    public $has_members;
-    public $can_be_updated;
-    public $is_dynamic_group;
-
-    public function __construct(array $members, $can_be_updated, $is_dynamic_group)
+    public function isSynchronizedWithProjectMembers(\ProjectUGroup $ugroup): bool
     {
-        $this->has_members      = count($members) > 0;
-        $this->can_be_updated   = $can_be_updated;
-        $this->members          = $members;
-        $this->is_dynamic_group = $is_dynamic_group;
+        $project = $ugroup->getProject();
+        return ! $project->isPublic();
     }
 }

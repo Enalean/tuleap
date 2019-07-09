@@ -22,7 +22,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -118,7 +118,9 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
                 new UserPermissionsDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ProjectMemberAdder(new UGroupBinding($this->getUGroupUserDao(), $this)),
+                new ProjectMemberAdderWithStatusCheckAndNotifications(
+                    new UGroupBinding($this->getUGroupUserDao(), $this)
+                ),
                 $this->getEventManager()
             );
         }

@@ -18,9 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
-interface ProjectMemberAdder
+class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMemberAdder
 {
-    public function addProjectMember(\PFUser $user, \Project $project): void;
+    /**
+     * @var \UGroupBinding
+     */
+    private $ugroup_binding;
+
+    public function __construct(\UGroupBinding $ugroup_binding)
+    {
+        $this->ugroup_binding = $ugroup_binding;
+    }
+
+    public function addProjectMember(\PFUser $user, \Project $project): void
+    {
+        /** @psalm-suppress MissingFile */
+        require_once __DIR__ . '/../../../../../www/include/account.php';
+        \account_add_user_obj_to_group($project->getID(), $user, true, true);
+        $this->ugroup_binding->reloadUgroupBindingInProject($project);
+    }
 }

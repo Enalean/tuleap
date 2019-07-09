@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,11 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\ProjectUGroup;
+namespace Tuleap\Project\Admin\ProjectUGroup\Details;
 
 use Event;
 use EventManager;
 use ProjectUGroup;
+use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use UserHelper;
 
 class MembersPresenterBuilder
@@ -36,11 +38,19 @@ class MembersPresenterBuilder
      * @var UserHelper
      */
     private $user_helper;
+    /**
+     * @var SynchronizedProjectMembershipDetector
+     */
+    private $detector;
 
-    public function __construct(EventManager $event_manager, UserHelper $user_helper)
-    {
+    public function __construct(
+        EventManager $event_manager,
+        UserHelper $user_helper,
+        SynchronizedProjectMembershipDetector $detector
+    ) {
         $this->event_manager = $event_manager;
         $this->user_helper   = $user_helper;
+        $this->detector      = $detector;
     }
 
     public function build(ProjectUGroup $ugroup)
@@ -51,10 +61,14 @@ class MembersPresenterBuilder
             array('ugroup_id' => $ugroup->getId(), 'allowed' => &$can_be_updated)
         );
 
-        $members          = $this->getFormattedUgroupMembers($ugroup);
-        $is_dynamic_group = ! $ugroup->isStatic();
+        $members                              = $this->getFormattedUgroupMembers($ugroup);
+        $is_synchronized_with_project_members = $this->detector->isSynchronizedWithProjectMembers($ugroup);
 
-        return new MembersPresenter($members, $can_be_updated, $is_dynamic_group);
+        return new MembersPresenter(
+            $members,
+            $can_be_updated,
+            $is_synchronized_with_project_members
+        );
     }
 
     private function getFormattedUgroupMembers(ProjectUGroup $ugroup)
