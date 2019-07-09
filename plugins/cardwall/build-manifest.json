@@ -1,17 +1,5 @@
 {
     "name": "cardwall",
-    "themes": {
-        "FlamingParrot": {
-            "files": [
-                "www/themes/FlamingParrot/css/style.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/FlamingParrot/css/utils"
-            ],
-            "target_dir": "../../src/www/assets/cardwall/FlamingParrot",
-            "is_revisioned": true
-        }
-    },
     "javascript": [
         "www/js/ajaxInPlaceEditorExtensions.js",
         "www/js/cardwall.js",
@@ -19,5 +7,6 @@
         "www/js/custom-mapping.js",
         "www/js/CardsEditInPlace.js",
         "www/js/fullscreen.js"
-    ]
+    ],
+    "components": ["themes/"]
 }
