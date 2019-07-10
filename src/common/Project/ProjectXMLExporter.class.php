@@ -20,10 +20,13 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 
 class ProjectXMLExporter
 {
+    public const UGROUPS_MODE_SYNCHRONIZED = 'synchronized';
+
     /** @var EventManager */
     private $event_manager;
 
@@ -38,19 +41,25 @@ class ProjectXMLExporter
 
     /** @var Logger */
     private $logger;
+    /**
+     * @var SynchronizedProjectMembershipDetector
+     */
+    private $synchronized_project_membership_detector;
 
     public function __construct(
         EventManager $event_manager,
         UGroupManager $ugroup_manager,
         XML_RNGValidator $xml_validator,
         UserXMLExporter $user_xml_exporter,
+        SynchronizedProjectMembershipDetector $synchronized_project_membership_detector,
         Logger $logger
     ) {
-        $this->event_manager     = $event_manager;
-        $this->ugroup_manager    = $ugroup_manager;
-        $this->xml_validator     = $xml_validator;
-        $this->user_xml_exporter = $user_xml_exporter;
-        $this->logger            = $logger;
+        $this->event_manager                            = $event_manager;
+        $this->ugroup_manager                           = $ugroup_manager;
+        $this->xml_validator                            = $xml_validator;
+        $this->user_xml_exporter                        = $user_xml_exporter;
+        $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
+        $this->logger                                   = $logger;
     }
 
     private function exportProjectInfo(Project $project, SimpleXMLElement $project_node)
@@ -73,6 +82,9 @@ class ProjectXMLExporter
     private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml)
     {
         $ugroups_node = $into_xml->addChild('ugroups');
+        if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)) {
+            $ugroups_node->addAttribute('mode', self::UGROUPS_MODE_SYNCHRONIZED);
+        }
 
         $this->logger->debug('Exporting project_admins ugroup');
         $project_admins_ugroup = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);

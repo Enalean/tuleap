@@ -1,4 +1,5 @@
 ugroups =
+    attribute mode { "synchronized" }?,
     element ugroup { ugroup }+
 
 ugroup =

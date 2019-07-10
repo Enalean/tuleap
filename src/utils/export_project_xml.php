@@ -21,6 +21,8 @@
 
 require_once 'pre.php';
 
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export;
 
 $posix_user = posix_getpwuid(posix_geteuid());
@@ -117,6 +119,7 @@ try {
         new UGroupManager(),
         $rng_validator,
         new UserXMLExporter(UserManager::instance(), $users_collection),
+        new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
         new ProjectXMLExporterLogger()
     );
 

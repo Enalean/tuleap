@@ -27,7 +27,7 @@ class UserTestBuilder
 {
     private $params = array('language_id' => 'en_US');
 
-    public function aUser() : self
+    public static function aUser() : self
     {
         return new self();
     }

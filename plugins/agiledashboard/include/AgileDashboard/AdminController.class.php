@@ -75,6 +75,7 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Service\ServiceCreator;
@@ -384,7 +385,6 @@ class AdminController extends BaseController
                         new XMLImportHelper($user_manager),
                         ServiceManager::instance(),
                         $logger,
-                        $ugroup_duplicator,
                         $frs_permissions_creator,
                         new UserRemover(
                             ProjectManager::instance(),
@@ -405,7 +405,8 @@ class AdminController extends BaseController
                             $widget_dao,
                             $logger,
                             $this->event_manager
-                        )
+                        ),
+                        new SynchronizedProjectMembershipDao()
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

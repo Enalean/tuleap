@@ -21,6 +21,7 @@
  */
 
 use Mockery as M;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
 
 final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
@@ -52,6 +53,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
+            M::mock(SynchronizedProjectMembershipDetector::class, [ 'isSynchronizedWithProjectMembers' => false ]),
             M::spy(ProjectXMLExporterLogger::class)
         );
 
