@@ -35,14 +35,14 @@
             {{ item.title }}
         </span>
         <a v-if="! hideDetailsEntry"
-           v-bind:href="getUrlForPane(DETAILS_PANE_NAME)"
+           v-on:click.prevent="showUpdateModal"
            class="tlp-dropdown-menu-item"
            role="menuitem"
            data-test="docman-dropdown-details"
         >
             <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>
-                Details
+            <span>
+                {{ properties_label }}
             </span>
         </a>
         <a v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
@@ -91,11 +91,12 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
+import { redirectToUrl } from "../../../helpers/location-helper.js";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
-import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK, TYPE_EMPTY } from "../../../constants.js";
 
 export default {
     name: "DropdownMenu",
@@ -130,6 +131,12 @@ export default {
                 this.item.type === TYPE_LINK ||
                 this.item.type === TYPE_EMPTY
             );
+        },
+        properties_label() {
+            if (this.item.type === TYPE_FILE) {
+                return this.$gettext("Update properties");
+            }
+            return this.$gettext("Properties");
         }
     },
     methods: {
@@ -137,6 +144,19 @@ export default {
             return `/plugins/docman/?group_id=${this.project_id}&id=${
                 this.item.id
             }&action=details&section=${pane_name}`;
+        },
+        showUpdateModal() {
+            if (this.item.type !== TYPE_FILE) {
+                const details_url = this.getUrlForPane(this.DETAILS_PANE_NAME);
+                redirectToUrl(details_url);
+                return;
+            }
+
+            document.dispatchEvent(
+                new CustomEvent("show-update-item-metadata-modal", {
+                    detail: { current_item: this.item }
+                })
+            );
         }
     }
 };

@@ -30,16 +30,13 @@
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
-            <global-metadata v-bind:item="item" v-bind:parent="parent">
+            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-updated-context="false">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item"/>
-                <status-metadata v-if="is_item_status_metadata_used" v-on:itemStatusSelectEvent="setItemStatus"/>
-                <obsolescence-date-metadata v-if="is_obsolescence_date_metadata_used"
-                                            v-on:documentObsolescenceDateSelectEvent="setObsolescenceDate"
-                />
             </global-metadata>
+            <other-information-metadata v-bind:currently-updated-item="item"/>
         </div>
 
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
@@ -49,7 +46,7 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { ITEM_STATUS_NONE, OBSOLESCENCE_DATE_NONE, TYPE_FILE } from "../../../constants.js";
+import { DOCMAN_ITEM_STATUS_NONE, TYPE_FILE } from "../../../constants.js";
 import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
 import LinkProperties from "../Property/LinkProperties.vue";
 import WikiProperties from "../Property/WikiProperties.vue";
@@ -59,13 +56,12 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
-import StatusMetadata from "../Metadata/StatusMetadata.vue";
-import ObsolescenceDateMetadata from "../Metadata/ObsolescenceDateMetadata.vue";
+import OtherInformationMetadata from "../Metadata/OtherInformationMetadata.vue";
 
 export default {
     name: "NewItemModal",
     components: {
-        ObsolescenceDateMetadata,
+        OtherInformationMetadata,
         FileProperties,
         EmbeddedProperties,
         ModalFooter,
@@ -74,30 +70,10 @@ export default {
         LinkProperties,
         WikiProperties,
         TypeSelector,
-        ModalFeedback,
-        StatusMetadata
+        ModalFeedback
     },
     data() {
         return {
-            default_item: {
-                title: "",
-                description: "",
-                type: TYPE_FILE,
-                link_properties: {
-                    link_url: ""
-                },
-                wiki_properties: {
-                    page_name: ""
-                },
-                file_properties: {
-                    file: ""
-                },
-                embedded_properties: {
-                    content: ""
-                },
-                status: ITEM_STATUS_NONE,
-                obsolescence_date: OBSOLESCENCE_DATE_NONE
-            },
             item: {},
             is_displayed: false,
             is_loading: false,
@@ -127,6 +103,29 @@ export default {
         this.registerEvents();
     },
     methods: {
+        getDefaultItem() {
+            return {
+                title: "",
+                description: "",
+                type: TYPE_FILE,
+                link_properties: {
+                    link_url: ""
+                },
+                wiki_properties: {
+                    page_name: ""
+                },
+                file_properties: {
+                    file: ""
+                },
+                embedded_properties: {
+                    content: ""
+                },
+                metadata: [
+                    { short_name: "status", list_value: [{ id: DOCMAN_ITEM_STATUS_NONE }] },
+                    { short_name: "obsolescence_date", value: null }
+                ]
+            };
+        },
         registerEvents() {
             document.addEventListener("show-new-document-modal", this.show);
             this.$once("hook:beforeDestroy", () => {
@@ -135,7 +134,7 @@ export default {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show(event) {
-            this.item = { ...this.default_item };
+            this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
             this.is_displayed = true;
             this.modal.show();
@@ -144,8 +143,7 @@ export default {
             this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
-            this.setItemStatus(ITEM_STATUS_NONE);
-            this.setObsolescenceDate(OBSOLESCENCE_DATE_NONE);
+            this.item = this.getDefaultItem();
         },
         async addDocument(event) {
             event.preventDefault();
@@ -157,18 +155,10 @@ export default {
                 this.current_folder
             ]);
 
-            this.setItemStatus(ITEM_STATUS_NONE);
-            this.setObsolescenceDate(OBSOLESCENCE_DATE_NONE);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
-        },
-        setItemStatus(status) {
-            this.item.status = status;
-        },
-        setObsolescenceDate(obsolescence_date) {
-            this.item.obsolescence_date = obsolescence_date;
         }
     }
 };

@@ -133,7 +133,7 @@ function addJustCreatedItemToFolderContent(state, new_item) {
         return addDocumentToTheRightPlace(state, new_item, parent);
     }
 
-    addFolderToTheRightPlace(state, new_item, parent);
+    return addFolderToTheRightPlace(state, new_item, parent);
 }
 
 function appendSubFolderContent(state, [folder_id, sub_items]) {
