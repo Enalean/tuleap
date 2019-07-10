@@ -49,3 +49,5 @@ export const APPROVAL_DECLINED = "Declined";
 export const APPROVAL_COMMENTED = "Commented";
 
 export const USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE = null;
+
+export const METADATA_OBSOLESCENCE_DATE_SHORT_NAME = "obsolescence_date";

@@ -59,6 +59,7 @@ import {
     getElapsedTimeFromNow,
     isDateValid
 } from "../../../helpers/date-formatter.js";
+import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
 
 export default {
     name: "QuickLookDocumentAdditionalMetadataList",
@@ -79,7 +80,7 @@ export default {
             return `document-${metadata_name_kebab_case}`;
         },
         metadata_name() {
-            if (this.metadata.name === this.$gettext("Obsolescence Date")) {
+            if (this.isMetadataObsolescenceDate()) {
                 return this.$gettext("Validity");
             }
             return this.metadata.name;
@@ -102,10 +103,7 @@ export default {
             return this.metadata.value;
         },
         has_obsolescence_date_metadata_unlimited_validity() {
-            return (
-                this.metadata.name === this.$gettext("Obsolescence Date") &&
-                this.metadata.value === null
-            );
+            return this.isMetadataObsolescenceDate() && this.metadata.value === null;
         }
     },
     methods: {
@@ -114,6 +112,9 @@ export default {
         },
         getFormattedDateForDisplay(date) {
             return getElapsedTimeFromNow(date);
+        },
+        isMetadataObsolescenceDate() {
+            return this.metadata.short_name === METADATA_OBSOLESCENCE_DATE_SHORT_NAME;
         }
     }
 };
