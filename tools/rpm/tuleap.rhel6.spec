@@ -558,6 +558,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
