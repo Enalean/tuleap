@@ -29,7 +29,7 @@
 
 <script>
 export default {
-    name: "ReleaseDescriptionDisplayer",
+    name: "ReleaseDescription",
     props: {
         releaseData: Object
     },

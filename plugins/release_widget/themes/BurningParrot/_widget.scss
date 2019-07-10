@@ -170,24 +170,24 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
-.project-release-infos {
+.project-release-infos-badges {
     display: flex;
     flex-wrap: wrap;
     margin: 0 $tlp-spacing $tlp-half-spacing 0;
 }
 
-.project-release-infos .project-release-info-badge {
+.project-release-infos-badges .project-release-info-badge {
     position: relative;
     margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
     cursor: default;
 }
 
-.project-release-infos .toggle-sprints {
+.project-release-infos-badges .toggle-sprints {
     position: relative;
     cursor: pointer;
 }
 
-.project-release-infos .toggle-sprints::before {
+.project-release-infos-badges .toggle-sprints::before {
     content: '';
     position: absolute;
     z-index: 2;
@@ -199,7 +199,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: $tlp-theme-color;
 }
 
-.project-release-infos .toggle-sprints::after {
+.project-release-infos-badges .toggle-sprints::after {
     content: '';
     position: absolute;
     z-index: 2;

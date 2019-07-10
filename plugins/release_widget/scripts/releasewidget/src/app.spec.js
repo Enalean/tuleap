@@ -25,8 +25,10 @@ import "./store/actions.spec.js";
 
 import "./components/App.spec.js";
 import "./components/WhatsHotSection/WhatsHotSection.spec.js";
-import "./components/WhatsHotSection/ReleaseInformationDisplayer.spec.js";
-import "./components/WhatsHotSection/ReleaseDescriptionDisplayer.spec.js";
+import "./components/WhatsHotSection/ReleaseBadges.spec.js";
+import "./components/WhatsHotSection/ReleaseDescription.spec.js";
+import "./components/WhatsHotSection/ReleaseDisplayer.spec.js";
+import "./components/WhatsHotSection/ReleaseHeader.spec.js";
 import "./components/RoadmapSection/RoadmapSection.spec.js";
 
 import "./helpers/date-formatters.spec.js";

@@ -18,16 +18,18 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import ReleaseInformationDisplayer from "./ReleaseInformationDisplayer.vue";
+import ReleaseBadges from "./ReleaseBadges.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 
 let releaseData = {};
+let totalSprint = 10;
+let initialEffort = 10;
 let component_options = {};
 const project_id = "102";
 
-describe("ReleaseInformationDisplayer", () => {
+describe("ReleaseBadges", () => {
     let store_options;
     let store;
 
@@ -41,7 +43,7 @@ describe("ReleaseInformationDisplayer", () => {
             silent: true
         });
 
-        return shallowMount(ReleaseInformationDisplayer, component_options);
+        return shallowMount(ReleaseBadges, component_options);
     }
 
     beforeEach(() => {
@@ -55,42 +57,24 @@ describe("ReleaseInformationDisplayer", () => {
             planning: {
                 id: 100
             },
-            start_date: Date("2017-01-22T13:42:08+02:00"),
             capacity: 10
         };
 
         component_options = {
             propsData: {
-                releaseData
-            },
-            data() {
-                return {
-                    is_open: false,
-                    total_sprint: null,
-                    initial_effort: null
-                };
+                releaseData,
+                totalSprint,
+                initialEffort
             }
         };
 
         getPersonalWidgetInstance(store_options);
     });
 
-    it("When the user toggle twice a project, the content widget is displayed first and hidden after", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeTruthy();
-        toggle.trigger("click");
-        expect(wrapper.contains("[data-test=toggle_open]")).toBeFalsy();
-    });
-
-    it("When a release is toggle, Then a good link to top planning of the release is rendered", () => {
+    it("When the component is displayed, Then a good link to top planning of the release is rendered", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = getPersonalWidgetInstance(store_options);
-
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
 
         expect(wrapper.find("[data-test=planning-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
@@ -103,48 +87,36 @@ describe("ReleaseInformationDisplayer", () => {
         );
     });
 
-    it("When a release is toggle and there is an initial effort, Then the points of initial effort are displayed", () => {
-        component_options = {
-            propsData: {
-                releaseData
-            },
-            data() {
-                return {
-                    initial_effort: 5
-                };
-            }
-        };
-
+    it("When there is an initial effort, Then the points of initial effort are displayed", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
-
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
 
         expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeTruthy();
         expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeFalsy();
     });
 
-    it("When a release is toggle and there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
-        const wrapper = getPersonalWidgetInstance(store_options);
+    it("When there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
+        initialEffort = null;
 
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
+        component_options = {
+            propsData: {
+                releaseData,
+                initialEffort
+            }
+        };
+        const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
         expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
     });
 
-    it("When a release is toggle and there are points of capacity, Then the points of capacity are displayed", () => {
+    it("When there are points of capacity, Then the points of capacity are displayed", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
-
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
 
         expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeTruthy();
         expect(wrapper.contains("[data-test=capacity-empty]")).toBeFalsy();
     });
 
-    it("When a release is toggle and there aren't points of capacity, Then the points of capacity are 'N/A'", () => {
+    it("When there aren't points of capacity, Then the points of capacity are 'N/A'", () => {
         releaseData = {
             label: "mile",
             id: 2,
@@ -159,37 +131,8 @@ describe("ReleaseInformationDisplayer", () => {
         };
 
         const wrapper = getPersonalWidgetInstance(store_options);
-        const toggle = wrapper.find("[data-test=project-release-toggle]");
-        toggle.trigger("click");
 
         expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
         expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
-    });
-
-    describe("Display arrow between dates", () => {
-        it("When there is a start date of a release, Then an arrow is displayed", () => {
-            const wrapper = getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
-        });
-
-        it("When there isn't a start date of a release, Then there isn't an arrow", () => {
-            releaseData = {
-                label: "mile",
-                id: 2,
-                planning: {
-                    id: 100
-                },
-                start_date: null
-            };
-
-            component_options.propsData = {
-                releaseData
-            };
-
-            const wrapper = getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
-        });
     });
 });
