@@ -107,7 +107,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     private function getConfigurationFieldRetriever()
     {
-        return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
+        return new ChartConfigurationFieldRetriever(
+            $this->getFormElementFactory(),
+            $this->getSemanticTimeframeBuilder(),
+            $this->getLogger()
+        );
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, array $submitted_values)
@@ -441,6 +445,14 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
             ),
             $this->getLogger()
+        );
+    }
+
+    private function getSemanticTimeframeBuilder()
+    {
+        return new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            Tracker_FormElementFactory::instance()
         );
     }
 }

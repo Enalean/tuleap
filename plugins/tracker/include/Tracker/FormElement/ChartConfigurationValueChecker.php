@@ -48,7 +48,7 @@ class ChartConfigurationValueChecker
 
     public function hasStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
-        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
+        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
         $artifact_value   = $artifact->getValue($start_date_field);
 
         if ($artifact_value === null) {
@@ -85,8 +85,8 @@ class ChartConfigurationValueChecker
         PFUser $user,
         Tracker_Artifact_Changeset $new_changeset
     ) {
-        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact, $user);
-        $duration_field   = $this->configuration_field_retriever->getDurationField($artifact, $user);
+        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
+        $duration_field   = $this->configuration_field_retriever->getDurationField($artifact->getTracker(), $user);
 
         return $this->hasFieldChanged($new_changeset, $start_date_field)
             || $this->hasFieldChanged($new_changeset, $duration_field);
