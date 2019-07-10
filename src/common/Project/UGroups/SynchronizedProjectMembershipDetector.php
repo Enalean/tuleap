@@ -32,9 +32,8 @@ class SynchronizedProjectMembershipDetector
         $this->dao = $dao;
     }
 
-    public function isSynchronizedWithProjectMembers(\ProjectUGroup $ugroup): bool
+    public function isSynchronizedWithProjectMembers(\Project $project): bool
     {
-        $project = $ugroup->getProject();
         return (! $project->isPublic() || $this->dao->isEnabled((int) $project->getID()));
     }
 }

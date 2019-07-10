@@ -62,7 +62,7 @@ class MembersPresenterBuilder
         );
 
         $members                              = $this->getFormattedUgroupMembers($ugroup);
-        $is_synchronized_with_project_members = $this->detector->isSynchronizedWithProjectMembers($ugroup);
+        $is_synchronized_with_project_members = $this->detector->isSynchronizedWithProjectMembers($ugroup->getProject());
 
         return new MembersPresenter(
             $members,

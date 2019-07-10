@@ -25,7 +25,7 @@ namespace Tuleap\Project\UGroups;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Git\GitPHP\Project;
+use Project;
 
 final class SynchronizedProjectMembershipDetectorTest extends TestCase
 {
@@ -44,41 +44,35 @@ final class SynchronizedProjectMembershipDetectorTest extends TestCase
         $this->detector = new SynchronizedProjectMembershipDetector($this->dao);
     }
 
-    public function testItReturnsTrueWhenTheUGroupsProjectIsPrivate(): void
+    public function testItReturnsTrueWhenTheProjectIsPrivate(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('isPublic')->andReturnFalse();
-        $ugroup = Mockery::mock(\ProjectUGroup::class);
-        $ugroup->shouldReceive('getProject')->andReturn($project);
 
-        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($ugroup));
+        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
     }
 
-    public function testItReturnsTrueWhenTheUGroupsProjectIsPublicAndHasSynchronizedManagementEnabled(): void
+    public function testItReturnsTrueWhenTheProjectIsPublicAndHasSynchronizedManagementEnabled(): void
     {
         $project = Mockery::mock(Project::class, ['getID' => 165]);
         $project->shouldReceive('isPublic')->andReturnTrue();
-        $ugroup = Mockery::mock(\ProjectUGroup::class);
-        $ugroup->shouldReceive('getProject')->andReturn($project);
         $this->dao->shouldReceive('isEnabled')
             ->with(165)
             ->once()
             ->andReturnTrue();
 
-        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($ugroup));
+        $this->assertTrue($this->detector->isSynchronizedWithProjectMembers($project));
     }
 
-    public function testItReturnsFalseWhenTheUGroupsProjectIsPublicAndHasSynchronizedManagementDisabled(): void
+    public function testItReturnsFalseWhenTheProjectIsPublicAndHasSynchronizedManagementDisabled(): void
     {
         $project = Mockery::mock(Project::class, ['getID' => 165]);
         $project->shouldReceive('isPublic')->andReturnTrue();
-        $ugroup = Mockery::mock(\ProjectUGroup::class);
-        $ugroup->shouldReceive('getProject')->andReturn($project);
         $this->dao->shouldReceive('isEnabled')
             ->with(165)
             ->once()
             ->andReturnFalse();
 
-        $this->assertFalse($this->detector->isSynchronizedWithProjectMembers($ugroup));
+        $this->assertFalse($this->detector->isSynchronizedWithProjectMembers($project));
     }
 }

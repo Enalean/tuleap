@@ -100,7 +100,7 @@ class MemberAdder
         }
         $this->static_member_adder->addUserToStaticGroup($project_id, $ugroup_id, $user->getId());
 
-        if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($ugroup)
+        if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
             && ! $user->isMember($project_id)
         ) {
             $this->project_member_adder->addProjectMember($user, $project);
