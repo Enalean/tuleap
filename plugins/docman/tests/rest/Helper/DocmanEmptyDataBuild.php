@@ -70,6 +70,7 @@ class DocmanEmptyDataBuild
 
         $this->createDeleteFolder($folder_id);
         $this->createLockFolder($folder_id);
+        $this->createPutFolder($folder_id);
     }
 
     /**
@@ -134,6 +135,33 @@ class DocmanEmptyDataBuild
             $this->docman_user_id,
             $folder_lock_id,
             'LOCK EM',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        );
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        PUT HM Empty
+     *                           +
+     *                           |
+     *                           +
+     *                        PUT EM
+     */
+    private function createPutFolder(int $folder_id): void
+    {
+        $folder_put_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'PUT HM Empty',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $this->common_builder->addWritePermissionOnItem($folder_put_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_put_id,
+            'PUT EM',
             PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
         );
     }

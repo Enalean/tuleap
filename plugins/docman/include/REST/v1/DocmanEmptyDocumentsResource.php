@@ -25,10 +25,18 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
+use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -93,9 +101,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
         $item_to_delete->accept($validator_visitor);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         try {
             (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
@@ -195,6 +201,67 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         Header::allowOptionsPostDelete();
     }
 
+    /**
+     * Update the empty document metadata
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url    PUT {id}/metadata
+     * @access hybrid
+     *
+     * @param int                       $id             Id of the empty document
+     * @param PUTMetadataRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws RestException 404
+     */
+    public function putMetadata(
+        int $id,
+        PUTMetadataRepresentation $representation
+    ): void {
+        $this->checkAccess();
+        $this->setMetadataHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $this->addAllEvent($project);
+
+        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator->updateDocumentMetadata(
+            $representation,
+            $item,
+            new \DateTimeImmutable(),
+            $current_user
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    private function setMetadataHeaders()
+    {
+        Header::allowOptionsPut();
+    }
+
     private function getRestLockUpdater(\Project $project): RestLockUpdater
     {
         return new RestLockUpdater(new Docman_LockFactory(new \Docman_LockDao(), new Docman_Log()), $this->getPermissionManager($project));
@@ -218,5 +285,39 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
         return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Empty::class);
+    }
+
+    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
+    {
+        $user_manager = \UserManager::instance();
+        return new MetadataUpdator(
+            new \Docman_ItemFactory(),
+            $this->getItemStatusMapper($project),
+            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
+            $user_manager,
+            new OwnerRetriever($user_manager),
+            new MetadataEventProcessor($this->event_manager)
+        );
+    }
+
+    private function getItemStatusMapper(\Project $project): ItemStatusMapper
+    {
+        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
+    }
+
+    private function getHardcodedMetadataObsolescenceDateRetriever(\Project $project): HardcodedMetadataObsolescenceDateRetriever
+    {
+        return new HardcodedMetadataObsolescenceDateRetriever(
+            new HardcodedMetdataObsolescenceDateChecker(
+                new Docman_SettingsBo($project->getID())
+            )
+        );
+    }
+
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
     }
 }
