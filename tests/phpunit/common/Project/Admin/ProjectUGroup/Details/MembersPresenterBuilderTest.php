@@ -103,7 +103,7 @@ final class MembersPresenterBuilderTest extends TestCase
         $ugroup = $this->getEmptyStaticUGroup();
         $this->detector
             ->shouldReceive('isSynchronizedWithProjectMembers')
-            ->with($ugroup)
+            ->with($ugroup->getProject())
             ->once()
             ->andReturnTrue();
 
@@ -116,7 +116,7 @@ final class MembersPresenterBuilderTest extends TestCase
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
-            ['isBound' => false, 'getId' => 98, 'isStatic' => true]
+            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
         $first_member = Mockery::mock(
             \PFUser::class,
@@ -151,7 +151,7 @@ final class MembersPresenterBuilderTest extends TestCase
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
-            ['isBound' => false, 'getId' => 98, 'isStatic' => true]
+            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
         $this->event_manager
             ->shouldReceive('processEvent')
@@ -195,7 +195,8 @@ final class MembersPresenterBuilderTest extends TestCase
                 'isBound'      => false,
                 'getId'        => \ProjectUGroup::NEWS_WRITER,
                 'getProjectId' => 180,
-                'isStatic'     => false
+                'isStatic'     => false,
+                'getProject' => Mockery::mock(\Project::class)
             ]
         );
         $first_member = Mockery::mock(
@@ -224,7 +225,7 @@ final class MembersPresenterBuilderTest extends TestCase
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
-            ['isBound' => true, 'getId' => 98, 'isStatic' => true]
+            ['isBound' => true, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
             ->andReturn([]);

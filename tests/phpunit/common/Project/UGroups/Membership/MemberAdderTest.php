@@ -162,7 +162,7 @@ final class MemberAdderTest extends TestCase
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
-            ->with($ugroup)
+            ->with($project)
             ->once()
             ->andReturnFalse();
 
@@ -197,7 +197,7 @@ final class MemberAdderTest extends TestCase
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
-            ->with($ugroup)
+            ->with($project)
             ->once()
             ->andReturnTrue();
 
@@ -232,7 +232,7 @@ final class MemberAdderTest extends TestCase
             ]
         );
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
-            ->with($ugroup)
+            ->with($project)
             ->once()
             ->andReturnTrue();
 

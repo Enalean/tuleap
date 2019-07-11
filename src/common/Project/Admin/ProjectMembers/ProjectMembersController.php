@@ -211,7 +211,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 $additional_modals,
                 $user_locale,
                 $this->canUserSeeUGroups($request->getCurrentUser(), $project),
-                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_MEMBERS))
+                $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
             )
         );
 
