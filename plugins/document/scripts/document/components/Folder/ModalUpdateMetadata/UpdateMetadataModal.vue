@@ -77,7 +77,7 @@ export default {
         }
     },
     beforeMount() {
-        this.item_to_update = { ...this.item };
+        this.item_to_update = JSON.parse(JSON.stringify(this.item));
     },
     mounted() {
         this.modal = createModal(this.$el);
