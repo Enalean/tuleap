@@ -22,7 +22,7 @@
 /**
  * ProjectUGroup binding
  */
-class UGroupBinding
+class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     private $ugroupUserDao;
@@ -237,7 +237,6 @@ class UGroupBinding
             foreach ($cascadingBindedUgroups as $cascadUgroupKey => $ugroupData) {
                 $this->reloadUgroupBinding($cascadUgroupKey, $ugroupId);
             }
-
         } catch (LogicException $e) {
             //re-throw exception
             throw new Exception($e->getMessage());
