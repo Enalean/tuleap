@@ -47,7 +47,8 @@ msgid ""
 "Access to <a class=\"access-legacy-update-properties-page-link\" v-bind:href="
 "\"`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props."
 "itemId}`\">legacy properties page</a>"
-msgstr "Accéder à <a class=\"access-legacy-update-properties-page-link\" v-bind:href="
+msgstr ""
+"Accéder à <a class=\"access-legacy-update-properties-page-link\" v-bind:href="
 "\"`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props."
 "itemId}`\">l'ancienne page des propriétés'</a>"
 
@@ -60,11 +61,11 @@ msgstr "Avancé"
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
-msgid "Approval status"
-msgstr "Status de la table d'approbation"
-
 msgid "Approval table"
 msgstr "Tables d'approbation"
+
+msgid "Approval table status"
+msgstr "Status de la table d'approbation"
 
 msgid "Approval tables"
 msgstr "Tables d'approbation"
