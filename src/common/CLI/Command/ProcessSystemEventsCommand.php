@@ -27,6 +27,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEvent;
 use SystemEventProcessManager;
 use SystemEventProcessor_Factory;
@@ -41,24 +43,27 @@ final class ProcessSystemEventsCommand extends Command
      * @var SystemEventProcessor_Factory
      */
     private $system_event_processor_factory;
-    /**
-     * @var SystemEventProcessManager
-     */
-    private $system_event_process_manager;
+
     /**
      * @var DBConnection
      */
     private $db_connection;
 
+    /**
+     * @var LockFactory
+     */
+    private $lock_factory;
+
     public function __construct(
         SystemEventProcessor_Factory $system_event_processor_factory,
-        SystemEventProcessManager $system_event_process_manager,
-        DBConnection $db_connection
+        DBConnection $db_connection,
+        LockFactory $lock_factory
     ) {
         parent::__construct(self::NAME);
+
         $this->system_event_processor_factory = $system_event_processor_factory;
-        $this->system_event_process_manager   = $system_event_process_manager;
         $this->db_connection                  = $db_connection;
+        $this->lock_factory                   = $lock_factory;
     }
 
     protected function configure() : void
@@ -78,7 +83,7 @@ final class ProcessSystemEventsCommand extends Command
 
         $processor = $this->system_event_processor_factory->getProcessForQueue($request_queue);
 
-        $mutex = new SystemEventProcessorMutex($this->system_event_process_manager, $processor);
+        $mutex = new SystemEventProcessorMutex($processor, $this->lock_factory);
         $mutex->execute();
         return 0;
     }

@@ -31,10 +31,11 @@ class SystemEventProcessCustomQueue implements SystemEventProcess {
         $this->queue = $queue;
     }
     /**
-     * @see SystemEventProcess::getPidFile()
+     * @see SystemEventProcess::getLockName()
      */
-    public function getPidFile() {
-        return '/var/tmp/tuleap_process_system_events_'. $this->queue .'.pid';
+    public function getLockName()
+    {
+        return 'tuleap_process_system_events_'. $this->queue;
     }
 
     public function getQueue() {

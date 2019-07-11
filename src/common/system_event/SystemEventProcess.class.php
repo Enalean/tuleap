@@ -30,11 +30,11 @@ interface SystemEventProcess
     public function getQueue();
 
     /**
-     * Return the path to the process identifier
+     * Return the lock identifier
      *
      * @return string
      */
-    public function getPidFile();
+    public function getLockName();
 
     /**
      * Return the command name that match the process to launch

@@ -25,10 +25,11 @@
 class SystemEventProcessRootDefaultQueue implements SystemEventProcess {
 
     /**
-     * @see SystemEventProcess::getPidFile()
+     * @see SystemEventProcess::getLockName()
      */
-    public function getPidFile() {
-        return '/var/run/tuleap_process_system_events.pid';
+    public function getLockName()
+    {
+        return 'tuleap_process_system_events';
     }
 
     public function getQueue() {

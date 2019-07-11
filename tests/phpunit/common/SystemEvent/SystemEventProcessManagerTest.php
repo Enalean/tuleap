@@ -24,69 +24,52 @@ declare(strict_types=1);
 namespace Tuleap\SystemEvent;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEventProcessManager;
 
 class SystemEventProcessManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $fixtures_dir;
-    private $fixture_file;
     /**
      * @var SystemEventProcessManager
      */
     private $process_manager;
+
     /**
      * @var \Mockery\MockInterface|\SystemEventProcess
      */
     private $process;
-    private $root;
+
+    /**
+     * @var LockFactory
+     */
+    private $lock_factory;
 
     public function setUp() : void
     {
-        $this->root         = vfsStream::setup('slash');
-        $this->fixtures_dir = $this->root->url();
-        $this->fixture_file = $this->fixtures_dir.'/tuleap_process_system_event.pid';
+        $this->process = \Mockery::mock(\SystemEventProcess::class, ['getLockName' => 'lock']);
 
-        $this->process = \Mockery::mock(\SystemEventProcess::class, ['getPidFile' => $this->fixture_file]);
+        $store              = new SemaphoreStore();
+        $this->lock_factory = new LockFactory($store);
 
-        $this->process_manager = new SystemEventProcessManager();
+        $this->process_manager = new SystemEventProcessManager($this->lock_factory);
     }
 
-    public function testItWritesPidFileOnStart()
+    public function testItReturnsFalseIfNoProcessRunning()
     {
-        $this->assertFileNotExists($this->fixture_file);
-
-        $this->process_manager->createPidFile($this->process);
-
-        $this->assertFileExists($this->fixture_file);
+        $this->process_manager->isAlreadyRunning($this->process);
     }
 
-    public function testItWritesProcessPid()
+    public function testItReturnsTrueIfAProcessIsRunning()
     {
-        $this->process_manager->createPidFile($this->process);
+        $lock = $this->lock_factory->createLock($this->process);
+        $lock->acquire();
 
-        $this->assertStringEqualsFile($this->fixture_file, (string) getmypid());
-    }
+        $this->process_manager->isAlreadyRunning($this->process);
 
-    public function testItThrowAnExceptionWhenCannotWritePidFile()
-    {
-        vfsStream::newFile('stuff.pid', 0000)->at($this->root);
-
-        $this->process->shouldReceive('getPidFile')->andReturns($this->root->url() . '/stuff.pid');
-
-        $this->expectException(\Exception::class);
-
-        $this->process_manager->createPidFile($this->process);
-    }
-
-    public function itRemovesPidFileOnEnd()
-    {
-        $this->process_manager->createPidFile($this->process);
-        $this->process_manager->deletePidFile($this->process);
-
-        $this->assertFileNotExists($this->fixture_file);
+        $lock->release();
     }
 }

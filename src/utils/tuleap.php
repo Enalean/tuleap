@@ -20,6 +20,8 @@
 
 require_once __DIR__.'/../www/include/pre.php';
 
+use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
@@ -71,10 +73,13 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     ProcessSystemEventsCommand::NAME,
     static function() use ($backend_logger, $event_manager) : ProcessSystemEventsCommand  {
+        $store   = new SemaphoreStore();
+        $factory = new LockFactory($store);
+
         return new ProcessSystemEventsCommand(
             new SystemEventProcessor_Factory($backend_logger, SystemEventManager::instance(), $event_manager),
-            new SystemEventProcessManager(),
-            DBFactory::getMainTuleapDBConnection()
+            DBFactory::getMainTuleapDBConnection(),
+            $factory
         );
     }
 );

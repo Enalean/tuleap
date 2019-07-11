@@ -22,56 +22,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Process stored events.
- *
- * How it works:
- * This script stores its process ID in /var/run/tuleap_process_system_event.pid,
- * and deletes it when it has finished.
- * If the PID file already exists, it means either that an instance is currently
- * running, or that a previous call to this script failed (and thus did not delete
- * the PID file). In this case, we send a signal to the process which PID is
- * in the file. If it returns TRUE, it means that there is a process
- * with this PID running. Then, we check that the command running with this PID
- * contains the name of this script. In this case, we simply exit.
- */
-class SystemEventProcessorMutex {
+use Symfony\Component\Lock\Factory as LockFactory;
+
+class SystemEventProcessorMutex
+{
     private $process_owner;
     private $runnable;
 
-    public function __construct(SystemEventProcessManager $process_manager, IRunInAMutex $runnable) {
+    /**
+     * @var LockFactory
+     */
+    private $lock_factory;
+
+    public function __construct(
+        IRunInAMutex $runnable,
+        LockFactory $lock_factory
+    ) {
         $this->process_owner = $runnable->getProcessOwner();
-        $this->runnable        = $runnable;
-        $this->process_manager = $process_manager;
+        $this->runnable      = $runnable;
+        $this->lock_factory  = $lock_factory;
     }
 
-    public function execute() {
+    /**
+     * @throws Exception
+     */
+    public function execute()
+    {
         $process = $this->getProcess();
-        if (! $this->process_manager->isAlreadyRunning($process)) {
-            $this->executeWithPidFile($process);
+        $lock = $this->lock_factory->createLock($process->getLockName());
+        if ($lock->acquire(true)) {
+            $this->runnable->execute($process->getQueue());
+            $lock->release();
         }
     }
 
-    public function waitAndExecute() {
-        $process = $this->getProcess();
-        while ($this->process_manager->isAlreadyRunning($process)) {
-            sleep(1);
-        }
-        $this->executeWithPidFile($process);
-    }
-
-    private function getProcess() {
+    /**
+     * @return SystemEventProcess
+     * @throws Exception
+     */
+    private function getProcess()
+    {
         $this->checkCurrentUserProcessOwner();
         return $this->runnable->getProcess();
     }
 
-    private function executeWithPidFile(SystemEventProcess $process) {
-        $this->process_manager->createPidFile($process);
-        $this->runnable->execute($process->getQueue());
-        $this->process_manager->deletePidFile($process);
-    }
-
-    protected function checkCurrentUserProcessOwner() {
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    protected function checkCurrentUserProcessOwner()
+    {
         $current_process_username = $this->getCurrentProcessUserName();
         if ($current_process_username != $this->process_owner) {
             throw new Exception("Must be ".$this->process_owner." to run this script (currently:$current_process_username)\n");
@@ -79,7 +79,8 @@ class SystemEventProcessorMutex {
         return true;
     }
 
-    protected function getCurrentProcessUserName() {
+    protected function getCurrentProcessUserName()
+    {
         $process_user = posix_getpwuid(posix_geteuid());
         return $process_user['name'];
     }
