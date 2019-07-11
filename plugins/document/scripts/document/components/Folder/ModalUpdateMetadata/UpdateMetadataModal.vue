@@ -19,9 +19,11 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by">
+    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="updateMetadata">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
+        <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body">
+            <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
             <global-metadata v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update" v-bind:is-in-updated-context="true">
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
             </global-metadata>
@@ -45,9 +47,13 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
 import OtherInformationMetadata from "../Metadata/OtherInformationMetadata.vue";
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
+import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 
 export default {
     components: {
+        InfoAccessOldPropertiesPage,
+        ModalFeedback,
         OwnerMetadata,
         OtherInformationMetadata,
         GlobalMetadata,
@@ -60,12 +66,13 @@ export default {
     data() {
         return {
             item_to_update: {},
-            is_loading: true,
+            is_loading: false,
             modal: null
         };
     },
     computed: {
-        ...mapState(["current_folder"]),
+        ...mapState(["current_folder", "project_id"]),
+        ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");
         },
@@ -96,6 +103,16 @@ export default {
         },
         reset() {
             this.is_displayed = false;
+        },
+        async updateMetadata(event) {
+            event.preventDefault();
+            this.is_loading = true;
+            this.$store.commit("error/resetModalError");
+            await this.$store.dispatch("updateMetadata", [this.item, this.item_to_update]);
+            this.is_loading = false;
+            if (this.has_modal_error === false) {
+                this.modal.hide();
+            }
         }
     }
 };

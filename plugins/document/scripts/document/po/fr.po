@@ -43,6 +43,14 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
+msgid ""
+"Access to <a class=\"access-legacy-update-properties-page-link\" v-bind:href="
+"\"`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props."
+"itemId}`\">legacy properties page</a>"
+msgstr "Accéder à <a class=\"access-legacy-update-properties-page-link\" v-bind:href="
+"\"`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props."
+"itemId}`\">l'ancienne page des propriétés'</a>"
+
 msgid "Administration"
 msgstr "Administration"
 

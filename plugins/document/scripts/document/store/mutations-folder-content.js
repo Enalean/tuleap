@@ -31,7 +31,8 @@ export {
     removeCreatedPropertyOnItem,
     replaceUploadingFileWithActualFile,
     removeItemFromFolderContent,
-    addDocumentToFoldedFolder
+    addDocumentToFoldedFolder,
+    updateCurrentItemForQuickLokDisplay
 };
 
 function saveFolderContent(state, folder_content) {
@@ -284,4 +285,8 @@ function removeItemFromFolderContent(state, item_to_remove) {
     }
 
     state.folder_content.splice(index, 1);
+}
+
+function updateCurrentItemForQuickLokDisplay(state, item) {
+    state.currently_previewed_item = item;
 }

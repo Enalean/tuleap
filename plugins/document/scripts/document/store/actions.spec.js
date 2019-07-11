@@ -40,7 +40,8 @@ import {
     lockDocument,
     unlockDocument,
     displayEmbeddedInLargeMode,
-    displayEmbeddedInNarrowMode
+    displayEmbeddedInNarrowMode,
+    updateMetadata
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -76,7 +77,8 @@ import {
     rewire$postLockEmbedded,
     rewire$deleteLockEmbedded,
     rewire$setNarrowModeForEmbeddedDisplay,
-    rewire$removeUserPreferenceForEmbeddedDisplay
+    rewire$removeUserPreferenceForEmbeddedDisplay,
+    rewire$putFileMetadata
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1615,6 +1617,62 @@ describe("Store actions", () => {
             await displayEmbeddedInNarrowMode(context, item);
 
             expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", false);
+        });
+    });
+
+    describe("replaceMetadataWithUpdatesOnes", () => {
+        let putFileMetadata, getItem, context;
+
+        beforeEach(() => {
+            context = { commit: jasmine.createSpy("commit") };
+
+            putFileMetadata = jasmine.createSpy("putFileMetadata");
+            rewire$putFileMetadata(putFileMetadata);
+
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+        });
+
+        it("it should update file metadata", async () => {
+            const item = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE,
+                description: "n",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new title",
+                description: "My description",
+                owner: {
+                    id: 102
+                },
+                status: "draft",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
         });
     });
 });
