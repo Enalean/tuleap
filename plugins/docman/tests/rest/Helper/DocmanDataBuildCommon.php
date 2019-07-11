@@ -318,20 +318,6 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     /**
      * @param $folder_id
      */
-    public function createReadOnlyItem(int $folder_id, string $title, int $item_type): void
-    {
-        $file_id = $this->createItem(
-            $this->docman_user_id,
-            $folder_id,
-            $title,
-            $item_type
-        );
-        $this->addReadPermissionOnItem($file_id, ProjectUGroup::PROJECT_MEMBERS);
-    }
-
-    /**
-     * @param $folder_id
-     */
     public function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
     {
         $read_only_file_id = $this->createItem(
