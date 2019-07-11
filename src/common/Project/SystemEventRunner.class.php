@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,28 +24,36 @@ use Project_Creation_Exception;
 use SystemEventProcessor_Factory;
 use SystemEvent;
 use SystemEventProcessorMutex;
-use SystemEventProcessManager;
+use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
 
-class SystemEventRunner {
+class SystemEventRunner
+{
 
     /** @var SystemEventProcessor_Factory */
     private $system_event_processor_factory;
 
-    public function __construct(SystemEventProcessor_Factory $system_event_processor_factory) {
+    public function __construct(SystemEventProcessor_Factory $system_event_processor_factory)
+    {
         $this->system_event_processor_factory = $system_event_processor_factory;
     }
 
-    public function checkPermissions() {
+    public function checkPermissions()
+    {
         // Check we have permissions to create project and run system events
-        if(posix_geteuid() != 0) {
+        if (posix_geteuid() != 0) {
             throw new Project_Creation_Exception("You need to be root to create a project for import");
         }
     }
 
-    public function runSystemEvents() {
+    public function runSystemEvents()
+    {
         $processor = $this->system_event_processor_factory->getProcessForQueue(SystemEvent::DEFAULT_QUEUE);
 
-        $mutex = new SystemEventProcessorMutex(new SystemEventProcessManager(), $processor);
-        $mutex->waitAndExecute();
+        $store   = new SemaphoreStore();
+        $factory = new LockFactory($store);
+
+        $mutex = new SystemEventProcessorMutex($processor, $factory);
+        $mutex->execute();
     }
 }

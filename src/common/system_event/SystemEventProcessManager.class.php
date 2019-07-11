@@ -22,42 +22,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Symfony\Component\Lock\Factory as LockFactory;
+
 /**
  * Say if a SystemEventProcess is running, and create or delete its pid file
  */
 class SystemEventProcessManager
 {
     /**
-     * @see http://www.php.net/manual/en/function.posix-kill.php#49596
+     * @var LockFactory
+     */
+    private $lock_factory;
+
+    public function __construct(LockFactory $lock_factory)
+    {
+        $this->lock_factory = $lock_factory;
+    }
+
+    /**
      * @return bool
      */
     public function isAlreadyRunning(SystemEventProcess $process)
     {
-        $pid_file = $process->getPidFile();
-        if (file_exists($pid_file)) {
-            $prev_pid = file_get_contents($pid_file);
-            if (($prev_pid !== FALSE) && posix_kill((int) trim($prev_pid), SIG_DFL)) {
-                // A program using this PID is currently running
-                // It might be a PID number collision: check the program name
-                $ps = new \Symfony\Component\Process\Process(['/bin/ps', '-ww', '-o', 'args=', '--pid', $prev_pid]);
-                $ps->run();
-                if ($ps->isSuccessful() && strpos($ps->getOutput(), $process->getCommandName()) !== false) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+        $lock = $this->lock_factory->createLock($process->getLockName());
 
-    public function createPidFile(SystemEventProcess $process)
-    {
-        if (@file_put_contents($process->getPidFile(), getmypid()) === false) {
-            throw new Exception('Cannot write pid file, aborting');
+        if ($lock->acquire()) {
+            $lock->release();
+            return false;
         }
-    }
 
-    public function deletePidFile(SystemEventProcess $process)
-    {
-        unlink($process->getPidFile());
+        return true;
     }
 }

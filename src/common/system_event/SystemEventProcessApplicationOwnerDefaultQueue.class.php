@@ -25,10 +25,11 @@
 class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProcess {
 
     /**
-     * @see SystemEventProcess::getPidFile()
+     * @see SystemEventProcess::getLockName()
      */
-    public function getPidFile() {
-        return '/var/tmp/tuleap_process_system_event_'.SystemEvent::OWNER_APP.'.pid';
+    public function getLockName()
+    {
+        return 'tuleap_process_system_event_'.SystemEvent::OWNER_APP;
     }
 
     public function getQueue() {
