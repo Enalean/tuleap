@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_EmbeddedFile;
+use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
@@ -176,20 +177,50 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
+
         try {
-            return $docman_item_creator->createFolder(
-                $parent,
-                $current_user,
-                $folder_representation,
-                new \DateTimeImmutable(),
-                $project
-            );
+            if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($folder_representation)) {
+                return $docman_item_creator->createFolder(
+                    $parent,
+                    $current_user,
+                    $folder_representation,
+                    new \DateTimeImmutable(),
+                    $project
+                );
+            }
+            if ($representation_for_copy_validation->isValidAsACopyRepresentation($folder_representation)) {
+                $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+                assert($docman_plugin instanceof DocmanPlugin);
+                $docman_plugin_info  = $docman_plugin->getPluginInfo();
+                $item_factory        = new Docman_ItemFactory();
+                $docman_item_copier  = new DocmanItemCopier(
+                    $item_factory,
+                    new BeforeCopyVisitor(Docman_Folder::class, $item_factory),
+                    $this->getPermissionManager($project),
+                    new MetadataFactoryBuilder(),
+                    EventManager::instance(),
+                    $docman_plugin_info->getPropertyValueForName('docman_root')
+                );
+                return $docman_item_copier->copyItem(
+                    $parent,
+                    $current_user,
+                    $folder_representation->copy
+                );
+            }
         } catch (Metadata\HardCodedMetadataException $e) {
             throw new I18NRestException(
                 400,
                 $e->getI18NExceptionMessage()
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create a folder (the properties %s are required for the creation)',
+                implode(', ', $folder_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -539,6 +570,6 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
-        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Folder::class);
+        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, Docman_Folder::class);
     }
 }

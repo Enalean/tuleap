@@ -265,7 +265,7 @@ class DocmanFoldersTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPostFolderItem(int $root_id): void
+    public function testPostFolderItem(int $root_id): int
     {
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
@@ -282,6 +282,31 @@ class DocmanFoldersTest extends DocmanBase
 
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertNull($response->json()['file_properties']);
+
+        return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testPostFolderItem
+     */
+    public function testPostCopyFolderItem(int $root_id, int $folder_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $folder_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_folders/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
@@ -435,13 +460,18 @@ class DocmanFoldersTest extends DocmanBase
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post(
-                'docman_folders/'.$root_id.'/embedded_files',
+                'docman_folders/' . urlencode((string) $root_id) . '/embedded_files',
                 ['Content-Type' => 'application/json'],
                 json_encode(['copy' => ['item_id' => $embedded_document_id]])
             )
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
