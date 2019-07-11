@@ -43,7 +43,7 @@
                 v-bind:wiki-page-referencers="wiki_page_referencers"
             />
             <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
-                <i class="fa fa-spin fa-spinner" v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"></i>
+                <i class="fa fa-spin fa-circle-o-notch" v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"></i>
             </span>
         </div>
         <div class="tlp-modal-footer">
@@ -60,7 +60,7 @@
                     class="fa tlp-button-icon"
                     v-bind:class="{
                         'fa-spin fa-circle-o-notch': is_an_action_on_going,
-                        'fa-trash': ! is_an_action_on_going
+                        'fa-trash-o': ! is_an_action_on_going
                     }"
                 ></i>
                 <span v-translate>Delete</span>
