@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
+use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -33,6 +34,8 @@ use Docman_Wiki;
 use LogicException;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\REST\I18NRestException;
 
 final class BeforeCopyVisitor implements ItemVisitor
 {
@@ -45,14 +48,22 @@ final class BeforeCopyVisitor implements ItemVisitor
      * @var Docman_ItemFactory
      */
     private $item_factory;
+    /**
+     * @var DocumentOngoingUploadRetriever
+     */
+    private $document_ongoing_upload_retriever;
 
     /**
      * @psalm-param class-string<Docman_Item> $expected_item_class_to_copy
      */
-    public function __construct(string $expected_item_class_to_copy, Docman_ItemFactory $item_factory)
-    {
-        $this->expected_item_class_to_copy = $expected_item_class_to_copy;
-        $this->item_factory                = $item_factory;
+    public function __construct(
+        string $expected_item_class_to_copy,
+        Docman_ItemFactory $item_factory,
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
+    ) {
+        $this->expected_item_class_to_copy       = $expected_item_class_to_copy;
+        $this->item_factory                      = $item_factory;
+        $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []) : ItemBeingCopiedExpectation
@@ -62,32 +73,59 @@ final class BeforeCopyVisitor implements ItemVisitor
 
     public function visitWiki(Docman_Wiki $item, array $params = []) : ItemBeingCopiedExpectation
     {
-        return $this->handleItem($item, $params['destination'], $this->isDocumentTitleConflictingVerifier());
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitLink(Docman_Link $item, array $params = []) : ItemBeingCopiedExpectation
     {
-        return $this->handleItem($item, $params['destination'], $this->isDocumentTitleConflictingVerifier());
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitFile(Docman_File $item, array $params = []) : ItemBeingCopiedExpectation
     {
-        return $this->handleItem($item, $params['destination'], $this->isDocumentTitleConflictingVerifier());
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : ItemBeingCopiedExpectation
     {
-        return $this->handleItem($item, $params['destination'], $this->isDocumentTitleConflictingVerifier());
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []) : ItemBeingCopiedExpectation
     {
-        return $this->handleItem($item, $params['destination'], $this->isDocumentTitleConflictingVerifier());
+        return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
     public function visitItem(Docman_Item $item, array $params = []) : ItemBeingCopiedExpectation
     {
         throw new LogicException('Cannot copy a non specialized item');
+    }
+
+    /**
+     * @psalm-param callable(string, Docman_Folder): bool $does_title_conflict
+     * @throws RestException
+     */
+    private function handleDocument(
+        DateTimeImmutable $current_time,
+        Docman_Item $item,
+        Docman_Folder $destination
+    ) : ItemBeingCopiedExpectation {
+        $is_document_being_uploaded = $this->document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
+            $destination,
+            $item->getTitle(),
+            $current_time
+        );
+        if ($is_document_being_uploaded) {
+            throw new I18NRestException(
+                409,
+                dgettext(
+                    'tuleap-docman',
+                    'A document with the same title is already being uploaded, you cannot copy your document here for now'
+                )
+            );
+        }
+
+        return $this->handleItem($item, $destination, $this->isDocumentTitleConflictingVerifier());
     }
 
     /**
