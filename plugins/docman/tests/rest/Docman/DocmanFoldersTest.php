@@ -25,40 +25,57 @@ namespace Tuleap\Docman\Test\rest\Docman;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Guzzle\Http\Client;
-use REST_TestDataBuilder;
-use Tuleap\Docman\Test\rest\DocmanBase;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
-class DocmanFoldersTest extends DocmanBase
+class DocmanFoldersTest extends DocmanTestExecutionHelper
 {
-    public function testGetRootId()
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
-        $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
+        $this->getDocmanRegularUser();
+        $root_folder = $this->loadRootFolderContent($root_id);
 
-        $this->assertSame(200, $project_response->getStatusCode());
+        $items_file    = $this->loadFolderContent($root_id, 'Folder');
+        $folder_files  = $this->findItemByTitle($root_folder, 'Folder');
+        $items_file_id = $folder_files['id'];
+        $get           = $this->loadFolderContent($items_file_id, 'GET FO');
+        $delete        = $this->loadFolderContent($items_file_id, 'DELETE Folder');
 
-        $json_projects = $project_response->json();
-        return $json_projects['additional_informations']['docman']['root_item']['id'];
+        return array_merge(
+            $root_folder,
+            $folder_files,
+            $items_file,
+            $get,
+            $delete
+        );
     }
 
     /**
-     * @depends             testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPostFileIsRejectedIfDocumentAlreadyExists($root_id)
+    public function testPostFileIsRejectedIfDocumentAlreadyExists(array $items): void
     {
+        $folder    = $this->findItemByTitle($items, 'GET FO');
+        $folder_id = $folder['id'];
+
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'       => 'Custom title',
-                'description' => 'A description'
+                'title'           => 'GET F',
+                'description'     => 'A description',
+                'file_properties' => ['file_name' => 'NEW F', 'file_size' => 0]
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/files', $headers, $query)
+            $this->client->post('docman_folders/' . $folder_id . '/files', $headers, $query)
         );
         $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("exists", $response->json()["error"]['message']);
     }
 
     /**
@@ -69,8 +86,8 @@ class DocmanFoldersTest extends DocmanBase
         $file_size = 123;
         $query     = json_encode(
             [
-                'title'           => 'File1',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size]
+                'title'           => 'NEW F',
+                'file_properties' => ['file_name' => 'NEW F', 'file_size' => $file_size]
             ]
         );
 
@@ -134,7 +151,7 @@ class DocmanFoldersTest extends DocmanBase
     {
         $query = json_encode(
             [
-                'title'           => 'File2',
+                'title'           => 'NEW EMPTY F',
                 'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
             ]
         );
@@ -162,8 +179,8 @@ class DocmanFoldersTest extends DocmanBase
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'           => 'File1',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 999999999999]
+                'title'           => 'NEW BIG F',
+                'file_properties' => ['file_name' => 'NEW BIG F', 'file_size' => 999999999999]
             ]
         );
 
@@ -172,6 +189,7 @@ class DocmanFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . '/files', $headers, $query)
         );
         $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("size", $response->json()["error"]['message']);
     }
 
     /**
@@ -270,7 +288,7 @@ class DocmanFoldersTest extends DocmanBase
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'       => 'My Folder',
+                'title'       => 'NEW FO',
                 'description' => 'A Folder description',
             ]
         );
@@ -292,7 +310,7 @@ class DocmanFoldersTest extends DocmanBase
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'       => 'My Folder',
+                'title'       => 'Folder',
                 'description' => 'A Folder description',
             ]
         );
@@ -303,17 +321,18 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("exists", $response->json()["error"]['message']);
     }
 
     /**
      * @depends testGetRootId
      */
-    public function testPostEmptyDocument($root_id)
+    public function testPostEmptyDocument(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'       => 'Custom title',
+                'title'       => 'NEW E',
                 'description' => 'A description',
             ]
         );
@@ -327,41 +346,11 @@ class DocmanFoldersTest extends DocmanBase
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPostDocumentIsRejectedIfDocumentAlreadyExists($root_id)
+    public function testPostReturns403WhenPermissionDenied(array $items): void
     {
-        $stored_items = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        )->json();
-        $folder_1     = $this->findItemByTitle($stored_items, 'folder 1');
-
-        $headers = ['Content-Type' => 'application/json'];
-        $query   = json_encode(
-            [
-                'title'       => 'empty',
-                'description' => 'A description',
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_1['id'] . '/empties', $headers, $query)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostReturns403WhenPermissionDenied(int $root_id): void
-    {
-        $stored_items = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        )->json();
-        $folder_3     = $this->findItemByTitle($stored_items, 'Folder RO');
+        $read_only_folder = $this->findItemByTitle($items, 'GET FO RO');
 
         $query = json_encode(
             [
@@ -372,9 +361,10 @@ class DocmanFoldersTest extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $folder_3['id'] . '/empties', null, $query)
+            $this->client->post('docman_folders/' . $read_only_folder['id'] . '/empties', null, $query)
         );
         $this->assertEquals(403, $response->getStatusCode());
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -386,7 +376,7 @@ class DocmanFoldersTest extends DocmanBase
         $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
         $query = json_encode(
             [
-                'title'           => 'How to become a Tuleap',
+                'title'           => 'NEW W',
                 'description'     => 'A description',
                 'wiki_properties' => $wiki_properties
             ]
@@ -400,7 +390,6 @@ class DocmanFoldersTest extends DocmanBase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-
     /**
      * @depends testGetRootId
      */
@@ -410,8 +399,8 @@ class DocmanFoldersTest extends DocmanBase
         $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
         $query = json_encode(
             [
-                'title'           => 'How to become a Tuleap (embedded version)',
-                'description'     => 'A description',
+                'title'               => 'NEW EMEBEDDED',
+                'description'         => 'A description',
                 'embedded_properties' => $embedded_properties
             ]
         );
@@ -453,7 +442,7 @@ class DocmanFoldersTest extends DocmanBase
         $link_properties = ['link_url' => 'https://turfu.example.test'];
         $query           = json_encode(
             [
-                'title'           => 'To the future',
+                'title'           => 'NEW L',
                 'description'     => 'A description',
                 'link_properties' => $link_properties
             ]
@@ -476,7 +465,7 @@ class DocmanFoldersTest extends DocmanBase
 
         $query = json_encode(
             [
-                'title'       => 'To the future',
+                'title'       => 'NEW FOLDER',
                 'description' => 'A description',
                 'status'      => 'approved'
             ]
@@ -488,196 +477,7 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-    }
-
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostEmptyWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-
-        $query = json_encode(
-            [
-                'title'       => 'EMPTY FAIL',
-                'description' => 'A description',
-                'status'      => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostEmptyWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-
-        $query = json_encode(
-            [
-                'title'             => 'EMPTY FAIL 2',
-                'description'       => 'A description',
-                'obsolescence_date' => '2019-02-25'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostEmbeddedWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-
-        $embedded_properties = ['content' => 'step2 : Stop using approval table'];
-        $query               = json_encode(
-            [
-                'title'               => 'How to become a Tuleap 2  (embedded version)',
-                'description'         => 'A description',
-                'embedded_properties' => $embedded_properties,
-                'obsolescence_date'   => '2019-02-25'
-            ]
-        );
-        $response            = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostEmbeddedWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
-    {
-        $headers             = ['Content-Type' => 'application/json'];
-        $embedded_properties = ['content' => 'step3 : bruh'];
-        $query               = json_encode(
-            [
-                'title'               => 'How to become a Tuleap 3 (embedded version)',
-                'description'         => 'A description',
-                'embedded_properties' => $embedded_properties,
-                'status'              => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostLinkWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
-    {
-        $headers         = ['Content-Type' => 'application/json'];
-        $link_properties = ['link_url' => 'https://turfu.example.test'];
-        $query           = json_encode(
-            [
-                'title'           => 'To the future 2',
-                'description'     => 'A description',
-                'link_properties' => $link_properties,
-                'status'          => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostLinkWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
-    {
-        $headers         = ['Content-Type' => 'application/json'];
-        $link_properties = ['link_url' => 'https://turfu.example.test'];
-        $query           = json_encode(
-            [
-                'title'             => 'To the future 3, the return',
-                'description'       => 'A description',
-                'link_properties'   => $link_properties,
-                'obsolescence_date' => '3000-08-08'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostWikiWithWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
-    {
-        $headers         = ['Content-Type' => 'application/json'];
-        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query           = json_encode(
-            [
-                'title'           => 'How to become a Tuleap wiki version',
-                'description'     => 'A description',
-                'wiki_properties' => $wiki_properties,
-                'status'          => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostWikiWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
-    {
-        $headers         = ['Content-Type' => 'application/json'];
-        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query           = json_encode(
-            [
-                'title'             => 'How to become a Tuleap wiki version 2',
-                'description'       => 'A description',
-                'wiki_properties'   => $wiki_properties,
-                'obsolescence_date' => '3000-08-08'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
-        );
-
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -701,6 +501,7 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -724,32 +525,7 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testGetTrashFolderContent(int $root_id): array
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $trash_folder    = $this->findItemByTitle($folder, "Trash");
-        $trash_folder_id = $trash_folder['id'];
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
-        );
-
-        $items_to_delete = $response->json();
-
-        $this->assertGreaterThan(0, count($items_to_delete));
-
-        return $items_to_delete;
+        $this->assertStringContainsString("obsolescence date", $response->json()["error"]['i18n_error_message']);
     }
 
     /**
@@ -763,112 +539,45 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString("root folder", $response->json()["error"]['i18n_error_message']);
 
-        $this->checkFolderHasNotBeenDeleted($root_id);
+        $this->checkItemHasNotBeenDeleted($root_id);
     }
 
     /**
-     * @depends testGetTrashFolderContent
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFolder(array $items): void
+    public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFolder(array $items): void
     {
-        $folder_to_delete    = $this->findItemByTitle($items, 'old folder L');
-        $folder_to_delete_id = $folder_to_delete['id'];
+        $file_to_delete    = $this->findItemByTitle($items, 'DELETE FO RO');
+        $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+            $this->client->delete('docman_folders/' . $file_to_delete_id)
         );
 
         $this->assertEquals(403, $response->getStatusCode());
+        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
 
-        $this->checkFolderHasNotBeenDeleted($folder_to_delete_id);
+        $this->checkItemHasNotBeenDeleted($file_to_delete_id);
     }
 
     /**
-     * @depends testGetTrashFolderContent
-     */
-    public function testItShouldThrowAnErrorWhenTheFolderContainsItemsUserIsNotAllowedToDelete(array $items): void
-    {
-        $folder_to_delete    = $this->findItemByTitle($items, 'folder with content you cannot delete');
-        $folder_to_delete_id = $folder_to_delete['id'];
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->delete('docman_folders/' . $folder_to_delete_id)
-        );
-
-        $this->assertEquals(403, $response->getStatusCode());
-
-        $this->checkFolderHasNotBeenDeleted($folder_to_delete_id);
-    }
-
-    /**
-     * @depends testGetTrashFolderContent
-     */
-    public function testItShouldDeleteWhenFolderIsLockedAndUserIsAdmin(array $items): void
-    {
-        $folder_to_delete    = $this->findItemByTitle($items, 'old folder L');
-        $folder_to_delete_id = $folder_to_delete['id'];
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_folders/' . $folder_to_delete_id)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $this->checkFolderHasBeenDeleted($folder_to_delete_id);
-    }
-
-    /**
-     * @depends testGetTrashFolderContent
+     * @depends testGetDocumentItemsForAdminUser
      */
     public function testItDeletesAFolder(array $items): void
     {
-        $folder_to_delete    = $this->findItemByTitle($items, 'another old folder');
-        $folder_to_delete_id = $folder_to_delete['id'];
+        $file_to_delete    = $this->findItemByTitle($items, 'DELETE FO');
+        $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+            $this->client->delete('docman_folders/' . $file_to_delete_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->checkFolderHasBeenDeleted($folder_to_delete_id);
-    }
-
-    /**
-     * Find first item in given array of items which has given title.
-     * @return array|null Found item. null otherwise.
-     */
-    private function findItemByTitle(array $items, $title)
-    {
-        $index = array_search($title, array_column($items, 'title'));
-        if ($index === false) {
-            return null;
-        }
-        return $items[$index];
-    }
-
-    private function checkFolderHasNotBeenDeleted(int $folder_to_delete_id) : void
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder_to_delete_id)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    private function checkFolderHasBeenDeleted(int $folder_to_delete_id) : void
-    {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder_to_delete_id)
-        );
-
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->checkItemHasBeenDeleted($file_to_delete_id);
     }
 }

@@ -35,31 +35,29 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testGetDocumentItemsForAdmin(int $root_id): array
+    public function testGetDocumentItemsForAdminUser(int $root_id): array
     {
-        $response            = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        $this->getDocmanRegularUser();
+        $root_folder = $this->loadRootFolderContent($root_id);
+
+        $items_file    = $this->loadFolderContent($root_id, 'Folder');
+        $folder_files  = $this->findItemByTitle($root_folder, 'Folder');
+        $items_file_id = $folder_files['id'];
+        $get           = $this->loadFolderContent($items_file_id, 'GET FO');
+
+        $items_folder_1 = array_merge(
+            $root_folder,
+            $folder_files,
+            $items_file,
+            $get
         );
-        $root_folder_content = $response->json();
 
-        $folder_1    = $this->findItemByTitle($root_folder_content, 'folder 1');
-        $folder_1_id = $folder_1['id'];
-        $this->assertGreaterThan(0, count($root_folder_content));
-        $this->assertEquals($root_folder_content[0]['user_can_write'], true);
-
-        $response       = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder_1_id . '/docman_items')
-        );
-        $items_folder_1 = $response->json();
-
-        $folder   = $this->findItemByTitle($items_folder_1, 'folder');
-        $empty    = $this->findItemByTitle($items_folder_1, 'empty');
-        $file     = $this->findItemByTitle($items_folder_1, 'file');
-        $embedded = $this->findItemByTitle($items_folder_1, 'embeddedFile');
-        $link     = $this->findItemByTitle($items_folder_1, 'link');
-        $wiki     = $this->findItemByTitle($items_folder_1, 'wiki');
+        $folder   = $this->findItemByTitle($items_folder_1, 'GET FO');
+        $empty    = $this->findItemByTitle($items_folder_1, 'GET EM');
+        $file     = $this->findItemByTitle($items_folder_1, 'GET F');
+        $embedded = $this->findItemByTitle($items_folder_1, 'GET E');
+        $link     = $this->findItemByTitle($items_folder_1, 'GET L');
+        $wiki     = $this->findItemByTitle($items_folder_1, 'GET W');
 
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -71,8 +69,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
 
         $this->assertGreaterThan(0, count($items));
 
-        $this->assertEquals('Test User 1 (rest_api_tester_1)', $items[0]['owner']['display_name']);
-        $this->assertEquals('Anonymous user', $empty['owner']['display_name']);
+        $this->assertEquals(' (docman_regular_user)', $items[0]['owner']['display_name']);
 
         $this->assertEquals($folder['user_can_write'], true);
         $this->assertEquals($empty['user_can_write'], true);
@@ -134,28 +131,24 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($wiki['wiki_properties']['page_name'], 'MyWikiPage');
 
         $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($folder['metadata'], 'Custom metadata'),
-            "custom value for folder_2"
-        );
-        $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($empty['metadata'], 'Custom metadata'),
-            "custom value for item_A"
+            "custom value"
         );
         $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($file['metadata'], 'Custom metadata'),
-            "custom value for item_C"
+            "custom value"
         );
         $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($link['metadata'], 'Custom metadata'),
-            "custom value for item_E"
+            "custom value"
         );
         $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($embedded['metadata'], 'Custom metadata'),
-            "custom value for item_F"
+            "custom value"
         );
         $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($wiki['metadata'], 'Custom metadata'),
-            "custom value for item_G"
+            "custom value"
         );
 
         return $items;
@@ -172,7 +165,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         );
         $folder   = $response->json();
 
-        $allowed_folder = $this->findItemByTitle($folder, 'folder 1');
+        $allowed_folder = $this->findItemByTitle($folder, 'Folder');
         $this->assertNotNull($allowed_folder);
         $denied_folder = $this->findItemByTitle($folder, 'Folder RO');
         $this->assertNull($denied_folder);
@@ -221,37 +214,18 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetDocumentItemsForAdmin
+     * @depends testGetDocumentItemsForAdminUser
      */
     public function testGetAllItemParents(array $items)
     {
-        $embedded_2 = $this->findItemByTitle($items, 'embeddedFile 2');
+        $embedded_2 = $this->findItemByTitle($items, 'GET EM');
 
         $project_response = $this->getResponse($this->client->get('docman_items/' . $embedded_2['id'] . '/parents'));
         $json_parents     = $project_response->json();
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
-        $this->assertEquals($json_parents[1]['title'], 'folder 1');
-        $this->assertEquals($json_parents[2]['title'], 'folder');
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdmin
-     */
-    public function testItemHasDisabledApprovalTable(array $items)
-    {
-        $file_E = $this->findItemByTitle($items, 'file DIS AT');
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file_E['id'])
-        );
-
-        $item = $response->json();
-
-        $this->assertTrue($item['has_approval_table']);
-        $this->assertFalse($item['is_approval_table_enabled']);
-        $this->assertNull($item['approval_table']);
+        $this->assertEquals($json_parents[1]['title'], 'Folder');
+        $this->assertEquals($json_parents[2]['title'], 'GET FO');
     }
 
     private function assertMetadataIsProperlySet(array $metadata, string $title): void
