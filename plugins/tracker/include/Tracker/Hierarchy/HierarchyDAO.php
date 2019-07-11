@@ -254,7 +254,7 @@ class HierarchyDAO extends DataAccessObject
             $sql = 'INSERT INTO tracker_hierarchy (parent_id, child_id)
                     VALUES (?, ?)';
 
-            $this->getDB()->run($sql, $parent_id, $child_id);
+            $this->getDB()->run($sql, $tracker_mapping[$parent_id], $tracker_mapping[$child_id]);
         }
     }
 
