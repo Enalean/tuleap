@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2006.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *
@@ -55,7 +56,10 @@ class CopyItemsTest extends TuleapTestCase {
         $dest_folder = \Mockery::spy(Docman_Folder::class);
         $dest_folder->shouldReceive('getId')->andReturns(33);
 
-        $cloneItemsVisitor = \Mockery::mock(Docman_CloneItemsVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cloneItemsVisitor = \Mockery::mock(
+            Docman_CloneItemsVisitor::class,
+            [$dstGroupId, Mockery::mock(ProjectManager::class), Mockery::mock(Docman_LinkVersionFactory::class)]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
 
         // expectations
         // - create new item
@@ -84,7 +88,6 @@ class CopyItemsTest extends TuleapTestCase {
         $dstSettingsBo->shouldReceive('getMetadataUsage')->andReturns(true);
         $cloneItemsVisitor->shouldReceive('_getSettingsBo')->with($dstGroupId)->andReturns($dstSettingsBo);
 
-        $cloneItemsVisitor->__construct($dstGroupId);
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,

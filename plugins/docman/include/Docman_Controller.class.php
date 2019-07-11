@@ -168,7 +168,12 @@ class Docman_Controller extends Controler {
                 $ugroupsMapping,
                 $dataRoot,
                 $src_root_folder,
-                DestinationCloneItem::fromDestinationProject($itemFactory, $destination_project)
+                DestinationCloneItem::fromDestinationProject(
+                    $itemFactory,
+                    $destination_project,
+                    ProjectManager::instance(),
+                    new Docman_LinkVersionFactory()
+                )
             );
         }
 

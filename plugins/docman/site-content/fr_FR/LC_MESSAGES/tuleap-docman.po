@@ -62,9 +62,16 @@ msgstr ""
 msgid "Commented"
 msgstr "Commenté"
 
+msgid "Copy from template"
+msgstr "Copier du template"
+
 #, php-format
 msgid "Copy of %s"
 msgstr "Copie de %s"
+
+#, php-format
+msgid "Copy of %s in %s at version %d."
+msgstr "Copie de %s dans %d à la version %d"
 
 msgid "Declined"
 msgstr "Décliné"

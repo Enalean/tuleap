@@ -26,6 +26,7 @@ use Docman_EmbeddedFile;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
+use Docman_LinkVersionFactory;
 use Docman_PermissionsManager;
 use DocmanPlugin;
 use EventManager;
@@ -200,6 +201,8 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $this->getPermissionManager($project),
                     new MetadataFactoryBuilder(),
                     EventManager::instance(),
+                    ProjectManager::instance(),
+                    new Docman_LinkVersionFactory(),
                     $docman_plugin_info->getPropertyValueForName('docman_root')
                 );
                 return $docman_item_copier->copyItem(
@@ -405,6 +408,8 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $this->getPermissionManager($project),
                     new MetadataFactoryBuilder(),
                     EventManager::instance(),
+                    ProjectManager::instance(),
+                    new Docman_LinkVersionFactory(),
                     $docman_plugin_info->getPropertyValueForName('docman_root')
                 );
                 return $docman_item_copier->copyItem(

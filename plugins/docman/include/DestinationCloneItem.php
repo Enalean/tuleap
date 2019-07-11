@@ -25,8 +25,10 @@ namespace Tuleap\Docman;
 use Docman_CloneItemsVisitor;
 use Docman_Folder;
 use Docman_ItemFactory;
+use Docman_LinkVersionFactory;
 use LogicException;
 use Project;
+use ProjectManager;
 
 final class DestinationCloneItem
 {
@@ -40,20 +42,41 @@ final class DestinationCloneItem
      * @var int
      */
     private $destination_project_id;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var Docman_LinkVersionFactory
+     */
+    private $link_version_factory;
 
-    private function __construct(int $parent_folder_id, int $destination_project_id)
-    {
+    private function __construct(
+        int $parent_folder_id,
+        int $destination_project_id,
+        ProjectManager $project_manager,
+        Docman_LinkVersionFactory $link_version_factory
+    ) {
         $this->parent_folder_id       = $parent_folder_id;
         $this->destination_project_id = $destination_project_id;
+        $this->project_manager        = $project_manager;
+        $this->link_version_factory   = $link_version_factory;
     }
 
-    public static function fromNewParentFolder(Docman_Folder $folder) : self
-    {
-        return new self((int) $folder->getId(), (int) $folder->getGroupId());
+    public static function fromNewParentFolder(
+        Docman_Folder $folder,
+        ProjectManager $project_manager,
+        Docman_LinkVersionFactory $link_version_factory
+    ) : self {
+        return new self((int) $folder->getId(), (int) $folder->getGroupId(), $project_manager, $link_version_factory);
     }
 
-    public static function fromDestinationProject(Docman_ItemFactory $item_factory, Project $destination_project) : self
-    {
+    public static function fromDestinationProject(
+        Docman_ItemFactory $item_factory,
+        Project $destination_project,
+        ProjectManager $project_manager,
+        Docman_LinkVersionFactory $link_version_factory
+    ) : self {
         $project_id = $destination_project->getID();
         if ($item_factory->getRoot($project_id) !== null) {
             throw new LogicException(
@@ -63,7 +86,7 @@ final class DestinationCloneItem
                 )
             );
         }
-        return new self(self::CLONE_ROOT_PARENT_ID, (int) $project_id);
+        return new self(self::CLONE_ROOT_PARENT_ID, (int) $project_id, $project_manager, $link_version_factory);
     }
 
     public function getNewParentID() : int
@@ -73,6 +96,10 @@ final class DestinationCloneItem
 
     public function getCloneItemsVisitor() : Docman_CloneItemsVisitor
     {
-        return new Docman_CloneItemsVisitor($this->destination_project_id);
+        return new Docman_CloneItemsVisitor(
+            $this->destination_project_id,
+            $this->project_manager,
+            $this->link_version_factory
+        );
     }
 }

@@ -840,7 +840,7 @@ class Docman_Actions extends Actions {
             $ugroupsMapping,
             $dataRoot,
             $itemToPaste,
-            DestinationCloneItem::fromNewParentFolder($newParentItem),
+            DestinationCloneItem::fromNewParentFolder($newParentItem, ProjectManager::instance(), new Docman_LinkVersionFactory()),
             $ordering
         );
 
