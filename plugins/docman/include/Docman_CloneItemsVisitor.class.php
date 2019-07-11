@@ -28,11 +28,25 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     var $dstGroupId;
     var $_cacheMetadataUsage;
     var $itemMapping;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var Docman_LinkVersionFactory
+     */
+    private $link_version_factory;
 
-    function __construct($dstGroupId) {
-        $this->dstGroupId = $dstGroupId;
-        $this->_cacheMetadataUsage = array();
-        $this->itemMapping = array();
+    public function __construct(
+        $dstGroupId,
+        ProjectManager $project_manager,
+        Docman_LinkVersionFactory $link_version_factory
+    ) {
+        $this->dstGroupId           = $dstGroupId;
+        $this->_cacheMetadataUsage  = array();
+        $this->itemMapping          = array();
+        $this->project_manager      = $project_manager;
+        $this->link_version_factory = $link_version_factory;
     }
 
     function visitFolder($item, $params = array()) {
@@ -67,7 +81,18 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     }
 
     public function visitLink(Docman_Link $item, $params = array()) {
-        $this->_cloneItem($item, $params);
+        $copied_item_id = $this->_cloneItem($item, $params);
+
+        $copied_item = $this->_getItemFactory()->getItemFromDb($copied_item_id);
+        if ($copied_item !== null) {
+            assert($copied_item instanceof Docman_Link);
+            $this->link_version_factory->create(
+                $copied_item,
+                dgettext('tuleap-docman', 'Copy from template'),
+                $this->getChangelogForCopiedItem($copied_item),
+                (new DateTimeImmutable())->getTimestamp()
+            );
+        }
     }
 
     public function visitFile(Docman_File $item, $params = array()) {
@@ -101,17 +126,12 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             // Register a new file
             $versionFactory = $this->_getVersionFactory();
             $user = $params['user'];
-            $label = $GLOBALS['Language']->getText('plugin_docman', 'clone_file_label');
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($item->getGroupId());
-            $changelog = $GLOBALS['Language']->getText('plugin_docman', 'clone_file_changelog', array($item->getTitle(),
-                                                                                                      $project->getPublicName(),
-                                                                                                      $srcVersion->getNumber()));
+
             $newVersionArray = array('item_id'   => $newItemId,
                                      'number'    => 0,
                                      'user_id'   => $user->getId(),
-                                     'label'     => $label,
-                                     'changelog' => $changelog,
+                                     'label'     => dgettext('tuleap-docman', 'Copy from template'),
+                                     'changelog' => $this->getChangelogForCopiedItem($item),
                                      'filename'  => $srcVersion->getFilename(),
                                      'filesize'  => $srcVersion->getFilesize(),
                                      'filetype'  => $srcVersion->getFiletype(),
@@ -120,6 +140,33 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             $versionId = $versionFactory->create($newVersionArray);
             
         }
+    }
+
+    /**
+     * @param Docman_File|Docman_Link $original_item
+     */
+    private function getChangelogForCopiedItem($original_item) : string
+    {
+        $project_id = $original_item->getGroupId();
+        $project    = $this->project_manager->getProject($project_id);
+        if ($project === null) {
+            throw new RuntimeException(
+                sprintf(
+                    'The project #%d of item #%d does not exist',
+                    $original_item->getId(),
+                    $original_item->getGroupId()
+                )
+            );
+        }
+
+        $current_version = $original_item->getCurrentVersion();
+
+        return sprintf(
+            dgettext('tuleap-docman', 'Copy of %s in %s at version %d.'),
+            $original_item->getTitle(),
+            $project->getUnconvertedPublicName(),
+            $current_version === null ? 0 : $current_version->getNumber()
+        );
     }
 
     function _cloneItem($item, $params) {
@@ -285,5 +332,3 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         return Docman_SettingsBo::instance($groupId);
     }
 }
-
-?>

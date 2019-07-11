@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
+use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_PermissionsManager;
 use EventManager;
@@ -34,6 +35,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use ProjectManager;
 use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -85,6 +87,8 @@ final class DocmanItemCopierTest extends TestCase
             $this->permission_manager,
             $this->metadata_factory_builder,
             $this->event_manager,
+            Mockery::mock(ProjectManager::class),
+            Mockery::mock(Docman_LinkVersionFactory::class),
             '/'
         );
     }

@@ -25,10 +25,12 @@ namespace Tuleap\Docman\REST\v1\CopyItem;
 use DateTimeImmutable;
 use Docman_Folder;
 use Docman_ItemFactory;
+use Docman_LinkVersionFactory;
 use Docman_PermissionsManager;
 use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
+use ProjectManager;
 use RuntimeException;
 use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
@@ -60,6 +62,14 @@ final class DocmanItemCopier
      * @var string
      */
     private $docman_root_path;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var Docman_LinkVersionFactory
+     */
+    private $link_version_factory;
 
     public function __construct(
         Docman_ItemFactory $item_factory,
@@ -67,6 +77,8 @@ final class DocmanItemCopier
         Docman_PermissionsManager $permissions_manager,
         MetadataFactoryBuilder $metadata_factory_builder,
         EventManager $event_manager,
+        ProjectManager $project_manager,
+        Docman_LinkVersionFactory $link_version_factory,
         string $docman_root_path
     ) {
         $this->item_factory             = $item_factory;
@@ -74,6 +86,8 @@ final class DocmanItemCopier
         $this->permissions_manager      = $permissions_manager;
         $this->metadata_factory_builder = $metadata_factory_builder;
         $this->event_manager            = $event_manager;
+        $this->link_version_factory     = $link_version_factory;
+        $this->project_manager          = $project_manager;
         $this->docman_root_path         = $docman_root_path;
     }
 
@@ -117,7 +131,7 @@ final class DocmanItemCopier
             false,
             $this->docman_root_path,
             $item_to_copy,
-            DestinationCloneItem::fromNewParentFolder($destination_folder)
+            DestinationCloneItem::fromNewParentFolder($destination_folder, $this->project_manager, $this->link_version_factory)
         );
 
         if (! isset($item_mapping[$item_to_copy_id])) {
