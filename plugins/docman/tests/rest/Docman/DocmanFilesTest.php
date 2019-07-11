@@ -1445,7 +1445,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $put_resource = [
             'id'                => $file_to_update_id,
             'title'             => 'PUT F New Title',
-            'description'       => 'Danger ! Danger !',
+            'description'       => '',
             'owner_id'          => 101,
             'status'            => 'none'
         ];
@@ -1474,7 +1474,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $this->assertGreaterThanOrEqual($date_before_update_timestamp, $last_update_date_timestamp);
 
         $this->assertEquals('PUT F New Title', $new_version['title']);
-        $this->assertEquals('Danger ! Danger !', $new_version['description']);
+        $this->assertEquals('', $new_version['description']);
         $this->assertEquals(101, $new_version['owner']['id']);
     }
 

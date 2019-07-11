@@ -33,7 +33,7 @@ class PUTMetadataRepresentation
     public $title;
 
     /**
-     * @var string Item description {@from body} {@required true}
+     * @var string | null Item description {@from body} {@required false}
      */
     public $description;
 
