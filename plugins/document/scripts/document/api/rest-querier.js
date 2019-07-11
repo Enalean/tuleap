@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, get, patch, post, recursiveGet } from "tlp";
+import { del, get, patch, post, recursiveGet, put } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 export {
@@ -59,7 +59,8 @@ export {
     deleteLockEmpty,
     setNarrowModeForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
-    getPreferenceForEmbeddedDisplay
+    getPreferenceForEmbeddedDisplay,
+    putFileMetadata
 };
 
 async function getProject(project_id) {
@@ -443,4 +444,19 @@ async function getPreferenceForEmbeddedDisplay(user_id, project_id, document_id)
     );
 
     return response.json();
+}
+
+function putFileMetadata(id, title, description, owner_id, status, obsolescence_date) {
+    return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title,
+            description,
+            owner_id,
+            status,
+            obsolescence_date
+        })
+    });
 }

@@ -56,7 +56,8 @@ import {
     deleteLockEmpty,
     setNarrowModeForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
-    getPreferenceForEmbeddedDisplay
+    getPreferenceForEmbeddedDisplay,
+    putFileMetadata
 } from "../api/rest-querier.js";
 
 import {
@@ -680,5 +681,31 @@ export const getEmbeddedFileDisplayPreference = async (context, item) => {
         );
     } catch (exception) {
         return handleErrors(context, exception);
+    }
+};
+
+export const updateMetadata = async (context, [item, item_to_update]) => {
+    try {
+        switch (item_to_update.type) {
+            case TYPE_FILE:
+                await putFileMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            default:
+                break;
+        }
+        const updated_item = await getItem(item.id);
+        Vue.set(updated_item, "updated", true);
+        context.commit("removeItemFromFolderContent", updated_item);
+        context.commit("addJustCreatedItemToFolderContent", updated_item);
+        context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+    } catch (exception) {
+        await handleErrorsForModal(context, exception);
     }
 };
