@@ -23,6 +23,8 @@
 
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
+use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
+use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 
 require_once('www/news/news_utils.php');
@@ -619,42 +621,36 @@ class Docman_Actions extends Actions {
                 $metadata_array = $request->get('metadata');
                 $mdvFactory = new Docman_MetadataValueFactory($groupId);
                 $mdvFactory->updateFromRow($data['id'], $metadata_array);
+
                 if($mdvFactory->isError()) {
                     $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
                 } else {
                     // Recursive update of properties
                     if($request->exist('recurse')) {
-                        $recurseArray = $request->get('recurse');
+                        $recurse_updator = new MetadataRecursiveUpdator(
+                            new Docman_MetadataFactory($groupId),
+                            Docman_PermissionsManager::instance($groupId),
+                            $mdvFactory,
+                            ReferenceManager::instance()
+                        );
 
-                        // Check if all are actually inheritable
-                        $metadataFactory = new Docman_MetadataFactory($groupId);
-                        $inheritableMdLabelArray = $metadataFactory->getInheritableMdLabelArray();
-                        if(count(array_diff($recurseArray, $inheritableMdLabelArray)) == 0) {
-                            $dPm = Docman_PermissionsManager::instance($groupId);
-                            if($dPm->currentUserCanWriteSubItems($data['id'])) {
-                                $subItemsWritableVisitor = $dPm->getSubItemsWritableVisitor();
-                                if($this->_controler->_actionParams['recurseOnDocs']) {
-                                    $itemIdArray = $subItemsWritableVisitor->getItemIdList();
-                                } else {
-                                    $itemIdArray = $subItemsWritableVisitor->getFolderIdList();
-                                }
-                                // Remove the first element (parent item) to keep
-                                // only the children.
-                                array_shift($itemIdArray);
-                                if(count($itemIdArray) > 0) {
-                                    $recurseArray = $request->get('recurse');
-                                    $mdvFactory->massUpdateFromRow($data['id'], $recurseArray, $itemIdArray);
-                                    // extract cross references
-                                    $reference_manager = ReferenceManager::instance();
-                                    foreach ($metadata_array as $curr_metadata_value) {
-                                        foreach ($itemIdArray as $curr_item_id) {
-                                            $reference_manager->extractCrossRef($curr_metadata_value, $curr_item_id, ReferenceManager::REFERENCE_NATURE_DOCUMENT, $groupId);
-                                        }
-                                    }
-                                } else {
-                                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
-                                }
+                        $collection = ItemImpactedByMetadataChangeCollection::buildFromLegacy($request->get('recurse'), $metadata_array);
+                        try {
+                            if ($this->_controler->_actionParams['recurseOnDocs']) {
+                                $recurse_updator->updateRecursiveMetadataOnFolderAndItems(
+                                    $collection,
+                                    $data['id'],
+                                    $groupId
+                                );
+                            } else {
+                                $recurse_updator->updateRecursiveMetadataOnFolder(
+                                    $collection,
+                                    $data['id'],
+                                    $groupId
+                                );
                             }
+                        } catch (\Tuleap\Docman\Metadata\NoItemToRecurseException $e) {
+                            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
                         }
                     }
                 }
