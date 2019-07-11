@@ -22,13 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Links;
 
+use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanLinkPOSTRepresentation
+class DocmanLinkPOSTRepresentation implements CanContainACopyRepresentation
 {
+    private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'link_properties'];
+
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string Item title {@from body} {@required false} Mandatory if copy is not set
      */
     public $title;
     /**
@@ -36,7 +40,7 @@ class DocmanLinkPOSTRepresentation
      */
     public $description = '';
     /**
-     * @var LinkPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation} {@from body}
+     * @var LinkPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation} {@from body} {@required false} Mandatory if copy is not set
      */
     public $link_properties;
     /**
@@ -47,4 +51,14 @@ class DocmanLinkPOSTRepresentation
      * @var string | null Obsolescence date {@from body} {@required false}
      */
     public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+    /**
+     * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
+     */
+    public $copy;
+
+    public static function getNonCopyRequiredObjectProperties() : array
+    {
+        return self::REQUIRED_NON_COPY_PROPERTIES;
+    }
 }
