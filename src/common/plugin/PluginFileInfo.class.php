@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -136,9 +136,9 @@ class PluginFileInfo extends PluginInfo
     /**
      * Return the property value for given property name
      *
-     * @param String $name Label of the property
+     * @param string $name Label of the property
      *
-     * @return String
+     * @return string
      */
     function getPropertyValueForName($name)
     {

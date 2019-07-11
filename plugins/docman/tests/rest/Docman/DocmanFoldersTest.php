@@ -404,7 +404,7 @@ class DocmanFoldersTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPostEmbeddedDocument(int $root_id): void
+    public function testPostEmbeddedDocument(int $root_id): int
     {
         $headers = ['Content-Type' => 'application/json'];
         $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
@@ -422,8 +422,27 @@ class DocmanFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        return $response->json()['id'];
     }
 
+    /**
+     * @depends testGetRootId
+     * @depends testPostEmbeddedDocument
+     */
+    public function testPostCopyEmbeddedDocument(int $root_id, int $embedded_document_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/'.$root_id.'/embedded_files',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $embedded_document_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
 
     /**
      * @depends testGetRootId

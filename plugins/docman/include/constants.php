@@ -60,14 +60,6 @@ define('PLUGIN_DOCMAN_EVENT_NEW_LINK', 'plugin_docman_event_new_link');
 define('PLUGIN_DOCMAN_EVENT_NEW_FOLDER', 'plugin_docman_event_new_folder');
 
 /**
- * Event raised when a docman item is copied
- *
- * Parameters:
- *      'item' => Docman_Item
- */
-define('PLUGIN_DOCMAN_EVENT_COPY', 'plugin_docman_event_copy');
-
-/**
  * Event raised when a docman link item ihas new version
  *
  * Parameters:

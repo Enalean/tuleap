@@ -22,13 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
+use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 
-class DocmanEmbeddedPOSTRepresentation
+class DocmanEmbeddedPOSTRepresentation implements CanContainACopyRepresentation
 {
+    private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'embedded_properties'];
+
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string Item title {@from body} {@required false} Mandatory if copy is not set
      */
     public $title;
     /**
@@ -36,7 +40,7 @@ class DocmanEmbeddedPOSTRepresentation
      */
     public $description = '';
     /**
-     * @var EmbeddedPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
+     * @var EmbeddedPropertiesPOSTPATCHRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation} Mandatory if copy is not set
      */
     public $embedded_properties;
     /**
@@ -47,4 +51,13 @@ class DocmanEmbeddedPOSTRepresentation
      * @var string | null Obsolescence date {@from body} {@required false}
      */
     public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+    /**
+     * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
+     */
+    public $copy;
+
+    public static function getNonCopyRequiredObjectProperties() : array
+    {
+        return self::REQUIRED_NON_COPY_PROPERTIES;
+    }
 }

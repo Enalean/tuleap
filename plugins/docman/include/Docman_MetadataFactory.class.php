@@ -817,14 +817,6 @@ class Docman_MetadataFactory
         return $mdLoveF;
     }
 
-    function _getEventManager() {
-        return EventManager::instance();
-    }
-
-    public function setRealGroupId($group_id) {
-        $this->groupId = $group_id;
-    }
-
     private function appendDynamicMetadataToItem(Docman_Item $item): void
     {
         $metadata_iterator = $this->getRealMetadataIterator(true);
