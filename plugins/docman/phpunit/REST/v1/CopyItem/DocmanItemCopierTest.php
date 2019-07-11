@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
+use DateTimeImmutable;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
@@ -35,6 +36,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
 final class DocmanItemCopierTest extends TestCase
 {
@@ -75,7 +77,11 @@ final class DocmanItemCopierTest extends TestCase
 
         $this->item_copier = new DocmanItemCopier(
             $this->item_factory,
-            new BeforeCopyVisitor(Docman_Item::class, $this->item_factory),
+            new BeforeCopyVisitor(
+                Docman_Item::class,
+                $this->item_factory,
+                Mockery::mock(DocumentOngoingUploadRetriever::class)
+            ),
             $this->permission_manager,
             $this->metadata_factory_builder,
             $this->event_manager,
@@ -109,6 +115,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->event_manager->shouldReceive('processEvent')->with('send_notifications');
 
         $representation_copy = $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             $destination_folder,
             Mockery::mock(PFUser::class),
             $copy_item_representation
@@ -127,6 +134,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
         $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             Mockery::mock(Docman_Folder::class),
             Mockery::mock(PFUser::class),
             $copy_item_representation
@@ -147,6 +155,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
         $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             Mockery::mock(Docman_Folder::class),
             Mockery::mock(PFUser::class),
             $copy_item_representation
@@ -173,6 +182,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
         $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             $destination_folder,
             Mockery::mock(PFUser::class),
             $copy_item_representation
@@ -210,6 +220,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->event_manager->shouldReceive('processEvent')->with('send_notifications');
 
         $representation_copy = $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             $destination_folder,
             Mockery::mock(PFUser::class),
             $copy_item_representation
@@ -243,6 +254,7 @@ final class DocmanItemCopierTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->item_copier->copyItem(
+            new DateTimeImmutable(),
             $destination_folder,
             Mockery::mock(PFUser::class),
             $copy_item_representation

@@ -30,6 +30,13 @@ msgstr ""
 "\"approval_table_action\" pour choisir l'option de la création de la table à "
 "la création de la version (valeurs possibles : copy,reset,empty)"
 
+msgid ""
+"A document with the same title is already being uploaded, you cannot copy "
+"your document here for now"
+msgstr ""
+"Un document avec le même titre est déjà en cours de téléversement, vous ne "
+"pouvez pas copier votre document ici pour le moment"
+
 msgid "An error occurred during the update of the max file size"
 msgstr ""
 "Une erreur est survenue durant la mise à jour de la taille maximale des "

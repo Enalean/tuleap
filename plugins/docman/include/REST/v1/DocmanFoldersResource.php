@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Folder;
 use Docman_Item;
@@ -46,6 +47,8 @@ use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -131,7 +134,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $files_representation->description,
                 $files_representation->status,
                 $files_representation->obsolescence_date,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $files_representation->file_properties
             );
         } catch (Metadata\HardCodedMetadataException $e) {
@@ -185,7 +188,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $parent,
                     $current_user,
                     $folder_representation,
-                    new \DateTimeImmutable(),
+                    new DateTimeImmutable(),
                     $project
                 );
             }
@@ -196,13 +199,18 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $item_factory        = new Docman_ItemFactory();
                 $docman_item_copier  = new DocmanItemCopier(
                     $item_factory,
-                    new BeforeCopyVisitor(Docman_Folder::class, $item_factory),
+                    new BeforeCopyVisitor(
+                        Docman_Folder::class,
+                        $item_factory,
+                        new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+                    ),
                     $this->getPermissionManager($project),
                     new MetadataFactoryBuilder(),
                     EventManager::instance(),
                     $docman_plugin_info->getPropertyValueForName('docman_root')
                 );
                 return $docman_item_copier->copyItem(
+                    new DateTimeImmutable(),
                     $parent,
                     $current_user,
                     $folder_representation->copy
@@ -271,7 +279,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $parent,
                 $current_user,
                 $empty_representation,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $project
             );
         } catch (Metadata\HardCodedMetadataException $e) {
@@ -329,7 +337,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $parent,
                 $current_user,
                 $wiki_representation,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $project
             );
         } catch (Metadata\HardCodedMetadataException $e) {
@@ -393,7 +401,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $parent,
                     $current_user,
                     $embeds_representation,
-                    new \DateTimeImmutable(),
+                    new DateTimeImmutable(),
                     $project
                 );
             }
@@ -401,13 +409,18 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $item_factory        = new Docman_ItemFactory();
                 $docman_item_copier  = new DocmanItemCopier(
                     $item_factory,
-                    new BeforeCopyVisitor(Docman_EmbeddedFile::class, $item_factory),
+                    new BeforeCopyVisitor(
+                        Docman_EmbeddedFile::class,
+                        $item_factory,
+                        new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+                    ),
                     $this->getPermissionManager($project),
                     new MetadataFactoryBuilder(),
                     EventManager::instance(),
                     $docman_plugin_info->getPropertyValueForName('docman_root')
                 );
                 return $docman_item_copier->copyItem(
+                    new DateTimeImmutable(),
                     $parent,
                     $current_user,
                     $embeds_representation->copy
@@ -477,7 +490,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $parent,
                 $current_user,
                 $links_representation,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $project
             );
         } catch (Metadata\HardCodedMetadataException $e) {

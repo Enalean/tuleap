@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
+use DateTimeImmutable;
 use Docman_Folder;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
@@ -76,8 +77,12 @@ final class DocmanItemCopier
         $this->docman_root_path         = $docman_root_path;
     }
 
-    public function copyItem(Docman_Folder $destination_folder, PFUser $user, DocmanCopyItemRepresentation $representation) : CreatedItemRepresentation
-    {
+    public function copyItem(
+        DateTimeImmutable $current_time,
+        Docman_Folder $destination_folder,
+        PFUser $user,
+        DocmanCopyItemRepresentation $representation
+    ) : CreatedItemRepresentation {
         $item_to_copy_id = $representation->item_id;
         $item_to_copy    = $this->item_factory->getItemFromDb($item_to_copy_id);
         if ($item_to_copy === null || ! $this->permissions_manager->userCanAccess($user, $item_to_copy->getId())) {
@@ -94,7 +99,10 @@ final class DocmanItemCopier
             );
         }
 
-        $copy_expectation = $item_to_copy->accept($this->before_copy_visitor, ['destination' => $destination_folder]);
+        $copy_expectation = $item_to_copy->accept(
+            $this->before_copy_visitor,
+            ['destination' => $destination_folder, 'current_time' => $current_time]
+        );
         assert($copy_expectation instanceof ItemBeingCopiedExpectation);
 
         $metadata_mapping = [];
