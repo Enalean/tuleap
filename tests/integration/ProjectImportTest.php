@@ -172,7 +172,6 @@ class ProjectImportTest extends TuleapDbTestCase
             new XMLImportHelper($user_manager),
             ServiceManager::instance(),
             new Log_ConsoleLogger(),
-            $ugroup_duplicator,
             $frs_permissions_creator,
             new UserRemover(
                 mock('ProjectManager'),
@@ -185,7 +184,8 @@ class ProjectImportTest extends TuleapDbTestCase
             ),
             $project_creator,
             mock('Tuleap\FRS\UploadedLinksUpdater'),
-            mock('Tuleap\Dashboard\Project\ProjectDashboardXMLImporter')
+            mock('Tuleap\Dashboard\Project\ProjectDashboardXMLImporter'),
+            Mockery::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDao::class)
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

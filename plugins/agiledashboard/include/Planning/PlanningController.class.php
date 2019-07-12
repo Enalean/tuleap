@@ -42,6 +42,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -495,7 +496,6 @@ class Planning_Controller extends BaseController
             new XMLImportHelper($user_manager),
             ServiceManager::instance(),
             $logger,
-            $ugroup_duplicator,
             $frs_permissions_creator,
             new UserRemover(
                 ProjectManager::instance(),
@@ -516,7 +516,8 @@ class Planning_Controller extends BaseController
                 $widget_dao,
                 $logger,
                 $event_manager
-            )
+            ),
+            new SynchronizedProjectMembershipDao()
         );
 
         try {

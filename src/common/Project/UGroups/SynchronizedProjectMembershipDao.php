@@ -33,4 +33,10 @@ class SynchronizedProjectMembershipDao extends DataAccessObject
             WHERE project_id = ? AND is_activated = 1';
         return $this->getDB()->exists($sql, $project_id);
     }
+
+    public function enable(\Project $project) : void
+    {
+        $sql = 'REPLACE INTO project_ugroup_synchronized_membership(project_id, is_activated) VALUES (?, 1)';
+        $this->getDB()->run($sql, $project->getID());
+    }
 }

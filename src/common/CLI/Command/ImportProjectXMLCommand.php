@@ -51,6 +51,7 @@ use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import;
@@ -281,7 +282,6 @@ class ImportProjectXMLCommand extends Command
                 $user_finder,
                 ServiceManager::instance(),
                 $broker_log,
-                $ugroup_duplicator,
                 $frs_permissions_creator,
                 new UserRemover(
                     ProjectManager::instance(),
@@ -304,7 +304,8 @@ class ImportProjectXMLCommand extends Command
                     $widget_dao,
                     $broker_log,
                     $event_manager
-                )
+                ),
+                new SynchronizedProjectMembershipDao()
             );
 
             if (empty($project_id)) {

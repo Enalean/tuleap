@@ -18,30 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "account.php";
+require_once __DIR__.'/../../www/include/account.php';
 
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
-use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\XML\MappingsRegistry;
 
-/**
- * This class import a project from a xml content
- */
-class ProjectXMLImporter {
-
-    /**
-     * @var UgroupDuplicator
-     */
-    private $ugroup_duplicator;
-
+class ProjectXMLImporter
+{
     /** @var EventManager */
     private $event_manager;
 
@@ -85,6 +77,10 @@ class ProjectXMLImporter {
      * @var ProjectDashboardXMLImporter
      */
     private $dashboard_importer;
+    /**
+     * @var SynchronizedProjectMembershipDao
+     */
+    private $synchronized_project_membership_dao;
 
     public function __construct(
         EventManager $event_manager,
@@ -95,27 +91,27 @@ class ProjectXMLImporter {
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         ServiceManager $service_manager,
         Logger $logger,
-        UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator,
         UserRemover $user_remover,
         ProjectCreator $project_creator,
         UploadedLinksUpdater $uploaded_links_updater,
-        ProjectDashboardXMLImporter $dashboard_importer
+        ProjectDashboardXMLImporter $dashboard_importer,
+        SynchronizedProjectMembershipDao $synchronized_project_membership_dao
     ) {
-        $this->event_manager           = $event_manager;
-        $this->project_manager         = $project_manager;
-        $this->user_manager            = $user_manager;
-        $this->xml_validator           = $xml_validator;
-        $this->ugroup_manager          = $ugroup_manager;
-        $this->user_finder             = $user_finder;
-        $this->logger                  = $logger;
-        $this->service_manager         = $service_manager;
-        $this->ugroup_duplicator       = $ugroup_duplicator;
-        $this->frs_permissions_creator = $frs_permissions_creator;
-        $this->user_remover            = $user_remover;
-        $this->project_creator         = $project_creator;
-        $this->uploaded_links_updater  = $uploaded_links_updater;
-        $this->dashboard_importer      = $dashboard_importer;
+        $this->event_manager                       = $event_manager;
+        $this->project_manager                     = $project_manager;
+        $this->user_manager                        = $user_manager;
+        $this->xml_validator                       = $xml_validator;
+        $this->ugroup_manager                      = $ugroup_manager;
+        $this->user_finder                         = $user_finder;
+        $this->logger                              = $logger;
+        $this->service_manager                     = $service_manager;
+        $this->frs_permissions_creator             = $frs_permissions_creator;
+        $this->user_remover                        = $user_remover;
+        $this->project_creator                     = $project_creator;
+        $this->uploaded_links_updater              = $uploaded_links_updater;
+        $this->dashboard_importer                  = $dashboard_importer;
+        $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
     }
 
     public function importNewFromArchive(
@@ -309,6 +305,10 @@ class ProjectXMLImporter {
 
         if ($xml_element->ugroups) {
             $this->logger->info("Some ugroups are defined in the XML");
+
+            if ((string) $xml_element->ugroups['mode'] === ProjectXMLExporter::UGROUPS_MODE_SYNCHRONIZED) {
+                $this->synchronized_project_membership_dao->enable($project);
+            }
 
             list($ugroups_in_xml, $project_members) = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 

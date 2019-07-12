@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <ugroups mode="synchronized">
+        <ugroup name="ug01" description="descr01">
+            <members>
+                <member format="ldap">ldap_01</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>
