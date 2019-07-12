@@ -114,7 +114,7 @@ describe("DropdownMenu", () => {
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
     });
 
-    it(`Given an user who wants to update wiki properties
+    it(`Given an user who wants to update folder properties
         When we display the menu
         Then the user should be redirected to the old UI`, () => {
         const redirect_to_url = jasmine.createSpy("redirectToUrl");
@@ -125,7 +125,7 @@ describe("DropdownMenu", () => {
             item: {
                 id: 1,
                 title: "my item title",
-                type: "wiki",
+                type: "folder",
                 can_user_manage: true
             }
         });

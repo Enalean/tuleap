@@ -23,24 +23,24 @@ import {
     cancelFileUpload,
     cancelFolderUpload,
     cancelVersionUpload,
-    createNewItem,
-    loadFolder,
-    loadDocumentWithAscendentHierarchy,
-    loadRootFolder,
-    setUserPreferenciesForFolder,
-    setUserPreferenciesForUI,
-    unsetUnderConstructionUserPreference,
+    createNewEmbeddedFileVersionFromModal,
     createNewFileVersion,
     createNewFileVersionFromModal,
-    createNewEmbeddedFileVersionFromModal,
-    createNewWikiVersionFromModal,
+    createNewItem,
     createNewLinkVersionFromModal,
+    createNewWikiVersionFromModal,
     deleteItem,
-    getWikisReferencingSameWikiPage,
-    lockDocument,
-    unlockDocument,
     displayEmbeddedInLargeMode,
     displayEmbeddedInNarrowMode,
+    getWikisReferencingSameWikiPage,
+    loadDocumentWithAscendentHierarchy,
+    loadFolder,
+    loadRootFolder,
+    lockDocument,
+    setUserPreferenciesForFolder,
+    setUserPreferenciesForUI,
+    unlockDocument,
+    unsetUnderConstructionUserPreference,
     updateMetadata
 } from "./actions.js";
 import {
@@ -53,32 +53,36 @@ import {
     restore as restoreRestQuerier,
     rewire$addNewEmpty,
     rewire$addNewFile,
+    rewire$addUserLegacyUIPreferency,
     rewire$cancelUpload,
     rewire$createNewVersion,
+    rewire$deleteEmbeddedFile,
+    rewire$deleteEmptyDocument,
+    rewire$deleteFile,
+    rewire$deleteFolder,
+    rewire$deleteLink,
+    rewire$deleteLockEmbedded,
+    rewire$deleteLockFile,
     rewire$deleteUserPreferenciesForFolderInProject,
-    rewire$addUserLegacyUIPreferency,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
+    rewire$deleteWiki,
     rewire$getItem,
+    rewire$getItemsReferencingSameWikiPage,
+    rewire$getParents,
     rewire$getProject,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$postEmbeddedFile,
-    rewire$postWiki,
     rewire$postLinkVersion,
-    rewire$deleteFile,
-    rewire$deleteLink,
-    rewire$deleteEmbeddedFile,
-    rewire$deleteWiki,
-    rewire$deleteFolder,
-    rewire$deleteEmptyDocument,
-    rewire$getParents,
-    rewire$getItemsReferencingSameWikiPage,
-    rewire$postLockFile,
-    rewire$deleteLockFile,
     rewire$postLockEmbedded,
-    rewire$deleteLockEmbedded,
-    rewire$setNarrowModeForEmbeddedDisplay,
+    rewire$postLockFile,
+    rewire$postWiki,
+    rewire$putEmbeddedFileMetadata,
+    rewire$putFileMetadata,
+    rewire$putLinkMetadata,
+    rewire$putWikiMetadata,
+    rewire$putEmptyDocumentMetadata,
     rewire$removeUserPreferenceForEmbeddedDisplay,
-    rewire$putFileMetadata
+    rewire$setNarrowModeForEmbeddedDisplay
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -90,12 +94,12 @@ import {
 } from "./actions-helpers/load-ascendant-hierarchy.js";
 
 import {
-    TYPE_FILE,
-    TYPE_LINK,
     TYPE_EMBEDDED,
-    TYPE_WIKI,
+    TYPE_EMPTY,
+    TYPE_FILE,
     TYPE_FOLDER,
-    TYPE_EMPTY
+    TYPE_LINK,
+    TYPE_WIKI
 } from "../constants.js";
 
 describe("Store actions", () => {
@@ -1621,19 +1625,25 @@ describe("Store actions", () => {
     });
 
     describe("replaceMetadataWithUpdatesOnes", () => {
-        let putFileMetadata, getItem, context;
+        let putFileMetadata,
+            putEmbeddedFileMetadata,
+            putLinkMetadata,
+            putWikiMetadata,
+            putEmptyDocumentMetadata,
+            getItem,
+            context;
 
         beforeEach(() => {
             context = { commit: jasmine.createSpy("commit") };
-
-            putFileMetadata = jasmine.createSpy("putFileMetadata");
-            rewire$putFileMetadata(putFileMetadata);
 
             getItem = jasmine.createSpy("getItem");
             rewire$getItem(getItem);
         });
 
         it("it should update file metadata", async () => {
+            putFileMetadata = jasmine.createSpy("putFileMetadata");
+            rewire$putFileMetadata(putFileMetadata);
+
             const item = {
                 id: 123,
                 title: "My file",
@@ -1654,6 +1664,180 @@ describe("Store actions", () => {
                     id: 102
                 },
                 status: "draft",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
+        });
+        it("it should update embedded file metadata", async () => {
+            putEmbeddedFileMetadata = jasmine.createSpy("putEmbeddedFileMetadata");
+            rewire$putEmbeddedFileMetadata(putEmbeddedFileMetadata);
+
+            const item = {
+                id: 123,
+                title: "My embedded file",
+                type: TYPE_EMBEDDED,
+                description: "nop",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new embedded  title",
+                description: "My description",
+                owner: {
+                    id: 102
+                },
+                status: "draft",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
+        });
+        it("it should update link document metadata", async () => {
+            putLinkMetadata = jasmine.createSpy("putEmbeddedLinkMetadata");
+            rewire$putLinkMetadata(putLinkMetadata);
+            const item = {
+                id: 123,
+                title: "My link",
+                type: TYPE_LINK,
+                description: "ui",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new link title",
+                description: "My link description",
+                owner: {
+                    id: 102
+                },
+                status: "draft",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
+        });
+
+        it("it should update wiki document metadata", async () => {
+            putWikiMetadata = jasmine.createSpy("putEmbeddedWikiMetadata");
+            rewire$putWikiMetadata(putWikiMetadata);
+            const item = {
+                id: 123,
+                title: "My wiki",
+                type: TYPE_WIKI,
+                description: "on",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new wiki title",
+                description: "My wiki description",
+                owner: {
+                    id: 102
+                },
+                status: "approved",
+                obsolescence_date: null
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
+        });
+        it("it should update empty document metadata", async () => {
+            putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
+            rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
+            const item = {
+                id: 123,
+                title: "My empty",
+                type: TYPE_EMPTY,
+                description: "on",
+                owner: {
+                    id: 102
+                },
+                status: "none",
+                obsolescence_date: null
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new empty title",
+                description: "My empty description",
+                owner: {
+                    id: 102
+                },
+                status: "rejected",
                 obsolescence_date: null
             };
 

@@ -48,7 +48,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI, TYPE_FOLDER } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
@@ -151,12 +151,9 @@ export default {
         showUpdateItemMetadataModal(event) {
             this.updated_metadata = event.detail.current_item;
 
-            switch (this.updated_metadata.type) {
-                case TYPE_FILE:
-                    this.shown_update_metadata_modal = () =>
-                        import(/* webpackChunkName: "update-metadata-modal" */ "./ModalUpdateMetadata/UpdateMetadataModal.vue");
-                    break;
-                default: //nothing
+            if (this.updated_metadata.type !== TYPE_FOLDER) {
+                this.shown_update_metadata_modal = () =>
+                    import(/* webpackChunkName: "update-metadata-modal" */ "./ModalUpdateMetadata/UpdateMetadataModal.vue");
             }
         },
         hideDeleteItemModal() {

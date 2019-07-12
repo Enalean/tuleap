@@ -57,7 +57,11 @@ import {
     setNarrowModeForEmbeddedDisplay,
     removeUserPreferenceForEmbeddedDisplay,
     getPreferenceForEmbeddedDisplay,
-    putFileMetadata
+    putFileMetadata,
+    putEmbeddedFileMetadata,
+    putLinkMetadata,
+    putWikiMetadata,
+    putEmptyDocumentMetadata
 } from "../api/rest-querier.js";
 
 import {
@@ -689,6 +693,46 @@ export const updateMetadata = async (context, [item, item_to_update]) => {
         switch (item_to_update.type) {
             case TYPE_FILE:
                 await putFileMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            case TYPE_EMBEDDED:
+                await putEmbeddedFileMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            case TYPE_LINK:
+                await putLinkMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            case TYPE_WIKI:
+                await putWikiMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            case TYPE_EMPTY:
+                await putEmptyDocumentMetadata(
                     item_to_update.id,
                     item_to_update.title,
                     item_to_update.description,
