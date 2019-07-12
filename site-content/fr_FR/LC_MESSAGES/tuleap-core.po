@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -160,6 +160,9 @@ msgstr "Agile Dashboard"
 
 msgid "All groups"
 msgstr "Tous les groupes"
+
+msgid "All members of %s will remain project members."
+msgstr "Tous les membres de %s resteront membres du projet."
 
 msgid "Allow restricted users to be added to the project"
 msgstr "Autoriser l'ajout d'utilisateurs restreints dans ce projet."
