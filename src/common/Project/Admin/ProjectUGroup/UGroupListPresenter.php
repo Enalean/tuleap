@@ -34,6 +34,8 @@ class UGroupListPresenter
     public $has_dynamic_ugroups;
     public $has_ugroups;
     public $has_static_ugroups;
+    /** @var bool */
+    public $is_synchronized_project_membership;
     /**
      * @var ?SynchronizedProjectMembershipPresenter
      */
@@ -45,6 +47,7 @@ class UGroupListPresenter
         array $static_ugroups,
         array $template_ugroups,
         CSRFSynchronizerToken $csrf,
+        bool $is_synchronized_project_membership,
         ?SynchronizedProjectMembershipPresenter $synchronized_project_membership_presenter
     ) {
         $this->dynamic_ugroups                           = $dynamic_ugroups;
@@ -55,6 +58,7 @@ class UGroupListPresenter
         $this->has_dynamic_ugroups                       = ! empty($dynamic_ugroups);
         $this->has_static_ugroups                        = ! empty($static_ugroups);
         $this->has_ugroups                               = $this->has_dynamic_ugroups || $this->has_static_ugroups;
+        $this->is_synchronized_project_membership        = $is_synchronized_project_membership;
         $this->synchronized_project_membership_presenter = $synchronized_project_membership_presenter;
     }
 }

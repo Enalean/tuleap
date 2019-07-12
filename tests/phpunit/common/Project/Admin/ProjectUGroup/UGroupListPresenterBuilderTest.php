@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 final class UGroupListPresenterBuilderTest extends TestCase
 {
@@ -42,20 +42,20 @@ final class UGroupListPresenterBuilderTest extends TestCase
      */
     private $ugroup_manager;
     /**
-     * @var Mockery\MockInterface|SynchronizedProjectMembershipDao
-     */
-    private $synchronized_dao;
-    /**
      * @var Mockery\MockInterface|\Project
      */
     private $project;
+    /**
+     * @var Mockery\MockInterface|SynchronizedProjectMembershipDetector
+     */
+    private $detector;
 
     protected function setUp(): void
     {
-        $this->ugroup_manager   = Mockery::mock(\UGroupManager::class);
-        $this->synchronized_dao = Mockery::mock(SynchronizedProjectMembershipDao::class);
+        $this->ugroup_manager = Mockery::mock(\UGroupManager::class);
+        $this->detector       = Mockery::mock(SynchronizedProjectMembershipDetector::class);
 
-        $this->builder = new UGroupListPresenterBuilder($this->ugroup_manager, $this->synchronized_dao);
+        $this->builder = new UGroupListPresenterBuilder($this->ugroup_manager, $this->detector);
 
         $this->ugroup_manager->shouldReceive('getStaticUgroups')->andReturn([]);
         $mock_ugroup = Mockery::mock(
@@ -81,25 +81,41 @@ final class UGroupListPresenterBuilderTest extends TestCase
         );
     }
 
-    public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProject()
+    public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProject(): void
     {
         $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
         $this->project->shouldReceive('isPublic')->andReturnTrue();
-        $this->synchronized_dao->shouldReceive('isEnabled')->andReturnTrue();
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
 
         $result = $this->builder->build($this->project, $csrf);
 
+        $this->assertTrue($result->is_synchronized_project_membership);
         $this->assertNotNull($result->synchronized_project_membership_presenter);
         $this->assertTrue($result->synchronized_project_membership_presenter->is_enabled);
     }
 
-    public function testItDoesNotBuildASynchronizedPresenterForPrivateProject()
+    public function testItDoesNotBuildASynchronizedPresenterForPrivateProject(): void
     {
         $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
         $this->project->shouldReceive('isPublic')->andReturnFalse();
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
 
         $result = $this->builder->build($this->project, $csrf);
 
+        $this->assertTrue($result->is_synchronized_project_membership);
         $this->assertNull($result->synchronized_project_membership_presenter);
+    }
+
+    public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProjectWithoutSynchronization(): void
+    {
+        $csrf = Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->project->shouldReceive('isPublic')->andReturnTrue();
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnFalse();
+
+        $result = $this->builder->build($this->project, $csrf);
+
+        $this->assertFalse($result->is_synchronized_project_membership);
+        $this->assertNotNull($result->synchronized_project_membership_presenter);
+        $this->assertFalse($result->synchronized_project_membership_presenter->is_enabled);
     }
 }

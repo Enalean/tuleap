@@ -18,10 +18,16 @@
         </div>
     </div>
     <div class="tlp-modal-body project-admin-delete-user-group-modal-content">
-        {{# gettext }}
+        <p>{{# gettext }}
             You are about to delete <b>%s</b> users group. Please, confirm your action.
             | {{ name }}
-        {{/ gettext }}
+        {{/ gettext }}</p>
+        {{# is_synchronized_project_membership }}
+            <p class="tlp-alert-warning">{{# gettext }}
+                All members of %s will remain project members.
+                | {{ name }}
+            {{/ gettext }}</p>
+        {{/ is_synchronized_project_membership }}
     </div>
     <div class="tlp-modal-footer">
         <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">

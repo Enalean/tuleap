@@ -24,7 +24,7 @@ use CSRFSynchronizerToken;
 use Project;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\SynchronizedProjectMembershipPresenter;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\User\UserGroup\NameTranslator;
 use UGroupManager;
 
@@ -35,16 +35,16 @@ class UGroupListPresenterBuilder
      */
     private $ugroup_manager;
     /**
-     * @var SynchronizedProjectMembershipDao
+     * @var SynchronizedProjectMembershipDetector
      */
-    private $synchronized_project_membership_dao;
+    private $detector;
 
     public function __construct(
         UGroupManager $ugroup_manager,
-        SynchronizedProjectMembershipDao $synchronized_project_membership_dao
+        SynchronizedProjectMembershipDetector $detector
     ) {
-        $this->ugroup_manager                      = $ugroup_manager;
-        $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
+        $this->ugroup_manager = $ugroup_manager;
+        $this->detector       = $detector;
     }
 
     public function build(Project $project, CSRFSynchronizerToken $csrf)
@@ -52,7 +52,11 @@ class UGroupListPresenterBuilder
         $static_ugroups = $this->getStaticUGroups($project);
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($project, $static_ugroups);
 
-        $synchronous_presenter = $this->buildSynchronizedProjectMembershipPresenter($project);
+        $is_synchronized_project_membership = $this->detector->isSynchronizedWithProjectMembers($project);
+        $synchronous_presenter              = $this->buildSynchronizedProjectMembershipPresenter(
+            $project,
+            $is_synchronized_project_membership
+        );
 
         return new UGroupListPresenter(
             $project,
@@ -60,6 +64,7 @@ class UGroupListPresenterBuilder
             $this->getStaticUGroupsPresenters($project, $static_ugroups),
             $templates,
             $csrf,
+            $is_synchronized_project_membership,
             $synchronous_presenter
         );
     }
@@ -181,12 +186,13 @@ class UGroupListPresenterBuilder
         });
     }
 
-    private function buildSynchronizedProjectMembershipPresenter(Project $project): ?SynchronizedProjectMembershipPresenter
-    {
+    private function buildSynchronizedProjectMembershipPresenter(
+        Project $project,
+        bool $is_synchronized
+    ): ?SynchronizedProjectMembershipPresenter {
         if (! $project->isPublic()) {
             return null;
         }
-        $is_enabled = $this->synchronized_project_membership_dao->isEnabled($project->getID());
-        return new SynchronizedProjectMembershipPresenter($is_enabled);
+        return new SynchronizedProjectMembershipPresenter($is_synchronized);
     }
 }

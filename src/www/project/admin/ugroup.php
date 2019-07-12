@@ -24,6 +24,7 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
@@ -79,7 +80,10 @@ $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('proje
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'groups');
 
-$presenter_builder = new UGroupListPresenterBuilder(new UGroupManager(), new SynchronizedProjectMembershipDao());
+$presenter_builder = new UGroupListPresenterBuilder(
+    new UGroupManager(),
+    new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
+);
 
 $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/user_groups';
 TemplateRendererFactory::build()
