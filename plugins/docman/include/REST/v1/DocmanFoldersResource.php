@@ -24,11 +24,15 @@ namespace Tuleap\Docman\REST\v1;
 
 use DateTimeImmutable;
 use Docman_EmbeddedFile;
+use Docman_Empty;
+use Docman_File;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
 use Docman_LinkVersionFactory;
+use Docman_Link;
 use Docman_PermissionsManager;
+use Docman_Wiki;
 use DocmanPlugin;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -126,24 +130,43 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-        try {
-            return $docman_item_creator->createFileDocument(
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
+
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($files_representation)) {
+            $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+            try {
+                return $docman_item_creator->createFileDocument(
+                    $parent,
+                    $current_user,
+                    $files_representation->title,
+                    $files_representation->description,
+                    $files_representation->status,
+                    $files_representation->obsolescence_date,
+                    new DateTimeImmutable(),
+                    $files_representation->file_properties
+                );
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            }
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($files_representation)) {
+            return $this->getItemCopier($project, Docman_File::class)->copyItem(
+                new DateTimeImmutable(),
                 $parent,
                 $current_user,
-                $files_representation->title,
-                $files_representation->description,
-                $files_representation->status,
-                $files_representation->obsolescence_date,
-                new DateTimeImmutable(),
-                $files_representation->file_properties
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+                $files_representation->copy
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create a file document (the properties %s are required for the creation)',
+                implode(', ', $files_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -179,12 +202,11 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
-        try {
-            if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($folder_representation)) {
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($folder_representation)) {
+            $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+            try {
                 return $docman_item_creator->createFolder(
                     $parent,
                     $current_user,
@@ -192,37 +214,19 @@ class DocmanFoldersResource extends AuthenticatedResource
                     new DateTimeImmutable(),
                     $project
                 );
-            }
-            if ($representation_for_copy_validation->isValidAsACopyRepresentation($folder_representation)) {
-                $docman_plugin = PluginManager::instance()->getPluginByName('docman');
-                assert($docman_plugin instanceof DocmanPlugin);
-                $docman_plugin_info  = $docman_plugin->getPluginInfo();
-                $item_factory        = new Docman_ItemFactory();
-                $docman_item_copier  = new DocmanItemCopier(
-                    $item_factory,
-                    new BeforeCopyVisitor(
-                        Docman_Folder::class,
-                        $item_factory,
-                        new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
-                    ),
-                    $this->getPermissionManager($project),
-                    new MetadataFactoryBuilder(),
-                    EventManager::instance(),
-                    ProjectManager::instance(),
-                    new Docman_LinkVersionFactory(),
-                    $docman_plugin_info->getPropertyValueForName('docman_root')
-                );
-                return $docman_item_copier->copyItem(
-                    new DateTimeImmutable(),
-                    $parent,
-                    $current_user,
-                    $folder_representation->copy
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
                 );
             }
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($folder_representation)) {
+            return $this->getItemCopier($project, Docman_Folder::class)->copyItem(
+                new DateTimeImmutable(),
+                $parent,
+                $current_user,
+                $folder_representation->copy
             );
         }
         throw new RestException(
@@ -275,22 +279,40 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
-        try {
-            return $docman_item_creator->createEmpty(
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($empty_representation)) {
+            $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+            try {
+                return $docman_item_creator->createEmpty(
+                    $parent,
+                    $current_user,
+                    $empty_representation,
+                    new DateTimeImmutable(),
+                    $project
+                );
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            }
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($empty_representation)) {
+            return $this->getItemCopier($project, Docman_Empty::class)->copyItem(
+                new DateTimeImmutable(),
                 $parent,
                 $current_user,
-                $empty_representation,
-                new DateTimeImmutable(),
-                $project
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+                $empty_representation->copy
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create an empty document (the properties %s are required for the creation)',
+                implode(', ', $empty_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -334,21 +356,40 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-        try {
-            return $docman_item_creator->createWiki(
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
+
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($wiki_representation)) {
+            $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+            try {
+                return $docman_item_creator->createWiki(
+                    $parent,
+                    $current_user,
+                    $wiki_representation,
+                    new DateTimeImmutable(),
+                    $project
+                );
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            }
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($wiki_representation)) {
+            return $this->getItemCopier($project, Docman_Wiki::class)->copyItem(
+                new DateTimeImmutable(),
                 $parent,
                 $current_user,
-                $wiki_representation,
-                new DateTimeImmutable(),
-                $project
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+                $wiki_representation->copy
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create a wiki document (the properties %s are required for the creation)',
+                implode(', ', $wiki_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -397,8 +438,8 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
-        try {
-            if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($embeds_representation)) {
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($embeds_representation)) {
+            try {
                 $docman_item_creator = DocmanItemCreatorBuilder::build($project);
                 return $docman_item_creator->createEmbedded(
                     $parent,
@@ -407,34 +448,19 @@ class DocmanFoldersResource extends AuthenticatedResource
                     new DateTimeImmutable(),
                     $project
                 );
-            }
-            if ($representation_for_copy_validation->isValidAsACopyRepresentation($embeds_representation)) {
-                $item_factory        = new Docman_ItemFactory();
-                $docman_item_copier  = new DocmanItemCopier(
-                    $item_factory,
-                    new BeforeCopyVisitor(
-                        Docman_EmbeddedFile::class,
-                        $item_factory,
-                        new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
-                    ),
-                    $this->getPermissionManager($project),
-                    new MetadataFactoryBuilder(),
-                    EventManager::instance(),
-                    ProjectManager::instance(),
-                    new Docman_LinkVersionFactory(),
-                    $docman_plugin_info->getPropertyValueForName('docman_root')
-                );
-                return $docman_item_copier->copyItem(
-                    new DateTimeImmutable(),
-                    $parent,
-                    $current_user,
-                    $embeds_representation->copy
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
                 );
             }
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($embeds_representation)) {
+            return $this->getItemCopier($project, Docman_EmbeddedFile::class)->copyItem(
+                new DateTimeImmutable(),
+                $parent,
+                $current_user,
+                $embeds_representation->copy
             );
         }
         throw new RestException(
@@ -488,22 +514,40 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+        $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
-        try {
-            return $docman_item_creator->createLink(
+        if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($links_representation)) {
+            $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+            try {
+                return $docman_item_creator->createLink(
+                    $parent,
+                    $current_user,
+                    $links_representation,
+                    new DateTimeImmutable(),
+                    $project
+                );
+            } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            }
+        }
+        if ($representation_for_copy_validation->isValidAsACopyRepresentation($links_representation)) {
+            return $this->getItemCopier($project, Docman_Link::class)->copyItem(
+                new DateTimeImmutable(),
                 $parent,
                 $current_user,
-                $links_representation,
-                new DateTimeImmutable(),
-                $project
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(
-                400,
-                $e->getI18NExceptionMessage()
+                $links_representation->copy
             );
         }
+        throw new RestException(
+            400,
+            sprintf(
+                'You need to either copy or create a link document (the properties %s are required for the creation)',
+                implode(', ', $links_representation::getNonCopyRequiredObjectProperties())
+            )
+        );
     }
 
     /**
@@ -589,5 +633,30 @@ class DocmanFoldersResource extends AuthenticatedResource
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
         return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, Docman_Folder::class);
+    }
+
+    /**
+     * @psalm-param class-string<Docman_Item> $expected_item_class_to_copy
+     */
+    private function getItemCopier(Project $project, string $expected_item_class_to_copy) : DocmanItemCopier
+    {
+        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        assert($docman_plugin instanceof DocmanPlugin);
+        $docman_plugin_info  = $docman_plugin->getPluginInfo();
+        $item_factory        = new Docman_ItemFactory();
+        return new DocmanItemCopier(
+            $item_factory,
+            new BeforeCopyVisitor(
+                $expected_item_class_to_copy,
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            new MetadataFactoryBuilder(),
+            EventManager::instance(),
+            ProjectManager::instance(),
+            new Docman_LinkVersionFactory(),
+            $docman_plugin_info->getPropertyValueForName('docman_root')
+        );
     }
 }

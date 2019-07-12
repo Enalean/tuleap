@@ -22,13 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
+use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanWikiPOSTRepresentation
+class DocmanWikiPOSTRepresentation implements CanContainACopyRepresentation
 {
+    private const REQUIRED_NON_COPY_PROPERTIES = ['title', 'wiki_properties'];
+
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string Item title {@from body} {@required false}  Mandatory if copy is not set
      */
     public $title;
     /**
@@ -36,7 +40,7 @@ class DocmanWikiPOSTRepresentation
      */
     public $description = '';
     /**
-     * @var WikiPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
+     * @var WikiPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation} {@from body} {@required false} Mandatory if copy is not set
      */
     public $wiki_properties;
     /**
@@ -47,4 +51,14 @@ class DocmanWikiPOSTRepresentation
      * @var string | null Obsolescence date {@from body} {@required false}
      */
     public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+    /**
+     * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
+     */
+    public $copy;
+
+    public static function getNonCopyRequiredObjectProperties() : array
+    {
+        return self::REQUIRED_NON_COPY_PROPERTIES;
+    }
 }

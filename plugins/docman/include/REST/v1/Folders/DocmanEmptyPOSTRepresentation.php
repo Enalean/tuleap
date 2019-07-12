@@ -22,13 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
+use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
-class DocmanEmptyPOSTRepresentation
+class DocmanEmptyPOSTRepresentation implements CanContainACopyRepresentation
 {
+    private const REQUIRED_NON_COPY_PROPERTIES = ['title'];
+
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string Item title {@from body} {@required false} Mandatory if copy is not set
      */
     public $title;
     /**
@@ -43,4 +47,14 @@ class DocmanEmptyPOSTRepresentation
      * @var string | null Obsolescence date {@from body} {@required false}
      */
     public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+    /**
+     * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
+     */
+    public $copy;
+
+    public static function getNonCopyRequiredObjectProperties() : array
+    {
+        return self::REQUIRED_NON_COPY_PROPERTIES;
+    }
 }

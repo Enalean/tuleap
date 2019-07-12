@@ -81,7 +81,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostFileDocument(int $root_id): void
+    public function testPostFileDocument(int $root_id) : int
     {
         $file_size = 123;
         $query     = json_encode(
@@ -142,6 +142,31 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(200, $file_content_response->getStatusCode());
         $this->assertEquals($file_content, $file_content_response->getBody());
+
+        return $response1->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testPostFileDocument
+     */
+    public function testPostCopyFileDocument(int $root_id, int $file_document_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/files',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $file_document_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_files/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
@@ -352,7 +377,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostEmptyDocument(int $root_id): void
+    public function testPostEmptyDocument(int $root_id): int
     {
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
@@ -368,6 +393,31 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testPostEmptyDocument
+     */
+    public function testPostCopyEmptyDocument(int $root_id, int $empty_document_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/empties',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $empty_document_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_empty_documents/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
@@ -395,7 +445,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostWikiDocument(int $root_id): void
+    public function testPostWikiDocument(int $root_id) : int
     {
         $headers = ['Content-Type' => 'application/json'];
         $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
@@ -413,6 +463,31 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testPostWikiDocument
+     */
+    public function testPostCopyWikiDocument(int $root_id, int $wiki_document_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/wikis',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $wiki_document_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_wikis/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
@@ -466,7 +541,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testPostLinkDocument(int $root_id): void
+    public function testPostLinkDocument(int $root_id): int
     {
         $headers         = ['Content-Type' => 'application/json'];
         $link_properties = ['link_url' => 'https://turfu.example.test'];
@@ -484,6 +559,31 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         );
 
         $this->assertEquals(201, $response->getStatusCode());
+
+        return $response->json()['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testPostLinkDocument
+     */
+    public function testPostCopyLinkDocument(int $root_id, int $link_document_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/links',
+                ['Content-Type' => 'application/json'],
+                json_encode(['copy' => ['item_id' => $link_document_id]])
+            )
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_links/' . urlencode((string) $response->json()['id']))
+        );
     }
 
     /**
