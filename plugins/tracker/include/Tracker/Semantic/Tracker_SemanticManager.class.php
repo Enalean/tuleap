@@ -122,11 +122,10 @@ class Tracker_SemanticManager
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance()
         );
-        $semantic_timeframe = $semantic_timeframe_builder->getSemantic($this->tracker);
-        if ($semantic_timeframe->isDefined()) {
-            $semantics->add($semantic_timeframe);
-        }
 
+        $semantic_timeframe = $semantic_timeframe_builder->getSemantic($this->tracker);
+
+        $semantics->add($semantic_timeframe);
         $semantics->add($this->tracker->getTooltip());
 
         $this->addOtherSemantics($semantics);

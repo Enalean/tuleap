@@ -33,6 +33,7 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
 class SemanticTimeframe extends Tracker_Semantic
 {
@@ -72,20 +73,20 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function getDescription(): string
     {
-        throw new \RuntimeException('Not implemented yet');
+        return dgettext('tuleap-tracker', 'Define the field to use to compute artifacts timeframes.');
     }
 
     public function display(): void
     {
         if ($this->start_date_field === null || $this->duration_field === null) {
-            return;
+            echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
+        } else {
+            echo sprintf(
+                dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
+                $this->start_date_field->getLabel(),
+                $this->duration_field->getLabel()
+            );
         }
-
-        echo sprintf(
-            dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
-            $this->start_date_field->getLabel(),
-            $this->duration_field->getLabel()
-        );
     }
 
     public function displayAdmin(
@@ -94,7 +95,23 @@ class SemanticTimeframe extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ): void {
-        throw new \RuntimeException('Not implemented yet');
+        $sm->displaySemanticHeader($this, $tracker_manager);
+
+        $builder = new SemanticTimeframeAdministrationPresenterBuilder(
+            \Tracker_FormElementFactory::instance()
+        );
+
+        $renderer  = \TemplateRendererFactory::build()->getRenderer(__DIR__. '/../../../../templates/timeframe-semantic');
+        $presenter = $builder->build(
+            $this->getCSRFSynchronizerToken(),
+            $this->tracker,
+            $this->start_date_field,
+            $this->duration_field
+        );
+
+        $renderer->renderToPage('timeframe-semantic-admin', $presenter);
+
+        $sm->displaySemanticFooter($this, $tracker_manager);
     }
 
     public function process(
@@ -103,7 +120,7 @@ class SemanticTimeframe extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ): void {
-        throw new \RuntimeException('Not implemented yet');
+        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
@@ -152,5 +169,17 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToREST(PFUser $user): void
     {
+    }
+
+    private function getCSRFSynchronizerToken() : \CSRFSynchronizerToken
+    {
+        return new \CSRFSynchronizerToken(
+            TRACKER_BASE_URL . "/?" . http_build_query(
+                [
+                    "semantic" => self::NAME,
+                    "func"     => "admin-semantic"
+                ]
+            )
+        );
     }
 }

@@ -262,6 +262,9 @@ msgstr "Changement de nature de %s à %s : %s"
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
 
+msgid "Choose a field..."
+msgstr "Choisissez un champ..."
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -290,6 +293,9 @@ msgstr ""
 msgid "Default notifications"
 msgstr "Notifications par défaut"
 
+msgid "Define the field to use to compute artifacts timeframes."
+msgstr "Définit le champ à utiliser pour calculer les plages de temps des artéfacts."
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -308,6 +314,9 @@ msgstr ""
 
 msgid "Disable notifications"
 msgstr "Désactiver les notifications"
+
+msgid "Duration"
+msgstr "Durée"
 
 msgid "Edit"
 msgstr "Éditer"
@@ -584,6 +593,9 @@ msgstr "Quelque chose s'est mal passé."
 
 msgid "Source id does not exist."
 msgstr "L'id source n'existe pas."
+
+msgid "Start date"
+msgstr "Date de début"
 
 msgid "Status change notifications"
 msgstr "Notifications lors de la mise à jour du statut"
@@ -975,6 +987,18 @@ msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à OPEN()."
 
 msgid ""
+"The timeframe of an artifact is defined for the moment by the fields "
+"<b>Start date</b> and <b>Duration</b>. It is advised to define explicitely "
+"the timeframe semantic using the form below."
+msgstr ""
+"La période d'un artéfact est pour le moment définie par les champs <b>Start "
+"date</b> et <b>Duration</b>. Il est conseillé de définir explicitement la "
+"sémantique plage de temps en utilisant le formulaire ci-dessous."
+
+msgid "The timeframe of an artifact will be defined by:"
+msgstr "La plage de temps d'un artéfact sera définie par :"
+
+msgid ""
 "The tracker %s is implicated in cross-tracker triggers. You will not be able "
 "to remove this tracker from the hierarchy until the triggers implicating it "
 "are removed."
@@ -1085,6 +1109,16 @@ msgid ""
 msgstr ""
 "Cet artefact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
 "importé: ligne %s du fichier CSV."
+
+msgid ""
+"This page is currently under construction, you cannot configure the "
+"timeframe semantic yet."
+msgstr ""
+"Cette page est actuellement en cours de construction, vous ne pouvez pas "
+"encore configurer la sémantique période."
+
+msgid "This semantic is not defined yet."
+msgstr "Cette sémantique n'est pas encore définie."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
@@ -1351,3 +1385,6 @@ msgstr "L'attribut fieldset_ids ne doit pas être vide."
 
 msgid "no type"
 msgstr "sans nature"
+
+msgid "« Go back to semantic overview"
+msgstr "« Retour à l'administration de la sémantique"
