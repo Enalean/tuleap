@@ -130,6 +130,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/12-suspended-project
     load_project /usr/share/tuleap/tests/rest/_fixtures/13-project-services
     load_project /usr/share/tuleap/tests/rest/_fixtures/14-public-sync-project-member
+    load_project /usr/share/tuleap/tests/rest/_fixtures/15-future-releases
 
     echo "Load initial data"
     "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php

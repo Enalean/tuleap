@@ -51,6 +51,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected $project_deleted_id;
     protected $project_suspended_id;
     protected $project_public_with_membership_id;
+    protected $project_future_releases_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -137,6 +138,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->project_deleted_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
         $this->project_suspended_id              = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
         $this->project_public_with_membership_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME);
+        $this->project_future_releases_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_FUTURE_RELEASES);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }

@@ -19,7 +19,7 @@
 
 import {
     getCurrentMilestones as getAllCurrentMilestones,
-    getInitialEffortOfRelease as getInitialEffort,
+    getMilestonesContent,
     getNbOfBacklogItems as getBacklogs,
     getNbOfSprints as getSprints,
     getNbOfUpcomingReleases as getReleases
@@ -66,7 +66,7 @@ export async function getNumberOfSprints(context, milestone_id) {
 
 export async function getInitialEffortOfRelease(context, id_release) {
     try {
-        let user_stories = await getInitialEffort(id_release, context.state);
+        let user_stories = await getMilestonesContent(id_release, context.state);
         return user_stories.reduce((acc, cu) => {
             if (cu.initial_effort !== null) {
                 return acc + cu.initial_effort;
