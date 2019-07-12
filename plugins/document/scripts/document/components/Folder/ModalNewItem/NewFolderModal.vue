@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -22,7 +22,7 @@
     <form class="tlp-modal" role="dialog" aria-labelledby="document-new-folder-modal" v-on:submit="addFolder">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
-        <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
+        <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-updated-context="false"/>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>

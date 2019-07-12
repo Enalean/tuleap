@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -48,7 +48,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI, TYPE_FOLDER } from "../../constants.js";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
@@ -150,14 +150,19 @@ export default {
         },
         showUpdateItemMetadataModal(event) {
             this.updated_metadata = event.detail.current_item;
-
-            if (this.updated_metadata.type !== TYPE_FOLDER) {
+            if (!this.isItemAFolder(this.updated_metadata)) {
                 this.shown_update_metadata_modal = () =>
                     import(/* webpackChunkName: "update-metadata-modal" */ "./ModalUpdateMetadata/UpdateMetadataModal.vue");
+            } else {
+                this.shown_update_metadata_modal = () =>
+                    import(/* webpackChunkName: "update-folder-metadata-modal" */ "./ModalUpdateMetadata/UpdateFolderMetadataModal.vue");
             }
         },
         hideDeleteItemModal() {
             this.item_to_delete = null;
+        },
+        isItemAFolder(item) {
+            return item.type === TYPE_FOLDER;
         }
     }
 };

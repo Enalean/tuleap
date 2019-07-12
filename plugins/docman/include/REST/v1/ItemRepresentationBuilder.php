@@ -115,7 +115,7 @@ class ItemRepresentationBuilder
         return $this->buildItemRepresentation(
             $item,
             $current_user,
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            ItemRepresentation::TYPE_FOLDER
         );
     }
 
@@ -126,7 +126,7 @@ class ItemRepresentationBuilder
     public function buildItemRepresentation(
         \Docman_Item $item,
         \PFUser $current_user,
-        $type,
+        ?string $type,
         ?FilePropertiesRepresentation $file_properties = null,
         ?EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         ?LinkPropertiesRepresentation $link_properties = null,

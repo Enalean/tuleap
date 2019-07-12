@@ -50,3 +50,18 @@ export function doesDocumentAlreadyExistsAtUpdate(
         );
     });
 }
+
+export function doesFolderAlreadyExistsAtUpdate(
+    text_value,
+    folder_content,
+    item_to_update,
+    parent_folder
+) {
+    return folder_content.some(item => {
+        return (
+            doesTitleAlreadyExists(text_value, item, parent_folder) &&
+            item.type === TYPE_FOLDER &&
+            item.id !== item_to_update.id
+        );
+    });
+}

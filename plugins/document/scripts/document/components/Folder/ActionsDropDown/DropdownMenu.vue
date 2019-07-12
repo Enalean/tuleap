@@ -41,9 +41,9 @@
            data-test="docman-dropdown-details"
         >
             <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
-            <span>
-                {{ properties_label }}
-            </span>
+            <translate>
+                Update properties
+            </translate>
         </a>
         <a v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
             <i class="fa fa-fw fa-bell-o tlp-dropdown-menu-item-icon"></i>
@@ -92,15 +92,7 @@
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import {
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_FILE,
-    TYPE_LINK,
-    TYPE_WIKI,
-    TYPE_FOLDER
-} from "../../../constants.js";
-import { redirectToUrl } from "../../../helpers/location-helper.js";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
@@ -138,12 +130,6 @@ export default {
                 this.item.type === TYPE_LINK ||
                 this.item.type === TYPE_EMPTY
             );
-        },
-        properties_label() {
-            if (this.item.type !== TYPE_FOLDER) {
-                return this.$gettext("Update properties");
-            }
-            return this.$gettext("Properties");
         }
     },
     methods: {
@@ -153,12 +139,6 @@ export default {
             }&action=details&section=${pane_name}`;
         },
         showUpdateModal() {
-            if (this.item.type === TYPE_FOLDER) {
-                const details_url = this.getUrlForPane(this.DETAILS_PANE_NAME);
-                redirectToUrl(details_url);
-                return;
-            }
-
             document.dispatchEvent(
                 new CustomEvent("show-update-item-metadata-modal", {
                     detail: { current_item: this.item }

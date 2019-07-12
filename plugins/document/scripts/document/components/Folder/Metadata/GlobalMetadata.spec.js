@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import GlobalMetadata from "./GlobalMetadata.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 
 describe("GlobalMetadata", () => {
     let global_metadata, state, store;
@@ -43,7 +43,7 @@ describe("GlobalMetadata", () => {
         };
     });
     it(`Given status is enabled for project
-        Then we should display the status component`, () => {
+        Then we should display the status component if the item is not a folder`, () => {
         const wrapper = global_metadata(
             {
                 currentlyUpdatedItem: {
@@ -87,6 +87,51 @@ describe("GlobalMetadata", () => {
         store.state.is_item_status_metadata_used = false;
 
         expect(wrapper.find("[data-test=document-status-metadata]").exists()).toBeFalsy();
+    });
+
+    it(`Given status is enabled for project
+        Then status component is not rendered if we want to update a folder`, () => {
+        const wrapper = global_metadata(
+            {
+                currentlyUpdatedItem: {
+                    status: 100,
+                    type: TYPE_FOLDER,
+                    title: "title"
+                },
+                isInUpdateContext: true
+            },
+            { parent: 102 }
+        );
+
+        store.state.is_item_status_metadata_used = true;
+
+        expect(wrapper.find("[data-test=document-status-metadata]").exists()).toBeFalsy();
+    });
+
+    it(`Given status is enabled for project
+        Then status component is rendered if we want to create a folder`, () => {
+        const wrapper = global_metadata({
+            currentlyUpdatedItem: {
+                status: 100,
+                type: TYPE_FOLDER,
+                title: "title",
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 100
+                            }
+                        ]
+                    }
+                ]
+            },
+            isInUpdateContext: false
+        });
+
+        store.state.is_item_status_metadata_used = true;
+
+        expect(wrapper.find("[data-test=document-status-metadata]").exists()).toBeTruthy();
     });
 
     describe("Given status value is updated", () => {
