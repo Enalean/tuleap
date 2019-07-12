@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_LockFactory;
 use Docman_Log;
@@ -34,6 +35,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
@@ -413,7 +415,12 @@ class DocmanLinksResource extends AuthenticatedResource
 
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
-        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Link::class);
+        return new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_Link::class)
+        );
     }
 
     private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator

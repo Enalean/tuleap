@@ -37,6 +37,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use RuntimeException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
@@ -80,7 +81,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->item_copier = new DocmanItemCopier(
             $this->item_factory,
             new BeforeCopyVisitor(
-                Docman_Item::class,
+                new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
                 $this->item_factory,
                 Mockery::mock(DocumentOngoingUploadRetriever::class)
             ),

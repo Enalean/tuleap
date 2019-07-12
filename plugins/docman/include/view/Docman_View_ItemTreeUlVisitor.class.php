@@ -94,6 +94,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         if($li_displayed) {
             $this->html .= '</li>'."\n";
         }
+        return '';
     }
     function visitDocument($item, $params = array()) {
         $params['popup_doc'] = true;

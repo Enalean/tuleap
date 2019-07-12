@@ -33,6 +33,7 @@ use Docman_Wiki;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 
 class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
@@ -66,7 +67,7 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
             $this->permission_manager,
             $this->current_user,
             $this->item,
-            Docman_File::class
+            new DoesItemHasExpectedTypeVisitor(Docman_File::class)
         );
     }
 

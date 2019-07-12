@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,19 +28,43 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 
+/**
+ * @template ReturnType
+ */
 interface ItemVisitor
 {
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitFolder(Docman_Folder $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitWiki(Docman_Wiki $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitLink(Docman_Link $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitFile(Docman_File $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitEmpty(Docman_Empty $item, array $params = []);
 
+    /**
+     * @psalm-return ReturnType
+     */
     public function visitItem(Docman_Item $item, array $params = []);
 }

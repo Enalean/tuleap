@@ -23,6 +23,9 @@
 
 use Tuleap\Docman\Item\ItemVisitor;
 
+/**
+ * @template-implements ItemVisitor<void>
+ */
 class Docman_CloneItemsVisitor implements ItemVisitor
 {
     var $dstGroupId;

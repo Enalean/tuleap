@@ -22,13 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
+use Docman_Empty;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Luracast\Restler\RestException;
+use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
@@ -282,9 +286,14 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
         return Docman_PermissionsManager::instance($project->getGroupId());
     }
 
-    private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
+    private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
-        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_Empty::class);
+        return new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class)
+        );
     }
 
     private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator

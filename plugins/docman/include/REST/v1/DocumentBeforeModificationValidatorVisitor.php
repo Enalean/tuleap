@@ -30,15 +30,14 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\REST\I18NRestException;
 
+/**
+ * @template-implements ItemVisitor<void>
+ */
 class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
 {
-    /**
-     * @var String
-     */
-    private $document_type;
-
     /**
      * @var \PFUser
      */
@@ -51,64 +50,55 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
      * @var \Docman_PermissionsManager
      */
     private $permission_manager;
+    /**
+     * @var DoesItemHasExpectedTypeVisitor
+     */
+    private $does_item_has_expected_type_visitor;
 
-    public function __construct(\Docman_PermissionsManager $permission_manager, \PFUser $current_user, Docman_Item $item, string $document_type)
-    {
-        $this->document_type      = $document_type;
-        $this->current_user       = $current_user;
-        $this->item               = $item;
-        $this->permission_manager = $permission_manager;
+    public function __construct(
+        \Docman_PermissionsManager $permission_manager,
+        \PFUser $current_user,
+        Docman_Item $item,
+        DoesItemHasExpectedTypeVisitor $does_item_has_expected_type_visitor
+    ) {
+        $this->current_user                        = $current_user;
+        $this->item                                = $item;
+        $this->permission_manager                  = $permission_manager;
+        $this->does_item_has_expected_type_visitor = $does_item_has_expected_type_visitor;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_Folder::class) {
-            $this->throwItemHasNotTheRightType();
-        }
+        $this->checkExpectedType($item);
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_Wiki::class) {
-            $this->throwItemHasNotTheRightType();
-        }
-
+        $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitLink(Docman_Link $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_Link::class) {
-            $this->throwItemHasNotTheRightType();
-        }
-
+        $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitFile(Docman_File $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_File::class) {
-            $this->throwItemHasNotTheRightType();
-        }
-
+        $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_EmbeddedFile::class) {
-            $this->throwItemHasNotTheRightType();
-        }
-
+        $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []) : void
     {
-        if ($this->document_type !== Docman_Empty::class) {
-            $this->throwItemHasNotTheRightType();
-        }
-
+        $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
@@ -120,13 +110,23 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
     /**
      * @throws I18NRestException
      */
+    private function checkExpectedType(Docman_Item $item) : void
+    {
+        if (! $item->accept($this->does_item_has_expected_type_visitor)) {
+            $this->throwItemHasNotTheRightType();
+        }
+    }
+
+    /**
+     * @throws I18NRestException
+     */
     private function throwItemHasNotTheRightType() : void
     {
         throw new I18NRestException(
             400,
             sprintf(
                 'The provided item id references an item which is not a %s',
-                $this->document_type
+                $this->does_item_has_expected_type_visitor->getExpectedItemClass()
             )
         );
     }
