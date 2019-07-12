@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\UGroups\Binding\BoundUGroupRefresher;
+use Tuleap\Project\UGroups\Binding\RecursiveBoundUGroupsRefresher;
+
 /**
  * ProjectUGroup binding
  */
@@ -169,43 +172,6 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     }
 
     /**
-     * Remove all users from a given user group
-     *
-     * @param int $ugroupId Id of the user group
-     *
-     * @return void
-     */
-    public function resetUgroup($ugroupId)
-    {
-        if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
-            if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
-                throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'reset_error', array($ugroupId)));
-            }
-        } else {
-            throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
-        }
-    }
-
-    /**
-     * Clone a given user group
-     *
-     * @param int $sourceId Id of the source user group
-     * @param int $ugroupId Id of the bound user group
-     *
-     * @return void
-     */
-    public function cloneUgroup($sourceId, $ugroupId)
-    {
-        if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
-            if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
-                throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'clone_error', array($ugroupId)));
-            }
-        } else {
-            throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
-        }
-    }
-
-    /**
      * Mark a given user group as bound to another one
      *
      * @param int $ugroupId Id of the bound user group
@@ -230,20 +196,18 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function reloadUgroupBinding($ugroupId, $sourceId)
     {
-        try {
-            $this->resetUgroup($ugroupId);
-            $this->cloneUgroup($sourceId, $ugroupId);
-            $cascadingBindedUgroups = $this->getUGroupsByBindingSource($ugroupId);
-            foreach ($cascadingBindedUgroups as $cascadUgroupKey => $ugroupData) {
-                $this->reloadUgroupBinding($cascadUgroupKey, $ugroupId);
-            }
-        } catch (LogicException $e) {
-            //re-throw exception
-            throw new Exception($e->getMessage());
-        } catch (RuntimeException $e) {
-            $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
-            throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-        }
+        $refresher = $this->getRecursiveRefresher();
+        $source_ugroup = $this->ugroupManager->getById($sourceId);
+        $destination_ugroup = $this->ugroupManager->getById($ugroupId);
+        $refresher->refreshUGroupAndBoundUGroups($source_ugroup, $destination_ugroup);
+    }
+
+    private function getRecursiveRefresher()
+    {
+        return new RecursiveBoundUGroupsRefresher(
+            new BoundUGroupRefresher($this->ugroupManager, $this->ugroupUserDao),
+            $this->ugroupManager
+        );
     }
 
     /**
