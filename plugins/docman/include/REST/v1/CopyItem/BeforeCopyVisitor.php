@@ -34,16 +34,19 @@ use Docman_Wiki;
 use LogicException;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\I18NRestException;
 
+/**
+ * @template-implements ItemVisitor<ItemBeingCopiedExpectation>
+ */
 final class BeforeCopyVisitor implements ItemVisitor
 {
     /**
-     * @var string
-     * @psalm-var class-string<Docman_Item>
+     * @var DoesItemHasExpectedTypeVisitor
      */
-    private $expected_item_class_to_copy;
+    private $does_item_has_expected_type;
     /**
      * @var Docman_ItemFactory
      */
@@ -57,11 +60,11 @@ final class BeforeCopyVisitor implements ItemVisitor
      * @psalm-param class-string<Docman_Item> $expected_item_class_to_copy
      */
     public function __construct(
-        string $expected_item_class_to_copy,
+        DoesItemHasExpectedTypeVisitor $does_item_has_expected_type,
         Docman_ItemFactory $item_factory,
         DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
     ) {
-        $this->expected_item_class_to_copy       = $expected_item_class_to_copy;
+        $this->does_item_has_expected_type       = $does_item_has_expected_type;
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
     }
@@ -134,7 +137,7 @@ final class BeforeCopyVisitor implements ItemVisitor
      */
     private function handleItem(Docman_Item $item, Docman_Folder $destination, callable $does_title_conflict) : ItemBeingCopiedExpectation
     {
-        if (get_class($item) !== $this->expected_item_class_to_copy) {
+        if (! $item->accept($this->does_item_has_expected_type)) {
             throw new RestException(400, 'The item to copy does not match the one expected by the route');
         }
 

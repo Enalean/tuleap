@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -22,8 +22,6 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
-
-require_once('Docman_ItemAction.class.php');
 
 /**
  * Item is a transport object (aka container) used to share data between
@@ -224,11 +222,13 @@ class Docman_Item {
     }
 
     /**
-     * @return mixed|void
+     * @template ItemVisitorReturnType
+     * @psalm-param ItemVisitor<ItemVisitorReturnType> $visitor
+     * @psalm-return ItemVisitorReturnType
      */
-    public function accept(ItemVisitor $visitor, $params = array())
+    public function accept(ItemVisitor $visitor, array $params = array())
     {
-        $visitor->visitItem($this, $params);
+        return $visitor->visitItem($this, $params);
     }
 
     public function addMetadata(&$metadata) {

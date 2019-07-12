@@ -34,14 +34,14 @@ use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\REST\I18NRestException;
 
+/**
+ * @template-implements ItemVisitor<void>
+ */
 class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 {
-    /**
-     * @var Docman_Item
-     */
-    private $item;
     /**
      * @var \Docman_PermissionsManager
      */
@@ -73,9 +73,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_Folder::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
+        $this->checkExpectedType($item, $params['document_type']);
 
         if ($item->getTitle() !== $params['title']
             && $this->item_factory->doesTitleCorrespondToExistingFolder($params['title'], (int)$item->getParentId())) {
@@ -85,9 +83,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
 
     public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_Wiki::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
+        $this->checkExpectedType($item, $params['document_type']);
 
         /**
          * @var Project $project
@@ -112,47 +108,44 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
         }
     }
 
-
-
     public function visitLink(Docman_Link $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_Link::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
-
+        $this->checkExpectedType($item, $params['document_type']);
         $this->checkItemCanBeUpdated($item, $params);
     }
 
     public function visitFile(Docman_File $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_File::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
-
+        $this->checkExpectedType($item, $params['document_type']);
         $this->checkItemCanBeUpdated($item, $params);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_EmbeddedFile::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
-
+        $this->checkExpectedType($item, $params['document_type']);
         $this->checkItemCanBeUpdated($item, $params);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
-        if ($params['document_type'] !== Docman_Empty::class) {
-            $this->throwItemHasNotTheRightType($params['document_type']);
-        }
-
+        $this->checkExpectedType($item, $params['document_type']);
         $this->checkItemCanBeUpdated($item, $params);
     }
 
     public function visitItem(Docman_Item $item, array $params = []): void
     {
         $this->throwItemHasNotTheRightType($params['document_type']);
+    }
+
+    /**
+     * @psalm-param class-string<Docman_Item> $expected_type
+     * @throws I18NRestException
+     */
+    private function checkExpectedType(Docman_Item $item, string $expected_type) : void
+    {
+        if (! $item->accept(new DoesItemHasExpectedTypeVisitor($expected_type))) {
+            $this->throwItemHasNotTheRightType($expected_type);
+        }
     }
 
     /**

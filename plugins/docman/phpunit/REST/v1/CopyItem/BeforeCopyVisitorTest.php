@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
 use DateTimeImmutable;
+use Docman_Document;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -35,13 +36,26 @@ use LogicException;
 use Luracast\Restler\RestException;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
 final class BeforeCopyVisitorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testOnlyExpectedTypeIsProcessed() : void
+    private const VISITOR_PROCESSABLE_CLASSES = [
+        Docman_Folder::class,
+        Docman_Wiki::class,
+        Docman_Link::class,
+        Docman_File::class,
+        Docman_EmbeddedFile::class,
+        Docman_Empty::class
+    ];
+
+    /**
+     * @dataProvider dataProviderProcessableItemClasses
+     */
+    public function testAllExpectedItemTypesCanBeProcessed(string $processed_item_class) : void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
@@ -52,46 +66,55 @@ final class BeforeCopyVisitorTest extends TestCase
         $destination_folder = Mockery::mock(Docman_Folder::class);
         $destination_folder->shouldReceive('getId')->andReturn(147);
 
-        $processable_classes = [
-            Docman_Folder::class,
-            Docman_Wiki::class,
-            Docman_Link::class,
-            Docman_File::class,
-            Docman_EmbeddedFile::class,
-            Docman_Empty::class
-        ];
+        $before_copy_visitor = new BeforeCopyVisitor(
+            new DoesItemHasExpectedTypeVisitor($processed_item_class),
+            $item_factory,
+            $document_ongoing_upload_retriever
+        );
+        $processed_item = new $processed_item_class();
+        $processed_item->setTitle('Title');
+        $expectation_for_copy = $processed_item->accept(
+            $before_copy_visitor,
+            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+        );
+        $this->assertEquals('Title', $expectation_for_copy->getExpectedTitle());
+    }
 
-        foreach ($processable_classes as $processed_class) {
-            $processed_item = new $processed_class();
-            $processed_item->setTitle('Title');
-            foreach ($processable_classes as $visitor_accepted_class) {
-                $before_copy_visitor = new BeforeCopyVisitor(
-                    $visitor_accepted_class,
-                    $item_factory,
-                    $document_ongoing_upload_retriever
-                );
+    /**
+     * @dataProvider dataProviderProcessableItemClasses
+     */
+    public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class) : void
+    {
+        $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
+        $document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-                try {
-                    $expectation_for_copy = $processed_item->accept(
-                        $before_copy_visitor,
-                        ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
-                    );
-                } catch (RestException $ex) {
-                    $this->assertNotEquals($processed_class, $visitor_accepted_class, 'The visitor has rejected a valid item');
-                    $this->assertEquals(400, $ex->getCode());
-                    continue;
-                }
+        $before_copy_visitor = new BeforeCopyVisitor(
+            new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
+            Mockery::mock(Docman_ItemFactory::class),
+            $document_ongoing_upload_retriever
+        );
 
-                $this->assertEquals($processed_class, $visitor_accepted_class, 'The visitor has accepted a invalid item');
-                $this->assertEquals('Title', $expectation_for_copy->getExpectedTitle());
-            }
+        $item = new $processed_item_class();
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $item->accept(
+            $before_copy_visitor,
+            ['destination' => Mockery::mock(Docman_Folder::class), 'current_time' => new DateTimeImmutable()]
+        );
+    }
+
+    public function dataProviderProcessableItemClasses() : ?\Generator
+    {
+        foreach (self::VISITOR_PROCESSABLE_CLASSES as $processable_class) {
+            yield [$processable_class];
         }
     }
 
     public function testProcessingGenericItemIsRejected() : void
     {
         $before_copy_visitor = new BeforeCopyVisitor(
-            Docman_Item::class,
+            new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
             Mockery::mock(Docman_ItemFactory::class),
             Mockery::mock(DocumentOngoingUploadRetriever::class)
         );
@@ -105,7 +128,7 @@ final class BeforeCopyVisitorTest extends TestCase
         $item_factory                      = Mockery::mock(Docman_ItemFactory::class);
         $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
         $before_copy_visitor               = new BeforeCopyVisitor(
-            Docman_Empty::class,
+            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class),
             $item_factory,
             $document_ongoing_upload_retriever
         );
@@ -133,9 +156,9 @@ final class BeforeCopyVisitorTest extends TestCase
 
     public function testFolderExpectedTitleIsUpdatedInCaseOfConflict() : void
     {
-        $item_factory                      = Mockery::mock(Docman_ItemFactory::class);
-        $before_copy_visitor               = new BeforeCopyVisitor(
-            Docman_Folder::class,
+        $item_factory        = Mockery::mock(Docman_ItemFactory::class);
+        $before_copy_visitor = new BeforeCopyVisitor(
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
             $item_factory,
             Mockery::mock(DocumentOngoingUploadRetriever::class)
         );
@@ -164,7 +187,7 @@ final class BeforeCopyVisitorTest extends TestCase
     {
         $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
         $before_copy_visitor               = new BeforeCopyVisitor(
-            Docman_Empty::class,
+            new DoesItemHasExpectedTypeVisitor(Docman_Empty::class),
             Mockery::mock(Docman_ItemFactory::class),
             $document_ongoing_upload_retriever
         );

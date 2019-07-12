@@ -200,5 +200,6 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
+        throw new LogicException('Cannot get the specific fields of a non specialized item');
     }
 }

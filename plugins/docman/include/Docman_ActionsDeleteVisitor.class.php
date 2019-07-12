@@ -144,6 +144,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
+        return null;
     }
 
     /**

@@ -33,6 +33,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
@@ -429,7 +430,12 @@ class DocmanFilesResource extends AuthenticatedResource
 
     private function getValidator(\Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
-        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, \Docman_File::class);
+        return new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_File::class)
+        );
     }
 
     private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator

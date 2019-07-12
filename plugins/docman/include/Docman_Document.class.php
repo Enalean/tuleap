@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2018-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Item.class.php');
-
 /**
  * Document is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
@@ -30,11 +28,4 @@ class Docman_Document extends Docman_Item {
     function __construct($data = null) {
         parent::__construct($data);
     }
-    
-    public function accept($visitor, $params = array())
-    {
-        return $visitor->visitDocument($this, $params);
-    }
 }
-
-?>

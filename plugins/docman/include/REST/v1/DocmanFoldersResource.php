@@ -40,6 +40,7 @@ use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
@@ -632,7 +633,12 @@ class DocmanFoldersResource extends AuthenticatedResource
 
     private function getValidator(Project $project, \PFUser $current_user, \Docman_Item $item): DocumentBeforeModificationValidatorVisitor
     {
-        return new DocumentBeforeModificationValidatorVisitor($this->getPermissionManager($project), $current_user, $item, Docman_Folder::class);
+        return new DocumentBeforeModificationValidatorVisitor(
+            $this->getPermissionManager($project),
+            $current_user,
+            $item,
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class)
+        );
     }
 
     /**
@@ -647,7 +653,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         return new DocmanItemCopier(
             $item_factory,
             new BeforeCopyVisitor(
-                $expected_item_class_to_copy,
+                new DoesItemHasExpectedTypeVisitor($expected_item_class_to_copy),
                 $item_factory,
                 new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
             ),

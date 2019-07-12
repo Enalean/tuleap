@@ -117,7 +117,6 @@ final class DocmanItemCopier
             $this->before_copy_visitor,
             ['destination' => $destination_folder, 'current_time' => $current_time]
         );
-        assert($copy_expectation instanceof ItemBeingCopiedExpectation);
 
         $metadata_mapping = [];
         $this->metadata_factory_builder->getMetadataFactoryForItem($item_to_copy)->getMetadataMapping(

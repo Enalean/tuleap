@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,9 @@ use Docman_Wiki;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Item\ItemVisitor;
 
+/**
+ * @template-implements ItemVisitor<void>
+ */
 class ItemCanHaveSubitemsCheckerVisitor implements ItemVisitor
 {
     public function visitFolder(Docman_Folder $item, array $params = [])
