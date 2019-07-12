@@ -22,11 +22,13 @@ require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 
 $data_builder = new DocmanDataBuilder(DocmanDataBuilder::PROJECT_NAME);
 $data_builder->setUp();
 
+$common_builder        = new DocmanDataBuildCommon(DocmanWithMetadataActivatedDataBuilder::PROJECT_NAME);
 $data_builder_metadata = new DocmanWithMetadataActivatedDataBuilder(
-    DocmanWithMetadataActivatedDataBuilder::PROJECT_NAME
+    $common_builder
 );
 $data_builder_metadata->setUp();

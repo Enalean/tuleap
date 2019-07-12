@@ -15,31 +15,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-use Tuleap\Docman\REST\v1\ItemRepresentation;
-
-class PUTMetadataRepresentation extends PUTMetadataCommonRepresentation
+class PUTRecursiveStatusRepresentation
 {
-
+    public const RECURSION_FOLDER    = 'folders';
+    public const RECURSION_ALL_ITEMS = 'all_items';
     /**
      * @var string Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
      */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public $value = ItemStatusMapper::ITEM_STATUS_NONE;
 
     /**
-     * @var string | null Obsolescence date {@from body} {@required false}
+     * @var string recursive option {@from body} {@required true} {@choice none,folders,all_items}
      */
-    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
-
-    /**
-     * @var int The new owner id of the item {@from body} {@required true}
-     */
-    public $owner_id;
+    public $recursion;
 }

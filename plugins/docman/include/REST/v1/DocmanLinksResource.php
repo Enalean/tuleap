@@ -36,8 +36,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
@@ -46,7 +44,7 @@ use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -354,7 +352,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
         $this->addAllEvent($project);
 
-        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator = MetadataUpdatorBuilder::build($project, $this->event_manager);
         $updator->updateDocumentMetadata(
             $representation,
             $item,
@@ -420,19 +418,6 @@ class DocmanLinksResource extends AuthenticatedResource
             $current_user,
             $item,
             new DoesItemHasExpectedTypeVisitor(Docman_Link::class)
-        );
-    }
-
-    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
-    {
-        $user_manager = \UserManager::instance();
-        return new MetadataUpdator(
-            new \Docman_ItemFactory(),
-            $this->getItemStatusMapper($project),
-            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
-            $user_manager,
-            new OwnerRetriever($user_manager),
-            new MetadataEventProcessor($this->event_manager)
         );
     }
 

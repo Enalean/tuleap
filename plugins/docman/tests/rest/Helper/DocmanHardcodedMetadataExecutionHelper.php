@@ -1,0 +1,117 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types = 1);
+
+namespace Tuleap\Docman\Test\rest\Helper;
+
+use REST_TestDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedBase;
+
+class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivatedBase
+{
+    protected function getDocmanRegularUser(): int
+    {
+        $search   = urlencode(
+            json_encode(
+                [
+                    'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+                ]
+            )
+        );
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(1, $json);
+
+        return $json[0]['id'];
+    }
+
+
+    public function testGetRootId(): int
+    {
+        $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
+
+        $this->assertSame(200, $project_response->getStatusCode());
+
+        $json_projects = $project_response->json();
+        return $json_projects['additional_informations']['docman']['root_item']['id'];
+    }
+
+
+    public function loadRootFolderContent(int $root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+        $this->assertEquals(200, $response->getStatusCode());
+
+        return $folder;
+    }
+
+    public function loadFolderContent(int $folder_id, string $folder_name): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_id . '/docman_items')
+        );
+        $folder   = $response->json();
+
+        $folder_content = $this->findItemByTitle($folder, $folder_name);
+        $new_folder_id  = $folder_content['id'];
+        $response       = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $new_folder_id . '/docman_items')
+        );
+        $item_folder    = $response->json();
+        $this->assertEquals(200, $response->getStatusCode());
+
+        return $item_folder;
+    }
+
+    /**
+     * Find first item in given array of items which has given title.
+     * @return array | null Found item. null otherwise.
+     */
+    public function findItemByTitle(array $items, string $title): ?array
+    {
+        $index = array_search($title, array_column($items, 'title'));
+        if ($index === false) {
+            return null;
+        }
+        return $items[$index];
+    }
+
+    /**
+     * @return array | null Found item. null otherwise.
+     */
+    public function findMetadataByName(array $metadata, string $name): ?array
+    {
+        $index = array_search($name, array_column($metadata, 'name'));
+        if ($index === false) {
+            return null;
+        }
+        return $metadata[$index];
+    }
+}

@@ -22,6 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Metadata;
 
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
+
 class ItemImpactedByMetadataChangeCollection
 {
     /**
@@ -44,6 +46,14 @@ class ItemImpactedByMetadataChangeCollection
                 $items[$recursive_elements] = '';
             }
         }
+
+        return new self($items);
+    }
+
+    public static function buildFromRest(PUTMetadataFolderRepresentation $representation): self
+    {
+        $items = [];
+        $items['status'] = $representation->status->value;
 
         return new self($items);
     }
