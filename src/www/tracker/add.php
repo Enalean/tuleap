@@ -27,7 +27,7 @@ $ath->header(array('title'=>$Language->getText('tracker_add', 'add_a')." ".$ath-
 echo '<div id="tracker_toolbar_clear"></div>';
 
 // Display the artifact items according to all the parameters
-$ah->displayAdd(user_getid());
+$ah->displayAdd(UserManager::instance()->getCurrentUser()->getId());
 
 echo "<script type=\"text/javascript\">\n";
 $armh = new ArtifactRulesManagerHtml($ath);

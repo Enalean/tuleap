@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2018-Present. All rights reserved
  * Copyright (c) STMicroelectronics 2011. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@ class ProjectHistoryDao extends DataAccessObject {
         if ($args) {
             $fieldName .= " %% ".implode("||", $args);
         }
-        $userId = user_getid();
+        $userId = UserManager::instance()->getCurrentUser()->getId();
         if ($userId == 0) {
             $userId = 100;
         }

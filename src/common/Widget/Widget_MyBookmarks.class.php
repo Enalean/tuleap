@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -40,7 +40,7 @@ class Widget_MyBookmarks extends Widget {
     function getContent() {
         $html_my_bookmarks = '';
         $result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
-            "user_id='". db_ei(user_getid()) ."' ORDER BY bookmark_title");
+            "user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' ORDER BY bookmark_title");
         $rows = db_numrows($result);
         if (!$result || $rows < 1) {
             $html_my_bookmarks .= $GLOBALS['Language']->getText('my_index', 'no_bookmark');

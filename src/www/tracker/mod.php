@@ -42,7 +42,7 @@ $ath->header($params);
 
 
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display($ro,$pv,user_getid());
+$ah->display($ro,$pv, UserManager::instance()->getCurrentUser()->getId());
 
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
 

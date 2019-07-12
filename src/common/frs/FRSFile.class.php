@@ -451,11 +451,13 @@ class FRSFile {
      * @return bool true if the user has permissions to download the file, false otherwise
      */
     function userCanDownload($user_id = 0) {
+        $user_manager = UserManager::instance();
         if ($user_id == 0) {
-            $user_id = user_getid();
+            $user = $user_manager->getCurrentUser();
+        } else {
+            $user = $user_manager->getUserById($user_id);
         }
 
-        $user = UserManager::instance()->getUserById($user_id);
         if ($user) {
             if ($user->isSuperUser()) {
                 return true;

@@ -1,5 +1,5 @@
 <?php
-// Copyright 2014-2018 (c) Enalean SAS
+// Copyright 2014-Present (c) Enalean SAS
 // This file is part of Tuleap
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
@@ -53,14 +53,14 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $description = db_es(htmlspecialchars($request->getValidated('description', 'string', '')));
                     $new_list_name = db_es($new_list_name);
                     $list_password = db_es($list_password);
-                    $user_id = user_getid();
+                    $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
                     $sql = "INSERT INTO mail_group_list
                                             (group_id,list_name,is_public,password,list_admin,status,description) VALUES (
                                             $group_id,
                                             '$new_list_name',
                                             $is_public,
                                             '$list_password',
-                                            $user_id,
+                                            $db_escaped_user_id,
                                             1,
                                             '$description')";
 
@@ -79,7 +79,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     EventManager::instance()->processEvent('mail_list_create', array('group_list_id' => $group_list_id,));
 
                     // get email addr
-                    $res_email = db_query("SELECT email FROM user WHERE user_id='" . user_getid() . "'");
+                    $res_email = db_query("SELECT email FROM user WHERE user_id='" . $db_escaped_user_id . "'");
                     if (db_numrows($res_email) < 1) {
                         exit_error($Language->getText('mail_admin_index', 'invalid_userid'), $Language->getText('mail_admin_index', 'does_not_compute'));
                     }

@@ -78,10 +78,10 @@ if ($group_id && $mode == "admin") {
 		  <tr class="'.util_get_alt_row_color($j).'"> 
 		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></td>
 		    <td align="center">
-                      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&func=import">'.$Language->getText('tracker_import_admin','import').'</a>
+                      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int) UserManager::instance()->getCurrentUser()->getId().'&func=import">'.$Language->getText('tracker_import_admin','import').'</a>
 		    </td>
 		    <td align="center"> 
-		      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&mode=showformat&func=import">'.$Language->getText('tracker_import_admin','show_format').'</a>
+		      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int) UserManager::instance()->getCurrentUser()->getId().'&mode=showformat&func=import">'.$Language->getText('tracker_import_admin','show_format').'</a>
 		    </td>
 		  </tr>';
             }

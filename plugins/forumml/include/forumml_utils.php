@@ -734,8 +734,10 @@ function plugin_forumml_process_mail($reply=false) {
     // Build mail headers
     $to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];
     $mail->setTo($to);
+
+    $current_user = UserManager::instance()->getCurrentUser();
     
-    $from = user_getrealname(user_getid())." <".user_getemail(user_getid()).">";
+    $from = $current_user->getRealName()." <".$current_user->getEmail().">";
     $mail->setFrom($from);
     
     $vMsg = new Valid_Text('message');

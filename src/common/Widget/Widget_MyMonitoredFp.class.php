@@ -44,7 +44,7 @@ class Widget_MyMonitoredFp extends Widget {
             "WHERE groups.group_id=frs_package.group_id ".
             "AND frs_package.status_id !=". db_ei($frsrf->STATUS_DELETED) ." ".
             "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
-            "AND filemodule_monitor.user_id='". db_ei(user_getid()) ."' ";
+            "AND filemodule_monitor.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' ";
         $um = UserManager::instance();
         $current_user = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
@@ -69,7 +69,7 @@ class Widget_MyMonitoredFp extends Widget {
                     "AND groups.group_id=". db_ei($group_id) . " ".
                     "AND frs_package.status_id !=". db_ei($frsrf->STATUS_DELETED) ." ".
                     "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
-                    "AND filemodule_monitor.user_id='". db_ei(user_getid()) ."'  LIMIT 100";
+                    "AND filemodule_monitor.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."'  LIMIT 100";
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
 

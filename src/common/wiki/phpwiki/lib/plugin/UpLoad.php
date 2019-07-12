@@ -207,7 +207,7 @@ ws[cfh]");
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
                                         HTML::th(_("Number of revision"))));
         $wai = WikiAttachment::getListWithCounter(GROUP_ID,
-                                                   user_getid(),
+                                                   UserManager::instance()->getCurrentUser()->getId(),
                                                    array('offset' => $offset,
                                                          'nb'     => $limit));
         $wai->rewind();

@@ -98,7 +98,7 @@ class Search_SearchTrackerV3 {
                     $status = $GLOBALS['Language']->getText('global', 'open');
                 }
                 // Only display artifacts that the user is allowed to see
-                if ($curArtifact->userCanView(user_getid())) {
+                if ($curArtifact->userCanView()) {
                     print "\n<TR class=\"" . html_get_alt_row_color($art_displayed) . "\">";
                     if ($summary_field->userCanRead($group_id, $atid))
                         print "<TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="

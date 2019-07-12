@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
  *
@@ -29,7 +29,7 @@ class Docman_Widget_MyEmbedded extends Docman_Widget_Embedded
     public function __construct($plugin_path) {
         parent::__construct(
             'plugin_docman_my_embedded',
-            user_getid(),
+            UserManager::instance()->getCurrentUser()->getId(),
             UserDashboardController::LEGACY_DASHBOARD_TYPE,
             $plugin_path
         );

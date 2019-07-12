@@ -42,7 +42,8 @@ function session_require($req) {
     }
 
     if (isset($req['group']) && $req['group']) {
-        $query = "SELECT user_id FROM user_group WHERE user_id=" . user_getid()
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
+        $query = "SELECT user_id FROM user_group WHERE user_id=" . $db_escaped_user_id
         . " AND group_id=".db_ei($req['group']);
         if (isset($req['admin_flags']) && $req['admin_flags']) {
             $query .= " AND admin_flags = '".db_escape_string($req['admin_flags'])."'";
@@ -53,7 +54,7 @@ function session_require($req) {
         }
     }
     elseif (isset($req['user']) && $req['user']) {
-        if (user_getid() != $req['user']) {
+        if (UserManager::instance()->getCurrentUser()->getId() != $req['user']) {
             exit_error($Language->getText('include_session','insufficient_u_access'),$Language->getText('include_session','no_perm_to_view'));
         }
     }

@@ -120,7 +120,7 @@ function forum_header($params) {
 
         $request = HTTPRequest::instance();
         if ($forum_id && user_isloggedin() && !$request->exist('delete')) {
-            if (user_monitor_forum($forum_id,user_getid()) ) {
+            if (user_monitor_forum($forum_id, UserManager::instance()->getCurrentUser()->getId()) ) {
                 $msg = $Language->getText('forum_forum_utils','stop_monitor');
             } else {
                 $msg = $Language->getText('forum_forum_utils','monitor');
@@ -453,7 +453,8 @@ function get_forum_saved_date($forum_id) {
     if ($forum_saved_date) {
         return $forum_saved_date;
     } else {
-        $sql="SELECT save_date FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
+        $sql="SELECT save_date FROM forum_saved_place WHERE user_id='".$db_escaped_user_id."' AND forum_id=".db_ei($forum_id);
         $result = db_query($sql);
         if ($result && db_numrows($result) > 0) {
             $forum_saved_date=db_result($result,0,'save_date');
@@ -478,13 +479,15 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','include_body_and_subject'));
         }
 
+        $user_id            = UserManager::instance()->getCurrentUser()->getId();
+        $db_escaped_user_id = db_ei($user_id);
     //see if that message has been posted already for people that double-post
         $res3=db_query("SELECT * FROM forum ".
         "WHERE is_followup_to=".db_ei($is_followup_to)." ".
         "AND subject='".  db_es(htmlspecialchars($subject)) ."' ".
         "AND group_forum_id=".db_ei($group_forum_id)." ".
             "AND body='".db_es(htmlspecialchars($body))."' ".
-        "AND posted_by='". user_getid() ."'");
+        "AND posted_by='". $db_escaped_user_id ."'");
 
         if (db_numrows($res3) > 0) {
             //already posted this message
@@ -517,7 +520,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         }
 
         $sql="INSERT INTO forum (group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-        "VALUES (".db_ei($group_forum_id).", '".user_getid()."', '".db_es(htmlspecialchars($subject))."', '".db_es(htmlspecialchars($body))."', '".time()."',".db_ei($is_followup_to).",".db_ei($thread_id).")";
+        "VALUES (".db_ei($group_forum_id).", '".$db_escaped_user_id."', '".db_es(htmlspecialchars($subject))."', '".db_es(htmlspecialchars($body))."', '".time()."',".db_ei($is_followup_to).",".db_ei($thread_id).")";
 
         $result=db_query($sql);
 
@@ -538,9 +541,9 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         $reference_manager->extractCrossRef($body,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
         
         if ($request->isPost() && $request->existAndNonEmpty('enable_monitoring')) {
-            forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
+            forum_thread_add_monitor($group_forum_id, $thread_id, $user_id);
         } else {
-            forum_thread_delete_monitor_by_user($group_forum_id, $msg_id, user_getid());
+            forum_thread_delete_monitor_by_user($group_forum_id, $msg_id, $user_id);
         }
         handle_monitoring($group_forum_id,$thread_id,$msg_id);
 
@@ -586,8 +589,9 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
       <TR><TD COLSPAN="2" ALIGN="center">
         <B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
       </TR>
-        <?php       
-        if (user_monitor_forum($forum_id,user_getid())) {
+        <?php
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
+        if (user_monitor_forum($forum_id, $user_id)) {
             $disabled = "disabled";
             $checked = "checked";
         } else {
@@ -595,7 +599,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
             if ($thread_id == 0) {
                 $checked = "checked";
             } else {              
-                if (user_monitor_forum_thread($thread_id, user_getid())) {
+                if (user_monitor_forum_thread($thread_id, $user_id)) {
                     $checked = "checked";
                 } else {
                     $checked = "";
@@ -761,7 +765,7 @@ function forum_utils_news_access($forum_id) {
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
         $g_id = db_result($res1,0,'group_id');    
         
-        return permission_is_authorized('NEWS_READ',intval($forum_id), user_getid(), $g_id);
+        return permission_is_authorized('NEWS_READ',intval($forum_id), UserManager::instance()->getCurrentUser()->getId(), $g_id);
     }
     
     return true;

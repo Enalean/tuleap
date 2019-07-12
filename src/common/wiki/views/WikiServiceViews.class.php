@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -196,7 +196,7 @@ class WikiServiceViews extends WikiViews {
     function _buildPageLink(&$wikiPage, $title=null) {
         $href='';
       // Check permission
-        if($wikiPage->isAutorized(user_getid())) {
+        if($wikiPage->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
 
             $pagename = $wikiPage->getPagename();
 
@@ -335,7 +335,7 @@ class WikiServiceViews extends WikiViews {
     function wiki() {
         $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
 
-        $wp->log(user_getid());
+        $wp->log(UserManager::instance()->getCurrentUser()->getId());
 
         $lite = false;
         $full_screen = false;

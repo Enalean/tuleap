@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -90,7 +90,7 @@ class WikiService extends Controler {
    */
     function checkPermissions() {
       // Check if user can access to whole wiki
-        if(!$this->wiki->isAutorized(user_getid())) {
+        if(!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
             $GLOBALS['Response']->addFeedback(
                                 'error', 
                                 $GLOBALS['Language']->getText(
@@ -106,7 +106,7 @@ class WikiService extends Controler {
       // Check if user can access to selected page
         if(!empty($_REQUEST['pagename'])) {
             $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-            if(!$wp->isAutorized(user_getid())) {
+            if(!$wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
                 $GLOBALS['Response']->addFeedback(
                                 'error', 
                                 $GLOBALS['Language']->getText(

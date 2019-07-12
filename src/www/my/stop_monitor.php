@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -36,16 +36,17 @@ if (user_isloggedin()) {
     if ($request->valid($vForumId)) {
         $forum_id = $request->get('forum_id');
 
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
                     
         $forum_monitor_error = false;
-        if (user_monitor_forum($forum_id, user_getid())) {
+        if (user_monitor_forum($forum_id, $user_id)) {
             // If already monitored then stop monitoring
-            forum_delete_monitor($forum_id, user_getid());
+            forum_delete_monitor($forum_id, $user_id);
             print "<p>".$Language->getText('my_monitored_forum', 'stop_monitoring').
             "<P><A HREF=\"/my/\">[".$Language->getText('global', 'back_home')."]</A>";
         } else {
             // Not yet monitored so add it
-            $forum_monitor_error = !forum_add_monitor($forum_id, user_getid());
+            $forum_monitor_error = !forum_add_monitor($forum_id, $user_id);
         }
 
     } else {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -148,7 +148,7 @@ db_query("UPDATE user SET "
          . "mail_va=" . $form_mail_va . ","
          . "sticky_login=" . $form_sticky_login . ","
          . "language_id='" . db_es($language_id) . "' WHERE "
-         . "user_id=" . user_getid());
+         . "user_id=" . db_ei(UserManager::instance()->getCurrentUser()->getId()));
 
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);

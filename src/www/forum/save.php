@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -67,7 +67,9 @@ if (user_isloggedin()) {
         echo '
 			<H2>'.$Language->getText('forum_save','save_your_place').'</H2>';
 
-        $sql="SELECT * FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
+
+        $sql="SELECT * FROM forum_saved_place WHERE user_id='".$db_escaped_user_id."' AND forum_id=".db_ei($forum_id);
 
         $result = db_query($sql);
 
@@ -76,7 +78,7 @@ if (user_isloggedin()) {
           User is not already monitoring thread, so 
           insert a row so monitoring can begin
          */
-            $sql="INSERT INTO forum_saved_place (forum_id,user_id,save_date) VALUES (".db_ei($forum_id).",'".user_getid()."','".time()."')";
+            $sql="INSERT INTO forum_saved_place (forum_id,user_id,save_date) VALUES (".db_ei($forum_id).",'".$db_escaped_user_id."','".time()."')";
 
             $result = db_query($sql);
 
@@ -89,7 +91,7 @@ if (user_isloggedin()) {
             }
 
         } else {
-            $sql="UPDATE forum_saved_place SET save_date='".time()."' WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
+            $sql="UPDATE forum_saved_place SET save_date='".time()."' WHERE user_id='".$db_escaped_user_id."' AND forum_id=".db_ei($forum_id);
             $result = db_query($sql);
 
             if (!$result) {

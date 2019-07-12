@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Originally by to the SourceForge Team,1999-2000
  *
@@ -273,10 +273,11 @@ if ($set=='my') {
     // Check if the current user is in the assigned_to list
     $field_object = $art_field_fact->getFieldFromName('assigned_to');
     $field_object_multi = $art_field_fact->getFieldFromName('multi_assigned_to');
-    if ( ($field_object)&&($field_object->checkValueInPredefinedValues($atid,user_getid())) ) {
-        $prefs['assigned_to'][]=user_getid();
-    } else if ( ($field_object_multi)&&($field_object_multi->checkValueInPredefinedValues($atid,user_getid())) ) {
-        $prefs['multi_assigned_to'][]=user_getid();
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
+    if ( ($field_object)&&($field_object->checkValueInPredefinedValues($atid, $user_id)) ) {
+        $prefs['assigned_to'][]= $user_id;
+    } else if ( ($field_object_multi)&&($field_object_multi->checkValueInPredefinedValues($atid, $user_id)) ) {
+        $prefs['multi_assigned_to'][]= $user_id;
     } else {
       // Any value
         $prefs['assigned_to'][]=0;

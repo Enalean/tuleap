@@ -173,6 +173,8 @@ if ($group_id && !$atid) {
     // Create field factory
     $art_field_fact = new ArtifactFieldFactory($ath);
 
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
+
     $func = $request->getValidated('func', 'string', '');
     switch ( $func ) {
         case 'report':
@@ -207,7 +209,7 @@ if ($group_id && !$atid) {
                     } else {
                         $rep_default = 0;
                     }
-                    $updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope, $rep_default);
+                    $updated = $arh->recreate($user_id, $rep_name, $rep_desc, $rep_scope, $rep_default);
                     if (!$updated) {
                         if ($arh->isError())
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report').': '.$arh->getErrorMessage());
@@ -220,7 +222,7 @@ if ($group_id && !$atid) {
                     } else {
                         $rep_default = 0;
                     }
-                    $report_id = $arh->create(user_getid(), $rep_name, $rep_desc, $rep_scope, $rep_default);
+                    $report_id = $arh->create($user_id, $rep_name, $rep_desc, $rep_scope, $rep_default);
                     if (!$report_id) {
                         if ($arh->isError())
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_created_report').': '.$arh->getErrorMessage());
@@ -282,7 +284,7 @@ if ($group_id && !$atid) {
                 $arh->showReportForm();
             } else {
    // Front page
-                $reports = $arh->getReports($atid, user_getid());
+                $reports = $arh->getReports($atid, $user_id);
                 $arh->showAvailableReports($reports);
             }
             $ath->footer(array());
@@ -394,7 +396,7 @@ if ($group_id && !$atid) {
             if ($request->getValidated('submit')) {
                 $ok = true;
                 if ($ath->userIsAdmin()) {
-                      $ok = $ath->updateNotificationSettings(user_getid(), 
+                      $ok = $ath->updateNotificationSettings($user_id,
                                                      $request->getValidated('watchees', 'string', ''),
                                                      $request->getValidated('stop_notification', new Valid_WhiteList('stop_notification', array('1')), 0)
                       );
@@ -454,8 +456,8 @@ if ($group_id && !$atid) {
                     }
                 }
 
-                $ath->deleteNotification(user_getid());
-                $res_notif = $ath->setNotification(user_getid(), $arr_notif);
+                $ath->deleteNotification($user_id);
+                $res_notif = $ath->setNotification($user_id, $arr_notif);
             
                // Give Feedback
                 if ($res_notif && $ok) {
@@ -469,7 +471,7 @@ if ($group_id && !$atid) {
             $ath->adminHeader(
             array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
             'help' => 'tracker-v3.html#email-notification-settings'));
-            $ath->displayNotificationForm(user_getid());
+            $ath->displayNotificationForm($user_id);
             $ath->footer(array());
         break;
       

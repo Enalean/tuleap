@@ -47,7 +47,7 @@ class Widget_MyMonitoredForums extends Widget {
              "AND groups.status = 'A' ".
             "AND forum_group_list.is_public <> 9 ".
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-             "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' ";
+             "AND forum_monitored_forums.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' ";
         $um = UserManager::instance();
         $current_user = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
@@ -72,7 +72,7 @@ class Widget_MyMonitoredForums extends Widget {
                     "AND groups.group_id=" . db_ei($group_id) ." ".
                     "AND forum_group_list.is_public <> 9 ".
                     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-                    "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' LIMIT 100";
+                    "AND forum_monitored_forums.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' LIMIT 100";
 
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);

@@ -296,10 +296,10 @@ class Group {
             } else {
 
                 if (user_isloggedin()) {
+                    $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
                     //check to see if site super-user
                     $res = db_query(
-                        "SELECT * FROM user_group WHERE user_id='" . user_getid(
-                        ) . "' AND group_id='1' AND admin_flags='A'"
+                        "SELECT * FROM user_group WHERE user_id='" . $db_escaped_user_id . "' AND group_id='1' AND admin_flags='A'"
                     );
                     if ($res && db_numrows($res) > 0) {
                         $this->is_admin = true;
@@ -329,7 +329,8 @@ class Group {
      //have already been through here and set up perms data
         } else {
             if (user_isloggedin()) {
-                    $res=db_query("SELECT * FROM user_group WHERE user_id='".user_getid()."' and group_id='". $this->getGroupId() ."'");
+                    $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
+                    $res=db_query("SELECT * FROM user_group WHERE user_id='".$db_escaped_user_id."' and group_id='". $this->getGroupId() ."'");
                 if ($res && db_numrows($res) > 0) {
                     $this->perm_data_array=db_fetch_array($res);
                 } else {

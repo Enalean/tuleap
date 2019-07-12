@@ -213,7 +213,7 @@ class Widget_MyProjects extends Widget {
             . "user_group.admin_flags "
             . "FROM groups,user_group "
             . "WHERE groups.group_id=user_group.group_id "
-            . "AND user_group.user_id='". db_ei(user_getid()) ."' "
+            . "AND user_group.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' "
             . "AND groups.status='A' ORDER BY group_name");
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {

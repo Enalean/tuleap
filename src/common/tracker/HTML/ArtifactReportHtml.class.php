@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Parts of code come from bug_util.php (written by Laurent Julliard)
@@ -613,7 +613,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
             //Show the list of available artifact reports
         if ($pv == 0) {
-            $res_report = $this->getReports($this->group_artifact_id,user_getid());
+            $res_report = $this->getReports($this->group_artifact_id, UserManager::instance()->getCurrentUser()->getId());
             $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
                 $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report');
                 $html_result .= html_build_select_box($res_report,$box_name,$report_id,false,'',false,'',false,'', CODENDI_PURIFIER_CONVERT_HTML);

@@ -106,7 +106,7 @@ if ($result && $rows > 0) {
       
             prepare_artifact_record($ath,$fields,$atid,$multiarr, 'csv');
             $curArtifact=new Artifact($ath, $multiarr['artifact_id']);
-            if ($curArtifact->userCanView(user_getid())) {
+            if ($curArtifact->userCanView()) {
                 echo build_csv_record($col_list, $multiarr).$eol;
             }
         }
@@ -115,7 +115,7 @@ if ($result && $rows > 0) {
         while ($arr = db_fetch_array($result)) {        
             prepare_artifact_record($ath,$fields,$atid,$arr, 'csv');
             $curArtifact=new Artifact($ath, $arr['artifact_id']);
-            if ($curArtifact->userCanView(user_getid())) {
+            if ($curArtifact->userCanView()) {
                 echo build_csv_record($col_list, $arr).$eol;
             }
         }

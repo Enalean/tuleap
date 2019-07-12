@@ -2,7 +2,7 @@
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2011 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -298,15 +298,16 @@ if ( $func == 'gotoid' ) {
             } else {
                 $artifact_cc_id = $request->get('artifact_cc_id');
                     $cc_array = $ah->getCC($artifact_cc_id);
+                    $user_id  = UserManager::instance()->getCurrentUser()->getId();
                     // Perform CC deletion if one of the condition is met:
                     // (a) current user is a artifact admin
                     // (b) then CC name is the current user 
                     // (c) the CC email address matches the one of the current user
                     // (d) the current user is the person who added a gieven name in CC list
                 if ( user_ismember($group_id) ||
-                    (user_getname(user_getid()) == $cc_array['email']) ||  
-                    (user_getemail(user_getid()) == $cc_array['email']) ||
-                    (user_getname(user_getid()) == $cc_array['user_name'] )) {
+                    (user_getname($user_id) == $cc_array['email']) ||
+                    (user_getemail($user_id) == $cc_array['email']) ||
+                    (user_getname($user_id) == $cc_array['user_name'] )) {
 
                         $changed = $ah->deleteCC($artifact_cc_id,$changes);
                     if ($changed) {
@@ -396,7 +397,7 @@ if ( $func == 'gotoid' ) {
                 $id = $request->get('id');
                 $file_array = $ah->getAttachedFile($id);
             if ( user_ismember($group_id) ||
-                (user_getname(user_getid()) == $file_array['user_name'] )) {
+                (user_getname(UserManager::instance()->getCurrentUser()->getId()) == $file_array['user_name'] )) {
 
                         $afh=new ArtifactFileHtml($ah,$id);
                 if (!$afh || !is_object($afh)) {
@@ -520,7 +521,7 @@ if ( $func == 'gotoid' ) {
                 }
                 if ($request->isAjax()) {
                     if ($field = $art_field_fact->getFieldFromName($request->get('field'))) {
-                        $field_html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, user_getid(), true);
+                        $field_html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, UserManager::instance()->getCurrentUser()->getId(), true);
                         echo $field_html['value'] ;
                     }
                 } else {
@@ -765,7 +766,7 @@ if ( $func == 'gotoid' ) {
             if (!$ath->userIsAdmin()) {
                 exit_permission_denied();
             }
-            $user_id = user_getid();
+            $user_id = UserManager::instance()->getCurrentUser()->getId();
        
        
 

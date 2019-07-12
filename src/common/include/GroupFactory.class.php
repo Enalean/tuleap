@@ -89,10 +89,12 @@ class GroupFactory {
             return false;
         }
 
+        $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
+
         $sql="SELECT g.group_id,g.group_name ".
         "FROM groups g, user_group ug ".
         "WHERE g.group_id <> 100 AND g.status = 'A' AND g.group_id = ug.group_id ".
-        "AND ug.user_id=".user_getid()." ".
+        "AND ug.user_id=".$db_escaped_user_id." ".
         "ORDER BY g.group_name ASC";
 
      //echo $sql;

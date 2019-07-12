@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -191,7 +191,7 @@ class GraphOnTrackersPlugin extends Plugin
     public function tracker_after_report($params){
         if($this->isAllowed($params['group_id'])) {
             require_once('html-generators/GraphicEngineHtml.class.php');
-            $eng = new graphicEngineHtml($this->atid,user_getid(),$this->getThemePath());
+            $eng = new graphicEngineHtml($this->atid, UserManager::instance()->getCurrentUser()->getId(),$this->getThemePath());
             $eng->displayReportGraphic($this->report_graphic_id, $params['group_id'], $params['atid'], $params['url']);
         }
     }
@@ -300,7 +300,7 @@ class GraphOnTrackersPlugin extends Plugin
                     }
                 } else {
                     // Front page
-                    $reports = $geh->grf->getReportsAvailable($atid, user_getid());
+                    $reports = $geh->grf->getReportsAvailable($atid, UserManager::instance()->getCurrentUser()->getId());
                     $geh->showAvailableReports($reports);
                 }
                 $GLOBALS['ath']->footer(null);

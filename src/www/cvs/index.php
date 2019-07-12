@@ -105,7 +105,7 @@ switch ($func) {
             require('../cvs/browse_commit.php');
         } else {
            // cvs_intro depends on the user shell access
-            $shell=get_user_shell(user_getid());
+            $shell=get_user_shell(UserManager::instance()->getCurrentUser()->getId());
             require('../cvs/cvs_intro.php');
         }
 

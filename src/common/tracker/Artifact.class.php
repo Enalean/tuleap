@@ -330,7 +330,7 @@ class Artifact {
             $user=100;
         } else {
             if ( user_isloggedin() ) {
-                $user=user_getid();
+                $user = UserManager::instance()->getCurrentUser()->getId();
             } else {
                 $user = 100;
             }
@@ -390,7 +390,7 @@ class Artifact {
             foreach ($vfl as $key => $val) {
                 $field = $art_field_fact->getFieldFromName($key);
                 if ($field && (!$field->getName() == 'comment_type_id')) {   // SR #684 we don't check the perms for the field comment type
-                    if (! $field->userCanSubmit($group->getID(),$group_artifact_id,user_getid())) {
+                    if (! $field->userCanSubmit($group->getID(),$group_artifact_id, UserManager::instance()->getCurrentUser()->getId())) {
                         // The user does not have the permissions to update the current field,
                         // we exit the function with an error message
                         $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_submission', $field->getLabel()));
@@ -434,7 +434,7 @@ class Artifact {
         if (!user_isloggedin()) {
             $user=100;
         } else {
-            $user=user_getid();
+            $user = UserManager::instance()->getCurrentUser()->getId();
         }
         
         
@@ -865,7 +865,7 @@ class Artifact {
                 $values = $value;
                 
                 // check if the user can update the field or not
-                if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
+                if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), UserManager::instance()->getCurrentUser()->getId())) {
                     // we only throw an error if the values has changed
                     $old_values = $field->getValues($this->getID());
                     list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
@@ -957,7 +957,7 @@ class Artifact {
                 }
                 if ($differ) {
                     // The userCanUpdate test is only done on modified fields
-                    if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
+                    if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
                                 
                         if ($is_text) {
                             if ( $field->isStandardField() ) {
@@ -1156,7 +1156,7 @@ class Artifact {
     function addCC($email,$comment,&$changes,$masschange=false) {
         global $Language;
         
-        $user_id = (user_isloggedin() ? user_getid(): 100);
+        $user_id = (user_isloggedin() ? UserManager::instance()->getCurrentUser()->getId(): 100);
         
         $arr_email = util_split_emails($email);
         $date = time();
@@ -1204,7 +1204,7 @@ class Artifact {
     function updateCC($email,$comment) {
         global $Language;
         
-        $user_id = (user_isloggedin() ? user_getid(): 100);
+        $user_id = (user_isloggedin() ? UserManager::instance()->getCurrentUser()->getId(): 100);
         
         $arr_email = util_split_emails($email);
         $date = time();
@@ -2248,15 +2248,16 @@ class Artifact {
         if (! user_isloggedin()) {
             return false;
         }
-        
+
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
         //tracker admin can delete and update followup comments
-        if ($this->ArtifactType->userIsAdmin(user_getid())) {            
+        if ($this->ArtifactType->userIsAdmin($user_id)) {
             return true;
         } 
         
         $com_res = $this->getOriginalCommentSubmitter($comment_id);
         $commenter = db_result($com_res,0,'mod_by'); 
-        if ($commenter == user_getid()) {
+        if ($commenter == $user_id) {
             return true;
         } else {
             return false;
@@ -2907,9 +2908,9 @@ class Artifact {
         if ($this->hasFieldPermission($field_perm, 'assigned_to') ||
             $this->hasFieldPermission($field_perm, 'multi_assigned_to') ||
             (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
-            if (user_isloggedin()) {
-                   $user_id = user_getid();
-                   $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
+            $user = UserManager::instance()->getCurrentUser();
+            if ($user->isLoggedIn()) {
+                   $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$user->getRealName().' <'.$user->getEmail().">". $GLOBALS['sys_lf'] ."";
                    $out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
             } else {
                    $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
@@ -3411,16 +3412,16 @@ class Artifact {
             if ($ascii) {
                 $out .= sprintf($fmt, $email, SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')));
             } else {
-                
+                $user_id = UserManager::instance()->getCurrentUser()->getId();
                 // show CC delete icon if one of the condition is met:
                 // (a) current user is a group member
                 // (b) the CC name is the current user 
                 // (c) the CC email address matches the one of the current user
                 // (d) the current user is the person who added a gieven name in CC list
                 if ( user_ismember($this->ArtifactType->getGroupID()) ||
-                    (user_getname(user_getid()) == $email) ||  
-                    (user_getemail(user_getid()) == $email) ||
-                    (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
+                    (user_getname($user_id) == $email) ||
+                    (user_getemail($user_id) == $email) ||
+                    (user_getname($user_id) == db_result($result, $i, 'user_name') )) {
                             $html_delete = '<a href="?func=delete_cc&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_cc_id='.(int)$artifact_cc_id.'" '.
                             ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_cc').'\')">'.
                             '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
@@ -3621,7 +3622,7 @@ class Artifact {
                 // (a) current user is group member
                 // (b) the current user is the person who added a gieven name in CC list
                 if ( user_ismember($this->ArtifactType->getGroupID()) ||
-                    (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
+                    (user_getname(UserManager::instance()->getCurrentUser()->getId()) == db_result($result, $i, 'user_name') )) {
                                         $html_delete = '<a href="?func=delete_file&group_id='.(int)$group_id."&atid=".(int)$group_artifact_id."&aid=".(int)$this->getID()."&id=".(int)db_result($result, $i, 'id').'" '.
                                             ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_attachment').'\')">'.
                                             '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';

@@ -262,9 +262,10 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
         Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
     */
 
+    $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
     $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0, '', $need_feedback = false);
     $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) 
-          VALUES (". db_ei($group_id) .", '". user_getid() ."', ". db_ei($promote_news) .", '".time()."',
+          VALUES (". db_ei($group_id) .", '". $db_escaped_user_id ."', ". db_ei($promote_news) .", '".time()."',
                  '$new_id', '". db_es($summary) ."', '". db_es($details) ."')";
     $result=db_query($sql);
 
@@ -312,7 +313,8 @@ function news_check_permission($forum_id,$group_id) {
             }
         }
     }
-    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
+    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,$user_id,$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
         return true;
     } else {
         return false;

@@ -28,7 +28,7 @@ $attch->setUri($_SERVER['REQUEST_URI']);
 PHPWikiPluginRedirector::redirect();
 
 if($attch->exist() && $attch->isActive()) {
-    if($attch->isAutorized(user_getid())) {
+    if($attch->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
         $attch->htmlDump();
     }
 }
