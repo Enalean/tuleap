@@ -42,10 +42,6 @@ class MembersController
      */
     private $user_manager;
     /**
-     * @var DynamicUGroupMembersUpdater
-     */
-    private $dynamic_ugroup_members_updater;
-    /**
      * @var MemberAdder
      */
     private $member_adder;
@@ -53,23 +49,20 @@ class MembersController
     public function __construct(
         Codendi_Request $request,
         UserManager $user_manager,
-        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater,
         MemberAdder $member_adder
     ) {
         $this->request                        = $request;
         $this->user_manager                   = $user_manager;
-        $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
         $this->member_adder                   = $member_adder;
     }
 
-    public function editMembers(Project $project, ProjectUGroup $ugroup)
+    public function editMembers(ProjectUGroup $ugroup)
     {
         $is_update_allowed = ! $ugroup->isBound();
         if (! $is_update_allowed) {
             return;
         }
 
-        $this->removeUserFromUGroup($project, $ugroup);
         $this->addUserToUGroup($ugroup);
     }
 
@@ -100,41 +93,6 @@ class MembersController
                     _('Account %s is restricted and the project does not allow restricted users. User not added.'),
                     $ex->getRestrictedUser()->getUserName()
                 )
-            );
-        }
-    }
-
-    /**
-     * @param Project       $project
-     * @param ProjectUGroup $ugroup
-     */
-    private function removeUserFromUGroup(Project $project, ProjectUGroup $ugroup)
-    {
-        $user_id = $this->request->get('remove_user');
-        if (! $user_id) {
-            return;
-        }
-
-        $user = $this->user_manager->getUserById($user_id);
-        if (! $user) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('include_account', 'user_not_exist')
-            );
-        }
-
-        if ($ugroup->isStatic()) {
-            ugroup_remove_user_from_ugroup($project->getID(), $ugroup->getId(), $user_id);
-
-            return;
-        }
-
-        try {
-            $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
-        } catch (CannotRemoveUserMembershipToUserGroupException $ex) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $ex->getMessage()
             );
         }
     }

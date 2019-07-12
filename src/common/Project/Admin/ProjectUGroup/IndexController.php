@@ -54,9 +54,9 @@ class IndexController
         $this->presenter_builder    = $presenter_builder;
     }
 
-    public function display(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
+    public function display(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, CSRFSynchronizerToken $csrf_remove_member, PFUser $user)
     {
-        $presenter = $this->presenter_builder->build($ugroup, $csrf, $user);
+        $presenter = $this->presenter_builder->build($ugroup, $csrf, $csrf_remove_member, $user);
 
         $this->displayHeader($ugroup);
         TemplateRendererFactory::build()

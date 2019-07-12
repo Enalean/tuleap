@@ -78,7 +78,6 @@ $synchronized_project_membership_detector = new SynchronizedProjectMembershipDet
 $members_controller                       = new MembersController(
     $request,
     $user_manager,
-    $dynamic_member_updater,
     new MemberAdder(
         new MembershipUpdateVerifier(),
         new StaticMemberAdder(),

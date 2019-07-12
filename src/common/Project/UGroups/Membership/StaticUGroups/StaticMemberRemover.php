@@ -16,27 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\StaticUGroups;
 
-class StaticMemberAdder
+class StaticMemberRemover
 {
-    /**
-     * Add user to a static ugroup
-     *
-     * @param int $group_id Id of the project
-     * @param int $ugroup_id Id of the ugroup
-     * @param int $user_id Id of the user
-     *
-     * @return void
-     */
-    public function addUserToStaticGroup($group_id, $ugroup_id, $user_id)
+    public function removeUser(\ProjectUGroup $ugroup, \PFUser $user) : void
+    {
+        $this->removeUserFromStaticGroup((int) $ugroup->getProjectId(), (int) $ugroup->getId(), (int) $user->getId());
+    }
+
+    public function removeUserFromStaticGroup(int $group_id, int $ugroup_id, int $user_id) : void
     {
         /** @psalm-suppress MissingFile */
         include_once __DIR__.'/../../../../../www/project/admin/ugroup_utils.php';
-        ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
+        ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 }
