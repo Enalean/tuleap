@@ -118,9 +118,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
                 new UserPermissionsDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ProjectMemberAdderWithStatusCheckAndNotifications(
-                    new UGroupBinding($this->getUGroupUserDao(), $this)
-                ),
+                new ProjectMemberAdderWithStatusCheckAndNotifications(),
                 $this->getEventManager()
             );
         }

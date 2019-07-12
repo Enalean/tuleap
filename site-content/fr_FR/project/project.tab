@@ -824,7 +824,6 @@ project_ugroup_binding	binding_removed	Liaison avec le groupe d'utilisateurs fai
 project_ugroup_binding	remove_error	La liaison avec le groupe d'utilisateurs n'a pas été enlevée
 project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilisateurs n'est pas autorisée pour le groupe d'utilisateurs $1
 project_ugroup_binding	reset_error	Impossible de réinitialiser le groupe d'utilisateurs $1
-project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs $1
 
 #-----------------------------------------------
 # Script: /www/project/admin/ugroup/UGroupController.class.php

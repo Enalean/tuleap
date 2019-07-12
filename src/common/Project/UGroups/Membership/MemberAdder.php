@@ -64,6 +64,7 @@ class MemberAdder
      * @throws InvalidProjectException
      * @throws UGroup_Invalid_Exception
      * @throws UserIsAnonymousException
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
     public function addMember(PFUser $user, ProjectUGroup $ugroup): void
     {

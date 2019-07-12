@@ -28,8 +28,8 @@ require_once('www/project/admin/ugroup_utils.php');
 /**
  *  Data Access Object for ProjectUGroup
  */
-class UGroupUserDao extends DataAccessObject {
-
+class UGroupUserDao extends DataAccessObject
+{
     /**
     * Searches ProjectUGroup members by UGroupId
     *
@@ -204,7 +204,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function cloneUgroup($source_ugroup_id, $target_ugroup_id) {
+    public function cloneUgroup($source_ugroup_id, $target_ugroup_id)
+    {
         $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);
         $target_ugroup_id = $this->da->escapeInt($target_ugroup_id);
 
