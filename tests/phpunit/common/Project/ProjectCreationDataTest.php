@@ -26,10 +26,11 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 
 class ProjectCreationDataTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
 
     /**
      * @var M\MockInterface|ProjectManager

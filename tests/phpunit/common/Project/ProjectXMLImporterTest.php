@@ -27,12 +27,13 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
 
 class ProjectXMLImporterTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
 
     /**
      * @var bool
@@ -249,7 +250,7 @@ class ProjectXMLImporterTest extends TestCase
 
         $this->sync_members->shouldReceive('enable')->with($this->project)->once();
 
-        $this->xml_importer->import($this->configuration, 122,  __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups_synchronized.xml');
+        $this->xml_importer->import($this->configuration, 122, __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_ugroups_synchronized.xml');
     }
 
     public function testItDoesNotStopIfUserIsAlreadyProjectMember()

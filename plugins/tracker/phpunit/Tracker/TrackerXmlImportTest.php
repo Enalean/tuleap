@@ -35,6 +35,7 @@ use Tracker_SemanticFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\XML\MappingsRegistry;
 use WorkflowFactory;
@@ -42,7 +43,7 @@ use XML_RNGValidator;
 
 class TrackerXmlImportTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox, RestoreLibXMLEntityLoadingInitialState;
 
     /**
      * @var string

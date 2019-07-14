@@ -23,10 +23,11 @@
 use Mockery as M;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders as B;
+use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 
 final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
 
     private $event_manager;
     private $ugroup_manager;
