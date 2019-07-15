@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenu from "./DropdownMenu.vue";
-import { restore, rewire$redirectToUrl } from "../../../helpers/location-helper";
+import { restore } from "../../../helpers/location-helper";
 
 describe("DropdownMenu", () => {
     let dropdown_menu_factory, store;
@@ -112,28 +112,6 @@ describe("DropdownMenu", () => {
         });
 
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
-    });
-
-    it(`Given an user who wants to update folder properties
-        When we display the menu
-        Then the user should be redirected to the old UI`, () => {
-        const redirect_to_url = jasmine.createSpy("redirectToUrl");
-        rewire$redirectToUrl(redirect_to_url);
-
-        const wrapper = dropdown_menu_factory({
-            hideDetailsEntry: false,
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "folder",
-                can_user_manage: true
-            }
-        });
-        expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
-
-        wrapper.find("[data-test=docman-dropdown-details]").trigger("click");
-
-        expect(redirect_to_url).toHaveBeenCalled();
     });
 
     it(`Given an user who wants to update file properties

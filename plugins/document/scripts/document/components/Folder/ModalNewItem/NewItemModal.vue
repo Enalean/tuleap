@@ -27,7 +27,7 @@
     >
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
-        <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
+        <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
             <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-updated-context="false">

@@ -19,44 +19,38 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="updateMetadata">
+    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
-        <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
-            <global-metadata v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update" v-bind:is-in-updated-context="true">
-                <owner-metadata v-bind:currently-updated-item="item_to_update"/>
-            </global-metadata>
-
-            <other-information-metadata v-bind:currently-updated-item="item_to_update"/>
-
-            <modal-footer v-bind:is-loading="is_loading"
-                          v-bind:submit-button-label="submit_button_label"
-                          v-bind:aria-labelled-by="aria_labelled_by"
+            <global-metadata v-bind:currently-updated-item="item_to_update"
+                             v-bind:parent="current_folder"
+                             v-bind:is-in-update-context="true"
             />
         </div>
+        <modal-footer v-bind:is-loading="is_loading"
+                      v-bind:submit-button-label="submit_button_label"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+        />
     </form>
 </template>
 
 <script>
 import { modal as createModal } from "tlp";
-import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
+import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
-import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
-import OtherInformationMetadata from "../Metadata/OtherInformationMetadata.vue";
-import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
+import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 
 export default {
+    name: "UpdateFolderMetadataModal",
     components: {
         InfoAccessOldPropertiesPage,
-        ModalFeedback,
-        OwnerMetadata,
-        OtherInformationMetadata,
         GlobalMetadata,
+        ModalFeedback,
         ModalHeader,
         ModalFooter
     },
@@ -66,13 +60,12 @@ export default {
     data() {
         return {
             item_to_update: {},
-            is_loading: false,
+            is_loading: true,
             modal: null
         };
     },
     computed: {
         ...mapState(["current_folder", "project_id"]),
-        ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update properties");
         },
@@ -80,11 +73,11 @@ export default {
             return sprintf(this.$gettext('Edit "%s" properties'), this.item.title);
         },
         aria_labelled_by() {
-            return "document-update-file-metadata-modal";
+            return "document-update-folder-metadata-modal";
         }
     },
     beforeMount() {
-        this.item_to_update = JSON.parse(JSON.stringify(this.item));
+        this.item_to_update = { ...this.item };
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -95,24 +88,13 @@ export default {
     },
     methods: {
         show() {
-            this.is_displayed = true;
             this.modal.show();
         },
         registerEvents() {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         reset() {
-            this.is_displayed = false;
-        },
-        async updateMetadata(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("updateMetadata", [this.item, this.item_to_update]);
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
-            }
+            this.modal.hide();
         }
     }
 };

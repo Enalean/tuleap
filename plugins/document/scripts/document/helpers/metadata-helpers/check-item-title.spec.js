@@ -22,7 +22,8 @@ import { TYPE_FILE, TYPE_FOLDER } from "../../constants.js";
 import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,
-    doesFolderNameAlreadyExist
+    doesFolderNameAlreadyExist,
+    doesFolderAlreadyExistsAtUpdate
 } from "./check-item-title.js";
 
 describe("doesFolderNameAlreadyExist", () => {
@@ -170,6 +171,83 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
         };
         expect(
             doesDocumentAlreadyExistsAtUpdate(
+                item_title,
+                folder_content,
+                item_to_update,
+                parent_folder
+            )
+        ).toEqual(false);
+    });
+
+    it("The folder title has not the same name of an other existing folder", () => {
+        const item_title = "my new folder";
+        const folder_content = [
+            {
+                id: 25,
+                title: "other folder name",
+                parent_id: 3,
+                type: TYPE_FOLDER
+            }
+        ];
+        const parent_folder = {
+            id: 3
+        };
+        const item_to_update = {
+            id: 25
+        };
+        expect(
+            doesFolderAlreadyExistsAtUpdate(
+                item_title,
+                folder_content,
+                item_to_update,
+                parent_folder
+            )
+        ).toEqual(false);
+    });
+    it("The folder title has the same name of an other existing folder", () => {
+        const item_title = "my existing folder";
+        const folder_content = [
+            {
+                id: 25,
+                title: item_title,
+                parent_id: 3,
+                type: TYPE_FOLDER
+            }
+        ];
+        const parent_folder = {
+            id: 3
+        };
+        const item_to_update = {
+            id: 300
+        };
+        expect(
+            doesFolderAlreadyExistsAtUpdate(
+                item_title,
+                folder_content,
+                item_to_update,
+                parent_folder
+            )
+        ).toEqual(true);
+    });
+
+    it("The folder title has the same name of itself", () => {
+        const item_title = "my existing folder";
+        const folder_content = [
+            {
+                id: 25,
+                title: item_title,
+                parent_id: 3,
+                type: TYPE_FOLDER
+            }
+        ];
+        const parent_folder = {
+            id: 3
+        };
+        const item_to_update = {
+            id: 25
+        };
+        expect(
+            doesFolderAlreadyExistsAtUpdate(
                 item_title,
                 folder_content,
                 item_to_update,

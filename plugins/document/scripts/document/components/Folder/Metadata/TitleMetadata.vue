@@ -45,11 +45,12 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants.js";
 import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,
-    doesFolderNameAlreadyExist
+    doesFolderNameAlreadyExist,
+    doesFolderAlreadyExistsAtUpdate
 } from "../../../helpers/metadata-helpers/check-item-title.js";
 
 export default {
@@ -90,7 +91,6 @@ export default {
                     this.parent
                 );
             }
-
             return this.getValidityErrorAtCreation(text_value, this.type, this.parent);
         },
         getValidityErrorAtCreation(text_value) {
@@ -110,7 +110,7 @@ export default {
         },
         getValidityErrorAtUpdate(text_value) {
             if (
-                this.currentlyUpdatedItem.type === TYPE_FILE &&
+                this.currentlyUpdatedItem.type !== TYPE_FOLDER &&
                 doesDocumentAlreadyExistsAtUpdate(
                     text_value,
                     this.folder_content,
@@ -119,6 +119,16 @@ export default {
                 )
             ) {
                 return this.getErrorWhenDocumentAlreadyExists();
+            } else if (
+                this.currentlyUpdatedItem.type === TYPE_FOLDER &&
+                doesFolderAlreadyExistsAtUpdate(
+                    text_value,
+                    this.folder_content,
+                    this.currentlyUpdatedItem,
+                    this.parent
+                )
+            ) {
+                return this.getErrorWhenFolderAlreadyExists();
             }
 
             return "";

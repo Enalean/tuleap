@@ -347,9 +347,6 @@ msgstr "Documentation du projet"
 msgid "Propagate deletion to wiki service"
 msgstr "Propager la suppression au service wiki"
 
-msgid "Properties"
-msgstr "Propriétés"
-
 msgid "Quick look"
 msgstr "Aperçu"
 
