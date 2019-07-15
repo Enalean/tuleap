@@ -24,7 +24,7 @@
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
-            <global-metadata v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update" v-bind:is-in-updated-context="true">
+            <global-metadata v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update" v-bind:is-in-update-context="true">
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
             </global-metadata>
 

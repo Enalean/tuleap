@@ -30,7 +30,7 @@
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
-            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-updated-context="false">
+            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-update-context="false">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item"/>
