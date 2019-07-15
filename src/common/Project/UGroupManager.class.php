@@ -93,7 +93,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     }
 
     /**
-     * @return ProjectUGroup of the given project or null if not found
+     * @return ProjectUGroup|null
      */
     public function getUGroup(Project $project, $ugroup_id) {
         $project_id = $project->getID();
@@ -107,6 +107,8 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if ($row) {
             return $this->instanciateGroupForProject($project, $row);
         }
+
+        return null;
     }
 
     /**
@@ -127,6 +129,9 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->dynamic_ugroup_members_updater;
     }
 
+    /**
+     * @return ProjectUGroup
+     */
     public function instanciateGroupForProject(Project $project, array $row) {
         // force group_id as it is set to 100 for dynamic groups
         $row['group_id'] = $project->getID();

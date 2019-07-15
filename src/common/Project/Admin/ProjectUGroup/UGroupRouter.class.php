@@ -98,6 +98,7 @@ class UGroupRouter
         $project = $this->request->getProject();
         $ugroup  = $this->getUGroup($project);
         $csrf    = new CSRFSynchronizerToken($this->getUGroupUrl($ugroup));
+        $csrf_remove_member = new CSRFSynchronizerToken(MemberRemovalController::getUrl($ugroup));
         switch ($this->request->get('action')) {
             case 'remove_binding':
                 $csrf->check();
@@ -111,7 +112,7 @@ class UGroupRouter
                 break;
             case 'edit_ugroup_members':
                 $csrf->check();
-                $this->members_controller->editMembers($project, $ugroup);
+                $this->members_controller->editMembers($ugroup);
                 $this->redirect($ugroup);
                 break;
             case 'update_details':
@@ -134,7 +135,7 @@ class UGroupRouter
                 if ($event->hasBeenHandled()) {
                     $this->redirect($ugroup);
                 } else {
-                    $this->index_controller->display($ugroup, $csrf, $this->user_manager->getCurrentUser());
+                    $this->index_controller->display($ugroup, $csrf, $csrf_remove_member, $this->user_manager->getCurrentUser());
                 }
         }
     }
@@ -154,7 +155,7 @@ class UGroupRouter
         $GLOBALS['Response']->redirect($this->getUGroupUrl($ugroup));
     }
 
-    protected function getUGroupUrl(ProjectUGroup $ugroup)
+    public static function getUGroupUrl(ProjectUGroup $ugroup)
     {
         return '/project/admin/editugroup.php?' . http_build_query(
                 array(

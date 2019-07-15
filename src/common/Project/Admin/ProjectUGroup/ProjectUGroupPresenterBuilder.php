@@ -80,12 +80,12 @@ class ProjectUGroupPresenterBuilder
         $this->permissions_delegation_builder = $permissions_delegation_builder;
     }
 
-    public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, PFUser $user)
+    public function build(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf, CSRFSynchronizerToken $csrf_remove_member, PFUser $user)
     {
         $binding     = $this->binding_builder->build($ugroup, $csrf);
         $members     = $this->members_builder->build($ugroup);
         $delegation  = $this->permissions_delegation_builder->build($ugroup);
 
-        return new ProjectUGroupPresenter($ugroup, $delegation, $binding, $members, $csrf, $user);
+        return new ProjectUGroupPresenter($ugroup, $delegation, $binding, $members, $csrf, $csrf_remove_member, $user);
     }
 }

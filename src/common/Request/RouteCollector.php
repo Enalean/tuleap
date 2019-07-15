@@ -47,6 +47,8 @@ use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
@@ -68,9 +70,14 @@ use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
+use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Home;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\REST\BasicAuthentication;
@@ -366,6 +373,28 @@ class RouteCollector
         );
     }
 
+    public static function getPostUserGroupIdRemove() : DispatchableWithRequest
+    {
+        $ugroup_manager = new UGroupManager();
+        return new MemberRemovalController(
+            ProjectManager::instance(),
+            $ugroup_manager,
+            \UserManager::instance(),
+            new DynamicUGroupMembersUpdater(
+                new UserPermissionsDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                new ProjectMemberAdderWithStatusCheckAndNotifications(
+                    new UGroupBinding(
+                        new UGroupUserDao(),
+                        $ugroup_manager
+                    )
+                ),
+                EventManager::instance()
+            ),
+            new StaticMemberRemover()
+        );
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -397,6 +426,8 @@ class RouteCollector
             $r->post('/categories', [self::class, 'getProjectAdminUpdateCategories']);
 
             $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
+
+            $r->post('/user-group/{user-group-id:\d+}/remove', [self::class, 'getPostUserGroupIdRemove']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
