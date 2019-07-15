@@ -8,14 +8,14 @@ set -e
 # Ensure system will be synchronized ASAP (once system starts)
 /usr/bin/tuleap queue-system-check
 
-# Switch to php 5.6 + nginx
+# Switch to php 7.3 + nginx
 if [ ! -f "/etc/nginx/conf.d/tuleap.conf" ]; then
-    /usr/share/tuleap/tools/utils/php72/run.php
+    /usr/share/tuleap/tools/utils/php73/run.php
 
     mv /etc/nginx /data/etc
     ln -s /data/etc/nginx /etc/nginx
 
-    mkdir -p /data/etc/opt/remi/php72/
-    mv /etc/opt/remi/php72/php-fpm.d/ /data/etc/opt/remi/php72/
-    ln -s /data/etc/opt/remi/php72/php-fpm.d /etc/opt/remi/php72/php-fpm.d
+    mkdir -p /data/etc/opt/remi/php73/
+    mv /etc/opt/remi/php73/php-fpm.d/ /data/etc/opt/remi/php73/
+    ln -s /data/etc/opt/remi/php73/php-fpm.d /etc/opt/remi/php73/php-fpm.d
 fi

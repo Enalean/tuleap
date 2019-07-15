@@ -11,7 +11,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.2",
+      "php": "7.3",
       "ext-mailparse": "0"
     },
     "sort-packages": true

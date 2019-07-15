@@ -31,5 +31,5 @@ _phpImportTrackerTemplate() {
 _phpConfigureModule() {
     # ${1}: module name
 
-    ${install_dir}/tools/utils/php72/run.php --module="${1}"
+    ${install_dir}/tools/utils/php73/run.php --module="${1}"
 }
