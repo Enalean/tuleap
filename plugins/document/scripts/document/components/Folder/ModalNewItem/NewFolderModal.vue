@@ -23,7 +23,7 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
-            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-updated-context="false"/>
+            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-update-context="false"/>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
