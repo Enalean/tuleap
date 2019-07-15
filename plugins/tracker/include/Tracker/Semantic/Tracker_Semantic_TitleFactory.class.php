@@ -18,8 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Semantic_TitleFactory implements Tracker_Semantic_IRetrieveSemantic {
-    
+use Tracker\Semantic\IDuplicateSemantic;
+use Tracker\Semantic\IRetrieveSemanticFromXML;
+
+class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
+{
     /**
      * Hold an instance of the class
      */
