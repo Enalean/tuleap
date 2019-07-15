@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -80,6 +81,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->dao                          = \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class);
         $this->mono_milestone_checker       = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
         $this->timeframe_builder            = \Mockery::mock(TimeframeBuilder::class);
+        $this->milestone_burndown_cheker    = \Mockery::spy(\Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker::class);
 
         $this->milestone_factory            = new Planning_MilestoneFactory(
             $this->planning_factory,
@@ -90,7 +92,8 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
             $this->planning_permissions_manager,
             $this->dao,
             $this->mono_milestone_checker,
-            $this->timeframe_builder
+            $this->timeframe_builder,
+            $this->milestone_burndown_cheker
         );
 
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
@@ -348,7 +351,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            \Mockery::mock(TimeframeBuilder::class)
+            \Mockery::mock(TimeframeBuilder::class),
+            \Mockery::mock(MilestoneBurndownFieldChecker::class)
         ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -373,7 +377,8 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            \Mockery::mock(TimeframeBuilder::class)
+            \Mockery::mock(TimeframeBuilder::class),
+            \Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
         $planning_items_tree = $factory->getPlannedArtifacts(\Mockery::spy(\PFUser::class), $root_artifact);
 
@@ -410,7 +415,8 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            \Mockery::mock(TimeframeBuilder::class)
+            \Mockery::mock(TimeframeBuilder::class),
+            \Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
     }
 
@@ -451,7 +457,8 @@ class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends 
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            \Mockery::mock(TimeframeBuilder::class)
+            \Mockery::mock(TimeframeBuilder::class),
+            \Mockery::spy(MilestoneBurndownFieldChecker::class)
         ])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -561,7 +568,8 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_Milestone_MilestoneDao'),
             mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
-            \Mockery::mock(TimeframeBuilder::class)
+            \Mockery::mock(TimeframeBuilder::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker::class)
         ))
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -623,7 +631,8 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            $this->timeframe_builder
+            $this->timeframe_builder,
+            \Mockery::spy(\Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker::class)
         );
 
         $planning = \Mockery::spy(\Planning::class);
@@ -754,7 +763,8 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase
             \Mockery::spy(\PlanningPermissionsManager::class),
             \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
             \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
-            $this->timeframe_builder
+            $this->timeframe_builder,
+            \Mockery::spy(\Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker::class)
         );
         $this->user = aUser()->build();
         $this->artifact_id = 112;

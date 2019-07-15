@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsChartPresentersRetriever
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
@@ -282,7 +283,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 new TimeframeBuilder(
                     $form_element_factory,
                     $this->getSemanticTimeframeBuilder($form_element_factory)
-                )
+                ),
+                new MilestoneBurndownFieldChecker($form_element_factory)
             )
         );
 

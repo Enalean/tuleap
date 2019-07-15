@@ -25,6 +25,7 @@ use Planning;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
@@ -69,7 +70,8 @@ class PlanningResource extends AuthenticatedResource {
             new TimeframeBuilder(
                 $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
-            )
+            ),
+            new MilestoneBurndownFieldChecker($form_element_factory)
         );
     }
 

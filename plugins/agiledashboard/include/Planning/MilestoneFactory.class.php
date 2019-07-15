@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Milestone\Criterion\Period\PeriodFuture;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
@@ -76,6 +76,10 @@ class Planning_MilestoneFactory
      * @var TimeframeBuilder
      */
     private $timeframe_builder;
+    /**
+     * @var MilestoneBurndownFieldChecker
+     */
+    private $burndown_field_checker;
 
     /**
      * Instanciates a new milestone factory.
@@ -93,7 +97,8 @@ class Planning_MilestoneFactory
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        TimeframeBuilder $timeframe_builder
+        TimeframeBuilder $timeframe_builder,
+        MilestoneBurndownFieldChecker $burndown_field_checker
     ) {
         $this->planning_factory             = $planning_factory;
         $this->artifact_factory             = $artifact_factory;
@@ -103,7 +108,8 @@ class Planning_MilestoneFactory
         $this->planning_permissions_manager = $planning_permissions_manager;
         $this->milestone_dao                = $milestone_dao;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->timeframe_builder = $timeframe_builder;
+        $this->timeframe_builder            = $timeframe_builder;
+        $this->burndown_field_checker       = $burndown_field_checker;
     }
 
     /**
@@ -854,7 +860,7 @@ class Planning_MilestoneFactory
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
 
         foreach ($artifacts as $artifact) {
-            if (! $this->isMilestoneCurrent($artifact, $user) && $this->milestoneHasStartDate($artifact, $user)) {
+            if ($this->notCurrentMilestoneHasStartDate($artifact, $user) || $this->isClosedMilestone($artifact)) {
                 continue;
             }
 
@@ -872,7 +878,7 @@ class Planning_MilestoneFactory
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
 
         foreach ($artifacts as $artifact) {
-            if (! $this->isMilestoneFuture($artifact, $user) && $this->milestoneHasStartDate($artifact, $user)) {
+            if (! $artifact->isOpen() || $this->notFutureMilestoneHasStartDate($artifact, $user)) {
                 continue;
             }
 
@@ -892,7 +898,7 @@ class Planning_MilestoneFactory
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
 
         foreach ($artifacts as $artifact) {
-            if (! $this->isMilestonePast($artifact) && $this->milestoneHasStartDate($artifact, $user)) {
+            if ( ! $this->isMilestonePast($artifact)) {
                 continue;
             }
 
@@ -913,26 +919,9 @@ class Planning_MilestoneFactory
      */
     private function getMilestoneFromArtifactWithBurndownInfo(Tracker_Artifact $artifact, PFUser $user) {
         $milestone = $this->getMilestoneFromArtifact($artifact);
-        $milestone->setHasUsableBurndownField($this->hasUsableBurndownField($user, $milestone));
+        $milestone->setHasUsableBurndownField($this->burndown_field_checker->hasUsableBurndownField($user, $milestone));
 
         return $milestone;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasUsableBurndownField(PFUser $user, Planning_ArtifactMilestone $milestone) {
-        $tracker = $milestone->getArtifact()->getTracker();
-        $factory = $this->formelement_factory;
-
-        $duration_field       = $factory->getFormElementByName($tracker->getId(), Planning_Milestone::DURATION_FIELD_NAME);
-        $initial_effort_field = AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
-
-        return $factory->getABurndownField($user, $tracker)
-            && $initial_effort_field
-            && $initial_effort_field->isUsed()
-            && $duration_field
-            && $duration_field->isUsed();
     }
 
     private function getMilestoneEndDate(Tracker_Artifact $milestone_artifact, PFUser $user) {
@@ -952,7 +941,7 @@ class Planning_MilestoneFactory
 
     private function isMilestonePast(Tracker_Artifact $milestone_artifact)
     {
-        return ! $milestone_artifact->isOpen();
+        return $milestone_artifact->getStatus() && ! $milestone_artifact->isOpen();
     }
 
     /**
