@@ -97,7 +97,7 @@ class MetadataRepresentationBuilder
                 assert($metadata_value instanceof Docman_MetadataListOfValuesElement);
                 $list_value[] = new MetadataListValueRepresentation(
                     (int) $metadata_value->getId(),
-                    $metadata_value->getName()
+                    $this->getNoneMetadataValue($metadata_value)
                 );
             }
 
@@ -152,5 +152,14 @@ class MetadataRepresentationBuilder
                 throw new UnknownMetadataException("Metadata type: " . $type . " unknown");
                 break;
         }
+    }
+
+    private function getNoneMetadataValue(Docman_MetadataListOfValuesElement $metadadata): string
+    {
+        if ((int)$metadadata->getId() === PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
+            return $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+        }
+
+        return $metadadata->getName();
     }
 }
