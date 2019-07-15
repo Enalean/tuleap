@@ -303,6 +303,9 @@ msgstr "Impossible d'agrandir le widget."
 msgid "Cannot minimize the widget."
 msgstr "Impossible de réduire le widget."
 
+msgid "Cannot remove user from group"
+msgstr "Impossible d'enlever l'utilisateur du groupe"
+
 msgid "Cannot remove users from bound groups"
 msgstr "Impossible d'enlever des utilisateurs d'un group lié"
 

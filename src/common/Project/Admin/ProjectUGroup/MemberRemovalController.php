@@ -26,14 +26,11 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
-use PFUser;
-use Project;
 use ProjectManager;
 use ProjectUGroup;
-use Response;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
+use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
+use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -51,25 +48,20 @@ class MemberRemovalController implements DispatchableWithRequest
      */
     private $ugroup_manager;
     /**
-     * @var DynamicUGroupMembersUpdater
-     */
-    private $dynamic_ugroup_members_updater;
-    /**
      * @var UserManager
      */
     private $user_manager;
     /**
-     * @var StaticMemberRemover
+     * @var MemberRemover
      */
-    private $static_member_remover;
+    private $member_remover;
 
-    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater, StaticMemberRemover $static_member_remover)
+    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover)
     {
         $this->project_manager = $project_manager;
         $this->ugroup_manager  = $ugroup_manager;
-        $this->user_manager = $user_manager;
-        $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
-        $this->static_member_remover = $static_member_remover;
+        $this->user_manager    = $user_manager;
+        $this->member_remover  = $member_remover;
     }
 
     /**
@@ -108,31 +100,15 @@ class MemberRemovalController implements DispatchableWithRequest
             throw new NotFoundException();
         }
 
-        $this->removeUserFromUGroup($layout, $project, $ugroup, $user);
+        try {
+            $this->member_remover->removeMember($user, $ugroup);
+        } catch (CannotModifyBoundGroupException $exception) {
+            $layout->addFeedback(Feedback::ERROR, _('Cannot remove users from bound groups'));
+        } catch (CannotRemoveUserMembershipToUserGroupException $exception) {
+            $layout->addFeedback(Feedback::ERROR, _('Cannot remove user from group'));
+        }
 
         $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
-    }
-
-    private function removeUserFromUGroup(Response $response, Project $project, ProjectUGroup $ugroup, PFUser $user) : void
-    {
-        if ($ugroup->isBound()) {
-            $response->addFeedback(Feedback::ERROR, _('Cannot remove users from bound groups'));
-            return;
-        }
-
-        if ($ugroup->isStatic()) {
-            $this->static_member_remover->removeUser($ugroup, $user);
-            return;
-        }
-
-        try {
-            $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
-        } catch (CannotRemoveUserMembershipToUserGroupException $ex) {
-            $response->addFeedback(
-                Feedback::ERROR,
-                $ex->getMessage()
-            );
-        }
     }
 
     public static function getUrl(ProjectUGroup $ugroup)
