@@ -36,12 +36,14 @@
                     <user-badge v-bind:user="item.owner"/>
                 </p>
             </div>
-            <quick-look-document-additional-metadata-list
-                v-for="metadata in metadata_right_column"
-                v-bind:metadata="metadata"
-                v-bind:key="metadata.name"
-                data-test="additional-metadata-right-list"
-            />
+            <template v-if="is_document">
+                <quick-look-document-additional-metadata-list
+                    v-for="metadata in metadata_right_column"
+                    v-bind:metadata="metadata"
+                    v-bind:key="metadata.name"
+                    data-test="additional-metadata-right-list"
+                />
+            </template>
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
@@ -74,12 +76,14 @@
                     {{ file_size_in_mega_bytes }}
                 </p>
             </div>
-            <quick-look-document-additional-metadata-list
-                v-for="metadata in metadata_left_column"
-                v-bind:metadata="metadata"
-                v-bind:key="metadata.name"
-                data-test="additional-metadata-left-list"
-            />
+            <template v-if="is_document">
+                <quick-look-document-additional-metadata-list
+                    v-for="metadata in metadata_left_column"
+                    v-bind:metadata="metadata"
+                    v-bind:key="metadata.name"
+                    data-test="additional-metadata-left-list"
+                />
+            </template>
         </div>
     </section>
 </template>
@@ -91,7 +95,7 @@ import {
     getElapsedTimeFromNow
 } from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 
@@ -114,6 +118,9 @@ export default {
         },
         is_file() {
             return this.item.type === TYPE_FILE;
+        },
+        is_document() {
+            return this.item.type !== TYPE_FOLDER;
         },
         file_size_in_mega_bytes() {
             if (!this.item.file_properties) {

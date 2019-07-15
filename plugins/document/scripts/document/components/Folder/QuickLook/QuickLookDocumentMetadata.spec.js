@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 
 import localVue from "../../../helpers/local-vue.js";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 
 import {
     rewire$formatDateUsingPreferredUserFormat,
@@ -90,6 +90,24 @@ describe("QuickLookDocumentMetadata", () => {
 
         const wrapper = metadata_factory({ item });
 
+        expect(wrapper.contains("[data-test='additional-metadata-left-list']")).toBeFalsy();
+        expect(wrapper.contains("[data-test='additional-metadata-right-list']")).toBeFalsy();
+    });
+
+    it(`Given folder,
+         Then there is no additional (hardcoded + customize) metadata displayed`, () => {
+        const item = {
+            id: 42,
+            title: "folder",
+            type: TYPE_FOLDER,
+            owner: {
+                id: 102
+            },
+            approval_table: null,
+            metadata: [{ title: "title document", short_name: "title" }]
+        };
+
+        const wrapper = metadata_factory({ item });
         expect(wrapper.contains("[data-test='additional-metadata-left-list']")).toBeFalsy();
         expect(wrapper.contains("[data-test='additional-metadata-right-list']")).toBeFalsy();
     });
