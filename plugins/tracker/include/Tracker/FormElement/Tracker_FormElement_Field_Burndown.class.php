@@ -642,7 +642,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function getBurdownConfigurationFieldRetriever()
     {
-        return new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
+        return new ChartConfigurationFieldRetriever(
+            $this->getFormElementFactory(),
+            $this->getSemanticTimeframeBuilder(),
+            $this->getLogger()
+        );
     }
 
     /**
@@ -803,10 +807,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $form_element_factory = $this->getFormElementFactory();
 
         return new TimeframeBuilder(
-            $form_element_factory,
-            new SemanticTimeframeBuilder(
-                 new SemanticTimeframeDao(), $form_element_factory
-            )
+            $form_element_factory, $this->getSemanticTimeframeBuilder()
+        );
+    }
+
+    private function getSemanticTimeframeBuilder() : SemanticTimeframeBuilder
+    {
+        return new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            $this->getFormElementFactory()
         );
     }
 }

@@ -2033,12 +2033,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private function getBurndownCacheChecker()
     {
-        $event_manager   = SystemEventManager::instance();
-        $logger          = new BurndownLogger();
-        $field_retriever = new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $logger);
-        $computed_dao    = new Tracker_FormElement_Field_ComputedDao();
-
-        $form_element_factory = Tracker_FormElementFactory::instance();
+        $event_manager              = SystemEventManager::instance();
+        $logger                     = new BurndownLogger();
+        $computed_dao               = new Tracker_FormElement_Field_ComputedDao();
+        $form_element_factory       = Tracker_FormElementFactory::instance();
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
+        $field_retriever            = new ChartConfigurationFieldRetriever(
+            $this->getFormElementFactory(),
+            $semantic_timeframe_builder,
+            $logger
+        );
 
         return new BurndownCacheGenerationChecker(
             $logger,
@@ -2051,7 +2055,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $field_retriever,
                     new TimeframeBuilder(
                         $form_element_factory,
-                        new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+                        $semantic_timeframe_builder
                     ),
                     $logger
                 )
