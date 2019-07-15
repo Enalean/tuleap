@@ -23,6 +23,7 @@
         v-bind:class="row_classes"
         v-bind:data-item-id="item.id"
         v-on:mouseleave="closeActionMenu"
+        v-on:click="$emit('toggleQuickLook', item)"
     >
         <td v-bind:colspan="colspan">
             <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }">
@@ -37,7 +38,6 @@
                     <div class="tlp-dropdown-split-button">
                         <quick-look-button
                             class="quick-look-button"
-                            v-on:displayQuickLook="$emit('displayQuickLook', item)"
                             data-test="quick-look-button"
                         />
                         <dropdown-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">

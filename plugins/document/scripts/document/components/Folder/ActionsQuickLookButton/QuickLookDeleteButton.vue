@@ -25,7 +25,7 @@
             'tlp-button-small tlp-button-outline tlp-button-danger': ! isInDropdown,
             'tlp-dropdown-menu-item tlp-dropdown-menu-item-danger': isInDropdown
         }"
-        v-on:click="processDeletion"
+        v-on:click.stop.prevent="processDeletion"
         data-test="quick-look-delete-button"
     >
         <i

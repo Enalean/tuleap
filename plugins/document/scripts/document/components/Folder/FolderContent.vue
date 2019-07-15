@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -28,7 +28,7 @@
                                 Name
                             </th>
                             <template v-if="! toggle_quick_look">
-                                <th class="document-tree-head-owner" v-translate>
+                                <th class="document-tree-head-owner" data-test="document-folder-owner-information" v-translate>
                                     Owner
                                 </th>
                                 <th class="document-tree-head-updatedate" v-translate>
@@ -44,13 +44,13 @@
                             v-bind:key="item.id"
                             v-bind:item="item"
                             v-bind:is-quick-look-displayed="toggle_quick_look"
-                            v-on:displayQuickLook="displayQuickLook(item)"
+                            v-on:toggleQuickLook="toggleQuickLook(item)"
                         />
                     </tbody>
                 </table>
             </div>
         </section>
-        <div v-if="toggle_quick_look && currently_previewed_item" class="document-folder-right-container">
+        <div v-if="should_display_preview" class="document-folder-right-container" data-test="document-quick-look">
             <section class="tlp-pane document-quick-look-pane" v-bind:class="quick_look_dropzone_class" v-bind:data-item-id="item_id">
                 <quicklook-global v-on:closeQuickLookEvent="closeQuickLook"/>
             </section>
@@ -92,9 +92,20 @@ export default {
                 "document-quick-look-file-dropzone":
                     this.currently_previewed_item.type === TYPE_FILE
             };
+        },
+        should_display_preview() {
+            return this.toggle_quick_look && this.currently_previewed_item;
         }
     },
     methods: {
+        toggleQuickLook(item) {
+            if (this.currently_previewed_item === item) {
+                this.toggle_quick_look = !this.toggle_quick_look;
+                return;
+            }
+
+            this.displayQuickLook(item);
+        },
         displayQuickLook(item) {
             this.$store.commit("updateCurrentlyPreviewedItem", item);
             this.toggle_quick_look = true;

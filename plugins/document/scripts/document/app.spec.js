@@ -45,6 +45,7 @@ import "./components/Folder/Clipboard/ClipboardContentInformation.vue";
 
 import "./components/Folder/FolderContentRow.spec.js";
 import "./components/Folder/FolderHeaderAction.spec.js";
+import "./components/Folder/FolderContent.spec.js";
 
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
@@ -61,7 +62,6 @@ import "./components/Folder/ActionsDropDown/CopyItem.spec.js";
 import "./components/Folder/ActionsDropDown/PasteItem.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
-import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";
 import "./components/Folder/ActionsQuickLookButton/QuickLookDocumentActionButton.spec.js";
 
 import "./components/Folder/ItemDisplay/ActionsHeader.spec.js";

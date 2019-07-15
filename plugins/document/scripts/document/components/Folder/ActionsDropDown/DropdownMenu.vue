@@ -35,7 +35,7 @@
             {{ item.title }}
         </span>
         <a v-if="! hideDetailsEntry"
-           v-on:click.prevent="showUpdateModal"
+           v-on:click.stop.prevent="showUpdateModal"
            class="tlp-dropdown-menu-item"
            role="menuitem"
            data-test="docman-dropdown-details"
