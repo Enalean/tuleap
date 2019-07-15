@@ -71,7 +71,8 @@
     "zendframework/zend-cache": "^2.8",
     "zendframework/zend-feed": "^2.10",
     "zendframework/zend-httphandlerrunner": "^1.1",
-    "zendframework/zend-mail": "^2.10"
+    "zendframework/zend-mail": "^2.10",
+     "ext-gettext": "*"
   },
   "config": {
     "platform": {

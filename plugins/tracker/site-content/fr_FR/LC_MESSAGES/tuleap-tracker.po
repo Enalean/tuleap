@@ -1078,6 +1078,14 @@ msgstr ""
 "Les fieldset_ids d'actions 'hidden_fieldsets' avec type 'int' ne doivent pas "
 "être en doublons."
 
+#, php-format
+msgid ""
+"This artifact doesn't respect tracker's rules. It will not be imported : "
+"CSV's line %s."
+msgstr ""
+"Cet artefact ne respecte pas les règles de l'outil de suivi. Il ne sera pas "
+"importé: ligne %s du fichier CSV."
+
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 

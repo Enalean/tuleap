@@ -928,55 +928,6 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
     }
 
-    public function testHasErrorNoError()
-    {
-        $header = array('summary', 'details');
-        $lines = array(
-                    array('summary 1', 'details 1'),
-                    array('summary 2', 'details 2'),
-                 );
-        $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field1, $field2));
-
-        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
-        $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
-
-        $field1->shouldReceive('getId')->andReturns(1);
-        $field2->shouldReceive('getId')->andReturns(2);
-
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
-        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
-        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
-
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1', $artifact)->andReturns('summary 1');
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2', $artifact)->andReturns('summary 2');
-
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1', $artifact)->andReturns('details 1');
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2', $artifact)->andReturns('details 2');
-
-        $field1->shouldReceive('isCSVImportable')->andReturns(true);
-        $field2->shouldReceive('isCSVImportable')->andReturns(true);
-
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
-
-        $um = \Mockery::spy(\UserManager::class);
-        $u = \Mockery::spy(\PFUser::class);
-        $u->shouldReceive('getId')->andReturns('107');
-        $this->tracker->shouldReceive('getUserManager')->andReturns($um);
-        $um->shouldReceive('getCurrentUser')->andReturns($u);
-
-
-        $af->shouldReceive('getInstanceFromRow')->andReturns($artifact);
-
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
-
-        $GLOBALS['Response']->shouldReceive('addFeedback')->never();
-        $this->assertFalse($this->tracker->hasError($header, $lines));
-    }
-
     public function testHasUnknownAidCreateMode() {
         $header = array('summary', 'details');
         $lines = array(
@@ -1062,7 +1013,7 @@ class TrackerTest extends TuleapTestCase {
         $separator = ',';
 
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker->shouldReceive('hasError')->andReturns(false);
+        $tracker->shouldReceive('hasBlockingError')->andReturns(false);
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', Mockery::any(), Mockery::any())->once();    // expected warning about wrong separator
         $tracker->isValidCSV($lines, $separator);
@@ -1078,8 +1029,9 @@ class TrackerTest extends TuleapTestCase {
                  );
         $separator = ',';
 
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tracker->shouldReceive('hasError')->andReturns(false);
+        $tracker->shouldReceive('hasBlockingError')->andReturns(false);
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->never();
         $tracker->isValidCSV($lines, $separator);

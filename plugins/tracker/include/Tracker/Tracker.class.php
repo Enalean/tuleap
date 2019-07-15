@@ -2702,7 +2702,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'separator_not_found', array($separator)), CODENDI_PURIFIER_FULL);
         }
 
-        if ($this->hasError($header_line, $lines)) {
+        if ($this->hasBlockingError($header_line, $lines)) {
             $is_valid = false;
         }
         return $is_valid;
@@ -2740,9 +2740,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      *
      * @return bool true if has unknown fields, false otherwise
      */
-    public function hasError($header_line, $lines)
+    public function hasBlockingError($header_line, $lines)
     {
-        $has_error = false;
+        $has_blocking_error = false;
         $fef = $this->getFormElementFactory();
         $aid_key = array_search('aid', $header_line);
         $af = $this->getTrackerArtifactFactory();
@@ -2775,7 +2775,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                         } else {
                             $unknown_fields[$field_name] = $field_name;
                         }
-                        $has_error = true;
+                        $has_blocking_error = true;
                     } else if ($field && !is_array($field_name)) {
                         // check if value is ok
                         if ($aid_key !== false && $this->aidExists($line[$aid_key])) {
@@ -2798,7 +2798,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
 
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
-                                $has_error = true;
+                                $has_blocking_error = true;
                             }
                         }
                     } else {
@@ -2807,7 +2807,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                 } else {
                     //Field is aid : we check if the artifact id exists
                     if ($this->hasUnknownAid($header_line, $lines)) {
-                        $has_error = true;
+                        $has_blocking_error = true;
                     }
                 }
             }
@@ -2819,7 +2819,18 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                     $fields_validator = $this->getNewChangesetFieldsValidator();
                 }
                 if (! $fields_validator->validate($artifact, $this->getUserManager()->getCurrentuser(), $data)) {
-                     $has_error = true;
+                     $has_blocking_error = true;
+                }
+                try {
+                    $this->getWorkflow()->checkGlobalRules($data);
+                } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        sprintf(
+                            dgettext('tuleap-tracker', "This artifact doesn't respect tracker's rules. It will not be imported : CSV's line %s."),
+                            intval($cpt_line) + 2
+                        )
+                    );
                 }
             }
         }
@@ -2830,7 +2841,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'importing_nature', array(implode(',', $error_nature))));
         }
 
-        return $has_error;
+        return $has_blocking_error;
     }
 
 
