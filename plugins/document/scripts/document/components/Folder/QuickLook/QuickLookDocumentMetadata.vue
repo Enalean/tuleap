@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -60,21 +60,11 @@
                     {{ getFormattedDateForDisplay(item.last_update_date) }}
                 </p>
             </div>
-            <div class="tlp-property">
-                <label for="document-approval-status" class="tlp-label" v-translate>
-                    Approval status
+            <div class="tlp-property" v-if="has_an_approval_table" data-test="docman-item-approval-table-status-badge">
+                <label for="document-approval-table-status" class="tlp-label" v-translate>
+                    Approval table status
                 </label>
-                <p id="document-approval-status">
-                    <approval-table-badge
-                        v-bind:item="item"
-                        v-bind:is-in-folder-content-row="false"
-                        v-if="has_an_approval_table"
-                        data-test="docman-item-approval-badge"
-                    />
-                    <span class="document-quick-look-property-empty" v-else v-translate>
-                        Empty
-                    </span>
-                </p>
+                <approval-table-badge id="document-approval-table-status" v-bind:item="item" v-bind:is-in-folder-content-row="false"/>
             </div>
             <div v-if="is_file" class="tlp-property">
                 <label for="document-file-size" class="tlp-label" v-translate>

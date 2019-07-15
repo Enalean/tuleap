@@ -123,7 +123,7 @@ describe("QuickLookDocumentMetadata", () => {
             owner: {
                 id: 102
             },
-            approval_data: {
+            approval_table: {
                 approval_state: "Approved"
             },
             creation_date: "2019-06-25T16:56:22+04:00",
@@ -131,6 +131,28 @@ describe("QuickLookDocumentMetadata", () => {
         };
 
         const wrapper = metadata_factory({ item });
-        expect(wrapper.contains("[data-test='docman-file-size']")).toBeTruthy();
+        expect(
+            wrapper.contains("[data-test='docman-item-approval-table-status-badge']")
+        ).toBeTruthy();
+    });
+
+    it(`Given item has no approval table,
+         Then its approval status is never displayed`, () => {
+        const item = {
+            id: 42,
+            title: "file",
+            type: TYPE_FILE,
+            owner: {
+                id: 102
+            },
+            approval_table: null,
+            creation_date: "2019-06-25T16:56:22+04:00",
+            metadata: []
+        };
+
+        const wrapper = metadata_factory({ item });
+        expect(
+            wrapper.contains("[data-test='docman-item-approval-table-status-badge']")
+        ).toBeFalsy();
     });
 });
