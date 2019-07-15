@@ -35,13 +35,31 @@ use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEvent;
 use SystemEventProcess;
 use SystemEventProcessorMutex;
+use Tuleap\DB\DBConnection;
 
 class SystemEventProcessorMutexTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $mutex;
+    /**
+     * @var Mockery\MockInterface|SystemEventProcess
+     */
+    private $process;
+
+    /**
+     * @var IRunInAMutex|Mockery\MockInterface
+     */
     private $object;
+
+    /**
+     * @var Mockery\MockInterface|DBConnection
+     */
+    private $db_connexion;
+
+    /**
+     * @var Mockery\MockInterface|SystemEventProcessorMutex
+     */
+    private $mutex;
 
     protected function setUp(): void
     {
@@ -56,7 +74,12 @@ class SystemEventProcessorMutexTest extends TestCase
         $this->object->shouldReceive('getProcess')->andReturn($this->process);
         $this->object->shouldReceive('getProcessOwner')->andReturn('root');
 
-        $this->mutex = Mockery::mock(SystemEventProcessorMutex::class, [$this->object, new LockFactory(new SemaphoreStore())])
+        $this->db_connexion = Mockery::mock(DBConnection::class);
+
+        $this->mutex = Mockery::mock(
+            SystemEventProcessorMutex::class,
+            [$this->object, new LockFactory(new SemaphoreStore()), $this->db_connexion]
+        )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }
@@ -65,7 +88,9 @@ class SystemEventProcessorMutexTest extends TestCase
     {
         $this->mutex->shouldReceive('checkCurrentUserProcessOwner')->once();
 
+        $this->db_connexion->shouldReceive('reconnectAfterALongRunningProcess')->never();
         $this->object->shouldReceive('execute')->once();
+
         $this->mutex->execute();
     }
 
@@ -77,5 +102,15 @@ class SystemEventProcessorMutexTest extends TestCase
         $this->object->shouldReceive('execute')->never();
 
         $this->mutex->execute();
+    }
+
+    public function testWaitAndExecuteReconnectsToTheDatabase()
+    {
+        $this->mutex->shouldReceive('checkCurrentUserProcessOwner')->once();
+
+        $this->db_connexion->shouldReceive('reconnectAfterALongRunningProcess')->once();
+        $this->object->shouldReceive('execute')->once();
+
+        $this->mutex->waitAndExecute();
     }
 }
