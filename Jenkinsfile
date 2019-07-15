@@ -47,27 +47,27 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT SimpleTest PHP 7.2') {
-                    steps { script { actions.runSimpleTestTests('72') } }
-                    post { always { junit 'results/ut-simpletest/php-72/results.xml' } }
+                stage('UT SimpleTest PHP 7.3') {
+                    steps { script { actions.runSimpleTestTests('73') } }
+                    post { always { junit 'results/ut-simpletest/php-73/results.xml' } }
                 }
                 stage('UT PHPUnit') {
                     stages {
-                        stage('UT PHPUnit PHP 7.2') { steps { script { actions.runPHPUnitTests('72') } } }
+                        stage('UT PHPUnit PHP 7.3') { steps { script { actions.runPHPUnitTests('73') } } }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
                 stage('REST') {
                     stages {
-                        stage('REST CentOS 6 PHP 7.2 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('c6-php72-mysql57') } }
+                        stage('REST CentOS 6 PHP 7.3 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('c6-php73-mysql57') } }
                         }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 7.2') { steps { script { actions.runSOAPTests('php-72', '4') } } }
+                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('php-73', '5') } } }
                     }
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
                 }
