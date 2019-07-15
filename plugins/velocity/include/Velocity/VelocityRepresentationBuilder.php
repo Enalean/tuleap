@@ -23,7 +23,9 @@ namespace Tuleap\Velocity;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
+use Tracker_Artifact;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 
 class VelocityRepresentationBuilder
@@ -43,14 +45,21 @@ class VelocityRepresentationBuilder
      */
     private $semantic_done_factory;
 
+    /**
+     * @var SemanticTimeframeBuilder
+     */
+    private $semantic_timeframe_builder;
+
     public function __construct(
         SemanticVelocityFactory $semantic_velocity_factory,
         SemanticDoneFactory $semantic_done_factory,
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
         Planning_MilestoneFactory $milestone_factory
     ) {
-        $this->milestone_factory         = $milestone_factory;
-        $this->semantic_velocity_factory = $semantic_velocity_factory;
-        $this->semantic_done_factory     = $semantic_done_factory;
+        $this->milestone_factory          = $milestone_factory;
+        $this->semantic_velocity_factory  = $semantic_velocity_factory;
+        $this->semantic_done_factory      = $semantic_done_factory;
+        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
     }
 
     public function buildCollectionOfRepresentations(Planning_Milestone $milestone, PFUser $user) : VelocityCollection
@@ -58,11 +67,17 @@ class VelocityRepresentationBuilder
         $representations = new VelocityCollection();
 
         $backlog_artifacts = $milestone->getLinkedArtifacts($user);
-        foreach ($backlog_artifacts as $artifact) {
-            $velocity      = $this->semantic_velocity_factory->getInstanceByTracker($artifact->getTracker());
-            $done_semantic = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
 
-            if ($velocity->getVelocityField() && $done_semantic->isDone($artifact->getLastChangeset())) {
+        foreach ($backlog_artifacts as $artifact) {
+            $velocity           = $this->semantic_velocity_factory->getInstanceByTracker($artifact->getTracker());
+            $done_semantic      = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
+            $timeframe_semantic = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
+
+            if (! $timeframe_semantic->isDefined()) {
+                $representations->addInvalidTracker($artifact->getTracker());
+            }
+
+            if ($velocity->getVelocityField() && $done_semantic->isDone($artifact->getLastChangeset()) && $timeframe_semantic->isDefined()) {
                 $computed_velocity = $artifact->getLastChangeset()->getValue($velocity->getVelocityField());
                 $sub_milestone     = $this->milestone_factory->getMilestoneFromArtifact($artifact);
                 $this->milestone_factory->updateMilestoneContextualInfo($user, $sub_milestone);

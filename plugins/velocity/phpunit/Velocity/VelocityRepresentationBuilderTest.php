@@ -33,6 +33,8 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_Float;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 
@@ -48,6 +50,7 @@ class VelocityRepresentationBuilderTest extends TestCase
     private $milestone_factory;
     private $semantic_velocity_factory;
     private $semantic_done_factory;
+    private $semantic_timeframe_builder;
     private $milestone;
     private $user;
 
@@ -55,13 +58,15 @@ class VelocityRepresentationBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->milestone_factory         = Mockery::mock(Planning_MilestoneFactory::class);
-        $this->semantic_velocity_factory = Mockery::mock(SemanticVelocityFactory::class);
-        $this->semantic_done_factory     = Mockery::mock(SemanticDoneFactory::class);
+        $this->milestone_factory          = Mockery::mock(Planning_MilestoneFactory::class);
+        $this->semantic_velocity_factory  = Mockery::mock(SemanticVelocityFactory::class);
+        $this->semantic_done_factory      = Mockery::mock(SemanticDoneFactory::class);
+        $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
         $this->builder = new VelocityRepresentationBuilder(
             $this->semantic_velocity_factory,
             $this->semantic_done_factory,
+            $this->semantic_timeframe_builder,
             $this->milestone_factory
         );
 
@@ -89,8 +94,9 @@ class VelocityRepresentationBuilderTest extends TestCase
 
         $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
 
-        $semantic_velocity = Mockery::mock(SemanticVelocity::class);
-        $semantic_done     = Mockery::mock(SemanticDone::class);
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
 
         $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
             ->with($tracker)
@@ -100,8 +106,15 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->with($tracker)
             ->andReturn($semantic_done);
 
+        $this->semantic_timeframe_builder
+            ->shouldReceive("getSemantic")
+            ->andReturn($timeframe_semantic);
+
         $semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
         $semantic_done->shouldReceive('isDone')->with($last_changeset)->andReturnTrue();
+        $timeframe_semantic
+            ->shouldReceive("isDefined")
+            ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
         $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
@@ -136,8 +149,9 @@ class VelocityRepresentationBuilderTest extends TestCase
 
         $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
 
-        $semantic_velocity = Mockery::mock(SemanticVelocity::class);
-        $semantic_done     = Mockery::mock(SemanticDone::class);
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
 
         $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
             ->with($tracker)
@@ -147,8 +161,15 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->with($tracker)
             ->andReturn($semantic_done);
 
+        $this->semantic_timeframe_builder
+            ->shouldReceive("getSemantic")
+            ->andReturn($timeframe_semantic);
+
         $semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
         $semantic_done->shouldReceive('isDone')->with($last_changeset)->andReturnFalse();
+        $timeframe_semantic
+            ->shouldReceive("isDefined")
+            ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
         $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
@@ -174,8 +195,9 @@ class VelocityRepresentationBuilderTest extends TestCase
 
         $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
 
-        $semantic_velocity = Mockery::mock(SemanticVelocity::class);
-        $semantic_done     = Mockery::mock(SemanticDone::class);
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
 
         $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
             ->with($tracker)
@@ -185,8 +207,15 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->with($tracker)
             ->andReturn($semantic_done);
 
+        $this->semantic_timeframe_builder
+            ->shouldReceive("getSemantic")
+            ->andReturn($timeframe_semantic);
+
         $semantic_velocity->shouldReceive('getVelocityField')->andReturnNull();
         $semantic_done->shouldReceive('isDone')->never();
+        $timeframe_semantic
+            ->shouldReceive("isDefined")
+            ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
         $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
@@ -223,8 +252,9 @@ class VelocityRepresentationBuilderTest extends TestCase
 
         $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
 
-        $semantic_velocity = Mockery::mock(SemanticVelocity::class);
-        $semantic_done     = Mockery::mock(SemanticDone::class);
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
 
         $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
             ->with($tracker)
@@ -234,8 +264,15 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->with($tracker)
             ->andReturn($semantic_done);
 
+        $this->semantic_timeframe_builder
+            ->shouldReceive("getSemantic")
+            ->andReturn($timeframe_semantic);
+
         $semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
         $semantic_done->shouldReceive('isDone')->with($last_changeset)->andReturnTrue();
+        $timeframe_semantic
+            ->shouldReceive("isDefined")
+            ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
         $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
@@ -251,5 +288,62 @@ class VelocityRepresentationBuilderTest extends TestCase
 
         $this->assertCount(0, $collection->getVelocityRepresentations());
         $this->assertCount(1, $collection->getInvalidArtifacts());
+    }
+
+    public function testItAddsTrackerNameToInvalidTrackersNamesWhenNoTimeframeSemanticIsDefined()
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn('Sprints');
+
+        $velocity_field = Mockery::mock(Tracker_FormElement_Field_Float::class);
+
+        $last_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $last_changeset_value->shouldReceive('getNumeric')->andReturn(10);
+
+        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
+
+        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $linked_artifact->shouldReceive('getId')->andReturn(102);
+        $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
+
+        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
+
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $semantic_timeframe = Mockery::mock(SemanticTimeframe::class);
+
+        $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
+            ->with($tracker)
+            ->andReturn($semantic_velocity);
+
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
+            ->with($tracker)
+            ->andReturn($semantic_done);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')
+            ->with($tracker)
+            ->andReturn($semantic_timeframe);
+
+        $semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
+        $semantic_done->shouldReceive('isDone')->with($last_changeset)->andReturnTrue();
+        $semantic_timeframe->shouldReceive('isDefined')->andReturnFalse();
+
+        $sub_milestone = Mockery::mock(Planning_Milestone::class);
+        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
+            ->with($linked_artifact)
+            ->andReturn($sub_milestone);
+
+        $sub_milestone->shouldReceive('getStartDate')->andReturn(1);
+        $sub_milestone->shouldReceive('getDuration')->andReturn(1);
+
+        $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
+
+        $this->assertCount(0, $collection->getVelocityRepresentations());
+        $this->assertCount(0, $collection->getInvalidArtifacts());
+        $this->assertCount(1, $collection->getInvalidTrackersNames());
+        $this->assertEquals('Sprints', $collection->getInvalidTrackersNames()[0]);
     }
 }
