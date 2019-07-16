@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker;
 
 class SemanticTimeframeTest extends TestCase
@@ -102,5 +103,106 @@ class SemanticTimeframeTest extends TestCase
         $this->assertTrue(
             (new SemanticTimeframe($tracker, $start_date, $duration))->isUsedInSemantics($duration)
         );
+    }
+
+    public function testItDoesNotExportToXMLIfThereIsNoField(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            null,
+            null
+        ))->exportToXml($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotExportToXMLIfThereIsNoStartDate(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            null,
+            Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+        ))->exportToXml($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotExportToXMLIfThereIsNoDuration(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            Mockery::mock(\Tracker_FormElement_Field_Date::class),
+            null
+        ))->exportToXml($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotExportToXMLIfStartDateIsNotInFieldMapping(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            $start_date_field,
+            Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+        ))->exportToXml($root, []);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItDoesNotExportToXMLIfDurationIsNotInFieldMapping(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        $duration_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field->shouldReceive('getId')->andReturn(102);
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            $start_date_field,
+            $duration_field
+        ))->exportToXml($root, [
+            'F101' => 101
+        ]);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItExportToXML(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        $duration_field = Mockery::mock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field->shouldReceive('getId')->andReturn(102);
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            $start_date_field,
+            $duration_field
+        ))->exportToXml($root, [
+            'F101' => 101,
+            'F102' => 102
+        ]);
+
+        $this->assertCount(1, $root->children());
+        $this->assertEquals('timeframe', (string) $root->semantic['type']);
+        $this->assertEquals('F101', (string) $root->semantic->start_date_field['REF']);
+        $this->assertEquals('F102', (string) $root->semantic->duration_field['REF']);
     }
 }

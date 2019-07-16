@@ -22,6 +22,7 @@
 
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 
 class Tracker_SemanticFactory {
 
@@ -64,14 +65,17 @@ class Tracker_SemanticFactory {
             case 'description':
                 $semantic = $this->getSemanticDescriptionFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
-            case 'status';
+            case 'status':
                 $semantic = $this->getSemanticStatusFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
-            case 'contributor';
+            case 'contributor':
                 $semantic = $this->getSemanticContributorFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
-            case 'tooltip';
+            case 'tooltip':
                 $semantic = $this->getSemanticTooltipFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
+                break;
+            case 'timeframe':
+                $semantic = (new SemanticTimeframeFromXMLBuilder())->getInstanceFromXML($xml, $xmlMapping, $tracker);
                 break;
             default:
                 $semantic = $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xmlMapping, $tracker, $type);

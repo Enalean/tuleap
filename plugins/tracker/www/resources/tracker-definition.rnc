@@ -370,6 +370,16 @@ tracker =
                     attribute REF { xsd:IDREF }
                 }
             )
+        |
+            (
+                attribute type { "timeframe" },
+                element start_date_field {
+                    attribute REF { xsd:IDREF }
+                },
+                element duration_field {
+                    attribute REF { xsd:IDREF }
+                }
+            )
         )
 
 
