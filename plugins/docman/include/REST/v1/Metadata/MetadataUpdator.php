@@ -32,6 +32,7 @@ use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\NoItemToRecurseException;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\I18NRestException;
 
 class MetadataUpdator
@@ -65,6 +66,10 @@ class MetadataUpdator
      * @var MetadataRecursiveUpdator
      */
     private $recursive_updator;
+    /**
+     * @var DocumentOngoingUploadRetriever
+     */
+    private $document_ongoing_upload_retriever;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -73,15 +78,17 @@ class MetadataUpdator
         \UserManager $user_manager,
         OwnerRetriever $owner_retriever,
         MetadataEventProcessor $event_processor,
-        MetadataRecursiveUpdator $recursive_updator
+        MetadataRecursiveUpdator $recursive_updator,
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
     ) {
-        $this->item_factory      = $item_factory;
-        $this->status_mapper     = $status_mapper;
-        $this->date_retriever    = $date_retriever;
-        $this->user_manager      = $user_manager;
-        $this->owner_retriever   = $owner_retriever;
-        $this->event_processor   = $event_processor;
-        $this->recursive_updator = $recursive_updator;
+        $this->item_factory                      = $item_factory;
+        $this->status_mapper                     = $status_mapper;
+        $this->date_retriever                    = $date_retriever;
+        $this->user_manager                      = $user_manager;
+        $this->owner_retriever                   = $owner_retriever;
+        $this->event_processor                   = $event_processor;
+        $this->recursive_updator                 = $recursive_updator;
+        $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
     }
 
     /**
@@ -94,6 +101,13 @@ class MetadataUpdator
         \DateTimeImmutable $current_time,
         PFUser $current_user
     ): void {
+        if ($representation->title !== $item->getTitle() &&
+            $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int)$item->getParentId())) {
+            throw new RestException(400, "A file with same title already exists in the given folder.");
+        }
+
+        $this->checkThereIsNoOnGoingUploadWithSameDocumentName($item);
+
         try {
             $status            = $this->status_mapper->getItemStatusIdFromItemStatusString($representation->status);
             $obsolescence_date = $this->date_retriever->getTimeStampOfDate(
@@ -114,11 +128,6 @@ class MetadataUpdator
                     $new_owner_id
                 )
             );
-        }
-
-        if ($representation->title !== $item->getTitle() &&
-            $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int)$item->getParentId())) {
-            throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
         $item_id = $item->getId();
@@ -173,6 +182,8 @@ class MetadataUpdator
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
+        $this->checkThereIsNoOnGoingUploadWithSameDocumentName($item);
+
         $item_id = $item->getId();
 
         try {
@@ -222,6 +233,34 @@ class MetadataUpdator
             }
         } catch (HardCodedMetadataException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        }
+    }
+
+    /**
+     * @throws I18NRestException
+     */
+    private function checkThereIsNoOnGoingUploadWithSameDocumentName(\Docman_Item $item): void
+    {
+        $parent_item = $this->item_factory->getItemFromDb($item->getParentId());
+        if (! $parent_item) {
+            throw new \LogicException(
+                sprintf('Parent item %d not found!', $item->getParentId())
+            );
+        }
+        $is_document_being_uploaded = $this->document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
+            $parent_item,
+            $item->getTitle(),
+            new \DateTimeImmutable()
+        );
+
+        if ($is_document_being_uploaded) {
+            throw new I18NRestException(
+                409,
+                dgettext(
+                    'tuleap-docman',
+                    'A document with the same title is already being uploaded, you cannot copy your document here for now'
+                )
+            );
         }
     }
 }

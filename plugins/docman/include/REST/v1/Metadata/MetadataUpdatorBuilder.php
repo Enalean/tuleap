@@ -26,6 +26,8 @@ use Docman_SettingsBo;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 
 class MetadataUpdatorBuilder
 {
@@ -48,7 +50,8 @@ class MetadataUpdatorBuilder
                 \Docman_PermissionsManager::instance($project->getID()),
                 new \Docman_MetadataValueFactory($project->getID()),
                 \ReferenceManager::instance()
-            )
+            ),
+            new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
         );
     }
 }
