@@ -24,7 +24,6 @@ namespace Tuleap\Request;
 use ArtifactTypeFactory;
 use Codendi_HTMLPurifier;
 use ConfigDao;
-use CSRFSynchronizerToken;
 use EventManager;
 use FastRoute;
 use FRSFileFactory;
@@ -54,7 +53,6 @@ use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
-use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -74,6 +72,7 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Home;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
@@ -380,18 +379,15 @@ class RouteCollector
             ProjectManager::instance(),
             $ugroup_manager,
             \UserManager::instance(),
-            new DynamicUGroupMembersUpdater(
-                new UserPermissionsDao(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ProjectMemberAdderWithStatusCheckAndNotifications(
-                    new UGroupBinding(
-                        new UGroupUserDao(),
-                        $ugroup_manager
-                    )
+            new MemberRemover(
+                new DynamicUGroupMembersUpdater(
+                    new UserPermissionsDao(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    new ProjectMemberAdderWithStatusCheckAndNotifications(),
+                    EventManager::instance()
                 ),
-                EventManager::instance()
-            ),
-            new StaticMemberRemover()
+                new StaticMemberRemover()
+            )
         );
     }
 
