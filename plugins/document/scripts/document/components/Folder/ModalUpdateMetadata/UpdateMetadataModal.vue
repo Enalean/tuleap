@@ -28,7 +28,9 @@
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
             </document-global-metadata>
 
-            <other-information-metadata v-bind:currently-updated-item="item_to_update"/>
+            <other-information-metadata v-bind:currently-updated-item="item_to_update">
+                <obsolescence-date-metadata-obsolete-today-option/>
+            </other-information-metadata>
 
             <modal-footer v-bind:is-loading="is_loading"
                           v-bind:submit-button-label="submit_button_label"
@@ -49,9 +51,11 @@ import OtherInformationMetadata from "../Metadata/DocumentMetadata/OtherInformat
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
+import ObsolescenceDateMetadataObsoleteTodayOption from "../Metadata/DocumentMetadata/ObsolescenceDateMetadataObsoleteTodayOption.vue";
 
 export default {
     components: {
+        ObsolescenceDateMetadataObsoleteTodayOption,
         InfoAccessOldPropertiesPage,
         ModalFeedback,
         OwnerMetadata,

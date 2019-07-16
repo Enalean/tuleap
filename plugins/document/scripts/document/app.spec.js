@@ -92,6 +92,7 @@ import "./components/Folder/Property/LockProperty.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 import "./components/Folder/Metadata/StatusMetadataWithCustomBinding.spec.js";
+import "./components/Folder/Metadata/DocumentMetadata/ObsolescenceDateMetadata.spec.js";
 
 import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadata.spec.js";
 

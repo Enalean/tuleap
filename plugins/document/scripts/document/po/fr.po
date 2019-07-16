@@ -12,6 +12,15 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "12 months"
+msgstr "12 mois"
+
+msgid "3 months"
+msgstr "3 mois"
+
+msgid "6 months"
+msgstr "6 mois"
+
 msgid ""
 "<a v-bind:href=\"table_owner.user_url\">{{ table_owner.display_name }}</a> "
 "has created an <a v-bind:href=\"approval_table_url\">approval table</a>  for "
@@ -196,6 +205,9 @@ msgstr "Fichier"
 msgid "File size"
 msgstr "Taille du fichier"
 
+msgid "Fixed date"
+msgstr "Date fixe"
+
 msgid "Go to Document manager home page"
 msgstr "Aller à la page d'accueil du service gestion de documents"
 
@@ -303,6 +315,9 @@ msgstr "OK, compris"
 
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
+
+msgid "Obsolete today"
+msgstr "Obsolète aujourd'hui"
 
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
