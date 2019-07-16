@@ -26,6 +26,8 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -160,6 +162,7 @@ class ProjectImportTest extends TuleapDbTestCase
             new ServiceCreator(),
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
+            new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             $force_activation
         );
 
@@ -185,7 +188,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $project_creator,
             mock('Tuleap\FRS\UploadedLinksUpdater'),
             mock('Tuleap\Dashboard\Project\ProjectDashboardXMLImporter'),
-            Mockery::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDao::class)
+            Mockery::spy(SynchronizedProjectMembershipDao::class)
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

@@ -21,13 +21,15 @@
 
 require_once 'pre.php';
 
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
@@ -98,6 +100,7 @@ if ($request->exist('wsdl')) {
         new ServiceCreator(),
         new LabelDao(),
         new DefaultProjectVisibilityRetriever(),
+        new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
         $force_activation
     );
 

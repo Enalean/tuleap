@@ -69,7 +69,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
                 mock('Tuleap\Service\ServiceCreator'),
                 mock(\Tuleap\Project\Label\LabelDao::class),
-                new DefaultProjectVisibilityRetriever()
+                new DefaultProjectVisibilityRetriever(),
+                Mockery::mock(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class)
             )
         );
     }
@@ -135,7 +136,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
                 mock('Tuleap\Service\ServiceCreator'),
                 Mock(\Tuleap\Project\Label\LabelDao::class),
-                new DefaultProjectVisibilityRetriever()
+                new DefaultProjectVisibilityRetriever(),
+                Mockery::mock(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class)
             )
         );
         $project_id      = 100;

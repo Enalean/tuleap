@@ -43,6 +43,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -53,7 +54,7 @@ use Tuleap\Widget\WidgetFactory;
 /**
  * Handles the HTTP actions related to a planning.
  */
-class Planning_Controller extends BaseController
+class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
     public const PAST_PERIOD   = 'past';
@@ -472,6 +473,8 @@ class Planning_Controller extends BaseController
             $widget_factory
         );
 
+        $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
+
         $project_creator = new ProjectCreator(
             ProjectManager::instance(),
             ReferenceManager::instance(),
@@ -483,6 +486,7 @@ class Planning_Controller extends BaseController
             new ServiceCreator(),
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
+            new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
             $force_activation
         );
 
@@ -517,7 +521,7 @@ class Planning_Controller extends BaseController
                 $logger,
                 $event_manager
             ),
-            new SynchronizedProjectMembershipDao()
+            $synchronized_project_membership_dao
         );
 
         try {
