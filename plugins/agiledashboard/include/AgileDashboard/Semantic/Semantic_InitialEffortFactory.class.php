@@ -22,7 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Semantic_InitialEffortFactory implements Tracker_Semantic_IRetrieveSemantic {
+use Tracker\Semantic\IDuplicateSemantic;
+use Tracker\Semantic\IRetrieveSemanticFromXML;
+
+class AgileDashboard_Semantic_InitialEffortFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic {
 
     /**
      * Hold an instance of the class

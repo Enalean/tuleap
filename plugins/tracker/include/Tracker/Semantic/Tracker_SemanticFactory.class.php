@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tracker\Semantic\IRetrieveSemanticFromXML;
 
 class Tracker_SemanticFactory {
 
@@ -170,13 +171,13 @@ class Tracker_SemanticFactory {
      * @return void
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-        foreach ($this->getSubFactories() as $factory) {
-            $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
+        foreach ($this->getDuplicators() as $duplicator) {
+            $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
         }
     }
 
-    /** @return Tracker_Semantic_IRetrieveSemantic[] */
-    private function getSubFactories() {
+    /** @return \Tracker\Semantic\IDuplicateSemantic[] */
+    private function getDuplicators() {
         $factories = array(
             $this->getSemanticTitleFactory(),
             $this->getSemanticDescriptionFactory(),

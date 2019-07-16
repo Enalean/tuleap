@@ -19,7 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Semantic_DescriptionFactory implements Tracker_Semantic_IRetrieveSemantic {
+use Tracker\Semantic\IDuplicateSemantic;
+use Tracker\Semantic\IRetrieveSemanticFromXML;
+
+class Tracker_Semantic_DescriptionFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
+{
 
     /**
      * Hold an instance of the class

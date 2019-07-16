@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,34 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tracker\Semantic;
+
+use Tracker;
+
 /**
  * Provides the retrieval and duplication of a Tracker_Semantic
  */
-interface Tracker_Semantic_IRetrieveSemantic {
-    
-    /**
-     * @return Tracker_Semantic
-     */
-    public function getByTracker(Tracker $tracker);
-    
-    /**
-     * Creates a Tracker_Semantic_Contributor Object
-     * 
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic contributor
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the semantic is attached
-     * 
-     * @return Tracker_Semantic The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker);
-    
-    /**
-     * Return the Dao
-     *
-     * @return Tracker_Semantic_ContributorDao The dao
-     */
-    public function getDao();
-    
+interface IDuplicateSemantic
+{
     /**
      * Duplicate the semantic from tracker source to tracker target
      *
@@ -56,6 +37,4 @@ interface Tracker_Semantic_IRetrieveSemantic {
      * @return void
      */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
-
 }
-?>

@@ -21,9 +21,11 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tracker\Semantic\IDuplicateSemantic;
+use Tracker\Semantic\IRetrieveSemanticFromXML;
 use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
 
-class Cardwall_Semantic_CardFieldsFactory implements Tracker_Semantic_IRetrieveSemantic {
+class Cardwall_Semantic_CardFieldsFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic {
 
     /**
      * Hold an instance of the class
