@@ -24,8 +24,8 @@
 /**
  * I am responsible of duplicating the various fields that compose a semantic for a new one
  */
-class Tracker_Semantic_CollectionOfFieldsDuplicator {
-
+class Tracker_Semantic_CollectionOfFieldsDuplicator implements \Tuleap\Tracker\Semantic\IDuplicateSemantic
+{
     /** @var Tracker_Semantic_IRetrieveSemanticDARByTracker */
     private $dao;
 

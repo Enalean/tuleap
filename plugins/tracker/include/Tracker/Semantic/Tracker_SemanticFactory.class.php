@@ -177,13 +177,13 @@ class Tracker_SemanticFactory {
         }
     }
 
-    /** @return \Tracker\Semantic\IDuplicateSemantic[] */
+    /** @return \Tuleap\Tracker\Semantic\IDuplicateSemantic[] */
     private function getDuplicators() {
         $timeframe_duplicator = new SemanticTimeframeDuplicator(
             new SemanticTimeframeDao()
         );
 
-        $factories = array(
+        $duplicators = array(
             $this->getSemanticTitleFactory(),
             $this->getSemanticDescriptionFactory(),
             $this->getSemanticStatusFactory(),
@@ -193,11 +193,11 @@ class Tracker_SemanticFactory {
         );
 
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_GET_SEMANTIC_FACTORIES,
-            array('factories' => &$factories)
+            TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS,
+            array('duplicators' => &$duplicators)
         );
 
-        return $factories;
+        return $duplicators;
     }
 }
 ?>

@@ -22,8 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tracker\Semantic\IDuplicateSemantic;
-use Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
 
 class AgileDashboard_Semantic_InitialEffortFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic {
 
@@ -88,7 +88,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IRetrieveSemanticF
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];

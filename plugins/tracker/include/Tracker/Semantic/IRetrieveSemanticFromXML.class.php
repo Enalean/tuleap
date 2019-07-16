@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tracker\Semantic;
+namespace Tuleap\Tracker\Semantic;
 
 use SimpleXMLElement;
 use Tracker;

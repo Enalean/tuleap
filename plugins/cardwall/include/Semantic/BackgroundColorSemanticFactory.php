@@ -20,7 +20,9 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-class BackgroundColorSemanticFactory
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+
+class BackgroundColorSemanticFactory implements IDuplicateSemantic
 {
     /**
      * @var BackgroundColorDao

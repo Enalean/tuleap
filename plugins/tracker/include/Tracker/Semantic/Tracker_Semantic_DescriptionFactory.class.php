@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tracker\Semantic\IDuplicateSemantic;
-use Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
 
 class Tracker_Semantic_DescriptionFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
 {
@@ -81,7 +81,7 @@ class Tracker_Semantic_DescriptionFactory implements IRetrieveSemanticFromXML, I
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];

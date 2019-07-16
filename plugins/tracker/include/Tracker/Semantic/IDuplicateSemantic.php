@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tracker\Semantic;
-
-use Tracker;
+namespace Tuleap\Tracker\Semantic;
 
 /**
  * Provides the retrieval and duplication of a Tracker_Semantic
@@ -36,5 +34,5 @@ interface IDuplicateSemantic
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping);
 }
