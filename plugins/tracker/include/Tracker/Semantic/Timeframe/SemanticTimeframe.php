@@ -107,6 +107,7 @@ class SemanticTimeframe extends Tracker_Semantic
         $presenter = $builder->build(
             $this->getCSRFSynchronizerToken(),
             $this->tracker,
+            $this->getUrl(),
             $this->start_date_field,
             $this->duration_field
         );
@@ -122,7 +123,27 @@ class SemanticTimeframe extends Tracker_Semantic
         Codendi_Request $request,
         PFUser $current_user
     ): void {
+        if ($request->exist('update-semantic-timeframe')) {
+            $this->getCSRFSynchronizerToken()->check();
+
+            $timeframe_updator = new SemanticTimeframeUpdator(
+                new SemanticTimeframeDao(),
+                \Tracker_FormElementFactory::instance()
+            );
+
+            $timeframe_updator->update($this->tracker, $request);
+
+            $this->redirectToSemanticTimeframeAdmin();
+
+            return;
+        }
+
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+    }
+
+    private function redirectToSemanticTimeframeAdmin()
+    {
+        $GLOBALS['Response']->redirect($this->getUrl());
     }
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
