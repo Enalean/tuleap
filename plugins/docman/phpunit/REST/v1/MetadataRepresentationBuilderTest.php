@@ -24,16 +24,19 @@ use Codendi_HTMLPurifier;
 use Docman_ListMetadata;
 use Docman_Metadata;
 use Docman_MetadataFactory;
+use Docman_MetadataListOfValuesElement;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\GlobalLanguageMock;
 use UserHelper;
 
 class MetadataRepresentationBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     public function testItBuildMetadataWithoutBasicProperties() : void
     {
@@ -52,12 +55,13 @@ class MetadataRepresentationBuilderTest extends TestCase
         $simple_metadata->shouldReceive('getLabel')->andReturn("simple_metadata_label");
         $simple_metadata->shouldReceive('getGroupId')->andReturn(102);
 
-        $value1 = Mockery::mock(\Docman_MetadataValueList::class);
+        $value1 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value1->shouldReceive('getId')->andReturn(1);
         $value1->shouldReceive('getName')->andReturn("My value 1");
-        $value2 = Mockery::mock(\Docman_MetadataValueList::class);
-        $value2->shouldReceive('getId')->andReturn(2);
-        $value2->shouldReceive('getName')->andReturn("My value 2");
+        $value2 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
+        $value2->shouldReceive('getId')->andReturn(100);
+        $value2->shouldReceive('getName')->andReturn("love_special_none_name_key");
+        $GLOBALS['Language']->shouldReceive('getText')->andReturn("None");
         $list_metadata   = Mockery::mock(Docman_ListMetadata::class);
         $list_metadata->shouldReceive('getValue')->andReturn(
             new \ArrayIterator([
@@ -101,7 +105,7 @@ class MetadataRepresentationBuilderTest extends TestCase
                 null,
                 [
                     new MetadataListValueRepresentation(1, "My value 1"),
-                    new MetadataListValueRepresentation(2, "My value 2")
+                    new MetadataListValueRepresentation(100, "None")
                 ],
                 true,
                 "list_metadata_label"
