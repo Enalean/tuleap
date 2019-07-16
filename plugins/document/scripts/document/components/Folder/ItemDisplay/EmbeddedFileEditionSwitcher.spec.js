@@ -57,26 +57,26 @@ describe("EmbeddedFileEditionSwitcher", () => {
     });
 
     it(`Should switch view to narrow when user click on narrow view`, () => {
-        store.state.currently_displayed_item = { id: 42, title: "my embedded document" };
+        store.state.currently_previewed_item = { id: 42, title: "my embedded document" };
         store.state.is_embedded_in_large_view = false;
         const wrapper = factory();
 
         wrapper.find("[data-test=view-switcher-narrow]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
             "displayEmbeddedInNarrowMode",
-            store.state.currently_displayed_item
+            store.state.currently_previewed_item
         );
     });
 
     it(`Should switch view to large when user click on large view`, () => {
-        store.state.currently_displayed_item = { id: 42, title: "my embedded document" };
+        store.state.currently_previewed_item = { id: 42, title: "my embedded document" };
         store.state.is_embedded_in_large_view = true;
         const wrapper = factory();
 
         wrapper.find("[data-test=view-switcher-large]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
             "displayEmbeddedInLargeMode",
-            store.state.currently_displayed_item
+            store.state.currently_previewed_item
         );
     });
 });

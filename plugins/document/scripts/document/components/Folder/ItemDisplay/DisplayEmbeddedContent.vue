@@ -20,15 +20,15 @@
 <template>
     <div class="embedded-document-container tlp-framed-vertically">
         <div class="document-header tlp-framed-horizontally">
-            <document-title-lock-info v-bind:item="embeddedFile"
+            <document-title-lock-info v-bind:item="currently_previewed_item"
                                       v-bind:is-displaying-in-header="true"
             />
 
-            <h1 class="document-header-title">{{ embeddedFile.title }}</h1>
+            <h1 class="document-header-title">{{ currently_previewed_item.title }}</h1>
 
-            <actions-header v-bind:item="embeddedFile"/>
+            <actions-header v-bind:item="currently_previewed_item"/>
 
-            <approval-table-badge v-bind:item="embeddedFile" v-bind:is-in-folder-content-row="false"/>
+            <approval-table-badge v-bind:item="currently_previewed_item" v-bind:is-in-folder-content-row="false"/>
 
             <embedded-file-edition-switcher
                 v-bind:is-in-large-view="is_embedded_in_large_view"
@@ -46,14 +46,20 @@
 
         <create-new-embedded-file-version-modal
             v-if="is_modal_shown"
-            v-bind:item="embeddedFile"
+            v-bind:item="currently_previewed_item"
             v-on:hidden="hideModal()"
         />
         <confirm-deletion-modal
             v-if="show_confirm_deletion_modal"
-            v-bind:item="embeddedFile"
+            v-bind:item="currently_previewed_item"
             v-on:delete-modal-closed="hideDeleteItemModal"
             v-bind:should-redirect-to-parent-after-deletion="true"
+        />
+
+        <update-metadata-modal
+            v-if="show_update_metadata_modal"
+            v-bind:item="currently_previewed_item"
+            v-on:update-metadata-modal-closed="hideUpdateMetadataModal"
         />
     </div>
 </template>
@@ -63,11 +69,13 @@ import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
+import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
 
 export default {
     name: "DisplayEmbeddedContent",
     components: {
+        UpdateMetadataModal,
         EmbeddedFileEditionSwitcher,
         ApprovalTableBadge,
         DocumentTitleLockInfo,
@@ -75,26 +83,26 @@ export default {
         "create-new-embedded-file-version-modal": () =>
             import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"),
         "confirm-deletion-modal": () =>
-            import(/* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue")
-    },
-    props: {
-        embeddedFile: Object
+            import(/* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue"),
+        "update-metadata-modal": () =>
+            import(/* webpackChunkName: "update-metadata-modal" */ "../ModalUpdateMetadata/UpdateMetadataModal.vue")
     },
     data() {
         return {
             is_modal_shown: false,
             show_confirm_deletion_modal: false,
+            show_update_metadata_modal: false,
             is_in_large_view: false
         };
     },
     computed: {
-        ...mapState(["is_embedded_in_large_view"]),
+        ...mapState(["is_embedded_in_large_view", "currently_previewed_item"]),
         embedded_content() {
-            if (!this.embeddedFile.embedded_file_properties) {
+            if (!this.currently_previewed_item.embedded_file_properties) {
                 return "";
             }
 
-            return this.embeddedFile.embedded_file_properties.content;
+            return this.currently_previewed_item.embedded_file_properties.content;
         }
     },
     mounted() {
@@ -105,6 +113,8 @@ export default {
 
         document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
 
+        document.addEventListener("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener(
                 "show-create-new-item-version-modal",
@@ -114,6 +124,11 @@ export default {
             document.removeEventListener(
                 "show-confirm-item-deletion-modal",
                 this.showDeleteItemModal
+            );
+
+            document.removeEventListener(
+                "show-update-item-metadata-modal",
+                this.showUpdateMetadataModal
             );
         });
     },
@@ -129,6 +144,12 @@ export default {
         },
         hideDeleteItemModal() {
             this.show_confirm_deletion_modal = false;
+        },
+        showUpdateMetadataModal() {
+            this.show_update_metadata_modal = true;
+        },
+        hideUpdateMetadataModal() {
+            this.show_update_metadata_modal = false;
         }
     }
 };

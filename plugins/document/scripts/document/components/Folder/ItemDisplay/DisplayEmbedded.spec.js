@@ -44,7 +44,7 @@ describe("DisplayEmbedded", () => {
 
     it(`Given user display an embedded file content
         When backend throw an error
-        Then no spinner is displayed and component is not rendered`, () => {
+        Then no spinner is displayed and component is not rendered`, async () => {
         const store_options = {
             state: {
                 error: {
@@ -60,13 +60,15 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
 
+        await wrapper.vm.$nextTick().then(() => {});
+
         expect(wrapper.find("[data-test=embedded_content]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=embedded_spinner]").exists()).toBeFalsy();
     });
 
     it(`Given user display an embedded file content
         When component is rendered
-        Backend load the embedded file content`, () => {
+        Backend load the embedded file content`, async () => {
         const store_options = {
             state: {
                 error: {}
@@ -79,6 +81,8 @@ describe("DisplayEmbedded", () => {
         store = createStoreMock(store_options);
 
         const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+
+        await wrapper.vm.$nextTick().then(() => {});
 
         spyOn(wrapper.vm, "loadDocumentWithAscendentHierarchy").and.returnValue({
             id: 10,

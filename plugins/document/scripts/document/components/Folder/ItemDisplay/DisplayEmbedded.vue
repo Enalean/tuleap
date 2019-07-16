@@ -19,7 +19,6 @@
 
 <template>
     <display-embedded-content
-        v-bind:embedded-file="embedded_file"
         v-if="has_loaded_without_error"
         data-test="embedded_content"
     />
@@ -46,13 +45,13 @@ export default {
             return !this.does_document_have_any_error && !this.is_loading;
         }
     },
-    async mounted() {
+    async beforeMount() {
         this.is_loading = true;
         this.embedded_file = await this.$store.dispatch(
             "loadDocumentWithAscendentHierarchy",
             parseInt(this.$route.params.item_id, 10)
         );
-        this.$store.commit("updateCurrentlyDisplayedItem", this.embedded_file);
+        this.$store.commit("updateCurrentlyPreviewedItem", this.embedded_file);
         const preference = await this.$store.dispatch(
             "getEmbeddedFileDisplayPreference",
             this.embedded_file
@@ -64,7 +63,7 @@ export default {
         this.is_loading = false;
     },
     destroyed() {
-        this.$store.commit("updateCurrentlyDisplayedItem", null);
+        this.$store.commit("updateCurrentlyPreviewedItem", null);
     },
     methods: {
         ...mapActions(["loadDocumentWithAscendentHierarchy"])

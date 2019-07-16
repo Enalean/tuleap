@@ -29,7 +29,6 @@ export {
     setCurrentFolder,
     removeIsUnderConstruction,
     updateCurrentlyPreviewedItem,
-    updateCurrentlyDisplayedItem,
     showPostDeletionNotification,
     hidePostDeletionNotification,
     shouldDisplayEmbeddedInLargeMode
@@ -128,10 +127,6 @@ function removeIsUnderConstruction(state) {
 
 function updateCurrentlyPreviewedItem(state, item) {
     state.currently_previewed_item = item;
-}
-
-function updateCurrentlyDisplayedItem(state, item) {
-    state.currently_displayed_item = item;
 }
 
 function showPostDeletionNotification(state) {
