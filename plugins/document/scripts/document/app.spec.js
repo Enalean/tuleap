@@ -86,8 +86,9 @@ import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 import "./components/Folder/Property/LockProperty.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
-import "./components/Folder/Metadata/GlobalMetadata.spec.js";
-import "./components/Folder/Metadata/OtherInformationMetadata.spec.js";
+import "./components/Folder/Metadata/StatusMetadataWithCustomBinding.spec.js";
+
+import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadata.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";

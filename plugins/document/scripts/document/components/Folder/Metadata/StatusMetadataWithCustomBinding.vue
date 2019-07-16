@@ -18,52 +18,28 @@
   -->
 
 <template>
-    <div class="document-metadata">
-        <div class="document-metadata-title-and-status-properties-container">
-            <title-metadata
-                v-model="currentlyUpdatedItem.title"
-                v-bind:currently-updated-item="currentlyUpdatedItem"
-                v-bind:parent="parent"
-                v-bind:is-in-update-context="isInUpdateContext"
-            />
-            <status-metadata v-model="status_value" v-if="is_status_metadata_displayed" data-test="document-status-metadata"/>
-        </div>
-        <description-metadata v-model="currentlyUpdatedItem.description"/>
-        <slot></slot>
-    </div>
+    <status-metadata v-model="status_value" v-if="is_item_status_metadata_used"/>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import TitleMetadata from "./TitleMetadata.vue";
-import StatusMetadata from "./StatusMetadata.vue";
-import DescriptionMetadata from "./DescriptionMetadata.vue";
 import {
     getStatusFromMapping,
     getStatusMetadata
 } from "../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { DOCMAN_ITEM_STATUS_NONE, TYPE_FOLDER } from "../../../constants.js";
+import { DOCMAN_ITEM_STATUS_NONE } from "../../../constants.js";
+import StatusMetadata from "./StatusMetadata.vue";
 
 export default {
-    name: "GlobalMetadata",
+    name: "StatusMetadataWithCustomBinding",
     components: {
-        DescriptionMetadata,
-        TitleMetadata,
         StatusMetadata
     },
     props: {
-        currentlyUpdatedItem: Object,
-        parent: Object,
-        isInUpdateContext: Boolean
+        currentlyUpdatedItem: Object
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
-        is_status_metadata_displayed() {
-            return (
-                this.is_item_status_metadata_used &&
-                (!this.isItemAFolder() || !this.isInUpdateContext)
-            );
-        },
         status_value: {
             get() {
                 const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
@@ -81,11 +57,6 @@ export default {
 
                 this.currentlyUpdatedItem.status = status_string;
             }
-        }
-    },
-    methods: {
-        isItemAFolder() {
-            return this.currentlyUpdatedItem.type === TYPE_FOLDER;
         }
     }
 };

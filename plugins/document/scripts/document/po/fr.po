@@ -58,6 +58,13 @@ msgstr "Administration"
 msgid "Advanced"
 msgstr "Avancé"
 
+msgid ""
+"All the properties values that you define here will be proposed as default "
+"values for the items that will be created within this folder."
+msgstr ""
+"Toutes les valeurs des propriétés que vous définirez ici seront proposées "
+"comme valeurs par défaut pour les éléments qui seront créés dans ce dossier."
+
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
@@ -120,6 +127,9 @@ msgstr "Couper / Copier / Coller des documents"
 
 msgid "Declined"
 msgstr "Décliné"
+
+msgid "Default properties"
+msgstr "Propriétés par défault"
 
 msgid "Delete"
 msgstr "Supprimer"

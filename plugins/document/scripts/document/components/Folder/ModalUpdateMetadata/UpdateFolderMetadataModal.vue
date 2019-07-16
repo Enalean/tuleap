@@ -23,9 +23,9 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <div class="tlp-modal-body document-item-modal-body">
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
-            <global-metadata v-bind:currently-updated-item="item_to_update"
-                             v-bind:parent="current_folder"
-                             v-bind:is-in-update-context="true"
+            <folder-global-metadata v-bind:currently-updated-item="item_to_update"
+                                    v-bind:parent="current_folder"
+                                    v-bind:is-in-update-context="true"
             />
         </div>
         <modal-footer v-bind:is-loading="is_loading"
@@ -41,15 +41,15 @@ import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
+import FolderGlobalMetadata from "../Metadata/FolderMetadata/FolderGlobalMetadata.vue";
 
 export default {
     name: "UpdateFolderMetadataModal",
     components: {
+        FolderGlobalMetadata,
         InfoAccessOldPropertiesPage,
-        GlobalMetadata,
         ModalFeedback,
         ModalHeader,
         ModalFooter
