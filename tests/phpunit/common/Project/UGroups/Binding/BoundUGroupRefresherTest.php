@@ -27,6 +27,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 
 final class BoundUGroupRefresherTest extends TestCase
 {
@@ -42,12 +44,22 @@ final class BoundUGroupRefresherTest extends TestCase
      * @var Mockery\MockInterface|\UGroupManager
      */
     private $ugroup_manager;
+    /**
+     * @var Mockery\MockInterface|MemberAdder
+     */
+    private $member_adder;
 
     protected function setUp(): void
     {
         $this->ugroup_user_dao = Mockery::mock(\UGroupUserDao::class);
         $this->ugroup_manager  = Mockery::mock(\UGroupManager::class);
-        $this->refresher       = new BoundUGroupRefresher($this->ugroup_manager, $this->ugroup_user_dao);
+        $this->member_adder    = Mockery::mock(MemberAdder::class);
+
+        $this->refresher = new BoundUGroupRefresher(
+            $this->ugroup_manager,
+            $this->ugroup_user_dao,
+            $this->member_adder
+        );
 
         $this->ugroup_manager->shouldReceive('isUpdateUsersAllowed')
             ->with(371)
@@ -69,7 +81,7 @@ final class BoundUGroupRefresherTest extends TestCase
             ->andReturn('Error message');
 
         $GLOBALS['Response']->shouldReceive('addFeedback')
-            ->with('warning', 'Error message')
+            ->with(\Feedback::WARN, 'Error message')
             ->once();
 
         $this->expectException(\Exception::class);
@@ -80,17 +92,54 @@ final class BoundUGroupRefresherTest extends TestCase
 
     public function testRefreshClearsAndDuplicatesUGroupMembers(): void
     {
-        $source      = Mockery::mock(\ProjectUGroup::class, ['getId' => 149]);
+        $source        = Mockery::mock(\ProjectUGroup::class);
+        $first_member  = Mockery::mock(\PFUser::class);
+        $second_member = Mockery::mock(\PFUser::class);
+        $source->shouldReceive('getMembers')
+            ->once()
+            ->andReturn([$first_member, $second_member]);
         $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
 
         $this->ugroup_user_dao->shouldReceive('resetUgroupUserList')
             ->with(371)
             ->once()
             ->andReturnTrue();
-        $this->ugroup_user_dao->shouldReceive('cloneUgroup')
-            ->with(149, 371)
+        $this->member_adder->shouldReceive('addMember')
+            ->with(Mockery::anyOf($first_member, $second_member), $destination);
+
+        $this->refresher->refresh($source, $destination);
+    }
+
+    public function testRefreshAddsFeedbackWhenRestrictedUserCouldNotBeAdded(): void
+    {
+        $source            = Mockery::mock(\ProjectUGroup::class);
+        $restricted_member = Mockery::mock(\PFUser::class, ['getId' => 200]);
+        $normal_member     = Mockery::mock(\PFUser::class);
+        $source->shouldReceive('getMembers')
+            ->once()
+            ->andReturn([$restricted_member, $normal_member]);
+        $destination = Mockery::mock(\ProjectUGroup::class, ['getId' => 371]);
+        $destination->shouldReceive('getTranslatedName')
+            ->once()
+            ->andReturn('developpers');
+
+        $this->ugroup_user_dao->shouldReceive('resetUgroupUserList')
+            ->with(371)
             ->once()
             ->andReturnTrue();
+        $project = Mockery::mock(\Project::class, ['getID' => 101]);
+        $this->member_adder->shouldReceive('addMember')
+            ->with($restricted_member, $destination)
+            ->once()
+            ->andThrow(
+                new CannotAddRestrictedUserToProjectNotAllowingRestricted($restricted_member, $project)
+            );
+        $this->member_adder->shouldReceive('addMember')
+            ->with($normal_member, $destination)
+            ->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')
+            ->with(\Feedback::ERROR, Mockery::any())
+            ->once();
 
         $this->refresher->refresh($source, $destination);
     }

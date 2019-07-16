@@ -24,21 +24,10 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
 class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMemberAdder
 {
-    /**
-     * @var \UGroupBinding
-     */
-    private $ugroup_binding;
-
-    public function __construct(\UGroupBinding $ugroup_binding)
-    {
-        $this->ugroup_binding = $ugroup_binding;
-    }
-
     public function addProjectMember(\PFUser $user, \Project $project): void
     {
         /** @psalm-suppress MissingFile */
         require_once __DIR__ . '/../../../../../www/include/account.php';
         \account_add_user_obj_to_group($project->getID(), $user, false, false);
-        $this->ugroup_binding->reloadUgroupBindingInProject($project);
     }
 }

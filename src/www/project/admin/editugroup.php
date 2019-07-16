@@ -65,7 +65,7 @@ $binding_controller                       = new BindingController(
     $edit_event_launcher
 );
 $user_manager                             = UserManager::instance();
-$project_member_adder                     = new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding);
+$project_member_adder                     = new ProjectMemberAdderWithStatusCheckAndNotifications();
 $dynamic_member_updater                   = new DynamicUGroupMembersUpdater(
     new UserPermissionsDao(),
     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
