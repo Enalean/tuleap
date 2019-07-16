@@ -78,7 +78,7 @@ class cardwallPlugin extends Plugin
             $this->addHook(AllowedFieldTypeChangesRetriever::NAME);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
-            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
@@ -312,16 +312,17 @@ class cardwallPlugin extends Plugin
         $type        = $params['type'];
 
         if ($type == Cardwall_Semantic_CardFields::NAME) {
-            $params['semantic'] = Cardwall_Semantic_CardFieldsFactory::instance()->getInstanceFromXML($xml, $xml_mapping, $tracker);
+            $params['semantic'] = (new Cardwall_Semantic_CardFieldsFactory())->getInstanceFromXML($xml, $xml_mapping, $tracker);
         }
     }
 
     /**
-     * @see TRACKER_EVENT_GET_SEMANTIC_FACTORIES
+     * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
-    public function tracker_event_get_semantic_factories($params) {
-        $params['factories'][] = Cardwall_Semantic_CardFieldsFactory::instance();
-        $params['factories'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
+    public function trackerEventGetSemanticDuplicators($params)
+    {
+        $params['duplicators'][] = new Tracker_Semantic_CollectionOfFieldsDuplicator(new Cardwall_Semantic_Dao_CardFieldsDao());
+        $params['duplicators'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
     }
 
     private function isAgileDashboardOrTrackerUrl() {

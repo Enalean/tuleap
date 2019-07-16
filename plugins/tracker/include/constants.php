@@ -143,12 +143,12 @@ define('TRACKER_EVENT_SEMANTIC_FROM_XML', 'tracker_event_semantic_from_xml');
 define('TRACKER_EVENT_GET_SEMANTICS_NAMES', 'tracker_event_get_semantics_names');
 
 /**
- * Get the various factories that can retrieve semantics
+ * Get the various duplicators that can duplicate semantics
  *
  * Parameters:
- *  'factories' => All semantic factories
+ *  'duplicators' => \Tuleap\Tracker\Semantic\IDuplicateSemantic[]
  */
-define('TRACKER_EVENT_GET_SEMANTIC_FACTORIES', 'tracker_event_get_semantic_factories');
+define('TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS', 'tracker_event_get_semantic_duplicators');
 
 /**
  * Get the various criteria that may enhance a report

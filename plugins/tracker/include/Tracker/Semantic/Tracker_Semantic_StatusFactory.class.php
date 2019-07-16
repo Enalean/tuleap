@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tracker\Semantic\IDuplicateSemantic;
-use Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
 
 class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
 {
@@ -27,7 +27,7 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
      * Hold an instance of the class
      */
     protected static $instance;
-    
+
     /**
      * The singleton method
      *
@@ -40,18 +40,18 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
         }
         return self::$instance;
     }
-    
+
     public function getByTracker(Tracker $tracker) {
         return Tracker_Semantic_Status::load($tracker);
     }
-    
+
     /**
      * Creates a Tracker_Semantic_Status Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic status
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the semantic is attached
-     * 
+     *
      * @return Tracker_Semantic_Status The semantic object
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
@@ -67,7 +67,7 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
         }
         return new Tracker_Semantic_Status($tracker, $field, $open_values);
     }
-    
+
     /**
      * Return the Dao
      *
@@ -76,7 +76,7 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
     public function getDao() {
         return new Tracker_Semantic_StatusDao();
     }
-    
+
     /**
      * Duplicate the semantic from tracker source to tracker target
      *
@@ -86,7 +86,7 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
         $dar = $this->getDao()->searchByTrackerId($from_tracker_id);
         $from_status_field_id = null;
         $from_open_value_ids = array();
@@ -99,17 +99,17 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
             }
             $from_open_value_ids[] = $row['open_value_id'];
         }
-        
+
         // walk the mapping array to get the corresponding status values for tracker TARGET
         $to_status_field_id = false;
         $to_open_value_ids = array();
         foreach ($field_mapping as $mapping) {
             if ($mapping['from'] == $from_status_field_id) {
                 // $mapping is the mapping for the status field
-                
+
                 // get the field id for status field target
                 $to_status_field_id = $mapping['to'];
-                
+
                 $mapping_values = $mapping['values'];
                 // get the value ids for status open values target
                 foreach ($from_open_value_ids as $from_open_value_id) {
@@ -119,11 +119,11 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
                 }
             }
         }
-        
+
         if ($to_status_field_id) {
             $this->getDao()->save($to_tracker_id, $to_status_field_id, $to_open_value_ids);
         }
-        
+
     }
 
 }

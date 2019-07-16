@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tracker\Semantic\IDuplicateSemantic;
-use Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
 
 class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
 {
@@ -27,7 +27,7 @@ class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplic
      * Hold an instance of the class
      */
     protected static $instance;
-    
+
     /**
      * The singleton method
      *
@@ -40,18 +40,18 @@ class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplic
         }
         return self::$instance;
     }
-    
+
     public function getByTracker(Tracker $tracker) {
         return Tracker_Semantic_Title::load($tracker);
     }
-    
+
     /**
      * Creates a Tracker_Semantic_Title Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic title
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the semantic is attached
-     * 
+     *
      * @return Tracker_Semantic_Title The semantic object
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
@@ -60,7 +60,7 @@ class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplic
         $field = $xmlMapping[(string)$xml_field_attributes['REF']];
         return new Tracker_Semantic_Title($tracker, $field);
     }
-    
+
     /**
      * Return the Dao
      *
@@ -69,7 +69,7 @@ class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplic
     public function getDao() {
         return new Tracker_Semantic_TitleDao();
     }
-    
+
     /**
      * Duplicate the semantic from tracker source to tracker target
      *
@@ -79,7 +79,7 @@ class Tracker_Semantic_TitleFactory implements IRetrieveSemanticFromXML, IDuplic
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping) {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();
         if ($row) {
             $from_title_field_id = $row['field_id'];

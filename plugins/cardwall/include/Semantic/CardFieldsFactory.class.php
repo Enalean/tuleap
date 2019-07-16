@@ -21,37 +21,11 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-use Tracker\Semantic\IDuplicateSemantic;
-use Tracker\Semantic\IRetrieveSemanticFromXML;
 use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
 
-class Cardwall_Semantic_CardFieldsFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic {
-
-    /**
-     * Hold an instance of the class
-     */
-    protected static $instance;
-
-    /**
-     * The singleton method
-     *
-     * @return Cardwall_Semantic_CardFieldsFactory an instance of the factory
-     */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $class_name = self::class;
-            self::$instance = new $class_name;
-        }
-        return self::$instance;
-    }
-
-    /**
-     * @return Cardwall_Semantic_CardFields
-     */
-    public function getByTracker(Tracker $tracker) {
-        return Cardwall_Semantic_CardFields::load($tracker);
-    }
-
+class Cardwall_Semantic_CardFieldsFactory implements IRetrieveSemanticFromXML
+{
     /**
      * Creates a Cardwall_Semantic_CardFields Object
      *
@@ -72,28 +46,5 @@ class Cardwall_Semantic_CardFieldsFactory implements IRetrieveSemanticFromXML, I
         $semantic->setBackgroundColorField($background_color);
 
         return $semantic;
-    }
-
-    /**
-     * Return the Dao
-     *
-     * @return Cardwall_Semantic_Dao_CardFieldsDao The dao
-     */
-    public function getDao() {
-        return new Cardwall_Semantic_Dao_CardFieldsDao();
-    }
-
-    /**
-     * Duplicate the semantic from tracker source to tracker target
-     *
-     * @param int   $from_tracker_id The Id of the tracker source
-     * @param int   $to_tracker_id   The Id of the tracker target
-     * @param array $field_mapping   The mapping of the fields of the tracker
-     *
-     * @return void
-     */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-        $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
-        $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 }

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
 class SemanticTimeframeDuplicator implements IDuplicateSemantic
 {
@@ -45,7 +45,7 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
+    public function duplicate($from_tracker_id, $to_tracker_id, array $field_mapping)
     {
         $row = $this->dao->searchByTrackerId((int) $from_tracker_id);
         if ($row === null) {
