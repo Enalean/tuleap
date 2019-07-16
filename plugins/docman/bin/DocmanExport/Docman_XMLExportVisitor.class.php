@@ -1,32 +1,34 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-  //require_once('Docman_iItemVisitor.class.php');
+use Tuleap\Docman\Item\ItemVisitor;
 
 /**
- *  Sometime we need createTextNode to properly escape the value
+ * @template-implements ItemVisitor<DOMElement>
  */
-class Docman_XMLExportVisitor {
+class Docman_XMLExportVisitor implements ItemVisitor
+{
     protected $doc;
     protected $statistics;
     protected $userCache;
@@ -55,7 +57,8 @@ class Docman_XMLExportVisitor {
         $this->dataPath = $path;
     }
 
-    public function visitItem(Docman_Item $item) {
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
         $type = str_replace('docman_','', strtolower(get_class($item)));
         $node = $this->doc->createElement('item');
         
@@ -127,7 +130,8 @@ class Docman_XMLExportVisitor {
         }
     }
     
-    public function visitFolder(Docman_Folder $item) {
+    public function visitFolder(Docman_Folder $item, array $params = [])
+    {
         $this->statistics['nb_folder']++;
         $n = $this->visitItem($item);
         $items = $item->getAllItems();
@@ -142,25 +146,29 @@ class Docman_XMLExportVisitor {
         return $n;
     }
     
-    public function visitDocument(Docman_Document $item) {
+    public function visitDocument(Docman_Document $item, array $params = [])
+    {
         return $this->visitItem($item);
     }
     
-    public function visitWiki(Docman_Wiki $item) {
+    public function visitWiki(Docman_Wiki $item, array $params = [])
+    {
         $this->statistics['nb_wiki']++;
         $node = $this->visitDocument($item);
         $this->appendChild($node, 'pagename', $item->getPagename());
         return $node;
     }
     
-    public function visitLink(Docman_Link $item) {
+    public function visitLink(Docman_Link $item, array $params = [])
+    {
         $this->statistics['nb_link']++;
         $node = $this->visitDocument($item);
         $this->appendChild($node, 'url', $item->getUrl());
         return $node;
     }
     
-    public function visitFile(Docman_File $item) {
+    public function visitFile(Docman_File $item, array $params = [])
+    {
         $this->statistics['nb_file']++;
         $n = $this->visitDocument($item);
 
@@ -178,12 +186,14 @@ class Docman_XMLExportVisitor {
         return $n;
     }
     
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
+    {
         $this->statistics['nb_embedded']++;
         return $this->visitFile($item);
     }
     
-    public function visitEmpty(Docman_Empty $item) {
+    public function visitEmpty(Docman_Empty $item, array $params = [])
+    {
         $this->statistics['nb_empty']++;
         return $this->visitDocument($item);
     }
@@ -258,5 +268,3 @@ class Docman_XMLExportVisitor {
         var_dump($this->statistics);
     }
 }
-
-?>

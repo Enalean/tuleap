@@ -1,33 +1,59 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_GetShowViewVisitor
-*/
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
+use Tuleap\Docman\Item\ItemVisitor;
 
-class Docman_View_GetShowViewVisitor /* implements Visitor*/ {
-    
-    function visitFolder(&$item, $params = array()) {
-        return Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
+/**
+ * @template-implements ItemVisitor<string>
+ */
+class Docman_View_GetShowViewVisitor implements ItemVisitor
+{
+    public function visitFolder(Docman_Folder $item, $params = array())
+    {
+        return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
     }
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array())
+    {
         return 'Redirect';
     }
-    function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return 'Redirect';
     }
-    function visitFile(&$item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         return 'Download';
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return 'Embedded';
     }
     
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return 'Empty';
     }
+
+    public function visitItem(Docman_Item $item, $params = [])
+    {
+        return '';
+    }
 }
-?>
