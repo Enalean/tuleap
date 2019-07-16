@@ -20,7 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 
 class Tracker_SemanticFactory {
 
@@ -178,12 +179,17 @@ class Tracker_SemanticFactory {
 
     /** @return \Tracker\Semantic\IDuplicateSemantic[] */
     private function getDuplicators() {
+        $timeframe_duplicator = new SemanticTimeframeDuplicator(
+            new SemanticTimeframeDao()
+        );
+
         $factories = array(
             $this->getSemanticTitleFactory(),
             $this->getSemanticDescriptionFactory(),
             $this->getSemanticStatusFactory(),
             $this->getSemanticContributorFactory(),
-            $this->getSemanticTooltipFactory()
+            $this->getSemanticTooltipFactory(),
+            $timeframe_duplicator
         );
 
         EventManager::instance()->processEvent(
