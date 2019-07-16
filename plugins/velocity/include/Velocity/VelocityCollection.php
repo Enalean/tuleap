@@ -20,6 +20,7 @@
 
 namespace Tuleap\Velocity;
 
+use Tracker;
 use Tracker_Artifact;
 
 class VelocityCollection
@@ -33,6 +34,11 @@ class VelocityCollection
      * @var VelocityRepresentation[]
      */
     private $velocity_representations = [];
+
+    /**
+     * @var Tracker[]
+     */
+    private $invalid_trackers = [];
 
     /**
      * @return VelocityRepresentation[]
@@ -71,5 +77,23 @@ class VelocityCollection
     public function addInvalidArtifact(InvalidArtifactRepresentation $invalid_artifact)
     {
         $this->invalid_artifacts[] = $invalid_artifact;
+    }
+
+    public function addInvalidTracker(Tracker $tracker)
+    {
+        if (! in_array($tracker, $this->invalid_trackers)) {
+            $this->invalid_trackers[] = $tracker;
+        }
+    }
+
+    public function getInvalidTrackersNames(): array
+    {
+        $tracker_names = [];
+
+        foreach ($this->invalid_trackers as $invalid_tracker) {
+            $tracker_names[] = $invalid_tracker->getName();
+        }
+
+        return $tracker_names;
     }
 }

@@ -1,10 +1,17 @@
-{{# has_backlog_items_with_computed_velocity }}
+{{# should_display_velocity_pane }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">{{# dgettext }} tuleap-velocity | Velocity{{/ dgettext }}</h1>
             </div>
             <section class="tlp-pane-section">
+                {{^ is_timeframe_semantic_configured }}
+                    {{# invalid_trackers_names }}
+                        <div class="tlp-alert-warning">
+                            {{# dgettext }} tuleap-velocity | Tracker %s does not have a configured Timeframe semantic | {{ . }} {{/ dgettext }}
+                        </div>
+                    {{/invalid_trackers_names}}
+                {{/ is_timeframe_semantic_configured }}
                 {{# has_more_than_max_velocities_limit }}
                     <div class="tlp-alert-info">
                         {{# dgettext }} tuleap-velocity | The velocity chart only displays the last 7 artifacts found.{{/ dgettext }}
@@ -24,10 +31,12 @@
                             {{/ invalid_artifacts }}
                         </p>
                 {{/ has_invalid_artifacts }}
-                <div id="velocity-chart"
-                     data-sprints="{{ backlog_items_representation }}"
-                ></div>
+                {{# has_backlog_items_with_computed_velocity }}
+                    <div id="velocity-chart"
+                         data-sprints="{{ backlog_items_representation }}"
+                    ></div>
+                {{/ has_backlog_items_with_computed_velocity }}
             </section>
         </div>
     </section>
-{{/ has_backlog_items_with_computed_velocity }}
+{{/ should_display_velocity_pane }}

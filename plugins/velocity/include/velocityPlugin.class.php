@@ -260,6 +260,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 new SemanticDoneDao(),
                 new SemanticDoneValueChecker()
             ),
+            $this->getSemanticTimeframeBuilder($form_element_factory),
             new Planning_MilestoneFactory(
                 PlanningFactory::build(),
                 Tracker_ArtifactFactory::instance(),
@@ -278,10 +279,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 ),
                 new TimeframeBuilder(
                     $form_element_factory,
-                    new SemanticTimeframeBuilder(
-                        new SemanticTimeframeDao(),
-                        $form_element_factory
-                    )
+                    $this->getSemanticTimeframeBuilder($form_element_factory)
                 )
             )
         );
@@ -296,5 +294,13 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $string_representation = $renderer->renderToString("chart-field", $presenter);
 
         $event->addEscapedChart($string_representation);
+    }
+
+    private function getSemanticTimeframeBuilder(Tracker_FormElementFactory $form_element_factory) : SemanticTimeframeBuilder
+    {
+        return new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            $form_element_factory
+        );
     }
 }

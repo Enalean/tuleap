@@ -49,6 +49,21 @@ class VelocityChartPresenter
      */
     public $has_more_than_max_velocities_limit;
 
+    /**
+     * @var bool
+     */
+    public $is_timeframe_semantic_configured;
+
+    /**
+     * @var array
+     */
+    public $invalid_trackers_names;
+
+    /**
+     * @var bool
+     */
+    public $should_display_velocity_pane;
+
     public function __construct(VelocityCollection $backlog_items_representation)
     {
         $this->backlog_items_representation             = json_encode($backlog_items_representation->getVelocityRepresentations());
@@ -57,5 +72,8 @@ class VelocityChartPresenter
         $this->invalid_artifacts                        = $backlog_items_representation->getInvalidArtifacts();
         $this->has_invalid_artifacts                    = count($this->invalid_artifacts) > 0;
         $this->nb_invalid_artifacts                     = count($this->invalid_artifacts);
+        $this->invalid_trackers_names                   = $backlog_items_representation->getInvalidTrackersNames();
+        $this->is_timeframe_semantic_configured         = count($this->invalid_trackers_names) === 0;
+        $this->should_display_velocity_pane             = $this->has_backlog_items_with_computed_velocity || ! $this->is_timeframe_semantic_configured;
     }
 }
