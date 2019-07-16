@@ -108,8 +108,8 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_ADMIN)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturns($project_ugroup_dynamic);
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns(array(
             $project_ugroup_members,
             $project_ugroup_members2,
@@ -175,8 +175,8 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_ADMIN)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
 
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 
@@ -233,7 +233,8 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->project->shouldReceive('getAccess')->andReturns('public');
         $project_ugroup_dynamic = M::spy(ProjectUGroup::class, [ 'getNormalizedName' => 'ugroup_dynamic' ]);
         $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns(array());
-        $this->ugroup_manager->shouldReceive('getUGroup')->andReturns($project_ugroup_dynamic);
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns(array());
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);

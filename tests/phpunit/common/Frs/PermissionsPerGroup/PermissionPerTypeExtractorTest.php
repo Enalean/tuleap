@@ -134,13 +134,10 @@ class PermissionPerTypeExtractorTest extends TestCase
                 )
             )
         );
+        $this->ugroup_manager->method('getProjectAdminsUGroup')->willReturn($this->ugroup_project_admin);
         $this->ugroup_manager->method('getUGroup')->withConsecutive(
-            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
-            [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_ADMIN],
             [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
         )->willReturnOnConsecutiveCalls(
-            $this->ugroup_project_admin,
-            $this->ugroup_project_admin,
             $this->ugroup_project_member
         );
 

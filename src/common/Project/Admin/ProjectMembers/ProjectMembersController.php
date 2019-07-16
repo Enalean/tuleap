@@ -38,6 +38,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\MinimalUGroupPresenter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
@@ -295,34 +296,26 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
         if ($member['admin_flags'] === UserPermissionsDao::PROJECT_ADMIN_FLAG) {
             $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN)
+                $this->ugroup_manager->getProjectAdminsUGroup($project)
             );
         }
 
         if ($member['wiki_flags'] === UserPermissionsDao::WIKI_ADMIN_FLAG && $project->usesWiki()) {
-            $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN)
-            );
+            $this->appendUgroups($ugroups, $project, ProjectUGroup::WIKI_ADMIN);
         }
 
         if ($member['forum_flags'] === UserPermissionsDao::FORUM_ADMIN_FLAG && $project->usesForum()) {
-            $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN)
-            );
+            $this->appendUgroups($ugroups, $project, ProjectUGroup::FORUM_ADMIN);
         }
 
         if (in_array($member['news_flags'], array(UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG))
             && $project->usesNews()
         ) {
-            $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER)
-            );
+            $this->appendUgroups($ugroups, $project, ProjectUGroup::NEWS_WRITER);
         }
 
         if ($member['news_flags'] === UserPermissionsDao::NEWS_ADMIN_FLAG && $project->usesNews()) {
-            $ugroups[] = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN)
-            );
+            $this->appendUgroups($ugroups, $project, ProjectUGroup::NEWS_ADMIN);
         }
 
         if (! $member['ugroups_ids']) {
@@ -337,17 +330,27 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         return $ugroups;
     }
 
+    private function appendUgroups(array &$ugroups, Project $project, int $ugroup_id): void
+    {
+        $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        if ($ugroup) {
+            $ugroups[] = new MinimalUGroupPresenter($ugroup);
+        }
+    }
+
     /**
      * @return MinimalUGroupPresenter
      */
     private function getMinimalUGroupPresenter(Project $project, $ugroup_id)
     {
         if (! isset($this->ugroup_presenters[$ugroup_id])) {
-            $ugroup_presenter = new MinimalUGroupPresenter(
-                $this->ugroup_manager->getUGroup($project, $ugroup_id)
+            $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+            if (! $ugroup) {
+                throw new InvalidUGroupException($ugroup_id);
+            }
+            $this->ugroup_presenters[$ugroup_id] = new MinimalUGroupPresenter(
+                $ugroup
             );
-
-            $this->ugroup_presenters[$ugroup_id] = $ugroup_presenter;
         }
 
         return $this->ugroup_presenters[$ugroup_id];

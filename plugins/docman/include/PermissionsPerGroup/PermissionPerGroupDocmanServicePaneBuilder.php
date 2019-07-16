@@ -106,7 +106,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
 
     private function addProjectAdministrators(Project $project, DocmanGlobalAdminPermissionCollection $permissions)
     {
-        $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+        $user_group = $this->ugroup_manager->getProjectAdminsUGroup($project);
         $permissions->addPermission(
             ProjectUGroup::PROJECT_ADMIN,
             $this->formatter->formatGroup($user_group)

@@ -87,11 +87,11 @@ class ProjectXMLExporter
         }
 
         $this->logger->debug('Exporting project_admins ugroup');
-        $project_admins_ugroup = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+        $project_admins_ugroup = $this->ugroup_manager->getProjectAdminsUGroup($project);
         $this->exportProjectUgroup($ugroups_node, $project_admins_ugroup);
 
         $this->logger->debug('Exporting project_admins ugroup');
-        $project_members_ugroup = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_MEMBERS);
+        $project_members_ugroup = $this->ugroup_manager->getProjectMembersUGroup($project);
         $this->exportProjectUgroup($ugroups_node, $project_members_ugroup);
 
         $this->logger->debug("Exporting project's static ugroups");

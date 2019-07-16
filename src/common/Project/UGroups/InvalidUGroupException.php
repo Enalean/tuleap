@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\SVN\PermissionsPerGroup;
+declare(strict_types=1);
 
-class PermissionPerGroupSVNGlobalAdminPermissionCollection
+namespace Tuleap\Project\UGroups;
+
+class InvalidUGroupException extends \Exception
 {
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    public function __construct()
+    public function __construct($ugroup_id)
     {
-        $this->permissions = array();
-    }
-
-    /**
-     * @return array
-     */
-    public function getPermissions()
-    {
-        $unique_permissions = array_values($this->permissions);
-
-        return $unique_permissions;
-    }
-
-    /**
-     * @param array $permission
-     */
-    public function addPermission($id, array $permission)
-    {
-        $this->permissions[$id] = $permission;
+        parent::__construct('This ugroup id is invalid: '.$ugroup_id);
     }
 }

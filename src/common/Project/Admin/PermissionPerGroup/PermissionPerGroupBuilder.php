@@ -102,33 +102,33 @@ class PermissionPerGroupBuilder
         );
     }
 
+    private function appendToUGroups(array &$ugroups, Project $project, int $ugroup_id): void
+    {
+        $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        if ($ugroup) {
+            $ugroups[] = $this->getUGroupEntry($ugroup);
+        }
+    }
+
     private function addWiki(Project $project, array &$ugroups)
     {
         if ($project->usesWiki()) {
-            $ugroups[] = $this->getUGroupEntry(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::WIKI_ADMIN)
-            );
+            $this->appendToUGroups($ugroups, $project, ProjectUGroup::WIKI_ADMIN);
         }
     }
 
     private function addForum(Project $project, array &$ugroups)
     {
         if ($project->usesForum()) {
-            $ugroups[] = $this->getUGroupEntry(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::FORUM_ADMIN)
-            );
+            $this->appendToUGroups($ugroups, $project, ProjectUGroup::FORUM_ADMIN);
         }
     }
 
     private function addNews(Project $project, array &$ugroups)
     {
         if ($project->usesNews()) {
-            $ugroups[] = $this->getUGroupEntry(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_WRITER)
-            );
-            $ugroups[] = $this->getUGroupEntry(
-                $this->ugroup_manager->getUGroup($project, ProjectUGroup::NEWS_ADMIN)
-            );
+            $this->appendToUGroups($ugroups, $project, ProjectUGroup::NEWS_WRITER);
+            $this->appendToUGroups($ugroups, $project, ProjectUGroup::NEWS_ADMIN);
         }
     }
 

@@ -81,7 +81,7 @@ class ProjectCreationTemplatePresenter {
      */
     public function getAdminUserNames() {
         $ugroup_manager = new UGroupManager();
-        $admin_ugroup   = $ugroup_manager->getUGroup($this->project, ProjectUGroup::PROJECT_ADMIN);
+        $admin_ugroup   = $ugroup_manager->getProjectAdminsUGroup($this->project);
         $user_helper    = UserHelper::instance();
         $users          = array();
         foreach ($admin_ugroup->getMembers() as $user) {

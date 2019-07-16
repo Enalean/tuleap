@@ -109,8 +109,8 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
             ]
         );
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_ADMIN)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
 
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 
@@ -147,8 +147,8 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
             ]
         );
 
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_ADMIN)->andReturns($project_ugroup_project_admins);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturns($project_ugroup_project_members);
+        $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_project_admins);
+        $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_project_members);
 
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -48,9 +48,11 @@ class Tracker_UgroupPermissionsGoldenRetriever {
         $project = $template_tracker->getProject();
         $ugroups = array();
         foreach ($this->permissions_dao->getAuthorizedStaticUgroupIds($template_tracker->getId()) as $id) {
-            $ugroups[] = $this->ugroup_manager->getUGroup($project, $id);
+            $ugroup = $this->ugroup_manager->getUGroup($project, $id);
+            if ($ugroup) {
+                $ugroups[] = $ugroup;
+            }
         }
         return $ugroups;
     }
 }
-?>

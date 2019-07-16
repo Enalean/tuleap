@@ -141,7 +141,7 @@ class PermissionPerTypeExtractor
         FrsGlobalAdminPermissionCollection $permission
     ) {
         if ($type === FRSPermission::FRS_ADMIN) {
-            $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+            $user_group = $this->ugroup_manager->getProjectAdminsUGroup($project);
             $permission->addPermission(
                 ProjectUGroup::PROJECT_ADMIN,
                 $this->formatter->formatGroup($user_group)
