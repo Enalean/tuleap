@@ -34,8 +34,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
@@ -44,7 +42,7 @@ use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
@@ -374,7 +372,7 @@ class DocmanFilesResource extends AuthenticatedResource
 
         $this->addAllEvent($project);
 
-        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator = MetadataUpdatorBuilder::build($project, $this->event_manager);
         $updator->updateDocumentMetadata(
             $representation,
             $item,
@@ -435,34 +433,6 @@ class DocmanFilesResource extends AuthenticatedResource
             $current_user,
             $item,
             new DoesItemHasExpectedTypeVisitor(Docman_File::class)
-        );
-    }
-
-    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
-    {
-        $user_manager = \UserManager::instance();
-        return new MetadataUpdator(
-            new \Docman_ItemFactory(),
-            $this->getItemStatusMapper($project),
-            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
-            $user_manager,
-            new OwnerRetriever($user_manager),
-            new MetadataEventProcessor($this->event_manager)
-        );
-    }
-
-    private function getItemStatusMapper(\Project $project): ItemStatusMapper
-    {
-        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
-    }
-
-    private function getHardcodedMetadataObsolescenceDateRetriever(
-        \Project $project
-    ): HardcodedMetadataObsolescenceDateRetriever {
-        return new HardcodedMetadataObsolescenceDateRetriever(
-            new HardcodedMetdataObsolescenceDateChecker(
-                new Docman_SettingsBo($project->getID())
-            )
         );
     }
 

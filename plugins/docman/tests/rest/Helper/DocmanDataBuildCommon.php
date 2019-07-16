@@ -32,7 +32,6 @@ use Tuleap\Docman\Test\rest\DocmanDatabaseInitialization;
 class DocmanDataBuildCommon extends REST_TestDataBuilder
 {
     public const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
-    public const REGULAR_USER_ID          = 102;
 
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 
@@ -167,10 +166,17 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         return $version_factory->create($version);
     }
 
+    /**
+     * @return \Project
+     */
+    public function getProject(): \Project
+    {
+        return $this->project;
+    }
+
     private function addLinkVersion(int $item_id): int
     {
-        $docman_factory = new Docman_ItemFactory();
-        $docman_link    = $docman_factory->getItemFromDb($item_id);
+        $docman_link    = $this->docman_item_factory->getItemFromDb($item_id);
         $docman_link->setUrl('https://my.example.test');
         $version_link_factory = new \Docman_LinkVersionFactory();
         $version_link_factory->create($docman_link, 'changset1', 'test rest Change', time());

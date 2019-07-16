@@ -29,8 +29,8 @@ use Docman_File;
 use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
-use Docman_LinkVersionFactory;
 use Docman_Link;
+use Docman_LinkVersionFactory;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use DocmanPlugin;
@@ -52,6 +52,9 @@ use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -127,9 +130,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $id);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
@@ -199,9 +200,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
@@ -276,9 +275,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $id);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
@@ -353,9 +350,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $id);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
@@ -424,9 +419,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $id);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
         assert($docman_plugin instanceof DocmanPlugin);
@@ -511,9 +504,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $id);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         $representation_for_copy_validation = new DocmanValidateRepresentationForCopy();
 
@@ -580,9 +571,7 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $item_to_delete->accept($validator_visitor);
 
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
+        $this->addAllEvent($project);
 
         if ($item_to_delete->getParentId() === 0) {
             throw new i18NRestException(400, dgettext("tuleap-docman", "You cannot delete the root folder."));
@@ -603,6 +592,78 @@ class DocmanFoldersResource extends AuthenticatedResource
     private function setHeaders()
     {
         Header::allowOptionsPostDelete();
+    }
+
+    /**
+     * @url OPTIONS {id}/metadata
+     */
+    public function optionsMetadata(int $id): void
+    {
+        $this->setMetadataHeaders();
+    }
+
+    private function setMetadataHeaders()
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Update the folder metadata and apply this changes to its children
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * <pre>
+     * recursion possible options are<br>
+     * Possible values:<br>
+     *  * none: changes only concerns folder<br>
+     *  * folders: changes will apply only on children of type folder<br>
+     *  * all_items: changes will apply for every single children regardless of its type<br>
+     * </pre>
+     *
+     *
+     * @url    PUT {id}/metadata
+     * @access hybrid
+     *
+     * @param int                       $id             Id of the folder
+     * @param PUTMetadataFolderRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws RestException 404
+     */
+    public function putMetadata(
+        int $id,
+        PUTMetadataFolderRepresentation $representation
+    ): void {
+        $this->checkAccess();
+        $this->setMetadataHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $project = $item_request->getProject();
+
+        $validator = $this->getValidator($project, $current_user, $item);
+        $item->accept($validator, []);
+
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $id);
+
+        $this->addAllEvent($project);
+
+        $updator = MetadataUpdatorBuilder::build($project, $this->event_manager);
+        $updator->updateFolderMetadata(
+            $representation,
+            $item,
+            $project,
+            $current_user
+        );
     }
 
     /**
@@ -664,5 +725,15 @@ class DocmanFoldersResource extends AuthenticatedResource
             new Docman_LinkVersionFactory(),
             $docman_plugin_info->getPropertyValueForName('docman_root')
         );
+    }
+
+    /**
+     * @param \Project $project
+     */
+    private function addAllEvent(\Project $project): void
+    {
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
     }
 }

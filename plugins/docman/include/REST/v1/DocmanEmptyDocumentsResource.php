@@ -22,24 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
-use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -244,7 +237,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
         $this->addAllEvent($project);
 
-        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator = MetadataUpdatorBuilder::build($project, $this->event_manager);
         $updator->updateDocumentMetadata(
             $representation,
             $item,
@@ -293,33 +286,6 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
             $current_user,
             $item,
             new DoesItemHasExpectedTypeVisitor(Docman_Empty::class)
-        );
-    }
-
-    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
-    {
-        $user_manager = \UserManager::instance();
-        return new MetadataUpdator(
-            new \Docman_ItemFactory(),
-            $this->getItemStatusMapper($project),
-            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
-            $user_manager,
-            new OwnerRetriever($user_manager),
-            new MetadataEventProcessor($this->event_manager)
-        );
-    }
-
-    private function getItemStatusMapper(\Project $project): ItemStatusMapper
-    {
-        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
-    }
-
-    private function getHardcodedMetadataObsolescenceDateRetriever(\Project $project): HardcodedMetadataObsolescenceDateRetriever
-    {
-        return new HardcodedMetadataObsolescenceDateRetriever(
-            new HardcodedMetdataObsolescenceDateChecker(
-                new Docman_SettingsBo($project->getID())
-            )
         );
     }
 

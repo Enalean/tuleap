@@ -34,14 +34,11 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\Metadata\MetadataEventProcessor;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
-use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataUpdator;
+use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
@@ -281,7 +278,7 @@ class DocmanWikiResource extends AuthenticatedResource
 
         $this->addAllEvent($project);
 
-        $updator = $this->getHardcodedMetadataUpdator($project);
+        $updator = MetadataUpdatorBuilder::build($project, $this->event_manager);
         $updator->updateDocumentMetadata(
             $representation,
             $item,
@@ -460,19 +457,6 @@ class DocmanWikiResource extends AuthenticatedResource
             \EventManager::instance(),
             $updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
-    }
-
-    private function getHardcodedMetadataUpdator(\Project $project): MetadataUpdator
-    {
-        $user_manager = \UserManager::instance();
-        return new MetadataUpdator(
-            new \Docman_ItemFactory(),
-            $this->getItemStatusMapper($project),
-            $this->getHardcodedMetadataObsolescenceDateRetriever($project),
-            $user_manager,
-            new OwnerRetriever($user_manager),
-            new MetadataEventProcessor($this->event_manager)
         );
     }
 

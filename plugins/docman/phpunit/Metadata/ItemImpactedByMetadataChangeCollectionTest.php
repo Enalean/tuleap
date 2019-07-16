@@ -23,6 +23,8 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\Metadata;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\PUTRecursiveStatusRepresentation;
 
 class ItemImpactedByMetadataChangeCollectionTest extends TestCase
 {
@@ -32,5 +34,17 @@ class ItemImpactedByMetadataChangeCollectionTest extends TestCase
 
         $this->assertEquals($collection->getFieldsToUpdate(), ['field_1', 'field_2', 'status']);
         $this->assertEquals($collection->getValuesToExtractCrossReferences(), ['field_1' => 'value', 'field_2' => 'other value', 'status' => '']);
+    }
+
+    public function testItBuildCollectionForRest(): void
+    {
+        $representation                    = new PUTMetadataFolderRepresentation();
+        $representation->status            = new PUTRecursiveStatusRepresentation();
+        $representation->status->value     = 'draft';
+        $representation->status->recursion = 'all_items';
+        $collection                        = ItemImpactedByMetadataChangeCollection::buildFromRest($representation);
+
+        $this->assertEquals($collection->getFieldsToUpdate(), ['status']);
+        $this->assertEquals($collection->getValuesToExtractCrossReferences(), ['status' => 'draft']);
     }
 }

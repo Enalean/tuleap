@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\REST\I18NRestException;
@@ -33,6 +34,10 @@ use Tuleap\REST\I18NRestException;
 final class MetadataUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\MockInterface|MetadataRecursiveUpdator
+     */
+    private $recursive_updator;
     /**
      * @var \Mockery\MockInterface|MetadataEventProcessor
      */
@@ -73,6 +78,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->user_manager                = \Mockery::mock(\UserManager::class);
         $this->owner_retriever             = \Mockery::mock(OwnerRetriever::class);
         $this->event_processor             = \Mockery::mock(MetadataEventProcessor::class);
+        $this->recursive_updator           = \Mockery::mock(MetadataRecursiveUpdator::class);
 
         $this->updator = new MetadataUpdator(
             $this->item_factory,
@@ -80,11 +86,12 @@ final class MetadataUpdatorTest extends TestCase
             $this->obsolescence_date_retriever,
             $this->user_manager,
             $this->owner_retriever,
-            $this->event_processor
+            $this->event_processor,
+            $this->recursive_updator
         );
     }
 
-    public function testOwnerCanBeChanged(): void
+    public function testDocumentOwnerCanBeChanged(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
@@ -125,7 +132,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
     }
 
-    public function testUpdateIsRejectedIfNewOwnerCanNotBeFound() : void
+    public function testDocumentUpdateIsRejectedIfNewOwnerCanNotBeFound(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
@@ -154,7 +161,7 @@ final class MetadataUpdatorTest extends TestCase
         );
     }
 
-    public function testUpdateIsInterruptedWhenThePreviousOwnerCanNotBeFoundAsTheWholeDocumentIsLikelyToBeBroken(): void
+    public function testDocumentUpdateIsInterruptedWhenThePreviousOwnerCanNotBeFoundAsTheWholeDocumentIsLikelyToBeBroken(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
@@ -187,7 +194,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
     }
 
-    public function testStatusIsUpdated(): void
+    public function testDocumentStatusIsUpdated(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
@@ -227,7 +234,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
     }
 
-    public function testUpdateIsInterruptedWhenAnOtherItemHasTheSameTitle(): void
+    public function testDocumentUpdateIsInterruptedWhenAnOtherItemHasTheSameTitle(): void
     {
         $date = new \DateTimeImmutable();
         $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
@@ -257,5 +264,123 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
         $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
+    }
+
+    public function testFolderUpdateIsRejectedIfAnOtherItemHasTheSameTitle(): void
+    {
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+
+        $representation                    = new PUTMetadataFolderRepresentation();
+        $representation->title             = 'title';
+        $representation->description       = '';
+        $representation->status            = new PUTRecursiveStatusRepresentation();
+        $representation->status->value     = 'draft';
+        $representation->status->recursion = null;
+
+        $this->expectException(RestException::class);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
+        $this->updator->updateFolderMetadata($representation, $item, \Mockery::mock(\Project::class), \Mockery::mock(\PFUser::class));
+    }
+
+    public function testFolderStatusUpdateIsDoneForEveryFolderAndItems(): void
+    {
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+        $item->shouldReceive('getId')->andReturn(100);
+        $item->shouldReceive('getStatus')->andReturn(100);
+
+        $user = \Mockery::mock(\PFUser::class);
+
+        $representation                    = new PUTMetadataFolderRepresentation();
+        $representation->title             = 'a new title';
+        $representation->description       = '';
+        $representation->status            = new PUTRecursiveStatusRepresentation();
+        $representation->status->value     = 'draft';
+        $representation->status->recursion = "all_items";
+
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
+        $this->status_mapper->shouldReceive('getItemStatusStringFormId')->andReturn('draft');
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->shouldReceive('update');
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(109);
+
+        $this->event_processor->shouldReceive('raiseUpdateEvent')->once();
+
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolderAndItems');
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolder')->never();
+
+        $this->updator->updateFolderMetadata($representation, $item, $project, $user);
+    }
+
+
+    public function testFolderUpdateIsDoneForOtherFolder(): void
+    {
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+        $item->shouldReceive('getId')->andReturn(100);
+        $item->shouldReceive('getStatus')->andReturn(100);
+
+        $user = \Mockery::mock(\PFUser::class);
+
+        $representation                    = new PUTMetadataFolderRepresentation();
+        $representation->title             = 'a new title';
+        $representation->description       = '';
+        $representation->status            = new PUTRecursiveStatusRepresentation();
+        $representation->status->value     = 'draft';
+        $representation->status->recursion = "folders";
+
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
+        $this->status_mapper->shouldReceive('getItemStatusStringFormId')->andReturn('draft');
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->shouldReceive('update');
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(109);
+
+        $this->event_processor->shouldReceive('raiseUpdateEvent')->once();
+
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolderAndItems')->never();
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolder');
+
+        $this->updator->updateFolderMetadata($representation, $item, $project, $user);
+    }
+
+    public function testFolderUpdateCanBeDoneWithoutRecusrivity(): void
+    {
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+        $item->shouldReceive('getId')->andReturn(100);
+        $item->shouldReceive('getStatus')->andReturn(100);
+
+        $user = \Mockery::mock(\PFUser::class);
+
+        $representation                    = new PUTMetadataFolderRepresentation();
+        $representation->title             = 'a new title';
+        $representation->description       = '';
+        $representation->status            = new PUTRecursiveStatusRepresentation();
+        $representation->status->value     = 'draft';
+        $representation->status->recursion = null;
+
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(102);
+        $this->status_mapper->shouldReceive('getItemStatusStringFormId')->andReturn('draft');
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->shouldReceive('update');
+        $project = \Mockery::mock(\Project::class);
+
+        $this->event_processor->shouldReceive('raiseUpdateEvent')->once();
+
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolderAndItems')->never();
+        $this->recursive_updator->shouldReceive('updateRecursiveMetadataOnFolder')->never();
+
+        $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
 }

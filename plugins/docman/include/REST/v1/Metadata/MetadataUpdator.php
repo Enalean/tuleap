@@ -25,9 +25,13 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Project;
 use RuntimeException;
-use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
+use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
+use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
+use Tuleap\Docman\Metadata\NoItemToRecurseException;
+use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\REST\I18NRestException;
 
 class MetadataUpdator
@@ -57,6 +61,10 @@ class MetadataUpdator
      * @var MetadataEventProcessor
      */
     private $event_processor;
+    /**
+     * @var MetadataRecursiveUpdator
+     */
+    private $recursive_updator;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -64,18 +72,21 @@ class MetadataUpdator
         HardcodedMetadataObsolescenceDateRetriever $date_retriever,
         \UserManager $user_manager,
         OwnerRetriever $owner_retriever,
-        MetadataEventProcessor $event_processor
+        MetadataEventProcessor $event_processor,
+        MetadataRecursiveUpdator $recursive_updator
     ) {
-        $this->item_factory    = $item_factory;
-        $this->status_mapper   = $status_mapper;
-        $this->date_retriever  = $date_retriever;
-        $this->user_manager    = $user_manager;
-        $this->owner_retriever = $owner_retriever;
-        $this->event_processor = $event_processor;
+        $this->item_factory      = $item_factory;
+        $this->status_mapper     = $status_mapper;
+        $this->date_retriever    = $date_retriever;
+        $this->user_manager      = $user_manager;
+        $this->owner_retriever   = $owner_retriever;
+        $this->event_processor   = $event_processor;
+        $this->recursive_updator = $recursive_updator;
     }
 
     /**
      * @throws I18nRestException
+     * @throws RestException
      */
     public function updateDocumentMetadata(
         PUTMetadataRepresentation $representation,
@@ -143,17 +154,74 @@ class MetadataUpdator
             );
         }
 
-        if ($status !== $item->getStatus()) {
-            $old_status = $this->status_mapper->getItemStatusStringFormId($item->getStatus());
-            $this->event_processor->raiseUpdateEvent(
-                $item,
-                $current_user,
-                $old_status,
-                $representation->status,
-                'status'
-            );
-        }
+        $this->sendStatusUpdateEvent($representation->status, $item, $current_user, $status);
 
         $this->item_factory->update($row);
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function updateFolderMetadata(
+        PUTMetadataFolderRepresentation $representation,
+        \Docman_Item $item,
+        Project $project,
+        PFUser $user
+    ): void {
+        if ($representation->title !== $item->getTitle() &&
+            $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, (int)$item->getParentId())) {
+            throw new RestException(400, "A file with same title already exists in the given folder.");
+        }
+
+        $item_id = $item->getId();
+
+        try {
+            $status = $this->status_mapper->getItemStatusIdFromItemStatusString($representation->status->value);
+        } catch (HardCodedMetadataException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        }
+
+        $row = [
+            'id'          => $item_id,
+            'title'       => $representation->title,
+            'description' => $representation->description,
+            'status'      => $status
+        ];
+        $this->item_factory->update($row);
+        $this->sendStatusUpdateEvent($representation->status->value, $item, $user, $status);
+
+        if ($representation->status->recursion === null) {
+            return;
+        }
+
+        $collection = ItemImpactedByMetadataChangeCollection::buildFromRest($representation);
+        try {
+            if ($representation->status->recursion === PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS) {
+                $this->recursive_updator->updateRecursiveMetadataOnFolderAndItems($collection, (int)$item->getId(), (int)$project->getID());
+            }
+
+            if ($representation->status->recursion === PUTRecursiveStatusRepresentation::RECURSION_FOLDER) {
+                $this->recursive_updator->updateRecursiveMetadataOnFolder($collection, (int)$item->getId(), (int)$project->getID());
+            }
+        } catch (NoItemToRecurseException $e) {
+        }
+    }
+
+    private function sendStatusUpdateEvent(string $status_value, \Docman_Item $item, PFUser $current_user, int $status): void
+    {
+        try {
+            if ($status !== $item->getStatus()) {
+                $old_status = $this->status_mapper->getItemStatusStringFormId($item->getStatus());
+                $this->event_processor->raiseUpdateEvent(
+                    $item,
+                    $current_user,
+                    $old_status,
+                    $status_value,
+                    'status'
+                );
+            }
+        } catch (HardCodedMetadataException $e) {
+            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        }
     }
 }
