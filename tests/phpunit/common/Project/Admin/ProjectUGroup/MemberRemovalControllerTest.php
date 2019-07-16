@@ -30,6 +30,7 @@ use Tuleap\GlobalResponseMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
+use Tuleap\Project\UserRemover as ProjectMemberRemover;
 
 class MemberRemovalControllerTest extends TestCase
 {
@@ -67,6 +68,10 @@ class MemberRemovalControllerTest extends TestCase
      * @var M\MockInterface|MemberRemover
      */
     private $member_remover;
+    /**
+     * @var M\MockInterface|ProjectMemberRemover
+     */
+    private $project_member_remover;
 
     protected function setUp(): void
     {
@@ -77,7 +82,8 @@ class MemberRemovalControllerTest extends TestCase
         $this->http_request                   = M::mock(\HTTPRequest::class);
         $this->layout                         = M::mock(BaseLayout::class);
         $this->a_user                         = M::mock(\PFUser::class);
-        $this->controller = new MemberRemovalController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_remover);
+        $this->project_member_remover         = M::mock(ProjectMemberRemover::class);
+        $this->controller = new MemberRemovalController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_remover, $this->project_member_remover);
     }
 
     protected function tearDown(): void
@@ -100,6 +106,8 @@ class MemberRemovalControllerTest extends TestCase
         $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
         $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
 
+        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
+
         $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $ugroup);
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
@@ -107,7 +115,7 @@ class MemberRemovalControllerTest extends TestCase
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
     }
 
-    public function testItRemovesWithError()
+    public function testItRemovesFromUserGroupOnlyWithError()
     {
         $project = new \Project(['group_id' => 101]);
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
@@ -122,10 +130,62 @@ class MemberRemovalControllerTest extends TestCase
         $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
         $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
 
+        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-only');
+
         $this->member_remover->shouldReceive('removeMember')->with($user_to_remove, $ugroup)->andThrow(new CannotModifyBoundGroupException());
 
         $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
 
+        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+
+        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+    }
+
+    public function testItRemovesFromUserGroupAndProject()
+    {
+        $project = new \Project(['group_id' => 101]);
+        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+
+        $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
+        $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
+
+        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+
+        $user_to_remove = M::mock(\PFUser::class, [ 'getId' => 303, 'isAdmin' => false]);
+        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
+        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+
+        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-and-project');
+
+        $this->project_member_remover->shouldReceive('removeUserFromProject')->with(101, 303)->once();
+
+        $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
+
+        $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);
+    }
+
+    public function testItDoesntRemoveProjectAdminsFromUserGroupAndProject()
+    {
+        $project = new \Project(['group_id' => 101]);
+        $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
+
+        $this->a_user->shouldReceive('isAdmin')->with(101)->andReturnTrue();
+        $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->a_user);
+
+        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
+
+        $user_to_remove = M::mock(\PFUser::class, [ 'getId' => 303]);
+        $user_to_remove->shouldReceive('isAdmin')->with(101)->andReturnTrue();
+        $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
+        $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
+
+        $this->http_request->shouldReceive('get')->with('remove-from-ugroup')->andReturn('remove-from-ugroup-and-project');
+
+        $this->project_member_remover->shouldNotReceive('removeUserFromProject');
+
+        $this->layout->shouldReceive('addFeedback')->with(\Feedback::ERROR, M::any());
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup));
 
         $this->controller->process($this->http_request, $this->layout, ['id' => '101', 'user-group-id' => '202']);

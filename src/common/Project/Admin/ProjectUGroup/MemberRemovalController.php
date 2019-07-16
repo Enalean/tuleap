@@ -29,6 +29,7 @@ use HTTPRequest;
 use ProjectManager;
 use ProjectUGroup;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\UserRemover as ProjectMemberRemover;
 use Tuleap\Project\UGroups\Membership\CannotModifyBoundGroupException;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Request\DispatchableWithRequest;
@@ -55,13 +56,18 @@ class MemberRemovalController implements DispatchableWithRequest
      * @var MemberRemover
      */
     private $member_remover;
+    /**
+     * @var ProjectMemberRemover
+     */
+    private $project_member_remover;
 
-    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover)
+    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover, ProjectMemberRemover $project_member_remover)
     {
         $this->project_manager = $project_manager;
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_manager    = $user_manager;
         $this->member_remover  = $member_remover;
+        $this->project_member_remover = $project_member_remover;
     }
 
     /**
@@ -101,7 +107,16 @@ class MemberRemovalController implements DispatchableWithRequest
         }
 
         try {
-            $this->member_remover->removeMember($user, $ugroup);
+            if ($request->get('remove-from-ugroup') === 'remove-from-ugroup-and-project') {
+                if ($user->isAdmin($ugroup->getProjectId())) {
+                    $layout->addFeedback(Feedback::ERROR, _('Cannot remove project admin from project. Must be removed from project administration first'));
+                    $layout->redirect(UGroupRouter::getUGroupUrl($ugroup));
+                    return;
+                }
+                $this->project_member_remover->removeUserFromProject($ugroup->getProjectId(), $user->getId());
+            } else {
+                $this->member_remover->removeMember($user, $ugroup);
+            }
         } catch (CannotModifyBoundGroupException $exception) {
             $layout->addFeedback(Feedback::ERROR, _('Cannot remove users from bound groups'));
         } catch (CannotRemoveUserMembershipToUserGroupException $exception) {

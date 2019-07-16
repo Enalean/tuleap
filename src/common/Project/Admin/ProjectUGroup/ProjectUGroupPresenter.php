@@ -27,6 +27,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 use CSRFSynchronizerToken;
 use PFUser;
 use ProjectUGroup;
+use Tuleap\Project\Admin\ProjectUGroup\Details\MembersPresenter;
 
 class ProjectUGroupPresenter
 {
@@ -53,8 +54,8 @@ class ProjectUGroupPresenter
     public function __construct(
         ProjectUGroup $ugroup,
         PermissionsDelegationPresenter $permissions_delegation,
-        $binding,
-        $members,
+        BindingPresenter $binding,
+        MembersPresenter $members,
         CSRFSynchronizerToken $csrf_token,
         CSRFSynchronizerToken $csrf_remove_member,
         PFUser $user
