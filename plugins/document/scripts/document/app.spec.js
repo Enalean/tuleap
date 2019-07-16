@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,9 @@ import "./helpers/metadata-helpers/check-item-title.spec.js";
 import "./store/error/error-mutations.spec.js";
 import "./store/error/error-getters.js";
 
+import "./store/clipboard/clipboard-mutations.spec.js";
+import "./store/clipboard/clipboard-actions.spec.js";
+
 import "./components/Breadcrumb/DocumentBreadcrumb.spec.js";
 
 import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
@@ -52,6 +55,8 @@ import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js
 import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
 import "./components/Folder/ActionsDropDown/LockItem.spec.js";
 import "./components/Folder/ActionsDropDown/UnlockItem.spec.js";
+import "./components/Folder/ActionsDropDown/CopyItem.spec.js";
+import "./components/Folder/ActionsDropDown/PasteItem.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
 import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";

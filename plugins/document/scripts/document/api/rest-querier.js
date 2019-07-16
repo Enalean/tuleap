@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,6 +40,12 @@ export {
     addNewWiki,
     addNewEmbedded,
     addNewLink,
+    copyFile,
+    copyFolder,
+    copyEmpty,
+    copyWiki,
+    copyEmbedded,
+    copyLink,
     deleteFile,
     deleteLink,
     deleteEmbeddedFile,
@@ -133,6 +139,64 @@ function addNewFolder(item, parent_id) {
     return addNewDocumentType(
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item
+    );
+}
+
+async function copyDocumentType(url, copied_item_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        copy: {
+            item_id: copied_item_id
+        }
+    });
+
+    const response = await post(url, { headers, body });
+
+    return response.json();
+}
+
+function copyFile(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/files",
+        copied_item_id
+    );
+}
+
+function copyEmpty(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/empties",
+        copied_item_id
+    );
+}
+
+function copyEmbedded(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/embedded_files",
+        copied_item_id
+    );
+}
+
+function copyWiki(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/wikis",
+        copied_item_id
+    );
+}
+
+function copyLink(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/links",
+        copied_item_id
+    );
+}
+
+function copyFolder(copied_item_id, parent_id) {
+    return copyDocumentType(
+        "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
+        copied_item_id
     );
 }
 

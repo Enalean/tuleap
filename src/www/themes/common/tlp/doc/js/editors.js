@@ -197,6 +197,16 @@
                 });
             }
 
+            var dropdown_trigger_disabled_options = document.getElementById(
+                "dropdown-disable-options"
+            );
+            if (dropdown_trigger_disabled_options) {
+                tlp.dropdown(dropdown_trigger_disabled_options, {
+                    keyboard: false,
+                    dropdown_menu: document.getElementById("dropdown-menu-disable-options")
+                });
+            }
+
             var dropdown_trigger_split_example1_options = document.getElementById(
                 "dropdown-split-example"
             );

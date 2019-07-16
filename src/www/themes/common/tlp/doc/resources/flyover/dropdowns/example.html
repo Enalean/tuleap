@@ -52,6 +52,30 @@
     );
 </script>
 
+<br>
+
+<button type="button" id="dropdown-disable-options" class="tlp-button-primary tlp-button-outline">
+    Disabled option
+    <i class="fa fa-caret-down tlp-button-icon-right"></i>
+</button>
+<!-- Dropdown menu, anywhere in the page -->
+<div>
+    <div class="tlp-dropdown-menu" id="dropdown-menu-disable-options" role="menu">
+        <span class="tlp-dropdown-menu-title" role="menuitem">Favorites</span>
+        <a href="javascript:;" class="tlp-dropdown-menu-item" role="menuitem">Available</a>
+        <a href="javascript:;" class="tlp-dropdown-menu-item tlp-dropdown-menu-item-disabled" role="menuitem">Disable</a>
+    </div>
+</div>
+
+<script>
+    tlp.dropdown(
+        document.getElementById('dropdown-disable-options'),
+        {
+            keyboard     : false,
+            dropdown_menu: document.getElementById('dropdown-menu-disable-options'),
+        }
+    );
+</script>
 
 <br>
 

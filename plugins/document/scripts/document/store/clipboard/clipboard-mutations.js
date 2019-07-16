@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import state from "./state.js";
-import error from "./error/module.js";
-import clipboard from "./clipboard/module.js";
+import defaultState from "./clipboard-default-state.js";
 
-Vue.use(Vuex);
+export { copyItem, emptyClipboard, startPasting, pastingHasFailed };
 
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions,
-    modules: {
-        error,
-        clipboard
+function copyItem(state, item) {
+    if (state.pasting_in_progress) {
+        return;
     }
-});
+    state.item_id = item.id;
+    state.item_type = item.type;
+    state.item_title = item.title;
+}
+
+function emptyClipboard(state) {
+    Object.assign(state, defaultState());
+}
+
+function startPasting(state) {
+    state.pasting_in_progress = true;
+}
+
+function pastingHasFailed(state) {
+    state.pasting_in_progress = false;
+}

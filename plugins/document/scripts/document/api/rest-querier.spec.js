@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,7 +32,13 @@ import {
     deleteUserPreferenciesForFolderInProject,
     addUserLegacyUIPreferency,
     createNewVersion,
-    postLinkVersion
+    postLinkVersion,
+    copyFile,
+    copyFolder,
+    copyEmpty,
+    copyWiki,
+    copyEmbedded,
+    copyLink
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -405,6 +411,87 @@ describe("rest-querier", () => {
                 change_log,
                 should_lock_file,
                 approval_table_action
+            );
+        });
+    });
+
+    describe("Copy item", () => {
+        const copied_item_id = 147;
+        const destination_folder_id = 852;
+
+        beforeEach(() => {
+            mockFetchSuccess(tlp.post, JSON.stringify({ id: 963, uri: "path/to/963" }));
+        });
+
+        it("Create a copy of a file", async () => {
+            await copyFile(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/files`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
+            );
+        });
+
+        it("Create a copy of an empty document", async () => {
+            await copyEmpty(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/empties`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
+            );
+        });
+
+        it("Create a copy of an embedded document", async () => {
+            await copyEmbedded(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/embedded_files`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
+            );
+        });
+
+        it("Create a copy of a wiki document", async () => {
+            await copyWiki(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/wikis`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
+            );
+        });
+
+        it("Create a copy of a link document", async () => {
+            await copyLink(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/links`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
+            );
+        });
+
+        it("Create a copy of a folder", async () => {
+            await copyFolder(copied_item_id, destination_folder_id);
+
+            expect(tlp.post).toHaveBeenCalledWith(
+                `/api/docman_folders/${destination_folder_id}/folders`,
+                {
+                    headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                }
             );
         });
     });

@@ -76,6 +76,7 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
+import { adjustItemToContentAfterItemCreation } from "./actions-helpers/adjust-item-to-content-after-item-creation.js";
 import { buildItemPath } from "./actions-helpers/build-parent-paths.js";
 import {
     TYPE_EMBEDDED,
@@ -115,17 +116,6 @@ export const getSubfolderContent = async (context, folder_id) => {
 };
 
 export const createNewItem = async (context, [item, parent, current_folder]) => {
-    async function adjustFileToContentAfterItemCreation(item_id) {
-        const created_item = await getItem(item_id);
-
-        flagItemAsCreated(context, created_item);
-
-        if (!parent.is_expanded && parent.id !== current_folder.id) {
-            context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
-        }
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
-    }
-
     try {
         let should_display_item = true;
         let item_reference;
@@ -139,23 +129,48 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_FOLDER:
                 item_reference = await addNewFolder(item, parent.id);
 
-                return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustItemToContentAfterItemCreation(
+                    context,
+                    parent,
+                    current_folder,
+                    item_reference.id
+                );
             case TYPE_EMPTY:
                 item_reference = await addNewEmpty(item, parent.id);
 
-                return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustItemToContentAfterItemCreation(
+                    context,
+                    parent,
+                    current_folder,
+                    item_reference.id
+                );
             case TYPE_WIKI:
                 item_reference = await addNewWiki(item, parent.id);
 
-                return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustItemToContentAfterItemCreation(
+                    context,
+                    parent,
+                    current_folder,
+                    item_reference.id
+                );
             case TYPE_EMBEDDED:
                 item_reference = await addNewEmbedded(item, parent.id);
 
-                return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustItemToContentAfterItemCreation(
+                    context,
+                    parent,
+                    current_folder,
+                    item_reference.id
+                );
             case TYPE_LINK:
                 item_reference = await addNewLink(item, parent.id);
 
-                return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustItemToContentAfterItemCreation(
+                    context,
+                    parent,
+                    current_folder,
+                    item_reference.id
+                );
             default:
                 throw new Error("Item type " + item.type + " is not supported for creation");
         }
