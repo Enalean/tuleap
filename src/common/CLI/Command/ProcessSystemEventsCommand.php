@@ -83,7 +83,7 @@ final class ProcessSystemEventsCommand extends Command
 
         $processor = $this->system_event_processor_factory->getProcessForQueue($request_queue);
 
-        $mutex = new SystemEventProcessorMutex($processor, $this->lock_factory);
+        $mutex = new SystemEventProcessorMutex($processor, $this->lock_factory, $this->db_connection);
         $mutex->execute();
         return 0;
     }

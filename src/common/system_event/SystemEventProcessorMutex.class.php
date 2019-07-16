@@ -23,6 +23,7 @@
  */
 
 use Symfony\Component\Lock\Factory as LockFactory;
+use Tuleap\DB\DBConnection;
 
 class SystemEventProcessorMutex
 {
@@ -34,13 +35,20 @@ class SystemEventProcessorMutex
      */
     private $lock_factory;
 
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
+
     public function __construct(
         IRunInAMutex $runnable,
-        LockFactory $lock_factory
+        LockFactory $lock_factory,
+        DBConnection $db_connection
     ) {
         $this->process_owner = $runnable->getProcessOwner();
         $this->runnable      = $runnable;
         $this->lock_factory  = $lock_factory;
+        $this->db_connection = $db_connection;
     }
 
     /**
@@ -50,7 +58,21 @@ class SystemEventProcessorMutex
     {
         $process = $this->getProcess();
         $lock = $this->lock_factory->createLock($process->getLockName());
+        if ($lock->acquire()) {
+            $this->runnable->execute($process->getQueue());
+            $lock->release();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function waitAndExecute()
+    {
+        $process = $this->getProcess();
+        $lock = $this->lock_factory->createLock($process->getLockName());
         if ($lock->acquire(true)) {
+            $this->db_connection->reconnectAfterALongRunningProcess();
             $this->runnable->execute($process->getQueue());
             $lock->release();
         }

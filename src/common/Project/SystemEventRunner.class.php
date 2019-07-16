@@ -26,6 +26,8 @@ use SystemEvent;
 use SystemEventProcessorMutex;
 use Symfony\Component\Lock\Factory as LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
+use Tuleap\DB\DBConnection;
+use Tuleap\DB\DBFactory;
 
 class SystemEventRunner
 {
@@ -53,7 +55,7 @@ class SystemEventRunner
         $store   = new SemaphoreStore();
         $factory = new LockFactory($store);
 
-        $mutex = new SystemEventProcessorMutex($processor, $factory);
-        $mutex->execute();
+        $mutex = new SystemEventProcessorMutex($processor, $factory, DBFactory::getMainTuleapDBConnection());
+        $mutex->waitAndExecute();
     }
 }
