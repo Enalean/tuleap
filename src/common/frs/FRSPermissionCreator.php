@@ -23,6 +23,7 @@ namespace Tuleap\FRS;
 use Project;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
+use ProjectHistoryDao;
 use UGroupDao;
 use ForgeAccess;
 
@@ -33,13 +34,19 @@ class FRSPermissionCreator
 
     /** @var UGroupDao */
     private $ugroup_dao;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         FRSPermissionDao $permission_dao,
-        UGroupDao $ugroup_dao
+        UGroupDao $ugroup_dao,
+        ProjectHistoryDao $project_history_dao
     ) {
-        $this->permission_dao = $permission_dao;
-        $this->ugroup_dao     = $ugroup_dao;
+        $this->permission_dao      = $permission_dao;
+        $this->ugroup_dao          = $ugroup_dao;
+        $this->project_history_dao = $project_history_dao;
     }
 
     public function savePermissions(Project $project, array $ugroup_ids, $permission_type)
@@ -50,7 +57,7 @@ class FRSPermissionCreator
 
         $this->permission_dao->savePermissions($project->getId(), $permission_type, $normalized_ugroup_ids);
 
-        group_add_history('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), array($permission_type));
+        $this->project_history_dao->groupAddHistory('perm_granted_for_files', implode(',', $this->getUGroupNames($ugroup_ids)), $project->getId(), array($permission_type));
 
         $override_collection->emitFeedback("");
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,7 +51,7 @@ if ($project->isError()) {
 
 // ########################### form submission, make updates
 if ($request->exist('submit')) {
-    group_add_history ('changed_member_perm','',$group_id);
+    (new ProjectHistoryDao())->groupAddHistory ('changed_member_perm','',$group_id);
     $nb_errors = 0;
 
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");

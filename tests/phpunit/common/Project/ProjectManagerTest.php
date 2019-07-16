@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessException;
 use ProjectDao;
+use ProjectHistoryDao;
 use ProjectManager;
 use TestHelper;
 
@@ -45,7 +46,11 @@ final class ProjectManagerTest extends TestCase
     {
         $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
         $project_dao            = Mockery::mock(ProjectDao::class);
-        $project_manager        = ProjectManager::testInstance($project_access_checker, $project_dao);
+        $project_manager        = ProjectManager::testInstance(
+            $project_access_checker,
+            Mockery::mock(ProjectHistoryDao::class),
+            $project_dao
+        );
 
         $project_dao->shouldReceive('getMyAndPublicProjectsForREST')->andReturn(
             TestHelper::argListToDar([['group_id' => 102], ['group_id' => 103]])

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -72,7 +72,8 @@ $edit_controller = new ProjectEditController(
     $project_edit_dao,
     $project_manager,
     $event_manager,
-    $system_event_manager
+    $system_event_manager,
+    new ProjectHistoryDao()
 );
 
 $router = new ProjectEditRouter($edit_controller);

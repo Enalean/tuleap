@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -64,7 +64,7 @@ if ($action == 'activate') {
     $csrf_token->check();
     $group_id = $request->get('group_id');
     $project  = $project_manager->getProject($group_id);
-    group_add_history('deleted', 'x', $project->getID());
+    (new ProjectHistoryDao())->groupAddHistory('deleted', 'x', $project->getID());
     $project_manager->updateStatus($project, Project::STATUS_DELETED);
 
     $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));

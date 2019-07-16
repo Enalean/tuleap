@@ -28,6 +28,7 @@ use EventManager;
 use ForgeConfig;
 use Mockery;
 use Project;
+use ProjectHistoryDao;
 use ProjectManager;
 use SimpleXMLElement;
 use SystemEventManager;
@@ -219,14 +220,18 @@ class XMLImporterTest extends TuleapTestCase
         $this->pmdao              = safe_mock('ProjectDao');
         $this->evdao              = safe_mock('SystemEventDao');
         $this->evfdao             = safe_mock('SystemEventsFollowersDao');
-        $this->pm                 = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $this->pmdao);
+        $project_history_dao      = \Mockery::spy(ProjectHistoryDao::class);
+        $this->pm                 = ProjectManager::testInstance(
+            Mockery::mock(ProjectAccessChecker::class),
+            $project_history_dao,
+            $this->pmdao
+        );
         $this->repodao            = safe_mock('Tuleap\SVN\Dao');
         $this->sysevmgr           = SystemEventManager::testInstance($this->evdao, $this->evfdao);
         $this->ugdao              = safe_mock('UGroupDao');
         $this->ugudao             = safe_mock('UGroupUserDao');
         $this->accessfiledao      = safe_mock('Tuleap\SVN\AccessControl\AccessFileHistoryDao');
         $this->accessfilefac      = new AccessFileHistoryFactory($this->accessfiledao);
-        $project_history_dao      = \Mockery::spy(\ProjectHistoryDao::class);
         $this->accessfilemgr      = new AccessFileHistoryCreator(
             $this->accessfiledao,
             $this->accessfilefac,

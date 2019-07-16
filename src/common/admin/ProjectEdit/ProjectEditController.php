@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,9 +26,9 @@ use Feedback;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
+use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectName;
-use SystemEvent;
 use SystemEventManager;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
@@ -55,19 +55,25 @@ class ProjectEditController
      * @var SystemEventManager
      */
     private $system_event_manager;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         ProjectDetailsPresenter $details_presenter,
         ProjectEditDao $dao,
         ProjectManager $project_manager,
         EventManager $event_manager,
-        SystemEventManager $system_event_manager
+        SystemEventManager $system_event_manager,
+        ProjectHistoryDao $project_history_dao
     ) {
         $this->details_presenter    = $details_presenter;
         $this->dao                  = $dao;
         $this->project_manager      = $project_manager;
         $this->event_manager        = $event_manager;
         $this->system_event_manager = $system_event_manager;
+        $this->project_history_dao  = $project_history_dao;
     }
 
     public function index()
@@ -113,7 +119,7 @@ class ProjectEditController
             $this->propagateStatusChange($project, $form_status);
 
             if ($this->hasTypeChanged($project, $project_type)) {
-                group_add_history('group_type', $project->getType(), $project_id);
+                $this->project_history_dao->groupAddHistory('group_type', $project->getType(), $project_id);
             }
 
             $this->project_manager->removeProjectFromCache($project);
@@ -129,7 +135,7 @@ class ProjectEditController
         }
 
         if ($this->hasStatusChanged($project, $form_status) && $project->getGroupId() !== Project::ADMIN_PROJECT_ID) {
-            group_add_history('status', $GLOBALS['Language']->getText('admin_groupedit', 'status_' . $project->getStatus()) . " :: " . $GLOBALS['Language']->getText('admin_groupedit', 'status_' . $form_status), $project->group_id);
+            $this->project_history_dao->groupAddHistory('status', $GLOBALS['Language']->getText('admin_groupedit', 'status_' . $project->getStatus()) . " :: " . $GLOBALS['Language']->getText('admin_groupedit', 'status_' . $form_status), $project->group_id);
 
             $event_params = [
                 'group_id' => $project->group_id
@@ -180,7 +186,7 @@ class ProjectEditController
         );
 
         //update group history
-        group_add_history('rename_request', $project->getUnixName(false) . ' :: ' . $new_name, $project->getID());
+        $this->project_history_dao->groupAddHistory('rename_request', $project->getUnixName(false) . ' :: ' . $new_name, $project->getID());
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,

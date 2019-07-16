@@ -451,7 +451,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
         $frs_permissions_creator = new FRSPermissionCreator(
             new FRSPermissionDao(),
-            new UGroupDao()
+            new UGroupDao(),
+            new ProjectHistoryDao()
         );
 
         $user_manager   = UserManager::instance();

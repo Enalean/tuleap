@@ -28,6 +28,7 @@ use Project;
 use Project_InvalidFullName_Exception;
 use Project_InvalidShortName_Exception;
 use ProjectCreator;
+use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
 use ReferenceManager;
@@ -178,7 +179,7 @@ class ProjectResource extends AuthenticatedResource
             $this->user_manager,
             $this->ugroup_duplicator,
             $send_notifications,
-            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao(), new ProjectHistoryDao()),
             $duplicator,
             new ServiceCreator(),
             $label_dao,

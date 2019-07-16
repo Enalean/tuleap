@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use ForgeAccess;
 use ForgeAccess_ForgePropertiesManager;
 use ForgeConfig;
 use PermissionsManager;
+use ProjectHistoryDao;
 use ProjectManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -64,7 +65,8 @@ class PlatformAccessControlCommand extends Command
             EventManager::instance(),
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
-                new UGroupDao()
+                new UGroupDao(),
+                new ProjectHistoryDao()
             )
         );
 

@@ -54,7 +54,11 @@ class HookConfigTest extends \TuleapTestCase
         $project_dao         = mock('ProjectDao');
         $this->hook_dao      = mock('Tuleap\SVN\Repository\HookDao');
 
-        $project_manager = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $project_dao);
+        $project_manager = ProjectManager::testInstance(
+            Mockery::mock(ProjectAccessChecker::class),
+            $project_history_dao,
+            $project_dao
+        );
 
         $this->project = $project_manager->getProjectFromDbRow(
             array(

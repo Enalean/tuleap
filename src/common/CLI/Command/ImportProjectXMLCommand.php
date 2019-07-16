@@ -239,7 +239,8 @@ class ImportProjectXMLCommand extends Command
 
             $frs_permissions_creator = new FRSPermissionCreator(
                 new FRSPermissionDao(),
-                new UGroupDao()
+                new UGroupDao(),
+                new ProjectHistoryDao()
             );
 
             $widget_factory = new WidgetFactory(

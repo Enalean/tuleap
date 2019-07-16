@@ -178,7 +178,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $send_notifications,
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
-                new UGroupDao()
+                new UGroupDao(),
+                new ProjectHistoryDao()
             ),
             $duplicator,
             new ServiceCreator(),
