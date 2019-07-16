@@ -37,7 +37,6 @@ const state = {
     files_uploads_list: [],
     embedded_are_allowed: false,
     currently_previewed_item: null,
-    currently_displayed_item: null,
     is_item_status_metadata_used: false,
     is_obsolescence_date_metadata_used: false,
     show_post_deletion_notification: false,

@@ -52,7 +52,7 @@
             </a>
         </span>
         <document-breadcrumb-document v-if="is_current_document_displayed"
-                                      v-bind:current_document="currently_displayed_item"
+                                      v-bind:current_document="currently_previewed_item"
                                       v-bind:parent_folder="current_folder"
                                       data-test="breadcrumb-current-document"
         />
@@ -78,7 +78,7 @@ export default {
             "is_user_administrator",
             "current_folder_ascendant_hierarchy",
             "is_loading_ascendant_hierarchy",
-            "currently_displayed_item",
+            "currently_previewed_item",
             "current_folder"
         ]),
         document_tree_title() {
@@ -116,7 +116,7 @@ export default {
                 .slice(-this.max_nb_to_display);
         },
         is_current_document_displayed() {
-            return this.currently_displayed_item !== null && this.current_folder !== null;
+            return this.currently_previewed_item !== null && this.current_folder !== null;
         }
     }
 };

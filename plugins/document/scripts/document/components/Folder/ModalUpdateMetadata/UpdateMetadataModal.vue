@@ -103,6 +103,7 @@ export default {
         },
         reset() {
             this.is_displayed = false;
+            this.$emit("update-metadata-modal-closed");
         },
         async updateMetadata(event) {
             event.preventDefault();

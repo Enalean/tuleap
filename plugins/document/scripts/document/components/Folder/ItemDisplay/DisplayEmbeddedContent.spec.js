@@ -41,14 +41,14 @@ describe("DisplayEmbeddedContent", () => {
 
     it(`It renders an embedded document in narrow view`, () => {
         store.state.is_embedded_in_large_view = false;
+        store.state.currently_previewed_item = {
+            id: 42,
+            title: "My embedded content",
+            embedded_file_properties: {
+                content: "My content"
+            }
+        };
         const wrapper = factory({
-            embeddedFile: {
-                id: 42,
-                title: "My embedded content",
-                embedded_file_properties: {
-                    content: "My content"
-                }
-            },
             isInLargeView: false
         });
 
@@ -58,14 +58,14 @@ describe("DisplayEmbeddedContent", () => {
 
     it(`It renders an embedded document in large view`, () => {
         store.state.is_embedded_in_large_view = true;
+        store.state.currently_previewed_item = {
+            id: 42,
+            title: "My embedded content",
+            embedded_file_properties: {
+                content: "My content"
+            }
+        };
         const wrapper = factory({
-            embeddedFile: {
-                id: 42,
-                title: "My embedded content",
-                embedded_file_properties: {
-                    content: "My content"
-                }
-            },
             isInLargeView: true
         });
 
@@ -75,11 +75,11 @@ describe("DisplayEmbeddedContent", () => {
 
     it(`It does not throw error if embedded_file_properties key is missing`, () => {
         store.state.is_embedded_in_large_view = true;
+        store.state.currently_previewed_item = {
+            id: 42,
+            title: "My embedded content"
+        };
         const wrapper = factory({
-            embeddedFile: {
-                id: 42,
-                title: "My embedded content"
-            },
             isInLargeView: true
         });
 

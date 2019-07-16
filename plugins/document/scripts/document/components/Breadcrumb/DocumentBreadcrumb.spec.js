@@ -100,7 +100,7 @@ describe("DocumentBreadcrumb", () => {
     When we display the breadcrumb
     Then the breadcrumb display the current folder`, () => {
         store.state.current_folder = { id: 1, title: "My first folder", parent_id: 0 };
-        store.state.currently_displayed_item = null;
+        store.state.currently_previewed_item = null;
         store.state.is_user_administrator = false;
         store.state.is_loading_ascendant_hierarchy = false;
         store.state.current_folder_ascendant_hierarchy = [
@@ -120,7 +120,7 @@ describe("DocumentBreadcrumb", () => {
     When we display the breadcrumb
     Then the breadcrumb display the current folder`, () => {
         store.state.current_folder = { id: 1, title: "My first folder", parent_id: 0 };
-        store.state.currently_displayed_item = {
+        store.state.currently_previewed_item = {
             id: 6,
             title: "My embedded content",
             parent_id: 0
