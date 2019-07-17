@@ -42,14 +42,6 @@ class ItemStatusMapper
         self::ITEM_STATUS_REJECTED => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
     ];
 
-    private const ITEM_INT_STATUS_ARRAY_MAP
-        = [
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE     => self::ITEM_STATUS_NONE,
-            PLUGIN_DOCMAN_ITEM_STATUS_DRAFT    => self::ITEM_STATUS_DRAFT,
-            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED => self::ITEM_STATUS_APPROVED,
-            PLUGIN_DOCMAN_ITEM_STATUS_REJECTED => self::ITEM_STATUS_REJECTED,
-        ];
-
     public function __construct(\Docman_SettingsBo $docman_settings_bo)
     {
         $this->docman_settings_bo  = $docman_settings_bo;
@@ -74,13 +66,5 @@ class ItemStatusMapper
         }
 
         return self::ITEM_STATUS_ARRAY_MAP[$status_string];
-    }
-
-    /**
-     * @throws HardCodedMetadataException
-     */
-    public function getItemStatusStringFormId(int $status_int): string
-    {
-        return self::ITEM_INT_STATUS_ARRAY_MAP[$status_int];
     }
 }
