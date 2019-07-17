@@ -98,6 +98,29 @@ final class MembersPresenterBuilderTest extends TestCase
         $this->assertFalse($result->can_be_updated);
     }
 
+    public function testItSetsTheUGroupAsDynamic(): void
+    {
+        $ugroup = Mockery::mock(
+            \ProjectUGroup::class,
+            ['isBound' => false, 'getId' => 98, 'isStatic' => false, 'getProject' => Mockery::mock(\Project::class)]
+        );
+        $ugroup->shouldReceive('getMembersIncludingSuspended')
+            ->andReturn([]);
+
+        $result = $this->builder->build($ugroup);
+
+        $this->assertTrue($result->is_dynamic_group);
+    }
+
+    public function testItSetsTheUGroupAsStatic(): void
+    {
+        $ugroup = $this->getEmptyStaticUGroup();
+
+        $result = $this->builder->build($ugroup);
+
+        $this->assertFalse($result->is_dynamic_group);
+    }
+
     public function testItSetsTheUGroupAsSynchronizedWithProjectMembersAccordingToDetector(): void
     {
         $ugroup = $this->getEmptyStaticUGroup();

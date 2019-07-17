@@ -39,16 +39,22 @@ class MembersPresenter
     /**
      * @var bool
      */
+    public $is_dynamic_group;
+    /**
+     * @var bool
+     */
     public $is_synchronized_with_project_members;
 
     public function __construct(
         array $members,
         bool $can_be_updated,
+        bool $is_dynamic_group,
         bool $is_synchronized_with_project_members
     ) {
         $this->has_members                          = count($members) > 0;
         $this->can_be_updated                       = $can_be_updated;
         $this->members                              = $members;
+        $this->is_dynamic_group                     = $is_dynamic_group;
         $this->is_synchronized_with_project_members = $is_synchronized_with_project_members;
     }
 }
