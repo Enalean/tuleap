@@ -821,6 +821,21 @@
           </attribute>
         </element>
       </group>
+      <group>
+        <attribute name="type">
+          <value>timeframe</value>
+        </attribute>
+        <element name="start_date_field">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+        <element name="duration_field">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </group>
     </choice>
   </define>
   <define name="reportContent">

@@ -101,7 +101,9 @@ class SemanticTimeframe extends Tracker_Semantic
             \Tracker_FormElementFactory::instance()
         );
 
-        $renderer  = \TemplateRendererFactory::build()->getRenderer(__DIR__. '/../../../../templates/timeframe-semantic');
+        $renderer  = \TemplateRendererFactory::build()->getRenderer(
+            __DIR__ . '/../../../../templates/timeframe-semantic'
+        );
         $presenter = $builder->build(
             $this->getCSRFSynchronizerToken(),
             $this->tracker,
@@ -125,7 +127,24 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
     {
-        // Not yet implemented
+        if ($this->start_date_field === null || $this->duration_field === null) {
+            return;
+        }
+        $start_date_field_id = $this->start_date_field->getId();
+        $start_date_ref      = array_search($start_date_field_id, $xmlMapping);
+        if (! $start_date_ref) {
+            return;
+        }
+        $duration_field_id = $this->duration_field->getId();
+        $duration_ref      = array_search($duration_field_id, $xmlMapping);
+        if (! $duration_ref) {
+            return;
+        }
+
+        $child = $root->addChild('semantic');
+        $child->addAttribute('type', $this->getShortName());
+        $child->addChild('start_date_field')->addAttribute('REF', $start_date_ref);
+        $child->addChild('duration_field')->addAttribute('REF', $duration_ref);
     }
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
@@ -141,7 +160,20 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function save(): bool
     {
-        throw new \RuntimeException('Not implemented yet');
+        $dao   = new SemanticTimeframeDao();
+        $saver = new SemanticTimeframeSaver($dao);
+
+        return $saver->save($this);
+    }
+
+    public function getStartDateField(): ?Tracker_FormElement_Field_Date
+    {
+        return $this->start_date_field;
+    }
+
+    public function getDurationField(): ?Tracker_FormElement_Field_Numeric
+    {
+        return $this->duration_field;
     }
 
     public function getStartDateFieldName(): string
@@ -171,7 +203,7 @@ class SemanticTimeframe extends Tracker_Semantic
     {
     }
 
-    private function getCSRFSynchronizerToken() : \CSRFSynchronizerToken
+    private function getCSRFSynchronizerToken(): \CSRFSynchronizerToken
     {
         return new \CSRFSynchronizerToken(
             TRACKER_BASE_URL . "/?" . http_build_query(
