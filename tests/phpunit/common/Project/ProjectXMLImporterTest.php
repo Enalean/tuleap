@@ -102,7 +102,8 @@ class ProjectXMLImporterTest extends TestCase
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
             M::spy(\Tuleap\Service\ServiceCreator::class),
             M::spy(\Tuleap\Project\Label\LabelDao::class),
-            new DefaultProjectVisibilityRetriever()
+            new DefaultProjectVisibilityRetriever(),
+            M::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class)
         );
 
         $this->xml_importer = new ProjectXMLImporter(

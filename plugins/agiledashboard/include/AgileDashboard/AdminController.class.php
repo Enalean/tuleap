@@ -76,6 +76,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Service\ServiceCreator;
@@ -352,6 +353,8 @@ class AdminController extends BaseController
                 $widget_factory
             );
 
+            $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
+
             $project_creator = new ProjectCreator(
                 ProjectManager::instance(),
                 ReferenceManager::instance(),
@@ -363,6 +366,7 @@ class AdminController extends BaseController
                 new ServiceCreator(),
                 new LabelDao(),
                 new DefaultProjectVisibilityRetriever(),
+                new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
                 $force_activation
             );
 
@@ -406,7 +410,7 @@ class AdminController extends BaseController
                             $logger,
                             $this->event_manager
                         ),
-                        new SynchronizedProjectMembershipDao()
+                        $synchronized_project_membership_dao
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

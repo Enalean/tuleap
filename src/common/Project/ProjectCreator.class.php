@@ -39,16 +39,18 @@ require_once 'common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Event\ProjectRegistrationActivateService;
-use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 
 /**
@@ -56,7 +58,8 @@ use Tuleap\Service\ServiceCreator;
  *
  * For now, mainly a wrapper for createProject method
  */
-class ProjectCreator {
+class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     /**
      * When a project is created, ask plugins if they replace the usage of legacy core services
@@ -132,6 +135,10 @@ class ProjectCreator {
      * @var DefaultProjectVisibilityRetriever
      */
     private $default_project_visibility_retriever;
+    /**
+     * @var SynchronizedProjectMembershipDuplicator
+     */
+    private $synchronized_project_membership_duplicator;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -144,6 +151,7 @@ class ProjectCreator {
         ServiceCreator $service_creator,
         LabelDao $label_dao,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
         $force_activation = false
     ) {
         $this->send_notifications                   = $send_notifications;
@@ -159,6 +167,7 @@ class ProjectCreator {
         $this->service_creator                      = $service_creator;
         $this->label_dao                            = $label_dao;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+        $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
     }
 
     /**
@@ -307,6 +316,7 @@ class ProjectCreator {
         // Activate other system references not associated with any service
         $this->reference_manager->addSystemReferencesWithoutService($template_id, $group_id);
 
+        $this->synchronized_project_membership_duplicator->duplicate((int) $template_id, $group);
         //Copy ugroups
         $ugroup_mapping = array();
         $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
@@ -324,7 +334,7 @@ class ProjectCreator {
 
         //Create project specific references if template is not default site template
         if (!$template_group->isSystem()) {
-            $this->reference_manager->addProjectReferences($template_id,$group_id);
+            $this->reference_manager->addProjectReferences($template_id, $group_id);
         }
 
         $this->copyEmailOptionsFromTemplate($group_id, $template_id);

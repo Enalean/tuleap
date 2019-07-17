@@ -54,6 +54,8 @@ use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -70,7 +72,6 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
-use Tracker_URLVerification;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
@@ -182,6 +183,7 @@ class ProjectResource extends AuthenticatedResource
             new ServiceCreator(),
             $label_dao,
             new DefaultProjectVisibilityRetriever(),
+            new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             $force_activation
         );
 

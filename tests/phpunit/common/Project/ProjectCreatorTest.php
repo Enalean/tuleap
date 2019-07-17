@@ -35,6 +35,8 @@ use SystemEventManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 use UserManager;
 
@@ -98,7 +100,8 @@ final class ProjectCreatorTest extends TestCase
             Mockery::mock(ProjectDashboardDuplicator::class),
             Mockery::mock(ServiceCreator::class),
             Mockery::mock(LabelDao::class),
-            new DefaultProjectVisibilityRetriever()
+            new DefaultProjectVisibilityRetriever(),
+            Mockery::mock(SynchronizedProjectMembershipDuplicator::class)
         );
 
         $project_manager->shouldReceive('getProjectByUnixName')->andReturn(null);

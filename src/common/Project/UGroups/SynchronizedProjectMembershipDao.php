@@ -39,4 +39,13 @@ class SynchronizedProjectMembershipDao extends DataAccessObject
         $sql = 'REPLACE INTO project_ugroup_synchronized_membership(project_id, is_activated) VALUES (?, 1)';
         $this->getDB()->run($sql, $project->getID());
     }
+
+    public function duplicateActivationFromTemplate(int $source_project_id, int $destination_project_id): void
+    {
+        $sql = 'INSERT INTO project_ugroup_synchronized_membership(project_id, is_activated)
+            SELECT ?, source.is_activated
+            FROM project_ugroup_synchronized_membership AS source
+            WHERE source.project_id = ?';
+        $this->getDB()->run($sql, $destination_project_id, $source_project_id);
+    }
 }
