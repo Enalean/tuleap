@@ -569,6 +569,9 @@ msgstr "Suppression : %s"
 msgid "Renderer id"
 msgstr "Id du rendu"
 
+msgid "Reset this semantic"
+msgstr "Réinitialiser cette sémantique"
+
 msgid "Return type"
 msgstr "Retour"
 
@@ -580,6 +583,9 @@ msgstr "Sauvegarder le webhook"
 
 msgid "Save your modifications"
 msgstr "Sauvegarder vos modifications"
+
+msgid "Semantic timeframe reset successfully"
+msgstr "La sémantique plage de temps a été réinitialisée avec succès"
 
 msgid "Semantic timeframe updated successfully"
 msgstr "La sémantique plage de temps a été mise à jour avec succès"
@@ -1343,6 +1349,13 @@ msgstr ""
 msgid "You cannot access to this tracker"
 msgstr "Vous n'avez pas accès à ce tracker."
 
+msgid ""
+"You cannot reset this semantic because this tracker has a burnup, burndown "
+"or another chart rendered by an external plugin"
+msgstr ""
+"Vous ne pouvez pas réinitialiser cette sémantique car ce tracker a un "
+"burnup, burndown ou un autre graphique généré par un plugin externe"
+
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
 
@@ -1391,6 +1404,9 @@ msgstr "L'attribut fieldset_ids ne doit pas être vide."
 
 msgid "no type"
 msgstr "sans nature"
+
+msgid "or"
+msgstr "ou"
 
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"

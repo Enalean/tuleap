@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -70,6 +71,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -302,5 +304,14 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             new SemanticTimeframeDao(),
             $form_element_factory
         );
+    }
+
+    public function doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent $event) : void
+    {
+        $semantic_velocity = SemanticVelocity::load($event->getTracker());
+
+        if ($semantic_velocity->getVelocityField() !== null) {
+            $event->setItRendersAChartForTracker();
+        }
     }
 }
