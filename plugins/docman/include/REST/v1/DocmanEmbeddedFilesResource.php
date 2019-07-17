@@ -22,8 +22,10 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_FileStorage;
+use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
@@ -38,7 +40,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
@@ -47,11 +48,16 @@ use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class DocmanEmbeddedFilesResource extends AuthenticatedResource
 {
@@ -84,36 +90,22 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Create a new version of an existing embedded file document
+     * Move an existing embedded document
      *
-     * <pre>
-     * /!\ This route is <strong> deprecated </strong> <br/>
-     * /!\ To create an embedded file version, please use the {id}/version route instead !
-     * </pre>
-     *
-     * <br>
-     * <pre>
-     * approval_table_action should be provided only if item has an existing approval table.<br>
-     * Possible values:<br>
-     *  * copy: Creates an approval table based on the previous one<br>
-     *  * reset: Reset the current approval table<br>
-     *  * empty: No approbation needed for the new version of this document<br>
-     * </pre>
      *
      * @url    PATCH {id}
      * @access hybrid
      *
-     * @param int                                    $id             Id of the item
-     * @param DocmanEmbeddedFilesPATCHRepresentation $representation {@from body}
+     * @param int                           $id             Id of the item
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
      *
      * @status 200
      * @throws RestException 400
      * @throws RestException 403
-     * @throws RestException 409
-     * @throws RestException 501
+     * @throws RestException 404
      */
 
-    public function patch(int $id, DocmanEmbeddedFilesPATCHRepresentation $representation)
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -122,24 +114,22 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $project      = $item_request->getProject();
         $this->addAllEvent($project);
 
-        try {
-            $status_id          = $this->getItemStatusMapper($project)->getItemStatusIdFromItemStatusString(
-                $representation->status
-            );
-            $obsolescence_date_time_stamp = $this->getHardcodedMetadataObsolescenceDateRetriever($project)->getTimeStampOfDate(
-                $representation->obsolescence_date,
-                new \DateTimeImmutable()
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        }
-        $this->createNewEmbeddedFileVersion(
-            $representation,
-            $item_request,
-            $status_id,
-            $obsolescence_date_time_stamp,
-            $representation->title,
-            $representation->description
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(Docman_EmbeddedFile::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project)
+        );
+
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            UserManager::instance()->getCurrentUser(),
+            $representation->move
         );
     }
 
@@ -174,7 +164,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->addAllEvent($project);
 
         try {
-            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
+            (new Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
         } catch (DeleteFailedException $exception) {
             throw new I18NRestException(
                 403,
@@ -376,7 +366,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $updator->updateDocumentMetadata(
             $representation,
             $item,
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             $current_user
         );
     }
@@ -445,7 +435,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         return new EmbeddedFileVersionCreator(
             new Docman_FileStorage($docman_root),
             new Docman_VersionFactory(),
-            new \Docman_ItemFactory(),
+            new Docman_ItemFactory(),
             $item_updator_builder->build($this->event_manager),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
@@ -505,7 +495,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
                 $item,
                 $current_user,
                 $representation,
-                new \DateTimeImmutable(),
+                new DateTimeImmutable(),
                 $status,
                 $obsolesence_date,
                 $title,

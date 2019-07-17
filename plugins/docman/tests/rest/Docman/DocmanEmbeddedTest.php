@@ -42,7 +42,6 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $items         = $this->loadFolderContent($root_id, 'Embedded');
         $folder        = $this->findItemByTitle($root_folder, 'Embedded');
         $items_id      = $folder['id'];
-        $patch_items   = $this->loadFolderContent($items_id, 'PATCH Embedded');
         $deleted_items = $this->loadFolderContent($items_id, 'DELETE Embedded');
         $lock_items    = $this->loadFolderContent($items_id, 'LOCK Embedded');
         $version_items = $this->loadFolderContent($items_id, 'POST Embedded version');
@@ -52,7 +51,6 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             $root_folder,
             $folder,
             $items,
-            $patch_items,
             $deleted_items,
             $lock_items,
             $version_items,
@@ -61,237 +59,9 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchAEmbeddedWithApprovalTableCopyAction(array $items): void
-    {
-        $item_name = 'PATCH E AT C';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $embedded = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
-                'approval_table_action' => 'copy'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchEmbeddedWithApprovalTableResetAction(array $items): void
-    {
-        $item_name = 'PATCH E AT R';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $embedded = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
-                'approval_table_action' => 'reset'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Not yet');
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchEmbeddedWithApprovalTableEmptyAction(array $items): void
-    {
-        $item_name = 'PATCH E AT E';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $embedded = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
-                'approval_table_action' => 'empty'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasADisabledApprovalTable($items, $item_name);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchThrowsExceptionWhenThereIsAnApprovalTableForTheItemAndNoApprovalAction(array $items): void
-    {
-        $item_name = 'PATCH E AT';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $embedded = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => $item_name,
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("has an approval table", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
-    {
-        $item_name = 'PATCH E NO AT';
-        $embedded  = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'should_lock_file'      => false,
-                'title'                 => $item_name,
-                'embedded_properties'   => ['content' => 'my new content'],
-                'approval_table_action' => 'copy'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("does not have an approval table", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPATCHThrowsAnExceptionWhenPatchIsCalledOnANonEmbeddedItem(array $items): void
-    {
-        $item_name = 'PATCH Embedded';
-        $item      = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'title'               => $item_name,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_embedded_files/' . $item["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
-    {
-        $item_name       = 'PATCH E RL';
-        $locked_embedded = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'title'               => $item_name,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_embedded_files/' . $locked_embedded["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
-    {
-        $item_name = 'PATCH E AL';
-        $item      = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'title'               => $item_name,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-
-        $response = $this->getResponseByName(
-            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_embedded_files/' . $item['id'],
-                null,
-                $put_resource
-            )
-        );
-
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
      * @depends testGetRootId
      */
-    public function testPatchEmbeddedDocument(int $root_id): void
+    public function testMoveEmbeddedDocument(int $root_id): void
     {
         $query = json_encode(
             [
@@ -304,152 +74,37 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $embedded_id = $this->createEmbeddedFileAndReturnItsId($root_id, $query);
 
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'title'               => 'New title',
-                'description'         => 'new description',
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
+        $response_folder_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_id, null, $put_resource)
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Embedded cut folder'])
+            )
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response_folder_creation->getStatusCode());
+        $folder_id = $response_folder_creation->json()['id'];
 
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_id),
+        $move_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch(
+                'docman_embedded_files/' . urlencode((string) $embedded_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            )
+        );
+        $this->assertEquals(200, $move_response->getStatusCode());
+
+        $moved_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $embedded_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $item     = $response->json();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('embedded', $item['type']);
-        $this->assertEquals(null, $item['lock_info']);
-        $this->assertFalse($item['has_approval_table']);
-        $this->assertFalse($item['is_approval_table_enabled']);
-        $this->assertNull($item['approval_table']);
-    }
+        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
 
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchAndLockAnEmbeddedDocument(int $root_id): void
-    {
-        $query = json_encode(
-            [
-                'title'               => 'My second embedded',
-                'parent_id'           => $root_id,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $embedded_id = $this->createEmbeddedFileAndReturnItsId($root_id, $query);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => 'My second embedded',
-                'should_lock_file'    => true,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_id, null, $put_resource)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_id),
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('embedded', $response->json()['type']);
-        $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchEmbeddedFileWithStatusThrows400WhenStatusIsNotEnabledForProject(int $root_id): void
-    {
-        $query = json_encode(
-            [
-                'title'               => 'Embedded file 403 v2',
-                'parent_id'           => $root_id,
-                'embedded_properties' => ['content' => 'I am content']
-            ]
-        );
-
-        $embedded_id = $this->createEmbeddedFileAndReturnItsId($root_id, $query);
-
-        $embedded_properties = [
-            'content' => 'https://example.com'
-        ];
-        $put_resource        = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => 'Embedded file 403 v2',
-                'status'              => 'approved',
-                'should_lock_file'    => false,
-                'embedded_properties' => $embedded_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_id, null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchEmbeddedFileWithStatusThrows400WhenObsolescenceDateIsNotEnabledForProject(
-        int $root_id
-    ): void {
-        $query = json_encode(
-            [
-                'title'               => 'Embedded file 403',
-                'parent_id'           => $root_id,
-                'embedded_properties' => ['content' => 'I am content']
-            ]
-        );
-
-        $item_id = $this->createEmbeddedFileAndReturnItsId($root_id, $query);
-
-        $embedded_properties = [
-            'content' => 'https://example.com',
-        ];
-        $patch_resource      = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => 'My new embedded with fail obsolescence date',
-                'obsolescence_date'   => '2038-12-31',
-                'should_lock_file'    => false,
-                'embedded_properties' => $embedded_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $item_id, null, $patch_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString('obsolescence', $response->json()["error"]['i18n_error_message']);
     }
 
     /**

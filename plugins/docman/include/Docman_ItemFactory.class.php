@@ -933,6 +933,26 @@ class Docman_ItemFactory
     }
 
     /**
+     * @return bool
+     */
+    public function move(Docman_Item $item_to_move, Docman_Folder $destination, PFUser $user_requesting_the_move, $ordering)
+    {
+        if (! $this->setNewParent($item_to_move->getId(), $destination->getId(), $ordering)) {
+            return false;
+        }
+        $item_to_move->fireEvent('plugin_docman_event_move', $user_requesting_the_move, $destination);
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function moveWithDefaultOrdering(Docman_Item $item_to_move, Docman_Folder $destination, PFUser $user_requesting_the_move)
+    {
+        return $this->move($item_to_move, $destination, $user_requesting_the_move, '');
+    }
+
+    /**
     * Walk through a item hierarchy and for each subitem apply callback method
     * in parameter.
     *
