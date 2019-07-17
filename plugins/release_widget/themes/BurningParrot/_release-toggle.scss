@@ -63,11 +63,17 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     background: $tlp-theme-color;
 }
 
+.release-content-description {
+    display: flex;
+    align-items: flex-start;
+    margin: 0 0 $tlp-double-spacing;
+}
+
 .release-description {
     padding: 0 0 $tlp-spacing 0;
 }
 
-.project-release-description .fa-long-arrow-right {
+.release-description-link-icon {
     margin: 0 5px 0 0;
     font-size: 12px;
 }

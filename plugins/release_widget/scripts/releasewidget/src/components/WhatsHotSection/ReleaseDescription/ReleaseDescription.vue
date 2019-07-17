@@ -18,22 +18,28 @@
   -->
 
 <template>
-    <div>
-        <div class="release-description" v-dompurify-html="releaseData.description"></div>
-        <a v-bind:href="get_overview_link" data-test="overview-link">
-            <i class="fa fa-long-arrow-right"></i>
-            <translate> Go to release overview </translate>
-        </a>
+    <div class="release-content-description">
+        <release-description-badges-tracker v-bind:release-data="releaseData"/>
+        <div class="release-description-row">
+            <div class="release-description" v-dompurify-html="releaseData.description"></div>
+            <a v-bind:href="get_overview_link" data-test="overview-link">
+                <i class="release-description-link-icon fa fa-long-arrow-right"></i>
+                <translate> Go to release overview </translate>
+            </a>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../type";
+import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
+import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 
-@Component
+@Component({
+    components: { ReleaseDescriptionBadgesTracker }
+})
 export default class ReleaseDescription extends Vue {
     @Prop()
     readonly releaseData!: MilestoneData;

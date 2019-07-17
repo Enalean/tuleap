@@ -27,7 +27,8 @@ const state: State = {
     offset: 0,
     limit: 50,
     is_loading: false,
-    current_milestones: []
+    current_milestones: [],
+    trackers: []
 };
 
 export default state;

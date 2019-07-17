@@ -31,10 +31,36 @@ export interface MilestoneData {
     initial_effort?: number | null;
     total_sprint?: number | null;
     description?: string | null;
+    resources?: {
+        content: {
+            accept: {
+                trackers: TrackerProject[];
+            };
+        };
+    };
+    number_of_artifact_by_trackers: TrackerNumberArtifacts[];
+}
+
+export interface TrackerNumberArtifacts {
+    id: number;
+    label: string;
+    total_artifact: number;
+    color_name: string | null;
+}
+
+export interface TrackerProject {
+    id: number;
+    color_name: string;
+    label: string;
 }
 
 export interface MilestoneContent {
     initial_effort: number;
+    artifact: {
+        tracker: {
+            id: number;
+        };
+    };
 }
 
 export interface ComponentOption {
@@ -66,6 +92,7 @@ export interface State {
     limit: number;
     is_loading: boolean;
     current_milestones: MilestoneData[];
+    trackers: TrackerProject[];
 }
 
 export interface Context {

@@ -26,7 +26,7 @@ import {
 } from "./rest-querier";
 
 import { mockFetchSuccess, tlp } from "tlp-mocks";
-import { MilestoneData } from "../type";
+import { MilestoneContent, MilestoneData } from "../type";
 
 describe("getProject() -", () => {
     const limit = 50,
@@ -102,7 +102,8 @@ describe("getProject() -", () => {
         const milestones: MilestoneData[] = [
             {
                 id: 1,
-                start_date: new Date()
+                start_date: new Date(),
+                number_of_artifact_by_trackers: []
             }
         ];
 
@@ -132,7 +133,7 @@ describe("getProject() -", () => {
         expect(result).toEqual(milestones);
     });
 
-    it("the REST API will be queried and the total of sprints of a milestone returned", async () => {
+    it("the REST API will be queried and all the content of a milestone returned", async () => {
         mockFetchSuccess(tlp.get, {
             headers: {
                 // X-PAGINATION-SIZE
@@ -156,34 +157,41 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and the total of user stories of a release returned", async () => {
-        const user_stories = [
+        const user_stories: MilestoneContent[] = [
             {
-                initial_effort: 5
+                initial_effort: 5,
+                artifact: {
+                    tracker: {
+                        id: 1
+                    }
+                }
             },
             {
-                initial_effort: 8
+                initial_effort: 8,
+                artifact: {
+                    tracker: {
+                        id: 2
+                    }
+                }
             }
         ];
 
-        mockFetchSuccess(tlp.get, {
-            headers: {
-                // X-PAGINATION-SIZE
-                get: () => 2
-            },
-            return_json: user_stories
-        });
+        tlp.recursiveGet.and.returnValue(user_stories);
 
         const result = await getMilestonesContent(milestone_id, {
             limit,
             offset
         });
 
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/milestones/" + milestone_id + "/content", {
-            params: {
-                limit,
-                offset
+        expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            "/api/v1/milestones/" + milestone_id + "/content",
+            {
+                params: {
+                    limit,
+                    offset
+                }
             }
-        });
+        );
 
         expect(result).toEqual(user_stories);
     });

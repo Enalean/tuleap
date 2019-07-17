@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import ReleaseBadges from "./ReleaseBadges.vue";
-import ReleaseDescription from "./ReleaseDescription.vue";
+import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
 import { MilestoneData } from "../../type";
