@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
+use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 require_once('bootstrap.php');
@@ -45,207 +47,6 @@ Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 
 //phpcs:ignorefile
 
-class Tracker_RulesManager_legacyTest extends TuleapTestCase {
-
-    function setUp() {
-        // Fields:
-        // F1(A1, A2)
-        // F2(B1, B2, B3)
-        // F3(C1, C2)
-        // F4(D1, D2)
-        //
-        // Rules:
-        // F1(A1) => F2(B1, B3) The resource A1 can be used in rooms B1 and B3
-        // F1(A2) => F2(B2, B3) The resource A2 can be used in rooms B2 and B3
-        // F2(B1) => F3(C1) The person C1 can access to rooms B1 and B3
-        // F2(B2) => F3(C2)     The person C2 can access to room B2 only
-        // F2(B3) => F3(C1)     The person C1 can access to rooms B1 and B3
-        //
-        // Scenarios:
-        // S1 => A2, B3, C1, D1 should be valid (C2 can use A2 in B3)
-        // S2 => A2, B3, C2, D1 should *not* be valid (C2 cannot access to B3)
-        // S3 => (A1, A2), B3, C1, D1 should be valid
-        // S4 => (A1, A2), B2, C2, D1 should be valid (even if A1 cannot access to B2)
-        // S5 => A1, (B1, B3), C1, D1 should be valid
-        // S6 => A1, (B1, B2), C1, D1 should *not* be valid (A1 or C1 cannot access to B2)
-
-        $r1 = new Tracker_Rule_List(1, 1, 'F1', 'A1', 'F2', 'B1');
-        $r2 = new Tracker_Rule_List(2, 1, 'F1', 'A1', 'F2', 'B3');
-        $r3 = new Tracker_Rule_List(3, 1, 'F1', 'A2', 'F2', 'B2');
-        $r4 = new Tracker_Rule_List(4, 1, 'F1', 'A2', 'F2', 'B3');
-        $r5 = new Tracker_Rule_List(5, 1, 'F2', 'B1', 'F3', 'C1');
-        $r6 = new Tracker_Rule_List(6, 1, 'F2', 'B2', 'F3', 'C2');
-        $r7 = new Tracker_Rule_List(7, 1, 'F2', 'B3', 'F3', 'C1');
-
-        $arf = new MockTracker_RuleFactory($this);
-        $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3, $r4, $r5, $r6, $r7));
-
-        $f1 = new MockTracker_FormElement_Field_Selectbox($this);
-        $f1->setReturnReference('getBind', $bind);
-        $f1->setReturnValue('getID', 'F1');
-        $f1->setReturnValue('getLabel', 'f_1');
-        $f1->setReturnValue('getAllValues', null);
-
-        $f2 = new MockTracker_FormElement_Field_Selectbox($this);
-        $f2->setReturnReference('getBind', $bind);
-        $f2->setReturnValue('getID', 'F2');
-        $f2->setReturnValue('getLabel', 'f_2');
-        $f2->setReturnValue('getAllValues', null);
-
-        $f3 = new MockTracker_FormElement_Field_Selectbox($this);
-        $f3->setReturnReference('getBind', $bind);
-        $f3->setReturnValue('getID', 'F3');
-        $f3->setReturnValue('getLabel', 'f_3');
-        $f3->setReturnValue('getAllValues', null);
-
-        $f4 = new MockTracker_FormElement_Field_Selectbox($this);
-        $f4->setReturnReference('getBind', $bind);
-        $f4->setReturnValue('getID', 'F4');
-        $f4->setReturnValue('getLabel', 'f_4');
-        $f4->setReturnValue('getAllValues', null);
-
-        $aff = new MockTracker_FormElementFactory($this);
-        $aff->setReturnReference('getFormElementById', $f1, array('F1'));
-        $aff->setReturnReference('getFormElementById', $f2, array('F2'));
-        $aff->setReturnReference('getFormElementById', $f3, array('F3'));
-        $aff->setReturnReference('getFormElementById', $f4, array('F4'));
-
-        $rule_date_factory = mock('Tracker_Rule_Date_Factory');
-        stub($rule_date_factory)->searchByTrackerId()->returns(array());
-
-        $this->arm = new Tracker_RulesManagerTestVersion($this);
-        $this->arm->setTrackerFormElementFactory($aff);
-        $this->arm->setRuleDateFactory($rule_date_factory);
-        $this->arm->setReturnReference('getRuleFactory', $arf);
-        $this->arm->setReturnValue('getSelectedValuesForField', array('a_1'), array($f1, 'A1'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('a_2'), array($f1, 'A2'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_1'), array($f2, 'B1'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_2'), array($f2, 'B2'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_3'), array($f2, 'B3'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('c_1'), array($f3, 'C1'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('c_2'), array($f3, 'C2'));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('a_1'), array($f1, array('A1')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('a_2'), array($f1, array('A2')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_1'), array($f2, array('B1')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_2'), array($f2, array('B2')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_3'), array($f2, array('B3')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('c_1'), array($f3, array('C1')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('c_2'), array($f3, array('C2')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('a_1', 'a_2'), array($f1, array('A1', 'A2')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_1', 'b_3'), array($f2, array('B1', 'B3')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_1', 'b_2'), array($f2, array('B1', 'B2')));
-        $this->arm->setReturnValue('getSelectedValuesForField', array('b_2', 'b_3'), array($f2, array('B2', 'B3')));
-    }
-
-    public function testS1() {
-        //S1
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
-        $this->assertTrue(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => 'A2',
-                    'F2' => 'B3',
-                    'F3' => 'C1',
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'], '');
-    }
-
-    public function testS2() {
-        //S2
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_2(b_3) -> f_3(c_2)'));
-        $this->assertFalse(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => 'A2',
-                    'F2' => 'B3',
-                    'F3' => 'C2', //C2 cannot access to B3 !
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
-    }
-
-    public function testS3() {
-        //S3
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
-        $this->assertTrue(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => array('A1', 'A2'),
-                    'F2' => 'B3',
-                    'F3' => 'C1',
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
-    }
-
-    public function testS4() {
-        //S4
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
-        $this->assertTrue(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => array('A1', 'A2'),
-                    'F2' => 'B2',
-                    'F3' => 'C2',
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
-    }
-
-    public function testS5() {
-        //S5
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectNever('addFeedback');
-        $this->assertTrue(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => 'A1',
-                    'F2' => array('B1', 'B3'),
-                    'F3' => 'C1',
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'],  '');
-    }
-
-    public function testS6() {
-        //S6
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_1(a_1) -> f_2(b_2)'));
-        $this->assertFalse(
-            $this->arm->validate(
-                1,
-                array(
-                    'F1' => 'A1',
-                    'F2' => array('B1', 'B2'), //A1 cannot access to B2 !
-                    'F3' => 'C1',
-                    'F4' => 'D1'
-                )
-            )
-        );
-        //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
-    }
-}
-
 class Tracker_RulesManagerTest extends TuleapTestCase {
     function testForbidden() {
         $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
@@ -262,10 +63,24 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('D')->andReturn(false);
         $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('E')->andReturn(false);
 
+        $tracker_rules_date_validator = Mockery::mock(TrackerRulesDateValidator::class);
+        $tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(true);
+
+        $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
+        $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
+
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+
         $arm = partial_mock(
             'Tracker_RulesManager',
             array('getRuleFactory', 'getSelectedValuesForField'),
-            [Mockery::mock(Tracker::class), Mockery::mock(Tracker_FormElementFactory::class), $frozen_dao]
+            [Mockery::mock(Tracker::class), Mockery::mock(
+                Tracker_FormElementFactory::class),
+                $frozen_dao,
+                $tracker_rules_date_validator,
+                $tracker_rules_list_validator,
+                $tracker_factory
+            ]
         );
         $arm->setReturnReference('getRuleFactory', $arf);
 
@@ -454,7 +269,11 @@ XML;
         $tracker              = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');
         $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-        $manager              = new Tracker_RulesManager($tracker, $form_element_factory, $frozen_dao);
+        $tracker_rules_date_validator = Mockery::mock(TrackerRulesDateValidator::class);
+        $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
+        $tracker_factory              = Mockery::mock(TrackerFactory::class);
+
+        $manager              = new Tracker_RulesManager($tracker, $form_element_factory, $frozen_dao, $tracker_rules_date_validator, $tracker_rules_list_validator, $tracker_factory);
 
         stub($tracker)->getId()->returns(45);
 
@@ -469,389 +288,6 @@ XML;
         $manager->setRuleListFactory($list_factory);
 
         $manager->exportToXml($sax_object, $xmlMapping);
-    }
-}
-
-class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
-
-    public function testValidateReturnsFalseWhenTheDateDataIsInvalid() {
-
-        $value_field_list = array(
-            10 => '',
-            11 => '',
-            12 => '',
-            13 => '',
-            );
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $source_field         = mock('Tracker_FormElement_Field_Date');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-        stub($source_field)->getLabel()->returns('aaaaa');
-        stub($form_element_factory)->getFormElementById()->returns($source_field);
-
-        $tracker_rule_date  = mock('Tracker_Rule_Date');
-        $tracker_rule_date2 = mock('Tracker_Rule_Date');
-
-        stub($tracker_rule_date)->validate()->returns(true);
-        stub($tracker_rule_date)->getSourceFieldId()->returns(10);
-        stub($tracker_rule_date)->getTargetFieldId()->returns(11);
-
-        stub($tracker_rule_date2)->validate()->returns(false);
-        stub($tracker_rule_date2)->getSourceFieldId()->returns(12);
-        stub($tracker_rule_date2)->getTargetFieldId()->returns(13);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',
-                array($tracker_rule_date, $tracker_rule_date2));
-
-
-        $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
-
-
-        $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-
-    }
-
-    public function testValidateReturnsTrueWhenThereAreValidDateRules() {
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $fozen_dao            = Mockery::mock(FrozenFieldsDao::class);
-
-        $tracker_rule_date  = mock('Tracker_Rule_Date');
-        $tracker_rule_date2 = mock('Tracker_Rule_Date');
-
-        stub($tracker_rule_date)->validate()->returns(true);
-        stub($tracker_rule_date)->getSourceFieldId()->returns(10);
-        stub($tracker_rule_date)->getTargetFieldId()->returns(11);
-
-        stub($tracker_rule_date2)->validate()->returns(true);
-        stub($tracker_rule_date2)->getSourceFieldId()->returns(12);
-        stub($tracker_rule_date2)->getTargetFieldId()->returns(13);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $fozen_dao]
-        );
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array($tracker_rule_date, $tracker_rule_date2));
-
-        $value_field_list = array(
-            10 => '',
-            11 => '',
-            12 => '',
-            13 => '',
-            );
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-
-    }
-
-    public function testValidateReturnsTrueWhenThereAreNoRules() {
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-
-        $value_field_list = array();
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-
-    }
-
-    public function testValidateListRulesReturnsTrueWhenSourceValueDoesNotMatchRuleSourceValue() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 101,
-        );
-
-        $rule = new Tracker_Rule_List();
-        $rule->setSourceValue('not equal to 456')
-                ->setTargetValue(101)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(10)
-                ->setId(5);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateListRulesReturnsFalseWhenTargetValueDoesNotMatchRuleTargetValue() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 101,
-        );
-
-        $rule = new Tracker_Rule_List();
-        $rule->setSourceValue(456)
-                ->setTargetValue('not 101')
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(10)
-                ->setId(5);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-
-        $source_field = mock('Tracker_FormElement_Field_Selectbox');
-        $target_field = mock('Tracker_FormElement_Field_Selectbox');
-
-        stub($source_field)->getLabel()->returns('aaaaa');
-        stub($source_field)->getID()->returns(123);
-        stub($target_field)->getLabel()->returns('bbbbb');
-        stub($target_field)->getID()->returns(789);
-
-        stub($form_element_factory)->getFormElementById(123)->returns($source_field);
-        stub($form_element_factory)->getFormElementById(789)->returns($target_field);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-                'getSelectedValuesForField',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-
-        stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
-        $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
-
-        $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateListRulesReturnsTrueWhenAllValuesMatchRuleValues() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 586,
-        );
-
-        $rule = new Tracker_Rule_List();
-        $rule->setSourceValue(456)
-                ->setTargetValue(586)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(10)
-                ->setId(5);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-                'getSelectedValuesForField',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-
-        stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateListRulesReturnsFalseWhenTrackerValueDoesNotMatchRuleValue() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 586,
-        );
-
-        $rule = new Tracker_Rule_List();
-        $rule->setSourceValue(456)
-                ->setTargetValue(586)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(19)
-                ->setId(5);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_field         = Mockery::mock(FrozenFieldsDao::class);
-
-        $source_field = mock('Tracker_FormElement_Field_Selectbox');
-        $target_field = mock('Tracker_FormElement_Field_Selectbox');
-
-        stub($source_field)->getLabel()->returns('aaaaa');
-        stub($source_field)->getID()->returns(123);
-        stub($target_field)->getLabel()->returns('bbbbb');
-        stub($target_field)->getID()->returns(789);
-
-        stub($form_element_factory)->getFormElementById(123)->returns($source_field);
-        stub($form_element_factory)->getFormElementById(789)->returns($target_field);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-                'getSelectedValuesForField',
-            ],
-            [$tracker, $form_element_factory, $frozen_field]
-        );
-
-        stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
-        $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
-
-        $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateListRulesReturnsTrueOnMultipleValidData() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 586,
-            45      => 6
-        );
-
-        $rule1 = new Tracker_Rule_List();
-        $rule1->setSourceValue(456)
-                ->setTargetValue(586)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(19)
-                ->setId(5);
-
-        $rule2 = new Tracker_Rule_List();
-        $rule2->setSourceValue(6)
-                ->setTargetValue(456)
-                ->setSourceFieldId(45)
-                ->setTargetFieldId(123)
-                ->setTrackerId(19)
-                ->setId(98);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(19);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-                'getSelectedValuesForField',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-
-        stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue(
-                'getAllListRulesByTrackerWithOrder',
-                array($rule1, $rule2)
-                );
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateListRulesReturnsTrueWhenOneRuleOnlyIsValidForAGivenSetting() {
-        $value_field_list = array(
-            123     => 456,
-            789     => 586,
-        );
-
-        $rule1 = new Tracker_Rule_List();
-        $rule1->setSourceValue(456)
-                ->setTargetValue(586)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(19)
-                ->setId(5);
-
-        //same rule with different target value
-        $rule2 = new Tracker_Rule_List();
-        $rule2->setSourceValue(456)
-                ->setTargetValue(54654)
-                ->setSourceFieldId(123)
-                ->setTargetFieldId(789)
-                ->setTrackerId(19)
-                ->setId(11);
-
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(19);
-
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
-        $source_field         = mock('Tracker_FormElement_Field_List_OpenValue');
-        stub($source_field)->getLabel()->returns('aaaaa');
-        stub($form_element_factory)->getFormElementById()->returns($source_field);
-
-        $tracker_rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            [
-                'getAllListRulesByTrackerWithOrder',
-                'getAllDateRulesByTrackerId',
-                'getSelectedValuesForField',
-            ],
-            [$tracker, $form_element_factory, $frozen_dao]
-        );
-        stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
-        $tracker_rules_manager->setReturnValue(
-                'getAllListRulesByTrackerWithOrder',
-                array($rule1, $rule2)
-                );
-
-        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
     }
 }
 
@@ -912,6 +348,9 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $rules_date = array(
             $this->setUpRuleDate()
         );
+        $tracker_rules_date_validator = Mockery::mock(TrackerRulesDateValidator::class);
+        $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
+        $tracker_factory  = Mockery::mock(TrackerFactory::class);
         $rule_date_factory = mock('Tracker_Rule_Date_Factory');
         stub($rule_date_factory)->searchByTrackerId($this->tracker_id)->returns($rules_date);
 
@@ -920,7 +359,7 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $this->rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getRuleFactory'],
-            [$tracker, $element_factory, $frozen_dao     ]
+            [$tracker, $element_factory, $frozen_dao, $tracker_rules_date_validator, $tracker_rules_list_validator, $tracker_factory]
         );
         stub($this->rules_manager)->getRuleFactory()->returns($rule_list_factory);
         $this->rules_manager->setRuleDateFactory($rule_date_factory);

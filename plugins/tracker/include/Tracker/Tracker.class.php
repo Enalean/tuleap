@@ -2793,13 +2793,15 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                                 'use_artifact_permissions' => 0,
                             )
                         );
-                        if ($line[$idx]!='') {
+                        if ($line[$idx]!= '') {
                             $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx], $artifact);
 
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
                                 $has_blocking_error = true;
                             }
+                        } else {
+                            $data[$field->getId()] = '';
                         }
                     } else {
                         $error_nature[$column_name] = $column_name;
