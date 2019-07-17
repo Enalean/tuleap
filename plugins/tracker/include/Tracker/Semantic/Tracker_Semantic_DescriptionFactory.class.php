@@ -20,9 +20,9 @@
  */
 
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Tracker_Semantic_DescriptionFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
+class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
 
     /**
@@ -47,19 +47,11 @@ class Tracker_Semantic_DescriptionFactory implements IRetrieveSemanticFromXML, I
         return Tracker_Semantic_Description::load($tracker);
     }
 
-    /**
-     * Creates a Tracker_Semantic_Description Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic title
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the semantic is attached
-     *
-     * @return Tracker_Semantic_Description The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    {
         $xml_field = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
-        $field = $xmlMapping[(string)$xml_field_attributes['REF']];
+        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
         return new Tracker_Semantic_Description($tracker, $field);
     }
 

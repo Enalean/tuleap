@@ -30,14 +30,22 @@ class MessageFetcherTest extends TuleapTestCase
      * @var MessageFetcher
      */
     private $message_fetcher;
+    /**
+     * @var \Mockery\MockInterface|AgileDashboard_Semantic_InitialEffortFactory
+     */
+    private $initial_effort_factory;
+    /**
+     * @var \Mockery\MockInterface|Tuleap\AgileDashboard\Semantic\SemanticDoneFactory
+     */
+    private $semantic_done_factory;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->planning_factory       = mock('PlanningFactory');
-        $this->initial_effort_factory = mock('AgileDashboard_Semantic_InitialEffortFactory');
-        $this->semantic_done_factory  = mock('Tuleap\AgileDashboard\Semantic\SemanticDoneFactory');
+        $this->initial_effort_factory = \Mockery::mock('AgileDashboard_Semantic_InitialEffortFactory');
+        $this->semantic_done_factory  = \Mockery::mock('Tuleap\AgileDashboard\Semantic\SemanticDoneFactory');
 
         $this->message_fetcher = new MessageFetcher(
             $this->planning_factory,
@@ -57,8 +65,8 @@ class MessageFetcherTest extends TuleapTestCase
         $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns($this->field);
 
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
-        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
-        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
@@ -81,8 +89,8 @@ class MessageFetcherTest extends TuleapTestCase
         $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns($this->field);
 
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
-        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
-        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 
@@ -96,8 +104,8 @@ class MessageFetcherTest extends TuleapTestCase
         $initial_effort = stub('AgileDashBoard_Semantic_InitialEffort')->getField()->returns(null);
 
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->tracker)->returns($planning);
-        stub($this->semantic_done_factory)->getInstanceByTracker($this->backlog_tracker)->returns($semantic_done);
-        stub($this->initial_effort_factory)->getByTracker($this->backlog_tracker)->returns($initial_effort);
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')->with($this->backlog_tracker)->andReturn($semantic_done);
+        $this->initial_effort_factory->shouldReceive('getByTracker')->with($this->backlog_tracker)->andReturn($initial_effort);
 
         $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
 

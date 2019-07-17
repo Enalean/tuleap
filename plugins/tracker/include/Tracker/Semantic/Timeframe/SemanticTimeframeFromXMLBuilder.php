@@ -24,29 +24,20 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use SimpleXMLElement;
 use Tracker;
-use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tracker_Semantic;
 
-class SemanticTimeframeFromXMLBuilder implements IRetrieveSemanticFromXML
+class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
 {
-    /**
-     * Creates a Tracker_Semantic_Contributor Object
-     *
-     * @param SimpleXMLElement  $xml        containing the structure of the imported semantic contributor
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker           $tracker    to which the semantic is attached
-     *
-     * @return Tracker_Semantic The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker)
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
     {
         $xml_start_date_field = $xml->start_date_field;
         $xml_start_date_field_attributes = $xml_start_date_field->attributes();
-        $start_date_field = $xmlMapping[(string)$xml_start_date_field_attributes['REF']];
+        $start_date_field = $xml_mapping[(string)$xml_start_date_field_attributes['REF']];
 
         $xml_duration_field = $xml->duration_field;
         $xml_duration_field_attributes = $xml_duration_field->attributes();
-        $duration_field = $xmlMapping[(string)$xml_duration_field_attributes['REF']];
+        $duration_field = $xml_mapping[(string)$xml_duration_field_attributes['REF']];
 
         return new SemanticTimeframe($tracker, $start_date_field, $duration_field);
     }

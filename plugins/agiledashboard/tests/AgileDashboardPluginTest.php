@@ -57,7 +57,7 @@ class AgileDashboardPluginTracker_event_semantic_from_xmlTest extends TuleapTest
      */
     public function itCreatesSemantic()
     {
-        $effort_factory = partial_mock('AgileDashboard_Semantic_InitialEffortFactory', array());
+        $effort_factory = AgileDashboard_Semantic_InitialEffortFactory::instance();
 
         $plugin = partial_mock('AgileDashboardPlugin', array('getSemanticInitialEffortFactory'));
         stub($plugin)->getSemanticInitialEffortFactory()->returns($effort_factory);

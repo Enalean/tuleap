@@ -22,20 +22,11 @@
 */
 
 use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
-use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Cardwall_Semantic_CardFieldsFactory implements IRetrieveSemanticFromXML
+class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
 {
-    /**
-     * Creates a Cardwall_Semantic_CardFields Object
-     *
-     * @param SimpleXMLElement $xml          containing the structure of the imported semantic initial effort
-     * @param array            &$xml_mapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker      to which the semantic is attached
-     *
-     * @return Cardwall_Semantic_CardFields The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xml_mapping, $tracker)
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
     {
         $extractor        = new CardFieldXmlExtractor();
         $fields           = $extractor->extractFieldFromXml($xml, $xml_mapping);
