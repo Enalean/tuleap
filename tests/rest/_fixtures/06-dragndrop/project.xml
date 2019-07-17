@@ -794,6 +794,10 @@
             <semantic type="plugin_cardwall_card_fields">
                 <field REF="F41"/>
             </semantic>
+            <semantic type="timeframe">
+                <start_date_field REF="F37"/>
+                <duration_field REF="F39"/>
+            </semantic>
         </semantics>
         <rules>
             <date_rules/>
@@ -1150,6 +1154,10 @@
             <semantic type="tooltip"/>
             <semantic type="plugin_cardwall_card_fields">
                 <field REF="F71"/>
+            </semantic>
+            <semantic type="timeframe">
+                <start_date_field REF="F65"/>
+                <duration_field REF="F67"/>
             </semantic>
         </semantics>
         <rules>

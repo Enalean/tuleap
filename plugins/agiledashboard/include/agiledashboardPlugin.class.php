@@ -127,7 +127,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
             $this->addHook(TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
-            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
+            $this->addHook(TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook('plugin_statistics_service_usage');
             $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
@@ -811,9 +811,9 @@ class AgileDashboardPlugin extends Plugin
     }
 
     /**
-     * @see TRACKER_EVENT_GET_SEMANTIC_FACTORIES
+     * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
-    public function tracker_event_get_semantic_factories($params) {
+    public function tracker_event_get_semantic_duplicators($params) {
         $params['factories'][] = $this->getSemanticInitialEffortFactory();
     }
 

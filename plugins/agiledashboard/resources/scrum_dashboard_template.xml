@@ -1074,6 +1074,10 @@
           <description>Define the velocity field</description>
           <field REF="F22900"/>
         </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F22749"/>
+          <duration_field REF="F22750"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -1320,6 +1324,10 @@
           <label>velocity</label>
           <description>Define the velocity field</description>
           <field REF="F22901"/>
+        </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F22771"/>
+          <duration_field REF="F22772"/>
         </semantic>
       </semantics>
       <rules>
