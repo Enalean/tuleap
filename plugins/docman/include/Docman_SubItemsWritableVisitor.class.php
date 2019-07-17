@@ -1,29 +1,34 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\Item\ItemVisitor;
 
 /**
  * Check if all the sub items are writable by given user.
+ * @template-implements ItemVisitor<bool>
  */
-class Docman_SubItemsWritableVisitor /* implements Visitor */ {
+class Docman_SubItemsWritableVisitor implements ItemVisitor
+{
     var $dpm;
     var $user;
     var $docIdList;
@@ -40,7 +45,8 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
         $this->fldCounter = 0;
     }
 
-    function visitFolder(&$item, $params = array()) {
+    public function visitFolder(Docman_Folder $item, array $params = array())
+    {
         // Recurse
         $canWrite = true;
         $this->fldCounter++;
@@ -63,7 +69,8 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
         return $canWrite;
     }
 
-    function visitDocument(&$item, $params = array()) {
+    public function visitDocument(Docman_Document $item, array $params = array())
+    {
         $this->docCounter++;
         if($this->_itemIsWritable($item, $params)) {
             $this->docIdList[] = $item->getId();
@@ -72,24 +79,34 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
         return false;
     }
 
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, array $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitFile(&$item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
+        return false;
     }
 
 
@@ -116,4 +133,3 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
         return $this->fldCounter;
     }
 }
-?>

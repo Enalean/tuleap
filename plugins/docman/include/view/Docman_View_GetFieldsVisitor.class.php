@@ -1,16 +1,31 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-*
-* 
-*
-* Docman_View_GetFieldsVisitor
-*/
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class.php');
+use Tuleap\Docman\Item\ItemVisitor;
 
-class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
+/**
+ * @template-implements ItemVisitor<array>
+ */
+class Docman_View_GetFieldsVisitor implements ItemVisitor
+{
     var $mdLabelToSkip;
 
     function __construct($mdLabelToSkip = array()) {
@@ -30,12 +45,14 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
         return $mdHtmlFactory->buildFieldArray($mdIter, $this->mdLabelToSkip, false, $formName, $themePath);
     }
 
-    function visitItem(&$item, $params = array()) {
+    public function visitItem(Docman_Item $item, $params = array())
+    {
         $mdIter = $item->getMetadataIterator();
         return $this->buildFieldArray($mdIter, $params);
     }
 
-    function visitFolder(&$item, $params = array()) {
+    public function visitFolder(Docman_Folder $item, $params = array())
+    {
         $folderMetadata = array('title', 'description','create_date', 'update_date');
         $mda = array();
         foreach($folderMetadata as $mdLabel) {
@@ -45,24 +62,29 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
         return $this->buildFieldArray($mdIter, $params);
     }
 
-    function visitDocument(&$item, $params = array()) {
+    public function visitDocument(Docman_Document $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return $this->visitItem($item, $params);
     }
 }
-?>
