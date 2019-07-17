@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -511,12 +511,12 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     abstract public function getChartType();
 
     /**
-     * @return GraphOnTracker_Engine The engine associated to the concrete chart
+     * @return GraphOnTrackersV5_Engine The engine associated to the concrete chart
      */
     abstract protected function getEngine();
 
     /**
-     * @return ChartDataBuilder The data builder associated to the concrete chart
+     * @return ChartDataBuilderV5 The data builder associated to the concrete chart
      */
     abstract protected function getChartDataBuilder($artifacts);
 

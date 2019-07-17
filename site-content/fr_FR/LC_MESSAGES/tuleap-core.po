@@ -444,6 +444,9 @@ msgstr "Données"
 msgid "Date"
 msgstr "Date"
 
+msgid "Day"
+msgstr "Jour"
+
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
 
@@ -683,6 +686,10 @@ msgstr ""
 msgid "Is used?"
 msgstr "Utilisé ?"
 
+#, php-format
+msgid "JpGraph error for graph \"%s\": %s"
+msgstr "Erreur JpGraph pour le graphique \"%s\": %s"
+
 msgid "Label"
 msgstr "Label"
 
@@ -788,6 +795,9 @@ msgstr "Information manquante. Veuillez saisir les informations demandées."
 
 msgid "Moderation"
 msgstr "Moderation"
+
+msgid "Month"
+msgstr "Mois"
 
 msgid "My personnal page"
 msgstr "Ma page personnelle"
@@ -1642,6 +1652,9 @@ msgstr ""
 msgid "Webhooks"
 msgstr "Webhooks"
 
+msgid "Week"
+msgstr "Semaine"
+
 msgid "Welcome aboard"
 msgstr "Bienvenue à bord"
 
@@ -1683,6 +1696,9 @@ msgid ""
 msgstr ""
 "Wow, attendez une minute. Vous êtes sur le point de supprimer le label <b>"
 "%s</b>. Merci de confirmer votre action."
+
+msgid "Year"
+msgstr "Année"
 
 msgid "Yesterday"
 msgstr "Hier"
