@@ -75,6 +75,8 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
@@ -319,11 +321,12 @@ class AdminController extends BaseController
         } else {
             $ugroup_user_dao   = new UGroupUserDao();
             $ugroup_manager    = new UGroupManager();
+            $ugroup_binding    = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
             $ugroup_duplicator = new UgroupDuplicator(
                 new UGroupDao(),
                 $ugroup_manager,
-                new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-                $ugroup_user_dao,
+                $ugroup_binding,
+                MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
                 $this->event_manager
             );
 

@@ -65,26 +65,13 @@ $binding_controller                       = new BindingController(
     $edit_event_launcher
 );
 $user_manager                             = UserManager::instance();
-$project_member_adder                     = new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding);
-$dynamic_member_updater                   = new DynamicUGroupMembersUpdater(
-    new UserPermissionsDao(),
-    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-    $project_member_adder,
-    $event_manager
-);
 $synchronized_project_membership_detector = new SynchronizedProjectMembershipDetector(
     new SynchronizedProjectMembershipDao()
 );
 $members_controller                       = new MembersController(
     $request,
     $user_manager,
-    new MemberAdder(
-        new MembershipUpdateVerifier(),
-        new StaticMemberAdder(),
-        $dynamic_member_updater,
-        $project_member_adder,
-        $synchronized_project_membership_detector
-    )
+    MemberAdder::build(new ProjectMemberAdderWithStatusCheckAndNotifications($ugroup_binding))
 );
 
 $membership_delegation_dao = new MembershipDelegationDao();

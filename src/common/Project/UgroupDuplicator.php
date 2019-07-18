@@ -20,12 +20,13 @@
 
 namespace Tuleap\Project;
 
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 use UGroupDao;
 use UGroupManager;
 use ProjectUGroup;
 use Project;
 use UGroupBinding;
-use UGroupUserDao;
 use EventManager;
 use Event;
 
@@ -38,9 +39,9 @@ class UgroupDuplicator
     private $event_manager;
 
     /**
-     * @var UGroupUserDao
+     * @var MemberAdder
      */
-    private $ugroup_user_dao;
+    private $member_adder;
 
     /**
      * @var UGroupBinding
@@ -61,14 +62,14 @@ class UgroupDuplicator
         UGroupDao $dao,
         UGroupManager $manager,
         UGroupBinding $binding,
-        UGroupUserDao $ugroup_user_dao,
+        MemberAdder $member_adder,
         EventManager $event_manager
     ) {
-        $this->dao             = $dao;
-        $this->manager         = $manager;
-        $this->binding         = $binding;
-        $this->ugroup_user_dao = $ugroup_user_dao;
-        $this->event_manager   = $event_manager;
+        $this->dao           = $dao;
+        $this->manager       = $manager;
+        $this->binding       = $binding;
+        $this->member_adder  = $member_adder;
+        $this->event_manager = $event_manager;
     }
 
     public function duplicateOnProjectCreation(Project $template, $new_project_id, array &$ugroup_mapping)
@@ -82,26 +83,28 @@ class UgroupDuplicator
         }
     }
 
-    private function duplicate(ProjectUGroup $ugroup, $new_project_id, array &$ugroup_mapping)
+    private function duplicate(ProjectUGroup $source_ugroup, $new_project_id, array &$ugroup_mapping)
     {
-        $ugroup_id     = $ugroup->getId();
+        $ugroup_id     = $source_ugroup->getId();
         $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
 
         if (! $new_ugroup_id) {
             return false;
         }
 
-        $this->pluginDuplicatesUgroup($ugroup, $new_ugroup_id);
-        $this->duplicateUgroupUsersAndBinding($ugroup, $new_ugroup_id, $new_project_id);
+        $new_ugroup = $this->manager->getById($new_ugroup_id);
+
+        $this->pluginDuplicatesUgroup($source_ugroup, $new_ugroup);
+        $this->duplicateUgroupUsersAndBinding($source_ugroup, $new_ugroup, $new_project_id);
 
         $ugroup_mapping[$ugroup_id] = $new_ugroup_id;
     }
 
-    private function pluginDuplicatesUgroup(ProjectUGroup $ugroup, $new_ugroup_id)
+    private function pluginDuplicatesUgroup(ProjectUGroup $source_ugroup, ProjectUGroup $new_ugroup)
     {
         $params = array(
-            'source_ugroup'  => $ugroup,
-            'new_ugroup_id'  => $new_ugroup_id,
+            'source_ugroup'  => $source_ugroup,
+            'new_ugroup_id'  => $new_ugroup->getId(),
         );
 
         $this->event_manager->processEvent(
@@ -110,15 +113,20 @@ class UgroupDuplicator
         );
     }
 
-    private function duplicateUgroupUsersAndBinding(ProjectUGroup $ugroup, $new_ugroup_id, $new_project_id)
+    private function duplicateUgroupUsersAndBinding(ProjectUGroup $source_ugroup, ProjectUGroup $new_ugroup, $new_project_id)
     {
+        $this->dao->createBinding($new_project_id, $source_ugroup->getId(), $new_ugroup->getId());
 
-        $this->dao->createBinding($new_project_id, $ugroup->getId(), $new_ugroup_id);
-
-        if ($ugroup->isBound()) {
-            $this->binding->addBinding($new_ugroup_id, $ugroup->getSourceGroup()->getId());
+        if ($source_ugroup->isBound()) {
+            $this->binding->addBinding($new_ugroup->getId(), $source_ugroup->getSourceGroup()->getId());
         } else {
-            $this->ugroup_user_dao->cloneUgroup($ugroup->getId(), $new_ugroup_id);
+            foreach ($source_ugroup->getMembers() as $member) {
+                try {
+                    $this->member_adder->addMember($member, $new_ugroup);
+                } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
+                    // do nothing
+                }
+            }
         }
     }
 }

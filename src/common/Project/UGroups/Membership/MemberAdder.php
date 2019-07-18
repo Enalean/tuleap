@@ -22,16 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership;
 
+use EventManager;
 use ForgeConfig;
 use PFUser;
 use Project;
 use ProjectUGroup;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Project\UserPermissionsDao;
 use UGroup_Invalid_Exception;
+use UGroupBinding;
+use UGroupManager;
+use UGroupUserDao;
 
 class MemberAdder
 {
@@ -58,6 +67,26 @@ class MemberAdder
         $this->dynamic_member_updater                   = $dynamic_member_updater;
         $this->project_member_adder                     = $project_member_adder;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
+    }
+
+    public static function build(ProjectMemberAdder $project_member_adder): self
+    {
+        return new MemberAdder(
+            new MembershipUpdateVerifier(),
+            new StaticMemberAdder(),
+            new DynamicUGroupMembersUpdater(
+                new UserPermissionsDao(),
+                new DBTransactionExecutorWithConnection(
+                    DBFactory::getMainTuleapDBConnection()
+                ),
+                $project_member_adder,
+                EventManager::instance()
+            ),
+            $project_member_adder,
+            new SynchronizedProjectMembershipDetector(
+                new SynchronizedProjectMembershipDao()
+            )
+        );
     }
 
     /**
