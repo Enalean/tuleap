@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,7 @@ use ProjectUGroup;
 use SimpleXMLElement;
 use System_Command;
 use Tuleap\GitBundle;
+use Tuleap\Project\UGroups\InvalidUGroupException;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UGroupManager;
 use UserManager;
@@ -138,7 +139,11 @@ class GitXmlExporter
             return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_admins_name_key');
         }
 
-        return $this->ugroup_manager->getUGroup($this->project, $ugroup)->getTranslatedName();
+        $ugroup_object = $this->ugroup_manager->getUGroup($this->project, $ugroup);
+        if (! $ugroup_object) {
+            throw new InvalidUGroupException($ugroup);
+        }
+        return $ugroup_object->getTranslatedName();
     }
 
     private function exportGitRepositories(

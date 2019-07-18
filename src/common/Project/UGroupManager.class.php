@@ -32,6 +32,8 @@ require_once('www/include/account.php');
 
 class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    private const FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS = 100;
+
     /**
      * @var UGroupDao
      */
@@ -98,7 +100,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getUGroup(Project $project, $ugroup_id) {
         $project_id = $project->getID();
         if ($ugroup_id <= 100) {
-            $project_id = 100;
+            $project_id = self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS;
         }
 
 
@@ -109,6 +111,26 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
 
         return null;
+    }
+
+    /**
+     * @param Project $project
+     * @return ProjectUGroup
+     */
+    public function getProjectAdminsUGroup(Project $project)
+    {
+        $row = $this->getDao()->searchByGroupIdAndUGroupId(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, ProjectUGroup::PROJECT_ADMIN)->getRow();
+        return $this->instanciateGroupForProject($project, $row);
+    }
+
+    /**
+     * @param Project $project
+     * @return ProjectUGroup
+     */
+    public function getProjectMembersUGroup(Project $project)
+    {
+        $row = $this->getDao()->searchByGroupIdAndUGroupId(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, ProjectUGroup::PROJECT_MEMBERS)->getRow();
+        return $this->instanciateGroupForProject($project, $row);
     }
 
     /**
@@ -213,10 +235,10 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getUGroupByName(Project $project, $name) {
         $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
         if (! $row && preg_match('/^ugroup_.*_key$/', $name)) {
-            $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
+            $row = $this->getDao()->searchByGroupIdAndName(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, $name)->getRow();
         }
         if (! $row && in_array($this->getUnormalisedName($name), NameTranslator::$names)) {
-            $row = $this->getDao()->searchByGroupIdAndName(100, $this->getUnormalisedName($name))->getRow();
+            $row = $this->getDao()->searchByGroupIdAndName(self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS, $this->getUnormalisedName($name))->getRow();
         }
         if (! $row && $ugroup = $this->getDynamicUGoupByName($project, $name)) {
             return $ugroup;

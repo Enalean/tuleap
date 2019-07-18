@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,9 @@
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
 
-require_once 'common/layout/ColorHelper.class.php';
-
+/**
+ * @template ListValueBinding of Tracker_FormElement_Field_List_Value
+ */
 abstract class Tracker_FormElement_Field_List_Bind implements
     Tracker_FormElement_Field_Shareable,
     Tracker_IProvideJsonFormatOfMyself,
@@ -659,6 +660,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public abstract function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
 
+    /**
+     * @psalm-param ListValueBinding $value
+     */
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
         $representation = new FieldValueRepresentation();
         $values = array(

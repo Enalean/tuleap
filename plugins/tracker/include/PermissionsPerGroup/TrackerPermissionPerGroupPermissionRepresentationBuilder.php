@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -139,7 +139,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
             $indexed_permissions[Tracker::PERMISSION_FULL] = [];
         }
 
-        $project_admins = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+        $project_admins = $this->ugroup_manager->getProjectAdminsUGroup($project);
 
         array_unshift(
             $indexed_permissions[Tracker::PERMISSION_FULL],

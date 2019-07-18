@@ -22,6 +22,9 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 
+/**
+ * @template-extends Tracker_FormElement_Field_List_Bind<Tracker_FormElement_Field_List_Bind_UgroupsValue>
+ */
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'ugroups';
@@ -639,8 +642,15 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
         $project               = $value->getProject();
+        if (! $project) {
+            throw new Project_NotFoundException();
+        }
+        $ugroup                = $this->ugroup_manager->getUGroup($project, $value->getUgroupId());
+        if (! $ugroup) {
+            throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
+        }
         $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build($project->getID(), $this->ugroup_manager->getUGroup($project, $value->getUgroupId()));
+        $ugroup_representation->build($project->getID(), $ugroup);
 
         $representation = new FieldListBindUGroupValueRepresentation();
         $representation->build($value, $ugroup_representation);

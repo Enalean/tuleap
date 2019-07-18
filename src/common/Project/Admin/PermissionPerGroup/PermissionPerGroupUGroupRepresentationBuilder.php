@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
 use Project;
 use ProjectUGroup;
+use Tuleap\Project\UGroups\InvalidUGroupException;
 use UGroupManager;
 
 class PermissionPerGroupUGroupRepresentationBuilder
@@ -39,7 +40,9 @@ class PermissionPerGroupUGroupRepresentationBuilder
     public function build(Project $project, $user_group_id)
     {
         $user_group = $this->ugroup_manager->getUGroup($project, $user_group_id);
-
+        if (! $user_group) {
+            throw new InvalidUGroupException($user_group_id);
+        }
         $is_custom = ! $this->isProjectAdmin($user_group) && ! $user_group->isStatic();
 
         return new PermissionPerGroupUGroupRepresentation(

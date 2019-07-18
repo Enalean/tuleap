@@ -83,7 +83,7 @@ class PermissionPerGroupSVNServicePaneBuilder
                 SvnPermissionManager::PERMISSION_ADMIN
             );
 
-            $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+            $user_group = $this->ugroup_manager->getProjectAdminsUGroup($project);
             $permissions->addPermission(
                 ProjectUGroup::PROJECT_ADMIN,
                 $this->formatter->formatGroup($user_group)
@@ -91,7 +91,7 @@ class PermissionPerGroupSVNServicePaneBuilder
         }
 
         if (count($ugroups) > 0 || (int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN) {
-            $user_group = $this->ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
+            $user_group = $this->ugroup_manager->getProjectAdminsUGroup($project);
             $permissions->addPermission(
                 ProjectUGroup::PROJECT_ADMIN,
                 $this->formatter->formatGroup($user_group)
