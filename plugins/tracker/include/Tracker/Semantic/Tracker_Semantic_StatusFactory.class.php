@@ -19,9 +19,9 @@
  */
 
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic
+class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
     /**
      * Hold an instance of the class
@@ -45,24 +45,16 @@ class Tracker_Semantic_StatusFactory implements IRetrieveSemanticFromXML, IDupli
         return Tracker_Semantic_Status::load($tracker);
     }
 
-    /**
-     * Creates a Tracker_Semantic_Status Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic status
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the semantic is attached
-     *
-     * @return Tracker_Semantic_Status The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    {
         $xml_field = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
-        $field = $xmlMapping[(string)$xml_field_attributes['REF']];
+        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
         $xml_open_values = $xml->open_values;
         $open_values = array();
         foreach ($xml_open_values->open_value as $xml_open_value) {
             $xml_open_value_attributes = $xml_open_value->attributes();
-            $value_id = $xmlMapping[(string)$xml_open_value_attributes['REF']];
+            $value_id = $xml_mapping[(string)$xml_open_value_attributes['REF']];
             $open_values[] = $value_id;
         }
         return new Tracker_Semantic_Status($tracker, $field, $open_values);

@@ -23,9 +23,9 @@
  */
 
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
-use Tuleap\Tracker\Semantic\IRetrieveSemanticFromXML;
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class AgileDashboard_Semantic_InitialEffortFactory implements IRetrieveSemanticFromXML, IDuplicateSemantic {
+class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFromXML, IDuplicateSemantic {
 
     /**
      * Hold an instance of the class
@@ -53,19 +53,11 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IRetrieveSemanticF
         return AgileDashBoard_Semantic_InitialEffort::load($tracker);
     }
 
-    /**
-     * Creates a AgileDashBoard_Semantic_InitialEffort Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported semantic initial effort
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the semantic is attached
-     *
-     * @return AgileDashBoard_Semantic_InitialEffort The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    {
         $xml_field = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
-        $field = $xmlMapping[(string)$xml_field_attributes['REF']];
+        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
 
         return new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
     }

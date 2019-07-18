@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
@@ -52,37 +53,48 @@ class Tracker_SemanticFactory {
     public function getInstanceFromXML(
         SimpleXMLElement $xml,
         SimpleXMLElement $full_semantic_xml,
-        array &$xmlMapping,
+        array $xml_mapping,
         Tracker $tracker
     ) {
         $semantic = null;
         $attributes = $xml->attributes();
         $type = $attributes['type'];
-        switch($type) {
-            case 'title':
-                $semantic = $this->getSemanticTitleFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            case 'description':
-                $semantic = $this->getSemanticDescriptionFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            case 'status':
-                $semantic = $this->getSemanticStatusFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            case 'contributor':
-                $semantic = $this->getSemanticContributorFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            case 'tooltip':
-                $semantic = $this->getSemanticTooltipFactory()->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            case 'timeframe':
-                $semantic = (new SemanticTimeframeFromXMLBuilder())->getInstanceFromXML($xml, $xmlMapping, $tracker);
-                break;
-            default:
-                $semantic = $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xmlMapping, $tracker, $type);
-                break;
+
+        $builder = $this->getSemanticFromXMLBuilder($type);
+        if ($builder === null) {
+            return $this->getSemanticFromAnotherPlugin($xml, $full_semantic_xml, $xml_mapping, $tracker, $type);
         }
 
-        return $semantic;
+        return $builder->getInstanceFromXML($xml, $xml_mapping, $tracker);
+    }
+
+    private function getSemanticFromXMLBuilder(string $type): ?IBuildSemanticFromXML
+    {
+        if ($type === 'title') {
+            return $this->getSemanticTitleFactory();
+        }
+
+        if ($type === 'description') {
+            return $this->getSemanticDescriptionFactory();
+        }
+
+        if ($type === 'status') {
+            return $this->getSemanticStatusFactory();
+        }
+
+        if ($type === 'contributor') {
+            return $this->getSemanticContributorFactory();
+        }
+
+        if ($type === 'tooltip') {
+            return $this->getSemanticTooltipFactory();
+        }
+
+        if ($type === 'timeframe') {
+            return (new SemanticTimeframeFromXMLBuilder());
+        }
+
+        return null;
     }
 
     private function getSemanticFromAnotherPlugin(

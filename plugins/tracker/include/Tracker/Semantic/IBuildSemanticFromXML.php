@@ -24,19 +24,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_Semantic;
 
-/**
- * Provides the retrieval and duplication of a Tracker_Semantic
- */
-interface IRetrieveSemanticFromXML
+interface IBuildSemanticFromXML
 {
-    /**
-     * Creates a Tracker_Semantic_Contributor Object
-     *
-     * @param SimpleXMLElement  $xml        containing the structure of the imported semantic contributor
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker           $tracker    to which the semantic is attached
-     *
-     * @return Tracker_Semantic The semantic object
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker);
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic;
 }
