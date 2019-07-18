@@ -260,11 +260,14 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
     /**
      * @depends testGetMultipleUsersFromAStaticGroup
      */
-    public function testPutUsersInProjectMembersAddsMembers() {
-        $put_resource = json_encode(array(
-            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
-            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME])
-        ));
+    public function testPutUsersInProjectMembersAddsMembers()
+    {
+        $put_resource = json_encode([
+            "user_references" => [
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME])
+            ]
+        ]);
 
         $response = $this->getResponse($this->client->put(
             'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
@@ -287,7 +290,8 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
         $this->restoreProjectMembersToAvoidBreakingOtherTests();
     }
 
-    private function restoreProjectMembersToAvoidBreakingOtherTests() {
+    private function restoreProjectMembersToAvoidBreakingOtherTests()
+    {
         $put_resource = json_encode(array(
             array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
             array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]),

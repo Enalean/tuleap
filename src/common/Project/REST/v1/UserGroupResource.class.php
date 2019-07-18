@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,8 @@ use UserManager;
 /**
  * Wrapper for user_groups related REST methods
  */
-class UserGroupResource extends AuthenticatedResource {
+class UserGroupResource extends AuthenticatedResource
+{
 
     public const MAX_LIMIT = 50;
     /**
@@ -74,7 +75,8 @@ class UserGroupResource extends AuthenticatedResource {
     /** @var ProjectManager */
     private $project_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->ugroup_manager        = new UGroupManager();
         $this->user_manager          = UserManager::instance();
         $this->project_manager       = ProjectManager::instance();
@@ -104,7 +106,8 @@ class UserGroupResource extends AuthenticatedResource {
      *
      * @return \Tuleap\Project\REST\UserGroupRepresentation
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
 
         $ugroup     = $this->user_group_retriever->getExistingUserGroup($id);
@@ -135,7 +138,8 @@ class UserGroupResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeadersForUserGroupId();
     }
 
@@ -250,6 +254,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @param string $id Id of the ugroup This should be one of two formats<br>
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
      * - format: ugroupId for all other groups (registered users, custom groups, ...)
+     *
      * @param array $user_references {@from body}
      *
      * @throws 400
@@ -297,6 +302,10 @@ class UserGroupResource extends AuthenticatedResource {
          */
         $user_references_representations = [];
         foreach ($user_references as $user_reference) {
+            if (! is_array($user_reference)) {
+                throw new RestException(400, 'Invalid format provided for "user_references"');
+            }
+
             $user_references_representations[] = UserRESTReferenceRepresentation::buildFromArray($user_reference);
         }
 
