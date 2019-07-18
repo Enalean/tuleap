@@ -266,13 +266,6 @@ class DocmanItemCreator
             throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
 
-        $this->checkDocumentIsNotBeingUploaded(
-            $parent_item,
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-            $representation->title,
-            $current_time
-        );
-
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             $current_time,
