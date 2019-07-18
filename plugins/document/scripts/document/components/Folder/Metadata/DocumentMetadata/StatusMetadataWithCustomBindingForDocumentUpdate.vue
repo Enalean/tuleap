@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <status-metadata v-model="status_value" v-if="is_item_status_metadata_used"/>
+    <status-metadata v-model="status_value" v-if="is_item_status_metadata_used" data-test="document-status-for-item-update"/>
 </template>
 
 <script>
@@ -26,12 +26,12 @@ import { mapState } from "vuex";
 import {
     getStatusFromMapping,
     getStatusMetadata
-} from "../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { DOCMAN_ITEM_STATUS_NONE } from "../../../constants.js";
-import StatusMetadata from "./StatusMetadata.vue";
+} from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
+import { DOCMAN_ITEM_STATUS_NONE } from "../../../../constants.js";
+import StatusMetadata from "../StatusMetadata.vue";
 
 export default {
-    name: "StatusMetadataWithCustomBinding",
+    name: "StatusMetadataWithCustomBindingForDocumentUpdate",
     components: {
         StatusMetadata
     },
@@ -54,8 +54,6 @@ export default {
 
                 metadata.list_value[0].id = parseInt(value, 10);
                 metadata.list_value[0].name = status_string;
-
-                this.currentlyUpdatedItem.status = status_string;
             }
         }
     }

@@ -61,7 +61,8 @@ import {
     putEmbeddedFileMetadata,
     putLinkMetadata,
     putWikiMetadata,
-    putEmptyDocumentMetadata
+    putEmptyDocumentMetadata,
+    putFolderDocumentMetadata
 } from "../api/rest-querier.js";
 
 import {
@@ -753,6 +754,19 @@ export const updateMetadata = async (context, [item, item_to_update]) => {
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
+                    item_to_update.obsolescence_date
+                );
+                break;
+            case TYPE_FOLDER:
+                await putFolderDocumentMetadata(
+                    item_to_update.id,
+                    item_to_update.title,
+                    item_to_update.description,
+                    item_to_update.owner.id,
+                    {
+                        value: item_to_update.status.value,
+                        recursion: item_to_update.status.recursion
+                    },
                     item_to_update.obsolescence_date
                 );
                 break;

@@ -18,23 +18,33 @@
   -->
 
 <template>
-    <div>
-        <hr class="tlp-modal-separator">
-        <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
-        <div class="tlp-property" v-translate>
-            All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
-        </div>
-        <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem"/>
-    </div>
+    <status-metadata v-model="status_value" v-if="is_item_status_metadata_used" data-test="document-status-metadata-for-item-create"/>
 </template>
 
 <script>
-import StatusMetadataWithCustomBindingForFolderCreate from "./StatusMetadataWithCustomBindingForFolderCreate.vue";
+import { mapState } from "vuex";
+import { getStatusFromMapping } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
+import { DOCMAN_ITEM_STATUS_NONE } from "../../../../constants.js";
+import StatusMetadata from "../StatusMetadata.vue";
+
 export default {
-    name: "FolderDefaultPropertiesForCreate",
-    components: { StatusMetadataWithCustomBindingForFolderCreate },
+    name: "StatusMetadataWithCustomBindingForDocumentCreate",
+    components: {
+        StatusMetadata
+    },
     props: {
         currentlyUpdatedItem: Object
+    },
+    computed: {
+        ...mapState(["is_item_status_metadata_used"]),
+        status_value: {
+            get() {
+                return DOCMAN_ITEM_STATUS_NONE;
+            },
+            set(value) {
+                this.currentlyUpdatedItem.status = getStatusFromMapping(value);
+            }
+        }
     }
 };
 </script>

@@ -56,3 +56,15 @@
 .access-legacy-update-properties-page {
     margin: $tlp-spacing;
 }
+
+.document-metadata-recursion-option-section {
+    margin: $tlp-spacing 0 0 $tlp-spacing;
+}
+
+.document-recursion-checkbox {
+    margin: $tlp-spacing $tlp-half-spacing 0 0;
+}
+
+.document-status-section-container {
+    display: flex;
+}

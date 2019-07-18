@@ -77,6 +77,15 @@ msgstr ""
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
+msgid "Apply new values on this folder and all its content"
+msgstr "Appliquer les nouvelles valeurs sur ce dossier et son contenu"
+
+msgid "Apply new values on this folder and its subfolders only"
+msgstr "Appliquer les nouvelles valeurs sur ce dossier et ses sous dossiers"
+
+msgid "Apply new values on this folder only"
+msgstr "Appliquer les nouvelles valeurs uniquement sur ce dossier"
+
 msgid "Approval table"
 msgstr "Tables d'approbation"
 
@@ -380,6 +389,9 @@ msgstr "Propager la suppression au service wiki"
 
 msgid "Quick look"
 msgstr "Aperçu"
+
+msgid "Recursion option"
+msgstr "Options de récursion"
 
 msgid "Rejected"
 msgstr "Rejeté"

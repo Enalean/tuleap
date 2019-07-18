@@ -19,36 +19,36 @@
 
 <template>
     <div class="document-metadata">
-        <div class="document-metadata-title-and-status-properties-container">
+        <div class="document-metadata-properties-margin">
             <title-metadata
                 v-model="currentlyUpdatedItem.title"
                 v-bind:currently-updated-item="currentlyUpdatedItem"
                 v-bind:parent="parent"
-                v-bind:is-in-update-context="isInUpdateContext"
+                v-bind:is-in-update-context="false"
             />
-            <status-metadata-with-custom-binding v-bind:currently-updated-item="currentlyUpdatedItem"/>
         </div>
         <description-metadata v-model="currentlyUpdatedItem.description"/>
-        <slot></slot>
+        <folder-default-properties-for-create v-bind:currently-updated-item="currentlyUpdatedItem"/>
     </div>
 </template>
 
 <script>
 import TitleMetadata from "../TitleMetadata.vue";
 import DescriptionMetadata from "../DescriptionMetadata.vue";
-import StatusMetadataWithCustomBinding from "../StatusMetadataWithCustomBinding.vue";
+import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
+import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 
 export default {
-    name: "DocumentGlobalMetadata",
+    name: "FolderGlobalMetadataForCreate",
     components: {
-        StatusMetadataWithCustomBinding,
+        FolderDefaultPropertiesForUpdate,
+        FolderDefaultPropertiesForCreate,
         DescriptionMetadata,
         TitleMetadata
     },
     props: {
         currentlyUpdatedItem: Object,
-        parent: Object,
-        isInUpdateContext: Boolean
+        parent: Object
     }
 };
 </script>

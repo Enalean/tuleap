@@ -1858,5 +1858,59 @@ describe("Store actions", () => {
                 item_to_update
             );
         });
+
+        it("it should update folder metadata", async () => {
+            putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
+            rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
+            const item = {
+                id: 123,
+                title: "My folder",
+                type: TYPE_FOLDER,
+                description: "on",
+                owner: {
+                    id: 102
+                }
+            };
+
+            const item_to_update = {
+                id: 123,
+                title: "My new empty title",
+                description: "My empty description",
+                owner: {
+                    id: 102
+                },
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103
+                            }
+                        ]
+                    }
+                ],
+                status: {
+                    value: "rejected",
+                    recursion: "none"
+                }
+            };
+
+            getItem.and.returnValue(Promise.resolve(item_to_update));
+
+            await updateMetadata(context, [item, item_to_update]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                item_to_update
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                item_to_update
+            );
+        });
     });
 });

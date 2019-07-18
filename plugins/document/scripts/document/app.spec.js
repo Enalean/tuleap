@@ -27,6 +27,7 @@ import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
 import "./helpers/metadata-helpers/check-item-title.spec.js";
+import "./helpers/metadata-helpers/update-data-transformatter-helper.spec.js";
 
 import "./store/error/error-mutations.spec.js";
 import "./store/error/error-getters.js";
@@ -93,10 +94,15 @@ import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 import "./components/Folder/Property/LockProperty.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
-import "./components/Folder/Metadata/StatusMetadataWithCustomBinding.spec.js";
-import "./components/Folder/Metadata/DocumentMetadata/ObsolescenceDateMetadata.spec.js";
 
+import "./components/Folder/Metadata/DocumentMetadata/ObsolescenceDateMetadata.spec.js";
 import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadata.spec.js";
+import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBindingForDocumentCreate.spec.js";
+import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBindingForDocumentUpdate.spec.js";
+
+import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBindingForFolderCreate.spec.js";
+import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBindingForFolderUpdate.spec.js";
+import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForUpdate.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";
