@@ -1,7 +1,7 @@
 #!/bin/bash
 
 replacement=`echo $REALTIME_KEY | sed "s|/|\\\\\/|g"`
-perl -pi -e "s/private_key_to_change/$replacement/" /etc/tuleap-realtime/config.json
+sed -s -i "s/private_key_to_change/$replacement/" /etc/tuleap-realtime/config.json
 
 if [ ! -f /etc/pki/tls/tuleap-realtime-cert.pem ]; then
     cd /etc/pki/tls/
@@ -17,4 +17,4 @@ else
 fi
 
 cd /usr/lib/node_modules/tuleap-realtime/
-node server.js --config=/etc/tuleap-realtime/config.json
+exec node server.js --config=/etc/tuleap-realtime/config.json
