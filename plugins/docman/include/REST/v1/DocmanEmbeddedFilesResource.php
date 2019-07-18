@@ -122,7 +122,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
                 $item_factory,
                 new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
             ),
-            $this->getPermissionManager($project)
+            $this->getPermissionManager($project),
+            $this->event_manager
         );
 
         $item_mover->moveItem(

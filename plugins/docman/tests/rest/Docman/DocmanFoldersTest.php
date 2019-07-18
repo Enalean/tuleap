@@ -331,6 +331,55 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
     /**
      * @depends testGetRootId
+     */
+    public function testPostMoveFolderItem(int $root_id) : void
+    {
+        $response_folder_to_cut = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Folder to cut'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_to_cut->getStatusCode());
+        $folder_to_cut_id = $response_folder_to_cut->json()['id'];
+
+        $response_folder_destination_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Folder cut folder'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_destination_creation->getStatusCode());
+        $folder_destination_id = $response_folder_destination_creation->json()['id'];
+
+        $move_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch(
+                'docman_folders/' . urlencode((string) $folder_to_cut_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_destination_id]])
+            )
+        );
+        $this->assertEquals(200, $move_response->getStatusCode());
+
+        $moved_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $folder_to_cut_id)),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals($folder_destination_id, $moved_item_response->json()['parent_id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_destination_id)),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+    }
+
+    /**
+     * @depends testGetRootId
      * @depends testPostFolderItem
      */
     public function testPostCopyFolderItem(int $root_id, int $folder_id) : void

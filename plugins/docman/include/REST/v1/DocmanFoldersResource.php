@@ -54,7 +54,8 @@ use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -62,6 +63,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
 {
@@ -84,6 +86,27 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->rest_user_manager = RestUserManager::build();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
         $this->event_manager     = EventManager::instance();
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function options(int $id) : void
+    {
+        $this->setHeaders();
+    }
+
+    /**
+     * @url OPTIONS {id}/files
+     * @url OPTIONS {id}/folders
+     * @url OPTIONS {id}/empties
+     * @url OPTIONS {id}/wikis
+     * @url OPTIONS {id}/embedded_files
+     * @url OPTIONS {id}/links
+     */
+    public function optionsCreation(int $id) : void
+    {
+        $this->setCreationHeaders();
     }
 
     /**
@@ -119,7 +142,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postFiles(int $id, DocmanPOSTFilesRepresentation $files_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -191,7 +214,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postFolders(int $id, DocmanFolderPOSTRepresentation $folder_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -264,7 +287,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postEmpties(int $id, DocmanEmptyPOSTRepresentation $empty_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -339,7 +362,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postWikis(int $id, DocmanWikiPOSTRepresentation $wiki_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -408,7 +431,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postEmbeds(int $id, DocmanEmbeddedPOSTRepresentation $embeds_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -493,7 +516,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postLinks(int $id, DocmanLinkPOSTRepresentation $links_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->setHeaders();
+        $this->setCreationHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -539,6 +562,50 @@ class DocmanFoldersResource extends AuthenticatedResource
                 'You need to either copy or create a link document (the properties %s are required for the creation)',
                 implode(', ', $links_representation::getNonCopyRequiredObjectProperties())
             )
+        );
+    }
+
+    /**
+     * Move an existing folder
+     *
+     * @url    PATCH {id}
+     * @access hybrid
+     *
+     * @param int                           $id             ID of the folder
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
+    {
+        $this->checkAccess();
+        $this->setHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
+
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            $this->event_manager
+        );
+
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            UserManager::instance()->getCurrentUser(),
+            $representation->move
         );
     }
 
@@ -589,9 +656,14 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    private function setHeaders()
+    private function setHeaders() : void
     {
-        Header::allowOptionsPostDelete();
+        Header::allowOptionsPatchDelete();
+    }
+
+    private function setCreationHeaders() : void
+    {
+        Header::allowOptionsPost();
     }
 
     /**

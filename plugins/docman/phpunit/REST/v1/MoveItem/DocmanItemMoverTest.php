@@ -27,6 +27,7 @@ use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
+use EventManager;
 use Luracast\Restler\RestException;
 use Mockery;
 use PFUser;
@@ -51,11 +52,16 @@ final class DocmanItemMoverTest extends TestCase
      * @var DocmanItemMover
      */
     private $item_mover;
+    /**
+     * @var EventManager|Mockery\MockInterface
+     */
+    private $event_manager;
 
     protected function setUp() : void
     {
         $this->item_factory        = Mockery::mock(Docman_ItemFactory::class);
         $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
+        $this->event_manager       = Mockery::mock(EventManager::class);
 
         $this->item_mover = new DocmanItemMover(
             $this->item_factory,
@@ -64,7 +70,8 @@ final class DocmanItemMoverTest extends TestCase
                 $this->item_factory,
                 Mockery::mock(DocumentOngoingUploadRetriever::class)
             ),
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->event_manager
         );
     }
 
@@ -90,6 +97,7 @@ final class DocmanItemMoverTest extends TestCase
             ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
 
         $this->item_factory->shouldReceive('moveWithDefaultOrdering')->once()->andReturn(true);
+        $this->event_manager->shouldReceive('processEvent')->with('send_notifications')->atLeast()->once();
 
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
