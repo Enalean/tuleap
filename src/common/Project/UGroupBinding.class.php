@@ -19,18 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\UGroups\Binding\BoundUGroupRefresher;
 use Tuleap\Project\UGroups\Binding\RecursiveBoundUGroupsRefresher;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
-use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
-use Tuleap\Project\UserPermissionsDao;
 
 /**
  * ProjectUGroup binding
@@ -215,22 +205,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     private function getRecursiveRefresher()
     {
         return new RecursiveBoundUGroupsRefresher(
-            new BoundUGroupRefresher(
-                $this->ugroupManager,
-                $this->ugroupUserDao,
-                new MemberAdder(
-                    new MembershipUpdateVerifier(),
-                    new StaticMemberAdder(),
-                    new DynamicUGroupMembersUpdater(
-                        new UserPermissionsDao(),
-                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                        new ProjectMemberAdderWithoutStatusCheckAndNotifications(),
-                        EventManager::instance()
-                    ),
-                    new ProjectMemberAdderWithoutStatusCheckAndNotifications(),
-                    new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
-                )
-            ),
+            new BoundUGroupRefresher($this->ugroupManager, $this->ugroupUserDao),
             $this->ugroupManager
         );
     }

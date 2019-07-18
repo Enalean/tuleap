@@ -25,10 +25,6 @@ namespace Tuleap\Project\UGroups\Binding;
 use Exception;
 use LogicException;
 use ProjectUGroup;
-use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-use Tuleap\Project\UGroups\Membership\InvalidProjectException;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\Membership\UserIsAnonymousException;
 
 class BoundUGroupRefresher
 {
@@ -36,17 +32,11 @@ class BoundUGroupRefresher
     private $ugroup_manager;
     /** @var \UGroupUserDao */
     private $ugroup_user_dao;
-    /** @var MemberAdder */
-    private $member_adder;
 
-    public function __construct(
-        \UGroupManager $ugroup_manager,
-        \UGroupUserDao $ugroup_user_dao,
-        MemberAdder $member_adder
-    ) {
+    public function __construct(\UGroupManager $ugroup_manager, \UGroupUserDao $ugroup_user_dao)
+    {
         $this->ugroup_manager  = $ugroup_manager;
         $this->ugroup_user_dao = $ugroup_user_dao;
-        $this->member_adder    = $member_adder;
     }
 
     /**
@@ -83,27 +73,14 @@ class BoundUGroupRefresher
         }
     }
 
-    /**
-     * @throws InvalidProjectException
-     * @throws UserIsAnonymousException
-     * @throws \UGroup_Invalid_Exception
-     */
     private function duplicateMembers(ProjectUGroup $source, ProjectUGroup $destination): void
     {
-        $members = $source->getMembers();
-        foreach ($members as $user) {
-            try {
-                $this->member_adder->addMember($user, $destination);
-            } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $e) {
-                $GLOBALS['Response']->addFeedback(
-                    \Feedback::ERROR,
-                    sprintf(
-                        _('The user #%d could not be duplicated into user group %s because its project does not allow restricted users.'),
-                        $e->getRestrictedUser()->getId(),
-                        $destination->getTranslatedName()
-                    )
-                );
-            }
+        $source_id      = $source->getId();
+        $destination_id = $destination->getId();
+        if ($this->ugroup_user_dao->cloneUgroup($source_id, $destination_id) === false) {
+            throw new LogicException(
+                $GLOBALS['Language']->getText('project_ugroup_binding', 'clone_error', [$destination_id])
+            );
         }
     }
 }

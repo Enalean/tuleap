@@ -1368,14 +1368,6 @@ msgstr ""
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
-#, php-format
-msgid ""
-"The user #%d could not be duplicated into user group %s because its project "
-"does not allow restricted users."
-msgstr ""
-"L'utilisateur #%d n'a pas pu être dupliqué dans le groupe d'utilisateurs %s "
-"parce que son project n'autorise pas les utilisateurs restreints."
-
 msgid "The user will automatically be added as project member."
 msgstr "L'utilisateur sera ajouté automatiquement aux membres du projet."
 
