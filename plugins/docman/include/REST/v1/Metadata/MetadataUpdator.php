@@ -163,7 +163,7 @@ class MetadataUpdator
             );
         }
 
-        $this->sendStatusUpdateEvent($representation->status, $item, $current_user, $status);
+        $this->sendStatusUpdateEvent($item, $current_user, $status);
 
         $this->item_factory->update($row);
     }
@@ -199,7 +199,7 @@ class MetadataUpdator
             'status'      => $status
         ];
         $this->item_factory->update($row);
-        $this->sendStatusUpdateEvent($representation->status->value, $item, $user, $status);
+        $this->sendStatusUpdateEvent($item, $user, $status);
 
         if ($representation->status->recursion === null) {
             return;
@@ -218,21 +218,16 @@ class MetadataUpdator
         }
     }
 
-    private function sendStatusUpdateEvent(string $status_value, \Docman_Item $item, PFUser $current_user, int $status): void
+    private function sendStatusUpdateEvent(\Docman_Item $item, PFUser $current_user, int $status): void
     {
-        try {
-            if ($status !== $item->getStatus()) {
-                $old_status = $this->status_mapper->getItemStatusStringFormId($item->getStatus());
-                $this->event_processor->raiseUpdateEvent(
-                    $item,
-                    $current_user,
-                    $old_status,
-                    $status_value,
-                    'status'
-                );
-            }
-        } catch (HardCodedMetadataException $e) {
-            throw new I18NRestException(400, $e->getI18NExceptionMessage());
+        if ($status !== $item->getStatus()) {
+            $this->event_processor->raiseUpdateEvent(
+                $item,
+                $current_user,
+                (string)$item->getStatus(),
+                (string)$status,
+                'status'
+            );
         }
     }
 
