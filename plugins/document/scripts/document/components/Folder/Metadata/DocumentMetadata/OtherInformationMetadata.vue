@@ -21,12 +21,14 @@
     <div class="document-metadata" v-if="should_display_other_information" data-test="document-other-information">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
-        <obsolescence-date-metadata v-model="date_value"/>
+        <obsolescence-date-metadata v-model="date_value">
+            <slot></slot>
+        </obsolescence-date-metadata>
     </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import ObsolescenceDateMetadata from "./ObsolescenceDateMetadata.vue";
 
 export default {
