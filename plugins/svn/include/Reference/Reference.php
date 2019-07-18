@@ -40,7 +40,7 @@ class Reference extends \Reference
             $base_id,
             $keyword,
             '',
-            SVN_BASE_URL . "/index.php?roottype=svn&view=rev&root=$repository_path&revision=$revision_id",
+            SVN_BASE_URL . "?roottype=svn&view=rev&root=$repository_path&revision=$revision_id",
             $visibility,
             SvnPlugin::SERVICE_SHORTNAME,
             SvnPlugin::SYSTEM_NATURE_NAME,
