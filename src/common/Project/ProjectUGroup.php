@@ -477,7 +477,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
             new MembershipUpdateVerifier(),
             new StaticMemberAdder(),
             $this->getDynamicUGroupMembersUpdater(),
-            new ProjectMemberAdderWithoutStatusCheckAndNotifications(),
+            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
+            ),
             new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
         );
     }
@@ -487,7 +489,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return new DynamicUGroupMembersUpdater(
             new UserPermissionsDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ProjectMemberAdderWithoutStatusCheckAndNotifications(),
+            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
+            ),
             EventManager::instance()
         );
     }

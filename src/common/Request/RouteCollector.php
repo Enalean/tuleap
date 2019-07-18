@@ -386,7 +386,9 @@ class RouteCollector
                 new DynamicUGroupMembersUpdater(
                     new UserPermissionsDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                    new ProjectMemberAdderWithStatusCheckAndNotifications(),
+                    new ProjectMemberAdderWithStatusCheckAndNotifications(
+                        new UGroupBinding(new UGroupUserDao(), $ugroup_manager)
+                    ),
                     EventManager::instance()
                 ),
                 new StaticMemberRemover()
