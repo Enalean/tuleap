@@ -69,10 +69,24 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitFolder(Docman_Folder $item, array $params = []) : void
+    public function visitFolder(Docman_Folder $folder_to_move, array $params = []) : void
     {
-        $this->handleItem($item);
-        throw new LogicException('Not yet implemented');
+        $this->handleItem($folder_to_move);
+        $destination_folder = $params['destination'];
+        assert($destination_folder instanceof Docman_Folder);
+
+        $folder_title = $folder_to_move->getTitle();
+        if ($this->item_factory->doesTitleCorrespondToExistingFolder($folder_title, $destination_folder->getId())) {
+            throw new RestException(400, 'A folder with same title already exists in the destination folder');
+        }
+
+        if ($destination_folder->getId() === $folder_to_move->getId()) {
+            throw new RestException(400, 'Cannot move a folder into itself');
+        }
+
+        if ($this->item_factory->isInSubTree($destination_folder->getId(), $folder_to_move->getId())) {
+            throw new RestException(400, 'Cannot move a folder into one of its child');
+        }
     }
 
     /**

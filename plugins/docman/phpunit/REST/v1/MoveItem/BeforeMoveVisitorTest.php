@@ -174,6 +174,86 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
+    public function testProcessingOfAFolderIsRejectedWhenTheNameIsAlreadyUsedByAnotherFolderInTheDestinationFolder() : void
+    {
+        $item_factory = Mockery::mock(Docman_ItemFactory::class);
+        $item_factory->shouldReceive('isMoveable')->andReturn(true);
+        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
+
+        $before_move_visitor = new BeforeMoveVisitor(
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
+            $item_factory,
+            Mockery::mock(DocumentOngoingUploadRetriever::class)
+        );
+
+        $folder_to_move = new Docman_Folder();
+        $folder_to_move->setTitle('Title');
+
+        $destination_folder = Mockery::mock(Docman_Folder::class);
+        $destination_folder->shouldReceive('getId')->andReturn(147);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $folder_to_move->accept(
+            $before_move_visitor,
+            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+        );
+    }
+
+    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsItself() : void
+    {
+        $item_factory = Mockery::mock(Docman_ItemFactory::class);
+        $item_factory->shouldReceive('isMoveable')->andReturn(true);
+        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+
+        $before_move_visitor = new BeforeMoveVisitor(
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
+            $item_factory,
+            Mockery::mock(DocumentOngoingUploadRetriever::class)
+        );
+
+        $folder_to_move = new Docman_Folder();
+        $folder_to_move->setTitle('Title');
+        $folder_to_move->setId(147);
+
+        $destination_folder = Mockery::mock(Docman_Folder::class);
+        $destination_folder->shouldReceive('getId')->andReturn(147);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $folder_to_move->accept(
+            $before_move_visitor,
+            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+        );
+    }
+
+    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsOneOfTheChild() : void
+    {
+        $item_factory = Mockery::mock(Docman_ItemFactory::class);
+        $item_factory->shouldReceive('isMoveable')->andReturn(true);
+        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $item_factory->shouldReceive('isInSubtree')->andReturn(true);
+
+        $before_move_visitor = new BeforeMoveVisitor(
+            new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
+            $item_factory,
+            Mockery::mock(DocumentOngoingUploadRetriever::class)
+        );
+
+        $folder_to_move = new Docman_Folder();
+        $folder_to_move->setTitle('Title');
+
+        $destination_folder = Mockery::mock(Docman_Folder::class);
+        $destination_folder->shouldReceive('getId')->andReturn(147);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $folder_to_move->accept(
+            $before_move_visitor,
+            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+        );
+    }
+
     public function dataProviderProcessableDocumentClasses() : array
     {
         return [

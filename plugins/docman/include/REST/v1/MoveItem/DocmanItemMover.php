@@ -27,6 +27,7 @@ use Docman_Folder;
 use Docman_Item;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
+use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use RuntimeException;
@@ -46,16 +47,22 @@ final class DocmanItemMover
      * @var Docman_PermissionsManager
      */
     private $permissions_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Docman_ItemFactory $item_factory,
         BeforeMoveVisitor $before_move_visitor,
-        Docman_PermissionsManager $permissions_manager
+        Docman_PermissionsManager $permissions_manager,
+        EventManager $event_manager
     ) {
 
         $this->item_factory        = $item_factory;
         $this->before_move_visitor = $before_move_visitor;
         $this->permissions_manager = $permissions_manager;
+        $this->event_manager       = $event_manager;
     }
 
     public function moveItem(
@@ -119,5 +126,7 @@ final class DocmanItemMover
                 )
             );
         }
+
+        $this->event_manager->processEvent('send_notifications');
     }
 }
