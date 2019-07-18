@@ -1,6 +1,6 @@
 <form method="POST"
       action="/project/{{ project_id }}/admin/user-group/{{ id }}/remove"
-      class="tlp-modal tlp-modal-danger"
+      class="tlp-modal tlp-modal-medium-sized tlp-modal-danger user-group-remove-member-modal"
       role="dialog"
       id="project-admin-remove-user-from-group-modal"
       aria-labelledby="project-admin-remove-user-from-group-modal-title"
@@ -26,8 +26,17 @@
         <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# gettext }}Cancel{{/ gettext }}
         </button>
-        <button type="submit" class="tlp-button-danger tlp-modal-action user-group-modal-button">
-            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Remove{{/ gettext }}
+        <button
+            type="submit"
+            class="tlp-button-danger tlp-button-outline tlp-modal-action"
+            name="remove-from-ugroup"
+            value="remove-from-ugroup-and-project"
+            id="project-admin-remove-user-from-group-modal-remove-from-project"
+        >
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Remove from this group and project{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action" name="remove-from-ugroup" value="remove-from-ugroup-only">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Remove from this group{{/ gettext }}
         </button>
     </div>
 </form>

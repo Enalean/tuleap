@@ -303,6 +303,13 @@ msgstr "Impossible d'agrandir le widget."
 msgid "Cannot minimize the widget."
 msgstr "Impossible de réduire le widget."
 
+msgid ""
+"Cannot remove project admin from project. Must be removed from project "
+"administration first"
+msgstr ""
+"Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
+"d'abord les retirer du groupe Administrateurs du projet"
+
 msgid "Cannot remove user from group"
 msgstr "Impossible d'enlever l'utilisateur du groupe"
 
@@ -1145,11 +1152,17 @@ msgstr "Retirer"
 msgid "Remove from project"
 msgstr "Retirer du projet"
 
+msgid "Remove from this group"
+msgstr "Retirer du groupe"
+
+msgid "Remove from this group and project"
+msgstr "Retirer du groupe et du projet"
+
 msgid "Remove from users group"
-msgstr "Supprimer du groupe"
+msgstr "Retirer du groupe"
 
 msgid "Remove group member"
-msgstr "Supprimer un membre du groupe"
+msgstr "Retirer un membre du groupe"
 
 msgid "Restricted users are allowed in this project."
 msgstr "Les utilisateurs restreints sont autorisés dans ce projet."

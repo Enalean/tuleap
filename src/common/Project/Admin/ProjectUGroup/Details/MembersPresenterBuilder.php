@@ -78,29 +78,10 @@ class MembersPresenterBuilder
         $ugroup_members_updatable = new ProjectUGroupMemberUpdatable($ugroup);
         $this->event_manager->processEvent($ugroup_members_updatable);
 
-        $members                   = $ugroup->getMembersIncludingSuspended();
+        $members = $ugroup->getMembersIncludingSuspended();
 
-        foreach ($members as $key => $member) {
-            $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";
-
-            $ugroup_members[$key]['username_display'] = $this->user_helper->getDisplayName(
-                $member->getUserName(),
-                $member->getRealName()
-            );
-
-            $is_news_admin = false;
-            if ((int) $ugroup->getId() === ProjectUGroup::NEWS_WRITER
-                && $member->isMember($ugroup->getProjectId(), "N2")) {
-                $is_news_admin = true;
-            }
-
-            $ugroup_members[$key]['has_avatar']                = $member->hasAvatar();
-            $ugroup_members[$key]['user_name']                 = $member->getUserName();
-            $ugroup_members[$key]['user_id']                   = $member->getId();
-            $updatable_error_messages                          = $ugroup_members_updatable->getUserUpdatableErrorMessages($member);
-            $ugroup_members[$key]['is_member_updatable']       = count($updatable_error_messages) === 0;
-            $ugroup_members[$key]['member_updatable_messages'] = $updatable_error_messages;
-            $ugroup_members[$key]['is_news_admin']             = $is_news_admin;
+        foreach ($members as $member) {
+            $ugroup_members[] = new MemberPresenter($this->user_helper, $member, $ugroup, $ugroup_members_updatable);
         }
 
         return $ugroup_members;

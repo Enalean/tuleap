@@ -76,6 +76,7 @@ function updateDeleteModalContent(button) {
     document.getElementById("project-admin-remove-user-from-group-modal-user-id").value =
         button.dataset.userId;
     updateDeleteModalDescription(button);
+    updateDeleteModalButtons(button);
 }
 
 function updateDeleteModalDescription(button) {
@@ -95,6 +96,18 @@ function updateDeleteModalDescription(button) {
                 escaper.html(button.dataset.ugroupName)
             )
         )
+    );
+}
+
+function updateDeleteModalButtons(button) {
+    const user_is_admin = button.dataset.userIsProjectAdmin === "1";
+    const delete_from_project_button = document.getElementById(
+        "project-admin-remove-user-from-group-modal-remove-from-project"
+    );
+
+    delete_from_project_button.classList.toggle(
+        "project-admin-remove-user-from-group-and-project-hidden-button",
+        user_is_admin
     );
 }
 

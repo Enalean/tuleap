@@ -116,7 +116,7 @@ final class MembersPresenterBuilderTest extends TestCase
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
-            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
+            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class), 'getProjectId' => 202]
         );
         $first_member = Mockery::mock(
             \PFUser::class,
@@ -124,7 +124,8 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getUserName' => 'jmost',
                 'getId'       => 105,
                 'getRealName' => 'Junko Most',
-                'hasAvatar'   => true
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
@@ -137,21 +138,22 @@ final class MembersPresenterBuilderTest extends TestCase
         $result = $this->builder->build($ugroup);
 
         $first_formatted_member = $result->members[0];
-        $this->assertSame($first_formatted_member['username_display'], 'Junko Most (jmost)');
-        $this->assertSame('/users/jmost/', $first_formatted_member['profile_page_url']);
-        $this->assertTrue($first_formatted_member['has_avatar']);
-        $this->assertSame('jmost', $first_formatted_member['user_name']);
-        $this->assertSame(105, $first_formatted_member['user_id']);
-        $this->assertTrue($first_formatted_member['is_member_updatable']);
-        $this->assertEmpty($first_formatted_member['member_updatable_messages']);
-        $this->assertFalse($first_formatted_member['is_news_admin']);
+        $this->assertSame('Junko Most (jmost)', $first_formatted_member->username_display);
+        $this->assertSame('/users/jmost/', $first_formatted_member->profile_page_url);
+        $this->assertTrue($first_formatted_member->has_avatar);
+        $this->assertSame('jmost', $first_formatted_member->user_name);
+        $this->assertSame(105, $first_formatted_member->user_id);
+        $this->assertTrue($first_formatted_member->is_member_updatable);
+        $this->assertEmpty($first_formatted_member->member_updatable_messages);
+        $this->assertFalse($first_formatted_member->is_news_admin);
+        $this->assertSame(0, $first_formatted_member->user_is_project_admin);
     }
 
     public function testItSetsMembersAsNotUpdatableAccordingToEvent(): void
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
-            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
+            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class), 'getProjectId' => 202]
         );
         $this->event_manager
             ->shouldReceive('processEvent')
@@ -163,7 +165,8 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getUserName' => 'jmost',
                 'getId'       => 105,
                 'getRealName' => 'Junko Most',
-                'hasAvatar'   => true
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
@@ -183,8 +186,8 @@ final class MembersPresenterBuilderTest extends TestCase
         $result = $this->builder->build($ugroup);
 
         $first_formatted_member = $result->members[0];
-        $this->assertFalse($first_formatted_member['is_member_updatable']);
-        $this->assertContains('User cannot be updated', $first_formatted_member['member_updatable_messages']);
+        $this->assertFalse($first_formatted_member->is_member_updatable);
+        $this->assertContains('User cannot be updated', $first_formatted_member->member_updatable_messages);
     }
 
     public function testItSetsMemberIsNewsAdmin(): void
@@ -196,7 +199,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getId'        => \ProjectUGroup::NEWS_WRITER,
                 'getProjectId' => 180,
                 'isStatic'     => false,
-                'getProject' => Mockery::mock(\Project::class)
+                'getProject'   => Mockery::mock(\Project::class),
             ]
         );
         $first_member = Mockery::mock(
@@ -205,7 +208,8 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getUserName' => 'jmost',
                 'getId'       => 105,
                 'getRealName' => 'Junko Most',
-                'hasAvatar'   => true
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
             ]
         );
         $first_member->shouldReceive('isMember')
@@ -218,7 +222,7 @@ final class MembersPresenterBuilderTest extends TestCase
         $result = $this->builder->build($ugroup);
 
         $first_formatted_member = $result->members[0];
-        $this->assertTrue($first_formatted_member['is_news_admin']);
+        $this->assertTrue($first_formatted_member->is_news_admin);
     }
 
     private function getEmptyStaticUGroup(): \ProjectUGroup

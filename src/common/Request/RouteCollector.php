@@ -374,11 +374,14 @@ class RouteCollector
 
     public static function getPostUserGroupIdRemove() : DispatchableWithRequest
     {
-        $ugroup_manager = new UGroupManager();
+        $project_manager = ProjectManager::instance();
+        $ugroup_manager  = new UGroupManager();
+        $event_manager   = EventManager::instance();
+        $user_manager    = \UserManager::instance();
         return new MemberRemovalController(
-            ProjectManager::instance(),
+            $project_manager,
             $ugroup_manager,
-            \UserManager::instance(),
+            $user_manager,
             new MemberRemover(
                 new DynamicUGroupMembersUpdater(
                     new UserPermissionsDao(),
@@ -387,6 +390,15 @@ class RouteCollector
                     EventManager::instance()
                 ),
                 new StaticMemberRemover()
+            ),
+            new UserRemover(
+                $project_manager,
+                $event_manager,
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                $ugroup_manager
             )
         );
     }
