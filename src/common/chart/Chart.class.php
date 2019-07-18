@@ -166,7 +166,12 @@ class Chart
             $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
         }
         catch (Exception $exc) {
-            $error_message = $GLOBALS['Language']->getText('plugin_graphontrackers_error', 'jp_graph', array($this->title->t, $exc->getMessage()));
+            $error_message = sprintf(
+                _('JpGraph error for graph "%s": %s'),
+                $this->title->t,
+                $exc->getMessage()
+            );
+
             if (headers_sent()) {
                 echo '<p class="feedback_error">';
                 echo $error_message;

@@ -1065,7 +1065,6 @@ fi
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/docman
-%{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/statistics

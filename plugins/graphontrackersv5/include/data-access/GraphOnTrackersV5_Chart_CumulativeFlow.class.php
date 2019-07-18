@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Originally written by Yoann CELTON, 2013. Jtekt Europe SAS.
  *
@@ -144,14 +144,14 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     }
 
     /**
-     * @return GraphOnTrackerV5_Engine The engine associated to the concrete chart
+     * @return GraphOnTrackersV5_Engine The engine associated to the concrete chart
      */
     protected function getEngine() {
         return new GraphOnTrackersV5_Engine_CumulativeFlow();
     }
 
     /**
-     * @return ChartDataBuilder The data builder associated to the concrete chart
+     * @return ChartDataBuilderV5 The data builder associated to the concrete chart
      */
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this,$artifacts);

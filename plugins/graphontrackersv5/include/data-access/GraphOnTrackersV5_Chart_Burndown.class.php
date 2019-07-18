@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox, 2008. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.
@@ -129,14 +129,14 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     }
     
     /**
-     * @return GraphOnTrackerV5_Engine The engine associated to the concrete chart
+     * @return GraphOnTrackersV5_Engine The engine associated to the concrete chart
      */
     protected function getEngine() {
         return new GraphOnTrackersV5_Engine_Burndown();
     }
     
     /**
-     * @return ChartDataBuilder The data builder associated to the concrete chart
+     * @return ChartDataBuilderV5 The data builder associated to the concrete chart
      */
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackersV5_Burndown_DataBuilder($this,$artifacts);

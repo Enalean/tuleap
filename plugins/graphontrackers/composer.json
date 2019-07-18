@@ -1,9 +1,0 @@
-{
-  "name": "tuleap/plugin-graphontrackers",
-  "autoload": {
-    "classmap": ["include/"]
-  },
-  "config": {
-    "sort-packages": true
-  }
-}
