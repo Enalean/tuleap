@@ -1057,6 +1057,14 @@ msgstr ""
 "que vous ajoutez un utilisateur dans un groupe, il est automatiquement "
 "ajouté en tant que membre de projet."
 
+msgid ""
+"Project members and group members are synchronized. Whenever you add someone "
+"in a user group, they are automatically added in project members."
+msgstr ""
+"Les membres de projet et de groupes utilisateurs sont synchronisés. Dès lors "
+"que vous ajoutez un utilisateur dans un groupe, il est automatiquement "
+"ajouté en tant que membre de projet."
+
 msgid "Project must be approved by administrators"
 msgstr "Les projets doivent être approuvés par les administrateurs"
 
@@ -1666,6 +1674,13 @@ msgstr "Bienvenue, %s"
 
 msgid "What's this access key for?"
 msgstr "À quel usage cette clé d'accès est destiné ?"
+
+msgid ""
+"When this setting is active, whenever you add someone in any user group, "
+"they will be automatically added in project members."
+msgstr ""
+"Lorsque cette option est activée, dès lors que vous ajoutez un utilisateur "
+"dans un groupe, il sera automatiquement ajouté en tant que membre de projet."
 
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
