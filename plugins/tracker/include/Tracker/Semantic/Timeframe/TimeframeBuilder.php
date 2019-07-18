@@ -155,13 +155,8 @@ class TimeframeBuilder
      */
     private function getTimestamp(PFUser $user, Tracker_Artifact $artifact, SemanticTimeframe $semantic_timeframe) : int
     {
-        $field = $this->formelement_factory->getDateFieldByNameForUser(
-            $artifact->getTracker(),
-            $user,
-            $semantic_timeframe->getStartDateFieldName()
-        );
-
-        if ($field === null) {
+        $field = $semantic_timeframe->getStartDateField();
+        if ($field === null || ! $field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 
@@ -183,13 +178,9 @@ class TimeframeBuilder
      */
     private function getDurationFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe)
     {
-        $field = $this->formelement_factory->getNumericFieldByNameForUser(
-            $milestone_artifact->getTracker(),
-            $user,
-            $semantic_timeframe->getDurationFieldName()
-        );
+        $field = $semantic_timeframe->getDurationField();
 
-        if ($field === null) {
+        if ($field === null || ! $field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
         }
 

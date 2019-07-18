@@ -40,40 +40,6 @@ class SemanticTimeframeTest extends TestCase
         parent::setUp();
     }
 
-    public function testItDefaultsToHardCodedFieldNames()
-    {
-        $timeframe = new SemanticTimeframe($this->tracker, null, null);
-
-        $this->assertEquals('start_date', $timeframe->getStartDateFieldName());
-        $this->assertEquals('duration', $timeframe->getDurationFieldName());
-    }
-
-    public function testItReturnsGivenStartDateFieldName()
-    {
-        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $start_date->shouldReceive('getName')
-                   ->once()
-                   ->andReturn('my_custom_start_date');
-
-        $timeframe = new SemanticTimeframe($this->tracker, $start_date, null);
-
-        $this->assertEquals('my_custom_start_date', $timeframe->getStartDateFieldName());
-        $this->assertEquals('duration', $timeframe->getDurationFieldName());
-    }
-
-    public function testItReturnsGivenDurationFieldName()
-    {
-        $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $duration->shouldReceive('getName')
-                 ->once()
-                 ->andReturn('my_custom_duration');
-
-        $timeframe = new SemanticTimeframe($this->tracker, null, $duration);
-
-        $this->assertEquals('start_date', $timeframe->getStartDateFieldName());
-        $this->assertEquals('my_custom_duration', $timeframe->getDurationFieldName());
-    }
-
     public function testIsDefined(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
