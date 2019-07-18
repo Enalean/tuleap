@@ -187,6 +187,10 @@
                     <description>Define the initial effort of an artifact.</description>
                     <field REF="F537"/>
                 </semantic>
+                <semantic type="timeframe">
+                    <start_date_field REF="F535"/>
+                    <duration_field REF="F536"/>
+                </semantic>
             </semantics>
             <rules>
                 <date_rules/>

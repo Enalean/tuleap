@@ -893,6 +893,10 @@
         <semantic type="plugin_cardwall_card_fields">
           <field REF="F414"/>
         </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F408"/>
+          <duration_field REF="F411"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>

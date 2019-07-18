@@ -63,6 +63,10 @@
       <semantics>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="timeframe">
+          <start_date_field REF="F23444"/>
+          <duration_field REF="F23445"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -383,6 +387,10 @@
       <semantics>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="timeframe">
+          <start_date_field REF="F23451"/>
+          <duration_field REF="F23452"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -627,6 +635,10 @@
       <semantics>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="timeframe">
+          <start_date_field REF="F23458"/>
+          <duration_field REF="F23459"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -766,6 +778,10 @@
       <semantics>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="timeframe">
+          <start_date_field REF="F23465"/>
+          <duration_field REF="F23466"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -1055,6 +1071,10 @@
       <semantics>
         <semantic type="tooltip"/>
         <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="timeframe">
+          <start_date_field REF="F23474"/>
+          <duration_field REF="F23475"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>

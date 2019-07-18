@@ -214,6 +214,10 @@
             <closed_value REF="V10513"/>
           </closed_values>
         </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F26560"/>
+          <duration_field REF="F26561"/>
+        </semantic>
       </semantics>
       <rules>
         <date_rules/>
@@ -486,6 +490,10 @@
           <closed_values>
             <closed_value REF="V10517"/>
           </closed_values>
+        </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F26583"/>
+          <duration_field REF="F26584"/>
         </semantic>
       </semantics>
       <rules>
