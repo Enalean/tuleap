@@ -30,12 +30,12 @@
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
-            <global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-update-context="false">
+            <document-global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-update-context="false">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item"/>
-            </global-metadata>
+            </document-global-metadata>
             <other-information-metadata v-bind:currently-updated-item="item"/>
         </div>
 
@@ -47,7 +47,7 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { DOCMAN_ITEM_STATUS_NONE, TYPE_FILE } from "../../../constants.js";
-import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
+import DocumentGlobalMetadata from "../Metadata/DocumentMetadata/DocumentGlobalMetadata.vue";
 import LinkProperties from "../Property/LinkProperties.vue";
 import WikiProperties from "../Property/WikiProperties.vue";
 import TypeSelector from "./TypeSelector.vue";
@@ -56,7 +56,7 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
-import OtherInformationMetadata from "../Metadata/OtherInformationMetadata.vue";
+import OtherInformationMetadata from "../Metadata/DocumentMetadata/OtherInformationMetadata.vue";
 
 export default {
     name: "NewItemModal",
@@ -66,7 +66,7 @@ export default {
         EmbeddedProperties,
         ModalFooter,
         ModalHeader,
-        GlobalMetadata,
+        DocumentGlobalMetadata,
         LinkProperties,
         WikiProperties,
         TypeSelector,

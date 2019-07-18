@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,37 +15,26 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-new-item-description"
-            v-translate
-        >
-            Description
-        </label>
-        <textarea
-            class="tlp-textarea"
-            id="document-new-item-description"
-            name="description"
-            v-bind:placeholder="placeholder"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-        ></textarea>
+    <div>
+        <hr class="tlp-modal-separator">
+        <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
+        <div class="tlp-property" v-translate>
+            All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
+        </div>
+        <status-metadata-with-custom-binding v-bind:currently-updated-item="currentlyUpdatedItem"/>
     </div>
 </template>
+
 <script>
+import StatusMetadataWithCustomBinding from "../StatusMetadataWithCustomBinding.vue";
 export default {
+    name: "FolderDefaultPropertiesForCreate",
+    components: { StatusMetadataWithCustomBinding },
     props: {
-        value: String
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("My useful document description");
-        }
+        currentlyUpdatedItem: Object
     }
 };
 </script>

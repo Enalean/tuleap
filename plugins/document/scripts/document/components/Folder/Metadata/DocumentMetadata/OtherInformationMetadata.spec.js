@@ -19,9 +19,9 @@
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../../helpers/local-vue.js";
 import OtherInformationMetadata from "./OtherInformationMetadata.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../../constants.js";
 
 describe("OtherInformationMetadata", () => {
     let other_metadata, state, store;
@@ -85,7 +85,7 @@ describe("OtherInformationMetadata", () => {
         expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
     });
 
-    describe("Given status value is updated", () => {
+    describe("Given obsolescence date value is updated", () => {
         it(`Then the props used for document creation is updated`, () => {
             const wrapper = other_metadata(
                 {
