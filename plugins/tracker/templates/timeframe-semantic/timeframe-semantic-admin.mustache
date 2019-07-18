@@ -1,26 +1,27 @@
 <div class="tracker-administration-semantic-timeframe">
-    <div class="alert alert-warning">
-        {{# dgettext }}
-            tuleap-tracker
-            | The timeframe of an artifact is defined for the moment by the fields <b>Start date</b> and <b>Duration</b>. It is advised to define explicitely the timeframe semantic using the form below.
-        {{/ dgettext }}
-    </div>
-
-    <div class="alert alert-warning">
-        {{# dgettext }} tuleap-tracker | This page is currently under construction, you cannot configure the timeframe semantic yet.{{/ dgettext }}
-    </div>
+    {{^ is_semantic_configured }}
+        <div class="alert alert-warning">
+            {{# dgettext }}
+                tuleap-tracker
+                | The timeframe of an artifact is defined for the moment by the fields <b>Start date</b> and <b>Duration</b>. It is advised to define explicitely the timeframe semantic using the form below.
+            {{/ dgettext }}
+        </div>
+    {{/ is_semantic_configured }}
 
     <p>{{# dgettext }} tuleap-tracker | The timeframe of an artifact will be defined by:{{/ dgettext }}</p>
 
-    <form action="">
-        {{# csrf_token }}
+    <form action="{{ target_url }}" method="POST">
+        {{# csrf }}
             {{> csrf_token_input }}
-        {{/ csrf_token }}
+        {{/ csrf }}
         <div class="control-group">
-            <label class="control-label" for="start-date">{{# dgettext }} tuleap-tracker | Start date{{/ dgettext}}</label>
+            <label class="control-label" for="start-date">
+                {{# dgettext }} tuleap-tracker | Start date{{/ dgettext}}
+                <span class="highlight">*</span>
+            </label>
 
             <div class="controls">
-                <select id="start-date" name="start-date-field" disabled>
+                <select id="start-date" name="start-date-field-id" required>
                     <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
                     {{# usable_date_fields }}
                         <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
@@ -30,10 +31,13 @@
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="duration">{{# dgettext }} tuleap-tracker | Duration{{/ dgettext}}</label>
+            <label class="control-label" for="duration">
+                {{# dgettext }} tuleap-tracker | Duration{{/ dgettext}}
+                <span class="highlight">*</span>
+            </label>
 
             <div class="controls">
-                <select id="duration" name="duration-field" disabled>
+                <select id="duration" name="duration-field-id" required>
                     <option value="">{{# dgettext }} tuleap-tracker | Choose a field... {{/ dgettext }}</option>
                     {{# usable_numeric_fields }}
                         <option value="{{ id }}" {{# is_selected }}selected{{/ is_selected }}>{{ label }}</option>
@@ -41,6 +45,10 @@
                 </select>
             </div>
         </div>
+
+        <button class="btn btn-primary" type="submit" name="update-semantic-timeframe">
+            {{# dgettext }} tuleap-tracker | Save your modifications {{/ dgettext }}
+        </button>
     </form>
     <div>
         <a href="{{ tracker_semantic_admin_url }}">

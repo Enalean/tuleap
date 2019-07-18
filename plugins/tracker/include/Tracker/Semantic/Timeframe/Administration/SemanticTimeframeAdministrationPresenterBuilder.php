@@ -41,6 +41,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
     public function build(
         \CSRFSynchronizerToken $csrf,
         Tracker $tracker,
+        string $target_url,
         ?Tracker_FormElement_Field_Date $start_date_field,
         ?Tracker_FormElement_Field_Numeric $duration_field
     ) : SemanticTimeframeAdministrationPresenter {
@@ -57,6 +58,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
             $tracker,
+            $target_url,
             $usable_date_fields,
             $usable_numeric_fields,
             $start_date_field,
@@ -70,7 +72,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
             return [
                 'id'          => $field->getId(),
                 'label'       => $field->getLabel(),
-                'is_selected' => $current_field && $field->getId() === $current_field->getId()
+                'is_selected' => $current_field && (int) $field->getId() === (int) $current_field->getId()
             ];
         }, $fields);
     }
