@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 use Guzzle\Http\Client;
@@ -24,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 use Test\Rest\Cache;
 use Test\Rest\RequestWrapper;
 
-class RestBase extends TestCase // phpcs:ignore
+class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     protected $base_url = 'https://localhost/api/v1';
     private $setup_url  = 'https://localhost/api/v1';
@@ -51,6 +50,7 @@ class RestBase extends TestCase // phpcs:ignore
     protected $project_pbi_id;
     protected $project_deleted_id;
     protected $project_suspended_id;
+    protected $project_public_with_membership_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -129,13 +129,14 @@ class RestBase extends TestCase // phpcs:ignore
             $this->initUserGroupsId();
         }
 
-        $this->project_private_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
-        $this->project_private_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
-        $this->project_public_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
-        $this->project_public_member_id   = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
-        $this->project_pbi_id             = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
-        $this->project_deleted_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
-        $this->project_suspended_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
+        $this->project_private_member_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->project_private_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
+        $this->project_public_id                 = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
+        $this->project_public_member_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
+        $this->project_pbi_id                    = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+        $this->project_deleted_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
+        $this->project_suspended_id              = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
+        $this->project_public_with_membership_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }
