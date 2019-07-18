@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import open_list_field_module from "./open-list-field.js";
 import angular from "angular";
 import "angular-mocks";
@@ -7,8 +26,7 @@ import tlp from "tlp";
 import { rewire$searchUsers, restore } from "../../rest/rest-service.js";
 
 describe("UsersOpenListFieldController", () => {
-    let $q,
-        $element,
+    let $element,
         $scope,
         $rootScope,
         $compile,
@@ -20,9 +38,8 @@ describe("UsersOpenListFieldController", () => {
         angular.mock.module(open_list_field_module);
 
         var $controller;
-        angular.mock.inject(function(_$controller_, _$q_, _$rootScope_) {
+        angular.mock.inject(function(_$controller_, _$rootScope_) {
             $controller = _$controller_;
-            $q = _$q_;
             $rootScope = _$rootScope_;
 
             $scope = $rootScope.$new();

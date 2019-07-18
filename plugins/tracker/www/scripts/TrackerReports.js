@@ -22,6 +22,18 @@
  *
  */
 
+/* global
+    Ajax:readonly
+    $:readonly
+    Class:readonly
+    $$:readonly
+    Class:readonly
+    Prototype:readonly
+    $F:readonly
+    TableKit:readonly
+    Sortable:readonly
+*/
+
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
 codendi.tracker.report = codendi.tracker.report || {};
@@ -67,14 +79,6 @@ Ajax.Responders.register({
                 }
             }
         }
-    },
-    //TODO: REMOVE THIS DEBUG FEATURE ---v
-    onException: function(request, e) {
-        if (console && console.debug) {
-            console.error(e);
-        } else {
-            alert(e.message);
-        }
     }
 });
 
@@ -96,11 +100,12 @@ codendi.tracker.report.table.saveColumnsWidth = function(table, onComplete) {
             );
         }
     }
-    var onComplete = onComplete || Prototype.emptyFunction;
+    var onCompleteFunction = onComplete || Prototype.emptyFunction;
+    //eslint-disable-next-line no-unused-vars
     var req = new Ajax.Request(location.href, {
         parameters: parameters,
-        onComplete: function(transport) {
-            onComplete();
+        onComplete: function() {
+            onCompleteFunction();
             codendi.tracker.report.setHasChanged();
         }
     });
@@ -189,6 +194,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                 parameters["renderer_table[add-column][artlink-nature]"] = artlink_nature;
             }
 
+            //eslint-disable-next-line no-unused-vars
             var req = new Ajax.Request(url, {
                 parameters: parameters,
                 onSuccess: function onSuccessAddColumn(transport) {
@@ -249,7 +255,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                             new_column.down(".nature-column-editor")
                         );
                     }
-                }.bind(this)
+                }
             });
         }
     },
@@ -286,6 +292,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     column_id;
             });
         } else {
+            //eslint-disable-next-line no-unused-vars
             var req = new Ajax.Request(
                 codendi.tracker.base_url +
                     "?report=" +
@@ -325,7 +332,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                         dropdown.setUnused(li);
                         codendi.tracker.report.setHasChanged();
-                    }.bind(this)
+                    }
                 }
             );
         }
@@ -388,7 +395,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                         );
 
                         tuleap.dateTimePicker.init();
-                    }.bind(this)
+                    }
                 });
             }
         }
@@ -409,7 +416,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                 dropdown.setUnused(li);
 
                 codendi.tracker.report.setHasChanged();
-            }.bind(this)
+            }
         });
     }
 });
@@ -431,6 +438,7 @@ codendi.tracker.report.loadAdvancedCriteria = function(element) {
                 .next()
                 .down("label")
                 .htmlFor.match(/_(\d+)$/)[1];
+            //eslint-disable-next-line no-unused-vars
             var req = new Ajax.Updater(li, location.href, {
                 parameters: {
                     func: "toggle-advanced",
@@ -502,18 +510,16 @@ codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_
     });
     var ul = new Element("ul");
     var btn_label = "";
-    selectbox.childElements().each(
-        function(el, index) {
-            if (index) {
-                if (el.tagName.toLowerCase() === "option") {
-                    ul.appendChild(buildCol(field_id + "_" + el.value, el.className, el.innerHTML));
-                }
-            } else {
-                //the first one, "-- Add column". don't need it.
-                btn_label = el.text.gsub(/^--\s*/, "");
+    selectbox.childElements().each(function(el, index) {
+        if (index) {
+            if (el.tagName.toLowerCase() === "option") {
+                ul.appendChild(buildCol(field_id + "_" + el.value, el.className, el.innerHTML));
             }
-        }.bind(this)
-    );
+        } else {
+            //the first one, "-- Add column". don't need it.
+            btn_label = el.text.gsub(/^--\s*/, "");
+        }
+    });
     var handle = new Element("a", {
         href: "#",
         title: btn_label,
@@ -610,8 +616,7 @@ document.observe("dom:loaded", function() {
                         .update(codendi.locales.tracker_artifact.masschange_check_all)
                 });
             //get checked artifacts
-            $("masschange_btn_checked").observe("click", function(evt) {
-                var mc_aids = new Array();
+            $("masschange_btn_checked").observe("click", function() {
                 $$('input[name="masschange_aids[]"]').each(function(e) {
                     if ($(e).checked) {
                         mc_all_form.appendChild(
@@ -729,9 +734,10 @@ document.observe("dom:loaded", function() {
                         "&renderer=" +
                         renderer_id;
 
+                    //eslint-disable-next-line no-unused-vars
                     var req = new Ajax.Request(location.href, {
                         parameters: parameters,
-                        onComplete: function(transport) {
+                        onComplete: function() {
                             codendi.tracker.report.setHasChanged();
                         }
                     });
@@ -754,6 +760,7 @@ document.observe("dom:loaded", function() {
 
     if ($("tracker_report_updater_delete")) {
         $("tracker_report_updater_delete").observe("click", function(event) {
+            //eslint-disable-next-line no-alert
             if (!confirm(codendi.locales.tracker_report.delete_report)) {
                 event.stop();
             }

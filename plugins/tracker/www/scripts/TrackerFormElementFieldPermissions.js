@@ -22,6 +22,8 @@
  *
  */
 
+/* global jQuery:readonly */
+
 (function($) {
     function init() {
         $(".tracker_field_permissionsonartifact").each(function(index, element) {

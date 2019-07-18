@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global jQuery:readonly tuleap:readonly codendi:readonly */
+
 (function($) {
     $(document).ready(function() {
         var hierarchy_containers = $(".artifact-hierarchy");
@@ -24,9 +26,10 @@
 
         var containers = hierarchy_containers.add(nature_containers);
 
-        containers.each(function(index) {
+        containers.each(function() {
             var container = $(this),
                 artifact_id = container.data("artifactId"),
+                //eslint-disable-next-line no-unused-vars
                 hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
                     codendi.tracker.base_url,
                     container.get(0),

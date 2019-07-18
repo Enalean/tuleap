@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/* global tuleap:readonly codendi:readonly jQuery:readonly */
+
 (function($, window, document) {
     var popovers = [];
 
@@ -113,7 +115,7 @@
 
             button;
 
-            input.click(function(evt) {
+            input.click(function() {
                 $(this).select();
             });
 

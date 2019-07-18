@@ -18,7 +18,7 @@
 !(function($) {
     document.observe("dom:loaded", function() {
         if ($("#tracker_report_updater_saveas-modal") && $("#tracker_report_form")) {
-            $("#tracker_report_updater_saveas-modal").on("hide", function(event) {
+            $("#tracker_report_updater_saveas-modal").on("hide", function() {
                 $("#report_copy_name_input").val("");
             });
         }

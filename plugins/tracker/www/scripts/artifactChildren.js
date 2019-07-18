@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global Class:readonly Template:readonly Ajax:readonly */
+
 var tuleap = tuleap || {};
 tuleap.artifact = tuleap.artifact || {};
 
@@ -48,6 +50,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.insertTable();
         this.body = this.container.down("tbody");
         this.row_template = new Template(
+            /* eslint-disable no-multi-str */
             '<tr data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
                     <a href="#" class="toggle-child"><i class="fa fa-caret-right fa-fw"></i></a> \
@@ -56,6 +59,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
                 <td>#{title}</td> \
                 <td>#{status}</td> \
             </tr>'
+            /* eslint-enable no-multi-str */
         );
     },
 
@@ -64,6 +68,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
             status = this.locales.tracker_hierarchy.status_column_name;
 
         this.container.insert(
+            /* eslint-disable no-multi-str */
             '<table class="table artifact-children-table"> \
                 <thead> \
                     <tr class="artifact-children-table-head"> \
@@ -79,6 +84,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
                 <tbody> \
                 </tbody> \
             </table>"
+            /* eslint-enable no-multi-str */
         );
     },
 

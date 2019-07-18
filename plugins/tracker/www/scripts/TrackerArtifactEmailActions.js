@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly jQuery:readonly */
+
 (function($, window) {
     $(function() {
         $(
@@ -45,7 +47,7 @@
 
                     updateButtonLabel(button, data.notification);
                 })
-                .fail(function(data) {
+                .fail(function() {
                     codendi.feedback.clear();
                     codendi.feedback.log(
                         "error",

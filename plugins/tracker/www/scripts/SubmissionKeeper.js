@@ -26,6 +26,8 @@
  * on the artifact before submission
  */
 
+/* global codendi:readonly jQuery:readonly */
+
 var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 

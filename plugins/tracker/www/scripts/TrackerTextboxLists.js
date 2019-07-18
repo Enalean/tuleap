@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* global ProtoMultiSelect:readonly $:readonly $$:readonly */
+
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
 

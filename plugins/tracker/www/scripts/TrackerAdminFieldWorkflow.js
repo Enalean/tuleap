@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global $$:readonly codendi:readonly $:readonly tuleap:readonly Ajax:readonly */
+
 document.observe("dom:loaded", function() {
     $$(".tracker-field-richtext").each(function define_rich_text(elem) {
-        var r = new codendi.RTE(elem);
+        var r = new codendi.RTE(elem); //eslint-disable-line no-unused-vars
     });
 
     $$(
         "input[type=checkbox][name^=remove_postaction]",
         "input[type=checkbox][name^=remove_rule]"
     ).each(function(elem) {
-        elem.observe("click", function(evt) {
+        elem.observe("click", function() {
             if (elem.checked) {
                 elem.up("tr")
                     .down("div")
@@ -56,7 +58,9 @@ document.observe("dom:loaded", function() {
                 elem.up("tr")
                     .select("input")
                     .each(function(e) {
-                        if (e.hasClassName("required")) e.required = true;
+                        if (e.hasClassName("required")) {
+                            e.required = true;
+                        }
                     });
             }
         });
@@ -185,7 +189,7 @@ document.observe("dom:loaded", function() {
                                 trigger_element.remove();
                             },
                             onFailure: function(response) {
-                                alert(response.responseText);
+                                alert(response.responseText); //eslint-disable-line no-alert
                             }
                         }
                     );

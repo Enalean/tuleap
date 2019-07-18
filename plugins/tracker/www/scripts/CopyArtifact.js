@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 (function($) {
     $(document).ready(function() {
         $("#copy_children_button").on("click", function(e) {
