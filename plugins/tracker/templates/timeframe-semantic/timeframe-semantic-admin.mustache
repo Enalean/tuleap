@@ -49,6 +49,20 @@
         <button class="btn btn-primary" type="submit" name="update-semantic-timeframe">
             {{# dgettext }} tuleap-tracker | Save your modifications {{/ dgettext }}
         </button>
+        {{# is_semantic_configured }}
+            {{# dgettext }} tuleap-tracker | or{{/ dgettext }}
+            <button
+                class="btn btn-danger"
+                type="submit"
+                name="reset-semantic-timeframe"
+                {{# has_tracker_charts }}
+                    title="{{# dgettext }} tuleap-tracker | You cannot reset this semantic because this tracker has a burnup, burndown or another chart rendered by an external plugin{{/ dgettext }}"
+                    disabled
+                {{/ has_tracker_charts }}
+            >
+                {{# dgettext }} tuleap-tracker | Reset this semantic {{/ dgettext }}
+            </button>
+        {{/ is_semantic_configured }}
     </form>
     <div>
         <a href="{{ tracker_semantic_admin_url }}">

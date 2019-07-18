@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
+use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 
 class SemanticTimeframeAdministrationPresenterBuilder
 {
@@ -55,10 +56,12 @@ class SemanticTimeframeAdministrationPresenterBuilder
             $duration_field
         );
 
+        $has_tracker_charts = $this->doesTrackerHaveCharts($tracker);
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
             $tracker,
             $target_url,
+            $has_tracker_charts,
             $usable_date_fields,
             $usable_numeric_fields,
             $start_date_field,
@@ -75,5 +78,18 @@ class SemanticTimeframeAdministrationPresenterBuilder
                 'is_selected' => $current_field && (int) $field->getId() === (int) $current_field->getId()
             ];
         }, $fields);
+    }
+
+
+    private function doesTrackerHaveCharts(Tracker $tracker) : bool
+    {
+        $event = new DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent($tracker);
+
+        $chart_fields = $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, [
+            'burnup',
+            'burndown'
+        ]);
+
+        return count($chart_fields) > 0 || $event->doesAPluginRenderAChartForTracker();
     }
 }

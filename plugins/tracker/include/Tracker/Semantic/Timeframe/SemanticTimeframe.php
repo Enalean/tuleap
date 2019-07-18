@@ -135,8 +135,10 @@ class SemanticTimeframe extends Tracker_Semantic
             $timeframe_updator->update($this->tracker, $request);
 
             $this->redirectToSemanticTimeframeAdmin();
-
-            return;
+        } elseif ($request->exist('reset-semantic-timeframe')) {
+            $this->getCSRFSynchronizerToken()->check();
+            $this->resetSemantic();
+            $this->redirectToSemanticTimeframeAdmin();
         }
 
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
@@ -244,6 +246,18 @@ class SemanticTimeframe extends Tracker_Semantic
                     "func"     => "admin-semantic"
                 ]
             )
+        );
+    }
+
+    private function resetSemantic() : void
+    {
+        (new SemanticTimeframeDao())->deleteTimeframeSemantic(
+            (int) $this->tracker->getId()
+        );
+
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::INFO,
+            dgettext('tuleap-tracker', 'Semantic timeframe reset successfully')
         );
     }
 }

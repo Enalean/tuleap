@@ -64,10 +64,16 @@ class SemanticTimeframeAdministrationPresenter
      */
     public $target_url;
 
+    /**
+     * @var bool
+     */
+    public $has_tracker_charts;
+
     public function __construct(
         \CSRFSynchronizerToken $csrf,
         \Tracker $tracker,
         string $target_url,
+        bool $has_tracker_charts,
         array $usable_date_fields,
         array $usable_numeric_fields,
         ?\Tracker_FormElement_Field_Date $start_date_field,
@@ -79,6 +85,7 @@ class SemanticTimeframeAdministrationPresenter
         $this->duration_field             = $duration_field;
         $this->usable_numeric_fields      = $usable_numeric_fields;
         $this->is_semantic_configured     = $start_date_field !== null && $duration_field !== null;
+        $this->has_tracker_charts         = $has_tracker_charts;
         $this->target_url                 = $target_url;
         $this->tracker_semantic_admin_url = TRACKER_BASE_URL . '/?' . http_build_query(
             [
