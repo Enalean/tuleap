@@ -56,9 +56,6 @@ final class BeforeCopyVisitor implements ItemVisitor
      */
     private $document_ongoing_upload_retriever;
 
-    /**
-     * @psalm-param class-string<Docman_Item> $expected_item_class_to_copy
-     */
     public function __construct(
         DoesItemHasExpectedTypeVisitor $does_item_has_expected_type,
         Docman_ItemFactory $item_factory,

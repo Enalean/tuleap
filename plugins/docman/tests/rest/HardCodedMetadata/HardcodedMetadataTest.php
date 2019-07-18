@@ -506,51 +506,6 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     }
 
     /**
-     * @depends testPostEmbeddedFileWithStatusAndObsolescenceDate
-     */
-    public function testPatchEmbeddedFileDocumentWithHardcodedMetadata(int $embedded_file_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-
-        $date = new \DateTimeImmutable();
-        $date = $date->setTimezone(new DateTimeZone('GMT+1'));
-        $date = $date->setTime(0, 0, 0);
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'title'               => 'My embedded to patched with a new title',
-                'should_lock_file'    => false,
-                'status'              => 'rejected',
-                'obsolescence_date'   => $date->modify('+2 day')->format('Y-m-d'),
-                'embedded_properties' => ['content' => 'TULEAAAAAAAAP']
-            ]
-        );
-
-        $patch_embedded_file_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_file_id, $headers, $put_resource)
-        );
-
-        $this->assertEquals(200, $patch_embedded_file_response->getStatusCode());
-
-        $get_embedded_file_response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_file_id),
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-        );
-
-        $this->assertEquals(200, $get_embedded_file_response->getStatusCode());
-        $this->assertEquals('embedded', $get_embedded_file_response->json()['type']);
-        $this->checkStatus($get_embedded_file_response, 'Rejected');
-        $this->checkObsolesenceDate($get_embedded_file_response, $date);
-        $this->assertEquals(
-            'TULEAAAAAAAAP',
-            $get_embedded_file_response->json()['embedded_file_properties']['content']
-        );
-    }
-
-    /**
      * @depends testGetDocumentItemsForAdmin
      */
     public function testPutFileHardcodedMetadataWithAllHardcodedMetadata(array $items): void

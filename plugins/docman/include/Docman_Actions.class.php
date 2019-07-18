@@ -777,8 +777,7 @@ class Docman_Actions extends Actions {
         if ($itemToMove && $newParentItem && $newParentItem->getId() != $itemToMove->getId()) {
             $item_factory = $this->_getItemFactory();
             $old_parent   = $item_factory->getItemFromDb($itemToMove->getParentId());
-            if ($item_factory->setNewParent($itemToMove->getId(), $newParentItem->getId(), $ordering)) {
-                $itemToMove->fireEvent('plugin_docman_event_move', $user, $newParentItem);
+            if ($item_factory->move($itemToMove, $newParentItem, $user, $ordering)) {
                 $hp = Codendi_HTMLPurifier::instance();
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                             $itemToMove->getGroupId(),
