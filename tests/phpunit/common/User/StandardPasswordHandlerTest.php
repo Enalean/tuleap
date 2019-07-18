@@ -72,15 +72,8 @@ final class StandardPasswordHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itCheckIfRehashingIsNeeded() : void
+    public function itChecksIfRehashingIsNeeded() : void
     {
-        /**
-         * PHP 7.4 alpha 1 bug
-         * @see https://bugs.php.net/bug.php?id=78208
-         */
-        if (PHP_VERSION_ID >= 70400) {
-            $this->markTestSkipped();
-        }
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
         $this->assertTrue($rehash_needed);
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::SHA512_HASH);
