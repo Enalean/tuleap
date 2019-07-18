@@ -33,6 +33,7 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\REST\SemanticTimeframeRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
 class SemanticTimeframe extends Tracker_Semantic
@@ -199,8 +200,18 @@ class SemanticTimeframe extends Tracker_Semantic
         return $this->start_date_field !== null && $this->duration_field !== null;
     }
 
-    public function exportToREST(PFUser $user): void
+    public function exportToREST(PFUser $user)
     {
+        if ($this->start_date_field === null || $this->duration_field === null) {
+            return null;
+        }
+        $start_date_field_id = (int) $this->start_date_field->getId();
+        $duration_field_id   = (int) $this->duration_field->getId();
+
+        $representation = new SemanticTimeframeRepresentation();
+        $representation->build($start_date_field_id, $duration_field_id);
+
+        return $representation;
     }
 
     private function getCSRFSynchronizerToken(): \CSRFSynchronizerToken
