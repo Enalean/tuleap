@@ -22,12 +22,13 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
+use Docman_ItemFactory;
 use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
-use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
@@ -36,20 +37,21 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
-use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class DocmanLinksResource extends AuthenticatedResource
 {
@@ -82,34 +84,21 @@ class DocmanLinksResource extends AuthenticatedResource
     }
 
     /**
-     * Patch an link of document manager
-     *
-     * <pre>
-     * /!\ This route is <strong> deprecated </strong> <br/>
-     * /!\ To create an embedded file version, please use the {id}/version route instead !
-     * </pre>
-     *
-     * <pre>
-     * approval_table_action should be provided only if item has an existing approval table.<br>
-     * Possible values:<br>
-     *  * copy: Creates an approval table based on the previous one<br>
-     *  * reset: Reset the current approval table<br>
-     *  * empty: No approbation needed for the new version of this document<br>
-     * </pre>
+     * Move an existing link document
      *
      * @url    PATCH {id}
      * @access hybrid
      *
      * @param int                           $id             Id of the item
-     * @param DocmanLinkPATCHRepresentation $representation {@from body}
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
      *
      * @status 200
-     * @throws I18NRestException 400
-     * @throws 403
-     * @throws 501
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
 
-    public function patch(int $id, DocmanLinkPATCHRepresentation $representation)
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -118,25 +107,23 @@ class DocmanLinksResource extends AuthenticatedResource
         $project      = $item_request->getProject();
         $this->addAllEvent($project);
 
-        try {
-            $status_id                    = $this->getItemStatusMapper($project)->getItemStatusIdFromItemStatusString(
-                $representation->status
-            );
-            $obsolescence_date_time_stamp = $this->getHardcodedMetadataObsolescenceDateRetriever($project)->getTimeStampOfDate(
-                $representation->obsolescence_date,
-                new \DateTimeImmutable()
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        }
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(Docman_Link::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            $this->event_manager
+        );
 
-        $this->createNewLinkVersion(
-            $representation,
-            $item_request,
-            $status_id,
-            $obsolescence_date_time_stamp,
-            $representation->title,
-            $representation->description
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            UserManager::instance()->getCurrentUser(),
+            $representation->move
         );
     }
 
@@ -429,20 +416,6 @@ class DocmanLinksResource extends AuthenticatedResource
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
-    }
-
-    private function getItemStatusMapper(\Project $project): ItemStatusMapper
-    {
-        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
-    }
-
-    private function getHardcodedMetadataObsolescenceDateRetriever(\Project $project): HardcodedMetadataObsolescenceDateRetriever
-    {
-        return new HardcodedMetadataObsolescenceDateRetriever(
-            new HardcodedMetdataObsolescenceDateChecker(
-                new Docman_SettingsBo($project->getID())
-            )
-        );
     }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder

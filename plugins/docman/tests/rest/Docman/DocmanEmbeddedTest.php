@@ -66,8 +66,6 @@ class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $query = json_encode(
             [
                 'title'               => 'My new embedded',
-                'parent_id'           => $root_id,
-                'type'                => 'embedded',
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );

@@ -55,10 +55,10 @@ class DocmanFileDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +-----------+----------------+---------------+--------------------+
-     *      |           |                |               |                    |
-     *      +           +                +               +                    +
-     *   PUT HM File    PATCH File    DELETE File  POST File Version   LOCK File
+     *                  +----------------+---------------+--------------------+
+     *                  |                |               |                    |
+     *                  +                +               +                    +
+     *             PUT HM File       DELETE File  POST File Version   LOCK File
      *
      * HM => Hardcoded Metadata
      *
@@ -74,7 +74,6 @@ class DocmanFileDataBuild
         $this->common_builder->addWritePermissionOnItem($folder_file_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $this->createPutFolder($folder_file_id);
-        $this->createPatchFolder($folder_file_id);
         $this->createDeleteFolder($folder_file_id);
         $this->createPostVersionFolder($folder_file_id);
         $this->createLockFolder($folder_file_id);
@@ -124,78 +123,6 @@ class DocmanFileDataBuild
             $this->docman_user_id,
             $folder_put_id,
             'PUT F',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-    }
-
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *                                       PATCH File
-     *                                            +
-     *                                            |
-     *                                            +
-     *    +-------------+-------------+-----------------+--------------+----------+-------------+-----------+---------+
-     *    |             |             |                 |              |          |             |           |         |
-     *    +             +             +                 +              +          +             +           +         +
-     *  PATCH F AT C  PATCH F AT R  PATCH F AT E   PATCH F AT   PATCH F NO AT  PATCH F AL   PATCH F KO     PATCH F   PATCH F RL
-     *
-     *
-     * (RL)   => Docman Regular user Lock on this item
-     * (AL)   => Docman Admin Lock on this item
-     * (AT)   => Approval table on this item
-     * (AT C) => Copy Approval table on this item
-     * (AT R) => Reset Approval table on this item
-     * (AT E) => Empty Approval table on this item
-     * (DIS AT) => Disabled Approval table on this item
-     */
-    private function createPatchFolder(int $folder_id): void
-    {
-        $folder_file_id = $this->common_builder->createItemWithVersion(
-            $this->docman_user_id,
-            $folder_id,
-            'PATCH File',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-        $this->common_builder->addWritePermissionOnItem($folder_file_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT C', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT R', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT E', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $this->common_builder->createItemWithApprovalTable($folder_file_id, 'PATCH F AT', 'version title', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_file_id,
-            'PATCH F NO AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_file_id,
-            'PATCH F KO',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_file_id,
-            'PATCH F',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_file_id,
-            $this->docman_user_id,
-            $this->admin_user_id,
-            'PATCH F AL',
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_file_id,
-            $this->docman_user_id,
-            $this->docman_user_id,
-            'PATCH F RL',
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
     }

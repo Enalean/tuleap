@@ -42,7 +42,6 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         $items         = $this->loadFolderContent($root_id, 'Wiki');
         $folder        = $this->findItemByTitle($root_folder, 'Wiki');
         $items_id      = $folder['id'];
-        $patch_items   = $this->loadFolderContent($items_id, 'PATCH Wiki');
         $deleted_items = $this->loadFolderContent($items_id, 'DELETE Wiki');
         $lock_items    = $this->loadFolderContent($items_id, 'LOCK Wiki');
         $post_items    = $this->loadFolderContent($items_id, 'POST Wiki');
@@ -52,7 +51,6 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
             $root_folder,
             $folder,
             $items,
-            $patch_items,
             $deleted_items,
             $lock_items,
             $post_items,
@@ -61,277 +59,55 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetDocumentItemsForAdminUser
+     * @depends testGetRootId
      */
-    public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
+    public function testMoveWikiDocument(int $root_id): void
     {
-        $item_title = 'POST AT W';
-        $wiki       = $this->findItemByTitle($items, $item_title);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'should_lock_file'      => false,
-                'wiki_properties'       => ['page_name' => 'my new page name'],
-                'title'                 => $item_title,
-                'approval_table_action' => 'copy'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_wikis/' . $wiki['id'], null, $put_resource)
-        );
-        $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
-    {
-        $item_name = 'PATCH W RL';
-        $item      = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'should_lock_file' => false,
-                'title'            => $item_name,
-                'wiki_properties'  => ['page_name' => 'my new page name']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_wikis/' . $item["id"],
+        $response_wiki_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/wikis',
                 null,
-                $put_resource
+                json_encode([
+                    'title' => 'Link document to cut',
+                    'wiki_properties' => ['page_name' => 'AAAAA']
+                ])
             )
         );
-        $this->assertEquals(200, $response->getStatusCode());
-    }
+        $this->assertEquals(201, $response_wiki_creation->getStatusCode());
+        $wiki_doc_id = $response_wiki_creation->json()['id'];
 
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
-    {
-        $item_name = 'PATCH W AL';
-        $item      = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => $item_name,
-                'should_lock_file' => false,
-                'wiki_properties'  => ['page_name' => 'my new page name']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_wikis/' . $item['id'],
+        $response_folder_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
                 null,
-                $put_resource
+                json_encode(['title' => 'Wiki cut folder'])
             )
         );
+        $this->assertEquals(201, $response_folder_creation->getStatusCode());
+        $folder_id = $response_folder_creation->json()['id'];
 
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchWikiDocument(int $root_id): void
-    {
-        $query = json_encode(
-            [
-                'title'           => 'My new wiki',
-                'parent_id'       => $root_id,
-                'type'            => 'wiki',
-                'wiki_properties' => ['page_name' => 'my new page name']
-            ]
-        );
-
-        $response1 = $this->getResponseByName(
+        $move_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
+            $this->client->patch(
+                'docman_wikis/' . urlencode((string) $wiki_doc_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            )
         );
+        $this->assertEquals(200, $move_response->getStatusCode());
 
-        $this->assertEquals(201, $response1->getStatusCode());
-
-        $wiki_item_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
-        );
-        $this->assertEquals(200, $wiki_item_response->getStatusCode());
-        $this->assertEquals('wiki', $wiki_item_response->json()['type']);
-        $this->assertEquals('My new wiki', $wiki_item_response->json()['title']);
-        $this->assertEquals('', $wiki_item_response->json()['description']);
-
-        $wiki_id = $response1->json()['id'];
-
-        $put_resource = json_encode(
-            [
-                'title'            => 'New wiki title :o',
-                'description'      => 'Add a description',
-                'should_lock_file' => false,
-                'wiki_properties'  => ['page_name' => 'my updated page name']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_wikis/' . $wiki_id, null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $wiki_id),
+        $moved_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $wiki_doc_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('wiki', $response->json()['type']);
-        $this->assertEquals('New wiki title :o', $response->json()['title']);
-        $this->assertEquals('Add a description', $response->json()['description']);
-        $this->assertEquals(null, $response->json()['lock_info']);
-        $this->assertEquals('my updated page name', $response->json()['wiki_properties']['page_name']);
-    }
+        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
 
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchWikiWithStatusThrows400WhenStatusIsNotEnabledForProject(int $root_id): void
-    {
-        $title = 'wiki with status';
-        $query = json_encode(
-            [
-                'title'           => $title,
-                'parent_id'       => $root_id,
-                'wiki_properties' => ['page_name' => 'my updated page name']
-            ]
-        );
-
-        $wiki_id = $this->createWikiAndReturnItsId($root_id, $query);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => $title,
-                'description'      => 'I have a description now',
-                'should_lock_file' => false,
-                'wiki_properties'  => ['page_name' => 'my updated page name'],
-                'status'           => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_wikis/' . $wiki_id, null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchWikiWithStatusThrows400WhenObsolescenceDateIsNotEnabledForProject(
-        int $root_id
-    ): void {
-        $title = 'wiki with validity date';
-        $query = json_encode(
-            [
-                'title'           => $title,
-                'parent_id'       => $root_id,
-                'wiki_properties' => ['page_name' => 'my updated page name']
-            ]
-        );
-
-        $item_id = $this->createWikiAndReturnItsId($root_id, $query);
-
-        $patch_resource = json_encode(
-            [
-                'version_title'     => 'My version title',
-                'changelog'         => 'I have changed',
-                'title'             => $title,
-                'should_lock_file'  => true,
-                'wiki_properties'   => ['page_name' => 'my updated page name'],
-                'obsolescence_date' => '2038-12-31',
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_wikis/' . $item_id, null, $patch_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString('obsolescence', $response->json()["error"]['i18n_error_message']);
-    }
-
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchDocumentAddLock(int $root_id): void
-    {
-        $query = json_encode(
-            [
-                'title'           => 'My second wiki',
-                'parent_id'       => $root_id,
-                'type'            => 'wiki',
-                'wiki_properties' => ['page_name' => 'my new page name']
-            ]
-        );
-
-        $response1 = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
-        );
-
-        $this->assertEquals(201, $response1->getStatusCode());
-
-        $wiki_item_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get($response1->json()['uri'])
-        );
-
-        $this->assertEquals(200, $wiki_item_response->getStatusCode());
-        $this->assertEquals('wiki', $wiki_item_response->json()['type']);
-
-        $wiki_id = $response1->json()['id'];
-
-        $put_resource = json_encode(
-            [
-                'title'            => 'My second wiki',
-                'should_lock_file' => true,
-                'wiki_properties'  => ['page_name' => 'my new page name']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_wikis/' . $wiki_id, null, $put_resource)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $wiki_id),
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('wiki', $response->json()['type']);
-        $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
     }
 
     /**
