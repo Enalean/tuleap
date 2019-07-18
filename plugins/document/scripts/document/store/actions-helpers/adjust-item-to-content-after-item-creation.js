@@ -17,24 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import state from "./state.js";
-import error from "./error/module.js";
-import clipboard from "./clipboard/module.js";
+export { adjustItemToContentAfterItemCreation };
 
-Vue.use(Vuex);
+import { getItem } from "../../api/rest-querier.js";
+import { flagItemAsCreated } from "./flag-item-as-created.js";
 
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions,
-    modules: {
-        error,
-        clipboard
+async function adjustItemToContentAfterItemCreation(context, parent, current_folder, item_id) {
+    const created_item = await getItem(item_id);
+
+    flagItemAsCreated(context, created_item);
+
+    if (!parent.is_expanded && parent.id !== current_folder.id) {
+        context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
     }
-});
+    return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+}

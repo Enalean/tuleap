@@ -98,6 +98,9 @@ msgstr "Commenté"
 msgid "Content"
 msgstr "Contenu"
 
+msgid "Copy"
+msgstr "Copier"
+
 msgid "Copy the previous approval table."
 msgstr "Copier la table d'approbation précedente."
 
@@ -331,6 +334,9 @@ msgstr "Propriétaire"
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
+
+msgid "Paste"
+msgstr "Coller"
 
 msgid "Permanent"
 msgstr "Permanent"

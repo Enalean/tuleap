@@ -180,6 +180,11 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 }
 
+.tlp-dropdown-menu-item-disabled {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
 .tlp-dropdown-menu-text {
     padding: $tlp-half-spacing $tlp-spacing;
     border: 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import state from "./state.js";
-import error from "./error/module.js";
-import clipboard from "./clipboard/module.js";
+import * as mutations from "./clipboard-mutations.js";
+import * as actions from "./clipboard-actions.js";
+import defaultState from "./clipboard-default-state.js";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-    state,
-    getters,
+export default {
+    namespaced: true,
+    state: defaultState(),
     mutations,
-    actions,
-    modules: {
-        error,
-        clipboard
-    }
-});
+    actions
+};

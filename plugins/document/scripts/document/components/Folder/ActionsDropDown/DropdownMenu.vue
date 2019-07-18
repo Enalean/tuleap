@@ -79,6 +79,9 @@
                 Approval tables
             </span>
         </a>
+        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <copy-item v-bind:item="item"/>
+        <paste-item v-bind:destination="item"/>
         <template v-if="can_user_delete_item">
             <span class="tlp-dropdown-menu-separator" role="separator"></span>
             <quick-look-delete-button
@@ -96,10 +99,12 @@ import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../.
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
+import CopyItem from "./CopyItem.vue";
+import PasteItem from "./PasteItem.vue";
 
 export default {
     name: "DropdownMenu",
-    components: { UnlockItem, LockItem, QuickLookDeleteButton },
+    components: { UnlockItem, LockItem, CopyItem, PasteItem, QuickLookDeleteButton },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
