@@ -18,14 +18,14 @@ Edit `/etc/httpd/conf/httpd.conf` and change the values for:
 
 ### Deploy fpm conf
 
-In `/etc/opt/remi/php72/php-fpm.d/www.conf`
+In `/etc/opt/remi/php73/php-fpm.d/www.conf`
 * Remove php_value[session.save_path]
 * Remove php_value[soap.wsdl_cache_dir]
-* Append the content of src/etc/fpm.conf.dist (cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/remi/php72/php-fpm.d/www.conf)
+* Append the content of src/etc/fpm.conf.dist (cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/remi/php73/php-fpm.d/www.conf)
 
 start fpm:
 
-    service php72-php-fpm restart
+    service php73-php-fpm restart
 
 ### Deploy nginx
 

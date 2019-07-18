@@ -76,7 +76,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.2",
+      "php": "7.3",
       "ext-bcmath": "0",
       "ext-mbstring": "0",
       "ext-curl": "0",

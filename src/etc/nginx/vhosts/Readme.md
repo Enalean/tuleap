@@ -1,7 +1,7 @@
 Nginx + FPM for Tuleap Homepages
 ================================
 
-- fpm.conf should be deployed as /etc/opt/remi/php72/php-fpm.d/homepages.conf
+- fpm.conf should be deployed as /etc/opt/remi/php73/php-fpm.d/homepages.conf
 - nginx.conf should be added after default https server declaration in /etc/nginx/conf.d/tuleap.conf
 
 Those 2 files are given as example and should be checked projects by projects.

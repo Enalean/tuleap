@@ -55,7 +55,7 @@ MV='/bin/mv'
 MYSQL='/usr/bin/mysql'
 MYSQLSHOW='/usr/bin/mysqlshow'
 PERL='/usr/bin/perl'
-PHP='/opt/remi/php72/root/usr/bin/php'
+PHP='/opt/remi/php73/root/usr/bin/php'
 RM='/bin/rm'
 RPM='/bin/rpm'
 SERVICE='/sbin/service'
@@ -1454,14 +1454,14 @@ if [ "$auto_passwd" = "true" ]; then
     todo "Auto generated passwords (mysql, application, etc) are stored in $passwd_file"
 fi
 
-################### Switch to PHP 7.2 + nginx
+################### Switch to PHP 7.3 + nginx
 control_service httpd stop
-$INSTALL_DIR/tools/utils/php72/run.php
+$INSTALL_DIR/tools/utils/php73/run.php
 control_service httpd start
 enable_service nginx
 control_service nginx start
-enable_service php72-php-fpm
-control_service php72-php-fpm start
+enable_service php73-php-fpm
+control_service php73-php-fpm start
 
 ##############################################
 # End of installation

@@ -1,4 +1,4 @@
-#!/opt/remi/php72/root/usr/bin/php
+#!/opt/remi/php73/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2019. All Rights Reserved.

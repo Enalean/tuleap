@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f20a078672317e36b353dcbf699bd01",
+    "content-hash": "f4b37f66a4d845e5499bc778b9e399aa",
     "packages": [
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
@@ -98,7 +98,7 @@
     "platform": [],
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.2",
+        "php": "7.3",
         "ext-mailparse": "0"
     }
 }

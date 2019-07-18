@@ -1,7 +1,7 @@
-#!/opt/remi/php72/root/usr/bin/php
+#!/opt/remi/php73/root/usr/bin/php
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,5 +21,5 @@
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 
-$php72centos6 = new \Tuleap\Configuration\Setup\PHP72CentOS6(new Tuleap\Configuration\Logger\Console());
+$php72centos6 = new \Tuleap\Configuration\Setup\PHP73CentOS6(new Tuleap\Configuration\Logger\Console());
 $php72centos6->main();

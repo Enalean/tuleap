@@ -64,9 +64,9 @@ rm -rf /etc/nginx
 ln -s /data/etc/nginx /etc/nginx
 fi
 
-if [ -d "/data/etc/opt/remi/php72/php-fpm.d" ]; then
-rm -rf /etc/opt/remi/php72/php-fpm.d
-ln -s /data/etc/opt/remi/php72/php-fpm.d /etc/opt/remi/php72/php-fpm.d
+if [ -d "/data/etc/opt/remi/php73/php-fpm.d" ]; then
+rm -rf /etc/opt/remi/php73/php-fpm.d
+ln -s /data/etc/opt/remi/php73/php-fpm.d /etc/opt/remi/php73/php-fpm.d
 fi
 
 mkdir -p /var/tmp/tuleap_cache/php/session /var/tmp/tuleap_cache/php/wsdlcache
