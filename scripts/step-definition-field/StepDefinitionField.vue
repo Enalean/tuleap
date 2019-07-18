@@ -19,6 +19,14 @@
 
 <template>
     <div>
+        <button
+            type="button"
+            class="btn"
+            v-on:click="addStep(0)"
+        >
+            <i class="fa fa-plus"></i>
+            <translate>Add step</translate>
+        </button>
         <step-definition-entry
             v-for="(step, index) in steps"
             v-bind:key="step.uuid"
@@ -26,6 +34,7 @@
             v-bind:step="step"
             v-bind:field-id="fieldId"
             v-bind:delete-step="deleteStep"
+            v-on:addStep="addStep"
         />
         <p v-if="! isThereAtLeastOneStep">
             <input
@@ -35,13 +44,6 @@
             >
             <translate>There isn't any step defined yet. Start by adding one.</translate>
         </p>
-        <button
-            type="button"
-            class="btn"
-            v-on:click="addStep"
-        >
-            <i class="fa fa-plus"></i> <translate>Add step</translate>
-        </button>
     </div>
 </template>
 
@@ -74,11 +76,11 @@ export default {
                 this.steps.splice(index, 1);
             }
         },
-        addStep() {
+        addStep(index) {
             const step = Object.assign({}, this.emptyStep);
             step.uuid = uuid();
 
-            this.steps.push(step);
+            this.steps.splice(index, 0, step);
         }
     }
 };
