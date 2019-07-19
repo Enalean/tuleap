@@ -43,7 +43,7 @@ class MembersPresenter
     /**
      * @var bool
      */
-    public $is_synchronized_with_project_members;
+    public $is_synchronized_message_shown;
 
     public function __construct(
         array $members,
@@ -51,10 +51,10 @@ class MembersPresenter
         bool $is_dynamic_group,
         bool $is_synchronized_with_project_members
     ) {
-        $this->has_members                          = count($members) > 0;
-        $this->can_be_updated                       = $can_be_updated;
-        $this->members                              = $members;
-        $this->is_dynamic_group                     = $is_dynamic_group;
-        $this->is_synchronized_with_project_members = $is_synchronized_with_project_members;
+        $this->has_members                   = count($members) > 0;
+        $this->can_be_updated                = $can_be_updated;
+        $this->members                       = $members;
+        $this->is_dynamic_group              = $is_dynamic_group;
+        $this->is_synchronized_message_shown = $is_synchronized_with_project_members && $can_be_updated;
     }
 }
