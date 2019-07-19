@@ -33,6 +33,12 @@ import {
     addUserLegacyUIPreferency,
     createNewVersion,
     postLinkVersion,
+    moveFile,
+    moveFolder,
+    moveEmpty,
+    moveWiki,
+    moveEmbedded,
+    moveLink,
     copyFile,
     copyFolder,
     copyEmpty,
@@ -412,6 +418,69 @@ describe("rest-querier", () => {
                 should_lock_file,
                 approval_table_action
             );
+        });
+    });
+
+    describe("Move item", () => {
+        const moved_item_id = 147;
+        const destination_folder_id = 852;
+
+        beforeEach(() => {
+            mockFetchSuccess(tlp.patch);
+        });
+
+        it("Move a file", async () => {
+            await moveFile(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_files/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
+        });
+
+        it("Move an empty document", async () => {
+            await moveEmpty(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_empty_documents/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
+        });
+
+        it("Move an embedded document", async () => {
+            await moveEmbedded(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_embedded_files/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
+        });
+
+        it("Move a wiki document", async () => {
+            await moveWiki(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_wikis/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
+        });
+
+        it("Move a link document", async () => {
+            await moveLink(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_links/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
+        });
+
+        it("Move a folder", async () => {
+            await moveFolder(moved_item_id, destination_folder_id);
+
+            expect(tlp.patch).toHaveBeenCalledWith(`/api/docman_folders/${moved_item_id}`, {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+            });
         });
     });
 

@@ -20,18 +20,29 @@
 <template>
     <p class="tlp-text-info" v-if="item_title !== null">
         <i class="fa fa-info-circle document-clipboard-content-information-icon"></i>
-        <translate v-bind:translate-params="{ title: item_title }">
-            You are currently copying "%{ title }". You can paste it in a folder allowed to write into using the folder action dropdown.
+        <translate key="cut-information" v-bind:translate-params="{ title: item_title }" v-if="operation_type === CLIPBOARD_OPERATION_CUT">
+            You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action dropdown.
+            You also cannot move the item somewhere where the name is already used by another item.
+        </translate>
+        <translate key="copy-information" v-bind:translate-params="{ title: item_title }" v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+            You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action dropdown.
         </translate>
     </p>
 </template>
 <script>
 import { mapState } from "vuex";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
 
 export default {
     name: "ClipboardContentInformation",
+    data: () => {
+        return {
+            CLIPBOARD_OPERATION_CUT,
+            CLIPBOARD_OPERATION_COPY
+        };
+    },
     computed: {
-        ...mapState("clipboard", ["item_title"])
+        ...mapState("clipboard", ["item_title", "operation_type"])
     }
 };
 </script>

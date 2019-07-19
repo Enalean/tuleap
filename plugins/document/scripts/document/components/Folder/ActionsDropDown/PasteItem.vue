@@ -41,6 +41,12 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
+import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
+import {
+    doesFolderNameAlreadyExist,
+    doesDocumentNameAlreadyExist
+} from "../../../helpers/metadata-helpers/check-item-title.js";
+import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers.js";
 
 export default {
     name: "PasteItem",
@@ -48,13 +54,44 @@ export default {
         destination: Object
     },
     computed: {
-        ...mapState("clipboard", ["item_title", "pasting_in_progress"]),
+        ...mapState(["folder_content"]),
+        ...mapState("clipboard", [
+            "item_title",
+            "pasting_in_progress",
+            "operation_type",
+            "item_type",
+            "item_id"
+        ]),
         ...mapGetters(["is_item_a_folder"]),
         can_item_be_pasted() {
+            if (
+                this.item_title === null ||
+                this.operation_type === null ||
+                !this.is_item_a_folder(this.destination) ||
+                !this.destination.user_can_write
+            ) {
+                return false;
+            }
+
+            if (this.operation_type === CLIPBOARD_OPERATION_COPY) {
+                return true;
+            }
+
+            if (this.item_type !== TYPE_FOLDER) {
+                return !doesDocumentNameAlreadyExist(
+                    this.item_title,
+                    this.folder_content,
+                    this.destination
+                );
+            }
+
             return (
-                this.item_title !== null &&
-                this.is_item_a_folder(this.destination) &&
-                this.destination.user_can_write
+                !doesFolderNameAlreadyExist(
+                    this.item_title,
+                    this.folder_content,
+                    this.destination
+                ) &&
+                !isItemDestinationIntoItself(this.folder_content, this.item_id, this.destination.id)
             );
         }
     },

@@ -80,6 +80,7 @@
             </span>
         </a>
         <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <cut-item v-bind:item="item"/>
         <copy-item v-bind:item="item"/>
         <paste-item v-bind:destination="item"/>
         <template v-if="can_user_delete_item">
@@ -99,13 +100,14 @@ import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../.
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
+import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "DropdownMenu",
-    components: { UnlockItem, LockItem, CopyItem, PasteItem, QuickLookDeleteButton },
+    components: { UnlockItem, LockItem, CutItem, CopyItem, PasteItem, QuickLookDeleteButton },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,

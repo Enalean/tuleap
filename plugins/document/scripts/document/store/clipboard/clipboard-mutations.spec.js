@@ -17,11 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { copyItem, emptyClipboard, startPasting, pastingHasFailed } from "./clipboard-mutations.js";
-import { TYPE_EMPTY } from "../../constants.js";
+import {
+    cutItem,
+    copyItem,
+    emptyClipboard,
+    startPasting,
+    pastingHasFailed
+} from "./clipboard-mutations.js";
+import { TYPE_EMPTY, CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
 import defaultState from "./clipboard-default-state.js";
 
 describe("Clipboard mutations", () => {
+    it("Cut item when no item is being pasted", () => {
+        const item = {
+            id: 3,
+            title: "My doc",
+            type: TYPE_EMPTY
+        };
+
+        const state = { pasting_in_progress: false, operation_type: null };
+        cutItem(state, item);
+        expect(state.item_id).toBe(item.id);
+        expect(state.item_title).toBe(item.title);
+        expect(state.item_type).toBe(item.type);
+        expect(state.operation_type).toBe(CLIPBOARD_OPERATION_CUT);
+    });
+
+    it("Do not cut item when an item is being pasted", () => {
+        const item = {
+            id: 3,
+            title: "My doc",
+            type: TYPE_EMPTY
+        };
+
+        const state = { pasting_in_progress: true, item_id: null };
+        cutItem(state, item);
+        expect(state.item_id).toBe(null);
+    });
+
     it("Copy item when no item is being pasted", () => {
         const item = {
             id: 3,
@@ -29,11 +62,12 @@ describe("Clipboard mutations", () => {
             type: TYPE_EMPTY
         };
 
-        const state = { pasting_in_progress: false };
+        const state = { pasting_in_progress: false, operation_type: null };
         copyItem(state, item);
         expect(state.item_id).toBe(item.id);
         expect(state.item_title).toBe(item.title);
         expect(state.item_type).toBe(item.type);
+        expect(state.operation_type).toBe(CLIPBOARD_OPERATION_COPY);
     });
 
     it("Do not copy item when an item is being pasted", () => {

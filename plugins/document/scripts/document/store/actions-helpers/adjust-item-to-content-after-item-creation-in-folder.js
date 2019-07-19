@@ -17,13 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { adjustItemToContentAfterItemCreation };
+export { adjustItemToContentAfterItemCreationInAFolder };
 
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
 
-async function adjustItemToContentAfterItemCreation(context, parent, current_folder, item_id) {
+async function adjustItemToContentAfterItemCreationInAFolder(
+    context,
+    parent,
+    current_folder,
+    item_id
+) {
     const created_item = await getItem(item_id);
+
+    context.commit("removeItemFromFolderContent", created_item);
 
     flagItemAsCreated(context, created_item);
 
