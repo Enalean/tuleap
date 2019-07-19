@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
+
 /**
  * Widget_MyArtifacts
  *
@@ -214,5 +218,14 @@ class Tracker_Widget_MyArtifacts extends Widget {
 
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts','description');
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/themes/BurningParrot/assets',
+            TRACKER_BASE_URL . '/themes/BurningParrot/assets'
+        );
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 }
