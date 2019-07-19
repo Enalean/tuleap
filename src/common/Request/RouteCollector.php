@@ -68,11 +68,14 @@ use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
+use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Home;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MemberRemover;
 use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -373,6 +376,22 @@ class RouteCollector
         );
     }
 
+    public static function getPostUserGroupIdAdd() : DispatchableWithRequest
+    {
+        $ugroup_manager = new UGroupManager();
+        return new MemberAdditionController(
+            ProjectManager::instance(),
+            $ugroup_manager,
+            \UserManager::instance(),
+            MemberAdder::build(
+                new ProjectMemberAdderWithStatusCheckAndNotifications(
+                    new UGroupBinding(new UGroupUserDao(), $ugroup_manager)
+                )
+            ),
+            UGroupRouter::getCSRFTokenSynchronizer()
+        );
+    }
+
     public static function getPostUserGroupIdRemove() : DispatchableWithRequest
     {
         $project_manager = ProjectManager::instance();
@@ -402,7 +421,8 @@ class RouteCollector
                 $user_manager,
                 new ProjectHistoryDao(),
                 $ugroup_manager
-            )
+            ),
+            UGroupRouter::getCSRFTokenSynchronizer()
         );
     }
 
@@ -443,10 +463,8 @@ class RouteCollector
 
             $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
 
-            $r->post(
-                '/change-synchronized-project-membership',
-                [self::class, 'getPostSynchronizedMembershipActivation']
-            );
+            $r->post('/change-synchronized-project-membership', [self::class, 'getPostSynchronizedMembershipActivation']);
+            $r->post('/user-group/{user-group-id:\d+}/add', [self::class, 'getPostUserGroupIdAdd']);
             $r->post('/user-group/{user-group-id:\d+}/remove', [self::class, 'getPostUserGroupIdRemove']);
         });
 

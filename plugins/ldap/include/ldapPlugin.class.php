@@ -39,6 +39,7 @@ use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionP
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
@@ -1301,7 +1302,7 @@ class LdapPlugin extends Plugin {
         switch ($request->get('action')) {
             case 'ldap_remove_binding':
                 $event->setHasBeenHandledToTrue();
-                $csrf->check();
+                $csrf->check(UGroupRouter::getUGroupUrl($ugroup));
                 $ldapUserGroupManager->setGroupName($request->get('previous_bind_with_group'));
                 if ($ldapUserGroupManager->unbindFromBindLdap()) {
                     $GLOBALS['Response']->addFeedback(
@@ -1313,7 +1314,7 @@ class LdapPlugin extends Plugin {
                 break;
             case 'ldap_add_binding':
                 $event->setHasBeenHandledToTrue();
-                $csrf->check();
+                $csrf->check(UGroupRouter::getUGroupUrl($ugroup));
                 $ldap_group_name = $request->get('bind_with_group');
                 $ldapUserGroupManager->setGroupName($ldap_group_name);
                 if ($ldapUserGroupManager->getGroupDn()) {

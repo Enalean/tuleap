@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -34,6 +34,8 @@ use UserManager;
 
 class UGroupRouter
 {
+    private const CSRF_TOKEN = 'user_group_modifications';
+
     /**
      * @var DelegationController
      */
@@ -50,10 +52,6 @@ class UGroupRouter
      * @var BindingController
      */
     private $binding_controller;
-    /**
-     * @var MembersController
-     */
-    private $members_controller;
     /**
      * @var IndexController
      */
@@ -76,7 +74,6 @@ class UGroupRouter
         Codendi_Request $request,
         EditBindingUGroupEventLauncher $edit_event_launcher,
         BindingController $binding_controller,
-        MembersController $members_controller,
         DelegationController $delegation_controller,
         IndexController $index_controller,
         DetailsController $details_controller,
@@ -85,7 +82,6 @@ class UGroupRouter
         $this->ugroup_manager        = $ugroup_manager;
         $this->request               = $request;
         $this->binding_controller    = $binding_controller;
-        $this->members_controller    = $members_controller;
         $this->delegation_controller = $delegation_controller;
         $this->index_controller      = $index_controller;
         $this->details_controller    = $details_controller;
@@ -97,26 +93,20 @@ class UGroupRouter
     {
         $project = $this->request->getProject();
         $ugroup  = $this->getUGroup($project);
-        $csrf    = new CSRFSynchronizerToken($this->getUGroupUrl($ugroup));
-        $csrf_remove_member = new CSRFSynchronizerToken(MemberRemovalController::getUrl($ugroup));
+        $csrf    = self::getCSRFTokenSynchronizer();
         switch ($this->request->get('action')) {
             case 'remove_binding':
-                $csrf->check();
+                $csrf->check(self::getUGroupUrl($ugroup));
                 $this->binding_controller->removeBinding($ugroup);
                 $this->redirect($ugroup);
                 break;
             case 'add_binding':
-                $csrf->check();
+                $csrf->check(self::getUGroupUrl($ugroup));
                 $this->binding_controller->addBinding($ugroup);
                 $this->redirect($ugroup);
                 break;
-            case 'edit_ugroup_members':
-                $csrf->check();
-                $this->members_controller->editMembers($ugroup);
-                $this->redirect($ugroup);
-                break;
             case 'update_details':
-                $csrf->check();
+                $csrf->check(self::getUGroupUrl($ugroup));
                 try {
                     $this->details_controller->updateDetails($ugroup);
                 } catch (CannotCreateUGroupException $ex) {
@@ -125,7 +115,7 @@ class UGroupRouter
                 $this->redirect($ugroup);
                 break;
             case 'update_permssions_delegation':
-                $csrf->check();
+                $csrf->check(self::getUGroupUrl($ugroup));
                 $this->delegation_controller->updateDelegation($ugroup, $this->request->get('permissions-delegation'));
                 $this->redirect($ugroup);
                 break;
@@ -135,7 +125,7 @@ class UGroupRouter
                 if ($event->hasBeenHandled()) {
                     $this->redirect($ugroup);
                 } else {
-                    $this->index_controller->display($ugroup, $csrf, $csrf_remove_member, $this->user_manager->getCurrentUser());
+                    $this->index_controller->display($ugroup, $csrf, $this->user_manager->getCurrentUser());
                 }
         }
     }
@@ -152,16 +142,21 @@ class UGroupRouter
 
     protected function redirect(ProjectUGroup $ugroup)
     {
-        $GLOBALS['Response']->redirect($this->getUGroupUrl($ugroup));
+        $GLOBALS['Response']->redirect(self::getUGroupUrl($ugroup));
     }
 
     public static function getUGroupUrl(ProjectUGroup $ugroup)
     {
         return '/project/admin/editugroup.php?' . http_build_query(
-                array(
-                    'group_id'  => $ugroup->getProjectId(),
-                    'ugroup_id' => $ugroup->getId()
-                )
-            );
+            array(
+                'group_id'  => $ugroup->getProjectId(),
+                'ugroup_id' => $ugroup->getId()
+            )
+        );
+    }
+
+    public static function getCSRFTokenSynchronizer() : CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken(self::CSRF_TOKEN);
     }
 }

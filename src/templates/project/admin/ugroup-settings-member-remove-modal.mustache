@@ -16,10 +16,9 @@
     </div>
     <div class="tlp-modal-body remove-user-from-group-modal-text">
         <input type="hidden" name="remove_user" id="project-admin-remove-user-from-group-modal-user-id">
-        {{# csrf_token_remove_user }}
+        {{# csrf_token }}
             {{> csrf_token_input }}
-        {{/ csrf_token_remove_user }}
-        <input type="hidden" name="action" value="edit_ugroup_members" />
+        {{/ csrf_token }}
         <p id="project-admin-remove-user-from-group-modal-description"></p>
     </div>
     <div class="tlp-modal-footer">
