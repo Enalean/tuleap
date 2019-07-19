@@ -127,7 +127,8 @@ class ProjectCreationTest extends TuleapDbTestCase {
             $send_notifications,
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
-                new UGroupDao()
+                new UGroupDao(),
+                new ProjectHistoryDao()
             ),
             $duplicator,
             new ServiceCreator(),

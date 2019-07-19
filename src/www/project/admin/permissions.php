@@ -944,9 +944,11 @@ function permission_add_history($group_id, $permission_type, $object_id){
     $type = permission_get_object_type($permission_type, $object_id);
     $name = permission_get_object_name($permission_type, $object_id);
 
+    $project_history_dao = new ProjectHistoryDao();
+
     if (db_numrows($res) < 1) {
         // No ugroup defined => no permissions set 
-        group_add_history('perm_reset_for_'.$type, 'default', $group_id, array($name));
+        $project_history_dao->groupAddHistory('perm_reset_for_'.$type, 'default', $group_id, array($name));
         return;
     } 
     $ugroup_list='';
@@ -955,7 +957,7 @@ function permission_add_history($group_id, $permission_type, $object_id){
         if ($ugroup_list) { $ugroup_list.=', ';}
         $ugroup_list.= $manager->getById($row['ugroup_id'])->getTranslatedName();
     }
-    group_add_history('perm_granted_for_'.$type, $ugroup_list, $group_id, array($name));
+    $project_history_dao->groupAddHistory('perm_granted_for_'.$type, $ugroup_list, $group_id, array($name));
 }
 
 /**

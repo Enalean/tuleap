@@ -104,7 +104,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                         }
                     }
                     //update group history
-                    group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
+                    (new ProjectHistoryDao())->groupAddHistory('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg', implode(', ', $addedUgroups)));
                 }
             } else {

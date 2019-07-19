@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Written for Codendi by Marie-Luise Schneider
@@ -268,7 +268,7 @@ class ArtifactImportHtml extends ArtifactImport {
         else $GLOBALS['Response']->addFeedback('error', $errors);
       
       //update group history
-        group_add_history('import',$this->ath->getName(),$this->group->group_id);
+        (new ProjectHistoryDao())->groupAddHistory('import',$this->ath->getName(),$this->group->group_id);
     }
   
     

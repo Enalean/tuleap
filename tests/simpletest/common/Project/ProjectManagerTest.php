@@ -272,7 +272,11 @@ class ProjectManager_GetValidProjectTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->dao = mock('ProjectDao');
-        $this->project_manager = ProjectManager::testInstance(Mockery::mock(ProjectAccessChecker::class), $this->dao);
+        $this->project_manager = ProjectManager::testInstance(
+            Mockery::mock(ProjectAccessChecker::class),
+            Mockery::mock(ProjectHistoryDao::class),
+            $this->dao
+        );
     }
 
     public function itFindsTheProjectWithItsID() {

@@ -554,7 +554,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     ));
     
     // Now log in project history
-    group_add_history('upd_ug','',$group_id,array($ugroup_name));
+    (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array($ugroup_name));
 
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,count($pickList))));
 }
@@ -570,7 +570,7 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
     if ($rows = db_affected_rows($res)) {
         // Now log in project history
         $res = ugroup_db_get_ugroup($ugroup_id);
-        group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
+        (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array(db_result($res,0,'name')));
         // Search for all members of this ugroup
         $sql="SELECT count(user.user_id)".
              "FROM ugroup_user, user ".
@@ -600,7 +600,7 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
         if ($rows = db_affected_rows($res)) {
             // Now log in project history
             $res = ugroup_db_get_ugroup($ugroup_id);
-            group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
+            (new ProjectHistoryDao())->groupAddHistory('upd_ug','',$group_id,array(db_result($res,0,'name')));
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
             // Raise event for ugroup modification
             EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
@@ -673,7 +673,7 @@ function ugroup_delete($group_id, $ugroup_id) {
         $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared));
     } 
     // Now log in project history
-    group_add_history('del_ug','',$group_id,array($ugroup->getName()));
+    (new ProjectHistoryDao())->groupAddHistory('del_ug','',$group_id,array($ugroup->getName()));
 
     return true;
 }

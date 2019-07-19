@@ -656,7 +656,7 @@ if ( $func == 'gotoid' ) {
 
         //update group history
             $old_value = $ath->getName();
-            group_add_history('mass_change',$old_value,$group_id);
+            (new ProjectHistoryDao())->groupAddHistory('mass_change',$old_value,$group_id);
 
         //      Show just one feedback entry if no errors
             if (!$was_error) {

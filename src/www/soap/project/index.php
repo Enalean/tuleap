@@ -94,7 +94,8 @@ if ($request->exist('wsdl')) {
         $send_notifications,
         new Tuleap\FRS\FRSPermissionCreator(
             new Tuleap\FRS\FRSPermissionDao(),
-            $ugroup_dao
+            $ugroup_dao,
+            new ProjectHistoryDao()
         ),
         $duplicator,
         new ServiceCreator(),

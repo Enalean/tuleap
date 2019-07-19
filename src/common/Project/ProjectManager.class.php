@@ -65,14 +65,22 @@ class ProjectManager
      * @var ProjectAccessChecker
      */
     private $project_access_checker;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     /**
      * A private constructor; prevents direct creation of object
      */
-    private function __construct(ProjectAccessChecker $project_access_checker, ProjectDao $dao = null)
-    {
+    private function __construct(
+        ProjectAccessChecker $project_access_checker,
+        ProjectHistoryDao $project_history_dao,
+        ProjectDao $dao = null
+    ) {
         $this->_dao                   = $dao;
         $this->_cached_projects       = array();
+        $this->project_history_dao    = $project_history_dao;
         $this->project_access_checker = $project_access_checker;
     }
 
@@ -87,7 +95,7 @@ class ProjectManager
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
             );
-            self::$_instance = new self($project_access_checker);
+            self::$_instance = new self($project_access_checker, new ProjectHistoryDao());
         }
         return self::$_instance;
     }
@@ -106,9 +114,12 @@ class ProjectManager
         self::$_instance = null;
     }
 
-    public static function testInstance(ProjectAccessChecker $project_access_checker, ProjectDao $dao)
-    {
-        return new self($project_access_checker, $dao);
+    public static function testInstance(
+        ProjectAccessChecker $project_access_checker,
+        ProjectHistoryDao $project_history_dao,
+        ProjectDao $dao
+    ) {
+        return new self($project_access_checker, $project_history_dao, $dao);
     }
 
     /**
@@ -374,7 +385,7 @@ class ProjectManager
 
             $this->removeProjectFromCache($project);
 
-            group_add_history('approved', 'x', $project->getId());
+            $this->project_history_dao->groupAddHistory('approved', 'x', $project->getId());
 
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
@@ -503,7 +514,7 @@ class ProjectManager
                 return;
         }
 
-        group_add_history('access', $access_level, $project_id);
+        $this->project_history_dao->groupAddHistory('access', $access_level, $project_id);
         $this->getEventManager()->processEvent('project_is_private', array(
             'group_id'           => $project_id,
             'project_is_private' => $is_private,
@@ -525,7 +536,8 @@ class ProjectManager
     {
         return new FRSPermissionCreator(
             new FRSPermissionDao(),
-            new UGroupDao()
+            new UGroupDao(),
+            $this->project_history_dao
         );
     }
 
@@ -540,7 +552,7 @@ class ProjectManager
         $project_id = $project->getID();
         $this->_getDao()->setTruncatedEmailsUsage($project_id, $usage);
 
-        group_add_history('truncated_emails', $usage, $project_id);
+        $this->project_history_dao->groupAddHistory('truncated_emails', $usage, $project_id);
     }
 
     public function disableAllowRestrictedForAll()
