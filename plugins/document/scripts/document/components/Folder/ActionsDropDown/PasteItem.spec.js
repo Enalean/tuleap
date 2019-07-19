@@ -21,11 +21,18 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import PasteItem from "./PasteItem.vue";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("PasteItem", () => {
-    let store, paste_item_factory;
+    let store, event_bus, paste_item_factory;
     beforeEach(() => {
         store = createStoreMock({}, { clipboard: {} });
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
 
         paste_item_factory = (props = {}) => {
             return shallowMount(PasteItem, {
@@ -34,6 +41,10 @@ describe("PasteItem", () => {
                 mocks: { $store: store }
             });
         };
+    });
+
+    afterEach(() => {
+        restoreEventBus();
     });
 
     it(`Given an item is in the clipboard
@@ -51,8 +62,6 @@ describe("PasteItem", () => {
 
         expect(wrapper.text()).toContain("My item");
 
-        spyOn(document, "dispatchEvent");
-
         wrapper.trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", [
@@ -60,9 +69,7 @@ describe("PasteItem", () => {
             current_folder,
             store
         ]);
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("document-hide-action-menu")
-        );
+        expect(event_bus.$emit).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given no item is in the clipboard
@@ -124,10 +131,8 @@ describe("PasteItem", () => {
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
-        spyOn(document, "dispatchEvent");
-
         wrapper.trigger("click");
 
-        expect(document.dispatchEvent).not.toHaveBeenCalled();
+        expect(event_bus.$emit).not.toHaveBeenCalled();
     });
 });

@@ -22,9 +22,13 @@ import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenu from "./DropdownMenu.vue";
 import { restore } from "../../../helpers/location-helper";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("DropdownMenu", () => {
-    let dropdown_menu_factory, store;
+    let dropdown_menu_factory, store, event_bus;
     beforeEach(() => {
         const state = {
             max_files_dragndrop: 10,
@@ -46,9 +50,13 @@ describe("DropdownMenu", () => {
         };
 
         store.getters.is_item_an_empty_document = () => false;
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
     });
     afterEach(() => {
         restore();
+        restoreEventBus();
     });
     it(`Given item title should be hidden (button displayed in quick look view)
         When we display the menu
@@ -126,14 +134,14 @@ describe("DropdownMenu", () => {
                 can_user_manage: true
             }
         });
-        spyOn(document, "dispatchEvent");
 
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
 
         wrapper.find("[data-test=docman-dropdown-details]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-item-metadata-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-update-item-metadata-modal",
+            jasmine.any(Object)
         );
     });
 

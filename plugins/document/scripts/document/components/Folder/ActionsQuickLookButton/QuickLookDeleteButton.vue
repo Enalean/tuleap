@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import EventBus from "../../../helpers/event-bus.js";
+
 export default {
     name: "QuickLookDeleteButton",
     props: {
@@ -51,11 +53,9 @@ export default {
     },
     methods: {
         processDeletion() {
-            document.dispatchEvent(
-                new CustomEvent("show-confirm-item-deletion-modal", {
-                    detail: { current_item: this.item }
-                })
-            );
+            EventBus.$emit("show-confirm-item-deletion-modal", {
+                detail: { current_item: this.item }
+            });
         }
     }
 };

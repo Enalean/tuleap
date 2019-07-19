@@ -40,6 +40,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "PasteItem",
@@ -60,7 +61,7 @@ export default {
     methods: {
         async pasteItem() {
             if (!this.pasting_in_progress) {
-                document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
+                EventBus.$emit("hide-action-menu");
             }
             await this.$store.dispatch("clipboard/pasteItem", [
                 this.destination,

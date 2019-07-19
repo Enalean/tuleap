@@ -38,6 +38,7 @@
 
 <script>
 import { dropdown as createDropdown } from "tlp";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "DropdownButton",
@@ -55,15 +56,17 @@ export default {
     mounted() {
         this.dropdown = createDropdown(this.$refs.dropdownButton);
 
-        const hideActionMenu = () => {
+        EventBus.$on("hide-action-menu", this.hideActionMenu);
+    },
+    beforeDestroy() {
+        EventBus.$off("hide-action-menu", this.hideActionMenu);
+    },
+    methods: {
+        hideActionMenu() {
             if (this.dropdown && this.dropdown.is_shown) {
                 this.dropdown.hide();
             }
-        };
-        document.addEventListener("document-hide-action-menu", hideActionMenu);
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("document-hide-action-menu", hideActionMenu);
-        });
+        }
     }
 };
 </script>

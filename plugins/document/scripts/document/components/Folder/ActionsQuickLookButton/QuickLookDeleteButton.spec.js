@@ -23,9 +23,13 @@ import localVue from "../../../helpers/local-vue.js";
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import { TYPE_LINK, TYPE_FILE } from "../../../constants.js";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("QuickLookDeleteButton", () => {
-    let delete_button_factory;
+    let delete_button_factory, event_bus;
     beforeEach(() => {
         const state = {
             project_id: 101
@@ -50,6 +54,13 @@ describe("QuickLookDeleteButton", () => {
                 mocks: { $store: store }
             });
         };
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
+    });
+
+    afterEach(() => {
+        restoreEventBus();
     });
 
     it(`Displays the delete button because the user can write`, () => {
@@ -62,13 +73,12 @@ describe("QuickLookDeleteButton", () => {
     });
 
     it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
-        spyOn(document, "dispatchEvent");
-
         const wrapper = delete_button_factory(true, TYPE_FILE);
         wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-confirm-item-deletion-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-confirm-item-deletion-modal",
+            jasmine.any(Object)
         );
     });
 });

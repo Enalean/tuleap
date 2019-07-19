@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -57,6 +57,7 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
 import OtherInformationMetadata from "../Metadata/DocumentMetadata/OtherInformationMetadata.vue";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "NewItemModal",
@@ -100,7 +101,12 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$el);
-        this.registerEvents();
+        EventBus.$on("show-new-document-modal", this.show);
+        this.modal.addEventListener("tlp-modal-hidden", this.reset);
+    },
+    beforeDestroy() {
+        EventBus.$off("show-new-document-modal", this.show);
+        this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
         getDefaultItem() {
@@ -125,13 +131,6 @@ export default {
                     { short_name: "obsolescence_date", value: null }
                 ]
             };
-        },
-        registerEvents() {
-            document.addEventListener("show-new-document-modal", this.show);
-            this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-new-document-modal", this.show);
-            });
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show(event) {
             this.item = this.getDefaultItem();

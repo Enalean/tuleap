@@ -21,9 +21,13 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenuForItemQuickLook from "./DropdownMenuForItemQuickLook.vue";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("DropdownMenuForItemQuickLook", () => {
-    let dropdown_quicklook_menu_factory, store;
+    let dropdown_quicklook_menu_factory, store, event_bus;
     beforeEach(() => {
         store = createStoreMock({});
 
@@ -36,7 +40,15 @@ describe("DropdownMenuForItemQuickLook", () => {
                 mocks: { $store: store }
             });
         };
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
     });
+
+    afterEach(() => {
+        restoreEventBus();
+    });
+
     it(`Given item is not a folder and user can write
         When we display the menu
         Then the drop down does not display New folder/document entries`, () => {
@@ -115,12 +127,11 @@ describe("DropdownMenuForItemQuickLook", () => {
             Then it should open a modal`, () => {
             wrapper = dropdown_quicklook_menu_factory({ item });
 
-            spyOn(document, "dispatchEvent");
-
             wrapper.find("[data-test=dropdown-menu-folder-creation]").trigger("click");
 
-            expect(document.dispatchEvent).toHaveBeenCalledWith(
-                new CustomEvent("show-new-folder-modal")
+            expect(event_bus.$emit).toHaveBeenCalledWith(
+                "show-new-folder-modal",
+                jasmine.any(Object)
             );
         });
 
@@ -128,12 +139,11 @@ describe("DropdownMenuForItemQuickLook", () => {
             Then it should open a modal`, () => {
             wrapper = dropdown_quicklook_menu_factory({ item });
 
-            spyOn(document, "dispatchEvent");
-
             wrapper.find("[data-test=dropdown-menu-file-creation]").trigger("click");
 
-            expect(document.dispatchEvent).toHaveBeenCalledWith(
-                new CustomEvent("show-new-folder-modal")
+            expect(event_bus.$emit).toHaveBeenCalledWith(
+                "show-new-document-modal",
+                jasmine.any(Object)
             );
         });
         it(`When user cannot write and the menu is displayed

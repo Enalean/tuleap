@@ -37,6 +37,7 @@ import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import FolderGlobalMetadata from "../Metadata/FolderMetadata/FolderGlobalMetadata.vue";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "NewFolderModal",
@@ -71,7 +72,12 @@ export default {
     mounted() {
         this.item = this.getDefaultItem();
         this.modal = createModal(this.$el);
-        this.registerEvents();
+        EventBus.$on("show-new-folder-modal", this.show);
+        this.modal.addEventListener("tlp-modal-hidden", this.reset);
+    },
+    beforeDestroy() {
+        EventBus.$off("show-new-folder-modal", this.show);
+        this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
         getDefaultItem() {
@@ -86,13 +92,6 @@ export default {
                     }
                 ]
             };
-        },
-        registerEvents() {
-            document.addEventListener("show-new-folder-modal", this.show);
-            this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-new-folder-modal", this.show);
-            });
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show(event) {
             this.item = this.getDefaultItem();

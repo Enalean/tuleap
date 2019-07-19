@@ -31,6 +31,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "CopyItem",
@@ -43,7 +44,7 @@ export default {
     methods: {
         copyItem() {
             if (!this.pasting_in_progress) {
-                document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
+                EventBus.$emit("hide-action-menu");
             }
             this.$store.commit("clipboard/copyItem", this.item);
         }

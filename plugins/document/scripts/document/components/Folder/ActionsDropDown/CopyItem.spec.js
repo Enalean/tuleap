@@ -21,11 +21,18 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import CopyItem from "./CopyItem.vue";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("CopyItem", () => {
-    let store, copy_item_factory;
+    let store, event_bus, copy_item_factory;
     beforeEach(() => {
         store = createStoreMock({}, { clipboard: {} });
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
 
         copy_item_factory = (props = {}) => {
             return shallowMount(CopyItem, {
@@ -36,20 +43,20 @@ describe("CopyItem", () => {
         };
     });
 
+    afterEach(() => {
+        restoreEventBus();
+    });
+
     it(`Given item is copied
         Then the store is updated accordingly
         And the menu closed`, () => {
         const item = { id: 147, type: "item_type", title: "My item" };
         const wrapper = copy_item_factory({ item });
 
-        spyOn(document, "dispatchEvent");
-
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/copyItem", item);
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("document-hide-action-menu")
-        );
+        expect(event_bus.$emit).toHaveBeenCalledWith("hide-action-menu");
     });
 
     it(`Given an item is being pasted
@@ -62,10 +69,8 @@ describe("CopyItem", () => {
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
 
-        spyOn(document, "dispatchEvent");
-
         wrapper.trigger("click");
 
-        expect(document.dispatchEvent).not.toHaveBeenCalled();
+        expect(event_bus.$emit).not.toHaveBeenCalled();
     });
 });
