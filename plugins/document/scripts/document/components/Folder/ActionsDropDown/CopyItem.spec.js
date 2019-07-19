@@ -37,22 +37,35 @@ describe("CopyItem", () => {
     });
 
     it(`Given item is copied
-        Then the store is updated accordingly`, () => {
+        Then the store is updated accordingly
+        And the menu closed`, () => {
         const item = { id: 147, type: "item_type", title: "My item" };
         const wrapper = copy_item_factory({ item });
+
+        spyOn(document, "dispatchEvent");
 
         wrapper.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("clipboard/copyItem", item);
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("document-hide-action-menu")
+        );
     });
 
     it(`Given an item is being pasted
-        Then the action is marked as disabled`, () => {
+        Then the action is marked as disabled
+        And the menu is not closed if the user tries to click on it`, () => {
         const item = { id: 147, type: "item_type", title: "My item" };
         store.state.clipboard.pasting_in_progress = true;
         const wrapper = copy_item_factory({ item });
 
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
+
+        spyOn(document, "dispatchEvent");
+
+        wrapper.trigger("click");
+
+        expect(document.dispatchEvent).not.toHaveBeenCalled();
     });
 });

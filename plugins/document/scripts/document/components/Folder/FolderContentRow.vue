@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <tr class="document-tree-item-toggle-quicklook document-tree-item" v-bind:class="row_classes" v-bind:data-item-id="item.id">
+    <tr
+        class="document-tree-item-toggle-quicklook document-tree-item"
+        v-bind:class="row_classes"
+        v-bind:data-item-id="item.id"
+        v-on:mouseleave="closeActionMenu"
+    >
         <td v-bind:colspan="colspan">
             <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }">
                 <component
@@ -199,6 +204,11 @@ export default {
                     detail: { item: this.item }
                 })
             );
+        }
+    },
+    methods: {
+        closeActionMenu() {
+            document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
         }
     }
 };

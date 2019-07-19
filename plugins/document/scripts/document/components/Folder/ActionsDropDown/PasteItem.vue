@@ -59,6 +59,9 @@ export default {
     },
     methods: {
         async pasteItem() {
+            if (!this.pasting_in_progress) {
+                document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
+            }
             await this.$store.dispatch("clipboard/pasteItem", [
                 this.destination,
                 this.$store.state.current_folder,

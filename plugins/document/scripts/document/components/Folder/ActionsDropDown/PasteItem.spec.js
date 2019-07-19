@@ -51,6 +51,8 @@ describe("PasteItem", () => {
 
         expect(wrapper.text()).toContain("My item");
 
+        spyOn(document, "dispatchEvent");
+
         wrapper.trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", [
@@ -58,6 +60,9 @@ describe("PasteItem", () => {
             current_folder,
             store
         ]);
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("document-hide-action-menu")
+        );
     });
 
     it(`Given no item is in the clipboard
@@ -105,7 +110,8 @@ describe("PasteItem", () => {
     });
 
     it(`Given an item is being pasted
-        Then the action is marked as disabled`, () => {
+        Then the action is marked as disabled
+        And the menu is not closed if the user tries to click on it`, () => {
         store.state.clipboard = { item_title: "My item", pasting_in_progress: true };
         store.getters.is_item_a_folder = () => true;
 
@@ -117,5 +123,11 @@ describe("PasteItem", () => {
 
         expect(wrapper.attributes().disabled).toBeTruthy();
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);
+
+        spyOn(document, "dispatchEvent");
+
+        wrapper.trigger("click");
+
+        expect(document.dispatchEvent).not.toHaveBeenCalled();
     });
 });

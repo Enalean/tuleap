@@ -30,7 +30,7 @@
     </a>
 </template>
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapState } from "vuex";
 
 export default {
     name: "CopyItem",
@@ -41,7 +41,12 @@ export default {
         ...mapState("clipboard", ["pasting_in_progress"])
     },
     methods: {
-        ...mapMutations("clipboard", ["copyItem"])
+        copyItem() {
+            if (!this.pasting_in_progress) {
+                document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
+            }
+            this.$store.commit("clipboard/copyItem", this.item);
+        }
     }
 };
 </script>
