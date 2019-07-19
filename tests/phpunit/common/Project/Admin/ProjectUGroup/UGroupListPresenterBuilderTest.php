@@ -87,7 +87,7 @@ final class UGroupListPresenterBuilderTest extends TestCase
         $this->project->shouldReceive('isPublic')->andReturnTrue();
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
 
-        $result = $this->builder->build($this->project, $csrf);
+        $result = $this->builder->build($this->project, $csrf, $csrf);
 
         $this->assertTrue($result->is_synchronized_project_membership);
         $this->assertNotNull($result->synchronized_project_membership_presenter);
@@ -100,7 +100,7 @@ final class UGroupListPresenterBuilderTest extends TestCase
         $this->project->shouldReceive('isPublic')->andReturnFalse();
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnTrue();
 
-        $result = $this->builder->build($this->project, $csrf);
+        $result = $this->builder->build($this->project, $csrf, $csrf);
 
         $this->assertTrue($result->is_synchronized_project_membership);
         $this->assertNull($result->synchronized_project_membership_presenter);
@@ -112,7 +112,7 @@ final class UGroupListPresenterBuilderTest extends TestCase
         $this->project->shouldReceive('isPublic')->andReturnTrue();
         $this->detector->shouldReceive('isSynchronizedWithProjectMembers')->andReturnFalse();
 
-        $result = $this->builder->build($this->project, $csrf);
+        $result = $this->builder->build($this->project, $csrf, $csrf);
 
         $this->assertFalse($result->is_synchronized_project_membership);
         $this->assertNotNull($result->synchronized_project_membership_presenter);

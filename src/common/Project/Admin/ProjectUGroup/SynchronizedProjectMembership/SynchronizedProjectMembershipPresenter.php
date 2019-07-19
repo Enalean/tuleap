@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership;
 
+use CSRFSynchronizerToken;
+
 final class SynchronizedProjectMembershipPresenter
 {
     /**
@@ -29,8 +31,20 @@ final class SynchronizedProjectMembershipPresenter
      */
     public $is_enabled;
 
-    public function __construct(bool $is_enabled)
+    /**
+     * @var string
+     */
+    public $form_url;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    public function __construct(\Project $project, bool $is_enabled, CSRFSynchronizerToken $csrf_token)
     {
         $this->is_enabled = $is_enabled;
+        $this->form_url   = ActivationController::getUrl($project);
+        $this->csrf_token = $csrf_token;
     }
 }
