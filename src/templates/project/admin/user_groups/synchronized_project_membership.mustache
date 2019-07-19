@@ -7,28 +7,37 @@
                 {{# gettext }}Synchronized project membership management{{/ gettext }}
             </div>
         </div>
-        <section class="tlp-pane-section">
-                <p>{{# gettext }}When this setting is active, whenever you add someone in any user group, they will be automatically added in project members.{{/ gettext }}</p>
-                <div class="tlp-form-element tlp-form-element-disabled">
-                    <label for="toggle-synchronized-project-membership" class="tlp-label">
-                        {{# gettext }}Activate synchronized project membership management{{/ gettext }}
-                    </label>
-                    <div class="tlp-switch">
-                        <input
-                            type="checkbox"
-                            id="toggle-synchronized-project-membership"
-                            class="tlp-switch-checkbox"
-                            {{# is_enabled }}checked="checked"{{/ is_enabled }}
-                            disabled
-                        />
-                        <label
-                            for="toggle-synchronized-project-membership"
-                            class="tlp-switch-button"
-                            aria-hidden="true"
-                        ></label>
+        <form action="{{ form_url }}" method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+            <section class="tlp-pane-section">
+                    <p>{{# gettext }}When this setting is active, whenever you add someone in any user group, they will be automatically added in project members.{{/ gettext }}</p>
+                    <div class="tlp-form-element">
+                        <label for="toggle-synchronized-project-membership" class="tlp-label">
+                            {{# gettext }}Activate synchronized project membership management{{/ gettext }}
+                        </label>
+                        <div class="tlp-switch">
+                            <input
+                                type="checkbox"
+                                id="toggle-synchronized-project-membership"
+                                name="activation"
+                                class="tlp-switch-checkbox"
+                                {{# is_enabled }}checked="checked"{{/ is_enabled }}
+                            />
+                            <label
+                                for="toggle-synchronized-project-membership"
+                                class="tlp-switch-button"
+                                aria-hidden="true"
+                            ></label>
+                        </div>
                     </div>
-                </div>
-        </section>
+                    <button type="submit" class="tlp-button-primary" >
+                        <i class="fa fa-save tlp-button-icon"></i>{{# gettext }}Save information{{/gettext}}
+                    </button>
+            </section>
+        </form>
     </div>
 </section>
 {{/ synchronized_project_membership_presenter }}

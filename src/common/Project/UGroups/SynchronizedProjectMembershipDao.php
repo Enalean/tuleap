@@ -40,6 +40,13 @@ class SynchronizedProjectMembershipDao extends DataAccessObject
         $this->getDB()->run($sql, $project->getID());
     }
 
+    public function disable(\Project $project): void
+    {
+        $sql = 'DELETE FROM project_ugroup_synchronized_membership
+                WHERE project_id = ?';
+        $this->getDB()->run($sql, $project->getID());
+    }
+
     public function duplicateActivationFromTemplate(int $source_project_id, int $destination_project_id): void
     {
         $sql = 'INSERT INTO project_ugroup_synchronized_membership(project_id, is_activated)

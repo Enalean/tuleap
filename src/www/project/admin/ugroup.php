@@ -22,6 +22,7 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
+use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
@@ -34,7 +35,7 @@ $request = HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 
-$csrf = new CSRFSynchronizerToken('/project/admin/ugroup.php');
+$ugroup_delete_token = new CSRFSynchronizerToken('/project/admin/ugroup.php');
 
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
@@ -43,7 +44,7 @@ if ($request->existAndNonEmpty('func')) {
 
     switch($request->get('func')) {
         case 'delete':
-            $csrf->check();
+            $ugroup_delete_token->check();
             if ($group_id > 100) {
                 ugroup_delete($group_id, $ugroup_id);
             } else {
@@ -85,9 +86,14 @@ $presenter_builder = new UGroupListPresenterBuilder(
     new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
 );
 
+$synchronized_membership_token = new CSRFSynchronizerToken(ActivationController::getUrl($project));
+
 $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/user_groups';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
-    ->renderToPage('list-groups', $presenter_builder->build($project, $csrf));
+    ->renderToPage(
+        'list-groups',
+        $presenter_builder->build($project, $ugroup_delete_token, $synchronized_membership_token)
+    );
 
 project_admin_footer(array());

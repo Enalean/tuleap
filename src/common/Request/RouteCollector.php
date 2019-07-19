@@ -69,6 +69,7 @@ use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
+use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Home;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
@@ -405,6 +406,11 @@ class RouteCollector
         );
     }
 
+    public static function getPostSynchronizedMembershipActivation(): DispatchableWithRequest
+    {
+        return new ActivationController(ProjectManager::instance(), new SynchronizedProjectMembershipDao());
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -437,6 +443,10 @@ class RouteCollector
 
             $r->addRoute(['GET', 'POST'], '/members', [self::class, 'getProjectAdminMembersController']);
 
+            $r->post(
+                '/change-synchronized-project-membership',
+                [self::class, 'getPostSynchronizedMembershipActivation']
+            );
             $r->post('/user-group/{user-group-id:\d+}/remove', [self::class, 'getPostUserGroupIdRemove']);
         });
 

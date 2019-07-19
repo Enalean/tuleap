@@ -47,15 +47,19 @@ class UGroupListPresenterBuilder
         $this->detector       = $detector;
     }
 
-    public function build(Project $project, CSRFSynchronizerToken $csrf)
-    {
+    public function build(
+        Project $project,
+        CSRFSynchronizerToken $ugroup_delete_token,
+        CSRFSynchronizerToken $synchronized_membership_token
+    ) {
         $static_ugroups = $this->getStaticUGroups($project);
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($project, $static_ugroups);
 
         $is_synchronized_project_membership = $this->detector->isSynchronizedWithProjectMembers($project);
         $synchronous_presenter              = $this->buildSynchronizedProjectMembershipPresenter(
             $project,
-            $is_synchronized_project_membership
+            $is_synchronized_project_membership,
+            $synchronized_membership_token
         );
 
         return new UGroupListPresenter(
@@ -63,7 +67,7 @@ class UGroupListPresenterBuilder
             $this->getDynamicUGroups($project),
             $this->getStaticUGroupsPresenters($project, $static_ugroups),
             $templates,
-            $csrf,
+            $ugroup_delete_token,
             $is_synchronized_project_membership,
             $synchronous_presenter
         );
@@ -190,11 +194,13 @@ class UGroupListPresenterBuilder
 
     private function buildSynchronizedProjectMembershipPresenter(
         Project $project,
-        bool $is_synchronized
+        bool $is_synchronized,
+        CSRFSynchronizerToken $csrf_token
     ): ?SynchronizedProjectMembershipPresenter {
         if (! $project->isPublic()) {
             return null;
         }
-        return new SynchronizedProjectMembershipPresenter($is_synchronized);
+
+        return new SynchronizedProjectMembershipPresenter($project, $is_synchronized, $csrf_token);
     }
 }
