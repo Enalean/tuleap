@@ -56,10 +56,10 @@ class DocmanWikiDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+------------------+------------------+
-     *      |                  |         |                  |                  |
-     *      +                  +         +                  +                  +
-     * PATCH Wiki    DELETE Wiki    LOCK Wiki         POST Wiki            PUT HM WIKI
+     *                         +---------+------------------+------------------+
+     *                         |         |                  |                  |
+     *                         +         +                  +                  +
+     *                  DELETE Wiki    LOCK Wiki         POST Wiki            PUT HM WIKI
      *
      * HM => Hardcoded Metadata
      *
@@ -74,70 +74,10 @@ class DocmanWikiDataBuild
         );
         $this->common_builder->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createPatchFolder($folder_id);
         $this->createDeleteFolder($folder_id);
         $this->createLockFolder($folder_id);
         $this->createPostFolder($folder_id);
         $this->createPutFolder($folder_id);
-    }
-
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *              PATCH Wiki
-     *                  +
-     *                  |
-     *                  +
-     *    +-------------+-------------+----------+
-     *    |             |             |          |
-     *    +             +             +          +
-     *    PATCH W   PATCH W RL   PATCH W AL   PATCH AT W
-     *
-     *
-     * (RL)   => Docman Regular user Lock on this item
-     * (AL)   => Docman Admin Lock on this item
-     */
-    private function createPatchFolder(int $folder_id): void
-    {
-        $folder_id = $this->common_builder->createItemWithVersion(
-            $this->docman_user_id,
-            $folder_id,
-            'PATCH Wiki',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-        $this->common_builder->addWritePermissionOnItem($folder_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_id,
-            'PATCH W',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_id,
-            $this->docman_user_id,
-            $this->admin_user_id,
-            'PATCH W AL',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_id,
-            $this->docman_user_id,
-            $this->docman_user_id,
-            'PATCH W RL',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $wiki_id = $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_id,
-            'PATCH AT W',
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-
-        $this->addApprovalTableForWiki($wiki_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
     }
 
     /**

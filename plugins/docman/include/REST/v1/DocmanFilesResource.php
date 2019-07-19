@@ -22,11 +22,12 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
 use Docman_File;
+use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
-use Docman_SettingsBo;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -35,15 +36,15 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionCreator;
 use Tuleap\Docman\REST\v1\Files\DocmanFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -51,6 +52,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class DocmanFilesResource extends AuthenticatedResource
 {
@@ -164,64 +166,47 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Patch an element of document manager
-     *
-     * Create a new version of an existing file document
-     * <pre>
-     * /!\ This route is <strong> deprecated </strong> <br/>
-     * /!\ To create a file version, please use the {id}/version route instead !
-     * </pre>
-     *
-     * <pre>
-     * approval_table_action should be provided only if item has an existing approval table.<br>
-     * Possible values:<br>
-     *  * copy: Creates an approval table based on the previous one<br>
-     *  * reset: Reset the current approval table<br>
-     *  * empty: No approbation needed for the new version of this document<br>
-     * </pre>
-     *
-     * @param int                            $id             Id of the item
-     * @param DocmanFilesPATCHRepresentation $representation {@from body}
-     *
-     * @return CreatedItemFilePropertiesRepresentation
-     *
-     * @status 200
-     * @throws RestException 400
-     * @throws RestException 401
-     * @throws RestException 403
-     * @throws RestException 501
+     * Move an existing file document
      *
      * @url    PATCH {id}
      * @access hybrid
      *
-     * @deprecated
+     * @param int                           $id             Id of the item
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
      */
-    public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
+
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
     {
         $this->checkAccess();
         $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $this->addAllEvent($item_request->getProject());
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
 
-        try {
-            $docman_settings_bo = new Docman_SettingsBo($item_request->getProject()->getID());
-            $status_mapper      = new ItemStatusMapper($docman_settings_bo);
-            $status_id          = $status_mapper->getItemStatusIdFromItemStatusString(
-                $representation->status
-            );
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(Docman_File::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            $this->event_manager
+        );
 
-            $date_retriever               = new HardcodedMetadataObsolescenceDateRetriever(
-                new HardcodedMetdataObsolescenceDateChecker($docman_settings_bo)
-            );
-            $obsolescence_date_time_stamp = $obsolescence_date_time_stamp = $date_retriever->getTimeStampOfDate(
-                $representation->obsolescence_date,
-                new \DateTimeImmutable()
-            );
-        } catch (Metadata\HardCodedMetadataException $e) {
-            throw new I18NRestException(400, $e->getI18NExceptionMessage());
-        }
-        return $this->createNewFileVersion($representation, $item_request, $status_id, $obsolescence_date_time_stamp, $representation->title);
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            UserManager::instance()->getCurrentUser(),
+            $representation->move
+        );
     }
 
     /**

@@ -42,7 +42,6 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
         $items         = $this->loadFolderContent($root_id, 'Link');
         $folder        = $this->findItemByTitle($root_folder, 'Link');
         $items_id      = $folder['id'];
-        $patch_items   = $this->loadFolderContent($items_id, 'PATCH Link');
         $deleted_items = $this->loadFolderContent($items_id, 'DELETE Link');
         $lock_items    = $this->loadFolderContent($items_id, 'LOCK Link');
         $post_version  = $this->loadFolderContent($items_id, 'POST Link version');
@@ -52,7 +51,6 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
             $root_folder,
             $folder,
             $items,
-            $patch_items,
             $deleted_items,
             $lock_items,
             $post_version,
@@ -61,391 +59,55 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     }
 
     /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchALinkWithApprovalTableCopyAction(array $items): void
-    {
-        $item_name = 'PATCH L AT C';
-        $link      = $this->findItemByTitle($items, $item_name);
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'link_properties'       => ['link_url' => 'https://example.com'],
-                'approval_table_action' => 'copy'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_links/' . $link['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchLinkWithApprovalTableResetAction(array $items): void
-    {
-        $item_name = 'PATCH L AT R';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $link = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'link_properties'       => ['link_url' => 'https://example.com'],
-                'approval_table_action' => 'reset'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_links/' . $link['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Not yet');
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchLinkWithApprovalTableEmptyAction(array $items): void
-    {
-        $item_name = 'PATCH L AT E';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $link = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'title'                 => $item_name,
-                'should_lock_file'      => false,
-                'link_properties'       => ['link_url' => 'https://example.com'],
-                'approval_table_action' => 'empty'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_links/' . $link['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->checkItemHasADisabledApprovalTable($items, $item_name);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchThrowsExceptionWhenThereIsAnApprovalTableForTheItemAndNoApprovalAction(array $items): void
-    {
-        $item_name = 'PATCH L AT';
-        $this->checkItemHasAnApprovalTable($items, $item_name, 'Approved');
-        $link = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => $item_name,
-                'should_lock_file' => false,
-                'link_properties'  => ['link_url' => 'https://example.com']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_links/' . $link['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("has an approval table", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
-    {
-        $item_name = 'PATCH L NO AT';
-        $link  = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'         => 'My version title',
-                'changelog'             => 'I have changed',
-                'should_lock_file'      => false,
-                'title'                 => $item_name,
-                'link_properties'       => ['link_url' => 'https://example.com'],
-                'approval_table_action' => 'copy'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_links/' . $link['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("does not have an approval table", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPATCHThrowsAnExceptionWhenPatchIsCalledOnANonLinkItem(array $items): void
-    {
-        $item_name = 'PATCH Link';
-        $item  = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => $item_name,
-                'should_lock_file' => false,
-                'link_properties'  => ['link_url' => 'https://example.com']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_links/' . $item["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchAdminShouldAlwaysBeAbleToUnlockADocument(array $items): void
-    {
-        $item_name  = 'PATCH L RL';
-        $item = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'should_lock_file' => false,
-                'title'            => $item_name,
-                'link_properties'  => ['link_url' => 'https://example.com']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_links/' . $item["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchRegularUserCanNotUnlockADocumentLockedByAnOtherUser(array $items): void
-    {
-        $item_name  = 'PATCH L AL';
-        $file = $this->findItemByTitle($items, $item_name);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => $item_name,
-                'should_lock_file' => false,
-                'link_properties'  => ['link_url' => 'https://example.com']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuildCommon::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch(
-                'docman_links/' . $file['id'],
-                null,
-                $put_resource
-            )
-        );
-
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertStringContainsString("allowed", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
      * @depends testGetRootId
      */
-    public function testPatchLinkDocument(int $root_id): void
+    public function testMoveLinkDocument(int $root_id): void
     {
-        $link_properties = ['link_url' => 'https://example.com'];
-        $query           = json_encode(
-            [
-                'title'           => 'My new link 403',
-                'parent_id'       => $root_id,
-                'link_properties' => $link_properties
-            ]
-        );
-
-        $link_id = $this->createLinkAndReturnItsId($root_id, $query);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => 'My new link 403',
-                'should_lock_file' => false,
-                'link_properties'  => $link_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
+        $response_link_creation = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_links/' . $link_id, null, $put_resource)
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/links',
+                null,
+                json_encode([
+                    'title' => 'Link document to cut',
+                    'link_properties' => ['link_url' => 'https://example.com']
+                ])
+            )
         );
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response_link_creation->getStatusCode());
+        $link_doc_id = $response_link_creation->json()['id'];
 
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $link_id),
+        $response_folder_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Link cut folder'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_creation->getStatusCode());
+        $folder_id = $response_folder_creation->json()['id'];
+
+        $move_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch(
+                'docman_links/' . urlencode((string) $link_doc_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            )
+        );
+        $this->assertEquals(200, $move_response->getStatusCode());
+
+        $moved_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $link_doc_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        $item     = $response->json();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('link', $item['type']);
-        $this->assertEquals(null, $item['lock_info']);
-        $this->assertFalse($item['has_approval_table']);
-        $this->assertFalse($item['is_approval_table_enabled']);
-        $this->assertNull($item['approval_table']);
-    }
+        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
 
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchAndLockALinkDocument(int $root_id): void
-    {
-        $link_properties = ['link_url' => 'https://example.com'];
-        $query           = json_encode(
-            [
-                'title'           => 'My new link with fail obsolescence date',
-                'parent_id'       => $root_id,
-                'link_properties' => $link_properties
-            ]
-        );
-
-        $link_id = $this->createLinkAndReturnItsId($root_id, $query);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => 'My new link with fail obsolescence date',
-                'should_lock_file' => true,
-                'link_properties'  => $link_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_links/' . $link_id, null, $put_resource)
-        );
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = $this->getResponse(
-            $this->client->get('docman_items/' . $link_id),
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('link', $response->json()['type']);
-        $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchLinkWithStatusThrows400WhenStatusIsNotEnabledForProject(int $root_id): void
-    {
-        $link_properties = ['link_url' => 'https://example.com'];
-        $query           = json_encode(
-            [
-                'title'           => 'My new link 3',
-                'parent_id'       => $root_id,
-                'link_properties' => $link_properties
-            ]
-        );
-
-        $link_id = $this->createLinkAndReturnItsId($root_id, $query);
-
-        $put_resource = json_encode(
-            [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'title'            => 'New title !!!',
-                'description'      => 'I have a description now',
-                'should_lock_file' => false,
-                'link_properties'  => $link_properties,
-                'status'           => 'approved'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_links/' . $link_id, null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString("Status", $response->json()["error"]['i18n_error_message']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchLinkWithStatusThrows400WhenObsolescenceDateIsNotEnabledForProject(
-        int $root_id
-    ): void {
-        $link_properties = ['link_url' => 'https://example.com'];
-        $query           = json_encode(
-            [
-                'title'           => 'My second link',
-                'parent_id'       => $root_id,
-                'type'            => 'links',
-                'link_properties' => $link_properties
-            ]
-        );
-
-        $item_id = $this->createLinkAndReturnItsId($root_id, $query);
-
-        $patch_resource = json_encode(
-            [
-                'version_title'     => 'My version title',
-                'changelog'         => 'I have changed',
-                'title'             => 'My second link',
-                'should_lock_file'  => true,
-                'link_properties'   => $link_properties,
-                'obsolescence_date' => '2038-12-31',
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_links/' . $item_id, null, $patch_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertStringContainsString('obsolescence', $response->json()["error"]['i18n_error_message']);
     }
 
     /**

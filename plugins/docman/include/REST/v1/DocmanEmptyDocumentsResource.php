@@ -22,7 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
 use Docman_Empty;
+use Docman_ItemFactory;
 use Docman_LockFactory;
 use Docman_Log;
 use Docman_PermissionsManager;
@@ -34,10 +36,15 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
+use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
+use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UserManager;
 
 class DocmanEmptyDocumentsResource extends AuthenticatedResource
 {
@@ -67,6 +74,50 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
     public function optionsDocumentItems($id)
     {
         $this->setHeaders();
+    }
+
+    /**
+     * Move an existing empty document
+     *
+     * @url    PATCH {id}
+     * @access hybrid
+     *
+     * @param int                           $id             Id of the item
+     * @param DocmanPATCHItemRepresentation $representation {@from body}
+     *
+     * @status 200
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
+    {
+        $this->checkAccess();
+        $this->setHeaders();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $this->addAllEvent($project);
+
+        $item_factory = new Docman_ItemFactory();
+        $item_mover   = new DocmanItemMover(
+            $item_factory,
+            new BeforeMoveVisitor(
+                new DoesItemHasExpectedTypeVisitor(Docman_Empty::class),
+                $item_factory,
+                new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            ),
+            $this->getPermissionManager($project),
+            $this->event_manager
+        );
+
+        $item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_request->getItem(),
+            UserManager::instance()->getCurrentUser(),
+            $representation->move
+        );
     }
 
     /**
@@ -271,7 +322,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
     private function setHeaders(): void
     {
-        Header::allowOptionsDelete();
+        Header::allowOptionsPatchDelete();
     }
 
     private function getPermissionManager(\Project $project): Docman_PermissionsManager

@@ -56,10 +56,10 @@ class DocmanLinkDataBuild
      *                                   +
      *                                   |
      *                                   +
-     *      +------------------+---------+---------------+---------------+
-     *      |                  |         |               |               |
-     *      +                  +         +               +               +
-     * PATCH Link    DELETE Link    LOCK Link   POST Link Version   PUT HM Link
+     *                         +---------+---------------+---------------+
+     *                         |         |               |               |
+     *                         +         +               +               +
+     *                  DELETE Link    LOCK Link   POST Link Version   PUT HM Link
      *
      * HM => Hardcoded Metadata
      *
@@ -74,85 +74,10 @@ class DocmanLinkDataBuild
         );
         $this->common_builder->addWritePermissionOnItem($folder_link_id, ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->createPatchFolder($folder_link_id);
         $this->createDeleteFolder($folder_link_id);
         $this->createLockFolder($folder_link_id);
         $this->createPostVersionFolder($folder_link_id);
         $this->createPutFolder($folder_link_id);
-    }
-
-
-    /**
-     * To help understand tests structure, below a representation of folder hierarchy
-     *
-     *                                       PATCH Link
-     *                                            +
-     *                                            |
-     *                                            +
-     *    +-------------+-------------+-----------------+--------------+----------+-------------+-----------+---------+
-     *    |             |             |                 |              |          |             |           |         |
-     *    +             +             +                 +              +          +             +           +         +
-     *  PATCH L AT C  PATCH L AT R  PATCH L AT E   PATCH L AT   PATCH L NO AT  PATCH L AL   PATCH L KO     PATCH L
-     *  PATCH L RL
-     *
-     *
-     * (RL)   => Docman Regular user Lock on this item
-     * (AL)   => Docman Admin Lock on this item
-     * (AT)   => Approval table on this item
-     * (AT C) => Copy Approval table on this item
-     * (AT R) => Reset Approval table on this item
-     * (AT E) => Empty Approval table on this item
-     * (DIS AT) => Disabled Approval table on this item
-     */
-    private function createPatchFolder(int $folder_id): void
-    {
-        $folder_link_id = $this->common_builder->createItemWithVersion(
-            $this->docman_user_id,
-            $folder_id,
-            'PATCH Link',
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-        );
-        $this->common_builder->addWritePermissionOnItem($folder_link_id, ProjectUGroup::PROJECT_MEMBERS);
-
-        $this->createLinkWithApprovalTable($folder_link_id, 'PATCH L AT C', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_LINK, 9000);
-        $this->createLinkWithApprovalTable($folder_link_id, 'PATCH L AT R', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_LINK, 9001);
-        $this->createLinkWithApprovalTable($folder_link_id, 'PATCH L AT E', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_LINK, 9002);
-        $this->createLinkWithApprovalTable($folder_link_id, 'PATCH L AT', PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED, $this->docman_user_id, PLUGIN_DOCMAN_ITEM_TYPE_LINK, 9003);
-
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_link_id,
-            'PATCH L NO AT',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_link_id,
-            'PATCH L KO',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $this->common_builder->createItem(
-            $this->docman_user_id,
-            $folder_link_id,
-            'PATCH L',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_link_id,
-            $this->docman_user_id,
-            $this->admin_user_id,
-            'PATCH L AL',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-
-        $this->common_builder->createAndLockItem(
-            $folder_link_id,
-            $this->docman_user_id,
-            $this->docman_user_id,
-            'PATCH L RL',
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
     }
 
     /**

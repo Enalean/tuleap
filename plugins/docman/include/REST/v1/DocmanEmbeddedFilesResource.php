@@ -442,21 +442,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         );
     }
 
-    private function getItemStatusMapper(\Project $project): ItemStatusMapper
-    {
-        return new ItemStatusMapper(new Docman_SettingsBo($project->getID()));
-    }
-
-    private function getHardcodedMetadataObsolescenceDateRetriever(
-        \Project $project
-    ): HardcodedMetadataObsolescenceDateRetriever {
-        return new HardcodedMetadataObsolescenceDateRetriever(
-            new HardcodedMetdataObsolescenceDateChecker(
-                new Docman_SettingsBo($project->getID())
-            )
-        );
-    }
-
     private function createNewEmbeddedFileVersion(
         DocmanEmbeddedFileVersionPOSTRepresentation $representation,
         DocmanItemsRequest $item_request,

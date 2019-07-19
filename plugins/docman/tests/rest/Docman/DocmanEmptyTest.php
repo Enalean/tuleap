@@ -255,7 +255,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse($this->client->options('docman_empty_documents/' . $id), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(['OPTIONS', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -268,5 +268,54 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
 
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testMoveEmptyDocument(int $root_id): void
+    {
+        $response_empty_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/empties',
+                null,
+                json_encode(['title' => 'Empty document to cut'])
+            )
+        );
+        $this->assertEquals(201, $response_empty_creation->getStatusCode());
+        $empty_doc_id = $response_empty_creation->json()['id'];
+
+        $response_folder_creation = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Empty cut folder'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_creation->getStatusCode());
+        $folder_id = $response_folder_creation->json()['id'];
+
+        $move_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch(
+                'docman_empty_documents/' . urlencode((string) $empty_doc_id),
+                null,
+                json_encode(['move' => ['destination_folder_id' => $folder_id]])
+            )
+        );
+        $this->assertEquals(200, $move_response->getStatusCode());
+
+        $moved_item_response = $this->getResponse(
+            $this->client->get('docman_items/' . urlencode((string) $empty_doc_id)),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals($folder_id, $moved_item_response->json()['parent_id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
     }
 }
