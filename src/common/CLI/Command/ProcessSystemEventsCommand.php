@@ -75,10 +75,6 @@ final class ProcessSystemEventsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            sleep(random_int(0, 59));
-            $this->db_connection->reconnectAfterALongRunningProcess();
-        }
         $request_queue = $input->getArgument('queue');
 
         $processor = $this->system_event_processor_factory->getProcessForQueue($request_queue);

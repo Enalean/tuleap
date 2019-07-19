@@ -28,6 +28,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
+use Tuleap\DB\DBConnection;
 use UserManager;
 
 class DailyJobCommand extends Command
@@ -42,33 +44,41 @@ class DailyJobCommand extends Command
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
+    /**
+     * @var ExecutionDelayedLauncher
+     */
+    private $execution_delayed_launcher;
 
-    public function __construct(EventManager $event_manager, UserManager $user_manager)
-    {
+    public function __construct(
+        EventManager $event_manager,
+        UserManager $user_manager,
+        DBConnection $db_connection,
+        ExecutionDelayedLauncher $execution_delayed_launcher
+    ) {
         parent::__construct(self::NAME);
-        $this->event_manager = $event_manager;
-        $this->user_manager  = $user_manager;
+        $this->event_manager              = $event_manager;
+        $this->user_manager               = $user_manager;
+        $this->db_connection              = $db_connection;
+        $this->execution_delayed_launcher = $execution_delayed_launcher;
     }
 
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Execute time consuming, low priority housekeeping jobs that should run once a day');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            try {
-                sleep(random_int(0, 1799));
-            } catch (\Exception $e) {
-                $error_output = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-                $error_output->writeln('Unable to get a random time for delay, aborting');
-                return 1;
-            }
-        }
+        $this->execution_delayed_launcher->execute(function () {
+            $this->db_connection->reconnectAfterALongRunningProcess();
+            $this->event_manager->processEvent('codendi_daily_start');
+            $this->user_manager->checkUserAccountValidity();
+        });
 
-        $this->event_manager->processEvent("codendi_daily_start");
-
-        $this->user_manager->checkUserAccountValidity();
+        return 0;
     }
 }
