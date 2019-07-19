@@ -35,31 +35,14 @@ class BurnupDao extends DataAccessObject
             FROM tracker_field AS burnup_field
             INNER JOIN tracker
               ON tracker.id = burnup_field.tracker_id
-            LEFT JOIN (
-                SELECT timeframe.tracker_id,
-                       start_date_field.name as start_date_field_name,
-                       duration_field.name   as duration_field_name
-                FROM tracker_semantic_timeframe AS timeframe
-                     INNER JOIN tracker_field AS start_date_field
-                        ON (
-                                timeframe.tracker_id = start_date_field.tracker_id
-                            AND timeframe.start_date_field_id = start_date_field.id
-                        )
-                     INNER JOIN tracker_field AS duration_field
-                        ON (
-                                timeframe.tracker_id = duration_field.tracker_id
-                            AND timeframe.duration_field_id = duration_field.id
-                        )
-            ) AS tracker_with_timeframe_semantic
-                ON (
-                    tracker.id = tracker_with_timeframe_semantic.tracker_id
-                )
+            INNER JOIN tracker_semantic_timeframe AS timeframe
+                ON (timeframe.tracker_id = tracker.id)
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = IFNULL(tracker_with_timeframe_semantic.start_date_field_name, 'start_date')
+              AND tracker_field_for_start_date.id = timeframe.start_date_field_id
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = IFNULL(tracker_with_timeframe_semantic.duration_field_name, 'duration')
+              AND tracker_field_for_duration.id = timeframe.duration_field_id
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
@@ -83,12 +66,11 @@ class BurnupDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getBurnupInformation($artifact_id, $start_date_field_name, $duration_field_name)
+    public function getBurnupInformation(int $artifact_id, int $start_date_field_id, int $duration_field_id)
     {
-        $artifact_id           = $this->da->escapeInt($artifact_id);
-        $type                  = $this->da->quoteSmart(Burnup::TYPE);
-        $start_date_field_name = $this->da->quoteSmart($start_date_field_name);
-        $duration_field_name   = $this->da->quoteSmart($duration_field_name);
+        $artifact_id         = $this->da->escapeInt($artifact_id);
+        $start_date_field_id = $this->da->escapeInt($start_date_field_id);
+        $duration_field_id   = $this->da->escapeInt($duration_field_id);
 
         $sql = "SELECT
                   tracker_artifact.id,
@@ -99,10 +81,10 @@ class BurnupDao extends DataAccessObject
               ON tracker.id = burnup_field.tracker_id
             INNER JOIN tracker_field AS tracker_field_for_start_date
               ON tracker.id = tracker_field_for_start_date.tracker_id
-              AND tracker_field_for_start_date.name = $start_date_field_name
+              AND tracker_field_for_start_date.id = $start_date_field_id
             INNER JOIN tracker_field AS tracker_field_for_duration
               ON tracker.id = tracker_field_for_duration.tracker_id
-              AND tracker_field_for_duration.name = $duration_field_name
+              AND tracker_field_for_duration.id = $duration_field_id
             INNER JOIN tracker_artifact
               ON tracker.id = tracker_artifact.tracker_id
             INNER JOIN tracker_changeset
@@ -116,7 +98,7 @@ class BurnupDao extends DataAccessObject
               ON tracker_changeset_value_int.changeset_value_id = tracker_changeset_value.id
               AND tracker_field_for_duration.id = tracker_changeset_value.field_id
             WHERE
-              burnup_field.formElement_type = $type
+              burnup_field.formElement_type = 'burnup'
               AND burnup_field.use_it = 1
               AND tracker_artifact.id = $artifact_id
               GROUP BY tracker_artifact.id, burnup_field.id

@@ -110,12 +110,17 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
             return false;
         }
 
+        $burndown_informations = null;
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
-        $burndown_informations = $this->burndown_dao->getBurndownInformation(
-            $artifact_id,
-            $semantic_timeframe->getStartDateFieldName(),
-            $semantic_timeframe->getDurationFieldName()
-        );
+        $start_date_field   = $semantic_timeframe->getStartDateField();
+        $duration_field     = $semantic_timeframe->getDurationField();
+        if ($start_date_field !== null && $duration_field !== null) {
+            $burndown_informations = $this->burndown_dao->getBurndownInformation(
+                $artifact_id,
+                $start_date_field->getId(),
+                $duration_field->getId()
+            );
+        }
 
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
         if ($burndown_informations) {

@@ -40,9 +40,6 @@ class SemanticTimeframe extends Tracker_Semantic
 {
     public const NAME = 'timeframe';
 
-    private const HARD_CODED_START_DATE_FIELD_NAME = ChartConfigurationFieldRetriever::START_DATE_FIELD_NAME;
-    private const HARD_CODED_DURATION_FIELD_NAME   = ChartConfigurationFieldRetriever::DURATION_FIELD_NAME;
-
     /**
      * @var Tracker_FormElement_Field_Date|null
      */
@@ -198,24 +195,6 @@ class SemanticTimeframe extends Tracker_Semantic
     public function getDurationField(): ?Tracker_FormElement_Field_Numeric
     {
         return $this->duration_field;
-    }
-
-    public function getStartDateFieldName(): string
-    {
-        if ($this->start_date_field === null) {
-            return self::HARD_CODED_START_DATE_FIELD_NAME;
-        }
-
-        return $this->start_date_field->getName();
-    }
-
-    public function getDurationFieldName(): string
-    {
-        if ($this->duration_field === null) {
-            return self::HARD_CODED_DURATION_FIELD_NAME;
-        }
-
-        return $this->duration_field->getName();
     }
 
     public function isDefined(): bool

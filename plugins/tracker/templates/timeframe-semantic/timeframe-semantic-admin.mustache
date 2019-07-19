@@ -1,13 +1,4 @@
 <div class="tracker-administration-semantic-timeframe">
-    {{^ is_semantic_configured }}
-        <div class="alert alert-warning">
-            {{# dgettext }}
-                tuleap-tracker
-                | The timeframe of an artifact is defined for the moment by the fields <b>Start date</b> and <b>Duration</b>. It is advised to define explicitely the timeframe semantic using the form below.
-            {{/ dgettext }}
-        </div>
-    {{/ is_semantic_configured }}
-
     <p>{{# dgettext }} tuleap-tracker | The timeframe of an artifact will be defined by:{{/ dgettext }}</p>
 
     <form action="{{ target_url }}" method="POST">

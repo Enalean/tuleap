@@ -23,17 +23,14 @@ namespace Tuleap\Tracker\FormElement;
 use PFUser;
 use Tracker;
 use Tracker_Artifact;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_InvalidFieldException;
+use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 class ChartConfigurationFieldRetriever
 {
     public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    public const DURATION_FIELD_NAME         = 'duration';
-    public const START_DATE_FIELD_NAME       = 'start_date';
     public const CAPACITY_FIELD_NAME         = 'capacity';
 
     /**
@@ -89,13 +86,9 @@ class ChartConfigurationFieldRetriever
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
 
-        $field = $this->form_element_field_factory->getNumericFieldByNameForUser(
-            $tracker,
-            $user,
-            $semantic->getDurationFieldName()
-        );
+        $field = $semantic->getDurationField();
 
-        if (! $field) {
+        if (! $field || ! $field->userCanRead($user)) {
             throw new Tracker_FormElement_Chart_Field_Exception(
                 dgettext('tuleap-tracker', 'The tracker doesn\'t have a "duration" Integer field or you don\'t have the permission to access it.')
             );
@@ -112,13 +105,9 @@ class ChartConfigurationFieldRetriever
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
 
-        $field = $this->form_element_field_factory->getDateFieldByNameForUser(
-            $tracker,
-            $user,
-            $semantic->getStartDateFieldName()
-        );
+        $field = $semantic->getStartDateField();
 
-        if (! $field) {
+        if (! $field || ! $field->userCanRead($user)) {
             throw new Tracker_FormElement_Chart_Field_Exception(
                 dgettext('tuleap-tracker', 'The tracker doesn\'t have a "start_date" Date field or you don\'t have the permission to access it.')
             );

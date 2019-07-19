@@ -108,12 +108,17 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             return false;
         }
 
+        $burnup_information = null;
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
-        $burnup_information = $this->burnup_dao->getBurnupInformation(
-            $artifact_id,
-            $semantic_timeframe->getStartDateFieldName(),
-            $semantic_timeframe->getDurationFieldName()
-        );
+        $start_date_field   = $semantic_timeframe->getStartDateField();
+        $duration_field     = $semantic_timeframe->getDurationField();
+        if ($start_date_field !== null && $duration_field !== null) {
+            $burnup_information = $this->burnup_dao->getBurnupInformation(
+                $artifact_id,
+                $start_date_field->getId(),
+                $duration_field->getId()
+            );
+        }
 
         $this->logger->debug("Calculating burnup for artifact #" . $artifact_id);
         if (! $burnup_information) {
