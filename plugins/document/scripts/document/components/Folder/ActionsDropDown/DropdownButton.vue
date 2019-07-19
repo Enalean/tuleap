@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -54,6 +54,16 @@ export default {
     },
     mounted() {
         this.dropdown = createDropdown(this.$refs.dropdownButton);
+
+        const hideActionMenu = () => {
+            if (this.dropdown && this.dropdown.is_shown) {
+                this.dropdown.hide();
+            }
+        };
+        document.addEventListener("document-hide-action-menu", hideActionMenu);
+        this.$once("hook:beforeDestroy", () => {
+            document.removeEventListener("document-hide-action-menu", hideActionMenu);
+        });
     }
 };
 </script>
