@@ -7,11 +7,11 @@
                 </h1>
             </div>
             <section class="tlp-pane-section">
-                {{# is_synchronized_with_project_members }}
+                {{# is_synchronized_message_shown }}
                     <p class="tlp-alert-info">
                         {{# gettext }}Project members and group members are synchronized. Whenever you add someone in a user group, they are automatically added in project members.{{/ gettext }}
                     </p>
-                {{/ is_synchronized_with_project_members }}
+                {{/ is_synchronized_message_shown }}
                 <div class="tlp-table-actions">
                     {{# can_be_updated }}
                         {{^ is_dynamic_group }}

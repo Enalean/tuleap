@@ -69,7 +69,7 @@ final class MembersPresenterBuilderTest extends TestCase
 
     public function testItDoesNotAllowUpdatingBoundUGroups(): void
     {
-        $ugroup = $this->getEmptyStaticUGroup();
+        $ugroup = $this->getEmptyBoundStaticUGroup();
 
         $result = $this->builder->build($ugroup);
 
@@ -121,18 +121,41 @@ final class MembersPresenterBuilderTest extends TestCase
         $this->assertFalse($result->is_dynamic_group);
     }
 
-    public function testItSetsTheUGroupAsSynchronizedWithProjectMembersAccordingToDetector(): void
+    public function testItShowsTheSynchronizedMembersipMessageWhenUGroupCanBeUpdated(): void
     {
         $ugroup = $this->getEmptyStaticUGroup();
-        $this->detector
-            ->shouldReceive('isSynchronizedWithProjectMembers')
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
             ->with($ugroup->getProject())
             ->once()
             ->andReturnTrue();
 
         $result = $this->builder->build($ugroup);
 
-        $this->assertTrue($result->is_synchronized_with_project_members);
+        $this->assertTrue($result->is_synchronized_message_shown);
+    }
+
+    public function testItDoesNotShowTheSynchronizedMembershipMessageWhenUGroupCannotBeUpdated(): void
+    {
+        $ugroup = $this->getEmptyBoundStaticUGroup();
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
+            ->once()
+            ->andReturnTrue();
+
+        $result = $this->builder->build($ugroup);
+
+        $this->assertFalse($result->is_synchronized_message_shown);
+    }
+
+    public function testItDoesNotShowTheSynchronizedMembershipMessageWhenItIsNotEnabled(): void
+    {
+        $ugroup = $this->getEmptyStaticUGroup();
+        $this->detector->shouldReceive('isSynchronizedWithProjectMembers')
+            ->once()
+            ->andReturnFalse();
+
+        $result = $this->builder->build($ugroup);
+
+        $this->assertFalse($result->is_synchronized_message_shown);
     }
 
     public function testItFormatsUGroupMembers(): void
@@ -248,11 +271,22 @@ final class MembersPresenterBuilderTest extends TestCase
         $this->assertTrue($first_formatted_member->is_news_admin);
     }
 
-    private function getEmptyStaticUGroup(): \ProjectUGroup
+    private function getEmptyBoundStaticUGroup(): \ProjectUGroup
     {
         $ugroup = Mockery::mock(
             \ProjectUGroup::class,
             ['isBound' => true, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
+        );
+        $ugroup->shouldReceive('getMembersIncludingSuspended')
+            ->andReturn([]);
+        return $ugroup;
+    }
+
+    private function getEmptyStaticUGroup(): \ProjectUGroup
+    {
+        $ugroup = Mockery::mock(
+            \ProjectUGroup::class,
+            ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
             ->andReturn([]);
