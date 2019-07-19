@@ -44,7 +44,32 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->metadata_obsolescence_date_checker = \Mockery::mock(HardcodedMetdataObsolescenceDateChecker::class);
     }
 
-    public function testGetTimeStampOfDateForDocument(): void
+    public function testGetTimeStampOfDateForDocumentAtUpdate(): void
+    {
+        $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
+
+        $current_time                = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-20');
+        $obsolescence_date           = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-21');
+        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
+                                                 ->withArgs(
+                                                     [
+                                                         $obsolescence_date_formatted,
+                                                     ]
+                                                 )->once();
+        $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->never();
+
+        $time_stamp              = $retriever->getTimeStampOfDate(
+            $obsolescence_date_formatted,
+            $current_time
+        );
+        $expected_date_timestamp = $obsolescence_date->getTimestamp();
+        $this->assertEquals($expected_date_timestamp, $time_stamp);
+    }
+
+    public function testGetTimeStampOfDateForDocumentAtCreation(): void
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
@@ -61,7 +86,7 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
         $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
-        $time_stamp              = $retriever->getTimeStampOfDate(
+        $time_stamp              = $retriever->getTimeStampOfDateWithoutPeriodValidity(
             $obsolescence_date_formatted,
             $current_time
         );

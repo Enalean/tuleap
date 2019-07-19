@@ -14,27 +14,26 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  -
   -->
 
 <template>
     <div class="document-metadata" v-if="should_display_other_information" data-test="document-other-information">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
-        <obsolescence-date-metadata v-model="date_value">
-            <slot></slot>
-        </obsolescence-date-metadata>
+        <obsolescence-date-metadata-for-create v-model="date_value"/>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import ObsolescenceDateMetadata from "./ObsolescenceDateMetadata.vue";
+import ObsolescenceDateMetadataForCreate from "./ObsolescenceMetadata/ObsolescenceDateMetadataForCreate.vue";
 
 export default {
-    name: "OtherInformationMetadata",
+    name: "OtherInformationMetadataForCreate",
     components: {
-        ObsolescenceDateMetadata
+        ObsolescenceDateMetadataForCreate
     },
     props: {
         currentlyUpdatedItem: Object

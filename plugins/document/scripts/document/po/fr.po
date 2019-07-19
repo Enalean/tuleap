@@ -98,6 +98,9 @@ msgstr "Tables d'approbation"
 msgid "Approved"
 msgstr "Approuvé"
 
+msgid "Bad date format"
+msgstr "Format de la date incorrecte"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -436,6 +439,9 @@ msgstr "Statut"
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
+msgid "The current date is the same or before the obsolescence date"
+msgstr "La date actuelle est la même ou antérieure à la date d'obsolescence"
+
 msgid "The document has been created below."
 msgstr "Le document a été créé ci dessous."
 
@@ -538,8 +544,8 @@ msgid ""
 msgstr ""
 "Vous êtes en train de déplacer \"%{ title }\". Vous pouvez le coller dans un "
 "dossier dans lequel vous êtes autorisé à écrire en utilisant le menu "
-"d'action. Il n'est pas autorisé de déplacer un élément dans un dossier où "
-"le nom est déjà utilisé par un autre élément."
+"d'action. Il n'est pas autorisé de déplacer un élément dans un dossier où le "
+"nom est déjà utilisé par un autre élément."
 
 msgid "You are not allowed to drag 'n drop more than %{ nb } file at once."
 msgid_plural ""

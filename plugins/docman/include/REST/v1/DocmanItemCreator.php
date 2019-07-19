@@ -149,7 +149,7 @@ class DocmanItemCreator
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
         if ($item_type_id !== PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDateWithoutPeriodValidity(
                 $obsolescence_date,
                 $current_time
             );
@@ -207,7 +207,7 @@ class DocmanItemCreator
 
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDateWithoutPeriodValidity(
             $obsolescence_date,
             $current_time
         );

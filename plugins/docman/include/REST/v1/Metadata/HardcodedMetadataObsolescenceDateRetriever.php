@@ -42,7 +42,7 @@ class HardcodedMetadataObsolescenceDateRetriever
      * @return int
      * @throws HardCodedMetadataException
      */
-    public function getTimeStampOfDate(?string $date, \DateTimeImmutable $current_time): int
+    public function getTimeStampOfDate(?string $date): int
     {
         $this->date_checker->checkObsolescenceDateUsageForDocument(
             $date
@@ -57,11 +57,21 @@ class HardcodedMetadataObsolescenceDateRetriever
             throw HardCodedMetadataException::invalidDateFormat();
         }
 
+        return $formatted_date->getTimestamp();
+    }
+
+    /**
+     * @throws HardCodedMetadataException
+     */
+    public function getTimeStampOfDateWithoutPeriodValidity(?string $date, \DateTimeImmutable $current_time): int
+    {
+        $formatted_date_timestamp = $this->getTimeStampOfDate($date);
+
         $this->date_checker->checkDateValidity(
             $current_time->getTimestamp(),
-            $formatted_date->getTimestamp()
+            $formatted_date_timestamp
         );
 
-        return $formatted_date->getTimestamp();
+        return $formatted_date_timestamp;
     }
 }

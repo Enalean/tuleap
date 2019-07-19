@@ -118,7 +118,7 @@ class DocmanItemCreatorTest extends TestCase
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever
-            ->shouldReceive('getTimeStampOfDate')
+            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
             ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE,$current_time])
             ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
@@ -182,7 +182,7 @@ class DocmanItemCreatorTest extends TestCase
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -299,7 +299,7 @@ class DocmanItemCreatorTest extends TestCase
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -434,7 +434,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -506,7 +506,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -568,7 +568,7 @@ class DocmanItemCreatorTest extends TestCase
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -669,7 +669,7 @@ class DocmanItemCreatorTest extends TestCase
             HardCodedMetadataException::itemStatusNotAvailable()
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->never();
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->never();
 
         $created_item = \Mockery::mock(\Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -730,7 +730,7 @@ class DocmanItemCreatorTest extends TestCase
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
@@ -805,7 +805,7 @@ class DocmanItemCreatorTest extends TestCase
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
@@ -877,7 +877,7 @@ class DocmanItemCreatorTest extends TestCase
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
@@ -958,7 +958,7 @@ class DocmanItemCreatorTest extends TestCase
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
@@ -1042,7 +1042,7 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
@@ -1124,7 +1124,7 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
