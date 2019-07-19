@@ -88,10 +88,10 @@ class ProjectSidebarBuilder
             $sidebar[] = array(
                 'link'        => $this->getLink($service, $project),
                 'icon'        => $service->getIcon(),
-                'name'        => $this->purifier->purify($service->getLabel()),
+                'name'        => $this->purifier->purify($service->getInternationalizedName()),
                 'label'       => $this->getLabel($service),
                 'enabled'     => $this->isEnabled($toptab, $service),
-                'description' => $this->purifier->purify($service->getDescription()),
+                'description' => $this->purifier->purify($service->getInternationalizedDescription()),
                 'id'          => $this->purifier->purify('sidebar-' . $service->getShortName())
             );
         }
