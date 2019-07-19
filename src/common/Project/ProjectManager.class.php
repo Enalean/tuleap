@@ -27,6 +27,8 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipProjectVisibilityToggler;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -516,6 +518,7 @@ class ProjectManager
         if ($is_private) {
             $this->updateForumVisibilityToPrivate($project_id);
         }
+        $this->getSynchronizedProjectMembershipProjectVisibilityToggler()->enableAccordingToVisibility($project, $old_access, $access_level);
     }
 
     private function getFrsPermissionsCreator()
@@ -523,6 +526,13 @@ class ProjectManager
         return new FRSPermissionCreator(
             new FRSPermissionDao(),
             new UGroupDao()
+        );
+    }
+
+    private function getSynchronizedProjectMembershipProjectVisibilityToggler()
+    {
+        return new SynchronizedProjectMembershipProjectVisibilityToggler(
+            new SynchronizedProjectMembershipDao()
         );
     }
 

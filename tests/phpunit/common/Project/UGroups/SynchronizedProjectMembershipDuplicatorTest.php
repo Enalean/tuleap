@@ -25,6 +25,8 @@ namespace Tuleap\Project\UGroups;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tuleap\GlobalLanguageMock;
 
 final class SynchronizedProjectMembershipDuplicatorTest extends TestCase
 {
@@ -47,7 +49,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends TestCase
 
     public function testDuplicateSucceeds(): void
     {
-        $destination = M::mock(\Project::class);
+        $destination = M::mock(Project::class);
         $destination->shouldReceive('isPublic')->andReturnTrue();
         $destination->shouldReceive('getID')->andReturn(120);
 
@@ -59,7 +61,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends TestCase
 
     public function testDuplicateDoesNothingWhenTheDestinationProjectIsPrivate(): void
     {
-        $destination = M::mock(\Project::class);
+        $destination = M::mock(Project::class);
         $destination->shouldReceive('isPublic')->andReturnFalse();
 
         $this->duplicator->duplicate(104, $destination);
