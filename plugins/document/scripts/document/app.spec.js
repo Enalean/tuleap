@@ -41,6 +41,8 @@ import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
 import "./components/Folder/Error/GoBackToRootButton.spec.js";
 import "./components/Folder/Error/ShowErrorDetails.spec.js";
 
+import "./components/Folder/Clipboard/ClipboardContentInformation.vue";
+
 import "./components/Folder/FolderContentRow.spec.js";
 import "./components/Folder/FolderHeaderAction.spec.js";
 
