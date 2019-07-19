@@ -124,6 +124,9 @@ tests_cypress_distlp: ## Run Cypress distlp tests
 tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp --network none -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php72 bash"
 
+tests_rest_setup_73: ## Start REST tests (PHP FPM 7.3) container to launch tests manually
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp --network none -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php73-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php73 bash"
+
 phpunit-ci-run:
 	$(PHP) -d pcov.directory=. src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
