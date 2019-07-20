@@ -63,13 +63,20 @@ function autocomplete_projects_for_select2(element, options) {
     select2(element, options);
 }
 
+const convertUsersToSelect2Entry = ({ tuleap_user_id, text }) => ({
+    id: tuleap_user_id,
+    text: text
+});
+
 function autocomplete_users_for_select2(element, options) {
     options = options || {};
 
+    options.use_tuleap_id = options.use_tuleap_id || false;
     options.internal_users_only = options.internal_users_only || 0;
     options.placeholder = element.dataset.placeholder || "";
     options.minimumInputLength = 3;
     options.allowClear = true;
+
     options.ajax = {
         url: "/user/autocomplete.php",
         dataType: "json",
@@ -80,17 +87,24 @@ function autocomplete_users_for_select2(element, options) {
                 name: params.term,
                 page: params.page || 1,
                 codendi_user_only: options.internal_users_only,
-                project_id: options.project_id || ""
+                project_id: options.project_id || "",
+                user: options.user
             };
         }
     };
+
+    if (options.use_tuleap_id === true) {
+        options.ajax.processResults = data => ({
+            results: data.results.map(convertUsersToSelect2Entry)
+        });
+    }
     options.escapeMarkup = function(markup) {
         return markup;
     };
     options.templateResult = formatUser;
     options.templateSelection = formatUserWhenSelected;
 
-    select2(element, options);
+    return select2(element, options);
 
     function formatUser(user) {
         if (user.loading) {

@@ -168,13 +168,14 @@ if ($json_format) {
         $display_name   = $user_info['display_name'];
         $login          = $user_info['login'];
 
-        $json_entries[] = array(
-            'type'       => 'user',
-            'id'         => $display_name,
-            'text'       => $display_name,
-            'avatar_url' => '/users/' . urlencode($login) . '/avatar.png',
-            'has_avatar' => (bool)$user_info['has_avatar']
-        );
+        $json_entries[] = [
+            'type'           => 'user',
+            'id'             => $display_name,
+            'text'           => $display_name,
+            'avatar_url'     => '/users/' . urlencode($login) . '/avatar.png',
+            'has_avatar'     => (bool)$user_info['has_avatar'],
+            'tuleap_user_id' => $user_id
+        ];
     }
 
     $output = array(
