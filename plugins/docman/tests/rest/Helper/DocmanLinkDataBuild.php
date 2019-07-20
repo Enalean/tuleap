@@ -319,6 +319,6 @@ class DocmanLinkDataBuild
 
         $version_id = $this->addLinkWithCustomVersionNumber($item_id, $version);
 
-        $this->common_builder->addApprovalTable($title, (int)$version_id, $approval_status);
+        $this->common_builder->addApprovalTable($title, (int)$version_id, $approval_status, 'link_version_id');
     }
 }

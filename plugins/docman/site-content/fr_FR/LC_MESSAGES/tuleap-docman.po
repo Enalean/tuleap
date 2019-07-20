@@ -202,6 +202,14 @@ msgstr "Il y a déjà un document en cours de téléversement pour cet élément
 msgid "There is already a version being uploaded for this document."
 msgstr "Il y a déjà une version en cours de téléversement pour ce document."
 
+msgid ""
+"This approval table has been detected has potentially corrupted, please "
+"reach out to the site administrators if you notice inconsistencies."
+msgstr ""
+"Cette table d'approbation a été détectée comme étant potentiellement "
+"corrompue, veuillez contacter les administrateurs du site si vous remarquez "
+"des incohérences."
+
 msgid "This limit prevents a user to upload a file which size exceed x Bytes."
 msgstr ""
 "Cette limite empêche un utilisateur de téléverser un fichier dont le poids "

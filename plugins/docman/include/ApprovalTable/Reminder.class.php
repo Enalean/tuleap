@@ -42,6 +42,8 @@ class Docman_ApprovalTableReminder {
             foreach ($dar as $row) {
                 if ($row['item_id']) {
                     $table = new Docman_ApprovalTableItem();
+                } elseif ($row['link_version_id']) {
+                    $table = new Docman_ApprovalTableLink();
                 } else {
                     $table = new Docman_ApprovalTableFile();
                 }
