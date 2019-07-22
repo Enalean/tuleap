@@ -369,9 +369,7 @@ class RouteCollector
             new UserImport(
                 $user_manager,
                 $user_helper,
-                new ProjectMemberAdderWithStatusCheckAndNotifications(
-                    $ugroup_binding
-                )
+                ProjectMemberAdderWithStatusCheckAndNotifications::build()
             ),
             $project_manager,
             new SynchronizedProjectMembershipDetector(
@@ -388,9 +386,7 @@ class RouteCollector
             $ugroup_manager,
             \UserManager::instance(),
             MemberAdder::build(
-                new ProjectMemberAdderWithStatusCheckAndNotifications(
-                    new UGroupBinding(new UGroupUserDao(), $ugroup_manager)
-                )
+                ProjectMemberAdderWithStatusCheckAndNotifications::build()
             ),
             UGroupRouter::getCSRFTokenSynchronizer()
         );
@@ -410,9 +406,7 @@ class RouteCollector
                 new DynamicUGroupMembersUpdater(
                     new UserPermissionsDao(),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                    new ProjectMemberAdderWithStatusCheckAndNotifications(
-                        new UGroupBinding(new UGroupUserDao(), $ugroup_manager)
-                    ),
+                    ProjectMemberAdderWithStatusCheckAndNotifications::build(),
                     EventManager::instance()
                 ),
                 new StaticMemberRemover()

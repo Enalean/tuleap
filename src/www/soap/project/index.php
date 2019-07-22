@@ -65,7 +65,7 @@ if ($request->exist('wsdl')) {
         $ugroup_dao,
         $ugroup_manager,
         $ugroup_binding,
-        MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+        MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
         EventManager::instance()
     );
 

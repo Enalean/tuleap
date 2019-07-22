@@ -22,23 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
+use Feedback;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+
 class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMemberAdder
 {
     /**
-     * @var \UGroupBinding
+     * @var AddProjectMember
      */
-    private $ugroup_binding;
+    private $add_project_member;
 
-    public function __construct(\UGroupBinding $ugroup_binding)
+    public function __construct(AddProjectMember $add_project_member)
     {
-        $this->ugroup_binding = $ugroup_binding;
+        $this->add_project_member = $add_project_member;
+    }
+
+    public static function build() : self
+    {
+        return new self(AddProjectMember::build());
     }
 
     public function addProjectMember(\PFUser $user, \Project $project): void
     {
-        /** @psalm-suppress MissingFile */
-        require_once __DIR__ . '/../../../../../www/include/account.php';
-        \account_add_user_obj_to_group($project->getID(), $user, false, false);
-        $this->ugroup_binding->reloadUgroupBindingInProject($project);
+        try {
+            $this->add_project_member->addProjectMember($user, $project);
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
+        } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+        } catch (AlreadyProjectMemberException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+        }
     }
 }

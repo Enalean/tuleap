@@ -51,12 +51,7 @@ $user_manager  = UserManager::instance();
 $import        = new UserImport(
     $user_manager,
     new UserHelper(),
-    new ProjectMemberAdderWithStatusCheckAndNotifications(
-        new UGroupBinding(
-            new UGroupUserDao(),
-            new UGroupManager()
-        )
-    )
+    ProjectMemberAdderWithStatusCheckAndNotifications::build()
 );
 $user_filename = $_FILES['user_filename']['tmp_name'];
 

@@ -489,12 +489,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getProjectMemberAdder() : ProjectMemberAdder
     {
-        return new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-            new UGroupBinding(
-                $this->getUGroupUserDao(),
-                new UGroupManager()
-            )
-        );
+        return ProjectMemberAdderWithoutStatusCheckAndNotifications::build();
     }
 
     /**

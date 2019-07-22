@@ -86,11 +86,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     private function getProjectMemberAdder() : ProjectMemberAdder
     {
         if (! $this->project_member_adder) {
-            $this->project_member_adder = new ProjectMemberAdderWithStatusCheckAndNotifications(
-                new UGroupBinding(
-                    $this->getUGroupUserDao(), $this
-                )
-            );
+            $this->project_member_adder = ProjectMemberAdderWithStatusCheckAndNotifications::build();
         }
         return $this->project_member_adder;
     }
@@ -162,9 +158,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
                 new UserPermissionsDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                new ProjectMemberAdderWithStatusCheckAndNotifications(
-                    new UGroupBinding($this->getUGroupUserDao(), $this)
-                ),
+                ProjectMemberAdderWithStatusCheckAndNotifications::build(),
                 $this->getEventManager()
             );
         }

@@ -233,7 +233,7 @@ class ImportProjectXMLCommand extends Command
                 new UGroupDao(),
                 $ugroup_manager,
                 $ugroup_binding,
-                MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+                MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
                 $event_manager
             );
 
@@ -300,9 +300,7 @@ class ImportProjectXMLCommand extends Command
                     new ProjectHistoryDao(),
                     new UGroupManager()
                 ),
-                new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-                    $ugroup_binding
-                ),
+                ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
                 $project_creator,
                 new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
                 new ProjectDashboardXMLImporter(

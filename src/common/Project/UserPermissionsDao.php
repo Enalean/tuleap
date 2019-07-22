@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,12 @@ class UserPermissionsDao extends DataAccessObject
         $rows = $this->getDB()->run($sql, $project_id, $user_id);
 
         return count($rows) > 0;
+    }
+
+    public function addUserAsProjectMember(int $project_id, int $user_id)
+    {
+        $sql = 'INSERT INTO user_group(group_id, user_id) VALUES (?, ?)';
+        $this->getDB()->run($sql, $project_id, $user_id);
     }
 
     public function addUserAsProjectAdmin($project_id, $user_id)
