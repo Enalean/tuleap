@@ -20,12 +20,18 @@
 <template>
     <div>
         <hr class="tlp-modal-separator">
-        <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
-        <div class="document-status-section-container">
-            <input type="checkbox" name="apply-recursive-status" class="document-recursion-checkbox" v-on:click="shouldApplyRecursion = true">
-            <status-metadata-with-custom-binding-for-folder-update v-bind:currently-updated-item="currentlyUpdatedItem"/>
+        <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
+        <p v-translate>All the properties values that you define here will be proposed as default values for the items that will be created within this folder.</p>
+        <div class="document-default-metadata">
+            <div class="document-metadata-container">
+                <div class="document-recursion-checkbox-container">
+                    <label class="tlp-label"><i class="fa fa-repeat"></i></label>
+                    <input type="checkbox" name="apply-recursive-status" class="document-recursion-checkbox" v-on:click="shouldApplyRecursion = true">
+                </div>
+                <status-metadata-with-custom-binding-for-folder-update v-bind:currently-updated-item="currentlyUpdatedItem"/>
+            </div>
+            <recursion-options v-bind:should-apply-recursion="shouldApplyRecursion" v-model="recursion_option"/>
         </div>
-        <recursion-options v-bind:should-apply-recursion="shouldApplyRecursion" v-model="recursion_option"/>
     </div>
 </template>
 

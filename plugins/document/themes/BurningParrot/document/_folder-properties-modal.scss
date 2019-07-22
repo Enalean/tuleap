@@ -1,0 +1,95 @@
+/**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ */
+
+.access-legacy-update-properties-page {
+    margin: $tlp-spacing;
+}
+
+.document-metadata-container {
+    display: flex;
+    position: relative;
+    padding: 0 0 $tlp-spacing;
+
+    &:not(:first-child) > .document-recursion-checkbox-container > .tlp-label {
+        visibility: hidden;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 9px;
+        width: 2px;
+        height: 100%;
+        background: $tlp-ui-border-normal;
+    }
+}
+
+.document-recursion-checkbox-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    margin: 0 20px 0 0;
+
+    > .tlp-label {
+        position: relative;
+        z-index: 2;
+        background: $tlp-ui-white;
+        box-shadow: 0 10px 5px $tlp-ui-white;
+    }
+}
+
+.document-recursion-checkbox {
+    position: relative;
+    z-index: 2;
+    margin: 12px 0 0;
+    background: $tlp-ui-white;
+    box-shadow: 0 3px 3px $tlp-ui-white, 0 -3px 3px $tlp-ui-white;
+}
+
+.document-metadata-recursion-option-section {
+    position: relative;
+    padding: 0 0 0 40px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 9px;
+        width: 2px;
+        height: 70%;
+        background-image: linear-gradient(to bottom, $tlp-ui-border-normal, $tlp-theme-color);
+    }
+
+    > .document-metadata-recursion-option-arrow {
+        position: absolute;
+        top: calc(70% - 11px / 2); //11px is the height of the svg
+        left: 9px;
+
+        > path {
+            fill: $tlp-theme-color;
+        }
+    }
+
+    > .tlp-label {
+        color: $tlp-theme-color;
+    }
+}
