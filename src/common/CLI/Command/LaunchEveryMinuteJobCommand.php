@@ -43,17 +43,12 @@ final class LaunchEveryMinuteJobCommand extends Command
      * @var Logger
      */
     private $logger;
-    /**
-     * @var DBConnection
-     */
-    private $db_connection;
 
     public function __construct(EventDispatcherInterface $event_dispatcher, Logger $logger, DBConnection $db_connection)
     {
         parent::__construct(self::NAME);
         $this->event_dispatcher = $event_dispatcher;
         $this->logger           = $logger;
-        $this->db_connection    = $db_connection;
     }
 
     protected function configure() : void
@@ -63,11 +58,6 @@ final class LaunchEveryMinuteJobCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            sleep(random_int(0, 59));
-            $this->db_connection->reconnectAfterALongRunningProcess();
-        }
-
         $this->event_dispatcher->dispatch(new EventCronJobEveryMinute($this->logger));
         return 0;
     }

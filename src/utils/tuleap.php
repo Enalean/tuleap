@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../www/include/pre.php';
-
 use Symfony\Component\Lock\Factory as LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tuleap\CLI\Application;
@@ -32,8 +30,33 @@ use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
+use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
+use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
+use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\Password\PasswordSanityChecker;
+
+(static function () {
+    require_once __DIR__ . '/../vendor/autoload.php';
+
+    $execution_launcher = new ExecutionDelayedLauncher(
+        new ConditionalTuleapCronEnvExecutionDelayer(
+            new ExecutionDelayerRandomizedSleep(59)
+        )
+    );
+
+    $execution_launcher->execute(
+        static function () {
+            // Do nothing
+            // In a ideal world loading pre.php and doing the setup
+            // of the CLI command should be done here but there is
+            // too much code relying on having access to information
+            // loaded implicitly into $GLOBALS by pre.php.
+        }
+    );
+})();
+
+require_once __DIR__ . '/../www/include/pre.php';
 
 $event_manager         = EventManager::instance();
 $backend_logger        = BackendLogger::getDefaultLogger();
@@ -86,7 +109,15 @@ $CLI_command_collector->addCommand(
 $CLI_command_collector->addCommand(
     QueueSystemCheckCommand::NAME,
     static function() use ($event_manager) : QueueSystemCheckCommand  {
-        return new QueueSystemCheckCommand($event_manager, DBFactory::getMainTuleapDBConnection());
+        return new QueueSystemCheckCommand(
+            $event_manager,
+            DBFactory::getMainTuleapDBConnection(),
+            new ExecutionDelayedLauncher(
+                new ConditionalTuleapCronEnvExecutionDelayer(
+                    new ExecutionDelayerRandomizedSleep(1799)
+                )
+            )
+        );
     }
 );
 
@@ -106,7 +137,13 @@ $CLI_command_collector->addCommand(
     static function() use ($event_manager, $user_manager) : DailyJobCommand  {
         return new DailyJobCommand(
             $event_manager,
-            $user_manager
+            $user_manager,
+            DBFactory::getMainTuleapDBConnection(),
+            new ExecutionDelayedLauncher(
+                new ConditionalTuleapCronEnvExecutionDelayer(
+                    new ExecutionDelayerRandomizedSleep(1799)
+                )
+            )
         );
     }
 );

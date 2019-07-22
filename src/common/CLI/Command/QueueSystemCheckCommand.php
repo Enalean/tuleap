@@ -27,10 +27,9 @@ use Event;
 use EventManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
-use Tuleap\DB\DBFactory;
 
 final class QueueSystemCheckCommand extends Command
 {
@@ -44,12 +43,20 @@ final class QueueSystemCheckCommand extends Command
      * @var DBConnection
      */
     private $db_connection;
+    /**
+     * @var ExecutionDelayedLauncher
+     */
+    private $execution_delayed_launcher;
 
-    public function __construct(EventManager $event_manager, DBConnection $db_connection)
-    {
+    public function __construct(
+        EventManager $event_manager,
+        DBConnection $db_connection,
+        ExecutionDelayedLauncher $execution_delayed_launcher
+    ) {
         parent::__construct(self::NAME);
-        $this->event_manager = $event_manager;
-        $this->db_connection = $db_connection;
+        $this->event_manager              = $event_manager;
+        $this->db_connection              = $db_connection;
+        $this->execution_delayed_launcher = $execution_delayed_launcher;
     }
 
     protected function configure() : void
@@ -59,12 +66,10 @@ final class QueueSystemCheckCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('TLP_DELAY_CRON_CMD') === '1') {
-            sleep(random_int(0, 1799));
+        $this->execution_delayed_launcher->execute(function () {
             $this->db_connection->reconnectAfterALongRunningProcess();
-        }
-
-        $this->event_manager->processEvent(Event::SYSTEM_CHECK);
+            $this->event_manager->processEvent(Event::SYSTEM_CHECK);
+        });
         return 0;
     }
 }
