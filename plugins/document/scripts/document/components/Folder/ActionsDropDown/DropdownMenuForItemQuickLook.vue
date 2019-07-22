@@ -55,6 +55,7 @@
 import { mapGetters } from "vuex";
 import DropdownMenu from "./DropdownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     components: { CreateNewItemVersionButton, DropdownMenu },
@@ -72,18 +73,10 @@ export default {
     },
     methods: {
         showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.item }
-                })
-            );
+            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
         },
         showNewDocumentModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-document-modal", {
-                    detail: { parent: this.item }
-                })
-            );
+            EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
         }
     }
 };

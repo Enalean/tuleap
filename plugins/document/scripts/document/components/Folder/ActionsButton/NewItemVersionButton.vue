@@ -32,8 +32,9 @@
 <script>
 import { mapState } from "vuex";
 import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
-
 import { redirectToUrl } from "../../../helpers/location-helper.js";
+import EventBus from "../../../helpers/event-bus.js";
+
 export default {
     name: "UpdateButton",
     props: {
@@ -77,11 +78,9 @@ export default {
             this.showUpdateFileModal();
         },
         showUpdateFileModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-create-new-item-version-modal", {
-                    detail: { current_item: this.item }
-                })
-            );
+            EventBus.$emit("show-create-new-item-version-modal", {
+                detail: { current_item: this.item }
+            });
         }
     }
 };

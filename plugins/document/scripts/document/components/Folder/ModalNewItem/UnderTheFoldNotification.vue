@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -30,6 +30,7 @@
 
 <script>
 import { TYPE_FOLDER } from "../../../constants.js";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     data() {
@@ -51,10 +52,10 @@ export default {
         }
     },
     created() {
-        document.addEventListener("item-has-been-created-under-the-fold", this.show);
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("item-has-been-created-under-the-fold", this.show);
-        });
+        EventBus.$on("item-has-been-created-under-the-fold", this.show);
+    },
+    beforeDestroy() {
+        EventBus.$off("item-has-been-created-under-the-fold", this.show);
     },
     methods: {
         show(event) {

@@ -101,6 +101,7 @@ import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "DropdownMenu",
@@ -144,11 +145,9 @@ export default {
             }&action=details&section=${pane_name}`;
         },
         showUpdateModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-update-item-metadata-modal", {
-                    detail: { current_item: this.item }
-                })
-            );
+            EventBus.$emit("show-update-item-metadata-modal", {
+                detail: { current_item: this.item }
+            });
         }
     }
 };

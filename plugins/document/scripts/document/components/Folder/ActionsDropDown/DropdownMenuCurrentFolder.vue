@@ -33,6 +33,8 @@
 <script>
 import { mapState } from "vuex";
 import DropdownMenu from "./DropdownMenu.vue";
+import EventBus from "../../../helpers/event-bus.js";
+
 export default {
     components: { DropdownMenu },
     props: {
@@ -43,11 +45,7 @@ export default {
     },
     methods: {
         showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.current_folder }
-                })
-            );
+            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.current_folder } });
         }
     }
 };

@@ -23,9 +23,13 @@ import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 import localVue from "../../../helpers/local-vue.js";
 import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("CreateNewItemVersionButton", () => {
-    let create_new_item_version_button_factory;
+    let create_new_item_version_button_factory, event_bus;
     beforeEach(() => {
         const state = {
             project_id: 101
@@ -44,17 +48,19 @@ describe("CreateNewItemVersionButton", () => {
                 mocks: { $store: store }
             });
         };
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
     });
 
     afterEach(() => {
         restore();
+        restoreEventBus();
     });
 
     it(`Given item is a file
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        spyOn(document, "dispatchEvent");
-
         const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
@@ -66,16 +72,15 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-create-new-item-version-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-create-new-item-version-modal",
+            jasmine.any(Object)
         );
     });
 
     it(`Given item is an embedded file
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        spyOn(document, "dispatchEvent");
-
         const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
@@ -87,16 +92,15 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-create-new-item-version-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-create-new-item-version-modal",
+            jasmine.any(Object)
         );
     });
 
     it(`Given item is a wiki with no approval table
         When we click on [create new version]
         Then create-new-item-version event should be dispatched`, () => {
-        spyOn(document, "dispatchEvent");
-
         const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
@@ -109,16 +113,15 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-create-new-item-version-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-create-new-item-version-modal",
+            jasmine.any(Object)
         );
     });
 
     it(`Given item is a wiki with an approval table
         When we click on [create new version]
         Then no event should be dispatched`, () => {
-        spyOn(document, "dispatchEvent");
-
         const wrapper = create_new_item_version_button_factory({
             item: {
                 id: 1,
@@ -133,7 +136,7 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
-        expect(document.dispatchEvent).not.toHaveBeenCalled();
+        expect(event_bus.$emit).not.toHaveBeenCalled();
     });
 
     it(`Given item is an empty document
@@ -174,8 +177,9 @@ describe("CreateNewItemVersionButton", () => {
 
         wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
 
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-create-new-item-version-modal")
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-create-new-item-version-modal",
+            jasmine.any(Object)
         );
     });
 

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -41,6 +41,7 @@ import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookDeleteButton },
@@ -54,11 +55,7 @@ export default {
     },
     methods: {
         showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.item }
-                })
-            );
+            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
         }
     }
 };

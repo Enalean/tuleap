@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -94,6 +94,7 @@ import {
 import LockProperty from "./Property/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "./ApprovalTables/ApprovalTableBadge.vue";
+import EventBus from "../../helpers/event-bus.js";
 
 export default {
     name: "FolderContentRow",
@@ -199,16 +200,12 @@ export default {
         const is_under_the_fold = position_from_top > viewport_height;
 
         if (is_under_the_fold) {
-            document.dispatchEvent(
-                new CustomEvent("item-has-been-created-under-the-fold", {
-                    detail: { item: this.item }
-                })
-            );
+            EventBus.$emit("item-has-been-created-under-the-fold");
         }
     },
     methods: {
         closeActionMenu() {
-            document.dispatchEvent(new CustomEvent("document-hide-action-menu"));
+            EventBus.$emit("hide-action-menu");
         }
     }
 };
