@@ -1606,6 +1606,9 @@ msgstr "L'utilisateur '%s' n’existe pas"
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
+msgid "User does not exist"
+msgstr "L'utilisateur n’existe pas"
+
 msgid "User group"
 msgstr "Groupe d'utilisateurs"
 

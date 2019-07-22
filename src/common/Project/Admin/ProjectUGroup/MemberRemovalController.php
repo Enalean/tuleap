@@ -60,14 +60,19 @@ class MemberRemovalController implements DispatchableWithRequest
      * @var ProjectMemberRemover
      */
     private $project_member_remover;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_synchronizer;
 
-    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover, ProjectMemberRemover $project_member_remover)
+    public function __construct(ProjectManager $project_manager, UGroupManager $ugroup_manager, UserManager $user_manager, MemberRemover $member_remover, ProjectMemberRemover $project_member_remover, CSRFSynchronizerToken $csrf_synchronizer)
     {
         $this->project_manager = $project_manager;
         $this->ugroup_manager  = $ugroup_manager;
         $this->user_manager    = $user_manager;
         $this->member_remover  = $member_remover;
         $this->project_member_remover = $project_member_remover;
+        $this->csrf_synchronizer = $csrf_synchronizer;
     }
 
     /**
@@ -97,8 +102,7 @@ class MemberRemovalController implements DispatchableWithRequest
             throw new NotFoundException();
         }
 
-        $csrf = new CSRFSynchronizerToken(self::getUrl($ugroup));
-        $csrf->check();
+        $this->csrf_synchronizer->check(UGroupRouter::getUGroupUrl($ugroup));
 
         $user = $this->user_manager->getUserById($request->get('remove_user'));
         if (! $user) {

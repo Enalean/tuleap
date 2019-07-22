@@ -15,7 +15,7 @@
                 <div class="tlp-table-actions">
                     {{# can_be_updated }}
                         {{^ is_dynamic_group }}
-                            <form action="?group_id={{ project_id }}&ugroup_id={{ id }}"
+                            <form action="/project/{{ project_id }}/admin/user-group/{{ id }}/add"
                                   method="post"
                                   class="project-admin-members-form"
                             >
@@ -46,7 +46,6 @@
                                 </button>
                             </div>
                         {{^ is_dynamic_group }}
-                            <input type="hidden" name="action" value="edit_ugroup_members">
                             </form>
                         {{/ is_dynamic_group }}
                         {{# is_dynamic_group}}

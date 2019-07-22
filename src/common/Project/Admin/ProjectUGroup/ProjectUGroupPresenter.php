@@ -46,10 +46,6 @@ class ProjectUGroupPresenter
      * @var PermissionsDelegationPresenter
      */
     public $permissions_delegation;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    public $csrf_token_remove_user;
 
     public function __construct(
         ProjectUGroup $ugroup,
@@ -57,7 +53,6 @@ class ProjectUGroupPresenter
         BindingPresenter $binding,
         MembersPresenter $members,
         CSRFSynchronizerToken $csrf_token,
-        CSRFSynchronizerToken $csrf_remove_member,
         PFUser $user
     ) {
         $this->id                        = $ugroup->getId();
@@ -67,7 +62,6 @@ class ProjectUGroupPresenter
         $this->binding                   = $binding;
         $this->members                   = $members;
         $this->csrf_token                = $csrf_token;
-        $this->csrf_token_remove_user    = $csrf_remove_member;
         $this->is_static_ugroup          = $ugroup->isStatic();
         $this->locale                    = $user->getLocale();
         $this->permissions_per_group_url = $this->getPermissionPerGroupUrl();

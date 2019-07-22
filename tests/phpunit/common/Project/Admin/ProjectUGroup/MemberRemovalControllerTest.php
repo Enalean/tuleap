@@ -72,6 +72,10 @@ class MemberRemovalControllerTest extends TestCase
      * @var M\MockInterface|ProjectMemberRemover
      */
     private $project_member_remover;
+    /**
+     * @var \CSRFSynchronizerToken|M\MockInterface
+     */
+    private $csrf;
 
     protected function setUp(): void
     {
@@ -83,12 +87,9 @@ class MemberRemovalControllerTest extends TestCase
         $this->layout                         = M::mock(BaseLayout::class);
         $this->a_user                         = M::mock(\PFUser::class);
         $this->project_member_remover         = M::mock(ProjectMemberRemover::class);
-        $this->controller = new MemberRemovalController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_remover, $this->project_member_remover);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
+        $this->csrf                           = M::mock(\CSRFSynchronizerToken::class);
+        $this->csrf->shouldReceive('check')->once();
+        $this->controller = new MemberRemovalController($this->project_manager, $this->ugroup_manager, $this->user_manager, $this->member_remover, $this->project_member_remover, $this->csrf);
     }
 
     public function testItRemovesWithSuccess()
