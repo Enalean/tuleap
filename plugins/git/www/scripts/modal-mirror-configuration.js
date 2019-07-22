@@ -17,14 +17,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+/* global tlp:readonly */
+
 (function() {
     "use strict";
 
     var button_selectors =
-            "#button-modal-mirror-configuration, \
-            .mirror-show-repositories, \
-            .mirror-action-delete-button, \
-            .mirror-action-edit-button",
+            "#button-modal-mirror-configuration, .mirror-show-repositories, .mirror-action-delete-button, .mirror-action-edit-button",
         matching_buttons = document.querySelectorAll(button_selectors);
 
     [].forEach.call(matching_buttons, function(button) {

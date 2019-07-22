@@ -46,7 +46,7 @@ describe("ExportCSVButton", () => {
         const vm = new Component({
             store: createStore()
         });
-        spyOn(vm.$store, "commit");
+        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
         return vm;
     }
 

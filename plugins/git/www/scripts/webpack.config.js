@@ -68,7 +68,8 @@ const webpack_config_for_burning_parrot = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        tuleap: "tuleap"
     },
     module: {
         rules: [

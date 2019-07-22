@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tuleap:readonly jQuery:readonly */
+
 (function($) {
     document.addEventListener("DOMContentLoaded", function() {
         var add_button = document.getElementById("svn-notifications-add"),

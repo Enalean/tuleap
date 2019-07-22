@@ -16,6 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+/* global
+    Ajax:readonly
+    $H:readonly
+    $F:readonly
+    $:readonly
+    Class:readonly
+    codendi:readonly
+    $$:readonly
+*/
+
 var tuleap = tuleap || {};
 tuleap.agiledashboard = tuleap.agiledashboard || {};
 tuleap.agiledashboard.cardwall = tuleap.agiledashboard.cardwall || {};
@@ -98,8 +109,8 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function(transport) {
             return;
         }
 
-        nb_open = parseInt(milestone_info["status_count"]["open"]);
-        nb_closed = parseInt(milestone_info["status_count"]["closed"]);
+        nb_open = parseInt(milestone_info["status_count"]["open"], 10);
+        nb_closed = parseInt(milestone_info["status_count"]["closed"], 10);
         nb_total = nb_open + nb_closed;
         element = $("milestone_remaining_effort");
 
@@ -159,8 +170,10 @@ tuleap.agiledashboard.cardwall.card.AbstractElementEditor = Class.create({
         if (typeof transport === "undefined") {
             return;
         }
+        /* eslint-disable no-console */
         if (typeof console == "object" && typeof console.error === "function") {
             console.error(transport.responseText.stripTags());
+            /* eslint-enable no-console */
         }
     },
 
@@ -484,6 +497,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             return function setRequestData(form, value) {
                 var parameters = {};
+                var linked_field;
                 if (is_multi_select) {
                     linked_field = "artifact[" + field_id + "][]";
                 } else {

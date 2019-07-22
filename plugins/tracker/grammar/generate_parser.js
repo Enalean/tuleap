@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 var fs = require("fs");
 var pegjs = require("pegjs");
 var phppegjs = require("php-pegjs");

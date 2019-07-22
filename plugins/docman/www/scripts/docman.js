@@ -1,12 +1,32 @@
-if (!com) var com = {};
-if (!com.xerox) com.xerox = {};
-if (!com.xerox.codendi) com.xerox.codendi = {};
+/* global
+    Class:readonly
+    $H:readonly
+    $:readonly
+    $F:readonly
+    Ajax:readonly
+    Builder:readonly
+    Form:readonly
+    Prototype:readonly
+    Insertion:readonly
+    Effect:readonly
+    Position:readonly
+*/
+
+if (!com) {
+    var com = {};
+}
+if (!com.xerox) {
+    com.xerox = {};
+}
+if (!com.xerox.codendi) {
+    com.xerox.codendi = {};
+}
 
 com.xerox.codendi.Docman = Class.create();
 Object.extend(com.xerox.codendi.Docman.prototype, {
     initialize: function(group_id, options) {
         if (!group_id) {
-            throw "group_id is mandatory!";
+            throw new Error("group_id is mandatory!");
         }
         this.group_id = group_id;
         this.options = Object.extend(
@@ -30,6 +50,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             this.options.move = Object.extend({}, options.move || {});
             this.options.language = Object.extend({}, options.language || {});
         }
+        var img;
 
         //Preload spinners
         if (this.options.folderSpinner) {
@@ -47,18 +68,22 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         this.actionsForItem = {};
         this.initShowOptions_already_done = false;
         this.initShowOptionsEvent = this.initShowOptions.bindAsEventListener(this);
-        if (this.options.action == "browse")
+        if (this.options.action == "browse") {
             document.observe("dom:loaded", this.initShowOptionsEvent);
+        }
 
         // NewItem
         this.parentFoldersForNewItem = {};
         this.initNewItemEvent = this.initNewItem.bindAsEventListener(this);
-        if (this.options.action == "browse") document.observe("dom:loaded", this.initNewItemEvent);
+        if (this.options.action == "browse") {
+            document.observe("dom:loaded", this.initNewItemEvent);
+        }
 
         // Expand/Collapse
         this.initExpandCollapseEvent = this.initExpandCollapse.bindAsEventListener(this);
-        if (this.options.action == "browse")
+        if (this.options.action == "browse") {
             document.observe("dom:loaded", this.initExpandCollapseEvent);
+        }
 
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
@@ -77,8 +102,9 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         this.toggleMultipleValuesChoiceEvent = this.toggleMultipleValuesChoice.bindAsEventListener(
             this
         );
-        if (this.options.action == "browse")
+        if (this.options.action == "browse") {
             document.observe("dom:loaded", this.toggleMultipleValuesChoiceEvent, true);
+        }
     },
     dispose: function() {
         // ShowOptions
@@ -156,8 +182,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         if (!this.showOptions_Menus) {
             this.showOptions_Menus = {};
         }
-        if (!this.itemHighlight) {
-        }
         $H(this.actionsForItem)
             .keys()
             .each(
@@ -202,7 +226,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     initNewItem: function() {
         var checkboxes = [6, 3, 5, 2, 4].inject([], function(checkboxes, type) {
-            el = $("item_item_type_" + type);
+            const el = $("item_item_type_" + type);
             if (el) {
                 checkboxes.push(el);
             }
@@ -213,7 +237,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         };
         checkboxes.each(
             function(checkbox) {
-                panel = $(checkbox.id + "_specific_properties");
+                const panel = $(checkbox.id + "_specific_properties");
                 this.newItem.specificProperties[checkbox.id] = {
                     checkbox: checkbox,
                     panel: panel
@@ -288,7 +312,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         Event.observe(
                             $("item_parent_id_" + folder_id),
                             "change",
-                            function(evt) {
+                            function() {
                                 return this.onNewItemParentChange(folder_id);
                             }.bind(this)
                         );
@@ -375,7 +399,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             {
                 onComplete: function() {
                     Element.hide("docman_new_item_location_spinner");
-                }.bind(this),
+                },
                 onLoading: function() {
                     Element.show("docman_new_item_location_spinner");
                 }
@@ -423,22 +447,23 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     toggleMultipleValuesChoice: function() {
         var type = $("type");
         var mulVal = $("multiplevalues_allowed");
-        if (type != null && mulVal != null) {
-            function _toggleCheckBox() {
-                if (type.getValue() == 5) {
-                    mulVal.enable();
-                } else {
-                    mulVal.checked = false;
-                    mulVal.disable();
-                }
-            }
 
+        function _toggleCheckBox() {
+            if (type.getValue() == 5) {
+                mulVal.enable();
+            } else {
+                mulVal.checked = false;
+                mulVal.disable();
+            }
+        }
+
+        if (type != null && mulVal != null) {
             Event.observe(type, "change", _toggleCheckBox);
             _toggleCheckBox();
         }
     },
     _expandCollapse: function(parent_element) {
-        var docman_item_type_folder = new RegExp("(^|\\s)" + "docman_item_type_folder" + "(\\s|$)");
+        var docman_item_type_folder = new RegExp("(^|\\s)docman_item_type_folder(\\s|$)");
         var item_ = new RegExp("^item_.*");
 
         var folders = parent_element.querySelectorAll(
@@ -457,13 +482,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         while (!node.id.match(item_)) {
                             node = node.parentNode;
                         }
+                        var icon, subitems;
                         if (element.className.match(docman_item_type_folder)) {
                             //collapse --> expand
                             Element.removeClassName(element, "docman_item_type_folder");
                             Element.addClassName(element, "docman_item_type_folder_open");
-                            var icon = element.select(".docman_item_icon").first();
+                            icon = element.select(".docman_item_icon").first();
                             icon.src = icon.src.replace("folder.png", "folder-open.png");
-                            var subitems = $("subitems_" + node.id.split("_")[1]);
+                            subitems = $("subitems_" + node.id.split("_")[1]);
                             if (subitems) {
                                 subitems.show();
                                 new Ajax.Request(
@@ -476,7 +502,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                     }
                                 );
                             } else {
-                                old_icon_src = icon.src;
+                                const old_icon_src = icon.src;
                                 if (this.options.folderSpinner) {
                                     icon.src = this.options.folderSpinner;
                                 }
@@ -487,7 +513,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                 Element.hide(outer);
 
                                 Element.setStyle(document.body, { cursor: "wait" });
-                                expandUrl =
+                                const expandUrl =
                                     "?group_id=" +
                                     this.group_id +
                                     "&view=ulsubfolder&action=expandFolder&id=" +
@@ -497,7 +523,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                     evalScripts: true,
                                     onComplete: function(transport) {
                                         if (!transport.responseText.length) {
-                                            fake = Builder.node("div", {
+                                            const fake = Builder.node("div", {
                                                 id: "subitems_" + node.id.split("_")[1]
                                             });
                                             target.appendChild(fake);
@@ -514,9 +540,9 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                             //expand --> collapse
                             Element.removeClassName(element, "docman_item_type_folder_open");
                             Element.addClassName(element, "docman_item_type_folder");
-                            var icon = element.select(".docman_item_icon").first();
+                            icon = element.select(".docman_item_icon").first();
                             icon.src = icon.src.replace("folder-open.png", "folder.png");
-                            var subitems = $("subitems_" + node.id.split("_")[1]);
+                            subitems = $("subitems_" + node.id.split("_")[1]);
                             if (subitems) {
                                 subitems.hide();
                             }
@@ -555,7 +581,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             var btn_name = $("plugin_docman_report_form_global").down("input[type=submit]").name;
             var url = location.href.parseQuery();
             var global_search_is_used = typeof url[btn_name] !== "undefined";
-            if (!global_search_is_used && (url["del_filter"] || url["add_filter"])) {
+            if (!global_search_is_used && (url.del_filter || url.add_filter)) {
                 this.showReport();
             } else {
                 this.hideReport();
@@ -597,7 +623,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     reportSelectSavedReport: function(event) {
         var form = $("plugin_docman_select_report_id");
-        var select = form["report_id"];
+        var select = form.report_id;
         if (select[select.selectedIndex].value != "-1") {
             form.submit();
         }
@@ -606,7 +632,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     reportSelectAddFilter: function(event) {
         var form = $("plugin_docman_report_form");
-        var select = form["plugin_docman_report_add_filter"];
+        var select = form.plugin_docman_report_add_filter;
         if (select[select.selectedIndex].value != "-1") {
             form.submit();
         }
@@ -617,27 +643,29 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     // But I think this kind of attack cannot be used against codendi.
     reportSelectSave: function(event) {
         var form = $("plugin_docman_report_form");
-        var select = form["plugin_docman_report_save"];
+        var select = form.plugin_docman_report_save;
         var value = select[select.selectedIndex].value;
         var nameField = Builder.node("input", { type: "hidden", name: "report_name" });
         if (value == "newp" || value == "newi") {
             // Create new report
-            var name = window.prompt(this.options.language.report_name_new, "");
+            //eslint-disable-next-line no-alert
+            const name = window.prompt(this.options.language.report_name_new, "");
             if (name != null && name.strip() != "") {
-                nameField.value = name.escapeHTML().replace(/\"/, "&quot;");
+                nameField.value = name.escapeHTML().replace(/"/, "&quot;");
                 form.appendChild(nameField);
                 form.submit();
             }
         } else {
             // Update existing report
-            var selectedValue = parseInt(value);
+            var selectedValue = parseInt(value, 10);
             if (selectedValue > 0) {
-                var name = window.prompt(
+                //eslint-disable-next-line no-alert
+                const name = window.prompt(
                     this.options.language.report_name_upd,
                     select.options[select.selectedIndex].innerHTML.unescapeHTML()
                 );
                 if (name != null && name.strip() != "") {
-                    nameField.value = name.escapeHTML().replace(/\"/, "&quot;");
+                    nameField.value = name.escapeHTML().replace(/"/, "&quot;");
                     form.appendChild(nameField);
                     form.submit();
                 }
@@ -650,10 +678,10 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //{{{----------------------------- Approval table create
     approvalTableCreate: function(form) {
         var selected;
-        var len = form["app_table_import"].length;
+        var len = form.app_table_import.length;
         for (var i = 0; i < len; i++) {
-            if (form["app_table_import"][i].checked) {
-                selected = form["app_table_import"][i].value;
+            if (form.app_table_import[i].checked) {
+                selected = form.app_table_import[i].value;
             }
         }
         switch (selected) {
@@ -682,15 +710,15 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //}}}
     //{{{----------------------------- Approval table check
     approvalTableCheck: function(form) {
-        if (!form["app_table_import"]) {
+        if (!form.app_table_import) {
             return true;
         }
 
         var selected;
-        var len = form["app_table_import"].length;
+        var len = form.app_table_import.length;
         for (var i = 0; i < len; i++) {
-            if (form["app_table_import"][i].checked) {
-                selected = form["app_table_import"][i].value;
+            if (form.app_table_import[i].checked) {
+                selected = form.app_table_import[i].value;
             }
         }
         var res;
@@ -753,6 +781,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 if (icon) {
                     new Ajax.Request(this.defaultUrl + "&action=move&quick_move=" + icon, {
                         onComplete: function() {
+                            //eslint-disable-next-line no-self-assign
                             window.location.href = window.location.href;
                         }
                     });
@@ -763,10 +792,10 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
 
         // Display the pointer when the mouse is over the image (as a link does)
-        Event.observe(im, "mouseover", function(evt) {
+        Event.observe(im, "mouseover", function() {
             Element.setStyle(document.body, { cursor: "pointer" });
         });
-        Event.observe(im, "mouseout", function(evt) {
+        Event.observe(im, "mouseout", function() {
             Element.setStyle(document.body, { cursor: "default" });
         });
 
@@ -991,7 +1020,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                             .each(
                                 function(id) {
                                     if (this.docman.actionsForItem[id].canNewDocument) {
-                                        parents = this.docman.actionsForItem[id].parents;
+                                        const parents = this.docman.actionsForItem[id].parents;
                                         if (this.item_id == id || parents[this.item_id] == true) {
                                             this.docman.actionsForItem[id].canPaste = false;
                                         } else {
@@ -1076,15 +1105,14 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             class: "docman_item_option_paste",
             title: this.docman.options.language.action_paste
         });
-        var title_txt = document.createTextNode(this.docman.options.language.action_paste);
         a.appendChild(title_txt);
 
-        spanCancel = Builder.node("span", {
+        const spanCancel = Builder.node("span", {
             style: "width:100%; align: right; vertical-align: middle;"
         });
         spanCancel.appendChild(this._getCancelPaste());
 
-        li = this._createLi(a);
+        const li = this._createLi(a);
         li.appendChild(spanCancel);
         return li;
     },
@@ -1129,10 +1157,10 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
 
         // Display the pointer when the mouse is over the image (as a link does)
-        Event.observe(im, "mouseover", function(evt) {
+        Event.observe(im, "mouseover", function() {
             Element.setStyle(document.body, { cursor: "pointer" });
         });
-        Event.observe(im, "mouseout", function(evt) {
+        Event.observe(im, "mouseout", function() {
             Element.setStyle(document.body, { cursor: "default" });
         });
 
@@ -1263,22 +1291,30 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         // History
         ul.appendChild(this._getHistory());
         // Permissions
-        if (this.docman.actionsForItem[this.item_id].canPermissions)
+        if (this.docman.actionsForItem[this.item_id].canPermissions) {
             ul.appendChild(this._getPermissions());
+        }
         // Approval table
-        if (this.docman.actionsForItem[this.item_id].canApproval)
+        if (this.docman.actionsForItem[this.item_id].canApproval) {
             ul.appendChild(this._getApproval());
+        }
 
         ul.appendChild(this._getSeparator());
 
         // Move
-        if (this.docman.actionsForItem[this.item_id].canMove) ul.appendChild(this._getMove());
+        if (this.docman.actionsForItem[this.item_id].canMove) {
+            ul.appendChild(this._getMove());
+        }
         // Cut
-        if (this.docman.actionsForItem[this.item_id].canCut) ul.appendChild(this._getCut());
+        if (this.docman.actionsForItem[this.item_id].canCut) {
+            ul.appendChild(this._getCut());
+        }
         // Copy
         ul.appendChild(this._getCopy());
         // Paste
-        if (this.docman.actionsForItem[this.item_id].canPaste) ul.appendChild(this._getPaste());
+        if (this.docman.actionsForItem[this.item_id].canPaste) {
+            ul.appendChild(this._getPaste());
+        }
 
         ul.appendChild(this._getSeparator());
 
@@ -1330,7 +1366,10 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     }
 });
 
-if (!init_obsolescence_date) var init_obsolescence_date = -1;
+if (!init_obsolescence_date) {
+    var init_obsolescence_date = -1;
+}
+//eslint-disable-next-line no-unused-vars
 function change_obsolescence_date(form) {
     // Find selected value
     var element = form.validity;
@@ -1345,6 +1384,7 @@ function change_obsolescence_date(form) {
 
     // Compute new date
     var newdatestr = "";
+    var today, newDate;
     switch (selected) {
         case "0":
             break;
@@ -1358,24 +1398,16 @@ function change_obsolescence_date(form) {
             break;
 
         case "200":
-            var today = new Date();
-            var newDate = new Date(
-                today.getFullYear(),
-                today.getMonth(),
-                today.getDate(),
-                0,
-                0,
-                0,
-                0
-            );
+            today = new Date();
+            newDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
             newdatestr =
                 newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
             break;
 
         default:
-            var today = new Date();
-            var newDateMonth = parseInt(selected) + today.getMonth();
-            var newDate = new Date(today.getFullYear(), newDateMonth, today.getDate(), 0, 0, 0, 0);
+            today = new Date();
+            var newDateMonth = parseInt(selected, 10) + today.getMonth();
+            newDate = new Date(today.getFullYear(), newDateMonth, today.getDate(), 0, 0, 0, 0);
             newdatestr =
                 newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
     }

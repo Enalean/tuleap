@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly jQuery:readonly lightwindow:readonly */
+
 /**
  * This script is responsible for the edition of cards directly
  * on the Agile Dashboard.
@@ -102,7 +104,6 @@ tuleap.cardwall = tuleap.cardwall || {};
                 event.preventDefault();
 
                 var artifact_id = $(this).attr("data-artifact-id");
-                var callback;
 
                 if (tuleap.browserCompatibility.isIE7()) {
                     displayIframeOverlay(event, $(this));

@@ -17,6 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global
+    $:readonly
+    Draggable:readonly
+    $F:readonly
+    Droppables:readonly
+    $$:readonly
+    tuleap:readonly
+    codendi:readonly
+    Ajax:readonly
+*/
+
 /**
  * This script manage the update of the cardwall (drag'n drop of card, edit of
  * fields, etc).
@@ -71,15 +82,16 @@ document.observe("dom:loaded", function() {
                         current_td = tr.down("td.cardwall-cell", col_index),
                         accept_class = "drop-into-" + swimline_id + "-" + value_id;
 
-                    tr.childElements()
-                        [col_index].select(".cardwall_board_postit")
+                    const child_elements = tr.childElements();
+                    child_elements[col_index]
+                        .select(".cardwall_board_postit")
                         .invoke("removeClassName", accept_class);
 
                     Droppables.add(current_td, {
                         hoverclass: "cardwall_board_column_hover",
                         accept: accept_class,
 
-                        onDrop: function(dragged, dropped, event) {
+                        onDrop: function(dragged) {
                             var value_id = col.id.split("-")[1],
                                 new_column = dragged
                                     .up("tr")
@@ -190,7 +202,7 @@ document.observe("dom:loaded", function() {
                 .each(registerTextFieldEvents);
 
             function registerTextFieldEvents(text_field) {
-                text_field.observe("keyup", function(evt) {
+                text_field.observe("keyup", function() {
                     onUpdate(text_field);
                 });
             }
@@ -232,7 +244,7 @@ document.observe("dom:loaded", function() {
                 return searchable_content_list.find(function(searchable_content) {
                     var text;
                     if (searchable_content.innerText !== undefined) {
-                        // Yay IE Family!
+                        // Yay IE Family!
                         text = searchable_content.innerText;
                     } else {
                         text = searchable_content.textContent;
@@ -263,7 +275,6 @@ document.observe("dom:loaded", function() {
         (function stackCards() {
             var stacked_classname = "cardwall-cell-stacked";
 
-            var columns_to_stack_index = [];
             $$(".cardwall_board th").each(function(th) {
                 var toggle_input = th.down(".cardwall-auto-stack-toggle"),
                     cell_index = th.cellIndex,
@@ -273,7 +284,7 @@ document.observe("dom:loaded", function() {
                     return;
                 }
 
-                toggle_input.observe("click", function(evt) {
+                toggle_input.observe("click", function() {
                     var toggle = toggle_input.checked ? "addClassName" : "removeClassName";
                     $$(cells_in_column).invoke(toggle, stacked_classname);
 
@@ -291,7 +302,7 @@ document.observe("dom:loaded", function() {
             $$(".cardwall-cell-controls-stack").each(function(icon_resize) {
                 var td = icon_resize.up("td");
 
-                icon_resize.observe("click", function(evt) {
+                icon_resize.observe("click", function() {
                     td.toggleClassName(stacked_classname);
                 });
             });

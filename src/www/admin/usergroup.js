@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/* global $:readonly $F:readonly codendi:readonly tuleap:readonly */
+
 /**
  * Observe default values set for each form field. If user changes the value,
  * displays the original value right after the form element.
@@ -33,10 +35,11 @@ document.observe("dom:loaded", function() {
     form.getElements().each(function(elt) {
         // Get inital value
         var span = new Element("span", { class: "highlight" });
+        var txt;
         if (elt.tagName.toUpperCase() == "SELECT") {
-            var txt = elt.options[elt.selectedIndex].text;
+            txt = elt.options[elt.selectedIndex].text;
         } else {
-            var txt = $F(elt);
+            txt = $F(elt);
         }
         span.update(tuleap.escaper.html(txt));
         var container = new Element("span", { style: "margin-left: 1em;" });
@@ -48,10 +51,11 @@ document.observe("dom:loaded", function() {
         // When something change display original value if the new value is
         // different.
         var displaySpan = function() {
+            var value;
             if (elt.tagName.toUpperCase() == "SELECT") {
-                var value = elt.options[elt.selectedIndex].text;
+                value = elt.options[elt.selectedIndex].text;
             } else {
-                var value = $F(elt);
+                value = $F(elt);
             }
             if (value != span.textContent) {
                 container.show();

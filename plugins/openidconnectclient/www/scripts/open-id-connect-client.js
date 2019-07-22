@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tlp:readonly */
+
 !(function($) {
     function formatOptionIcon(option) {
         return $('<i class="fa fa-' + option.id + '"></i>');

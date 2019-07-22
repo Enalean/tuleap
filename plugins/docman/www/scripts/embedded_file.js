@@ -15,11 +15,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 var codendi = codendi || {};
 
 (function($, codendi) {
     $(document).ready(function() {
         var embedded_content = $("#embedded_content"),
+            //eslint-disable-next-line no-unused-vars
             rte = null,
             options = null;
 

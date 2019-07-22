@@ -101,25 +101,6 @@
         }
     }
 
-    function checkMirrorIfNeeded(mirror_id) {
-        var check_mirror = true;
-
-        $("[data-mirror-id=" + mirror_id + "]").each(function() {
-            if (!$(this).is(":checked")) {
-                check_mirror = false;
-            }
-        });
-
-        $(".checkall-mirror[value=" + mirror_id + "]").prop("checked", check_mirror);
-    }
-
-    function checkRepositoryIfNeeded(repository_id) {
-        var check_repository =
-            $("[data-repository-id=" + repository_id + "]:not(:checked)").length === 0;
-
-        $(".checkall-repository[value=" + repository_id + "]").prop("checked", check_repository);
-    }
-
     function updateRepositoriesCheckboxesState(state) {
         $(".repository-ids").prop("checked", state);
     }

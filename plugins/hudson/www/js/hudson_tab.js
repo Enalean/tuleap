@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 (function($) {
-    toggle_addurlform = function() {
+    window.toggle_addurlform = function() {
         $("#hudson_add_job").slideToggle(300);
     };
 })(jQuery);
