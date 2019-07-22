@@ -17,6 +17,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+/* global tlp:readonly */
+
 (function() {
     "use strict";
 
@@ -37,7 +40,7 @@
         [].forEach.call(modal_buttons, function(button) {
             var modal_element = document.getElementById(button.dataset.modalId);
             if (!modal_element) {
-                throw "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'";
+                throw new Error("Bad reference to an unknown modal element: '" + button.dataset.modalId + "'");
             }
 
             var modal = tlp.modal(modal_element);
