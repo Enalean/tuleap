@@ -70,7 +70,8 @@ export {
     putEmbeddedFileMetadata,
     putLinkMetadata,
     putWikiMetadata,
-    putEmptyDocumentMetadata
+    putEmptyDocumentMetadata,
+    putFolderDocumentMetadata
 };
 
 async function getProject(project_id) {
@@ -576,6 +577,21 @@ function putWikiMetadata(id, title, description, owner_id, status, obsolescence_
 
 function putEmptyDocumentMetadata(id, title, description, owner_id, status, obsolescence_date) {
     return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title,
+            description,
+            owner_id,
+            status,
+            obsolescence_date
+        })
+    });
+}
+
+function putFolderDocumentMetadata(id, title, description, owner_id, status, obsolescence_date) {
+    return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
         },

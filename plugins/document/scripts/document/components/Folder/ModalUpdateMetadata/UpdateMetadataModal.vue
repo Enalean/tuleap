@@ -24,9 +24,9 @@
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
-            <document-global-metadata v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update" v-bind:is-in-update-context="true">
+            <document-global-metadata-for-update v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update">
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
-            </document-global-metadata>
+            </document-global-metadata-for-update>
 
             <other-information-metadata v-bind:currently-updated-item="item_to_update">
                 <obsolescence-date-metadata-obsolete-today-option/>
@@ -46,7 +46,7 @@ import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import DocumentGlobalMetadata from "../Metadata/DocumentMetadata/DocumentGlobalMetadata.vue";
+import DocumentGlobalMetadataForUpdate from "../Metadata/DocumentMetadata/DocumentGlobalMetadataForUpdate.vue";
 import OtherInformationMetadata from "../Metadata/DocumentMetadata/OtherInformationMetadata.vue";
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
@@ -60,7 +60,7 @@ export default {
         ModalFeedback,
         OwnerMetadata,
         OtherInformationMetadata,
-        DocumentGlobalMetadata,
+        DocumentGlobalMetadataForUpdate,
         ModalHeader,
         ModalFooter
     },

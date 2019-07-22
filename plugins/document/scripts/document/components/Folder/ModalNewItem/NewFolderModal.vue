@@ -23,7 +23,7 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
-            <folder-global-metadata v-bind:currently-updated-item="item" v-bind:parent="parent" v-bind:is-in-update-context="false"/>
+            <folder-global-metadata-for-create v-bind:currently-updated-item="item" v-bind:parent="parent"/>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -36,13 +36,13 @@ import { DOCMAN_ITEM_STATUS_NONE, TYPE_FOLDER } from "../../../constants.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import FolderGlobalMetadata from "../Metadata/FolderMetadata/FolderGlobalMetadata.vue";
 import EventBus from "../../../helpers/event-bus.js";
+import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
 
 export default {
     name: "NewFolderModal",
     components: {
-        FolderGlobalMetadata,
+        FolderGlobalMetadataForCreate,
         ModalFeedback,
         ModalHeader,
         ModalFooter
