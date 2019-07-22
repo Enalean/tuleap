@@ -18,6 +18,12 @@
  */
 
 import {
+    moveEmbedded,
+    moveEmpty,
+    moveFolder,
+    moveLink,
+    moveWiki,
+    moveFile,
     copyEmbedded,
     copyEmpty,
     copyFolder,
@@ -31,9 +37,11 @@ import {
     TYPE_FILE,
     TYPE_FOLDER,
     TYPE_LINK,
-    TYPE_WIKI
+    TYPE_WIKI,
+    CLIPBOARD_OPERATION_CUT,
+    CLIPBOARD_OPERATION_COPY
 } from "../../constants.js";
-import { adjustItemToContentAfterItemCreation } from "../actions-helpers/adjust-item-to-content-after-item-creation.js";
+import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 import { handleErrors } from "../actions-helpers/handle-errors.js";
 
 export const pasteItem = async (context, [destination_folder, current_folder, global_context]) => {
@@ -42,39 +50,70 @@ export const pasteItem = async (context, [destination_folder, current_folder, gl
     }
     context.commit("startPasting");
     try {
-        let item_reference;
-        switch (context.state.item_type) {
-            case TYPE_FILE:
-                item_reference = await copyFile(context.state.item_id, destination_folder.id);
+        let pasted_item_id;
+        switch (context.state.operation_type) {
+            case CLIPBOARD_OPERATION_CUT:
+                await pasteItemBeingMoved(context, destination_folder);
+                pasted_item_id = context.state.item_id;
                 break;
-            case TYPE_FOLDER:
-                item_reference = await copyFolder(context.state.item_id, destination_folder.id);
-                break;
-            case TYPE_EMPTY:
-                item_reference = await copyEmpty(context.state.item_id, destination_folder.id);
-                break;
-            case TYPE_WIKI:
-                item_reference = await copyWiki(context.state.item_id, destination_folder.id);
-                break;
-            case TYPE_EMBEDDED:
-                item_reference = await copyEmbedded(context.state.item_id, destination_folder.id);
-                break;
-            case TYPE_LINK:
-                item_reference = await copyLink(context.state.item_id, destination_folder.id);
+            case CLIPBOARD_OPERATION_COPY:
+                pasted_item_id = (await pasteItemBeingCopied(context, destination_folder)).id;
                 break;
             default:
                 context.commit("emptyClipboard");
-                throw new Error("Cannot copy unknown item type " + context.state.item_type);
+                throw new Error(
+                    "Cannot paste from an unknown operation " + context.state.item_type
+                );
         }
         context.commit("emptyClipboard");
-        return adjustItemToContentAfterItemCreation(
+        adjustItemToContentAfterItemCreationInAFolder(
             global_context,
             destination_folder,
             current_folder,
-            item_reference.id
+            pasted_item_id
         );
     } catch (exception) {
         context.commit("pastingHasFailed");
-        return handleErrors(global_context, exception);
+        handleErrors(global_context, exception);
     }
 };
+
+function pasteItemBeingMoved(context, destination_folder) {
+    switch (context.state.item_type) {
+        case TYPE_FILE:
+            return moveFile(context.state.item_id, destination_folder.id);
+        case TYPE_FOLDER:
+            return moveFolder(context.state.item_id, destination_folder.id);
+        case TYPE_EMPTY:
+            return moveEmpty(context.state.item_id, destination_folder.id);
+        case TYPE_WIKI:
+            return moveWiki(context.state.item_id, destination_folder.id);
+        case TYPE_EMBEDDED:
+            return moveEmbedded(context.state.item_id, destination_folder.id);
+        case TYPE_LINK:
+            return moveLink(context.state.item_id, destination_folder.id);
+        default:
+            context.commit("emptyClipboard");
+            throw new Error("Cannot copy unknown item type " + context.state.item_type);
+    }
+}
+
+function pasteItemBeingCopied(context, destination_folder) {
+    switch (context.state.item_type) {
+        case TYPE_FILE:
+            return copyFile(context.state.item_id, destination_folder.id);
+        case TYPE_FOLDER:
+            return copyFolder(context.state.item_id, destination_folder.id);
+        case TYPE_EMPTY:
+            return copyEmpty(context.state.item_id, destination_folder.id);
+        case TYPE_WIKI:
+            return copyWiki(context.state.item_id, destination_folder.id);
+        case TYPE_EMBEDDED:
+            return copyEmbedded(context.state.item_id, destination_folder.id);
+        case TYPE_LINK:
+            return copyLink(context.state.item_id, destination_folder.id);
+        default:
+            context.commit("emptyClipboard");
+            throw new Error("Cannot copy unknown item type " + context.state.item_type);
+    }
+}

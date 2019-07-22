@@ -94,6 +94,14 @@ final class DocmanItemMover
             );
         }
 
+        $item_to_move_id = $item_to_move->getId();
+        if (! $this->permissions_manager->userCanWrite($user, $item_to_move_id)) {
+            throw new RestException(
+                403,
+                sprintf('You does not have the right to move item #%d', $item_to_move_id)
+            );
+        }
+
         if (! $destination_folder instanceof Docman_Folder) {
             throw new RestException(
                 400,
@@ -121,7 +129,7 @@ final class DocmanItemMover
             throw new RuntimeException(
                 sprintf(
                     'Something unexpected has happened during the move of #%d into #%d',
-                    $item_to_move->getId(),
+                    $item_to_move_id,
                     $destination_item_id
                 )
             );

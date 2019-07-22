@@ -89,6 +89,7 @@ final class DocmanItemMoverTest extends TestCase
         $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(true);
 
         $item_to_move = Mockery::mock(Docman_Item::class);
+        $item_to_move->shouldReceive('getId')->andReturn(123);
         $item_to_move->shouldReceive('getGroupId')->andReturn(102);
         $destination_folder->shouldReceive('getGroupId')->andReturn(102);
         $item_to_move->shouldReceive('getParentId')->andReturn(146);
@@ -206,8 +207,10 @@ final class DocmanItemMoverTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->with($destination_id)->andReturn($destination);
 
         $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(true);
 
         $item_to_move = Mockery::mock(Docman_Item::class);
+        $item_to_move->shouldReceive('getId')->andReturn(123);
         $item_to_move->shouldReceive('getGroupId')->andReturn(102);
         $destination->shouldReceive('getGroupId')->andReturn(102);
         $item_to_move->shouldReceive('getParentId')->andReturn(146);
@@ -222,23 +225,27 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoAFolderTheUserCannotWrite() : void
+    public function testCannotMoveAnItemTheUserCannotWrite() : void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
+        $user = Mockery::mock(PFUser::class);
+
         $destination_folder = Mockery::mock(Docman_Folder::class);
         $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
         $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(false);
-
-        $item_to_move = Mockery::mock(Docman_Item::class);
+        $item_to_move    = Mockery::mock(Docman_Item::class);
+        $item_to_move_id = 123;
+        $item_to_move->shouldReceive('getId')->andReturn($item_to_move_id);
         $item_to_move->shouldReceive('getGroupId')->andReturn(102);
         $destination_folder->shouldReceive('getGroupId')->andReturn(102);
         $item_to_move->shouldReceive('getParentId')->andReturn(146);
+
+        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $item_to_move_id)->andReturn(false);
 
         $item_to_move->shouldReceive('accept')
             ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
@@ -248,7 +255,43 @@ final class DocmanItemMoverTest extends TestCase
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            $user,
+            $representation
+        );
+    }
+
+    public function testCannotMoveAnItemIntoAFolderTheUserCannotWrite() : void
+    {
+        $destination_folder_id                 = 147;
+        $representation                        = new DocmanMoveItemRepresentation();
+        $representation->destination_folder_id = $destination_folder_id;
+
+        $user = Mockery::mock(PFUser::class);
+
+        $destination_folder = Mockery::mock(Docman_Folder::class);
+        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
+        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+
+        $item_to_move    = Mockery::mock(Docman_Item::class);
+        $item_to_move_id = 123;
+        $item_to_move->shouldReceive('getId')->andReturn($item_to_move_id);
+        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
+        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
+        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+
+        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $item_to_move_id)->andReturn(true);
+        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $destination_folder_id)->andReturn(false);
+
+        $item_to_move->shouldReceive('accept')
+            ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->item_mover->moveItem(
+            new DateTimeImmutable(),
+            $item_to_move,
+            $user,
             $representation
         );
     }

@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
 
 describe("ClipboardContentInformation", () => {
     let store, content_information_factory;
@@ -46,10 +47,17 @@ describe("ClipboardContentInformation", () => {
 
     it(`Given there is an item in the clipboard
         Then information is displayed`, () => {
-        store.state.clipboard = { item_title: "My item" };
+        store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
 
         const wrapper = content_information_factory();
 
-        expect(wrapper.text()).toContain("My item");
+        const result_copy = wrapper.html();
+        expect(result_copy).toBeTruthy();
+
+        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        const result_cut = wrapper.html();
+        expect(result_cut).toBeTruthy();
+
+        expect(result_cut).not.toEqual(result_copy);
     });
 });

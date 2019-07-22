@@ -18,16 +18,26 @@
  */
 
 import defaultState from "./clipboard-default-state.js";
+import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
 
-export { copyItem, emptyClipboard, startPasting, pastingHasFailed };
+export { cutItem, copyItem, emptyClipboard, startPasting, pastingHasFailed };
+
+function cutItem(state, item) {
+    startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_CUT);
+}
 
 function copyItem(state, item) {
+    startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_COPY);
+}
+
+function startNewClipboardOperation(state, item, operationType) {
     if (state.pasting_in_progress) {
         return;
     }
     state.item_id = item.id;
     state.item_type = item.type;
     state.item_title = item.title;
+    state.operation_type = operationType;
 }
 
 function emptyClipboard(state) {

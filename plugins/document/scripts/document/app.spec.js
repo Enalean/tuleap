@@ -42,7 +42,7 @@ import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
 import "./components/Folder/Error/GoBackToRootButton.spec.js";
 import "./components/Folder/Error/ShowErrorDetails.spec.js";
 
-import "./components/Folder/Clipboard/ClipboardContentInformation.vue";
+import "./components/Folder/Clipboard/ClipboardContentInformation.spec.js";
 
 import "./components/Folder/FolderContentRow.spec.js";
 import "./components/Folder/FolderHeaderAction.spec.js";
@@ -59,6 +59,7 @@ import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js
 import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
 import "./components/Folder/ActionsDropDown/LockItem.spec.js";
 import "./components/Folder/ActionsDropDown/UnlockItem.spec.js";
+import "./components/Folder/ActionsDropDown/CutItem.spec.js";
 import "./components/Folder/ActionsDropDown/CopyItem.spec.js";
 import "./components/Folder/ActionsDropDown/PasteItem.spec.js";
 
@@ -111,4 +112,5 @@ import "./components/User/UserName.spec.js";
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";
 import "./helpers/approval-table-helper.spec.js";
+import "./helpers/clipboard/clipboard-helpers.spec.js";
 import "./helpers/metadata-helpers/hardcoded-metadata-mapping-helper.spec.js";

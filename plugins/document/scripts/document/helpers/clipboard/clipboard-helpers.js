@@ -14,15 +14,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-export default () => {
-    return {
-        item_id: null,
-        item_title: null,
-        item_type: null,
-        operation_type: null,
-        pasting_in_progress: false
-    };
-};
+export function isItemDestinationIntoItself(folder_content, item_id, destination_id) {
+    if (destination_id === item_id) {
+        return true;
+    }
+
+    const destination_item = folder_content.find(({ id }) => id === destination_id);
+    if (!destination_item || destination_item.id === 0) {
+        return false;
+    }
+
+    return isItemDestinationIntoItself(folder_content, item_id, destination_item.parent_id);
+}

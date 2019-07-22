@@ -40,6 +40,12 @@ export {
     addNewWiki,
     addNewEmbedded,
     addNewLink,
+    moveFile,
+    moveFolder,
+    moveEmpty,
+    moveWiki,
+    moveEmbedded,
+    moveLink,
     copyFile,
     copyFolder,
     copyEmpty,
@@ -141,6 +147,50 @@ function addNewFolder(item, parent_id) {
         "/api/docman_folders/" + encodeURIComponent(parent_id) + "/folders",
         item
     );
+}
+
+async function moveDocumentType(url, destination_folder_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        move: {
+            destination_folder_id: destination_folder_id
+        }
+    });
+
+    await patch(url, { headers, body });
+}
+
+function moveFile(moved_item_id, parent_id) {
+    return moveDocumentType("/api/docman_files/" + encodeURIComponent(moved_item_id), parent_id);
+}
+
+function moveEmpty(moved_item_id, parent_id) {
+    return moveDocumentType(
+        "/api/docman_empty_documents/" + encodeURIComponent(moved_item_id),
+        parent_id
+    );
+}
+
+function moveEmbedded(moved_item_id, parent_id) {
+    return moveDocumentType(
+        "/api/docman_embedded_files/" + encodeURIComponent(moved_item_id),
+        parent_id
+    );
+}
+
+function moveWiki(moved_item_id, parent_id) {
+    return moveDocumentType("/api/docman_wikis/" + encodeURIComponent(moved_item_id), parent_id);
+}
+
+function moveLink(moved_item_id, parent_id) {
+    return moveDocumentType("/api/docman_links/" + encodeURIComponent(moved_item_id), parent_id);
+}
+
+function moveFolder(moved_item_id, parent_id) {
+    return moveDocumentType("/api/docman_folders/" + encodeURIComponent(moved_item_id), parent_id);
 }
 
 async function copyDocumentType(url, copied_item_id) {

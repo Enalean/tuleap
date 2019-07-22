@@ -77,7 +77,7 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { adjustItemToContentAfterItemCreation } from "./actions-helpers/adjust-item-to-content-after-item-creation.js";
+import { adjustItemToContentAfterItemCreationInAFolder } from "./actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 import { buildItemPath } from "./actions-helpers/build-parent-paths.js";
 import {
     TYPE_EMBEDDED,
@@ -130,7 +130,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_FOLDER:
                 item_reference = await addNewFolder(item, parent.id);
 
-                return adjustItemToContentAfterItemCreation(
+                return adjustItemToContentAfterItemCreationInAFolder(
                     context,
                     parent,
                     current_folder,
@@ -139,7 +139,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_EMPTY:
                 item_reference = await addNewEmpty(item, parent.id);
 
-                return adjustItemToContentAfterItemCreation(
+                return adjustItemToContentAfterItemCreationInAFolder(
                     context,
                     parent,
                     current_folder,
@@ -148,7 +148,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_WIKI:
                 item_reference = await addNewWiki(item, parent.id);
 
-                return adjustItemToContentAfterItemCreation(
+                return adjustItemToContentAfterItemCreationInAFolder(
                     context,
                     parent,
                     current_folder,
@@ -157,7 +157,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_EMBEDDED:
                 item_reference = await addNewEmbedded(item, parent.id);
 
-                return adjustItemToContentAfterItemCreation(
+                return adjustItemToContentAfterItemCreationInAFolder(
                     context,
                     parent,
                     current_folder,
@@ -166,7 +166,7 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
             case TYPE_LINK:
                 item_reference = await addNewLink(item, parent.id);
 
-                return adjustItemToContentAfterItemCreation(
+                return adjustItemToContentAfterItemCreationInAFolder(
                     context,
                     parent,
                     current_folder,
