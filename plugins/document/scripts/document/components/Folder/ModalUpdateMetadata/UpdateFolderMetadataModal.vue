@@ -84,16 +84,11 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
 
-        this.registerEvents();
-
         this.show();
     },
     methods: {
         show() {
             this.modal.show();
-        },
-        registerEvents() {
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         reset() {
             this.modal.hide();
