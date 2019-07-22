@@ -366,10 +366,11 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         }
 
         $user_collection = $this->user_importer->parse($project->getID(), $import_file);
+        if ($user_collection) {
+            $this->user_importer->updateDB($project, $user_collection);
+            $this->user_group_bindings->reloadUgroupBindingInProject($project);
+        }
 
-        $this->user_importer->updateDB($project->getID(), $user_collection->getUsers());
-
-        $this->user_group_bindings->reloadUgroupBindingInProject($project);
     }
 
     private function canUserSeeUGroups(PFUser $user, Project $project)

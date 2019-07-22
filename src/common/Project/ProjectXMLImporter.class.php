@@ -25,6 +25,7 @@ use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -81,6 +82,10 @@ class ProjectXMLImporter
      * @var SynchronizedProjectMembershipDao
      */
     private $synchronized_project_membership_dao;
+    /**
+     * @var ProjectMemberAdder
+     */
+    private $project_member_adder;
 
     public function __construct(
         EventManager $event_manager,
@@ -92,7 +97,8 @@ class ProjectXMLImporter
         ServiceManager $service_manager,
         Logger $logger,
         FRSPermissionCreator $frs_permissions_creator,
-        UserRemover $user_remover,
+        UserRemover $project_member_remover,
+        ProjectMemberAdder $project_member_adder,
         ProjectCreator $project_creator,
         UploadedLinksUpdater $uploaded_links_updater,
         ProjectDashboardXMLImporter $dashboard_importer,
@@ -107,7 +113,8 @@ class ProjectXMLImporter
         $this->logger                              = $logger;
         $this->service_manager                     = $service_manager;
         $this->frs_permissions_creator             = $frs_permissions_creator;
-        $this->user_remover                        = $user_remover;
+        $this->user_remover                        = $project_member_remover;
+        $this->project_member_adder                = $project_member_adder;
         $this->project_creator                     = $project_creator;
         $this->uploaded_links_updater              = $uploaded_links_updater;
         $this->dashboard_importer                  = $dashboard_importer;
@@ -358,11 +365,7 @@ class ProjectXMLImporter
     {
         $this->logger->info("Add user {$user->getUserName()} to project.");
 
-        $check_user_status  = false;
-        $send_notifications = false;
-        if (! account_add_user_obj_to_group($project->getID(), $user, $check_user_status, $send_notifications)) {
-            $this->logger->info("User is already member");
-        }
+        $this->project_member_adder->addProjectMember($user, $project);
     }
 
     private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)

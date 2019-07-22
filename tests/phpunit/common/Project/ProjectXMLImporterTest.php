@@ -25,6 +25,7 @@ declare(strict_types=1);
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
@@ -117,6 +118,7 @@ class ProjectXMLImporterTest extends TestCase
             $this->logger,
             $frs_permissions_creator,
             $user_removal,
+            M::mock(ProjectMemberAdder::class),
             $project_creator,
             M::spy(\Tuleap\FRS\UploadedLinksUpdater::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardXMLImporter::class),

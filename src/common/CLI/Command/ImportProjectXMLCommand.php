@@ -300,6 +300,9 @@ class ImportProjectXMLCommand extends Command
                     new ProjectHistoryDao(),
                     new UGroupManager()
                 ),
+                new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+                    $ugroup_binding
+                ),
                 $project_creator,
                 new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
                 new ProjectDashboardXMLImporter(

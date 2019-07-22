@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\User\UserImportCollection;
 
 class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -34,11 +35,16 @@ class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * @var UserHelper
      */
     private $user_helper;
+    /**
+     * @var ProjectMemberAdder
+     */
+    private $project_member_adder;
 
-    public function __construct(UserManager $user_manager, UserHelper $user_helper)
+    public function __construct(UserManager $user_manager, UserHelper $user_helper, ProjectMemberAdder $project_member_adder)
     {
-        $this->user_manager    = $user_manager;
-        $this->user_helper = $user_helper;
+        $this->user_manager         = $user_manager;
+        $this->user_helper          = $user_helper;
+        $this->project_member_adder = $project_member_adder;
     }
 
     public function parse(int $project_id, $user_filename)
@@ -87,17 +93,10 @@ class UserImport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $user_collection;
     }
 
-    public function updateDB(int $project_id, array $parsed_users)
+    public function updateDB(Project $project, UserImportCollection $user_collection)
     {
-        include_once __DIR__ . '/../../www/include/account.php';
-
-        $res                = true;
-        $send_notifications = true;
-        $check_user_status  = true;
-
-        foreach ($parsed_users as $user) {
-            $res &= account_add_user_obj_to_group($project_id, $user, $check_user_status, $send_notifications);
+        foreach ($user_collection->getUsers() as $user) {
+            $this->project_member_adder->addProjectMember($user, $project);
         }
-        return $res;
     }
 }

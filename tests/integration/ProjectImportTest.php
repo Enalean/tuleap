@@ -189,6 +189,7 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('ProjectHistoryDao'),
                 mock('UGroupManager')
             ),
+            Mockery::spy(\Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder::class),
             $project_creator,
             mock('Tuleap\FRS\UploadedLinksUpdater'),
             mock('Tuleap\Dashboard\Project\ProjectDashboardXMLImporter'),
