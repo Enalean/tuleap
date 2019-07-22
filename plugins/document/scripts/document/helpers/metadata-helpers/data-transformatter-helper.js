@@ -30,3 +30,37 @@ export function transformFolderMetadataForRecursionAtUpdate(item) {
 
     return folder_to_update;
 }
+
+export function transformItemMetadataForCreation(
+    document_to_create,
+    parent,
+    is_item_status_metadata_used
+) {
+    if (!is_item_status_metadata_used) {
+        return;
+    }
+
+    const metadata = getStatusMetadata(parent.metadata);
+    updateItemMetadata(metadata, document_to_create);
+}
+
+export function transformDocumentMetadataForUpdate(
+    document_to_update,
+    is_item_status_metadata_used
+) {
+    if (!is_item_status_metadata_used) {
+        return;
+    }
+
+    const metadata = getStatusMetadata(document_to_update.metadata);
+    updateItemMetadata(metadata, document_to_update);
+}
+
+function updateItemMetadata(metadata, item) {
+    let status = "none";
+    if (metadata.list_value[0].id) {
+        status = getStatusFromMapping(metadata.list_value[0].id);
+    }
+
+    item.status = status;
+}

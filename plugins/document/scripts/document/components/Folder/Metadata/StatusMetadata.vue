@@ -33,18 +33,10 @@
             ref="input"
             data-test="document-new-item-status"
         >
-            <option name="none" value="100">
-                <translate>None</translate>
-            </option>
-            <option name="draft" value="101">
-                <translate>Draft</translate>
-            </option>
-            <option name="approved" value="102">
-                <translate>Approved</translate>
-            </option>
-            <option name="rejected" value="103">
-                <translate>Rejected</translate>
-            </option>
+            <option name="none" value="none" v-translate>None</option>
+            <option name="draft" value="draft" v-translate>Draft</option>
+            <option name="approved" value="approved" v-translate>Approved</option>
+            <option name="rejected" value="rejected" v-translate>Rejected</option>
         </select>
     </div>
 </template>
@@ -52,7 +44,7 @@
 <script>
 export default {
     props: {
-        value: Number
+        value: String
     }
 };
 </script>

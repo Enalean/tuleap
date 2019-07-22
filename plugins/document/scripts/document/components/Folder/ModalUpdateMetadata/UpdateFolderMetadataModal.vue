@@ -44,7 +44,7 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlobalMetadataForUpdate.vue";
-import { transformFolderMetadataForRecursionAtUpdate } from "../../../helpers/metadata-helpers/update-data-transformatter-helper.js";
+import { transformFolderMetadataForRecursionAtUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "UpdateFolderMetadataModal",

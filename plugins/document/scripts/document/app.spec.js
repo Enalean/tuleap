@@ -27,7 +27,7 @@ import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
 import "./helpers/metadata-helpers/check-item-title.spec.js";
-import "./helpers/metadata-helpers/update-data-transformatter-helper.spec.js";
+import "./helpers/metadata-helpers/data-transformatter-helper.spec.js";
 
 import "./store/error/error-mutations.spec.js";
 import "./store/error/error-getters.js";

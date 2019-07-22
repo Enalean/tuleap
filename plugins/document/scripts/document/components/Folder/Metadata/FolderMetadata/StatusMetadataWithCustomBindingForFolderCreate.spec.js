@@ -27,7 +27,10 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
     let status_metadata, state, store;
     beforeEach(() => {
         state = {
-            is_item_status_metadata_used: false
+            is_item_status_metadata_used: false,
+            current_folder: {
+                id: 4
+            }
         };
 
         const store_options = { state };
@@ -49,6 +52,19 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
                 status: 100,
                 type: TYPE_FILE,
                 title: "title"
+            },
+            parent: {
+                id: 40,
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103
+                            }
+                        ]
+                    }
+                ]
             }
         });
 
@@ -62,9 +78,21 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
     it(`It does not display status if property is not available`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
-                status: 100,
                 type: TYPE_FILE,
                 title: "title"
+            },
+            parent: {
+                id: 40,
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103
+                            }
+                        ]
+                    }
+                ]
             }
         });
 
@@ -73,6 +101,33 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
         expect(
             wrapper.contains("[data-test=document-status-metadata-for-item-create]")
         ).toBeFalsy();
+        expect(wrapper.vm.status_value).toEqual(undefined);
+    });
+
+    it(`Status is inherit from current folder`, () => {
+        const wrapper = status_metadata({
+            currentlyUpdatedItem: {
+                type: TYPE_FILE,
+                title: "title"
+            },
+            parent: {
+                id: 40,
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        store.state.is_item_status_metadata_used = true;
+
+        expect(wrapper.vm.status_value).toEqual("rejected");
     });
 
     it(`Given status value is updated Then the props used for document creation is updated`, () => {
@@ -91,12 +146,25 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
                 status: 100,
                 type: TYPE_FILE,
                 title: "title"
+            },
+            parent: {
+                id: 40,
+                metadata: [
+                    {
+                        short_name: "status",
+                        list_value: [
+                            {
+                                id: 103
+                            }
+                        ]
+                    }
+                ]
             }
         });
 
         store.state.is_item_status_metadata_used = true;
 
-        wrapper.vm.status_value = 102;
+        wrapper.vm.status_value = "approved";
 
         expect(wrapper.vm.currentlyUpdatedItem.status).toEqual("approved");
     });
