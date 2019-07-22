@@ -63,6 +63,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             expect(label_element.text()).toBe("Validity");
         });
     });
+
     describe(`List type metadata `, () => {
         it(`Given a list value with several value
              Then it displays the list value in a ul tag`, () => {
@@ -103,128 +104,53 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             expect(wrapper.find("p").text()).toBe("value 1");
         });
     });
-    describe("Date type metadata", () => {
-        it(`Given a date
-        Then it displays the formatted date`, () => {
-            const metadata_date = {
+
+    describe("Metadata simple string value", () => {
+        it(`Given text type value
+    Then it displays the value`, () => {
+            const metadata_string = {
                 id: 100,
-                name: "original date",
-                type: "date",
-                list_value: null,
-                value: "2019-08-02",
-                post_processed_value: "2019-08-02"
-            };
-            store.state.date_time_format = "d/m/Y H:i";
-
-            const wrapper = metadata_factory(metadata_date);
-            expect(wrapper.contains("ul")).toBeFalsy();
-            expect(wrapper.contains("[data-test=metadata-list-date]")).toBeTruthy();
-            expect(
-                wrapper.find("[data-tlp-tooltip]").element.getAttribute("data-tlp-tooltip")
-            ).toBe("02/08/2019 00:00");
-            expect(wrapper.text()).not.toEqual("Empty");
-            expect(wrapper.text()).not.toEqual("Permanent");
-            expect(wrapper.text()).not.toEqual(metadata_date.value);
-        });
-        it(`Given a date without value
-        Then it displays it as empty`, () => {
-            const metadata_date = {
-                id: 100,
-                name: "original date",
-                type: "date",
-                list_value: null,
-                value: null,
-                post_processed_value: null
-            };
-
-            const wrapper = metadata_factory(metadata_date);
-            const displayed_metadata = wrapper.find("[id=document-original-date]");
-            expect(displayed_metadata.text()).toEqual("Empty");
-        });
-        it(`Given an obsolescence date
-        Then it displays the formatted date like a regular date type metadata`, () => {
-            const metadata_date = {
-                id: 100,
-                name: "Obsolescence Date",
-                type: "date",
-                list_value: null,
-                value: "2019-08-02",
-                post_processed_value: "2019-08-02"
-            };
-            store.state.date_time_format = "d/m/Y H:i";
-
-            const wrapper = metadata_factory(metadata_date);
-
-            expect(wrapper.contains("ul")).toBeFalsy();
-            expect(wrapper.contains("[data-test=metadata-list-date]")).toBeTruthy();
-            expect(
-                wrapper.find("[data-tlp-tooltip]").element.getAttribute("data-tlp-tooltip")
-            ).toBe("02/08/2019 00:00");
-            expect(wrapper.text()).not.toEqual("Empty");
-            expect(wrapper.text()).not.toEqual("Permanent");
-            expect(wrapper.text()).not.toEqual(metadata_date.value);
-        });
-        it(`Given an obsolescence date without value
-        Then it displays it as permanent`, () => {
-            const metadata_date = {
-                id: 100,
-                short_name: "obsolescence_date",
-                name: "Obsolescence Date",
-                type: "date",
-                list_value: null,
-                value: null,
-                post_processed_value: null
-            };
-
-            const wrapper = metadata_factory(metadata_date);
-            const displayed_metadata = wrapper.find("[id=document-obsolescence-date]");
-            expect(displayed_metadata.text()).toEqual("Permanent");
-        });
-        describe("Metadata simple string value", () => {
-            it(`Given text type value
-        Then it displays the value`, () => {
-                const metadata_string = {
-                    id: 100,
-                    name: "Bad lyrics",
-                    type: "text",
-                    list_value: null,
-                    value: "The mer-custo wants ref #1 that ... mmmmmh, mmmmh ...",
-                    post_processed_value:
-                        'The mer-custo wants <a href="https://example.com/goto">ref #1</a> that ... mmmmmh, mmmmh ...'
-                };
-
-                const wrapper = metadata_factory(metadata_string);
-
-                const displayed_metadata = wrapper.find("[id=document-bad-lyrics]");
-
-                expect(wrapper.contains("ul")).toBeFalsy();
-                expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
-                expect(displayed_metadata).toBeTruthy();
-                expect(displayed_metadata.text()).toEqual(metadata_string.value);
-                expect(displayed_metadata.html()).toContain(metadata_string.post_processed_value);
-            });
-        });
-        it(`Given text type empty value
-        Then it displays the value`, () => {
-            const metadata_empty = {
-                id: 100,
-                name: "silence",
+                name: "Bad lyrics",
+                short_name: "bad-lyrics",
                 type: "text",
                 list_value: null,
-                value: "",
-                post_processed_value: ""
+                value: "The mer-custo wants ref #1 that ... mmmmmh, mmmmh ...",
+                post_processed_value:
+                    'The mer-custo wants <a href="https://example.com/goto">ref #1</a> that ... mmmmmh, mmmmh ...'
             };
 
-            const wrapper = metadata_factory(metadata_empty);
+            const wrapper = metadata_factory(metadata_string);
 
-            const displayed_metadata = wrapper.find("[id=document-silence]");
+            const displayed_metadata = wrapper.find("[id=document-bad-lyrics]");
 
             expect(wrapper.contains("ul")).toBeFalsy();
             expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
-            expect(displayed_metadata.text()).toBeTruthy();
-            expect(displayed_metadata).not.toEqual("Permanent");
-            expect(displayed_metadata.text()).toEqual("Empty");
-            expect(displayed_metadata.text()).not.toEqual(metadata_empty.value);
+            expect(displayed_metadata).toBeTruthy();
+            expect(displayed_metadata.text()).toEqual(metadata_string.value);
+            expect(displayed_metadata.html()).toContain(metadata_string.post_processed_value);
         });
+    });
+    it(`Given text type empty value
+    Then it displays the value`, () => {
+        const metadata_empty = {
+            id: 100,
+            name: "silence",
+            short_name: "silence",
+            type: "text",
+            list_value: null,
+            value: "",
+            post_processed_value: ""
+        };
+
+        const wrapper = metadata_factory(metadata_empty);
+
+        const displayed_metadata = wrapper.find("[id=document-silence]");
+
+        expect(wrapper.contains("ul")).toBeFalsy();
+        expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
+        expect(displayed_metadata.text()).toBeTruthy();
+        expect(displayed_metadata).not.toEqual("Permanent");
+        expect(displayed_metadata.text()).toEqual("Empty");
+        expect(displayed_metadata.text()).not.toEqual(metadata_empty.value);
     });
 });

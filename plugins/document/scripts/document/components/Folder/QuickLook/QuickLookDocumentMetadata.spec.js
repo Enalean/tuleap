@@ -24,13 +24,8 @@ import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 import localVue from "../../../helpers/local-vue.js";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 
-import {
-    rewire$formatDateUsingPreferredUserFormat,
-    restore
-} from "../../../helpers/date-formatter.js";
-
 describe("QuickLookDocumentMetadata", () => {
-    let metadata_factory, store, formatDateUsingPreferredUserFormat;
+    let metadata_factory, store;
 
     beforeEach(() => {
         store = new Vuex.Store();
@@ -43,14 +38,7 @@ describe("QuickLookDocumentMetadata", () => {
             });
         };
 
-        formatDateUsingPreferredUserFormat = jasmine.createSpy(
-            "formatDateUsingPreferredUserFormat"
-        );
-        rewire$formatDateUsingPreferredUserFormat(formatDateUsingPreferredUserFormat);
-    });
-
-    afterEach(() => {
-        restore();
+        store.state.date_time_format = "d/m/Y H:i";
     });
 
     it(`Given document has multiple metadata

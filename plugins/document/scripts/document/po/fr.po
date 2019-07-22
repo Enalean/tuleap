@@ -477,6 +477,9 @@ msgstr "Ce wiki a une table d'approbation, vous ne pouvez pas mettre à jour."
 msgid "Title"
 msgstr "Titre"
 
+msgid "Today"
+msgstr "Aujourd'hui"
+
 msgid "URL"
 msgstr "URL"
 
