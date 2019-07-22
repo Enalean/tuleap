@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly */
+
 (function($) {
     $(document).ready(function() {
         var field_times = document.querySelectorAll(".bot-mattermost-agiledashboard-field-time");
