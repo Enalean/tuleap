@@ -124,7 +124,7 @@ export default {
     },
     methods: {
         closeQuickLookEvent() {
-            this.$emit("closeQuickLookEvent", false);
+            this.$emit("closeQuickLookEvent");
         }
     }
 };

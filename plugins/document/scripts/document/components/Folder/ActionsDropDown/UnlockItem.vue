@@ -23,7 +23,7 @@
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-test="dropdown-menu-unlock-item"
-        v-on:click.prevent="unlockDocument"
+        v-on:click.stop.prevent="unlockDocument"
     >
         <i class="fa fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
         <translate>Unlock</translate>

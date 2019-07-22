@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -21,7 +21,6 @@
 <template>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
-            v-on:click="displayQuickLook()"
             data-test="quick-look-button"
     >
         <i class="fa fa-eye tlp-button-icon"></i>
@@ -30,16 +29,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
-    name: "QuickLookButton",
-    computed: {
-        ...mapState(["currently_previewed_item"])
-    },
-    methods: {
-        displayQuickLook() {
-            this.$emit("displayQuickLook", this.currently_previewed_item);
-        }
-    }
+    name: "QuickLookButton"
 };
 </script>

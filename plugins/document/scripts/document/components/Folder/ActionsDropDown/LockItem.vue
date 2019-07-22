@@ -23,7 +23,7 @@
         class="tlp-dropdown-menu-item"
         role="menuitem"
         data-test="dropdown-menu-lock-item"
-        v-on:click.prevent="lockDocument"
+        v-on:click.stop.prevent="lockDocument"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>Lock</translate>
