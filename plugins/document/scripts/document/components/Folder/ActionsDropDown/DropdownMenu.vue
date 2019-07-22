@@ -34,7 +34,7 @@
         <span v-if="! hideItemTitle" class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
             {{ item.title }}
         </span>
-        <a v-if="! hideDetailsEntry"
+        <a v-if="! hideDetailsEntry && item.user_can_write"
            v-on:click.stop.prevent="showUpdateModal"
            class="tlp-dropdown-menu-item"
            role="menuitem"

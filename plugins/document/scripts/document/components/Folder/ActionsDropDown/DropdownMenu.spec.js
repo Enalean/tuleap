@@ -92,14 +92,14 @@ describe("DropdownMenu", () => {
 
     it(`Given user can't write in folder
         When we display the menu
-        Then the display link should not be available`, () => {
+        Then the update properties menu should not be available`, () => {
         const wrapper = dropdown_menu_factory({
             hideDetailsEntry: true,
             item: {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                can_user_manage: false
+                user_can_write: false
             }
         });
 
@@ -108,41 +108,18 @@ describe("DropdownMenu", () => {
 
     it(`Given user is docman writer
         When we display the menu
-        Then the display link should be available`, () => {
+        Then the update properties menu should be available`, () => {
         const wrapper = dropdown_menu_factory({
             hideDetailsEntry: false,
             item: {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                can_user_manage: true
+                user_can_write: true
             }
         });
 
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
-    });
-
-    it(`Given an user who wants to update file properties
-        When we display the menu
-        Then the user should see the update properties modal`, () => {
-        const wrapper = dropdown_menu_factory({
-            hideDetailsEntry: false,
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "file",
-                can_user_manage: true
-            }
-        });
-
-        expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
-
-        wrapper.find("[data-test=docman-dropdown-details]").trigger("click");
-
-        expect(event_bus.$emit).toHaveBeenCalledWith(
-            "show-update-item-metadata-modal",
-            jasmine.any(Object)
-        );
     });
 
     it(`Given user is docman writer and the current folder is not the root folder
