@@ -428,7 +428,11 @@ class RouteCollector
 
     public static function getPostSynchronizedMembershipActivation(): DispatchableWithRequest
     {
-        return new ActivationController(ProjectManager::instance(), new SynchronizedProjectMembershipDao());
+        return new ActivationController(
+            ProjectManager::instance(),
+            new SynchronizedProjectMembershipDao(),
+            UGroupRouter::getCSRFTokenSynchronizer()
+        );
     }
 
     public function getLegacyController(string $path)

@@ -37,11 +37,17 @@ class ActivationController implements DispatchableWithRequest, DispatchableWithP
     private $project_manager;
     /** @var SynchronizedProjectMembershipDao */
     private $dao;
+    /** @var \CSRFSynchronizerToken */
+    private $csrf;
 
-    public function __construct(\ProjectManager $project_manager, SynchronizedProjectMembershipDao $dao)
-    {
+    public function __construct(
+        \ProjectManager $project_manager,
+        SynchronizedProjectMembershipDao $dao,
+        \CSRFSynchronizerToken $csrf
+    ) {
         $this->project_manager = $project_manager;
         $this->dao             = $dao;
+        $this->csrf            = $csrf;
     }
 
     public static function getUrl(Project $project): string
@@ -78,9 +84,7 @@ class ActivationController implements DispatchableWithRequest, DispatchableWithP
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
-
-        $csrf = new \CSRFSynchronizerToken(self::getUrl($project));
-        $csrf->check($this->getRedirectUrl($project), $request);
+        $this->csrf->check($this->getRedirectUrl($project));
 
         $activation = $request->get('activation') === 'on';
         $this->toggleProjectMembership($project, $activation);
