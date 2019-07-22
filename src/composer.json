@@ -71,8 +71,7 @@
     "zendframework/zend-cache": "^2.8",
     "zendframework/zend-feed": "^2.10",
     "zendframework/zend-httphandlerrunner": "^1.1",
-    "zendframework/zend-mail": "^2.10",
-     "ext-gettext": "*"
+    "zendframework/zend-mail": "^2.10"
   },
   "config": {
     "platform": {
@@ -81,7 +80,8 @@
       "ext-mbstring": "0",
       "ext-curl": "0",
       "ext-iconv": "0",
-      "ext-gd": "0"
+      "ext-gd": "0",
+      "ext-gettext": "0"
     },
     "sort-packages": true
   },
