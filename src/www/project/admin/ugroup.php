@@ -24,6 +24,7 @@ use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
@@ -86,7 +87,7 @@ $presenter_builder = new UGroupListPresenterBuilder(
     new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
 );
 
-$synchronized_membership_token = new CSRFSynchronizerToken(ActivationController::getUrl($project));
+$synchronized_membership_token = UGroupRouter::getCSRFTokenSynchronizer();
 
 $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/user_groups';
 TemplateRendererFactory::build()

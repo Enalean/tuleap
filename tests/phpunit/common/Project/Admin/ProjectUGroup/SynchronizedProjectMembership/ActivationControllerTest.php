@@ -44,17 +44,27 @@ final class ActivationControllerTest extends TestCase
      * @var M\MockInterface|SynchronizedProjectMembershipDao
      */
     private $dao;
+    /**
+     * @var \CSRFSynchronizerToken|M\MockInterface
+     */
+    private $csrf;
+    /**
+     * @var M\MockInterface|BaseLayout
+     */
+    private $layout;
+    /**
+     * @var \HTTPRequest|M\MockInterface
+     */
+    private $request;
 
     protected function setUp(): void
     {
+        $this->layout          = M::mock(BaseLayout::class);
+        $this->request         = M::mock(\HTTPRequest::class);
         $this->project_manager = M::mock(\ProjectManager::class);
         $this->dao             = M::mock(SynchronizedProjectMembershipDao::class);
-        $this->controller      = new ActivationController($this->project_manager, $this->dao);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['_SESSION']);
+        $this->csrf            = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller      = new ActivationController($this->project_manager, $this->dao, $this->csrf);
     }
 
     public function testGetUrl(): void
@@ -76,7 +86,7 @@ final class ActivationControllerTest extends TestCase
         $project->shouldReceive('isError')
             ->once()
             ->andReturnTrue();
-        $variables = ['id' => '104', 'activation' => 'on'];
+        $variables = ['id' => '104'];
 
         $this->project_manager->shouldReceive('getProject')
             ->with('104')
@@ -85,9 +95,55 @@ final class ActivationControllerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $request = M::mock(\HTTPRequest::class);
-        $layout  = M::mock(BaseLayout::class);
+        $this->controller->process($this->request, $this->layout, $variables);
+    }
 
-        $this->controller->process($request, $layout, $variables);
+    public function testProcessEnablesSynchronizedProjectMembership(): void
+    {
+        $this->csrf->shouldReceive('check')->once();
+        $project = M::mock(Project::class, ['isError' => false, 'getID' => '104']);
+        $this->project_manager->shouldReceive('getProject')
+            ->with('104')
+            ->once()
+            ->andReturn($project);
+        $variables = ['id' => '104'];
+        $this->request->shouldReceive('get')
+            ->with('activation')
+            ->once()
+            ->andReturn('on');
+
+        $this->dao->shouldReceive('enable')
+            ->once();
+        $this->dao->shouldNotReceive('disable');
+        $this->layout->shouldReceive('redirect')
+            ->with('/project/admin/ugroup.php?group_id=104')
+            ->once();
+
+        $this->controller->process($this->request, $this->layout, $variables);
+    }
+
+    public function testProcessDisablesSynchronizedProjectMembership(): void
+    {
+        $this->csrf->shouldReceive('check')->once();
+        $project = M::mock(Project::class, ['isError' => false, 'getID' => '104']);
+        $this->project_manager->shouldReceive('getProject')
+            ->with('104')
+            ->once()
+            ->andReturn($project);
+        $variables = ['id' => '104'];
+        $this->request->shouldReceive('get')
+            ->with('activation')
+            ->once()
+            ->andReturnFalse();
+
+        $this->dao->shouldReceive('disable')
+            ->once();
+        $this->dao->shouldNotReceive('enable');
+
+        $this->layout->shouldReceive('redirect')
+            ->with('/project/admin/ugroup.php?group_id=104')
+            ->once();
+
+        $this->controller->process($this->request, $this->layout, $variables);
     }
 }
