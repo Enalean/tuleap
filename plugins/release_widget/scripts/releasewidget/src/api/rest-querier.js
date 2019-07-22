@@ -17,74 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+import { get, recursiveGet } from "tlp";
 
 export {
     getNbOfBacklogItems,
     getNbOfUpcomingReleases,
     getCurrentMilestones,
     getNbOfSprints,
-    getInitialEffortOfRelease
+    getMilestonesContent
 };
 
-function getProjectMilestonesWithQuery(project_id, query, pagination_limit, pagination_offset) {
-    return get(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
+function recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset) {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
         params: {
-            pagination_limit,
-            pagination_offset,
+            limit,
+            offset,
             query
         }
     });
 }
 
-async function getNbOfUpcomingReleases({ project_id, pagination_limit, pagination_offset }) {
+async function getNbOfUpcomingReleases({ project_id, limit, offset }) {
     const query = JSON.stringify({
         period: "future"
     });
 
-    const response = await getProjectMilestonesWithQuery(
-        project_id,
-        query,
-        pagination_limit,
-        pagination_offset
-    );
+    const response = await recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 
-    return getPaginationSizeFromHeader(response.headers);
+    return response.length;
 }
 
-async function getCurrentMilestones({ project_id, pagination_limit, pagination_offset }) {
+function getCurrentMilestones({ project_id, limit, offset }) {
     const query = JSON.stringify({
         period: "current"
     });
 
-    const response = await getProjectMilestonesWithQuery(
-        project_id,
-        query,
-        pagination_limit,
-        pagination_offset
-    );
-
-    return response.json();
+    return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 }
 
-async function getNbOfBacklogItems({ project_id, pagination_limit, pagination_offset }) {
+async function getNbOfBacklogItems({ project_id, limit, offset }) {
     const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
         params: {
-            pagination_limit,
-            pagination_offset
+            limit,
+            offset
         }
     });
 
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getNbOfSprints(milestone_id, { pagination_limit, pagination_offset }) {
+async function getNbOfSprints(milestone_id, { limit, offset }) {
     const response = await get(
         `/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`,
         {
             params: {
-                pagination_limit,
-                pagination_offset
+                limit,
+                offset
             }
         }
     );
@@ -92,11 +80,11 @@ async function getNbOfSprints(milestone_id, { pagination_limit, pagination_offse
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getInitialEffortOfRelease(id_release, { pagination_limit, pagination_offset }) {
+async function getMilestonesContent(id_release, { limit, offset }) {
     const response = await get(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
         params: {
-            pagination_limit,
-            pagination_offset
+            limit,
+            offset
         }
     });
 

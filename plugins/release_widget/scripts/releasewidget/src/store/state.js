@@ -22,8 +22,8 @@ const state = {
     nb_backlog_items: 0,
     nb_upcoming_releases: 0,
     error_message: null,
-    pagination_offset: 0,
-    pagination_limit: 50,
+    offset: 0,
+    limit: 50,
     is_loading: false,
     current_milestones: []
 };

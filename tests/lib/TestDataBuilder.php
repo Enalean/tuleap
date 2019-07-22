@@ -86,6 +86,7 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public const PROJECT_SUSPENDED_SHORTNAME              = 'suspended-project';
     public const PROJECT_SERVICES                         = 'project-services';
     public const PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME = 'public-sync-project-member';
+    public const PROJECT_FUTURE_RELEASES                  = 'current-future-releases';
 
     public const STATIC_UGROUP_1_ID    = 101;
     public const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';

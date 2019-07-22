@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Period\PeriodFuture;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
+use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -490,7 +491,7 @@ class Planning_MilestoneFactory
         $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion(
             $user,
             $project,
-            new StatusAll(),
+            new StatusOpen(),
             $limit,
             $offset,
             $order);
@@ -498,13 +499,13 @@ class Planning_MilestoneFactory
         $milestones = [];
 
         foreach ($paginated_top_milestones->getMilestones() as $milestone) {
-            if (!$this->isMilestoneFuture($milestone->getArtifact(), $user) && $this->milestoneHasStartDate($milestone->getArtifact(), $user)) {
+            if ($this->notFutureMilestoneHasStartDate($milestone->getArtifact(), $user) || $this->isClosedMilestone($milestone->getArtifact())) {
                 continue;
             }
             $milestones[] = $milestone;
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, count($milestones));
+        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
     public function getCurrentPaginatedTopMilestones (
@@ -525,7 +526,7 @@ class Planning_MilestoneFactory
         $milestones = [];
 
         foreach ($paginated_top_milestones->getMilestones() as $milestone) {
-            if (!$this->isMilestoneCurrent($milestone->getArtifact(), $user) && $this->milestoneHasStartDate($milestone->getArtifact(), $user)) {
+            if ($this->notCurrentMilestoneHasStartDate($milestone->getArtifact(), $user) || $this->isClosedMilestone($milestone->getArtifact())) {
                 continue;
             }
 
@@ -534,7 +535,7 @@ class Planning_MilestoneFactory
             $milestones[] = $milestone;
         }
 
-        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, count($milestones));
+        return new AgileDashboard_Milestone_PaginatedMilestones($milestones, $paginated_top_milestones->getTotalSize());
     }
 
     private function convertDARToArrayOfMilestones(PFUser $user, Planning_Milestone $milestone, LegacyDataAccessResultInterface $sub_milestone_artifacts) {
@@ -1000,5 +1001,34 @@ class Planning_MilestoneFactory
         }
 
         return $user_can_change_priorities;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return bool
+     */
+    private function isClosedMilestone(Tracker_Artifact $artifact)
+    {
+        return ($artifact->getStatus() && ! $artifact->isOpen());
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param PFUser           $user
+     * @return bool
+     */
+    public function notCurrentMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)
+    {
+        return (! $this->isMilestoneCurrent($artifact, $user) && $this->milestoneHasStartDate($artifact, $user));
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param PFUser           $user
+     * @return bool
+     */
+    public function notFutureMilestoneHasStartDate(Tracker_Artifact $artifact, PFUser $user)
+    {
+        return (! $this->isMilestoneFuture($artifact, $user) && $this->milestoneHasStartDate($artifact, $user));
     }
 }

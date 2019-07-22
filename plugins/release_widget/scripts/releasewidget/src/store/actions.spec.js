@@ -26,6 +26,22 @@ import { rewire$handleErrorMessage } from "./actions.js";
 
 describe("Store actions", () => {
     let context;
+    const milestones = [
+        [
+            {
+                start_date: {},
+                end_date: {},
+                project: {}
+            }
+        ],
+        [
+            {
+                start_date: {},
+                end_date: {},
+                project: {}
+            }
+        ]
+    ];
     beforeEach(() => {
         context = {
             commit: jasmine.createSpy("commit"),
@@ -33,8 +49,8 @@ describe("Store actions", () => {
                 project_id: null,
                 nb_backlog_items: 0,
                 nb_upcoming_releases: 0,
-                pagination_offset: 0,
-                pagination_limit: 50,
+                offset: 0,
+                limit: 50,
                 current_milestones: []
             }
         };
@@ -81,7 +97,7 @@ describe("Store actions", () => {
     describe("getNumberOfUpcomingReleases - rest", () => {
         describe("getNumberOfUpcomingReleases - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then an exception is caught.", async () => {
-                mockFetchError(tlp.get, {
+                mockFetchError(tlp.recursiveGet, {
                     error_json: {
                         error: {
                             code: 403,
@@ -97,21 +113,11 @@ describe("Store actions", () => {
             it("Given a success response, When total of backlog are received, Then no message error is received", async () => {
                 context.state.project_id = 102;
 
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    }
-                });
+                tlp.recursiveGet.and.returnValue(milestones);
 
                 await actions.getNumberOfUpcomingReleases(context);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 1);
+                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 2);
             });
         });
     });
@@ -119,7 +125,7 @@ describe("Store actions", () => {
     describe("getCurrentMilestones - rest", () => {
         describe("getCurrentMilestones - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then an exception is thrown.", async () => {
-                mockFetchError(tlp.get, {
+                mockFetchError(tlp.recursiveGet, {
                     error_json: {
                         error: {
                             code: 403,
@@ -134,7 +140,7 @@ describe("Store actions", () => {
 
         describe("getCurrentMilestones - success", () => {
             it("Given a success response, When all current milestones are received, Then no message error is received", async () => {
-                let milestones = [
+                const milestones = [
                     [
                         {
                             start_date: {},
@@ -144,18 +150,7 @@ describe("Store actions", () => {
                     ]
                 ];
 
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 1
-                            };
-
-                            return headers[header_name];
-                        }
-                    },
-                    return_json: milestones
-                });
+                tlp.recursiveGet.and.returnValue(milestones);
 
                 await actions.getCurrentMilestones(context);
 
@@ -291,7 +286,7 @@ describe("Store actions", () => {
         });
         describe("getInitialEffortOfRelease - success", () => {
             it("Given a success response, When capacity of release is received, Then no message error is received", async () => {
-                let user_stories = [
+                const user_stories = [
                     {
                         initial_effort: 10
                     },
