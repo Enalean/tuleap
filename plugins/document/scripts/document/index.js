@@ -23,7 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import french_translations from "./po/fr.po";
 import App from "./components/App.vue";
-import store from "./store/index.js";
+import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
@@ -67,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
     moment.locale(user_locale);
 
     const AppComponent = Vue.extend(App);
-    const router = createRouter(project_name);
+    const store = createStore(user_id, project_id);
+    const router = createRouter(store, project_name);
 
     new AppComponent({
         store,
