@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,24 +15,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import { shallowMount } from "@vue/test-utils";
+import VueRouter from 'vue-router';
 import localVue from "../support/local-vue.js";
 import App from "./App.vue";
-import router from "../router";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";
 import store_options from "../store/store_options";
-import { create } from "../support/factories";
+import { create } from "../support/factories.js";
 import Notification from "./Notification.vue";
 
 describe("App", () => {
-    let $store;
-    let wrapper;
+    let $store, wrapper;
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
+        const router = new VueRouter();
 
         wrapper = shallowMount(App, {
             localVue,

@@ -34,8 +34,7 @@ const webpack_config = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.skeletons_alias
+            webpack_configurator.tlp_mocks_alias
         )
     },
     module: {

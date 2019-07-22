@@ -18,6 +18,8 @@
  *
  */
 
+/* global jasmine:readonly */
+
 import { Store } from "vuex-mock-store";
 
 /**
@@ -36,7 +38,7 @@ export function createStoreMock(store_options, custom_state = {}) {
     const options = Object.assign({}, store_options, {
         state,
         spy: {
-            create: () => jasmine.createSpy(), //eslint-disable-line jasmine/no-unsafe-spy
+            create: () => jasmine.createSpy(),
             reset: spy => spy.and.stub()
         }
     });
