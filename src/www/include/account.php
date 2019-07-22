@@ -1,11 +1,25 @@
 <?php
-// Copyright (c) Enalean, 2015-Present. All Rights Reserved.
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
-//
+/**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 // adduser.php - All the forms and functions to manage unix users
 // Add user to an existing project
 function account_add_user_to_group ($group_id, &$user_unix_name)
@@ -13,9 +27,18 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
     if ($user) {
-        $send_notifications = true;
-        $check_user_status  = true;
-        return account_add_user_obj_to_group($group_id, $user, $check_user_status, $send_notifications);
+        $project = ProjectManager::instance()->getProject($group_id);
+        if (! $project || $project->isError()) {
+            return false;
+        }
+        $project_member_adder =new \Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications(
+            new UGroupBinding(
+                new UGroupUserDao(),
+                new UGroupManager()
+            )
+        );
+        $project_member_adder->addProjectMember($user, $project);
+        return true;
     } else {
         //user doesn't exist
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_not_exist'));

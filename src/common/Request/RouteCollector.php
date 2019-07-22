@@ -346,14 +346,15 @@ class RouteCollector
         $user_helper     = new UserHelper();
         $ugroup_manager  = new UGroupManager();
         $project_manager = ProjectManager::instance();
+        $ugroup_binding  = new UGroupBinding(
+            new UGroupUserDao(),
+            $ugroup_manager
+        );
 
         return new ProjectMembersController(
             new ProjectMembersDAO(),
             $user_helper,
-            new UGroupBinding(
-                new UGroupUserDao(),
-                $ugroup_manager
-            ),
+            $ugroup_binding,
             new UserRemover(
                 $project_manager,
                 $event_manager,
@@ -367,7 +368,10 @@ class RouteCollector
             $ugroup_manager,
             new UserImport(
                 $user_manager,
-                $user_helper
+                $user_helper,
+                new ProjectMemberAdderWithStatusCheckAndNotifications(
+                    $ugroup_binding
+                )
             ),
             $project_manager,
             new SynchronizedProjectMembershipDetector(

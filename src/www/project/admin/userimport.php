@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+
 require_once('pre.php');
 require_once('www/include/account.php');
 
@@ -46,7 +48,16 @@ if (! $user->isAdmin($project_id) && ! $membership_delegation_dao->doesUserHasMe
 }
 
 $user_manager  = UserManager::instance();
-$import        = new UserImport($user_manager, new UserHelper());
+$import        = new UserImport(
+    $user_manager,
+    new UserHelper(),
+    new ProjectMemberAdderWithStatusCheckAndNotifications(
+        new UGroupBinding(
+            new UGroupUserDao(),
+            new UGroupManager()
+        )
+    )
+);
 $user_filename = $_FILES['user_filename']['tmp_name'];
 
 if (!file_exists($user_filename) || !is_readable($user_filename)) {

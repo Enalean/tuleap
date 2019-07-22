@@ -22,6 +22,8 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
@@ -52,17 +54,23 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @var DynamicUGroupMembersUpdater
      */
     private $dynamic_ugroup_members_updater;
+    /**
+     * @var ProjectMemberAdder|null
+     */
+    private $project_member_adder;
 
     public function __construct(
         ?UGroupDao $dao = null,
         ?EventManager $event_manager = null,
         ?UGroupUserDao $ugroup_user_dao = null,
-        ?DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null
+        ?DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null,
+        ?ProjectMemberAdder $project_member_adder = null
     ) {
         $this->dao                            = $dao;
         $this->event_manager                  = $event_manager;
         $this->ugroup_user_dao                = $ugroup_user_dao;
         $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
+        $this->project_member_adder           = $project_member_adder;
     }
 
     /**
@@ -73,6 +81,18 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->ugroup_user_dao = new UGroupUserDao();
         }
         return $this->ugroup_user_dao;
+    }
+
+    private function getProjectMemberAdder() : ProjectMemberAdder
+    {
+        if (! $this->project_member_adder) {
+            $this->project_member_adder = new ProjectMemberAdderWithStatusCheckAndNotifications(
+                new UGroupBinding(
+                    $this->getUGroupUserDao(), $this
+                )
+            );
+        }
+        return $this->project_member_adder;
     }
 
     /**
@@ -548,9 +568,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         switch ((int) $user_group->getId()) {
             case ProjectUGroup::PROJECT_MEMBERS:
-                $send_notifications = true;
-                $check_user_status  = true;
-                account_add_user_obj_to_group($user_group->getProjectId(), $user, $check_user_status, $send_notifications);
+                $this->getProjectMemberAdder()->addProjectMember($user, $user_group->getProject());
                 break;
             case ProjectUGroup::PROJECT_ADMIN:
                 $this->getDynamicUGroupMembersUpdater()->addUser($user_group->getProject(), $user_group, $user);
