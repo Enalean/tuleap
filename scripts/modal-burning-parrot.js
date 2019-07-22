@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+import tlp from "tlp";
 import jQuery from "jquery";
 import { contactSupportModalShown } from "./modal.js";
 
