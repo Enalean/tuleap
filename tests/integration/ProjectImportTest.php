@@ -26,6 +26,8 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
@@ -114,11 +116,12 @@ class ProjectImportTest extends TuleapDbTestCase
     {
         $ugroup_user_dao = new UGroupUserDao();
         $ugroup_manager = new UGroupManager();
+        $ugroup_binding = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
         $ugroup_duplicator = new UgroupDuplicator(
             new UGroupDao(),
             $ugroup_manager,
             new UGroupBinding($ugroup_user_dao, $ugroup_manager),
-            $ugroup_user_dao,
+            MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
             EventManager::instance()
         );
 

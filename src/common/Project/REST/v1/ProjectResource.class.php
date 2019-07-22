@@ -55,6 +55,8 @@ use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\REST\AuthenticatedResource;
@@ -116,11 +118,6 @@ class ProjectResource extends AuthenticatedResource
     private $event_manager;
 
     /**
-     * @var UgroupDuplicator
-     */
-    private $ugroup_duplicator;
-
-    /**
      * @var JsonDecoder
      */
     private $json_decoder;
@@ -162,11 +159,12 @@ class ProjectResource extends AuthenticatedResource
             $widget_factory
         );
 
-        $this->ugroup_duplicator = new UgroupDuplicator(
+        $ugroup_binding = new UGroupBinding($ugroup_user_dao, $this->ugroup_manager);
+        $ugroup_duplicator = new UgroupDuplicator(
             new UGroupDao(),
             $this->ugroup_manager,
-            new UGroupBinding($ugroup_user_dao, $this->ugroup_manager),
-            $ugroup_user_dao,
+            $ugroup_binding,
+            MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
             EventManager::instance()
         );
         $send_notifications      = true;
@@ -177,7 +175,7 @@ class ProjectResource extends AuthenticatedResource
             $this->project_manager,
             $this->reference_manager,
             $this->user_manager,
-            $this->ugroup_duplicator,
+            $ugroup_duplicator,
             $send_notifications,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao(), new ProjectHistoryDao()),
             $duplicator,

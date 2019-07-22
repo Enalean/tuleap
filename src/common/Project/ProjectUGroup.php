@@ -22,6 +22,7 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
@@ -473,15 +474,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getMemberAdder(): MemberAdder
     {
-        return new MemberAdder(
-            new MembershipUpdateVerifier(),
-            new StaticMemberAdder(),
-            $this->getDynamicUGroupMembersUpdater(),
-            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
-            ),
-            new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao())
-        );
+        return MemberAdder::build($this->getProjectMemberAdder());
     }
 
     private function getDynamicUGroupMembersUpdater(): DynamicUGroupMembersUpdater
@@ -489,10 +482,18 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return new DynamicUGroupMembersUpdater(
             new UserPermissionsDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-                new UGroupBinding($this->getUGroupUserDao(), new UGroupManager())
-            ),
+            $this->getProjectMemberAdder(),
             EventManager::instance()
+        );
+    }
+
+    private function getProjectMemberAdder() : ProjectMemberAdder
+    {
+        return new ProjectMemberAdderWithoutStatusCheckAndNotifications(
+            new UGroupBinding(
+                $this->getUGroupUserDao(),
+                new UGroupManager()
+            )
         );
     }
 
