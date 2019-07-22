@@ -83,6 +83,7 @@ import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentAdditionalMetadataList.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentMetadata.spec.js";
 import "./components/Folder/QuickLook/QuickLookGlobal.spec.js";
+import "./components/Folder/QuickLook/QuickLookMetadataDate.spec.js";
 
 import "./components/Folder/ProgressBar/UploadProgressBar.spec.js";
 

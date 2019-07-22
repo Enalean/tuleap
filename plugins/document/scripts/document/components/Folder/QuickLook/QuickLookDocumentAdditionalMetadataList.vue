@@ -23,7 +23,11 @@
             {{ metadata_name }}
         </label>
         <p v-bind:id="metadata_label">
-            <template v-if="metadata.type === METADATA_LIST_TYPE && ! is_list_empty">
+            <quicklook-metadata-date
+                v-if="metadata.type === METADATA_DATE_TYPE"
+                v-bind:metadata="metadata"
+            />
+            <template v-else-if="metadata.type === METADATA_LIST_TYPE && ! is_list_empty">
                 <ul v-if="metadata.list_value.length > 1">
                     <li v-for="value in metadata.list_value" v-bind:key="value.id">
                         {{ value.name }}
@@ -33,18 +37,10 @@
                     {{ metadata.list_value[0].name }}
                 </template>
             </template>
-            <template v-else-if="metadata.type === METADATA_DATE_TYPE && is_date_valid">
-                <div class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(metadata.value)" data-test="metadata-list-date">
-                    {{ getFormattedDateForDisplay(metadata.value) }}
-                </div>
-            </template>
+
             <span class="document-quick-look-property-empty"
-                  v-else-if="! has_metadata_a_value && ! has_obsolescence_date_metadata_unlimited_validity" v-translate>
+                  v-else-if="! has_metadata_a_value " v-translate>
                 Empty
-            </span>
-            <span class="document-quick-look-property-empty"
-                  v-else-if="has_obsolescence_date_metadata_unlimited_validity" v-translate>
-                Permanent
             </span>
             <template v-else>
                 <div v-dompurify-html="metadata.post_processed_value"></div>
@@ -53,16 +49,12 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import {
-    formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow,
-    isDateValid
-} from "../../../helpers/date-formatter.js";
 import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
+import QuicklookMetadataDate from "./QuickLookMetadataDate.vue";
 
 export default {
     name: "QuickLookDocumentAdditionalMetadataList",
+    components: { QuicklookMetadataDate },
     props: {
         metadata: Object
     },
@@ -73,11 +65,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["date_time_format"]),
         metadata_label() {
-            const metadata_name_kebab_case = this.metadata.name.toLowerCase().replace(/\s/, "-");
-
-            return `document-${metadata_name_kebab_case}`;
+            return `document-${this.metadata.short_name}`;
         },
         metadata_name() {
             if (this.isMetadataObsolescenceDate()) {
@@ -88,31 +77,15 @@ export default {
         is_list_empty() {
             return !this.metadata.list_value || !this.metadata.list_value.length;
         },
-        is_date_valid() {
-            return isDateValid(this.metadata.value);
-        },
         has_metadata_a_value() {
             if (this.metadata.type === this.METADATA_LIST_TYPE) {
                 return !this.is_list_empty;
             }
 
-            if (this.metadata.type === this.METADATA_DATE_TYPE) {
-                return this.is_date_valid;
-            }
-
             return this.metadata.value;
-        },
-        has_obsolescence_date_metadata_unlimited_validity() {
-            return this.isMetadataObsolescenceDate() && this.metadata.value === null;
         }
     },
     methods: {
-        getFormattedDate(date) {
-            return formatDateUsingPreferredUserFormat(date, this.date_time_format);
-        },
-        getFormattedDateForDisplay(date) {
-            return getElapsedTimeFromNow(date);
-        },
         isMetadataObsolescenceDate() {
             return this.metadata.short_name === METADATA_OBSOLESCENCE_DATE_SHORT_NAME;
         }

@@ -29,3 +29,7 @@ export function getElapsedTimeFromNow(date) {
 }
 
 export const isDateValid = date => moment(date).isValid();
+
+export function isToday(date) {
+    return moment().diff(date, "days") === 0;
+}
