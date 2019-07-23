@@ -21,12 +21,12 @@
     <div class="project-release-infos-badges">
         <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-bind:href="getTopPlanningLink" data-test="planning-link">
             <i class="fa fa-map-signs tlp-badge-icon"></i>
-            <translate v-bind:translate-n="totalSprint" translate-plural="%{ totalSprint } sprints">
-                %{ totalSprint } sprint
+            <translate v-bind:translate-n="releaseData.total_sprint" translate-plural="%{ releaseData.total_sprint } sprints">
+                %{ releaseData.total_sprint } sprint
             </translate>
         </a>
         <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
-            <translate v-if="capacityExist()" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
+            <translate v-if="capacityExist" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
                 Capacity: %{capacity}
             </translate>
             <translate v-else data-test="capacity-empty">
@@ -34,7 +34,7 @@
             </translate>
         </div>
         <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
-            <translate v-if="initialEffortExist()" v-bind:translate-params="{initialEffort: initialEffort}" data-test="initial-effort-not-empty">
+            <translate v-if="initialEffortExist" v-bind:translate-params="{initialEffort: releaseData.initial_effort}" data-test="initial-effort-not-empty">
                 Initial effort: %{initialEffort}
             </translate>
             <translate v-else data-test="initial-effort-empty">
@@ -48,9 +48,7 @@
 export default {
     name: "ReleaseBadges",
     props: {
-        releaseData: Object,
-        totalSprint: Number,
-        initialEffort: Number
+        releaseData: Object
     },
     computed: {
         getTopPlanningLink() {
@@ -63,14 +61,12 @@ export default {
                 encodeURIComponent(this.releaseData.id) +
                 "&pane=planning-v2"
             );
-        }
-    },
-    methods: {
+        },
         capacityExist() {
             return this.releaseData.capacity && this.releaseData.capacity > 0;
         },
         initialEffortExist() {
-            return this.initialEffort && this.initialEffort > 0;
+            return this.releaseData.initial_effort && this.releaseData.initial_effort > 0;
         }
     }
 };

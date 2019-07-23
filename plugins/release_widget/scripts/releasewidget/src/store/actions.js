@@ -19,33 +19,44 @@
 
 import {
     getCurrentMilestones as getAllCurrentMilestones,
-    getMilestonesContent,
+    getMilestonesContent as getContent,
     getNbOfBacklogItems as getBacklogs,
     getNbOfSprints as getSprints,
     getNbOfUpcomingReleases as getReleases
 } from "../api/rest-querier.js";
 
-export async function getNumberOfBacklogItems(context) {
+async function getNumberOfBacklogItems(context) {
     context.commit("resetErrorMessage");
     const total = await getBacklogs(context.state);
     return context.commit("setNbBacklogItem", total);
 }
 
-export async function getNumberOfUpcomingReleases(context) {
+async function getNumberOfUpcomingReleases(context) {
     context.commit("resetErrorMessage");
     const total = await getReleases(context.state);
     return context.commit("setNbUpcomingReleases", total);
 }
 
-export async function getCurrentMilestones(context) {
+async function getCurrentMilestones(context) {
     context.commit("resetErrorMessage");
     const milestones = await getAllCurrentMilestones(context.state);
+
+    let promises = [];
+
+    milestones.forEach(milestone => {
+        promises.push(getInitialEffortOfRelease(context, milestone));
+        promises.push(getNumberOfSprints(context, milestone));
+    });
+
+    await Promise.all(promises);
+
     return context.commit("setCurrentMilestones", milestones);
 }
 
 export async function getMilestones(context) {
     try {
         context.commit("setIsLoading", true);
+
         await getNumberOfUpcomingReleases(context);
         await getNumberOfBacklogItems(context);
         await getCurrentMilestones(context);
@@ -56,26 +67,21 @@ export async function getMilestones(context) {
     }
 }
 
-export async function getNumberOfSprints(context, milestone_id) {
-    try {
-        return await getSprints(milestone_id, context.state);
-    } catch (error) {
-        await handleErrorMessage(context, error);
-    }
+async function getNumberOfSprints(context, milestone) {
+    context.commit("resetErrorMessage");
+    milestone.total_sprint = await getSprints(milestone.id, context.state);
 }
 
-export async function getInitialEffortOfRelease(context, id_release) {
-    try {
-        let user_stories = await getMilestonesContent(id_release, context.state);
-        return user_stories.reduce((acc, cu) => {
-            if (cu.initial_effort !== null) {
-                return acc + cu.initial_effort;
-            }
-            return acc;
-        }, 0);
-    } catch (error) {
-        await handleErrorMessage(context, error);
-    }
+async function getInitialEffortOfRelease(context, milestone) {
+    context.commit("resetErrorMessage");
+    let user_stories = await getContent(milestone.id, context.state);
+
+    milestone.initial_effort = user_stories.reduce((nb_users_stories, user_story) => {
+        if (user_story.initial_effort !== null) {
+            return nb_users_stories + user_story.initial_effort;
+        }
+        return nb_users_stories;
+    }, 0);
 }
 
 export async function handleErrorMessage(context, rest_error) {
