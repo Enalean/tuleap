@@ -35,6 +35,8 @@ import "./store/error/error-getters.js";
 import "./store/clipboard/clipboard-mutations.spec.js";
 import "./store/clipboard/clipboard-actions.spec.js";
 
+import "./store/store-persistence/storage.spec.js";
+
 import "./components/Breadcrumb/DocumentBreadcrumb.spec.js";
 
 import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
