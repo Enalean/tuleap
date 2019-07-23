@@ -404,7 +404,6 @@ class GitPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="/plugins/git/themes/default/css/gitphp.css" />';
         }
     }
 

@@ -1,0 +1,659 @@
+.help {
+  width: auto;
+  background: url(../images/help.png) no-repeat;
+  background-position: 5px center;
+  border: 1px solid #DDDDDD;
+  padding: 0.5em;
+  padding-left: 40px;
+  margin: 0.5em;
+}
+
+.repository {
+  width: auto;
+}
+
+textarea.text {
+  height: 50px;
+  width: 400px;
+}
+
+.plugin_git_mail_prefix {
+  width: 15em;
+}
+
+.plugin_git_permissions_select {
+  width: 256px;
+  margin-right: 20px;
+}
+
+#git_repositories_list {
+  min-width: 960px;
+  width: auto;
+}
+
+tr.boxitemalt > td {
+  font-weight: bold;
+}
+
+#fork_repositories {
+  border-collapse: collapse;
+}
+
+#fork_repositories td {
+  padding-left: 1em;
+  border-left: 1px solid #ccc;
+  padding-right: 1em;
+  border-right: 1px solid #ccc;
+}
+
+#fork_repositories td.first {
+  padding-left: 0em;
+  border-left: none;
+}
+
+#fork_repositories td.last {
+  padding-right: 0em;
+  border-right: none;
+}
+
+.git_repomanagement label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.git_repomanagement_gerrit_more_description {
+  display: inline-block;
+  min-height: 20px;
+  padding: 15px;
+  margin-bottom: 1em;
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.gerrit_url.alert.alert-info {
+  display: inline-block;
+  margin-bottom: 1em;
+}
+
+.gerrit_url.alert.alert-info a {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.wait_creation.alert.alert-info {
+  display: inline-block;
+  margin-bottom: 1em;
+}
+
+legend.gerrit_disconnect {
+  font-weight: bold;
+}
+
+fieldset.gerrit_disconnect {
+  width: 680px;
+  border-color: lightgrey;
+}
+
+.git_admin_config_template_action {
+  width: 80px;
+}
+
+#editor_textarea {
+  width: 100%;
+  height: 450px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  resize: none;
+}
+
+#description_commit {
+  resize: none;
+}
+
+#cancel {
+  margin-right: 5px;
+}
+
+#commit_form {
+  padding-left: 5px;
+}
+
+#mirrors-list {
+  margin: 0 0 30px 25px;
+
+  > li {
+    > span {
+      font-style: italic;
+      color: #888;
+      font-size: 0.9em;
+    }
+  }
+}
+
+.git_admin_mirror_owner_link {
+  padding-top: 5px;
+}
+
+.reserved-hostname-help {
+  font-size: 0.8em;
+}
+
+.git_admin_mirror_big_span {
+  word-break: break-all;
+}
+
+.git_admin_mirror_table {
+  max-width: 960px;
+
+  > thead > tr > th {
+    white-space: nowrap;
+  }
+}
+
+.git_admin_mirror_url {
+  white-space: nowrap
+}
+
+.git_admin_mirror_details {
+  max-width: 800px;
+
+  & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
+    width: 20px;
+  }
+}
+
+.mirrors-list {
+  max-width: 800px;
+
+  & > thead > tr > th,
+  & > tbody > tr > td {
+    min-width: 100px;
+    vertical-align: middle;
+  }
+
+  & > thead > tr > th:first-child,
+  & > tbody > tr > td:first-child {
+    min-width: 20px;
+    max-width: 20px;
+    text-align: center;
+  }
+
+  & > tbody > tr > td.name {
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  & > thead > tr > th.used,
+  & > tbody > tr > td.used {
+    white-space: nowrap;
+    text-align: center;
+  }
+}
+
+.mass-mirrors-list {
+  width: 600px;
+
+  > thead > tr > th {
+    padding: 0 40px;
+
+    &:first-child {
+      width: 100%;
+    }
+  }
+
+  > thead > tr > th,
+  > tbody > tr > td:first-child {
+    white-space: nowrap;
+    position: relative;
+    height: 45px;
+    min-width: 70px;
+    padding-right: 30px;
+  }
+
+  > tbody > tr > td:first-child {
+    box-sizing: border-box;
+  }
+
+  > thead > tr > th,
+  > tbody > tr > td {
+    vertical-align: middle;
+    text-align: center;
+
+    &:first-child {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  > tbody > tr {
+    .check-all-panel {
+      opacity: 0;
+    }
+
+    &:hover {
+      .check-all-panel {
+        opacity: 1;
+      }
+    }
+
+    > td {
+      transition: background linear 0.08s;
+
+      > div {
+        display: block;
+        opacity: 0;
+        margin: 5px 0 0 0;
+        transition: opacity linear 0.08s;
+      }
+
+      &.has-changed {
+        transition: background linear 0.08s;
+
+        > div {
+          opacity: 1;
+          transition: opacity linear 0.08s;
+        }
+
+        &.was-used {
+          background: rgba(218, 83, 83, 0.2);
+
+          > div {
+            background: rgb(218, 83, 83);
+          }
+        }
+
+        &.was-unused {
+          background: rgba(88, 179, 89, 0.2);
+
+          > div {
+            background: rgb(88, 179, 89);
+          }
+        }
+      }
+    }
+  }
+
+  .check-all-panel {
+    display: inline-block;
+    width: 20px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+
+    > .check-all,
+    > .uncheck-all {
+      white-space: nowrap;
+      display: block;
+      color: #777;
+
+      &:hover, &:active {
+        color: #222;
+        text-decoration: none;
+      }
+    }
+
+    > .uncheck-all {
+      margin: 0 2px 0 0;
+    }
+  }
+}
+
+.mass-mirrors-list-update-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid #E0E0E0;
+  box-sizing: border-box;
+}
+
+body.sidebar-expanded .mass-mirrors-list-update-bar {
+  padding-left: 200px;
+}
+
+.git-admin-tabs {
+  margin: 10px 0;
+}
+
+.git-admin-tab-content {
+  overflow: inherit;
+
+  h3 {
+    margin: 0 0 10px;
+  }
+
+  h4 {
+    font-size: 1.1em;
+    margin: 30px 0 10px
+  }
+}
+
+.git-admin-mass-update-table {
+  max-width: 800px;
+
+  & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
+    width: 20px;
+    text-align: center;
+  }
+}
+
+.update-n-repositories > span {
+  font-weight: bold;
+}
+
+.form-tree {
+  margin: 30px 0 0;
+}
+
+h1, h2, h3 {
+  .fa-question-circle {
+    color: #AAA;
+    font-size: 0.8em;
+
+    &:hover {
+      text-decoration: none;
+      color: #888;
+    }
+  }
+}
+
+#admin-general-settings {
+  ul > li > a.disabled-link {
+    pointer-events: none;
+    cursor: default;
+    color: #AAA;
+  }
+}
+
+#git-notification-mail-list {
+  max-width: 960px;
+  margin-bottom: 15px;
+}
+
+.git-notification-mail-list-people {
+  width: 100%;
+}
+
+#admin-git-default-access-rights {
+  > table {
+    margin-bottom: 10px;
+  }
+}
+
+.git_webhook {
+
+  > .hooks-desc {
+    margin: 10px 0 20px;
+  }
+
+  .create-webhook-btn {
+    margin: 0 0 10px;
+  }
+
+  > .only-one-webhook {
+    display: inline-block;
+    cursor: not-allowed;
+    margin-right: 4px;
+
+    > .btn[disabled] {
+      pointer-events: none;
+    }
+  }
+
+  > .popover {
+    h3 {
+      border: 0;
+      background: #da5353;
+      color: #ffffff;
+    }
+
+    form {
+      margin: 0;
+
+      .remove-webhook-confirm-actions {
+        text-align: right;
+      }
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+}
+
+.hooks-list {
+  max-width: 960px;
+
+  > thead > tr > th,
+  > tbody > tr > td {
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &:first-child {
+      width: 100%;
+      max-width: 430px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    &.last-push {
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    &.action-buttons {
+      > a {
+        margin: 0 5px;
+
+        &:hover,
+        &:focus {
+          text-decoration: none;
+          opacity: .8;
+        }
+      }
+    }
+  }
+}
+
+.hooks-jobs-list {
+  > tbody {
+    font-size: 12px;
+
+    > tr:first-child > td {
+      white-space: nowrap;
+    }
+
+    > tr > td:last-child {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 383px;
+      width: 100%;
+    }
+  }
+}
+
+.modal-webhook {
+  > .modal-header {
+    border-bottom: 2px solid #888888;
+
+    > .close {
+      margin-left: 10px;
+    }
+
+    > h3 {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .modal-body {
+
+    > p:first-child {
+      margin-bottom: 30px;
+    }
+
+    input[type=url] {
+      width: 100%;
+      height: 30px;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.remove-webhook-popover {
+  display: none;
+}
+
+.git-per-tags-branches-permissions {
+  .alert {
+    display: inline-block;
+    margin: 20px 0;
+  }
+
+  .regexp_incoherence_label {
+    padding: 0 0 0 55px;
+  }
+
+  h4 {
+    color: #888888;
+    font-size: 14px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+
+  .permission-pattern {
+    width: 50%;
+  }
+
+  .permission-delete {
+    min-width: 80px;
+  }
+
+  > .popover {
+    .popover-title {
+      border: 0;
+      background: #da5353;
+      color: #ffffff;
+    }
+
+    form {
+      margin: 0;
+
+      .remove-fine-grained-permission-confirm-actions {
+        text-align: right;
+      }
+    }
+
+    p {
+      font-size: 13px;
+    }
+  }
+}
+
+.git-permission-table {
+  min-width: 800px;
+  max-width: 1200px;
+
+  .git-permission-table-selector {
+    width: 250px;
+  }
+
+  select, input {
+    width: 100%;
+    margin: 0;
+  }
+
+  input {
+    height: 30px;
+    box-sizing: border-box;
+  }
+}
+
+.git-default-permission-table {
+  width: auto;
+}
+
+.add-fine-grained-permission {
+  margin: 0 0 40px;
+}
+
+#add-fine-grained-permission-template {
+  display: none;
+}
+
+.remove-fine-grained-permission {
+  white-space: nowrap;
+}
+
+.remove-fine-grained-permission-popover {
+  display: none;
+}
+
+.regexp_permission_activated_hidden {
+  display: none;
+}
+
+.use-regexp-label-arrow {
+  margin: 0 0 0 20px;
+}
+
+.use-regexp-label {
+  display: inline-block !important;
+}
+
+.regexp_permission_label {
+  margin: 0;
+}
+
+.fine-grained-permissions {
+  margin: 0 0 60px;
+}
+
+.modal-regexp-delete {
+  display: none;
+}
+
+.modal {
+  .remove-regexp-permission-popover {
+    .popover-title {
+      border: 0;
+      background: #da5353;
+      color: #ffffff;
+    }
+  }
+}
+
+.git-notification-mail-list-people {
+  width: 100%;
+}
+
+.avatar.git-notification-mail-list-user-avatar {
+  display: inline-block;
+  position: relative;
+  top: -2px;
+  width: 22px;
+  height: 22px; margin: 0 2px 0 0;
+  vertical-align: middle;
+}
+
+.git-notification-mail-list-group-icon {
+  color: #666;
+  margin: 0 5px 0 4px;
+}
+
+.git-notification-mail-list-submit {
+  margin: 15px 0 0;
+}
