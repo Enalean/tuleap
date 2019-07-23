@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <dropdown-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="current_folder" v-bind:hide-details-entry="true">
+    <dropdown-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="current_folder">
         <a href="#" v-on:click.prevent="showNewFolderModal"
            class="tlp-dropdown-menu-item"
            role="menuitem"

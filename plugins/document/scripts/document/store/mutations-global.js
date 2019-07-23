@@ -31,7 +31,8 @@ export {
     updateCurrentlyPreviewedItem,
     showPostDeletionNotification,
     hidePostDeletionNotification,
-    shouldDisplayEmbeddedInLargeMode
+    shouldDisplayEmbeddedInLargeMode,
+    replaceCurrentFolder
 };
 
 function initApp(
@@ -119,6 +120,13 @@ function appendFolderToAscendantHierarchy(state, folder) {
 
 function setCurrentFolder(state, folder) {
     state.current_folder = folder;
+}
+function replaceCurrentFolder(state, folder) {
+    state.current_folder = folder;
+    let folder_in_hierarchy = state.current_folder_ascendant_hierarchy.find(
+        item => item.id === folder.id
+    );
+    folder_in_hierarchy.title = folder.title;
 }
 
 function removeIsUnderConstruction(state) {

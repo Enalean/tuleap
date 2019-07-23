@@ -1640,277 +1640,343 @@ describe("Store actions", () => {
             rewire$getItem(getItem);
         });
 
-        it("it should update file metadata", async () => {
-            putFileMetadata = jasmine.createSpy("putFileMetadata");
-            rewire$putFileMetadata(putFileMetadata);
+        describe("Given item is not the current folder - ", () => {
+            it("it should update file metadata", async () => {
+                putFileMetadata = jasmine.createSpy("putFileMetadata");
+                rewire$putFileMetadata(putFileMetadata);
 
-            const item = {
-                id: 123,
-                title: "My file",
-                type: TYPE_FILE,
-                description: "n",
-                owner: {
-                    id: 102
-                },
-                status: "none",
-                obsolescence_date: null
-            };
+                const item = {
+                    id: 123,
+                    title: "My file",
+                    type: TYPE_FILE,
+                    description: "n",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
 
-            const item_to_update = {
-                id: 123,
-                title: "My new title",
-                description: "My description",
-                owner: {
-                    id: 102
-                },
-                status: "draft",
-                obsolescence_date: null
-            };
+                const item_to_update = {
+                    id: 123,
+                    title: "My new title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "draft",
+                    obsolescence_date: null
+                };
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                const current_folder = {
+                    id: 456
+                };
 
-            await updateMetadata(context, [item, item_to_update]);
+                getItem.and.returnValue(Promise.resolve(item_to_update));
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
-        });
-        it("it should update embedded file metadata", async () => {
-            putEmbeddedFileMetadata = jasmine.createSpy("putEmbeddedFileMetadata");
-            rewire$putEmbeddedFileMetadata(putEmbeddedFileMetadata);
+                await updateMetadata(context, [item, item_to_update, current_folder]);
 
-            const item = {
-                id: 123,
-                title: "My embedded file",
-                type: TYPE_EMBEDDED,
-                description: "nop",
-                owner: {
-                    id: 102
-                },
-                status: "none",
-                obsolescence_date: null
-            };
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
+            it("it should update embedded file metadata", async () => {
+                putEmbeddedFileMetadata = jasmine.createSpy("putEmbeddedFileMetadata");
+                rewire$putEmbeddedFileMetadata(putEmbeddedFileMetadata);
 
-            const item_to_update = {
-                id: 123,
-                title: "My new embedded  title",
-                description: "My description",
-                owner: {
-                    id: 102
-                },
-                status: "draft",
-                obsolescence_date: null
-            };
+                const item = {
+                    id: 123,
+                    title: "My embedded file",
+                    type: TYPE_EMBEDDED,
+                    description: "nop",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                const item_to_update = {
+                    id: 123,
+                    title: "My new embedded  title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "draft",
+                    obsolescence_date: null
+                };
 
-            await updateMetadata(context, [item, item_to_update]);
+                const current_folder = {
+                    id: 456
+                };
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
-        });
-        it("it should update link document metadata", async () => {
-            putLinkMetadata = jasmine.createSpy("putEmbeddedLinkMetadata");
-            rewire$putLinkMetadata(putLinkMetadata);
-            const item = {
-                id: 123,
-                title: "My link",
-                type: TYPE_LINK,
-                description: "ui",
-                owner: {
-                    id: 102
-                },
-                status: "none",
-                obsolescence_date: null
-            };
+                getItem.and.returnValue(Promise.resolve(item_to_update));
 
-            const item_to_update = {
-                id: 123,
-                title: "My new link title",
-                description: "My link description",
-                owner: {
-                    id: 102
-                },
-                status: "draft",
-                obsolescence_date: null
-            };
+                await updateMetadata(context, [item, item_to_update, current_folder]);
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
+            it("it should update link document metadata", async () => {
+                putLinkMetadata = jasmine.createSpy("putEmbeddedLinkMetadata");
+                rewire$putLinkMetadata(putLinkMetadata);
+                const item = {
+                    id: 123,
+                    title: "My link",
+                    type: TYPE_LINK,
+                    description: "ui",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
 
-            await updateMetadata(context, [item, item_to_update]);
+                const item_to_update = {
+                    id: 123,
+                    title: "My new link title",
+                    description: "My link description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "draft",
+                    obsolescence_date: null
+                };
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
-        });
+                getItem.and.returnValue(Promise.resolve(item_to_update));
 
-        it("it should update wiki document metadata", async () => {
-            putWikiMetadata = jasmine.createSpy("putEmbeddedWikiMetadata");
-            rewire$putWikiMetadata(putWikiMetadata);
-            const item = {
-                id: 123,
-                title: "My wiki",
-                type: TYPE_WIKI,
-                description: "on",
-                owner: {
-                    id: 102
-                },
-                status: "none",
-                obsolescence_date: null
-            };
+                const current_folder = {
+                    id: 456
+                };
 
-            const item_to_update = {
-                id: 123,
-                title: "My new wiki title",
-                description: "My wiki description",
-                owner: {
-                    id: 102
-                },
-                status: "approved",
-                obsolescence_date: null
-            };
+                await updateMetadata(context, [item, item_to_update, current_folder]);
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
 
-            await updateMetadata(context, [item, item_to_update]);
+            it("it should update wiki document metadata", async () => {
+                putWikiMetadata = jasmine.createSpy("putEmbeddedWikiMetadata");
+                rewire$putWikiMetadata(putWikiMetadata);
+                const item = {
+                    id: 123,
+                    title: "My wiki",
+                    type: TYPE_WIKI,
+                    description: "on",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
-        });
-        it("it should update empty document metadata", async () => {
-            putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
-            rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
-            const item = {
-                id: 123,
-                title: "My empty",
-                type: TYPE_EMPTY,
-                description: "on",
-                owner: {
-                    id: 102
-                },
-                status: "none",
-                obsolescence_date: null
-            };
+                const item_to_update = {
+                    id: 123,
+                    title: "My new wiki title",
+                    description: "My wiki description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "approved",
+                    obsolescence_date: null
+                };
 
-            const item_to_update = {
-                id: 123,
-                title: "My new empty title",
-                description: "My empty description",
-                owner: {
-                    id: 102
-                },
-                status: "rejected",
-                obsolescence_date: null
-            };
+                const current_folder = {
+                    id: 456
+                };
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                getItem.and.returnValue(Promise.resolve(item_to_update));
 
-            await updateMetadata(context, [item, item_to_update]);
+                await updateMetadata(context, [item, item_to_update, current_folder]);
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
-        });
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
+            it("it should update empty document metadata", async () => {
+                putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
+                rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
+                const item = {
+                    id: 123,
+                    title: "My empty",
+                    type: TYPE_EMPTY,
+                    description: "on",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
 
-        it("it should update folder metadata", async () => {
-            putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
-            rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
-            const item = {
-                id: 123,
-                title: "My folder",
-                type: TYPE_FOLDER,
-                description: "on",
-                owner: {
-                    id: 102
-                }
-            };
+                const item_to_update = {
+                    id: 123,
+                    title: "My new empty title",
+                    description: "My empty description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "rejected",
+                    obsolescence_date: null
+                };
 
-            const item_to_update = {
-                id: 123,
-                title: "My new empty title",
-                description: "My empty description",
-                owner: {
-                    id: 102
-                },
-                metadata: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103
-                            }
-                        ]
+                const current_folder = {
+                    id: 456
+                };
+
+                getItem.and.returnValue(Promise.resolve(item_to_update));
+
+                await updateMetadata(context, [item, item_to_update, current_folder]);
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
+
+            it("it should update folder metadata", async () => {
+                putEmptyDocumentMetadata = jasmine.createSpy("putEmptyDocumentMetadata");
+                rewire$putEmptyDocumentMetadata(putEmptyDocumentMetadata);
+                const item = {
+                    id: 123,
+                    title: "My folder",
+                    type: TYPE_FOLDER,
+                    description: "on",
+                    owner: {
+                        id: 102
                     }
-                ],
-                status: {
-                    value: "rejected",
-                    recursion: "none"
-                }
-            };
+                };
 
-            getItem.and.returnValue(Promise.resolve(item_to_update));
+                const item_to_update = {
+                    id: 123,
+                    title: "My new empty title",
+                    description: "My empty description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                };
 
-            await updateMetadata(context, [item, item_to_update]);
+                const current_folder = {
+                    id: 456
+                };
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                item_to_update
-            );
-            expect(context.commit).toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                item_to_update
-            );
+                getItem.and.returnValue(Promise.resolve(item_to_update));
+
+                await updateMetadata(context, [item, item_to_update, current_folder]);
+
+                expect(context.commit).toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    item_to_update
+                );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    item_to_update
+                );
+            });
+        });
+
+        describe("Given I'm updating current folder - ", () => {
+            it("it should update file metadata", async () => {
+                putFileMetadata = jasmine.createSpy("putFileMetadata");
+                rewire$putFileMetadata(putFileMetadata);
+
+                const item = {
+                    id: 123,
+                    title: "My folder",
+                    type: TYPE_FOLDER,
+                    description: "n",
+                    owner: {
+                        id: 102
+                    },
+                    status: "none",
+                    obsolescence_date: null
+                };
+
+                const item_to_update = {
+                    id: 123,
+                    title: "My new title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    status: "draft",
+                    obsolescence_date: null
+                };
+
+                const current_folder = {
+                    id: 123
+                };
+
+                getItem.and.returnValue(Promise.resolve(item_to_update));
+
+                await updateMetadata(context, [item, item_to_update, current_folder]);
+
+                expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", item_to_update);
+            });
         });
     });
 });
