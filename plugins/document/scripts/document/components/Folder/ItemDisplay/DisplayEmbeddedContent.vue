@@ -71,6 +71,7 @@ import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
 import { mapState } from "vuex";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "DisplayEmbeddedContent",
@@ -105,32 +106,15 @@ export default {
             return this.currently_previewed_item.embedded_file_properties.content;
         }
     },
-    mounted() {
-        document.addEventListener(
-            "show-create-new-item-version-modal",
-            this.showCreateNewItemVersionModal
-        );
-
-        document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
-
-        document.addEventListener("show-update-item-metadata-modal", this.showUpdateMetadataModal);
-
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener(
-                "show-create-new-item-version-modal",
-                this.showCreateNewItemVersionModal
-            );
-
-            document.removeEventListener(
-                "show-confirm-item-deletion-modal",
-                this.showDeleteItemModal
-            );
-
-            document.removeEventListener(
-                "show-update-item-metadata-modal",
-                this.showUpdateMetadataModal
-            );
-        });
+    created() {
+        EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
+        EventBus.$on("show-update-item-metadata-modal", this.showUpdateMetadataModal);
+    },
+    beforeDestroy() {
+        EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
+        EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
+        EventBus.$off("show-update-item-metadata-modal", this.showUpdateMetadataModal);
     },
     methods: {
         showCreateNewItemVersionModal() {
