@@ -29,7 +29,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Mail\MailFactory;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 
 class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends TestCase
@@ -63,7 +62,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotificationsTest extends TestCase
         $user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_ACTIVE, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
         $this->add_project_member->shouldReceive('addProjectMember')->with($user, $this->an_active_project)->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with(\Feedback::INFO, M::any())->once();
+        $GLOBALS['Response']->shouldNotReceive('addFeedback');
 
         $this->project_member_adder->addProjectMember($user, $this->an_active_project);
     }
