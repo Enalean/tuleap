@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
-use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 /**
@@ -52,35 +50,14 @@ class Tracker_RulesManager
     /** @var FrozenFieldsDao */
     private $frozen_fields_dao;
 
-    /**
-     * @var TrackerRulesDateValidator
-     */
-    private $tracker_rules_date_validator;
-
-    /**
-     * @var TrackerRulesListValidator
-     */
-    private $tracker_rules_list_validator;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
     public function __construct(
         Tracker $tracker,
         Tracker_FormElementFactory $form_element_factory,
-        FrozenFieldsDao $frozen_fields_dao,
-        TrackerRulesDateValidator $tracker_rules_date_validator,
-        TrackerRulesListValidator $tracker_rules_list_validator,
-        TrackerFactory $tracker_factory
+        FrozenFieldsDao $frozen_fields_dao
     ) {
-        $this->tracker                      = $tracker;
-        $this->form_element_factory         = $form_element_factory;
-        $this->frozen_fields_dao            = $frozen_fields_dao;
-        $this->tracker_rules_date_validator = $tracker_rules_date_validator;
-        $this->tracker_rules_list_validator = $tracker_rules_list_validator;
-        $this->tracker_factory              = $tracker_factory;
+        $this->tracker              = $tracker;
+        $this->form_element_factory = $form_element_factory;
+        $this->frozen_fields_dao    = $frozen_fields_dao;
     }
 
     /**
@@ -177,15 +154,11 @@ class Tracker_RulesManager
      * @param int $tracker_id the artifact id to test
      * @param array $value_field_list the selected values to test for the artifact     *
      * @return bool True if the submitted values are coherent regarding the rules,
-     * false otherwise
+ * false otherwise
      */
     function validate($tracker_id, $value_field_list) {
-        $tracker =  $this->tracker_factory->getTrackerByid($tracker_id);
-        $valid_list_rules = $this->tracker_rules_list_validator
-            ->validateListRules($tracker, $value_field_list, $this->getAllListRulesByTrackerWithOrder($tracker_id));
-
-        $valid_date_rules = $this->tracker_rules_date_validator
-            ->validateDateRules($value_field_list, $this->getAllDateRulesByTrackerId($tracker_id));
+        $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
+        $valid_date_rules = $this->validateDateRules($tracker_id, $value_field_list);
 
         if(! $valid_list_rules || ! $valid_date_rules) {
             return false;
@@ -623,6 +596,206 @@ class Tracker_RulesManager
                 $this->getTrackerFormElementFactory(),
                 $this->tracker->getId()
                 );
+    }
+
+    /**
+     *
+     * @param int $tracker_id
+     * @param array $value_field_list
+     * @return bool
+     */
+    protected function validateDateRules($tracker_id, $value_field_list) {
+        $rules = $this->getAllDateRulesByTrackerId($tracker_id);
+
+        foreach ($rules as $rule) {
+
+            if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
+                return false;
+            }
+
+            if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
+                $source_field = $this->getField($rule->getSourceFieldId());
+                $target_field = $this->getField($rule->getTargetFieldId());
+                $feedback = $GLOBALS['Language']->getText(
+                        'plugin_tracker_artifact',
+                        'rules_date_not_valid',
+                        array(
+                            $source_field->getLabel() ,
+                            $rule->getComparator(),
+                            $target_field->getLabel()
+                        )
+                    );
+
+                $GLOBALS['Response']->addFeedback('error', $feedback);
+
+                $source_field->setHasErrors(true);
+                $target_field->setHasErrors(true);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
+        $is_valid = true;
+        if(! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
+            $source_field = $this->getField($rule->getSourceFieldId());
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
+
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
+            $source_field->setHasErrors(true);
+            $is_valid = false;
+        }
+
+        if(! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
+            $target_field = $this->getField($rule->getTargetFieldId());
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
+            $target_field->setHasErrors(true);
+            $is_valid = false;
+        }
+
+        return $is_valid;
+    }
+
+    /** @return bool */
+    private function validateDateRuleOnSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
+        $source_value = $value_field_list[$rule->getSourceFieldId()];
+        $target_value = $value_field_list[$rule->getTargetFieldId()];
+
+        return $rule->validate($source_value, $target_value);
+    }
+
+    /**
+     * Checks that the submitted values do not break field dependencies.
+     *
+     * The logic is that if a rule from a source field to a target field exists
+     * AND the incoming source value corresponds to a source value of ONE of the rule source values
+     * then the incoming target value must be in one of the rules.
+     * I.e one rule must be satsified for a given (source_id, target_id, source_value) trio.
+     *
+     * @param int $tracker_id
+     * @param array $value_field_list
+     * @return bool
+     */
+    protected function validateListRules($tracker_id, $value_field_list) {
+         // construction of $values array : selected values in the form
+        // $values[$field_id]['field'] = artifactfield Object
+        // $values[$field_id]['values'][] = selected value
+        $values = array();
+        foreach ($value_field_list as $field_id => $value) {
+            if ($field = $this->getTrackerFormElementFactory()->getFormElementById($field_id)) {
+                $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
+            }
+        }
+        // construction of $dependencies array : dependcies defined rules
+        // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
+        $dependencies = array();
+        foreach($this->getAllListRulesByTrackerWithOrder($tracker_id) as $rule) {
+            if (is_a($rule, 'Tracker_Rule_List')) {
+                if (!isset($dependencies[$rule->source_field])) {
+                    $dependencies[$rule->source_field] = array();
+                }
+                if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
+                    $dependencies[$rule->source_field][$rule->target_field] = array();
+                }
+                $dependencies[$rule->source_field][$rule->target_field][] = $rule;
+            }
+        }
+
+        $error_occured = false;
+        foreach ($dependencies as $source => $not_used) {
+            if ($error_occured) {
+                break;
+            }
+
+            if (isset($values[$source])) {
+                foreach ($dependencies[$source] as $target => $not_used_target) {
+                    if ($error_occured) {
+                        break;
+                    }
+                    if (isset($values[$target])) {
+                        foreach ($values[$target]['values'] as $target_value) {
+                            if ($error_occured) {
+                                break;
+                            }
+                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                                    || $target_value == null) {
+
+                                /*
+                                 * Field dependencies are only set between fields with values.
+                                 * Ideally, field dependencies between all other fields and the null/ 100
+                                 * value should be set.
+                                 */
+                                continue;
+                            }
+                            //Foreach target values we look if there is at least one source value whith corresponding rule valid
+                            $valid = false;
+                            foreach ($values[$source]['values'] as $source_value) {
+                                if ($valid) {
+                                    break;
+                                }
+
+                                $applied = false;
+                                foreach ($dependencies[$source][$target] as $rule) {
+                                    if ($applied && $valid) {
+                                        break;
+                                    }
+                                    if ($rule->canApplyTo(
+                                        $tracker_id,
+                                        $source,
+                                        $source_value,
+                                        $target,
+                                        $target_value))
+                                    {
+                                        $applied = true;
+                                        $valid = $rule->applyTo(
+                                            $tracker_id,
+                                            $source,
+                                            $source_value,
+                                            $target,
+                                            $target_value);
+                                    }
+                                }
+                            }
+                            // when a dependence problem is detected, we detail the message error
+                            // to explain the fields that trigger the problem
+                            if (! $valid) {
+
+                                $error_occured = true;
+                                // looking for the source field value which cause the dependence problem
+                                $source_field = $this->getTrackerFormElementFactory()->getFormElementById($source);
+                                if(is_null($value_field_list[$source])) {
+                                    $pb_source_values = array();
+                                } else {
+                                    $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                }
+                                $source_field->setHasErrors(true);
+
+                                // looking for the target field value which cause the dependence problem
+                                $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
+                                if(is_null($target_value)) {
+                                    $pb_target_values = array();
+                                } else {
+                                    $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
+                                }
+                                $target_field->setHasErrors(true);
+                               // detailled error message
+                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return !$error_occured;
+    }
+
+    private function getField($field_id) {
+        $tracker_list_factory = $this->getTrackerFormElementFactory();
+        $field                = $tracker_list_factory->getFormElementById($field_id);
+        return $field;
     }
 
     private function isFieldUsedInFrozenFieldsTransitionPostAction($field_id)

@@ -211,17 +211,6 @@ class Tracker_FormElementFactory {
     }
 
     /**
-     * @return Tracker_FormElement_Field_List|null
-     */
-    public function getFormElementListById(int $field_id) {
-        $field = $this->getFormElementById($field_id);
-        if ($field instanceof Tracker_FormElement_Field_List) {
-            return $field;
-        }
-        return null;
-    }
-
-    /**
      * @return Tracker_FormElement_Field
      */
     public function getFormElementFieldById($id) {
