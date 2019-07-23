@@ -20,6 +20,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import createMutationsSharer from "vuex-shared-mutations";
+import { expiringLocalStorage } from "./store-persistence/storage.js";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
@@ -42,8 +44,13 @@ export function createStore(user_id, project_id) {
         plugins: [
             createPersistedState({
                 key: `document_clipboard_${user_id}_${project_id}`,
-                storage: window.sessionStorage,
+                storage: expiringLocalStorage(900),
                 paths: ["clipboard"]
+            }),
+            createMutationsSharer({
+                predicate: mutation => {
+                    return mutation.type.startsWith("clipboard/");
+                }
             })
         ]
     });
