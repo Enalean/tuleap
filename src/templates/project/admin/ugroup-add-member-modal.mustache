@@ -1,5 +1,5 @@
 <form method="POST"
-      action="?group_id={{ project_id }}&ugroup_id={{ id }}"
+      action="/project/{{ project_id }}/admin/user-group/{{ id }}/add"
       class="tlp-modal"
       role="dialog"
       id="add-user-to-ugroup-and-project-members"
@@ -19,7 +19,6 @@
             {{> csrf_token_input }}
         {{/ csrf_token }}
         <input type="hidden" name="user-group" id="user-group" value="{{ name }}">
-        <input type="hidden" name="action" value="edit_ugroup_members">
         <input type="hidden" name="add_user_name" id="add-user-to-ugroup">
         <p id="add-user-to-ugroup-and-project-members-confirmation-message"></p>
         <p>{{# gettext }}The user will automatically be added as project member.{{/ gettext }}</p>
