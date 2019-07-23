@@ -50,6 +50,7 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -61,7 +62,9 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -176,18 +179,20 @@ class TrackersResource extends AuthenticatedResource
             new TransitionExtractor()
         );
 
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
         $builder = new Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new FormElementRepresentationsBuilder(
                 $this->formelement_factory,
                 new PermissionsExporter(
-                    new FrozenFieldDetector(
-                        $transition_retriever,
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            Tracker_FormElementFactory::instance()
-                        )
-                    )
+                    $frozen_fields_detector
                 ),
                 new HiddenFieldsetChecker(
                     new HiddenFieldsetsDetector(
@@ -199,7 +204,16 @@ class TrackersResource extends AuthenticatedResource
                         Tracker_FormElementFactory::instance()
                     ),
                     new FieldsExtractor()
+                ),
+                new PermissionsForGroupsBuilder(
+                    new \UGroupManager(),
+                    $frozen_fields_detector,
+                    new PermissionsFunctionsWrapper()
                 )
+            ),
+            new PermissionsRepresentationBuilder(
+                new \UGroupManager(),
+                new PermissionsFunctionsWrapper()
             )
         );
 
@@ -676,18 +690,20 @@ class TrackersResource extends AuthenticatedResource
                 new TransitionExtractor()
             );
 
+            $frozen_fields_detector = new FrozenFieldDetector(
+                $transition_retriever,
+                new FrozenFieldsRetriever(
+                    new FrozenFieldsDao(),
+                    Tracker_FormElementFactory::instance()
+                )
+            );
+
             $builder = new Tracker_REST_TrackerRestBuilder(
                 $this->formelement_factory,
                 new FormElementRepresentationsBuilder(
                     $this->formelement_factory,
                     new PermissionsExporter(
-                        new FrozenFieldDetector(
-                            $transition_retriever,
-                            new FrozenFieldsRetriever(
-                                new FrozenFieldsDao(),
-                                Tracker_FormElementFactory::instance()
-                            )
-                        )
+                        $frozen_fields_detector
                     ),
                     new HiddenFieldsetChecker(
                         new HiddenFieldsetsDetector(
@@ -699,7 +715,16 @@ class TrackersResource extends AuthenticatedResource
                             Tracker_FormElementFactory::instance()
                         ),
                         new FieldsExtractor()
+                    ),
+                    new PermissionsForGroupsBuilder(
+                        new \UGroupManager(),
+                        $frozen_fields_detector,
+                        new PermissionsFunctionsWrapper()
                     )
+                ),
+                new PermissionsRepresentationBuilder(
+                    new \UGroupManager(),
+                    new PermissionsFunctionsWrapper()
                 )
             );
 

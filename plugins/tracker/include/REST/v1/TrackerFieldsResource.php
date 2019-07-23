@@ -121,7 +121,8 @@ class TrackerFieldsResource extends AuthenticatedResource
         $field_representation->build(
             $field,
             $form_element_factory->getType($field),
-            []
+            [],
+            null
         );
 
         return $field_representation;

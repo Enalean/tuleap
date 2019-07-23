@@ -22,6 +22,7 @@ use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRepresentation;
 use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
 use Tuleap\Tracker\REST\WorkflowRulesRepresentation;
@@ -37,13 +38,19 @@ class Tracker_REST_TrackerRestBuilder
      * @var FormElementRepresentationsBuilder
      */
     private $form_element_representations_builder;
+    /**
+     * @var PermissionsRepresentationBuilder
+     */
+    private $permissions_representation_builder;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        FormElementRepresentationsBuilder $form_element_representations_builder
+        FormElementRepresentationsBuilder $form_element_representations_builder,
+        PermissionsRepresentationBuilder $permissions_representation_builder
     ) {
         $this->formelement_factory                  = $formelement_factory;
         $this->form_element_representations_builder = $form_element_representations_builder;
+        $this->permissions_representation_builder   = $permissions_representation_builder;
     }
 
     public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker) : CompleteTrackerRepresentation
@@ -81,7 +88,8 @@ class Tracker_REST_TrackerRestBuilder
             $rest_fields,
             $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
-            $this->getWorkflowRepresentation($tracker->getWorkflow(), $user, $tracker->getGroupId())
+            $this->getWorkflowRepresentation($tracker->getWorkflow(), $user, $tracker->getGroupId()),
+            $this->permissions_representation_builder->getPermissionsRepresentation($tracker, $user)
         );
 
         return $tracker_representation;
