@@ -90,9 +90,6 @@ export default {
         show() {
             this.modal.show();
         },
-        reset() {
-            this.modal.hide();
-        },
         async updateMetadata(event) {
             event.preventDefault();
             this.is_loading = true;
