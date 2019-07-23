@@ -58,7 +58,7 @@ class GitCrumbBuilder
             new BreadCrumbLinkWithIcon(
                 dgettext('tuleap-git', 'Git repositories'),
                 $this->plugin_path . '/' . urlencode($project->getUnixNameLowerCase()) . '/',
-                'tuleap-services-plugin_git'
+                'fa fa-fw fa-tlp-versioning-git'
             )
         );
 

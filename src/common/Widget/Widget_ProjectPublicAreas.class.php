@@ -95,8 +95,9 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Wiki (only for Active)
 
         if ($project->usesWiki()) {
-            $html .= '<p><a href="'.$purifier->purify($project->getWikiPage()).'">';
-            $html .= '<i class="tuleap-services-wiki tuleap-services-widget"></i>';
+            $wiki_service = $project->getService(Service::WIKI);
+            $html .= '<p><a href="'.$purifier->purify($wiki_service->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($wiki_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
             $pos = strpos($project->getWikiPage(), '/wiki/');
@@ -109,8 +110,9 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### CVS (only for Active)
 
         if ($project->usesCVS()) {
-            $html .= '<p><a href="' . $purifier->purify($project->getCvsPage()) . '">';
-            $html .= '<i class="tuleap-services-cvs tuleap-services-widget"></i>';
+            $cvs_service = $project->getService(Service::CVS);
+            $html .= '<p><a href="'.$purifier->purify($cvs_service->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($cvs_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
             // LJ Cvs checkouts added
             $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='" . db_ei($group_id) . "'";
@@ -137,8 +139,9 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Subversion (only for Active)
 
         if ($project->usesService('svn')) {
-            $html .= '<p><a href="' . $purifier->purify($project->getSvnPage()) . '">';
-            $html .= '<i class="tuleap-services-svn tuleap-services-widget"></i>';
+            $svn_service = $project->getService(Service::SVN);
+            $html .= '<p><a href="'.$purifier->purify($svn_service->getUrl()).'">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($svn_service->getIcon()).'"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
@@ -209,7 +212,7 @@ class Widget_ProjectPublicAreas extends Widget {
                 $ftp_subdomain = $project->getUnixName() . ".";
             }
             $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". urlencode($project->getUnixName(false)) ."/\">";    // keep the first occurence in lower case
-            $html .= '<i class="tuleap-services-ftp tuleap-services-widget"></i>';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas fa fa-tlp-folder-globe"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</a>';
             $html .= '</p>';
         }

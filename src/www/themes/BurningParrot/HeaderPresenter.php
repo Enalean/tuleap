@@ -60,9 +60,6 @@ class HeaderPresenter
     /** @var string */
     public $main_classes;
 
-    /** @var array */
-    public $unicode_icons;
-
     /** @var SidebarPresenter */
     public $sidebar;
 
@@ -109,7 +106,6 @@ class HeaderPresenter
         $main_classes,
         $sidebar,
         $current_project_navbar_info_presenter,
-        $unicode_icons,
         array $toolbar,
         array $breadcrumbs,
         $motd
@@ -128,7 +124,6 @@ class HeaderPresenter
         $this->main_classes                          = $main_classes;
         $this->sidebar                               = $sidebar;
         $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
-        $this->unicode_icons                         = $unicode_icons;
         $this->toolbar                               = $toolbar;
         $this->motd                                  = $motd;
         $this->has_motd                              = ! empty($motd);

@@ -19,16 +19,6 @@
 }
 
 @font-face {
-    font-family: 'tuleap-services';
-    src: url('/themes/common/font/tuleap-services.eot'),
-    url('/themes/common/font/tuleap-services.woff') format('woff'),
-    url('/themes/common/font/tuleap-services.ttf') format('truetype'),
-    url('/themes/font/tuleap-services.svg#tuleap-services') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'kalamregular';
     src: url('/themes/common/font/kalam/Kalam-Regular.ttf') format('truetype');
     font-weight: normal;
@@ -47,63 +37,4 @@
     src: url('/themes/common/font/kalam/Kalam-Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-}
-
-[class^="tuleap-services-"]:before, [class*=" tuleap-services-"]:before {
-    font-family: "tuleap-services";
-    font-style: normal;
-    font-weight: normal;
-    speak: none;
-    display: inline-block;
-    text-decoration: inherit;
-    width: 1em;
-    margin-right: .5em;
-    text-align: center;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1em;
-}
-
-.tuleap-services-angle-double-right:before {
-    content: $services-angle-double-right;
-}
-
-.tuleap-services-admin:before {
-    content: $services-admin;
-}
-
-.tuleap-services-wiki:before {
-    content: $services-wiki;
-}
-
-.tuleap-services-homepage:before {
-    content: $services-homepage;
-}
-
-.tuleap-services-forum:before {
-    content: $services-forum;
-}
-
-.tuleap-services-mail:before {
-    content: $services-mail;
-}
-
-.tuleap-services-news:before {
-    content: $services-news;
-}
-
-.tuleap-services-svn:before {
-    content: $services-svn;
-}
-
-.tuleap-services-cvs:before {
-    content: $services-cvs;
-}
-
-.tuleap-services-file:before {
-    content: $services-file;
-}
-
-.tuleap-services-tracker:before {
-    content: $services-tracker;
 }

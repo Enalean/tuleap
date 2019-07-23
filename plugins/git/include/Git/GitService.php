@@ -26,6 +26,11 @@ use Service;
 
 class GitService extends Service
 {
+    public function getIcon(): string
+    {
+        return $this->getFontAwesomeIcon('fa-tlp-versioning-git');
+    }
+
     public function getInternationalizedName()
     {
         $label = $this->getLabel();

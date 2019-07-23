@@ -202,7 +202,6 @@ class GitPlugin extends Plugin
         $this->addHook('project_is_active');
         $this->addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         // Stats plugin
@@ -348,10 +347,6 @@ class GitPlugin extends Plugin
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e806';
     }
 
     public function site_admin_option_hook($params)

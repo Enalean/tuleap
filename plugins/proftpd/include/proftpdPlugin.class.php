@@ -43,7 +43,6 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::RENAME_PROJECT);
@@ -109,12 +108,9 @@ class proftpdPlugin extends Plugin {
 
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e801';
-    }
-
-    public function service_classnames(array $params) {
-        $params['classnames'][$this->getServiceShortname()] = 'Tuleap\ProFTPd\ServiceProFTPd';
+    public function service_classnames(array &$params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\ProFTPd\ServiceProFTPd::class;
     }
 
     public function cssfile($params) {

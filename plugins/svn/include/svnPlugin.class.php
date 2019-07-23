@@ -146,7 +146,6 @@ class SvnPlugin extends Plugin
         $this->setScope(Plugin::SCOPE_PROJECT);
         bindtextdomain('tuleap-svn', __DIR__.'/../site-content');
 
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -492,12 +491,9 @@ class SvnPlugin extends Plugin
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
     }
 
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e804';
-    }
-
-    public function service_classnames(array $params) {
-        $params['classnames'][$this->getServiceShortname()] = 'Tuleap\SVN\ServiceSvn';
+    public function service_classnames(array &$params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\SVN\ServiceSvn::class;
     }
 
     /**

@@ -101,7 +101,7 @@ class ServiceFile extends Service
                   </td>';
                 // Releases to display
                 $ret['content'] .= '<td>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">
-                    <i class="tuleap-services-file tuleap-services-widget"></i>
+                    <i class="fa fa-fw fa-files-o"></i>
                   </td>
                   <td><a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</a></td></tr>';
             }

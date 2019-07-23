@@ -42,6 +42,8 @@ class Service
         self::HOMEPAGE  => 'fa-home',
         self::ML        => 'fa-envelope',
         self::NEWS      => 'fa-rss',
+        self::CVS       => 'fa-tlp-versioning-cvs',
+        self::WIKI      => 'fa-tlp-wiki',
         self::TRACKERV3 => 'fa-list-ol',
     ];
 
@@ -243,7 +245,7 @@ class Service
         if (isset(self::ICONS[$this->getShortName()])) {
             return $this->getFontAwesomeIcon(self::ICONS[$this->getShortName()]);
         }
-        return 'tuleap-services-angle-double-right tuleap-services-'.$this->getShortName();
+        return $this->getFontAwesomeIcon('fa-angle-double-right');
     }
 
     protected function getFontAwesomeIcon(string $icon) : string
