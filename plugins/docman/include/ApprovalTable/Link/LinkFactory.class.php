@@ -73,7 +73,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
      */
     public function _createTable($table) {
         return $this->dao->createTable(
-            'version_id',
+            'link_version_id',
             $table->getVersionId(),
             $table->getOwner(),
             $table->getDescription(),

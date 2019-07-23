@@ -257,11 +257,11 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $initializer->setup($this->project);
     }
 
-    public function addApprovalTable(string $title, int $version_id, int $status): void
+    public function addApprovalTable(string $title, int $version_id, int $status, string $field): void
     {
         $dao = new Docman_ApprovalTableItemDao();
         $table_id = $dao->createTable(
-            'version_id',
+            $field,
             $version_id,
             $this->docman_user_id,
             $title,
@@ -271,7 +271,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         );
 
         $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
-        $reviewer_dao-> addUser($table_id, $this->docman_user_id);
+        $reviewer_dao->addUser($table_id, $this->docman_user_id);
         $reviewer_dao->updateReview($table_id, $this->docman_user_id, time(), 1, "", 1);
     }
 
@@ -303,7 +303,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $file_path       = __DIR__ . '/../_fixtures/docmanFile/embeddedFile';
         $version_id = $this->addFileVersion($item_id, $file_version_title, 'application/pdf', $file_path);
 
-        $this->addApprovalTable($file_name, (int)$version_id, $approval_status);
+        $this->addApprovalTable($file_name, (int)$version_id, $approval_status, 'version_id');
     }
 
     /**

@@ -272,6 +272,7 @@ CREATE TABLE plugin_docman_metadata_love_md (
 -- item_id     Id of the item (FK plugin_docman_item (item_id))
 -- version_id  Id of the item version (FK plugin_docman_version (id))
 -- wiki_version_Id Id of the wiki page version (FK wiki_version(version))
+-- link_version_Id Id of the link version (FK plugin_docman_link_version(id))
 -- table_owner User who creates the table (FK user (user_id))
 -- date        Table creation date
 -- description A text that describe why the approval is required.
@@ -285,6 +286,7 @@ CREATE TABLE plugin_docman_approval (
   item_id INT(11) UNSIGNED NULL DEFAULT NULL,
   version_id INT(11) UNSIGNED NULL DEFAULT NULL,
   wiki_version_id INT(11) UNSIGNED NULL DEFAULT NULL,
+  link_version_id INT(11) UNSIGNED NULL DEFAULT NULL,
   table_owner INT(11) UNSIGNED NOT NULL,
   date INT(11) UNSIGNED NULL,
   description TEXT NULL,
@@ -292,8 +294,10 @@ CREATE TABLE plugin_docman_approval (
   notification TINYINT(4) DEFAULT 0 NOT NULL,
   notification_occurence INT(11) DEFAULT 0,
   auto_status TINYINT(4) DEFAULT 0 NOT NULL,
+  might_be_corrupted BOOL DEFAULT FALSE,
   PRIMARY KEY(table_id),
   UNIQUE KEY version_id (version_id),
+  UNIQUE KEY uniq_link_version_id (link_version_id),
   UNIQUE KEY item_id(item_id,wiki_version_id)
 );
 

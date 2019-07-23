@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class Docman_ApprovalTableItemDao extends DataAccessObject {
@@ -168,7 +169,9 @@ class Docman_ApprovalTableItemDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function getTablesForReminder() {
-        $sql  = 'SELECT * from plugin_docman_approval
+        $sql  = 'SELECT plugin_docman_approval.*, plugin_docman_link_version.item_id AS link_item_id
+                 FROM plugin_docman_approval
+                 LEFT JOIN plugin_docman_link_version ON (plugin_docman_link_version.id = plugin_docman_approval.link_version_id)
                  WHERE status = 1
                    AND notification != 0
                    AND notification_occurence != 0';
