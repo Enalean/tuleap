@@ -46,7 +46,6 @@ class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMem
     {
         try {
             $this->add_project_member->addProjectMember($user, $project);
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
         } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         } catch (AlreadyProjectMemberException $exception) {
