@@ -23,12 +23,8 @@
 
 <script>
 import { mapState } from "vuex";
-import {
-    getStatusFromMapping,
-    getStatusMetadata
-} from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { DOCMAN_ITEM_STATUS_NONE } from "../../../../constants.js";
 import StatusMetadata from "../StatusMetadata.vue";
+import { transformDocumentMetadataForUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentUpdate",
@@ -42,18 +38,14 @@ export default {
         ...mapState(["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
-                if (!metadata) {
-                    return DOCMAN_ITEM_STATUS_NONE;
-                }
-                return metadata.list_value[0].id;
+                transformDocumentMetadataForUpdate(
+                    this.currentlyUpdatedItem,
+                    this.is_item_status_metadata_used
+                );
+                return this.currentlyUpdatedItem.status;
             },
             set(value) {
-                const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
-                const status_string = getStatusFromMapping(value);
-
-                metadata.list_value[0].id = parseInt(value, 10);
-                metadata.list_value[0].name = status_string;
+                this.currentlyUpdatedItem.status = value;
             }
         }
     }

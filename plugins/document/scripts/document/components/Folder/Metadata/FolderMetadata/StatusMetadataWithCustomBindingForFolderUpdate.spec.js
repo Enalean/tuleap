@@ -119,7 +119,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
 
         store.state.is_item_status_metadata_used = true;
 
-        wrapper.vm.status_value = 102;
+        wrapper.vm.status_value = "approved";
 
         expect(
             wrapper.contains("[data-test=document-status-metadata-for-folder-update]")

@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper.js";
+import {
+    getStatusFromMapping,
+    getStatusMetadata,
+    getStatusIdFromName
+} from "./hardcoded-metadata-mapping-helper.js";
 
 describe("getStatusMetadata", () => {
     it("Given metadata has a status, then its return the corresponding metadata", () => {
@@ -32,7 +36,17 @@ describe("getStatusFromMapping", () => {
         expect(getStatusFromMapping(101)).toEqual("draft");
     });
 
-    it("Returns none is value does not correspond to anything known", () => {
+    it("Returns none if the value does not correspond to anything known", () => {
         expect(getStatusFromMapping(200)).toEqual("none");
+    });
+});
+
+describe("getStatusIdFromName", () => {
+    it("Returns the correct status string depending on status id", () => {
+        expect(getStatusIdFromName("draft")).toEqual(101);
+    });
+
+    it("Returns none if the value does not correspond to anything known", () => {
+        expect(getStatusIdFromName("aapap")).toEqual(100);
     });
 });

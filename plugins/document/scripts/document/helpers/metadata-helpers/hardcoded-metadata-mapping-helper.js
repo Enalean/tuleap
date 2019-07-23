@@ -36,3 +36,19 @@ export function getStatusFromMapping(value) {
 
     return "none";
 }
+
+export function getStatusIdFromName(value) {
+    const status_mapping = {
+        none: 100,
+        draft: 101,
+        approved: 102,
+        rejected: 103
+    };
+
+    const status_int = status_mapping[value];
+    if (status_int) {
+        return status_int;
+    }
+
+    return 100;
+}

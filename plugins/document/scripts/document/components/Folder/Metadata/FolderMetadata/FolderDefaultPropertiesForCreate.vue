@@ -24,7 +24,7 @@
         <div class="tlp-property" v-translate>
             All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
         </div>
-        <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem"/>
+        <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
     </div>
 </template>
 
@@ -34,7 +34,8 @@ export default {
     name: "FolderDefaultPropertiesForCreate",
     components: { StatusMetadataWithCustomBindingForFolderCreate },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
+        parent: Object
     }
 };
 </script>

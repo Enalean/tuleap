@@ -111,12 +111,10 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
 
         store.state.is_item_status_metadata_used = true;
 
-        wrapper.vm.status_value = 102;
+        wrapper.vm.status_value = "approved";
 
         expect(wrapper.contains("[data-test=document-status-for-item-update]")).toBeTruthy();
 
-        expect(wrapper.vm.currentlyUpdatedItem.metadata[0].short_name).toEqual("status");
-        expect(wrapper.vm.currentlyUpdatedItem.metadata[0].list_value[0].id).toEqual(102);
-        expect(wrapper.vm.currentlyUpdatedItem.metadata[0].list_value[0].name).toEqual("approved");
+        expect(wrapper.vm.currentlyUpdatedItem.status).toEqual("approved");
     });
 });

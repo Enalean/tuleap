@@ -23,8 +23,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { getStatusFromMapping } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { DOCMAN_ITEM_STATUS_NONE } from "../../../../constants.js";
+import { transformItemMetadataForCreation } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 import StatusMetadata from "../StatusMetadata.vue";
 
 export default {
@@ -33,16 +32,22 @@ export default {
         StatusMetadata
     },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
+        parent: Object
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                return DOCMAN_ITEM_STATUS_NONE;
+                transformItemMetadataForCreation(
+                    this.currentlyUpdatedItem,
+                    this.parent,
+                    this.is_item_status_metadata_used
+                );
+                return this.currentlyUpdatedItem.status;
             },
             set(value) {
-                this.currentlyUpdatedItem.status = getStatusFromMapping(value);
+                this.currentlyUpdatedItem.status = value;
             }
         }
     }

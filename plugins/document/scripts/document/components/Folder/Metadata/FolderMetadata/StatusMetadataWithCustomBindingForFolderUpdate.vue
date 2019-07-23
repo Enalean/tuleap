@@ -27,11 +27,8 @@
 <script>
 import { mapState } from "vuex";
 import StatusMetadata from "../StatusMetadata.vue";
-import {
-    getStatusFromMapping,
-    getStatusMetadata
-} from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
-import { DOCMAN_ITEM_STATUS_NONE } from "../../../../constants.js";
+import { getStatusIdFromName } from "../../../../helpers/metadata-helpers/hardcoded-metadata-mapping-helper.js";
+import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "StatusMetadataWithCustomBindingForFolderUpdate",
@@ -45,17 +42,16 @@ export default {
         ...mapState(["is_item_status_metadata_used"]),
         status_value: {
             get() {
-                const metadata = getStatusMetadata(this.currentlyUpdatedItem.metadata);
-                if (!metadata) {
-                    return DOCMAN_ITEM_STATUS_NONE;
-                }
-                return metadata.list_value[0].id;
+                transformFolderMetadataForRecursionAtUpdate(
+                    this.currentlyUpdatedItem,
+                    this.parent,
+                    this.is_item_status_metadata_used
+                );
+                return this.currentlyUpdatedItem.status.value;
             },
             set(value) {
-                const status_string = getStatusFromMapping(value);
-
-                this.currentlyUpdatedItem.status.id = parseInt(value, 10);
-                this.currentlyUpdatedItem.status.value = status_string;
+                this.currentlyUpdatedItem.status.id = getStatusIdFromName(value);
+                this.currentlyUpdatedItem.status.value = value;
             }
         }
     }
