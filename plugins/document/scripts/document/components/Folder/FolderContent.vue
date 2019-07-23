@@ -44,7 +44,6 @@
                             v-bind:key="item.id"
                             v-bind:item="item"
                             v-bind:is-quick-look-displayed="toggle_quick_look"
-                            v-on:toggleQuickLook="toggleQuickLook(item)"
                         />
                     </tbody>
                 </table>
@@ -63,6 +62,7 @@ import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
 import { TYPE_FOLDER, TYPE_FILE } from "../../constants.js";
+import EventBus from "../../helpers/event-bus.js";
 
 export default {
     name: "FolderContent",
@@ -97,14 +97,17 @@ export default {
             return this.toggle_quick_look && this.currently_previewed_item;
         }
     },
+    mounted() {
+        EventBus.$on("toggle-quick-look", this.toggleQuickLook);
+    },
     methods: {
-        toggleQuickLook(item) {
-            if (this.currently_previewed_item === item) {
+        toggleQuickLook(event) {
+            if (this.currently_previewed_item === event.details.item) {
                 this.toggle_quick_look = !this.toggle_quick_look;
                 return;
             }
 
-            this.displayQuickLook(item);
+            this.displayQuickLook(event.details.item);
         },
         displayQuickLook(item) {
             this.$store.commit("updateCurrentlyPreviewedItem", item);

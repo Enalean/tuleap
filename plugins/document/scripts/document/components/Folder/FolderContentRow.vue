@@ -23,10 +23,12 @@
         v-bind:class="row_classes"
         v-bind:data-item-id="item.id"
         v-on:mouseleave="closeActionMenu"
-        v-on:click="$emit('toggleQuickLook', item)"
+        v-on:click="toggleQuickLookOnRow"
     >
-        <td v-bind:colspan="colspan">
-            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }">
+        <td v-bind:colspan="colspan" v-bind:id="`document-folder-content-row-${item.id}`">
+            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }"
+                 v-bind:id="`document-folder-content-row-div-${item.id}`"
+            >
                 <component
                     v-bind:is="cell_title_component_name"
                     v-bind:item="item"
@@ -39,6 +41,7 @@
                         <quick-look-button
                             class="quick-look-button"
                             data-test="quick-look-button"
+                            v-bind:item="item"
                         />
                         <dropdown-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">
                             <dropdown-menu-for-item-quick-look v-bind:item="item" data-test="dropdown-menu"/>
@@ -208,6 +211,14 @@ export default {
     methods: {
         closeActionMenu() {
             EventBus.$emit("hide-action-menu");
+        },
+        toggleQuickLookOnRow(event) {
+            if (
+                event.target.id === `document-folder-content-row-${this.item.id}` ||
+                event.target.id === `document-folder-content-row-div-${this.item.id}`
+            ) {
+                EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
+            }
         }
     }
 };

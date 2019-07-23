@@ -22,6 +22,7 @@
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
             data-test="quick-look-button"
+            v-on:click="toggleQuickLook()"
     >
         <i class="fa fa-eye tlp-button-icon"></i>
         <translate>Quick look</translate>
@@ -29,7 +30,16 @@
 </template>
 
 <script>
+import EventBus from "../../../helpers/event-bus.js";
 export default {
-    name: "QuickLookButton"
+    name: "QuickLookButton",
+    props: {
+        item: Object
+    },
+    methods: {
+        toggleQuickLook() {
+            EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
+        }
+    }
 };
 </script>

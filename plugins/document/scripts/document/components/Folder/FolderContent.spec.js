@@ -79,7 +79,11 @@ describe("FolderContent", () => {
 
         const wrapper = factory();
 
-        wrapper.vm.toggleQuickLook(item);
+        const event = {
+            details: { item }
+        };
+
+        wrapper.vm.toggleQuickLook(event);
         expect(wrapper.contains("[data-test=document-quick-look]")).toBeTruthy();
 
         expect(store.commit).not.toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
@@ -102,7 +106,11 @@ describe("FolderContent", () => {
 
         const wrapper = factory();
 
-        wrapper.vm.toggleQuickLook(other_item);
+        const event = {
+            details: { item: other_item }
+        };
+
+        wrapper.vm.toggleQuickLook(event);
         expect(wrapper.contains("[data-test=document-quick-look]")).toBeTruthy();
 
         expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", other_item);
