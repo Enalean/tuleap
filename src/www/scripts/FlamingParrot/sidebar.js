@@ -166,7 +166,7 @@ function initCustomScrollbar() {
     });
 }
 
-$(document).ready(function() {
+$(window).load(function() {
     var current_size = getSidebarUserPreference();
 
     if ($(".sidebar-nav").length > 0) {
