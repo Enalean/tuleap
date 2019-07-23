@@ -110,6 +110,7 @@ describe("scroll synchronizer", () => {
 });
 
 function buildCodeMirrorSpy() {
+    //eslint-disable-next-line jasmine/no-unsafe-spy
     const fake_code_mirror = jasmine.createSpyObj("code_mirror", [
         "on",
         "scrollTo",

@@ -283,5 +283,6 @@ describe("side-by-side line mapper", () => {
 });
 
 function buildCodeMirrorSpy() {
+    //eslint-disable-next-line jasmine/no-unsafe-spy
     return jasmine.createSpyObj("code_mirror", ["getLineHandle"]);
 }

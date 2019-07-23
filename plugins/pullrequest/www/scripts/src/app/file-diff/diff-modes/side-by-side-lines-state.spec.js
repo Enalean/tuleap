@@ -212,5 +212,6 @@ describe("side-by-side lines state", () => {
 });
 
 function buildCodeMirrorSpy() {
+    //eslint-disable-next-line jasmine/no-unsafe-spy
     return jasmine.createSpyObj("code_mirror", ["setValue"]);
 }
