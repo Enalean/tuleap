@@ -94,7 +94,11 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("updateMetadata", [this.item, this.item_to_update]);
+            await this.$store.dispatch("updateMetadata", [
+                this.item,
+                this.item_to_update,
+                this.current_folder
+            ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

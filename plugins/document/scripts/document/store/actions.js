@@ -704,7 +704,7 @@ export const getEmbeddedFileDisplayPreference = async (context, item) => {
     }
 };
 
-export const updateMetadata = async (context, [item, item_to_update]) => {
+export const updateMetadata = async (context, [item, item_to_update, current_folder]) => {
     try {
         switch (item_to_update.type) {
             case TYPE_FILE:
@@ -774,10 +774,15 @@ export const updateMetadata = async (context, [item, item_to_update]) => {
                 break;
         }
         const updated_item = await getItem(item.id);
-        Vue.set(updated_item, "updated", true);
-        context.commit("removeItemFromFolderContent", updated_item);
-        context.commit("addJustCreatedItemToFolderContent", updated_item);
-        context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+
+        if (item.id === current_folder.id) {
+            context.commit("replaceCurrentFolder", updated_item);
+        } else {
+            Vue.set(updated_item, "updated", true);
+            context.commit("removeItemFromFolderContent", updated_item);
+            context.commit("addJustCreatedItemToFolderContent", updated_item);
+            context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+        }
     } catch (exception) {
         await handleErrorsForModal(context, exception);
     }
