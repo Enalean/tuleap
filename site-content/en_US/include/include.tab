@@ -15,7 +15,6 @@
 #
 include_account	pwd_length_err	Password must be at least 6 characters.
 include_account	account_notactive	Account '$1' not active. User not added.
-include_account	user_added	User added
 include_account	user_already_member	User is already a member
 include_account	user_not_exist	User does not exist
 include_account	welcome	$1 - Welcome to Project $2

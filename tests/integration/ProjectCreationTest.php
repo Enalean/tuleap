@@ -95,7 +95,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
             new UGroupDao(),
             $ugroup_manager,
             $ugroup_binding,
-            MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
             EventManager::instance()
         );
 

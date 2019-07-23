@@ -854,6 +854,9 @@ msgstr "Aucune clé d'accès à l'API"
 msgid "No children projects"
 msgstr "Aucun projet enfant"
 
+msgid "No email for user account"
+msgstr "Pas d'adresse email pour ce compte"
+
 msgid "No items can use labels in this project."
 msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
 
@@ -1566,6 +1569,10 @@ msgstr "Catégories"
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
+#, php-format
+msgid "Unable to send email to user, please contact %s"
+msgstr "Impossible d'envoyer l'email à l'utilisateur, veuillez contacter %s"
+
 msgid "Unauthorized action for anonymous"
 msgstr "Cette action n'est pas autorisée pour les anonymes"
 
@@ -1603,6 +1610,9 @@ msgstr "Utilisée en tant que marqueur de projet"
 msgid "User '%s' does not exist"
 msgstr "L'utilisateur '%s' n’existe pas"
 
+msgid "User added"
+msgstr "Utilisateur ajouté"
+
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
@@ -1622,6 +1632,9 @@ msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
 
 msgid "User group does not exist"
 msgstr "Le groupe d'utilisateurs n'existe pas"
+
+msgid "User is already member of the project"
+msgstr "L'utilisateur est déjà membre du projet"
 
 msgid "User name"
 msgstr "Nom d'utilisateur"

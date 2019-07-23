@@ -445,7 +445,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             new UGroupDao(),
             $ugroup_manager,
             $ugroup_binding,
-            MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
             $event_manager
         );
 
@@ -514,9 +514,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 new ProjectHistoryDao(),
                 new UGroupManager()
             ),
-            new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-                $ugroup_binding
-            ),
+            ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
             $project_creator,
             new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
             new ProjectDashboardXMLImporter(

@@ -8,7 +8,6 @@
 #
 include_account	pwd_length_err	Le mot de passe doit comporter au moins 6 caractères.
 include_account	account_notactive	Compte '$1' inactif. L'utilisateur n'a pas été ajouté.
-include_account	user_added	Utilisateur ajouté
 include_account	user_already_member	L'utilisateur est déjà membre
 include_account	user_not_exist	L'utilisateur n'existe pas
 include_account	welcome	$1 - Bienvenue sur le projet $2

@@ -148,7 +148,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             new UGroupDao(),
             $ugroup_manager,
             $ugroup_binding,
-            MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
             EventManager::instance()
         );
 

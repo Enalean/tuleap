@@ -64,6 +64,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     public const STATUS_VALIDATED_RESTRICTED = 'W';
 
+    public const UNIX_STATUS_SITEADMIN_SPECIAL = '0';
+    public const UNIX_STATUS_NO_UNIX_ACCOUNT = 'N';
+    public const UNIX_STATUS_ACTIVE = 'A';
+    public const UNIX_STATUS_SUSPENDED = 'S';
+    public const UNIX_STATUS_DELETED = 'D';
+
     /**
      * Name of the preference for lab features
      */
@@ -666,6 +672,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getUnixStatus() {
         return $this->unix_status;
+    }
+
+    public function hasUnixAccount()
+    {
+        return $this->getUnixStatus() !== self::UNIX_STATUS_NO_UNIX_ACCOUNT;
     }
 
     function getUnixUid() {

@@ -31,12 +31,7 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
         if (! $project || $project->isError()) {
             return false;
         }
-        $project_member_adder =new \Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications(
-            new UGroupBinding(
-                new UGroupUserDao(),
-                new UGroupManager()
-            )
-        );
+        $project_member_adder = \Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications::build();
         $project_member_adder->addProjectMember($user, $project);
         return true;
     } else {
@@ -44,116 +39,6 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_not_exist'));
         return false;
     }
-}
-
-/**
- * Add a new user into a given project
- *
- * @param int $group_id Project id
- * @param PFUser $user User to add
- * @param bool $check_user_status
- * @return bool
- */
-
-function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_status, $send_notifications)
-{
-    //user was found but if it's a pending account adding
-    //is not allowed
-    if ($check_user_status && !$user->isActive() && !$user->isRestricted()) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
-        return false;
-    }
-
-    $project = ProjectManager::instance()->getProject($group_id);
-    if ($project !== null && $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-        ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted()) {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            sprintf(_('Account %s is restricted and the project does not allow restricted users. User not added.'), $user->getUserName())
-        );
-        return false;
-    }
-
-        //if not already a member, add it
-    $res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$user->getId()." AND group_id='".db_ei($group_id)."'");
-    if (db_numrows($res_member) < 1) {
-        //not already a member
-        db_query("INSERT INTO user_group (user_id,group_id) VALUES (".db_ei($user->getId()).",".db_ei($group_id).")");
-
-
-        //if no unix account, give them a unix_uid
-        if ($user->getUnixStatus() == 'N' || !$user->getUnixUid()) {
-            $user->setUnixStatus('A');
-            $um = UserManager::instance();
-            $um->assignNextUnixUid($user);
-            $um->updateDb($user);
-        }
-
-        // Raise an event
-        $em = EventManager::instance();
-        $em->processEvent('project_admin_add_user', array(
-                'group_id'       => $group_id,
-                'user_id'        => $user->getId(),
-                'user_unix_name' => $user->getUserName(),
-        ));
-
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_account', 'user_added'));
-        if ($send_notifications) {
-            account_send_add_user_to_group_email($group_id, $user->getId());
-        }
-        (new ProjectHistoryDao())->groupAddHistory('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
-
-        return true;
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'user_already_member'));
-    }
-    return false;
-}
-
-/**
- * Warn user she has been added to a project
- *
- * @param int $group_id id of the project
- * @param int $user_id id of the user
- *
- * @return bool true if the mail was sent false otherwise
- */
-function account_send_add_user_to_group_email($group_id,$user_id) {
-    global $Language;
-
-    // Get email address
-    $res = db_query("SELECT email FROM user WHERE user_id=".db_ei($user_id));
-    if (db_numrows($res) > 0) {
-        $email_address = db_result($res,0,'email');
-        if (!$email_address) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'no_mail_for_account'));
-            return false;
-        }
-        $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=".db_ei($group_id));
-        if (db_numrows($res2) > 0) {
-            $group_name = db_result($res2,0,'group_name');
-            /*
-             * Both variables $base_url and $unix_group_name are used
-             * by default in add_user_to_group_email.txt
-             */
-            $base_url        = HTTPRequest::instance()->getServerUrl();
-            $unix_group_name = db_result($res2,0,'unix_group_name');
-            // $message is defined in the content file
-            include($Language->getContent('include/add_user_to_group_email'));
-
-            $mail = new Codendi_Mail();
-            $mail->setTo($email_address);
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
-            $mail->setBodyText($message);
-            $result = $mail->send();
-            if (!$result) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_DISABLED);
-            }
-            return $result;
-        }
-    }
-    return false;
 }
 
 // Generate a valid Unix login name from the email address.

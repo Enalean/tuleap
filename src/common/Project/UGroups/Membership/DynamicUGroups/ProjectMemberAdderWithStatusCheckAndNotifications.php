@@ -22,23 +22,91 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 
+use BaseLanguage;
+use Feedback;
+use HTTPRequest;
+use Tuleap\Mail\MailFactory;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+
 class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMemberAdder
 {
     /**
-     * @var \UGroupBinding
+     * @var BaseLanguage
      */
-    private $ugroup_binding;
+    private $language;
+    /**
+     * @var MailFactory
+     */
+    private $mail_factory;
+    /**
+     * @var AddProjectMember
+     */
+    private $project_member_adder;
 
-    public function __construct(\UGroupBinding $ugroup_binding)
+    public function __construct(AddProjectMember $project_member_adder, BaseLanguage $language, MailFactory $mail_factory)
     {
-        $this->ugroup_binding = $ugroup_binding;
+        $this->project_member_adder = $project_member_adder;
+        $this->language = $language;
+        $this->mail_factory = $mail_factory;
+    }
+
+    public static function build() : self
+    {
+        return new self(
+            AddProjectMember::build(),
+            $GLOBALS['Language'],
+            new MailFactory()
+        );
     }
 
     public function addProjectMember(\PFUser $user, \Project $project): void
     {
-        /** @psalm-suppress MissingFile */
-        require_once __DIR__ . '/../../../../../www/include/account.php';
-        \account_add_user_obj_to_group($project->getID(), $user, true, true);
-        $this->ugroup_binding->reloadUgroupBindingInProject($project);
+        if (! $user->isActive() && ! $user->isRestricted()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
+            return;
+        }
+        try {
+            $this->project_member_adder->addProjectMember($user, $project);
+            $this->sendNotification($user, $project);
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, _('User added'));
+        } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+        } catch (AlreadyProjectMemberException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+        } catch (NoEmailForUserException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('No email for user account'));
+        }
+    }
+
+    private function sendNotification(\PFUser $user, \Project $project) : void
+    {
+        if (! $user->getEmail()) {
+            throw new NoEmailForUserException();
+        }
+
+        $mail = $this->mail_factory->getMail();
+        $mail->setTo($user->getEmail());
+        $mail->setFrom(\ForgeConfig::get('sys_noreply'));
+        $mail->setSubject($this->language->getOverridableText('include_account', 'welcome', [\ForgeConfig::get('sys_name'), $project->getUnconvertedPublicName()]));
+        $mail->setBodyText($this->getMessageBody($project));
+        if (! $mail->send()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(_('Unable to send email to user, please contact %s'), \ForgeConfig::get('sys_email_admin')));
+        }
+    }
+
+    /**
+     * Both variables $base_url and $unix_group_name are used
+     * by default in add_user_to_group_email.txt
+     */
+    private function getMessageBody(\Project $project) : string
+    {
+        $group_name      = $project->getUnconvertedPublicName();
+        $base_url        = HTTPRequest::instance()->getServerUrl();
+        $unix_group_name = $project->getUnixName();
+        // $message is defined in the content file
+        $message         = '';
+        include($this->language->getContent('include/add_user_to_group_email'));
+
+        return $message;
     }
 }

@@ -326,7 +326,7 @@ class AdminController extends BaseController
                 new UGroupDao(),
                 $ugroup_manager,
                 $ugroup_binding,
-                MemberAdder::build(new ProjectMemberAdderWithoutStatusCheckAndNotifications($ugroup_binding)),
+                MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
                 $this->event_manager
             );
 
@@ -403,9 +403,7 @@ class AdminController extends BaseController
                             new ProjectHistoryDao(),
                             new UGroupManager()
                         ),
-                        new ProjectMemberAdderWithoutStatusCheckAndNotifications(
-                            $ugroup_binding
-                        ),
+                        ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
                         $project_creator,
                         new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
                         new ProjectDashboardXMLImporter(
