@@ -118,7 +118,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     private function getLocalIncPath() {
-        return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
+        return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/tuleap/conf/local.inc';
     }
 
     private function foraceCreateDatabase() {

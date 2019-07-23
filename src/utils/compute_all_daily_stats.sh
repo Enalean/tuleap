@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# Codendi
+# Tuleap
+# Copyright (c) Enalean, 2019-Present. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
@@ -17,7 +18,7 @@
 
 # Read util directory location from local.inc
 if [ -z "$CODENDI_LOCAL_INC" ]; then 
-    CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+    CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
 fi
 CODENDI_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
