@@ -123,6 +123,21 @@ pipeline {
                         stage('Javascript coding standards') {
                             steps { script { actions.runJavascriptCodingStandards() } }
                         }
+                        stage('ESLint static analysis') {
+                            agent {
+                                docker {
+                                    image 'node:12.6-alpine'
+                                    reuseNode true
+                                    args '--network none'
+                                }
+                            }
+                            steps { script { actions.runESLint() } }
+                            post {
+                                always {
+                                    recordIssues enabledForFailure: true, tools: [checkStyle(id: 'checkstyle_eslint', pattern: 'results/eslint/checkstyle.xml')]
+                                }
+                            }
+                        }
                         stage('PHP coding standards') {
                             steps {
                                 script {
@@ -155,7 +170,11 @@ pipeline {
                                     actions.runPsalm('tests/psalm/psalm.xml', filesToAnalyze)
                                 }
                             }
-                            post { always { recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(pattern: 'results/psalm/checkstyle.xml')] } }
+                            post {
+                                always {
+                                    recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(id: 'checkstyle_psalm', pattern: 'results/psalm/checkstyle.xml')]
+                                }
+                            }
                         }
                     }
                 }

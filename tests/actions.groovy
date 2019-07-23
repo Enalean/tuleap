@@ -67,6 +67,12 @@ def runJavascriptCodingStandards() {
     sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,vue}"'
 }
 
+def runESLint() {
+    dir ('sources') {
+        sh 'npm run eslint -- --quiet --format=checkstyle --output-file=../results/eslint/checkstyle.xml .'
+    }
+}
+
 def runPsalm(String configPath, String filesToAnalyze) {
     dir ('sources') {
         if (filesToAnalyze == '') {
