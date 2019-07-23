@@ -12,6 +12,12 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "\"%{ title }\" is being copied…"
+msgstr "\"%{ title }\" est en train d'être copié…"
+
+msgid "\"%{ title }\" is being moved…"
+msgstr "\"%{ title }\" est en train d'être déplacé…"
+
 msgid "12 months"
 msgstr "12 mois"
 

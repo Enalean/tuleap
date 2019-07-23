@@ -47,7 +47,11 @@ describe("ClipboardContentInformation", () => {
 
     it(`Given there is an item in the clipboard
         Then information is displayed`, () => {
-        store.state.clipboard = { item_title: "My item", operation_type: CLIPBOARD_OPERATION_COPY };
+        store.state.clipboard = {
+            item_title: "My item",
+            operation_type: CLIPBOARD_OPERATION_COPY,
+            pasting_in_progress: false
+        };
 
         const wrapper = content_information_factory();
 
@@ -57,7 +61,18 @@ describe("ClipboardContentInformation", () => {
         store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
         const result_cut = wrapper.html();
         expect(result_cut).toBeTruthy();
-
         expect(result_cut).not.toEqual(result_copy);
+
+        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_COPY;
+        store.state.clipboard.pasting_in_progress = true;
+        const result_copy_paste = wrapper.html();
+        expect(result_copy_paste).toBeTruthy();
+        expect(result_copy_paste).not.toEqual(result_copy);
+
+        store.state.clipboard.operation_type = CLIPBOARD_OPERATION_CUT;
+        const result_cut_paste = wrapper.html();
+        expect(result_cut_paste).toBeTruthy();
+        expect(result_cut_paste).not.toEqual(result_cut);
+        expect(result_cut_paste).not.toEqual(result_copy_paste);
     });
 });
