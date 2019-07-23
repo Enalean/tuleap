@@ -1,4 +1,7 @@
 {
   "label": "Iconography",
-  "shortcode": ".fa .fa-[icon]"
+  "children": [
+    "font-awesome",
+    "font-awesome-tlp-extension"
+  ]
 }

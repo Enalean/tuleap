@@ -74,7 +74,7 @@ $main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tuleap UI Framework</title>
+    <title>TLP</title>
 
     <link rel="stylesheet" id="tlp-stylesheet" href="<?php echo $tlp_blue_css ?>">
 
