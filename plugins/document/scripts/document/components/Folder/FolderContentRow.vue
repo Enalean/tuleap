@@ -200,7 +200,9 @@ export default {
         const is_under_the_fold = position_from_top > viewport_height;
 
         if (is_under_the_fold) {
-            EventBus.$emit("item-has-been-created-under-the-fold");
+            EventBus.$emit("item-has-been-created-under-the-fold", {
+                detail: { item: this.item }
+            });
         }
     },
     methods: {
