@@ -120,17 +120,3 @@ window.addEventListener("scroll", function() {
     }
     ticking = true;
 });
-
-var icons = document.querySelectorAll(".doc-icon-card");
-[].forEach.call(icons, function(icon) {
-    var classname = icon.dataset.tlpTooltip;
-    icon.addEventListener("click", function() {
-        navigator.clipboard.writeText(classname).then(function() {
-            icon.setAttribute("data-tlp-tooltip", "Classname have been copied!");
-
-            setTimeout(function() {
-                icon.setAttribute("data-tlp-tooltip", classname);
-            }, 5000);
-        });
-    });
-});
