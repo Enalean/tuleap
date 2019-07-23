@@ -97,8 +97,11 @@ export default {
             return this.toggle_quick_look && this.currently_previewed_item;
         }
     },
-    mounted() {
+    created() {
         EventBus.$on("toggle-quick-look", this.toggleQuickLook);
+    },
+    beforeDestroy() {
+        EventBus.$off("toggle-quick-look", this.toggleQuickLook);
     },
     methods: {
         toggleQuickLook(event) {
