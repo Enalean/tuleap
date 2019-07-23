@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import _ from "lodash";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
@@ -236,9 +256,10 @@ describe("ExecutionService - ", () => {
             var remote_executions = [execution_1, execution_2];
 
             ExecutionService.synchronizeExecutions(campaign_id).then(function() {
+                //eslint-disable-next-line you-dont-need-lodash-underscore/size
                 expect(_.size(service_executions())).toEqual(2);
-                expect(_.size(service_categories().Security.executions)).toEqual(1);
-                expect(_.size(service_categories().NonRegression.executions)).toEqual(1);
+                expect(service_categories().Security.executions.length).toEqual(1);
+                expect(service_categories().NonRegression.executions.length).toEqual(1);
             });
 
             resolveExecutions(remote_executions);

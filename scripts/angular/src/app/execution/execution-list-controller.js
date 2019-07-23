@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import _ from "lodash";
 import angular from "angular";
 
@@ -105,7 +124,7 @@ function ExecutionListCtrl(
             SocketService.listenToExecutionViewed();
             SocketService.listenToExecutionCreated();
             SocketService.listenToExecutionUpdated();
-            SocketService.listenToExecutionDeleted(function(execution) {
+            SocketService.listenToExecutionDeleted(function() {
                 hideDetailsForRemovedTestExecution();
             });
             SocketService.listenToExecutionLeft();
@@ -204,6 +223,7 @@ function ExecutionListCtrl(
     function hideDetailsForRemovedTestExecution() {
         if ($state.includes("campaigns.executions.detail")) {
             var campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
+                //eslint-disable-next-line you-dont-need-lodash-underscore/any
                 current_execution_exists = _.any(campaign_executions, checkActiveClassOnExecution);
 
             if (!current_execution_exists) {
@@ -223,6 +243,7 @@ function ExecutionListCtrl(
             $scope.status
         );
 
+        //eslint-disable-next-line you-dont-need-lodash-underscore/size
         return _.size(filtered_executions) > 0;
     }
 }

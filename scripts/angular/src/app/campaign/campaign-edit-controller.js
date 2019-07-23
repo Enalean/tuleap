@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import _ from "lodash";
 
 import { UNCATEGORIZED } from "../definition/definition-constants.js";
@@ -41,20 +60,20 @@ function CampaignEditCtrl(
         loadDefinitions
     });
 
-    _.extend($scope, {
+    Object.assign($scope, {
         tests_list: {},
         test_reports: [],
         filters: {},
-        selectReportTests: selectReportTests,
-        showAddTestModal: showAddTestModal,
-        toggleCategory: toggleCategory,
-        toggleTest: toggleTest,
-        addedTests: addedTests,
-        removedTests: removedTests,
-        editCampaign: editCampaign,
-        categoryCheckmark: categoryCheckmark,
-        testCheckmark: testCheckmark,
-        diffState: diffState
+        selectReportTests,
+        showAddTestModal,
+        toggleCategory,
+        toggleTest,
+        addedTests,
+        removedTests,
+        editCampaign,
+        categoryCheckmark,
+        testCheckmark,
+        diffState
     });
 
     function init() {
@@ -95,17 +114,22 @@ function CampaignEditCtrl(
     }
 
     function selectedTests(category) {
+        //eslint-disable-next-line you-dont-need-lodash-underscore/filter
         return _.filter(category.tests, function(test) {
             return test.selected;
         });
     }
 
     function toggleCategory(category) {
+        //category.tests is not an array
+        //eslint-disable-next-line you-dont-need-lodash-underscore/size
         if (selectedTests(category).length === _.size(category.tests)) {
+            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
             _.forEach(category.tests, function(test) {
                 test.selected = false;
             });
         } else {
+            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
             _.forEach(category.tests, function(test) {
                 test.selected = true;
             });
@@ -120,6 +144,7 @@ function CampaignEditCtrl(
         switch (selectedTests(category).length) {
             case 0:
                 return "fa-square-o";
+            //eslint-disable-next-line you-dont-need-lodash-underscore/size
             case _.size(category.tests):
                 return "fa-check-square-o";
             default:
@@ -146,6 +171,7 @@ function CampaignEditCtrl(
     function addedTests() {
         return _($scope.tests_list)
             .map(function(category) {
+                //eslint-disable-next-line you-dont-need-lodash-underscore/select
                 return _.select(category.tests, { execution: null, selected: true });
             })
             .flatten()
@@ -172,9 +198,11 @@ function CampaignEditCtrl(
         }
 
         self.loadDefinitions(selected_report).then(definitions => {
+            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
             _.forEach($scope.tests_list, function(category) {
+                //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
                 _.forEach(category.tests, function(test) {
-                    test.selected = _.some(definitions, { id: test.definition.id });
+                    test.selected = definitions.some(definition => definition.id === test.definition.id);
                 });
             });
         });
@@ -205,10 +233,10 @@ function CampaignEditCtrl(
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
-        const definition_ids = _.map(addedTests(), test => {
+        const definition_ids = addedTests().map(test => {
             return test.definition.id;
         });
-        const execution_ids = _.map(removedTests(), test => {
+        const execution_ids = removedTests().map(test => {
             return test.execution.id;
         });
 

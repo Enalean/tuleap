@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import _ from "lodash";
 
 export default ExecutionService;
@@ -65,20 +84,21 @@ function ExecutionService(
     }
 
     function synchronizeExecutions(campaign_id) {
-        var remote_executions = [],
-            limit = 50,
+        var limit = 50,
             offset = 0;
 
         return getAllRemoteExecutions(campaign_id, limit, offset).then(function(remote_executions) {
+            //eslint-disable-next-line you-dont-need-lodash-underscore/select
             var executions_to_remove = _.select(self.executions, function(execution) {
-                return !_.some(remote_executions, { id: execution.id });
+                return ! remote_executions.some(remote => remote.id === execution.id);
             });
-            var executions_to_add = _.select(remote_executions, function(execution) {
+            var executions_to_add = remote_executions.filter(function(execution) {
+                //eslint-disable-next-line you-dont-need-lodash-underscore/some
                 return !_.some(self.executions, { id: execution.id });
             });
 
-            _.forEach(executions_to_remove, removeTestExecutionWithoutUpdateCampaignStatus);
-            _.forEach(executions_to_add, addTestExecutionWithoutUpdateCampaignStatus);
+            executions_to_remove.forEach(removeTestExecutionWithoutUpdateCampaignStatus);
+            executions_to_add.forEach(addTestExecutionWithoutUpdateCampaignStatus);
         });
     }
 
@@ -89,8 +109,7 @@ function ExecutionService(
             return $q.when(Object.values(self.executions_by_categories_by_campaigns[campaign_id]));
         }
 
-        var remote_executions = [],
-            limit = 50,
+        var limit = 50,
             offset = 0;
 
         self.loading[campaign_id] = true;
@@ -129,7 +148,7 @@ function ExecutionService(
     function groupExecutionsByCategory(campaign_id, executions) {
         var categories = self.executions_by_categories_by_campaigns[campaign_id];
 
-        _.forEach(executions, function(execution) {
+        executions.forEach(function(execution) {
             var category = execution.definition.category;
             if (!category) {
                 category = ExecutionConstants.UNCATEGORIZED;
@@ -147,7 +166,7 @@ function ExecutionService(
                 };
             }
 
-            if (!_.some(categories[category].executions, { id: execution.id })) {
+            if (!categories[category].executions.some(category_execution => category_execution.id === execution.id)) {
                 categories[category].executions.push(execution);
             }
         });
@@ -156,9 +175,10 @@ function ExecutionService(
     }
 
     function getExecutionsByDefinitionId(artifact_id) {
+        //eslint-disable-next-line you-dont-need-lodash-underscore/map
         var executions = _.flatten(_.map(self.categories, "executions"));
 
-        return _.filter(executions, { definition: { id: artifact_id } });
+        return executions.filter(execution => execution.definition.id === artifact_id);
     }
 
     function addTestExecution(execution) {
@@ -249,9 +269,7 @@ function ExecutionService(
     }
 
     function updatePresenceOnCampaign(user) {
-        var user_on_campaign = _.find(self.presences_on_campaign, function(presence) {
-            return presence.id === user.id;
-        });
+        var user_on_campaign = self.presences_on_campaign.find(presence => presence.id === user.id);
 
         if (user_on_campaign && !_.has(user_on_campaign, "score")) {
             _.extend(user_on_campaign, user.score);
@@ -271,9 +289,7 @@ function ExecutionService(
     }
 
     function addPresenceCampaign(user) {
-        var user_id_exists = _.some(self.presences_on_campaign, function(presence) {
-            return presence.id === user.id;
-        });
+        var user_id_exists = self.presences_on_campaign.some(presence => presence.id === user.id);
 
         if (!user_id_exists) {
             self.presences_on_campaign.push(user);
@@ -290,9 +306,7 @@ function ExecutionService(
                 execution.viewed_by = [];
             }
 
-            var user_uuid_exists = _.some(execution.viewed_by, function(presence) {
-                return presence.uuid === user.uuid;
-            });
+            var user_uuid_exists = execution.viewed_by.some(presence => presence.uuid === user.uuid);
 
             if (!user_uuid_exists) {
                 execution.viewed_by.push(user);
@@ -312,12 +326,14 @@ function ExecutionService(
     }
 
     function removeAllViewTestExecution() {
+        //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
         _.forEach(self.executions, function(execution) {
             _.remove(execution.viewed_by);
         });
     }
 
     function removeViewTestExecutionByUUID(uuid) {
+        //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
         _.forEach(self.executions, function(execution) {
             _.remove(execution.viewed_by, { uuid: uuid });
         });
@@ -337,7 +353,9 @@ function ExecutionService(
         if (self.presences_loaded && self.executions_loaded) {
             self.presences_loaded = false;
             self.executions_loaded = false;
+            //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
             _.forEach(self.presences_by_execution, function(presences, execution_id) {
+                //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
                 _.forEach(presences, function(presence) {
                     viewTestExecution(execution_id, presence);
                     addPresenceCampaign(presence);
@@ -357,6 +375,7 @@ function ExecutionService(
     }
 
     function executionsForCampaign(campaign_id) {
+        //eslint-disable-next-line you-dont-need-lodash-underscore/map
         var executions = _.map(
             self.executions_by_categories_by_campaigns[campaign_id],
             "executions"
