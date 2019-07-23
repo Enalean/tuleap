@@ -20,8 +20,6 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
-use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -895,15 +893,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function isUsedInFieldDependency()
     {
-        $frozen_field_dao     = new FrozenFieldsDao();
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $rm                   = new Tracker_RulesManager($this->getTracker(),
-            $form_element_factory,
-            $frozen_field_dao,
-            new TrackerRulesDateValidator($form_element_factory),
-            new TrackerRulesListValidator($form_element_factory),
-            TrackerFactory::instance()
-        );
+        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance(), new FrozenFieldsDao());
         return $rm->isUsedInFieldDependency($this);
     }
 

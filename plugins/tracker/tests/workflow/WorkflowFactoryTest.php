@@ -114,10 +114,9 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker_rules_manager = Mockery::mock(Tracker_RulesManager::class);
         $this->workflow_factory = partial_mock(
             'WorkflowFactory',
-            array('getDao', 'getGlobalRulesManager'),
+            array('getDao'),
             array(
                 mock('TransitionFactory'),
                 stub('TrackerFactory')->getTrackerById()->returns(aMockTracker()->build()),
@@ -130,7 +129,6 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
         );
         $this->dao = mock('Workflow_Dao');
         stub($this->workflow_factory)->getDao()->returns($this->dao);
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns($this->tracker_rules_manager);
     }
 
     public function itReturnsSameObjectWhenUsingSameTrackerId() {
