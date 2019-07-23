@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean 2017 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -292,5 +292,10 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         if ($this->description) {
             $root->addChild('description', $this->description);
         }
+    }
+
+    public function getReport()
+    {
+        return $this->report;
     }
 }

@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe SAS.
  *
@@ -31,6 +31,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     protected $nbSteps;
     protected $labels;
     protected $observed_field_id;
+    protected $observed_field;
 
     /**
      * build cumulative_flow chart properties
@@ -41,9 +42,9 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         parent::buildProperties($engine);
 
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $observed_field       = $form_element_factory->getFormElementById($this->chart->getFieldId());
-        $type                 = $form_element_factory->getType($observed_field);
-        $this->observed_field_id = $observed_field->getId();
+        $this->observed_field = $form_element_factory->getFormElementById($this->chart->getFieldId());
+        $type                 = $form_element_factory->getType($this->observed_field);
+        $this->observed_field_id = $this->observed_field->getId();
         $this->timeFiller = array(GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600*24,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600*24*7,
             GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
@@ -53,7 +54,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $this->scale = $this->chart->getScale();
         $this->nbSteps = ceil(($this->stopDate - $this->startDate)/$this->timeFiller[$this->scale]);
 
-        if ($this->isValidObservedField($observed_field, $type) && $this->isValidType($type)) {
+        if ($this->isValidObservedField($this->observed_field, $type) && $this->isValidType($type)) {
             $engine->data = $this->getCumulativeFlowData($engine);
         }
 
@@ -101,8 +102,14 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
     public function getColumns(array $data)
     {
+        $report_filter = $this->getReportFilter();
+
         $columns = [];
         foreach($data as $column_id => $column) {
+            if (count($report_filter) > 0 && ! in_array($column_id, $report_filter)) {
+                continue;
+            }
+
             $values = array_values($column['values']);
 
             if (! $this->isColumnEmpty($values)) {
@@ -112,6 +119,26 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         }
 
         return $columns;
+    }
+
+    private function getReportFilter(): array
+    {
+        $tracker_report = $this->chart->getRenderer()->getReport();
+        assert($tracker_report instanceof Tracker_Report);
+
+        $report_filter = [];
+        foreach ($tracker_report->getCriteria() as $criterion) {
+            $criterion_field = $criterion->getField();
+            if ((int) $criterion_field->getId() === (int) $this->chart->getFieldId()) {
+                $criterion_value = $criterion_field->getCriteriaValue($criterion);
+                if (is_array($criterion_value)) {
+                    $report_filter = $criterion_value;
+                }
+                break;
+            }
+        }
+
+        return $report_filter;
     }
 
     private function isColumnEmpty(array $column_values)
