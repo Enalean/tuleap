@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <p class="tlp-text-info" v-if="item_title !== null">
+    <p class="tlp-text-info" v-if="item_title !== null && !pasting_in_progress">
         <i class="fa fa-info-circle document-clipboard-content-information-icon"></i>
         <translate key="cut-information" v-bind:translate-params="{ title: item_title }" v-if="operation_type === CLIPBOARD_OPERATION_CUT">
             You are currently moving "%{ title }". You can paste it in a folder you are allowed to write into using the folder action dropdown.
@@ -26,6 +26,15 @@
         </translate>
         <translate key="copy-information" v-bind:translate-params="{ title: item_title }" v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
             You are currently copying "%{ title }". You can paste it in a folder you are allowed to write into using the folder action dropdown.
+        </translate>
+    </p>
+    <p class="tlp-text-info" v-else-if="item_title !== null && pasting_in_progress">
+        <i class="fa fa-spin fa-circle-o-notch document-clipboard-content-information-icon"></i>
+        <translate key="cut-in-progress-information" v-bind:translate-params="{ title: item_title }" v-if="operation_type === CLIPBOARD_OPERATION_CUT">
+            "%{ title }" is being moved…
+        </translate>
+        <translate key="copy-in-progress-information" v-bind:translate-params="{ title: item_title }" v-else-if="operation_type === CLIPBOARD_OPERATION_COPY">
+            "%{ title }" is being copied…
         </translate>
     </p>
 </template>
@@ -42,7 +51,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("clipboard", ["item_title", "operation_type"])
+        ...mapState("clipboard", ["item_title", "operation_type", "pasting_in_progress"])
     }
 };
 </script>
