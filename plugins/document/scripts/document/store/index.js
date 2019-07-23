@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import * as actions from "./actions.js";
@@ -28,13 +29,22 @@ import clipboard from "./clipboard/module.js";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions,
-    modules: {
-        error,
-        clipboard
-    }
-});
+export function createStore(user_id, project_id) {
+    return new Vuex.Store({
+        state,
+        getters,
+        mutations,
+        actions,
+        modules: {
+            error,
+            clipboard
+        },
+        plugins: [
+            createPersistedState({
+                key: `document_clipboard_${user_id}_${project_id}`,
+                storage: window.sessionStorage,
+                paths: ["clipboard"]
+            })
+        ]
+    });
+}

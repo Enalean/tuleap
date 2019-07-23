@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,6 @@
 
 import Vue from "vue";
 import VueRouter from "vue-router";
-import store from "../store/index.js";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
 import DisplayEmbedded from "../components/Folder/ItemDisplay/DisplayEmbedded.vue";
@@ -27,7 +26,7 @@ import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
 
 Vue.use(VueRouter);
 
-export function createRouter(project_name) {
+export function createRouter(store, project_name) {
     const router = new VueRouter({
         mode: "history",
         base: "/plugins/document/" + project_name + "/",
