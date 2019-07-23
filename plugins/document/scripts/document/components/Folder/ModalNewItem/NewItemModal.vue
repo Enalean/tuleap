@@ -36,7 +36,7 @@
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item" name="properties"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item" name="properties"/>
             </document-global-metadata-for-create>
-            <other-information-metadata v-bind:currently-updated-item="item"/>
+            <other-information-metadata-for-create v-bind:currently-updated-item="item"/>
         </div>
 
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
@@ -56,13 +56,13 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
-import OtherInformationMetadata from "../Metadata/DocumentMetadata/OtherInformationMetadata.vue";
+import OtherInformationMetadataForCreate from "../Metadata/OtherInformationMetadataForCreate.vue";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "NewItemModal",
     components: {
-        OtherInformationMetadata,
+        OtherInformationMetadataForCreate,
         DocumentGlobalMetadataForCreate,
         FileProperties,
         EmbeddedProperties,

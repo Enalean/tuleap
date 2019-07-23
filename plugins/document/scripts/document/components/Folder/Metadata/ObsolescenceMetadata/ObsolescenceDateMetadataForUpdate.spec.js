@@ -21,10 +21,10 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../../helpers/local-vue.js";
-import ObsolescenceDateMetadata from "./ObsolescenceDateMetadata.vue";
-import moment from "moment";
+import ObsolescenceDateMetadataUpdate from "./ObsolescenceDateMetadataForUpdate.vue";
+import moment from "moment/moment";
 
-describe("ObsolescenceDateMetadata", () => {
+describe("ObsolescenceDateMetadataForUpdate", () => {
     let metadata_factory, state, store;
     beforeEach(() => {
         state = {
@@ -36,7 +36,7 @@ describe("ObsolescenceDateMetadata", () => {
         store = createStoreMock(store_options);
 
         metadata_factory = (props = {}) => {
-            return shallowMount(ObsolescenceDateMetadata, {
+            return shallowMount(ObsolescenceDateMetadataUpdate, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
@@ -64,7 +64,7 @@ describe("ObsolescenceDateMetadata", () => {
                 const wrapper = metadata_factory();
                 store.state.is_obsolescence_date_metadata_used = true;
 
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
+                const select = wrapper.find("[data-test=document-obsolescence-date-select-update]")
                     .element;
                 select.value = "permanent";
                 select.dispatchEvent(new Event("input"));
@@ -75,7 +75,7 @@ describe("ObsolescenceDateMetadata", () => {
                 const wrapper = metadata_factory();
                 store.state.is_obsolescence_date_metadata_used = true;
 
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
+                const select = wrapper.find("[data-test=document-obsolescence-date-select-update]")
                     .element;
                 select.value = "3";
                 select.dispatchEvent(new Event("input"));
@@ -88,86 +88,44 @@ describe("ObsolescenceDateMetadata", () => {
 
                 expect(wrapper.emitted().input[0]).toEqual([expected_date]);
             });
-
-            it(`should be the current day + 6 months if the option "6months" is chosen by the user `, () => {
-                const wrapper = metadata_factory();
-                store.state.is_obsolescence_date_metadata_used = true;
-
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
-                    .element;
-                select.value = "6";
-                select.dispatchEvent(new Event("input"));
-
-                const current_date = moment().format("YYYY-MM-DD");
-
-                const expected_date = moment(current_date, "YYYY-MM-DD")
-                    .add(6, "M")
-                    .format("YYYY-MM-DD");
-
-                expect(wrapper.emitted().input[0]).toEqual([expected_date]);
-            });
-
-            it(`should be the current day + 12 months if the option "12months" is chosen by the user `, () => {
-                const wrapper = metadata_factory();
-                store.state.is_obsolescence_date_metadata_used = true;
-
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
-                    .element;
-                select.value = "12";
-                select.dispatchEvent(new Event("input"));
-
-                const current_date = moment().format("YYYY-MM-DD");
-
-                const expected_date = moment(current_date, "YYYY-MM-DD")
-                    .add(12, "M")
-                    .format("YYYY-MM-DD");
-
-                expect(wrapper.emitted().input[0]).toEqual([expected_date]);
-            });
-            it(`should be the current day if the option "fixedDate" is chosen by the user `, () => {
-                const wrapper = metadata_factory();
-                store.state.is_obsolescence_date_metadata_used = true;
-
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
-                    .element;
-                select.value = "fixed";
-                select.dispatchEvent(new Event("input"));
-
-                const current_date = moment().format("YYYY-MM-DD");
-
-                expect(wrapper.emitted().input[0]).toEqual([current_date]);
-            });
-
-            it(`should be the current day if the option "today" is chosen by the user `, () => {
-                const wrapper = metadata_factory();
-                store.state.is_obsolescence_date_metadata_used = true;
-
-                const select = wrapper.find("[data-test=document-obsolescence-date-select]")
-                    .element;
-                select.value = "today";
-                select.dispatchEvent(new Event("input"));
-
-                const current_date = moment().format("YYYY-MM-DD");
-
-                expect(wrapper.emitted().input[0]).toEqual([current_date]);
-            });
             describe(`The binding between the select box and the date input`, () => {
                 it(`When the user click on the date input then the value of the select should be 'Fixed date`, () => {
                     const wrapper = metadata_factory();
                     store.state.is_obsolescence_date_metadata_used = true;
 
                     const select_date = wrapper.find(
-                        "[data-test=document-obsolescence-date-select]"
+                        "[data-test=document-obsolescence-date-select-update]"
                     ).element;
                     expect(select_date.value).toEqual("permanent");
 
                     const obsolescence_date_input = wrapper.find(
-                        "[data-test=document-obsolescence-date-input]"
+                        "[data-test=document-obsolescence-date-input-update]"
                     );
                     obsolescence_date_input.element.value = "2019-02-02";
                     obsolescence_date_input.trigger("click");
 
                     expect(select_date.value).toEqual("fixed");
+                });
+            });
+            describe(`The checking of the obsolescence date`, () => {
+                it(`displays error if the obsolescence date is not well formatted`, async () => {
+                    const props = {
+                        isInUpdateContext: true
+                    };
+                    const wrapper = metadata_factory(props);
+                    store.state.is_obsolescence_date_metadata_used = true;
+
+                    const obsolescence_date_input = wrapper.find(
+                        "[data-test=document-obsolescence-date-input-update]"
+                    );
+                    obsolescence_date_input.element.value = "2044-81-02";
+                    obsolescence_date_input.trigger("click");
+
+                    await wrapper.vm.$nextTick().then(() => {});
+
+                    expect(
+                        wrapper.contains("[data-test=obsolescence-date-error-message]")
+                    ).toBeTruthy();
                 });
             });
         });

@@ -14,14 +14,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import localVue from "../../../../helpers/local-vue.js";
-import OtherInformationMetadata from "./OtherInformationMetadata.vue";
-import { TYPE_FILE } from "../../../../constants.js";
+import localVue from "../../../helpers/local-vue.js";
+import OtherInformationMetadata from "./OtherInformationMetadataForUpdate.vue";
+import { TYPE_FILE } from "../../../constants.js";
 
 describe("OtherInformationMetadata", () => {
     let other_metadata, state, store;

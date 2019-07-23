@@ -65,7 +65,6 @@
                 >
                     Fixed date
                 </option>
-                <slot></slot>
             </select>
             <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
             <input
@@ -80,22 +79,28 @@
                 ref="input"
             >
         </div>
+        <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="obsolescence-date-error-message">
+            {{ error_message }}
+        </p>
     </div>
 </template>
 
 <script>
 import { datePicker } from "tlp";
 import { mapState } from "vuex";
-import moment from "moment";
+import moment from "moment/moment";
+import { getObsolescenceDateValueInput } from "../../../../helpers/metadata-helpers/obsolescence-date-value.js";
+import { isDateValid } from "../../../../helpers/date-formatter.js";
 
 export default {
-    name: "ObsolescenceDateMetadata",
+    name: "ObsolescenceDateMetadataForCreate",
     props: {
         value: String
     },
     data() {
         return {
-            selectDateValue: "permanent"
+            select_date_value: "permanent",
+            error_message: ""
         };
     },
     computed: {
@@ -109,32 +114,35 @@ export default {
     },
     methods: {
         obsolescenceDateValue(event) {
-            this.selectDateValue = event.target.value;
-            const current_date = moment();
-            let date;
-            switch (this.selectDateValue) {
-                case "permanent":
-                    date = null;
-                    break;
-                case "today":
-                    date = current_date.format("YYYY-MM-DD");
-                    break;
-                default:
-                    date = moment(current_date, "YYYY-MM-DD")
-                        .add(this.selectDateValue, "M")
-                        .format("YYYY-MM-DD");
-            }
+            this.select_date_value = event.target.value;
+            const date = getObsolescenceDateValueInput(this.select_date_value);
             this.$emit("input", date);
         },
         inputDate(event) {
             const input_date_value = event.target.value;
             if (input_date_value && this.value !== input_date_value) {
                 this.setSelectDate("fixed");
+
+                let error = "";
+                const current_date = moment();
+
+                if (!isDateValid(input_date_value)) {
+                    error = this.$gettext("Bad date format");
+                }
+                if (current_date.isSameOrAfter(input_date_value, "day")) {
+                    error = this.$gettext(
+                        "The current date is the same or before the obsolescence date"
+                    );
+                }
+
+                this.$refs.input.setCustomValidity(error);
+                this.error_message = error;
             }
+
             this.$emit("input", input_date_value);
         },
         setSelectDate(value) {
-            this.selectDateValue = value;
+            this.select_date_value = value;
             this.$refs.selectDateValue.value = value;
         }
     }
