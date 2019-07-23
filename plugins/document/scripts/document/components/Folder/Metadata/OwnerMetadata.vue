@@ -22,28 +22,36 @@
     <div class="tlp-form-element">
         <label
             class="tlp-label"
-            for="document-new-item-owner"
+            for="document-item-owner"
         >
             <translate>Owner</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <input
-            disabled
-            type="text"
-            class="tlp-input"
-            id="document-new-item-owner"
-            name="owner"
-            required
-            v-bind:value="currentlyUpdatedItem.owner.username"
-        >
+        <people-picker v-bind:value="owner_id"
+                       id="document-item-owner"
+                       v-bind:currently_selected_user="currentlyUpdatedItem.owner"
+        />
     </div>
 </template>
 
 <script>
+import PeoplePicker from "./PeoplePicker.vue";
+
 export default {
     name: "OwnerMetadata",
+    components: { PeoplePicker },
     props: {
         currentlyUpdatedItem: Object
+    },
+    computed: {
+        owner_id: {
+            get() {
+                return this.currentlyUpdatedItem.owner.id;
+            },
+            set(value) {
+                this.currentlyUpdatedItem.owner_id = value;
+            }
+        }
     }
 };
 </script>
