@@ -18,31 +18,27 @@
   -->
 
 <template>
-    <button
-        v-if="item.user_can_write"
-        type="button"
-        class="tlp-button-small tlp-button-outline tlp-button-danger"
-        v-on:click="processDeletion"
-        data-test="quick-look-delete-button"
+    <a href="#"
+       v-on:click.prevent="showNewFolderModal"
+       class="tlp-dropdown-menu-item"
+       role="menuitem"
+       v-if="is_item_a_folder(item) && item.user_can_write"
+       data-test="document-new-folder-creation-button"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i>
-        <translate>Delete</translate>
-    </button>
+        <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
+        <translate>New folder</translate>
+    </a>
 </template>
-
 <script>
+import { mapGetters } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
-
 export default {
-    name: "QuickLookDeleteButton",
-    props: {
-        item: Object
-    },
+    name: "NewFolderSecondaryAction",
+    props: { item: Object },
+    computed: { ...mapGetters(["is_item_a_folder"]) },
     methods: {
-        processDeletion() {
-            EventBus.$emit("show-confirm-item-deletion-modal", {
-                detail: { current_item: this.item }
-            });
+        showNewFolderModal() {
+            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
         }
     }
 };

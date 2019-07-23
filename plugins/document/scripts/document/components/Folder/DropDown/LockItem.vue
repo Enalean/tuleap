@@ -18,31 +18,35 @@
   -->
 
 <template>
-    <button
-        v-if="item.user_can_write"
-        type="button"
-        class="tlp-button-small tlp-button-outline tlp-button-danger"
-        v-on:click="processDeletion"
-        data-test="quick-look-delete-button"
+    <a
+        v-if="can_lock_document"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-test="document-dropdown-menu-lock-item"
+        v-on:click.prevent="lockDocument"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i>
-        <translate>Delete</translate>
-    </button>
+        <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
+        <translate>Lock</translate>
+    </a>
 </template>
-
 <script>
-import EventBus from "../../../helpers/event-bus.js";
-
 export default {
-    name: "QuickLookDeleteButton",
+    name: "LockItem",
     props: {
         item: Object
     },
+    computed: {
+        can_lock_document() {
+            if (this.item.lock_info !== null) {
+                return false;
+            }
+
+            return this.item.user_can_write;
+        }
+    },
     methods: {
-        processDeletion() {
-            EventBus.$emit("show-confirm-item-deletion-modal", {
-                detail: { current_item: this.item }
-            });
+        async lockDocument() {
+            await this.$store.dispatch("lockDocument", this.item);
         }
     }
 };

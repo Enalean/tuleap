@@ -17,37 +17,15 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <a
-        v-if="can_lock_document"
-        class="tlp-dropdown-menu-item"
-        role="menuitem"
-        data-test="dropdown-menu-lock-item"
-        v-on:click.prevent="lockDocument"
-    >
-        <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
-        <translate>Lock</translate>
-    </a>
+
+<template functional>
+    <span class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
+        {{ props.item.title }}
+    </span>
 </template>
+
 <script>
 export default {
-    name: "LockItem",
-    props: {
-        item: Object
-    },
-    computed: {
-        can_lock_document() {
-            if (this.item.lock_info !== null) {
-                return false;
-            }
-
-            return this.item.user_can_write;
-        }
-    },
-    methods: {
-        async lockDocument() {
-            await this.$store.dispatch("lockDocument", this.item);
-        }
-    }
+    name: "DropDownItemTitle"
 };
 </script>

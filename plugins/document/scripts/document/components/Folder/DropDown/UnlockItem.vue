@@ -18,31 +18,38 @@
   -->
 
 <template>
-    <button
-        v-if="item.user_can_write"
-        type="button"
-        class="tlp-button-small tlp-button-outline tlp-button-danger"
-        v-on:click="processDeletion"
-        data-test="quick-look-delete-button"
+    <a
+        v-if="can_unlock_document"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        data-test="document-dropdown-menu-unlock-item"
+        v-on:click.prevent="unlockDocument"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i>
-        <translate>Delete</translate>
-    </button>
+        <i class="fa fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
+        <translate>Unlock</translate>
+    </a>
 </template>
 
 <script>
-import EventBus from "../../../helpers/event-bus.js";
-
+import { mapState } from "vuex";
 export default {
-    name: "QuickLookDeleteButton",
+    name: "UnlockItem",
     props: {
         item: Object
     },
+    computed: {
+        ...mapState(["user_id"]),
+        can_unlock_document() {
+            if (this.item.lock_info === null) {
+                return false;
+            }
+
+            return this.item.user_can_write;
+        }
+    },
     methods: {
-        processDeletion() {
-            EventBus.$emit("show-confirm-item-deletion-modal", {
-                detail: { current_item: this.item }
-            });
+        async unlockDocument() {
+            await this.$store.dispatch("unlockDocument", this.item);
         }
     }
 };

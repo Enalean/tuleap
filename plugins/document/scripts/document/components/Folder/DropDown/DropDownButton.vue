@@ -41,7 +41,7 @@ import { dropdown as createDropdown } from "tlp";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
-    name: "DropdownButton",
+    name: "DropDownButton",
     props: {
         isInLargeMode: Boolean,
         isInQuickLookMode: Boolean,

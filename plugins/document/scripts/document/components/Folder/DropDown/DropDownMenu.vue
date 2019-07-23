@@ -25,26 +25,19 @@
          }"
          role="menu"
     >
-        <slot></slot>
-        <template v-if="item.user_can_write && is_lock_supported_for_item">
-            <lock-item v-bind:item="item" data-test="dropdown-menu-lock-item"/>
-            <unlock-item v-bind:item="item" data-test="dropdown-menu-unlock-item"/>
-            <span class="tlp-dropdown-menu-separator" role="separator" v-if="hideItemTitle" data-test="docman-lock-separator"></span>
-        </template>
-        <span v-if="! hideItemTitle" class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
-            {{ item.title }}
-        </span>
-        <a v-if="! hideDetailsEntry && item.user_can_write"
-           v-on:click.prevent="showUpdateModal"
-           class="tlp-dropdown-menu-item"
-           role="menuitem"
-           data-test="docman-dropdown-details"
-        >
-            <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
-            <translate>
-                Update properties
-            </translate>
-        </a>
+        <slot name="new-folder-secondary-action"/>
+
+        <slot name="new-item-version"/>
+        <slot name="new-document"/>
+
+        <slot name="lock-item"/>
+        <slot name="unlock-item"/>
+
+        <slot name="display-item-title-separator"/>
+        <slot name="display-item-title"/>
+
+        <slot name="update-properties"/>
+
         <a v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
             <i class="fa fa-fw fa-bell-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
@@ -61,7 +54,7 @@
            v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
-           data-test="docman-dropdown-permissions"
+           data-test="document-dropdown-permissions"
         >
             <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
@@ -72,42 +65,45 @@
            v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
-           data-test="docman-dropdown-approval-tables"
+           data-test="document-dropdown-approval-tables"
         >
             <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Approval tables
             </span>
         </a>
-        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+
+        <drop-down-separator/>
+
         <cut-item v-bind:item="item"/>
         <copy-item v-bind:item="item"/>
         <paste-item v-bind:destination="item"/>
-        <template v-if="can_user_delete_item">
-            <span class="tlp-dropdown-menu-separator" role="separator"></span>
-            <quick-look-delete-button
-                v-bind:is-in-dropdown="true"
-                v-bind:item="item"
-                role="menuitem"
-                data-test="docman-dropdown-delete"
-            />
-        </template>
+
+        <slot name="delete-item-separator"/>
+        <slot name="delete-item"/>
     </div>
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
-import EventBus from "../../../helpers/event-bus.js";
+import DropDownSeparator from "./DropDownSeparator.vue";
 
 export default {
-    name: "DropdownMenu",
-    components: { UnlockItem, LockItem, CutItem, CopyItem, PasteItem, QuickLookDeleteButton },
+    name: "DropDownMenu",
+    components: {
+        DropDownSeparator,
+        UnlockItem,
+        LockItem,
+        CutItem,
+        CopyItem,
+        PasteItem,
+        QuickLookDeleteButton
+    },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
@@ -117,7 +113,6 @@ export default {
     },
     data() {
         return {
-            DETAILS_PANE_NAME: "details",
             NOTIFS_PANE_NAME: "notifications",
             HISTORY_PANE_NAME: "history",
             PERMISSIONS_PANE_NAME: "permissions",
@@ -126,30 +121,13 @@ export default {
     },
     computed: {
         ...mapState(["project_id"]),
-        ...mapGetters(["is_item_an_empty_document"]),
-        can_user_delete_item() {
-            return this.item.user_can_write && this.item.parent_id;
-        },
-        is_lock_supported_for_item() {
-            return (
-                this.item.type === TYPE_FILE ||
-                this.item.type === TYPE_EMBEDDED ||
-                this.item.type === TYPE_WIKI ||
-                this.item.type === TYPE_LINK ||
-                this.item.type === TYPE_EMPTY
-            );
-        }
+        ...mapGetters(["is_item_an_empty_document"])
     },
     methods: {
         getUrlForPane(pane_name) {
             return `/plugins/docman/?group_id=${this.project_id}&id=${
                 this.item.id
             }&action=details&section=${pane_name}`;
-        },
-        showUpdateModal() {
-            EventBus.$emit("show-update-item-metadata-modal", {
-                detail: { current_item: this.item }
-            });
         }
     }
 };

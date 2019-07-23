@@ -55,18 +55,23 @@ import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
 import "./components/Folder/ActionsButton/NewItemVersionButton.spec.js";
 
-import "./components/Folder/ActionsDropDown/DropdownButton.spec.js";
-import "./components/Folder/ActionsDropDown/DropdownMenu.spec.js";
-import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js";
-import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
-import "./components/Folder/ActionsDropDown/LockItem.spec.js";
-import "./components/Folder/ActionsDropDown/UnlockItem.spec.js";
-import "./components/Folder/ActionsDropDown/CutItem.spec.js";
-import "./components/Folder/ActionsDropDown/CopyItem.spec.js";
-import "./components/Folder/ActionsDropDown/PasteItem.spec.js";
+import "./components/Folder/DropDown/CopyItem.spec.js";
+import "./components/Folder/DropDown/CutItem.spec.js";
+import "./components/Folder/DropDown/PasteItem.spec.js";
+import "./components/Folder/DropDown/DeleteItem.spec.js";
+import "./components/Folder/DropDown/DropDownButton.spec.js";
+import "./components/Folder/DropDown/DropDownCurrentFolder.spec.js";
+import "./components/Folder/DropDown/DropDownMenu.spec.js";
+import "./components/Folder/DropDown/DropDownMenuTreeView.spec.js";
+import "./components/Folder/DropDown/DropDownDisplayedEmbedded.spec.js";
+import "./components/Folder/DropDown/DropDownQuickLook.spec.js";
+import "./components/Folder/DropDown/NewFolderSecondaryAction.spec.js";
+import "./components/Folder/DropDown/NewIDocument.spec.js";
+import "./components/Folder/DropDown/UpdateProperties.spec.js";
+import "./components/Folder/DropDown/LockItem.spec.js";
+import "./components/Folder/DropDown/UnlockItem.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
-import "./components/Folder/ActionsQuickLookButton/QuickLookDocumentActionButton.spec.js";
 
 import "./components/Folder/ItemDisplay/ActionsHeader.spec.js";
 import "./components/Folder/ItemDisplay/DisplayEmbedded.spec.js";

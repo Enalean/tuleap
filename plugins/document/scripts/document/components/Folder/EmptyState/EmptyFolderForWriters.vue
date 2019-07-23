@@ -28,9 +28,9 @@
         <div class="tlp-dropdown">
             <div class="tlp-dropdown-split-button">
                 <new-item-button class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
-                <dropdown-button v-bind:is-in-large-mode="true">
-                    <dropdown-menu-current-folder v-bind:is-in-folder-empty-state="true"/>
-                </dropdown-button>
+                <drop-down-button v-bind:is-in-large-mode="true">
+                    <drop-down-current-folder v-bind:is-in-folder-empty-state="true"/>
+                </drop-down-button>
             </div>
         </div>
     </div>
@@ -40,16 +40,16 @@
 import { mapState } from "vuex";
 import EmptyFolderForWritersSvg from "../../svg/folder/EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
-import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
-import DropdownMenuCurrentFolder from "../ActionsDropDown/DropdownMenuCurrentFolder.vue";
+import DropDownButton from "../DropDown/DropDownButton.vue";
+import DropDownCurrentFolder from "../DropDown/DropDownCurrentFolder.vue";
 
 export default {
     name: "EmptyFolderForWriters",
     components: {
-        DropdownMenuCurrentFolder,
+        DropDownCurrentFolder,
         EmptyFolderForWritersSvg,
         NewItemButton,
-        DropdownButton
+        DropDownButton
     },
     computed: {
         ...mapState(["current_folder"])

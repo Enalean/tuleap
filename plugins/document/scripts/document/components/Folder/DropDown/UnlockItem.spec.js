@@ -55,7 +55,7 @@ describe("UnlockItem", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=dropdown-menu-unlock-item]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeFalsy();
     });
 
     it(`Given an other user has locked a document, and given I don't have admin permission
@@ -75,7 +75,7 @@ describe("UnlockItem", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=dropdown-menu-unlock-item]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeFalsy();
     });
 
     it(`Given user can write
@@ -95,7 +95,7 @@ describe("UnlockItem", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=dropdown-menu-unlock-item]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeTruthy();
     });
 
     it(`Given item is a file and given user can write
@@ -112,6 +112,6 @@ describe("UnlockItem", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=dropdown-menu-unlock-item]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeTruthy();
     });
 });

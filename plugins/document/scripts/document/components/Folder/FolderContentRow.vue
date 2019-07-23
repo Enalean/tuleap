@@ -43,9 +43,9 @@
                             data-test="quick-look-button"
                             v-bind:item="item"
                         />
-                        <dropdown-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">
-                            <dropdown-menu-for-item-quick-look v-bind:item="item" data-test="dropdown-menu"/>
-                        </dropdown-button>
+                        <drop-down-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">
+                            <drop-down-menu-tree-view v-bind:item="item" data-test="dropdown-menu"/>
+                        </drop-down-button>
                     </div>
                 </div>
                 <upload-progress-bar
@@ -77,12 +77,6 @@
 
 <script>
 import { mapState } from "vuex";
-import UserBadge from "../User/UserBadge.vue";
-import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
-import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
-import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
-import DropdownMenuForItemQuickLook from "./ActionsDropDown/DropdownMenuForItemQuickLook.vue";
-
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants.js";
 import {
     formatDateUsingPreferredUserFormat,
@@ -94,22 +88,27 @@ import {
     isItemUploadingInTreeView,
     isItemInTreeViewWithoutUpload
 } from "../../helpers/uploading-status-helper.js";
+import EventBus from "../../helpers/event-bus.js";
+import UserBadge from "../User/UserBadge.vue";
+import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
+import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
+import DropDownButton from "./DropDown/DropDownButton.vue";
 import LockProperty from "./Property/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "./ApprovalTables/ApprovalTableBadge.vue";
-import EventBus from "../../helpers/event-bus.js";
+import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
 
 export default {
     name: "FolderContentRow",
     components: {
+        DropDownMenuTreeView,
         ApprovalTableBadge,
         DocumentTitleLockInfo,
         LockProperty,
-        DropdownMenuForItemQuickLook,
         QuickLookButton,
         UserBadge,
         UploadProgressBar,
-        DropdownButton
+        DropDownButton
     },
     props: {
         item: Object,

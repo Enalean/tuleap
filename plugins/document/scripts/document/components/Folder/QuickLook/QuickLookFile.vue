@@ -25,19 +25,19 @@
         >
             <i class="fa fa-download tlp-button-icon"></i> <translate>Download</translate>
         </button>
-        <quick-look-document-action-button v-bind:item="item"/>
+        <drop-down-quick-look v-bind:item="item"/>
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item"/>
     </div>
 </template>
 
 <script>
-import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
+import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookFile",
-    components: { QuickLookDeleteButton, QuickLookDocumentActionButton },
+    components: { QuickLookDeleteButton, DropDownQuickLook },
     props: {
         item: Object
     },

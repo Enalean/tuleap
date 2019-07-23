@@ -20,21 +20,21 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../helpers/local-vue.js";
-import DropdownMenuForItemQuickLook from "./DropdownMenuForItemQuickLook.vue";
+import DropDownQuickLook from "./DropDownQuickLook.vue";
 import {
     rewire as rewireEventBus,
     restore as restoreEventBus
 } from "../../../helpers/event-bus.js";
 
-describe("DropdownMenuForItemQuickLook", () => {
-    let dropdown_quicklook_menu_factory, store, event_bus;
+describe("DropDownQuickLook", () => {
+    let factory, store, event_bus;
     beforeEach(() => {
         store = createStoreMock({});
 
         store.getters.is_item_a_folder = () => false;
 
-        dropdown_quicklook_menu_factory = (props = {}) => {
-            return shallowMount(DropdownMenuForItemQuickLook, {
+        factory = (props = {}) => {
+            return shallowMount(DropDownQuickLook, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
@@ -52,7 +52,7 @@ describe("DropdownMenuForItemQuickLook", () => {
     it(`Given item is not a folder and user can write
         When we display the menu
         Then the drop down does not display New folder/document entries`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
+        const wrapper = factory({
             item: {
                 id: 1,
                 title: "my item title",
@@ -63,41 +63,23 @@ describe("DropdownMenuForItemQuickLook", () => {
 
         expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeFalsy();
         expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
     });
 
-    it(`Given item is a folder and user can write
+    it(`Given item is not a folder and user can read
         When we display the menu
-        Then the drop down enable user to create folder/document`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
+        Then does not display lock informations`, () => {
+        const wrapper = factory({
             item: {
                 id: 1,
-                title: "my folder",
-                type: "folder",
-                user_can_write: true
-            }
-        });
-
-        store.getters.is_item_a_folder = () => true;
-
-        expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeTruthy();
-    });
-
-    it(`Given item is a a file
-        When the dropdown is open
-        Then the dropdown should allow user to create a new version of the item`, () => {
-        const wrapper = dropdown_quicklook_menu_factory({
-            item: {
-                id: 1,
-                title: "my file",
+                title: "my item title",
                 type: "file",
-                user_can_write: true
+                user_can_write: false
             }
         });
 
-        expect(
-            wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
-        ).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeFalsy();
     });
 
     describe("Given item is a folder", () => {
@@ -116,44 +98,29 @@ describe("DropdownMenuForItemQuickLook", () => {
 
         it(`When the dropdown is open
             Then user should not have the "create new version" option`, () => {
-            wrapper = dropdown_quicklook_menu_factory({ item });
+            wrapper = factory({ item });
 
             expect(
-                wrapper.contains("[data-test=docman-dropdown-create-new-version-button]")
+                wrapper.contains("[data-test=document-dropdown-create-new-version-button]")
             ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-dropdown-menu-update-properties]")
+            ).toBeTruthy();
+            expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
         });
 
-        it(`When user clicks on [create new folder]
-            Then it should open a modal`, () => {
-            wrapper = dropdown_quicklook_menu_factory({ item });
-
-            wrapper.find("[data-test=dropdown-menu-folder-creation]").trigger("click");
-
-            expect(event_bus.$emit).toHaveBeenCalledWith(
-                "show-new-folder-modal",
-                jasmine.any(Object)
-            );
-        });
-
-        it(`When user clicks on [create new document]
-            Then it should open a modal`, () => {
-            wrapper = dropdown_quicklook_menu_factory({ item });
-
-            wrapper.find("[data-test=dropdown-menu-file-creation]").trigger("click");
-
-            expect(event_bus.$emit).toHaveBeenCalledWith(
-                "show-new-document-modal",
-                jasmine.any(Object)
-            );
-        });
         it(`When user cannot write and the menu is displayed
             Then the user should not be able to create folder/documents`, () => {
             item.user_can_write = false;
 
-            wrapper = dropdown_quicklook_menu_factory({ item });
+            wrapper = factory({ item });
 
             expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeFalsy();
             expect(wrapper.contains("[data-test=dropdown-menu-file-creation]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-dropdown-menu-update-properties]")
+            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
         });
     });
 });

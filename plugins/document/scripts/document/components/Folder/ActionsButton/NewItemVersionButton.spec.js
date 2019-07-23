@@ -70,7 +70,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus.$emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -90,7 +90,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus.$emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -111,7 +111,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus.$emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -134,7 +134,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus.$emit).not.toHaveBeenCalled();
     });
@@ -154,7 +154,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/plugins/docman/index.php?group_id=101&id=1&action=action_update"
@@ -175,7 +175,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        wrapper.find("[data-test=docman-new-item-version-button]").trigger("click");
+        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus.$emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -194,7 +194,7 @@ describe("CreateNewItemVersionButton", () => {
             }
         });
 
-        expect(wrapper.contains("[data-test=docman-new-item-version-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=docman-folder-update-button]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-new-item-version-button]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-folder-update-button]")).toBeFalsy();
     });
 });

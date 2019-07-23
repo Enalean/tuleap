@@ -19,13 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
-import DropdownButton from "./DropdownButton.vue";
+import DropDownButton from "./DropDownButton.vue";
 
-describe("DropdownButton", () => {
+describe("DropDownButton", () => {
     let dropdown_factory;
     beforeEach(() => {
         dropdown_factory = (props = {}) => {
-            return shallowMount(DropdownButton, {
+            return shallowMount(DropDownButton, {
                 localVue,
                 propsData: { ...props }
             });
