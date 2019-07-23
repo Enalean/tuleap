@@ -77,6 +77,50 @@ class SemanticTimeframeTest extends TestCase
         );
     }
 
+    public function testIsStartDateField(): void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date->shouldReceive(['getId' => 42]);
+        $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $duration->shouldReceive(['getId' => 43]);
+        $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $a_field->shouldReceive(['getId' => 44]);
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, null, null))->isStartDateField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($duration)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($start_date)
+        );
+    }
+
+    public function testIsDurationField(): void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date->shouldReceive(['getId' => 42]);
+        $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $duration->shouldReceive(['getId' => 43]);
+        $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $a_field->shouldReceive(['getId' => 44]);
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, null, null))->isDurationField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($start_date)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($duration)
+        );
+    }
+
     public function testItDoesNotExportToXMLIfThereIsNoField(): void
     {
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');

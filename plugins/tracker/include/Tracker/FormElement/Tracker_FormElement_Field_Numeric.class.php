@@ -19,6 +19,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
 
@@ -293,7 +297,17 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             return $this->getNoValueLabel();
         }
         $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);
+
+        $html_value = $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);
+
+        $user              = $this->getCurrentUser();
+        $time_frame_helper = $this->getArtifactTimeframeHelper();
+
+        if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
+            $html_value = $html_value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
+        }
+
+        return $html_value;
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
@@ -398,5 +412,19 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
 
     public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
         return $this->getComputedValue($user, $artifact, $timestamp);
+    }
+
+    protected function getArtifactTimeframeHelper() : ArtifactTimeframeHelper
+    {
+        $form_element_factory       = Tracker_FormElementFactory::instance();
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
+
+        return new ArtifactTimeframeHelper(
+            $semantic_timeframe_builder,
+            new TimeframeBuilder(
+                $form_element_factory,
+                $semantic_timeframe_builder
+            )
+        );
     }
 }
