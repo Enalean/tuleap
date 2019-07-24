@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.4.1@99a2d866611c6478490bfba1377a30d527e6b874">
+<files psalm-version="3.4.10@c283f0877d543e7ab738d231ba6a3cdce5e1039a">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -86,7 +86,7 @@
     </NullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
-    <InvalidReturnType occurrences="21">
+    <InvalidReturnType occurrences="20">
       <code>fetchArtifactValue</code>
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
@@ -107,7 +107,6 @@
       <code>getQueryFrom</code>
       <code>getQuerySelect</code>
       <code>keepValue</code>
-      <code>saveValue</code>
     </InvalidReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCalculator.php">
@@ -155,13 +154,6 @@
     <PossiblyFalseIterator occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/KanbanFactory.class.php">
-    <InvalidClass occurrences="3">
-      <code>PFuser</code>
-      <code>PFuser</code>
-      <code>PFuser</code>
-    </InvalidClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanItemDao.class.php">
     <UndefinedDocblockClass occurrences="1">
@@ -303,12 +295,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemRepresentationFactory.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>Cardwall_Semantic_CardFields</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$card_fields_semantic</code>
-    </NullableReturnStatement>
     <PossiblyNullArgument occurrences="1">
       <code>$artifact-&gt;getLastChangeset()</code>
     </PossiblyNullArgument>
@@ -475,15 +461,9 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneResource.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>\Tuleap\Tracker\REST\Artifact\BurndownRepresentation</code>
-    </InvalidNullableReturnType>
     <InvalidReturnType occurrences="1">
       <code>\Tuleap\Tracker\REST\Artifact\BurndownRepresentation</code>
     </InvalidReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$burndown</code>
-    </NullableReturnStatement>
     <PossiblyNullArgument occurrences="1">
       <code>$artifact_added</code>
     </PossiblyNullArgument>
@@ -573,10 +553,6 @@
     </ArgumentTypeCoercion>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/SemanticDone.php">
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <UndefinedMethod occurrences="2">
       <code>getAllVisibleValues</code>
       <code>getListValues</code>
@@ -588,10 +564,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/Semantic_InitialEffort.class.php">
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
@@ -601,11 +573,6 @@
     <PropertyTypeCoercion occurrences="1">
       <code>$field</code>
     </PropertyTypeCoercion>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/Semantic_InitialEffortFactory.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>AgileDashboard_Semantic_Dao_InitialEffort</code>
-    </ImplementedReturnTypeMismatch>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/SequenceIdManager.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -670,14 +637,10 @@
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;getArtifact()-&gt;getLastUpdateDate()</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>getStartDate</code>
+    <InvalidReturnType occurrences="1">
       <code>int</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$this-&gt;getDuration()</code>
-    </InvalidScalarArgument>
-    <PossiblyNullPropertyAssignmentValue occurrences="5">
+    <PossiblyNullPropertyAssignmentValue occurrences="3">
       <code>$planned_artifacts</code>
       <code>null</code>
       <code>null</code>
@@ -749,8 +712,7 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$milestone_artifact == null</code>
     </TypeDoesNotContainType>
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>setStartDate</code>
+    <UndefinedInterfaceMethod occurrences="1">
       <code>setPlannedArtifacts</code>
     </UndefinedInterfaceMethod>
     <UndefinedMethod occurrences="1">
@@ -787,15 +749,12 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/agiledashboard/include/Planning/NoMilestone.class.php">
-    <InvalidNullableReturnType occurrences="8">
+    <InvalidNullableReturnType occurrences="5">
       <code>getArtifactId</code>
       <code>getArtifactTitle</code>
-      <code>getStartDate</code>
-      <code>getEndDate</code>
       <code>getLastModifiedDate</code>
       <code>getCapacity</code>
       <code>getRemainingEffort</code>
-      <code>getDuration</code>
     </InvalidNullableReturnType>
     <InvalidReturnType occurrences="4">
       <code>getArtifact</code>
@@ -850,17 +809,14 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/Planning/VirtualTopMilestone.class.php">
-    <InvalidNullableReturnType occurrences="10">
+    <InvalidNullableReturnType occurrences="7">
       <code>getArtifact</code>
       <code>getArtifactId</code>
       <code>getArtifactTitle</code>
       <code>bool</code>
-      <code>getStartDate</code>
-      <code>getEndDate</code>
       <code>getCapacity</code>
       <code>getRemainingEffort</code>
       <code>getLastModifiedDate</code>
-      <code>getDuration</code>
     </InvalidNullableReturnType>
     <InvalidReturnType occurrences="3">
       <code>getTrackerId</code>
@@ -1020,11 +976,6 @@
       <code>$this-&gt;table_name</code>
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/cardwall/include/FieldProviders/SemanticStatusFieldProvider.class.php">
-    <UndefinedMethod occurrences="1">
-      <code>getField</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/cardwall/include/Form.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -1219,9 +1170,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;tracker-&gt;getFormElements()</code>
     </ArgumentTypeCoercion>
-    <InvalidReturnType occurrences="3">
-      <code>display</code>
-      <code>displayAdmin</code>
+    <InvalidReturnType occurrences="1">
       <code>save</code>
     </InvalidReturnType>
     <LessSpecificReturnStatement occurrences="1">
@@ -1230,11 +1179,6 @@
     <MoreSpecificReturnType occurrences="1">
       <code>Tracker_FormElement_Field_List</code>
     </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/cardwall/include/Semantic/CardFieldsFactory.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>Cardwall_Semantic_Dao_CardFieldsDao</code>
-    </ImplementedReturnTypeMismatch>
   </file>
   <file src="plugins/cardwall/include/Semantic/Dao/CardFieldsDao.class.php">
     <LessSpecificImplementedReturnType occurrences="1">
@@ -1600,138 +1544,6 @@
     <TooManyArguments occurrences="1">
       <code>new Docman_MetadataListOfValuesElement($md-&gt;getId())</code>
     </TooManyArguments>
-    <UndefinedMethod occurrences="30">
-      <code>getUser</code>
-      <code>getProperty</code>
-      <code>getUser</code>
-      <code>userCanManage</code>
-      <code>getUser</code>
-      <code>getProperty</code>
-      <code>getUser</code>
-      <code>getProperty</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getProperty</code>
-      <code>getUser</code>
-      <code>userCanManage</code>
-      <code>setReportId</code>
-      <code>forceView</code>
-      <code>forceView</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>getUser</code>
-      <code>userCanAdmin</code>
-      <code>userCanAdmin</code>
-      <code>getUser</code>
-      <code>userCanAdmin</code>
-      <code>userCanWrite</code>
-      <code>getUser</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch occurrences="98">
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;notificationsManager</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/docman/include/Docman_ActionsDeleteVisitor.class.php">
     <TooFewArguments occurrences="1">
@@ -1755,26 +1567,13 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/docman/include/Docman_Controller.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$get_show_view</code>
-    </InvalidArgument>
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_Token::retrieveUrl($this-&gt;request-&gt;get('token'))</code>
     </InvalidStaticInvocation>
-    <PossiblyNullArgument occurrences="5">
-      <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-      <code>$this-&gt;getUser()</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="6">
+    <PossiblyNullReference occurrences="3">
       <code>setRank</code>
       <code>setName</code>
       <code>setDescription</code>
-      <code>getId</code>
-      <code>isMember</code>
-      <code>isMember</code>
     </PossiblyNullReference>
     <TooManyArguments occurrences="2">
       <code>userCanAdmin</code>
@@ -1802,13 +1601,6 @@
       <code>_set_createItemView_afterCreate</code>
       <code>_includeView</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;pluginPath</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;pluginPath</code>
-      <code>$this-&gt;pluginPath</code>
-    </UndefinedThisPropertyFetch>
     <UndefinedVariable occurrences="1">
       <code>$metadataFactory</code>
     </UndefinedVariable>
@@ -1830,9 +1622,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getEmail</code>
     </PossiblyNullReference>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;pluginPath</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/docman/include/Docman_HtmlFilter.class.php">
     <InvalidStaticInvocation occurrences="1">
@@ -1978,9 +1767,6 @@
     <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Intger</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_LogDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -2090,7 +1876,7 @@
     <PossiblyNullArgument occurrences="1">
       <code>$srcItem</code>
     </PossiblyNullArgument>
-    <UndefinedDocblockClass occurrences="7">
+    <UndefinedDocblockClass occurrences="5">
       <code>Integer</code>
       <code>Boolean</code>
       <code>Integer</code>
@@ -2144,35 +1930,6 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$params</code>
     </PossiblyUndefinedVariable>
-    <UndefinedMethod occurrences="1">
-      <code>getUser</code>
-    </UndefinedMethod>
-    <UndefinedPropertyFetch occurrences="24">
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;request</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-      <code>$this-&gt;_controler-&gt;feedback</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/docman/include/Docman_SqlFilter.class.php">
     <PossiblyUndefinedVariable occurrences="2">
@@ -2267,13 +2024,6 @@
       <code>$this-&gt;_pluginPath</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/docman/include/Docman_WikiController.class.php">
-    <UndefinedFunction occurrences="3">
-      <code>HTML()</code>
-      <code>HTML()</code>
-      <code>HTML()</code>
-    </UndefinedFunction>
-  </file>
   <file src="plugins/docman/include/Notifications/NotificationListPresenter.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -2332,20 +2082,12 @@
     <InvalidArgument occurrences="1">
       <code>$group_id</code>
     </InvalidArgument>
-    <InvalidReturnStatement occurrences="3">
-      <code>$e</code>
-      <code>new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', $actor)</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', $actor)</code>
-    </InvalidReturnStatement>
     <InvalidScalarArgument occurrences="1">
       <code>PLUGIN_DOCMAN_ITEM_TYPE_FOLDER</code>
     </InvalidScalarArgument>
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
-    <ParadoxicalCondition occurrences="1">
-      <code>$result instanceof SoapFault</code>
-    </ParadoxicalCondition>
     <PossiblyUndefinedVariable occurrences="7">
       <code>$permParams</code>
       <code>$extraParams</code>
@@ -2355,20 +2097,9 @@
       <code>$extraParams</code>
       <code>$extraParams</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="1">
-      <code>$result</code>
-    </UndefinedClass>
     <UndefinedConstant occurrences="1">
       <code>invalid_session_fault</code>
     </UndefinedConstant>
-    <UndefinedDocblockClass occurrences="1">
-      <code>unknown</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_Admin_LockInfos.class.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getParentId</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_MetadataDetails.class.php">
     <InvalidStaticInvocation occurrences="1">
@@ -2394,15 +2125,9 @@
       <code>new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this-&gt;_controller, $token)</code>
     </TooManyArguments>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_Docman.class.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getShortLocale</code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_GetMenuItemsVisitor.class.php">
-    <UndefinedThisPropertyAssignment occurrences="3">
+    <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;dPm</code>
-      <code>$this-&gt;user</code>
       <code>$this-&gt;if</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="8">
@@ -2484,27 +2209,18 @@
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_View_ItemDetailsSectionApprovalCreate::displayImportLastTable(false)</code>
     </InvalidStaticInvocation>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;controller</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionProperties.class.php">
     <TooManyArguments occurrences="1">
       <code>getInheritableMdLabelArray</code>
     </TooManyArguments>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_ItemDetailsSectionUpdate.class.php">
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;controller</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_ItemTreeUlVisitor.class.php">
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_View_Browse::getItemClasses($params)</code>
     </InvalidStaticInvocation>
-    <UndefinedThisPropertyAssignment occurrences="3">
+    <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;view</code>
-      <code>$this-&gt;get_action_on_icon</code>
       <code>$this-&gt;params</code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch occurrences="4">
@@ -2519,19 +2235,10 @@
       <code>Docman_MetadataHtmlList::_getElementName($e)</code>
     </InvalidStaticInvocation>
   </file>
-  <file src="plugins/docman/include/view/Docman_View_New.class.php">
-    <PossiblyNullReference occurrences="2">
-      <code>isMember</code>
-      <code>isMember</code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/docman/include/view/Docman_View_NewDocument.class.php">
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_ItemFactory::getItemTypeForItem($params['force_item'])</code>
     </InvalidStaticInvocation>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;controller</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/docman/include/view/Docman_View_NewFolder.class.php">
     <TooManyArguments occurrences="1">
@@ -2542,11 +2249,6 @@
     <InvalidStaticInvocation occurrences="1">
       <code>Docman_View_Browse::getItemClasses(array('is_last' =&gt; $params['is_last']))</code>
     </InvalidStaticInvocation>
-  </file>
-  <file src="plugins/docman/include/view/Docman_View_ProjectHeader.class.php">
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$this-&gt;_controller-&gt;pluginPath</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Table.class.php">
     <UndefinedDocblockClass occurrences="1">
@@ -2902,9 +2604,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/Git/Driver/Gerrit/UserAccountManager.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$ldap_user</code>
-    </InvalidArgument>
     <InvalidReturnStatement occurrences="1">
       <code>$keys_to_add || $keys_to_remove</code>
     </InvalidReturnStatement>
@@ -2916,9 +2615,6 @@
       <code>$gerrit_user</code>
       <code>$gerrit_user</code>
     </PossiblyNullArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$ldap_user</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/git/include/Git/Driver/Gerrit/UserFinder.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -3059,17 +2755,6 @@
       <code>$user_manager-&gt;getUsersWithSshKey()</code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="plugins/git/include/Git/GitoliteHousekeeping/ChainOfResponsibility/CheckRunningEvents.class.php">
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;process_manager</code>
-      <code>$this-&gt;process</code>
-      <code>$this-&gt;response</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;process_manager</code>
-      <code>$this-&gt;response</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/git/include/Git/GitoliteHousekeeping/ChainOfResponsibility/CleanUpGitoliteAdminRepo.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
@@ -3088,11 +2773,6 @@
       <code>$this-&gt;gitolite_var_path</code>
       <code>$this-&gt;remote_admin_repository</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/git/include/Git/Hook/ExtractCrossReferences.class.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$rev_id</code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/Git/Hook/LogAnalyzer.class.php">
     <UndefinedDocblockClass occurrences="3">
@@ -3202,11 +2882,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>\Git_RemoteServer_GerritReplicationSSHKey</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/git/include/Git/RemoteServer/GerritCanMigrateChecker.php">
-    <TypeDoesNotContainType occurrences="1">
-      <code>$platform_can_use_gerrit &amp;&amp; count($gerrit_servers) &gt; 0</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/git/include/Git/Repository/GitRepositoryHeaderDisplayerBuilder.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -3360,13 +3035,7 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Blame.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-    <InvalidScalarArgument occurrences="1">
-      <code>$lang</code>
-    </InvalidScalarArgument>
-    <PossiblyFalseArgument occurrences="2">
+    <PossiblyFalseArgument occurrences="1">
       <code>strrchr($blob-&gt;GetName(), '.')</code>
       <code>strrchr($blob-&gt;GetName(), '.')</code>
     </PossiblyFalseArgument>
@@ -3374,20 +3043,9 @@
       <code>PathToHash</code>
       <code>GetTree</code>
     </PossiblyNullReference>
-    <UndefinedConstant occurrences="3">
-      <code>GESHI_MAYBE</code>
-      <code>GESHI_HEADER_PRE_TABLE</code>
-      <code>GESHI_NORMAL_LINE_NUMBERS</code>
-    </UndefinedConstant>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Blob.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-    <InvalidScalarArgument occurrences="1">
-      <code>$lang</code>
-    </InvalidScalarArgument>
-    <PossiblyFalseArgument occurrences="2">
+    <PossiblyFalseArgument occurrences="1">
       <code>strrchr($blob-&gt;GetName(), '.')</code>
       <code>strrchr($blob-&gt;GetName(), '.')</code>
     </PossiblyFalseArgument>
@@ -3396,100 +3054,38 @@
       <code>PathToHash</code>
       <code>GetTree</code>
     </PossiblyNullReference>
-    <UndefinedConstant occurrences="3">
-      <code>GESHI_MAYBE</code>
-      <code>GESHI_HEADER_PRE_TABLE</code>
-      <code>GESHI_NORMAL_LINE_NUMBERS</code>
-    </UndefinedConstant>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Blobdiff.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <PossiblyNullReference occurrences="1">
       <code>GetTree</code>
     </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Commit.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <PossiblyNullReference occurrences="1">
       <code>GetTree</code>
     </PossiblyNullReference>
   </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Commitdiff.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <PossiblyNullArgument occurrences="2">
       <code>$commit</code>
       <code>$commit</code>
     </PossiblyNullArgument>
   </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Feed.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-    <InvalidNullableReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidNullableReturnType>
-  </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Heads.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_History.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <PossiblyNullReference occurrences="2">
       <code>PathToHash</code>
       <code>GetTree</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Log.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Message.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <InvalidNullableReturnType occurrences="1">
       <code>string</code>
     </InvalidNullableReturnType>
   </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Search.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/git/include/GitPHP/controller/Controller_Snapshot.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
     <InvalidReturnType occurrences="1">
       <code>string</code>
     </InvalidReturnType>
-  </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Tag.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-  </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Tags.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
-  </file>
-  <file src="plugins/git/include/GitPHP/controller/Controller_Tree.php">
-    <InvalidClass occurrences="1">
-      <code>controller</code>
-    </InvalidClass>
   </file>
   <file src="plugins/git/include/GitPHP/git/Archive.php">
     <FalsableReturnStatement occurrences="2">
@@ -3519,9 +3115,6 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/GitPHP/git/Commit.php">
-    <InvalidClass occurrences="1">
-      <code>tag</code>
-    </InvalidClass>
     <InvalidNullableReturnType occurrences="3">
       <code>array</code>
       <code>array</code>
@@ -3550,9 +3143,6 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/git/include/GitPHP/git/FileDiff.php">
-    <InvalidClass occurrences="1">
-      <code>commit</code>
-    </InvalidClass>
     <InvalidReturnStatement occurrences="3">
       <code>explode("\n", $this-&gt;diffData)</code>
       <code>explode("\n", $this-&gt;diffData)</code>
@@ -3715,9 +3305,6 @@
       <code>$full_path</code>
       <code>$row</code>
     </InvalidArgument>
-    <InvalidClass occurrences="1">
-      <code>PFuser</code>
-    </InvalidClass>
     <InvalidNullableReturnType occurrences="3">
       <code>GitRepository</code>
       <code>GitRepository</code>
@@ -4081,10 +3668,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/gitlfs/include/LFSJSONHTTPDispatchable.php">
-    <InvalidClass occurrences="2">
-      <code>\HttpRequest</code>
-      <code>$request</code>
-    </InvalidClass>
     <PossiblyInvalidArgument occurrences="1">
       <code>$status_code</code>
     </PossiblyInvalidArgument>
@@ -4149,168 +3732,6 @@
       <code>\hash_init('sha256')</code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="plugins/graphontrackers/include/common/GraphicEngineUserPrefs.class.php">
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$group_id</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_Chart.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$e</code>
-    </InvalidArgument>
-    <UndefinedDocblockClass occurrences="4">
-      <code>$e-&gt;graph</code>
-      <code>GraphOnTracker_Chart_Engine</code>
-      <code>$e</code>
-      <code>GraphOnTracker_Engine</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_ChartDao.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;table_name</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_Chart_Bar.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>create</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>getEngine</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_Chart_Gantt.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>create</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>getEngine</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_Chart_Pie.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>create</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>getEngine</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_Report.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$report</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>id</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>id</code>
-    </UndefinedDocblockClass>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;chart_factories</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;report_graphic_id</code>
-      <code>$this-&gt;chart_factories</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/data-access/GraphicReportFactory.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>db_query($sql)</code>
-    </InvalidReturnStatement>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$result</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;report_graphic_id</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/data-transformation/DataBuilder.class.php">
-    <PossiblyUndefinedGlobalVariable occurrences="2">
-      <code>$result</code>
-      <code>$group_id</code>
-    </PossiblyUndefinedGlobalVariable>
-  </file>
-  <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_BarDataBuilder.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>Bar_Engine</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_GanttDataBuilder.class.php">
-    <TooManyArguments occurrences="2">
-      <code>db_error($res)</code>
-      <code>db_error($res)</code>
-    </TooManyArguments>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Bar_Engine</code>
-    </UndefinedDocblockClass>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;artPos</code>
-      <code>$this-&gt;artPos</code>
-      <code>$this-&gt;artPos</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_PieDataBuilder.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>Pie_Engine</code>
-    </UndefinedDocblockClass>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;bc</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/graphic-library/GraphOnTrackers_Engine.class.php">
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;title</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/graphic-library/GraphOnTrackers_Engine_Bar.class.php">
-    <PossiblyUndefinedGlobalVariable occurrences="2">
-      <code>$b</code>
-      <code>$b</code>
-    </PossiblyUndefinedGlobalVariable>
-    <UndefinedConstant occurrences="2">
-      <code>SIDE_DOWN</code>
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
-  </file>
-  <file src="plugins/graphontrackers/include/graphic-library/GraphOnTrackers_Engine_Gantt.class.php">
-    <UndefinedConstant occurrences="13">
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HWEEK</code>
-      <code>GANTT_HDAY</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HWEEK</code>
-      <code>GANTT_HYEAR</code>
-      <code>GANTT_HMONTH</code>
-      <code>GANTT_HYEAR</code>
-      <code>FS_NORMAL</code>
-      <code>GANTT_RDIAG</code>
-      <code>GANTT_SOLID</code>
-    </UndefinedConstant>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;width</code>
-      <code>$this-&gt;height</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/graphic-library/GraphOnTrackers_Engine_Pie.class.php">
-    <UndefinedConstant occurrences="1">
-      <code>FS_NORMAL</code>
-    </UndefinedConstant>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;description</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;description</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/graphontrackers/include/graphontrackersPlugin.class.php">
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$report_graphic_id</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;msort</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/graphontrackersv5/include/GraphActionsPresenter.class.php">
     <UndefinedDocblockClass occurrences="2">
       <code>WidgetMyDashboardPresenter[]</code>
@@ -4359,11 +3780,9 @@
     <TooManyArguments occurrences="1">
       <code>userIsAdmin</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="4">
+    <UndefinedDocblockClass occurrences="2">
       <code>$e-&gt;graph</code>
       <code>GraphOnTracker_Chart_Engine</code>
-      <code>$this-&gt;engine</code>
-      <code>GraphOnTracker_Engine</code>
     </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
@@ -4398,10 +3817,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Bar.class.php">
-    <InvalidReturnType occurrences="2">
-      <code>getEngine</code>
-      <code>getChartDataBuilder</code>
-    </InvalidReturnType>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4421,20 +3836,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Burndown.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>GraphOnTrackerV5_Engine</code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement occurrences="2">
-      <code>new GraphOnTrackersV5_Engine_Burndown()</code>
-      <code>new GraphOnTrackersV5_Burndown_DataBuilder($this,$artifacts)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>GraphOnTrackerV5_Engine</code>
-      <code>ChartDataBuilder</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>GraphOnTrackerV5_Engine</code>
-    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4454,20 +3855,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_CumulativeFlow.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>GraphOnTrackerV5_Engine</code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement occurrences="2">
-      <code>new GraphOnTrackersV5_Engine_CumulativeFlow()</code>
-      <code>new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this,$artifacts)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>GraphOnTrackerV5_Engine</code>
-      <code>ChartDataBuilder</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>GraphOnTrackerV5_Engine</code>
-    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4487,10 +3874,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Gantt.class.php">
-    <InvalidReturnType occurrences="2">
-      <code>getEngine</code>
-      <code>getChartDataBuilder</code>
-    </InvalidReturnType>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4510,10 +3893,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/data-access/GraphOnTrackersV5_Chart_Pie.class.php">
-    <InvalidReturnType occurrences="2">
-      <code>getEngine</code>
-      <code>getChartDataBuilder</code>
-    </InvalidReturnType>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4566,10 +3945,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$aid</code>
-      <code>$changesets[$i]</code>
-    </InvalidScalarArgument>
     <UndefinedDocblockClass occurrences="1">
       <code>Bar_Engine</code>
     </UndefinedDocblockClass>
@@ -4593,10 +3968,6 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackersv5/include/graphic-library/GraphOnTrackersV5_Engine_Bar.class.php">
-    <PossiblyUndefinedGlobalVariable occurrences="2">
-      <code>$b</code>
-      <code>$b</code>
-    </PossiblyUndefinedGlobalVariable>
     <UndefinedConstant occurrences="2">
       <code>SIDE_DOWN</code>
       <code>FS_NORMAL</code>
@@ -4762,16 +4133,6 @@
       <code>$repository</code>
     </NullableReturnStatement>
   </file>
-  <file src="plugins/hudson_git/include/HudsonGit/Hook/HookTriggerController.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getBody</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/hudson_git/include/HudsonGit/Hook/JenkinsClient.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>CURLINFO_HEADER_SIZE</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="plugins/hudson_git/include/HudsonGit/JenkinsWebhookPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;purified_last_push_info</code>
@@ -4800,17 +4161,6 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>json_encode($formatter-&gt;getLabelsIds($labels))</code>
     </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;ldap_user_manager-&gt;getUserFromLdap($user)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>PFUser</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>PFUser</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/ldap/include/LDAP.class.php">
     <InvalidArgument occurrences="2">
@@ -4879,12 +4229,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="plugins/ldap/include/LDAP_ProjectGroupManager.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$project-&gt;getMembersId()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Array</code>
-    </InvalidReturnType>
     <PossiblyNullReference occurrences="1">
       <code>isAdmin</code>
     </PossiblyNullReference>
@@ -4952,10 +4296,8 @@
     </InvalidReturnStatement>
   </file>
   <file src="plugins/ldap/include/LDAP_UserGroupManager.class.php">
-    <InvalidArgument occurrences="3">
+    <InvalidArgument occurrences="1">
       <code>$userList</code>
-      <code>$project_member_ids</code>
-      <code>$project_member_ids</code>
     </InvalidArgument>
     <InvalidNullableReturnType occurrences="2">
       <code>bool</code>
@@ -4967,27 +4309,10 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/ldap/include/LDAP_UserManager.class.php">
-    <FalsableReturnStatement occurrences="4">
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="3">
-      <code>LDAPResult</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-    </InvalidFalsableReturnType>
-    <InvalidMethodCall occurrences="2">
+    <InvalidMethodCall occurrences="1">
       <code>getRow</code>
       <code>getRow</code>
     </InvalidMethodCall>
-    <InvalidReturnStatement occurrences="1">
-      <code>$dao-&gt;searchLdapLoginFromUserIds($userIds)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Array</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$ldapUid</code>
     </InvalidScalarArgument>
@@ -5011,9 +4336,6 @@
   </file>
   <file src="plugins/ldap/include/ldapPlugin.class.php">
     <InvalidArgument occurrences="1"/>
-    <InvalidMethodCall occurrences="1">
-      <code>getRow</code>
-    </InvalidMethodCall>
     <InvalidReturnStatement occurrences="2">
       <code>true</code>
       <code>$this-&gt;getLdap()-&gt;getLDAPParam('grp_sync_admin_notifications_enabled')</code>
@@ -5052,11 +4374,6 @@
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
-  </file>
-  <file src="plugins/mediawiki/include/MediawikiDataDir.php">
-    <UndefinedFunction occurrences="1">
-      <code>forge_get_config('projects_path', 'mediawiki')</code>
-    </UndefinedFunction>
   </file>
   <file src="plugins/mediawiki/include/MediawikiInstantiater.class.php">
     <InvalidClass occurrences="8">
@@ -5131,9 +4448,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
-    <UndefinedFunction occurrences="1">
-      <code>forge_define_config_item('src_path','mediawiki', "/usr/share/mediawiki")</code>
-    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;text</code>
     </UndefinedThisPropertyAssignment>
@@ -5272,11 +4586,6 @@
       <code>createEvent</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/proftpd/include/proftpdPlugin.class.php">
-    <InvalidClass occurrences="1">
-      <code>HttpRequest</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/project_ownership/include/ProjectAdmin/IndexController.php">
     <InvalidArgument occurrences="1">
       <code>$e</code>
@@ -5353,17 +4662,6 @@
     <InvalidReturnType occurrences="1">
       <code>true</code>
     </InvalidReturnType>
-  </file>
-  <file src="plugins/pullrequest/include/PullRequest/InlineComment/InlineCommentUpdater.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$comments_to_update</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>the</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>the</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Label/LabeledItemCollector.php">
     <PossiblyNullArgument occurrences="1">
@@ -5682,17 +4980,6 @@
       <code>$this-&gt;usage_progress_label</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/statistics/include/DataExportRouter.php">
-    <InvalidClass occurrences="7">
-      <code>HTTPRequest</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/statistics/include/DiskUsageGlobalPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;pane_title</code>
@@ -5711,28 +4998,6 @@
       <code>$this-&gt;order_is_evolution</code>
       <code>$this-&gt;order_is_evolution_rate</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/statistics/include/DiskUsageRouter.php">
-    <InvalidClass occurrences="18">
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </InvalidClass>
   </file>
   <file src="plugins/statistics/include/DiskUsageTopUsersPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -6104,11 +5369,6 @@
       <code>$this-&gt;repository_delete_url</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/svn/include/SVN/Commit/CommitInfoEnhancer.php">
-    <InvalidClass occurrences="1">
-      <code>SVNLook</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/svn/include/SVN/Dao.php">
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
@@ -6136,23 +5396,7 @@
       <code>$size</code>
     </InvalidOperand>
   </file>
-  <file src="plugins/svn/include/SVN/Explorer/RepositoryDisplayController.php">
-    <TypeDoesNotContainType occurrences="1">
-      <code>$plugin_intro_info</code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/svn/include/SVN/Hooks/PreCommit.php">
-    <InvalidClass occurrences="4">
-      <code>SVNLook</code>
-      <code>SVNLook</code>
-      <code>$this-&gt;svnlook</code>
-      <code>$this-&gt;svnlook</code>
-    </InvalidClass>
-  </file>
   <file src="plugins/svn/include/SVN/Logs/QueryBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$project-&gt;getMembersId()</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="1">
       <code>1</code>
     </InvalidScalarArgument>
@@ -6478,32 +5722,7 @@
       <code>is_hidden</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/REST/FieldOpenListRepresentation.class.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="1">
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$field instanceof Tracker_FormElement_Field</code>
-    </TypeDoesNotContainType>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;default_value</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/tracker/include/REST/FieldRepresentation.class.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="1">
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <UndefinedMethod occurrences="1">
-      <code>isCollapsed</code>
-    </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;default_value</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/tracker/include/REST/TrackerRestBuilder.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$field</code>
-    </ArgumentTypeCoercion>
     <InvalidReturnStatement occurrences="1">
       <code>$dates</code>
     </InvalidReturnStatement>
@@ -6646,11 +5865,6 @@
       <code>Tracker_Factory</code>
       <code>$this-&gt;tracker_factory</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/ModeUpdater.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$workflow_id</code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/PostAction/FrozenFieldsRepresentation.php">
     <PossiblyNullArgument occurrences="1">
@@ -6801,7 +6015,7 @@
     <InvalidReturnType occurrences="1">
       <code>Tracker_Artifact_Attachment_TemporaryFile[]</code>
     </InvalidReturnType>
-    <PossiblyNullArgument occurrences="4">
+    <PossiblyNullArgument occurrences="3">
       <code>$user</code>
       <code>$user</code>
       <code>$user</code>
@@ -6818,16 +6032,6 @@
       <code>getValues</code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetAtGivenDateCreator.class.php">
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreator.class.php">
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/InitialChangesetCreatorBase.class.php">
     <PossiblyNullArgument occurrences="1">
       <code>$artifact-&gt;getChangeset($changeset_id)</code>
@@ -6835,16 +6039,6 @@
     <PossiblyNullReference occurrences="1">
       <code>validate</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetAtGivenDateCreator.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>saveNewChangesetForField</code>
-    </InvalidReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreator.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>saveNewChangesetForField</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/NewChangesetCreatorBase.class.php">
     <PossiblyNullArgument occurrences="1">
@@ -6856,15 +6050,6 @@
       <code>hasChanges</code>
       <code>validate</code>
     </PossiblyNullReference>
-    <TooManyArguments occurrences="1">
-      <code>checkGlobalRules</code>
-    </TooManyArguments>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;reference_manager</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;reference_manager</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Changeset/PostCreation/EmailNotificationTask.php">
     <InvalidReturnStatement occurrences="1">
@@ -7044,7 +6229,7 @@
       <code>Integer</code>
       <code>Integer</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="5">
+    <UndefinedMethod occurrences="4">
       <code>getContentAsText</code>
       <code>getContentAsText</code>
       <code>getText</code>
@@ -7069,7 +6254,6 @@
       <code>Tracker_Artifact[]</code>
       <code>Tracker_Artifact[]</code>
     </InvalidReturnType>
-    <TooManyArguments occurrences="1"/>
     <UndefinedDocblockClass occurrences="3">
       <code>type</code>
       <code>type</code>
@@ -7281,23 +6465,15 @@
     <LessSpecificImplementedReturnType occurrences="1">
       <code>array</code>
     </LessSpecificImplementedReturnType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
     <NullableReturnStatement occurrences="2">
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_PossibleParentsRetriever.php">
-    <InvalidArgument occurrences="3">
+    <InvalidArgument occurrences="1">
       <code>$parent_tracker-&gt;getId()</code>
-      <code>$possible_parents</code>
-      <code>$possible_parents</code>
     </InvalidArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$possible_parents</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_PriorityManager.class.php">
     <PossiblyNullArgument occurrences="4">
@@ -7326,10 +6502,6 @@
     </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/XMLImport.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$changeset_array</code>
-      <code>$changeset_array</code>
-    </InvalidScalarArgument>
     <PossiblyNullArrayAccess occurrences="2">
       <code>$xml_artifact-&gt;attributes()['id']</code>
       <code>$xml_artifact-&gt;attributes()['id']</code>
@@ -7690,21 +6862,12 @@
       <code>$this-&gt;tracker_ids_warning</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Tracker/FileInfoFactory.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>type</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownCalculator.php">
     <NullOperand occurrences="1">
       <code>$manual_sum</code>
     </NullOperand>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueChecker.php">
-    <PossiblyInvalidArgument occurrences="2">
-      <code>$start_date_field</code>
-      <code>$start_date_field</code>
-    </PossiblyInvalidArgument>
     <PossiblyNullReference occurrences="1">
       <code>hasChanged</code>
     </PossiblyNullReference>
@@ -7713,31 +6876,16 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartConfigurationValueRetriever.php">
-    <PossiblyInvalidArgument occurrences="2">
-      <code>$start_date_field</code>
-      <code>$start_date_field</code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullReference occurrences="2">
-      <code>getValue</code>
-      <code>getTimestamp</code>
-    </PossiblyNullReference>
-    <UndefinedMethod occurrences="2">
+    <UndefinedMethod occurrences="1">
       <code>getComputedValue</code>
-      <code>getTimestamp</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ChartMessageFetcher.php">
-    <InvalidArgument occurrences="1">
-      <code>array($this-&gt;configuration_field_retriever, 'doesRemainingEffortFieldExists')</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="3">
       <code>string</code>
       <code>String</code>
       <code>String</code>
     </InvalidNullableReturnType>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$configuration_field_retriever</code>
-    </InvalidPropertyAssignmentValue>
     <NullableReturnStatement occurrences="3">
       <code>null</code>
       <code>null</code>
@@ -7763,9 +6911,6 @@
       <code>$this-&gt;artifact_factory-&gt;getArtifactById($target_artifact_id)</code>
       <code>$this-&gt;artifact_factory-&gt;getArtifactById($target_artifact_id)</code>
     </PossiblyNullArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>! empty($nature_by_plugin) &amp;&amp; $existing_nature !== $nature_by_plugin</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/ArtifactLinksToRender.php">
     <PossiblyNullArrayAccess occurrences="2">
@@ -7879,8 +7024,7 @@
       <code>getId</code>
       <code>getComputedValue</code>
     </PossiblyInvalidMethodCall>
-    <UndefinedMethod occurrences="2">
-      <code>isTodayWithinTimePeriod</code>
+    <UndefinedMethod occurrences="1">
       <code>getComputedValue</code>
     </UndefinedMethod>
   </file>
@@ -8147,11 +7291,6 @@
       <code>Tracker_</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Alphanum.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>int</code>
-    </ImplementedReturnTypeMismatch>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.class.php">
     <UndefinedDocblockClass occurrences="4">
       <code>the</code>
@@ -8227,7 +7366,7 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>process</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnType occurrences="15">
+    <InvalidReturnType occurrences="14">
       <code>getCriteriaFrom</code>
       <code>getCriteriaWhere</code>
       <code>getQuerySelect</code>
@@ -8238,7 +7377,6 @@
       <code>fetchRawValue</code>
       <code>fetchFollowUp</code>
       <code>fetchRawValueFromChangeset</code>
-      <code>saveValue</code>
       <code>keepValue</code>
       <code>getCriteriaDao</code>
       <code>fetchSubmitValue</code>
@@ -8247,10 +7385,6 @@
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <PossiblyNullArgument occurrences="2">
-      <code>$start_date</code>
-      <code>$duration</code>
-    </PossiblyNullArgument>
     <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
@@ -8313,10 +7447,7 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_CrossReferences.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>int</code>
-    </ImplementedReturnTypeMismatch>
-    <InvalidNullableReturnType occurrences="3">
+    <InvalidNullableReturnType occurrences="2">
       <code>int</code>
       <code>int</code>
       <code>Tracker_Artifact_ChangesetValue</code>
@@ -8324,7 +7455,7 @@
     <MoreSpecificImplementedParamType occurrences="1">
       <code>$value</code>
     </MoreSpecificImplementedParamType>
-    <NullableReturnStatement occurrences="3">
+    <NullableReturnStatement occurrences="2">
       <code>null</code>
       <code>null</code>
       <code>null</code>
@@ -8462,8 +7593,7 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastModifiedBy.class.php">
-    <InvalidNullableReturnType occurrences="2">
-      <code>saveValue</code>
+    <InvalidNullableReturnType occurrences="1">
       <code>keepValue</code>
     </InvalidNullableReturnType>
     <NullableReturnStatement occurrences="1">
@@ -8478,13 +7608,10 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastUpdateDate.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>int</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidArgument occurrences="1">
       <code>$changeset-&gt;getArtifact()-&gt;getLastUpdateDate()</code>
     </InvalidArgument>
-    <InvalidNullableReturnType occurrences="2">
+    <InvalidNullableReturnType occurrences="1">
       <code>int</code>
       <code>int</code>
     </InvalidNullableReturnType>
@@ -8499,7 +7626,7 @@
       <code>null</code>
       <code>null</code>
     </NullArgument>
-    <NullableReturnStatement occurrences="2">
+    <NullableReturnStatement occurrences="1">
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
@@ -8691,11 +7818,9 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="4">
+    <UndefinedMethod occurrences="2">
       <code>isMultiple</code>
       <code>getListValues</code>
-      <code>getProject</code>
-      <code>getUgroupId</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php">
@@ -8721,9 +7846,6 @@
       <code>void</code>
       <code>true</code>
     </InvalidReturnType>
-    <PossiblyFalseIterator occurrences="1">
-      <code>$dao-&gt;retrieve(implode(' UNION ', $sql))</code>
-    </PossiblyFalseIterator>
     <PossiblyNullPropertyFetch occurrences="4">
       <code>$tracker-&gt;id</code>
       <code>$tracker-&gt;group_id</code>
@@ -8931,9 +8053,6 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedBy.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>null</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
@@ -8952,9 +8071,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>null</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidNullableReturnType occurrences="2">
       <code>int</code>
       <code>getFieldDataFromRESTValue</code>
@@ -8986,9 +8102,6 @@
       <code>var_dump($this, 'Properties must be "rows" and "cols"')</code>
       <code>var_dump($this, 'Properties must be "maxchars" and "size"')</code>
     </ForbiddenCode>
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>bool</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidNullableReturnType occurrences="1">
       <code>Tracker_Artifact_ChangesetValue</code>
     </InvalidNullableReturnType>
@@ -9173,9 +8286,6 @@
       <code>displayAdminFormElementsHeader</code>
       <code>displayFooter</code>
     </PossiblyNullReference>
-    <UndefinedFunction occurrences="1">
-      <code>json_header(array('dialog-title' =&gt; $title))</code>
-    </UndefinedFunction>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/dao/Tracker_FormElement_FieldDao.class.php">
     <FalsableReturnStatement occurrences="3">
@@ -9548,29 +8658,6 @@
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/Controller.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;renderer</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;renderer</code>
-    </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/Dao.class.php">
-    <PossiblyFalseIterator occurrences="1">
-      <code>$dar</code>
-    </PossiblyFalseIterator>
-    <PossiblyFalseReference occurrences="1">
-      <code>count</code>
-    </PossiblyFalseReference>
-    <PossiblyUndefinedVariable occurrences="2">
-      <code>$insert_values</code>
-      <code>$insert_values</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedDocblockClass occurrences="1">
-      <code>type</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;tracker_factory</code>
@@ -9589,16 +8676,6 @@
       <code>type</code>
       <code>type</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$child-&gt;getId()</code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/MasschangeUpdater.class.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>Tracker_ArtifactFactory::instance()-&gt;getArtifactById($artifact_id)</code>
-    </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Migration/V3.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -9724,14 +8801,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$submitter</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Permission/PermissionController.class.php">
-    <UndefinedFunction occurrences="1"/>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Permission/PermissionPresenterBuilder.class.php">
-    <UndefinedFunction occurrences="1">
-      <code>plugin_tracker_permission_get_tracker_ugroups_permissions($tracker-&gt;getGroupId(), $tracker-&gt;getId())</code>
-    </UndefinedFunction>
   </file>
   <file src="plugins/tracker/include/Tracker/Permission/PermissionSetter.class.php">
     <InvalidArgument occurrences="2">
@@ -10119,17 +9188,10 @@
       <code>$criterion_opts</code>
       <code>$matchingIds</code>
     </PossiblyUndefinedVariable>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$search_performed</code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="2">
       <code>Request</code>
       <code>ReportRenderer</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="2">
-      <code>isPost</code>
-      <code>isPost</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_ReportFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -10210,9 +9272,6 @@
     <PossiblyNullReference occurrences="1">
       <code>duplicate</code>
     </PossiblyNullReference>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$instance</code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="7">
       <code>Report</code>
       <code>Report</code>
@@ -10649,12 +9708,6 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_SemanticFactory.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$factories</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tracker_Semantic_IRetrieveSemantic[]</code>
-    </InvalidReturnType>
     <PossiblyNullArrayAccess occurrences="1">
       <code>$attributes['type']</code>
     </PossiblyNullArrayAccess>
@@ -10663,10 +9716,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$field</code>
     </ArgumentTypeCoercion>
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
@@ -10678,10 +9727,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$field</code>
     </ArgumentTypeCoercion>
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
@@ -10689,19 +9734,10 @@
       <code>$text_field</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_DescriptionFactory.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>Tracker_Semantic_DescriptionDao</code>
-    </ImplementedReturnTypeMismatch>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Status.class.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$field</code>
     </ArgumentTypeCoercion>
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
@@ -10710,30 +9746,16 @@
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_StatusFactory.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>Tracker_Semantic_StatusDao</code>
-    </ImplementedReturnTypeMismatch>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Title.class.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$field</code>
     </ArgumentTypeCoercion>
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($this-&gt;getFieldId(), $xmlMapping)</code>
     </PossiblyFalseArgument>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$text_field</code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_TitleFactory.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>Tracker_Semantic_TitleDao</code>
-    </ImplementedReturnTypeMismatch>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_ContributorDao.class.php">
     <PossiblyInvalidArrayAccess occurrences="1">
@@ -10779,26 +9801,12 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Tooltip/Tracker_Tooltip.class.php">
-    <InvalidReturnType occurrences="3">
+    <InvalidReturnType occurrences="1">
       <code>bool</code>
-      <code>string</code>
-      <code>string</code>
     </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
       <code>array_search($field-&gt;id, $xmlMapping)</code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Tooltip/Tracker_TooltipFactory.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$tooltip</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tooltip</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Tooltip</code>
-      <code>Tooltip</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Tooltip/dao/Tracker_TooltipDao.class.php">
     <InvalidFalsableReturnType occurrences="1">
@@ -10898,7 +9906,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Boolean</code>
     </UndefinedDocblockClass>
-    <UndefinedFunction occurrences="2"/>
     <UndefinedMethod occurrences="1">
       <code>getFieldDataFromCSVValue</code>
     </UndefinedMethod>
@@ -10962,8 +9969,7 @@
     <InvalidParamDefault occurrences="1">
       <code>PFUser</code>
     </InvalidParamDefault>
-    <InvalidStaticInvocation occurrences="2">
-      <code>SimpleSanitizer::unsanitize($tracker_v3-&gt;getName())</code>
+    <InvalidStaticInvocation occurrences="1">
       <code>DOMDocument::load($filename)</code>
     </InvalidStaticInvocation>
     <PossiblyInvalidMethodCall occurrences="3">
@@ -11368,14 +10374,6 @@
       <code>isPost</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Workflow/Action/Triggers/EditTriggers.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;url_query</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;url_query</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php">
     <UndefinedDocblockClass occurrences="1">
       <code>Integer</code>
@@ -11480,7 +10478,7 @@
     <InvalidScalarArgument occurrences="1">
       <code>$post_action_id</code>
     </InvalidScalarArgument>
-    <UndefinedThisPropertyFetch occurrences="11">
+    <UndefinedThisPropertyFetch occurrences="9">
       <code>$this-&gt;table_name</code>
       <code>$this-&gt;table_name</code>
       <code>$this-&gt;table_name</code>
@@ -11540,61 +10538,19 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetDateValueRepository.php">
-    <InvalidArgument occurrences="1">
-      <code>$ids_to_skip</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="1">
       <code>$id_or_failure</code>
     </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$set_date_value-&gt;getId()</code>
-      <code>$set_date_value-&gt;getId()</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetDateValueUpdater.php">
-    <ArgumentTypeCoercion occurrences="3">
-      <code>$diff-&gt;getUpdatedActions()</code>
-      <code>$added_action</code>
-      <code>$updated_action</code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetFloatValueRepository.php">
-    <InvalidArgument occurrences="1">
-      <code>$ids_to_skip</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="1">
       <code>$id_or_failure</code>
     </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$set_float_value-&gt;getId()</code>
-      <code>$set_float_value-&gt;getId()</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetFloatValueUpdater.php">
-    <ArgumentTypeCoercion occurrences="3">
-      <code>$diff-&gt;getUpdatedActions()</code>
-      <code>$added_action</code>
-      <code>$updated_action</code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetIntValueRepository.php">
-    <InvalidArgument occurrences="1">
-      <code>$ids_to_skip</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="1">
       <code>$id_or_failure</code>
     </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$set_int_value-&gt;getId()</code>
-      <code>$set_int_value-&gt;getId()</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/SetIntValueUpdater.php">
-    <ArgumentTypeCoercion occurrences="3">
-      <code>$diff-&gt;getUpdatedActions()</code>
-      <code>$added_action</code>
-      <code>$updated_action</code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Workflow/SimpleMode/SimpleWorkflowXMLExporter.php">
     <PossiblyFalseArgument occurrences="1">
@@ -11671,9 +10627,6 @@
       <code>$this-&gt;table_name</code>
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Transition/Condition/Permissions.class.php">
-    <UndefinedFunction occurrences="1"/>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/ConditionManager.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -11940,26 +10893,10 @@
       <code>nothing</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_Logger_Prefix.class.php">
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;logger</code>
-      <code>$this-&gt;prefix</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;logger</code>
-      <code>$this-&gt;logger</code>
-      <code>$this-&gt;logger</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/tracker_date_reminder/include/tracker_date_reminderPlugin.class.php">
     <InvalidScalarArgument occurrences="1">
       <code>!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) &amp;&amp; $_REQUEST['notified_groups'] == NULL)</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="plugins/tracker_encryption/include/EncryptionKeySettings_Presenter.class.php">
-    <InvalidClass occurrences="1">
-      <code>tracker</code>
-    </InvalidClass>
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_FormElement_Field_Encrypted.class.php">
     <ImplementedParamTypeMismatch occurrences="1">
@@ -12058,9 +10995,7 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/velocity/include/Velocity/Semantic/SemanticVelocity.php">
-    <InvalidReturnType occurrences="3">
-      <code>display</code>
-      <code>displayAdmin</code>
+    <InvalidReturnType occurrences="1">
       <code>save</code>
     </InvalidReturnType>
     <PossiblyFalseArgument occurrences="1">
@@ -12477,44 +11412,6 @@
       <code>$db_connection</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/Dashboard/Project/ProjectDashboardController.php">
-    <InvalidClass occurrences="34">
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>HTTPRequest</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-    </InvalidClass>
-  </file>
   <file src="src/common/Dashboard/Project/ProjectDashboardDuplicator.php">
     <PossiblyNullReference occurrences="1">
       <code>setOwner</code>
@@ -12530,11 +11427,6 @@
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;warning_no_trove_cat</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/Dashboard/User/AtUserCreationDefaultWidgetsCreator.php">
-    <InvalidArgument occurrences="1">
-      <code>$widgets</code>
-    </InvalidArgument>
   </file>
   <file src="src/common/Dashboard/User/UserDashboardDao.php">
     <InvalidReturnStatement occurrences="1">
@@ -12595,9 +11487,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/Error/PermissionDeniedMailSender.php">
-    <InvalidClass occurrences="1">
-      <code>?Url</code>
-    </InvalidClass>
     <InvalidReturnType occurrences="1">
       <code>returnBuildInterfaceParam</code>
     </InvalidReturnType>
@@ -12648,42 +11537,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;request</code>
     </ArgumentTypeCoercion>
-  </file>
-  <file src="src/common/Http/Client.class.php">
-    <InvalidArgument occurrences="5">
-      <code>true</code>
-      <code>true</code>
-      <code>true</code>
-      <code>5</code>
-      <code>$last_response</code>
-    </InvalidArgument>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;execute()</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="2">
-      <code>$this-&gt;curl_response</code>
-      <code>curl_exec($this-&gt;curl_handle)</code>
-    </InvalidReturnStatement>
-    <InvalidScalarArgument occurrences="7">
-      <code>CURLINFO_HEADER_OUT</code>
-      <code>CURLOPT_RETURNTRANSFER</code>
-      <code>CURLOPT_FAILONERROR</code>
-      <code>CURLOPT_TIMEOUT</code>
-      <code>CURLOPT_PROXY</code>
-      <code>$name</code>
-      <code>CURLOPT_HEADER</code>
-    </InvalidScalarArgument>
-    <PossiblyFalseOperand occurrences="1">
-      <code>strpos($status_line, ' ')</code>
-    </PossiblyFalseOperand>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;getLastError()</code>
-    </PossiblyNullArgument>
-    <UndefinedDocblockClass occurrences="3">
-      <code>type</code>
-      <code>multiple</code>
-      <code>multiple</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Http/HttpClientFactory.php">
     <InvalidReturnStatement occurrences="4">
@@ -12812,12 +11665,6 @@
       <code>$this-&gt;group_id</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="src/common/Project/Admin/ProjectHistoryPresenter.class.php">
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;start_date</code>
-      <code>$this-&gt;end_date</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="src/common/Project/Admin/ProjectHistoryPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="8">
       <code>$this-&gt;filter_label</code>
@@ -12853,11 +11700,6 @@
       <code>$this-&gt;title</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="src/common/Project/Admin/ProjectMembers/ProjectMembersController.php">
-    <MissingFile occurrences="1">
-      <code>require_once __DIR__ . '/../../../../www/include/account.php'</code>
-    </MissingFile>
-  </file>
   <file src="src/common/Project/Admin/ProjectMembersPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;is_active</code>
@@ -12868,19 +11710,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>(int)$has_membership_management</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/DynamicUGroupMembersUpdater.php">
-    <InvalidArgument occurrences="1">
-      <code>new ApproveProjectAdministratorRemoval($project, $user)</code>
-    </InvalidArgument>
-    <MissingFile occurrences="1">
-      <code>require_once __DIR__ . '/../../../../www/include/account.php'</code>
-    </MissingFile>
-  </file>
-  <file src="src/common/Project/Admin/ProjectUGroup/MembersController.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$user</code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/common/Project/Admin/ProjectVisibilityPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -13056,14 +11885,13 @@
       <code>String</code>
       <code>String</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="5">
+    <InvalidReturnStatement occurrences="4">
       <code>true</code>
-      <code>$success</code>
       <code>$dao-&gt;removeProjectMembers($project-&gt;getID())</code>
       <code>$result</code>
       <code>$result</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="6">
+    <InvalidReturnType occurrences="5">
       <code>ProjectManager</code>
       <code>Boolean</code>
       <code>Boolean</code>
@@ -13188,9 +12016,6 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>$paginated_projects</code>
     </PossiblyInvalidArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$activated</code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Project\PaginatedProjects</code>
     </UndefinedDocblockClass>
@@ -13474,14 +12299,6 @@
       <code>IMAGETYPE_PNG</code>
     </InvalidScalarArgument>
   </file>
-  <file src="src/common/User/Admin/PendingProjectBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$members_id</code>
-    </InvalidArgument>
-    <InvalidArrayAccess occurrences="1">
-      <code>$members_id[0]</code>
-    </InvalidArrayAccess>
-  </file>
   <file src="src/common/User/Admin/PendingUserPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;resend_label</code>
@@ -13582,15 +12399,6 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/User/Admin/UserListSearchFieldsPresenter.php">
-    <InvalidClass occurrences="7">
-      <code>PFUser</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-      <code>PFUser</code>
-    </InvalidClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;title</code>
     </UndefinedThisPropertyAssignment>
@@ -13599,19 +12407,6 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$labels</code>
     </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/common/User/ForgeUserGroupManager.class.php">
-    <InvalidClass occurrences="9">
-      <code>User_ForgeUgroup</code>
-      <code>$user_group</code>
-      <code>$user_group</code>
-      <code>$user_group</code>
-      <code>$user_group</code>
-      <code>$user_group</code>
-      <code>User_ForgeUgroup</code>
-      <code>$user_group</code>
-      <code>$user_group</code>
-    </InvalidClass>
   </file>
   <file src="src/common/User/ForgeUserGroupPermission.class.php">
     <InvalidReturnType occurrences="3">
@@ -13652,11 +12447,6 @@
       <code>$pfuser</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/User/LoginManager.class.php">
-    <TypeDoesNotContainType occurrences="1">
-      <code>$auth_success</code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="src/common/User/PaginatedUserCollection.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;users</code>
@@ -13681,25 +12471,11 @@
       <code>$this-&gt;user_manager-&gt;getUserById($row['user_id'])</code>
     </NullableReturnStatement>
   </file>
-  <file src="src/common/User/PendingUserNotifier.php">
-    <InvalidClass occurrences="2">
-      <code>PFuser</code>
-      <code>$user</code>
-    </InvalidClass>
-  </file>
   <file src="src/common/User/Profile/ProfilePresenter.php">
-    <InvalidArgument occurrences="1">
-      <code>$project-&gt;getMembersId()</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="2">
       <code>$user-&gt;getAddDate()</code>
       <code>$user-&gt;getAddDate()</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="src/common/User/Profile/ProfilePresenterBuilder.php">
-    <EmptyArrayAccess occurrences="1">
-      <code>$additional_entry_values[$key]</code>
-    </EmptyArrayAccess>
   </file>
   <file src="src/common/User/REST/MinimalUserRepresentation.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="4">
@@ -13770,22 +12546,16 @@
       <code>the</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/User/UserImport.class.php">
-    <UndefinedFunction occurrences="1">
-      <code>account_add_user_obj_to_group($this-&gt;project_id, $user, $check_user_status, $send_notifications)</code>
-    </UndefinedFunction>
-  </file>
   <file src="src/common/User/UserManager.class.php">
     <FalsableReturnStatement occurrences="2">
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidArgument occurrences="3">
-      <code>array_values($user_keys_to_keep)</code>
+    <InvalidArgument occurrences="2">
       <code>$midnightTime</code>
       <code>$midnightTime</code>
     </InvalidArgument>
-    <InvalidNullableReturnType occurrences="3">
+    <InvalidNullableReturnType occurrences="1">
       <code>PFUser</code>
       <code>PFUser</code>
       <code>PFUser</code>
@@ -13807,10 +12577,7 @@
       <code>$date_list[2]</code>
       <code>$date_list[0]</code>
     </InvalidScalarArgument>
-    <MismatchingDocblockParamType occurrences="1">
-      <code>String</code>
-    </MismatchingDocblockParamType>
-    <NullableReturnStatement occurrences="6">
+    <NullableReturnStatement occurrences="4">
       <code>null</code>
       <code>$user</code>
       <code>$user</code>
@@ -13821,7 +12588,7 @@
     <TooManyArguments occurrences="1">
       <code>new User_SSHKeyValidator($this, $this-&gt;_getEventManager())</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="2">
+    <TypeDoesNotContainType occurrences="1">
       <code>$user</code>
       <code>$user</code>
     </TypeDoesNotContainType>
@@ -13963,11 +12730,6 @@
       <code>$can_access</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="src/common/Widget/Widget_MyAdmin.class.php">
-    <PossiblyInvalidMethodCall occurrences="1">
-      <code>getText</code>
-    </PossiblyInvalidMethodCall>
-  </file>
   <file src="src/common/Widget/Widget_MyArtifacts.class.php">
     <PossiblyUndefinedArrayOffset occurrences="3">
       <code>$artifact_types[$group_id][$atid]['user_can_view_at']</code>
@@ -13989,16 +12751,6 @@
   <file src="src/common/Widget/Widget_MyLatestSvnCommits.class.php">
     <UndefinedFunction occurrences="1">
       <code>my_hide_url('my_svn_group', $project_id, $request-&gt;get('hide_item_id'), count($project_ids), $request-&gt;get('hide_my_svn_group'), $request-&gt;get('dashboard_id'))</code>
-    </UndefinedFunction>
-  </file>
-  <file src="src/common/Widget/Widget_MyMonitoredForums.class.php">
-    <UndefinedFunction occurrences="1">
-      <code>my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request-&gt;get('dashboard_id'))</code>
-    </UndefinedFunction>
-  </file>
-  <file src="src/common/Widget/Widget_MyMonitoredFp.class.php">
-    <UndefinedFunction occurrences="1">
-      <code>my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs, $request-&gt;get('dashboard_id'))</code>
     </UndefinedFunction>
   </file>
   <file src="src/common/Widget/Widget_ProjectLatestFileReleases.class.php">
@@ -14037,9 +12789,8 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/admin/AdminSidebarPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="8">
+    <UndefinedThisPropertyAssignment occurrences="7">
       <code>$this-&gt;pending_news_count</code>
-      <code>$this-&gt;additional_tracker_entries</code>
       <code>$this-&gt;users_nav_validated_users</code>
       <code>$this-&gt;configuration_nav_project_fields</code>
       <code>$this-&gt;configuration_nav_predefined_references</code>
@@ -14247,28 +12998,6 @@
       <code>File</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/backend/BackendFactory.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>Backend</code>
-    </InvalidNullableReturnType>
-    <LessSpecificReturnStatement occurrences="5">
-      <code>$backend</code>
-      <code>$backend</code>
-      <code>$backend</code>
-      <code>$backend</code>
-      <code>$backend</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="5">
-      <code>BackendSystem</code>
-      <code>BackendAliases</code>
-      <code>BackendMailingList</code>
-      <code>BackendCVS</code>
-      <code>BackendSVN</code>
-    </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$backend</code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/common/backend/BackendMailingList.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;_getMailingListDao()-&gt;deleteListDefinitively($group_list_id)</code>
@@ -14303,8 +13032,7 @@
       <code>0</code>
       <code>true</code>
     </InvalidScalarArgument>
-    <TypeDoesNotContainType occurrences="2">
-      <code>$intro_information !== false</code>
+    <TypeDoesNotContainType occurrences="1">
       <code>$project</code>
     </TypeDoesNotContainType>
   </file>
@@ -15522,22 +14250,6 @@
       <code>$filePath</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/include/GroupFactory.class.php">
-    <FalsableReturnStatement occurrences="5">
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="1">
-      <code>array</code>
-    </InvalidFalsableReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>resultset</code>
-      <code>resultset</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="src/common/include/HTTPRequest.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)</code>
@@ -15697,9 +14409,6 @@
     <PossiblyInvalidOperand occurrences="1">
       <code>$written</code>
     </PossiblyInvalidOperand>
-    <UndefinedClass occurrences="1">
-      <code>COM</code>
-    </UndefinedClass>
     <UndefinedDocblockClass occurrences="3">
       <code>Return</code>
       <code>Return</code>
@@ -15899,12 +14608,6 @@
       <code>the</code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/common/plugin/PluginLoader.php">
-    <PossiblyInvalidMethodCall occurrences="2">
-      <code>getEvents</code>
-      <code>getPlugin</code>
-    </PossiblyInvalidMethodCall>
-  </file>
   <file src="src/common/plugin/PluginManager.class.php">
     <UndefinedVariable occurrences="2">
       <code>$prjId</code>
@@ -15949,9 +14652,6 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$is_reference_removed</code>
-    </TypeDoesNotContainType>
     <UndefinedDocblockClass occurrences="1">
       <code>Stirng</code>
     </UndefinedDocblockClass>
@@ -16112,11 +14812,6 @@
       <code>Controller</code>
     </InvalidNullableReturnType>
   </file>
-  <file src="src/common/svn/hook/PostRevPropset.class.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$revision</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="src/common/svn/hook/PreCommit.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;logger</code>
@@ -16124,11 +14819,6 @@
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;logger</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/svn/immutable_tags/SVN_Immutable_Tags_Handler.php">
-    <InvalidClass occurrences="1">
-      <code>SVN_immutable_tags_DAO</code>
-    </InvalidClass>
   </file>
   <file src="src/common/svn/immutable_tags/SVN_Immutable_Tags_Presenter.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -16208,16 +14898,6 @@
     <TooManyArguments occurrences="1">
       <code>info</code>
     </TooManyArguments>
-  </file>
-  <file src="src/common/system_event/SystemEventProcessorMutex.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;process_manager</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;process_manager</code>
-      <code>$this-&gt;process_manager</code>
-      <code>$this-&gt;process_manager</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/system_event/SystemEventProcessor_Factory.php">
     <ArgumentTypeCoercion occurrences="4">
@@ -16386,20 +15066,10 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_ROOT_DAILY.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$backend_system</code>
-    </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="3">
-      <code>$warnings</code>
+    <InvalidArgument occurrences="2">
       <code>array(UserManager::instance(), 'getUserInstanceFromRow')</code>
       <code>$user</code>
     </InvalidArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>count($warnings) &gt; 0</code>
-    </TypeDoesNotContainType>
-    <UndefinedMethod occurrences="1">
-      <code>dumpSSHKeys</code>
-    </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php">
     <UndefinedMethod occurrences="4">
@@ -16507,28 +15177,6 @@
       <code>void</code>
       <code>void</code>
     </InvalidReturnType>
-    <InvalidScalarArgument occurrences="3">
-      <code>self::OUTPUT_BROWSER</code>
-      <code>self::OUTPUT_BROWSER</code>
-      <code>$output</code>
-    </InvalidScalarArgument>
-    <InvalidStaticInvocation occurrences="15">
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']))</code>
-      <code>SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']))</code>
-      <code>SimpleSanitizer::unsanitize($label)</code>
-      <code>SimpleSanitizer::unsanitize($comment_type)</code>
-      <code>SimpleSanitizer::unsanitize(db_result($result, $i, 'comment'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($result, $i, 'comment'))</code>
-      <code>SimpleSanitizer::unsanitize($tracker_label)</code>
-      <code>SimpleSanitizer::unsanitize(db_result($result, $i, 'description'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($result, $i, 'description'))</code>
-    </InvalidStaticInvocation>
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
@@ -16590,17 +15238,6 @@
     </PossiblyNullReference>
   </file>
   <file src="src/common/tracker/ArtifactFactory.class.php">
-    <FalsableReturnStatement occurrences="5">
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="2">
-      <code>array</code>
-      <code>array</code>
-    </InvalidFalsableReturnType>
     <TypeDoesNotContainType occurrences="1">
       <code>is_object($report)</code>
     </TypeDoesNotContainType>
@@ -16617,10 +15254,9 @@
     <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidReturnStatement occurrences="8">
+    <InvalidReturnStatement occurrences="7">
       <code>$res</code>
       <code>$t</code>
-      <code>$value_id.$Language-&gt;getText('tracker_common_field','not_found')</code>
       <code>true</code>
       <code>"valueText"</code>
       <code>"valueInt"</code>
@@ -16661,18 +15297,6 @@
     </UndefinedVariable>
   </file>
   <file src="src/common/tracker/ArtifactFieldFactory.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
-    <InvalidStaticInvocation occurrences="1">
-      <code>SimpleSanitizer::unsanitize($f)</code>
-    </InvalidStaticInvocation>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>$fields_contained_in_fieldset</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>array{ArtifactField}</code>
-    </MoreSpecificReturnType>
     <TooManyArguments occurrences="1">
       <code>new ArtifactField($this-&gt;ArtifactType-&gt;getID(),"")</code>
     </TooManyArguments>
@@ -16702,18 +15326,9 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/tracker/ArtifactFieldSetFactory.class.php">
-    <FalsableReturnStatement occurrences="1">
-      <code>false</code>
-    </FalsableReturnStatement>
     <InvalidArgument occurrences="1">
       <code>$fields</code>
     </InvalidArgument>
-    <InvalidFalsableReturnType occurrences="1">
-      <code>array</code>
-    </InvalidFalsableReturnType>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <UndefinedVariable occurrences="1">
       <code>$field_id</code>
     </UndefinedVariable>
@@ -16735,12 +15350,6 @@
     <InvalidScalarArgument occurrences="1">
       <code>9</code>
     </InvalidScalarArgument>
-    <InvalidStaticInvocation occurrences="4">
-      <code>SimpleSanitizer::sanitize($data[$c])</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ath-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ath-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize(db_result($predef_val,$i,1))</code>
-    </InvalidStaticInvocation>
     <ParadoxicalCondition occurrences="1"/>
     <PossiblyFalseArgument occurrences="1">
       <code>$on_position</code>
@@ -16803,20 +15412,9 @@
     </PossiblyNullReference>
   </file>
   <file src="src/common/tracker/ArtifactReport.class.php">
-    <FalsableReturnStatement occurrences="2">
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
     <InvalidNullableReturnType occurrences="1">
       <code>string</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>true</code>
-      <code>id</code>
-    </InvalidReturnType>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$notany</code>
     </PossiblyUndefinedVariable>
@@ -16824,22 +15422,17 @@
       <code>fetchData</code>
       <code>db_insertid($res, 'artifact_report', 'report_id')</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="1">
-      <code>id</code>
-    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;user_id</code>
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/tracker/ArtifactReportFactory.class.php">
-    <InvalidReturnStatement occurrences="3">
+    <InvalidReturnStatement occurrences="2">
       <code>false</code>
       <code>new ArtifactReportHtml($report_id,$atid)</code>
-      <code>$report_mapping</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>void</code>
-      <code>bool</code>
     </InvalidReturnType>
     <TooManyArguments occurrences="1">
       <code>db_insertid($res_insert,'artifact_report','report_id')</code>
@@ -16847,14 +15440,6 @@
     <UndefinedVariable occurrences="1">
       <code>$Language</code>
     </UndefinedVariable>
-  </file>
-  <file src="src/common/tracker/ArtifactReportField.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;show_on_result == 1</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>string</code>
-    </InvalidReturnType>
   </file>
   <file src="src/common/tracker/ArtifactRuleFactory.class.php">
     <UndefinedClass occurrences="3">
@@ -16882,12 +15467,10 @@
       <code>0</code>
       <code>0</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="2">
-      <code>$this-&gt;cannedresponses_res</code>
+    <InvalidReturnStatement occurrences="1">
       <code>"field_".$id</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>database</code>
+    <InvalidReturnType occurrences="1">
       <code>array</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="8">
@@ -16945,15 +15528,12 @@
     <TypeDoesNotContainType occurrences="1">
       <code>is_object($afh)</code>
     </TypeDoesNotContainType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>database</code>
-    </UndefinedDocblockClass>
     <UndefinedVariable occurrences="1">
       <code>$dependent</code>
     </UndefinedVariable>
   </file>
   <file src="src/common/tracker/ArtifactTypeFactory.class.php">
-    <FalsableReturnStatement occurrences="17">
+    <FalsableReturnStatement occurrences="2">
       <code>false</code>
       <code>false</code>
       <code>false</code>
@@ -16972,22 +15552,14 @@
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="1">
-      <code>array</code>
-    </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="2">
+    <InvalidReturnStatement occurrences="1">
       <code>$new_at</code>
-      <code>$id</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>the</code>
-      <code>id</code>
     </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="4">
-      <code>resultSet</code>
-      <code>db_result</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-      <code>id</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/tracker/ArtifactXMLExporterArtifact.class.php">
@@ -17000,23 +15572,6 @@
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;attachment_exporter</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactCannedHtml.class.php">
-    <InvalidStaticInvocation occurrences="1">
-      <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
-    </InvalidStaticInvocation>
-  </file>
-  <file src="src/common/tracker/HTML/ArtifactFieldHtml.class.php">
-    <InvalidStaticInvocation occurrences="8">
-      <code>SimpleSanitizer::unsanitize($this-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;description)</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($row['1'])</code>
-      <code>SimpleSanitizer::unsanitize($row['1'])</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getValue($group_artifact_id,$arr[$i]))</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getValue($group_artifact_id,$arr[$i]))</code>
-    </InvalidStaticInvocation>
   </file>
   <file src="src/common/tracker/HTML/ArtifactHtml.class.php">
     <InvalidOperand occurrences="4">
@@ -17034,22 +15589,6 @@
       <code>void</code>
       <code>void</code>
     </InvalidReturnType>
-    <InvalidStaticInvocation occurrences="11">
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($tracker_label)</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getLabel())</code>
-    </InvalidStaticInvocation>
-    <TooManyArguments occurrences="1">
-      <code>util_make_links($field_html-&gt;display($this-&gt;ArtifactType-&gt;getID(),$field_value,false,false,true),$group_id, $group_artifact_id)</code>
-    </TooManyArguments>
   </file>
   <file src="src/common/tracker/HTML/ArtifactImportHtml.class.php">
     <PossiblyUndefinedVariable occurrences="3">
@@ -17062,13 +15601,6 @@
     </UndefinedVariable>
   </file>
   <file src="src/common/tracker/HTML/ArtifactReportHtml.class.php">
-    <InvalidStaticInvocation occurrences="5">
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($ath-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($ath-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($ath-&gt;getName())</code>
-    </InvalidStaticInvocation>
     <ParadoxicalCondition occurrences="1">
       <code>$width</code>
     </ParadoxicalCondition>
@@ -17089,63 +15621,11 @@
     </InvalidReturnType>
   </file>
   <file src="src/common/tracker/HTML/ArtifactRulesManagerHtml.class.php">
-    <InvalidStaticInvocation occurrences="6">
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($row[1])</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($row[1])</code>
-      <code>SimpleSanitizer::unsanitize($row[1])</code>
-    </InvalidStaticInvocation>
     <UndefinedMethod occurrences="1">
       <code>parent::saveRule($this-&gt;artifact_type-&gt;getId(), $source, $source_value, $target, $target_values)</code>
     </UndefinedMethod>
   </file>
   <file src="src/common/tracker/HTML/ArtifactTypeHtml.class.php">
-    <InvalidStaticInvocation occurrences="42">
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($tracker-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($label)</code>
-      <code>SimpleSanitizer::unsanitize($field_name)</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($label)</code>
-      <code>SimpleSanitizer::unsanitize($description)</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($value)</code>
-      <code>SimpleSanitizer::unsanitize($description)</code>
-      <code>SimpleSanitizer::unsanitize($row['value'])</code>
-      <code>SimpleSanitizer::unsanitize($row['description'])</code>
-      <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset_name)</code>
-      <code>SimpleSanitizer::unsanitize($description)</code>
-      <code>SimpleSanitizer::unsanitize($fieldset_name?$fieldset_name:"")</code>
-      <code>SimpleSanitizer::unsanitize($description?$description:"")</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($field_contained-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field_contained-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($fieldset-&gt;getLabel())</code>
-    </InvalidStaticInvocation>
     <NullArgument occurrences="2">
       <code>null</code>
       <code>null</code>
@@ -17247,15 +15727,11 @@
     <UndefinedDocblockClass occurrences="1">
       <code>WikiPageVersion</code>
     </UndefinedDocblockClass>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;user_manager</code>
+    <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;project_manager</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;user_manager</code>
-      <code>$this-&gt;user_manager</code>
+    <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;project_manager</code>
-      <code>$this-&gt;user_manager</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/wiki/lib/PaginatedWikiPages.class.php">
@@ -17411,9 +15887,6 @@
       <code>WikiAttachment::getAttachmentIterator($this-&gt;gid)</code>
       <code>WikiAttachmentRevision::getRevisionIterator($this-&gt;gid, $attachmentId)</code>
     </InvalidStaticInvocation>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$referenced</code>
-    </TypeDoesNotContainType>
     <UndefinedConstant occurrences="2">
       <code>DEFAULT_LANGUAGE</code>
       <code>DEFAULT_LANGUAGE</code>
@@ -17428,21 +15901,10 @@
       <code>WikiPage::getAllUserPages()</code>
     </InvalidStaticInvocation>
   </file>
-  <file src="src/common/wiki/views/WikiViews.class.php">
-    <TypeDoesNotContainType occurrences="1">
-      <code>$referenced</code>
-    </TypeDoesNotContainType>
-  </file>
   <file src="src/common/xml/Security.class.php">
     <UndefinedDocblockClass occurrences="1">
       <code>The</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/utils/codendi_daily.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>0</code>
-      <code>-1</code>
-    </InvalidScalarArgument>
   </file>
   <file src="src/utils/tv3_to_test.php">
     <PossiblyFalseReference occurrences="1">
@@ -17574,10 +16036,6 @@
       <code>html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language-&gt;getText('file_file_utils','must_choose_one'),false, '', false, '', false, '', CODENDI_PURIFIER_CONVERT_HTML)</code>
       <code>getText('file_admin_editreleases', 'add_rel_fail')</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="2">
-      <code>$additional_info</code>
-      <code>$notes_in_markdown</code>
-    </TypeDoesNotContainType>
     <UndefinedClass occurrences="1">
       <code>COM</code>
     </UndefinedClass>
@@ -17853,14 +16311,10 @@
       <code>always</code>
       <code>always</code>
     </UndefinedDocblockClass>
-    <UndefinedFunction occurrences="8">
-      <code>'schemaStartElement'</code>
+    <UndefinedFunction occurrences="4">
       <code>'schemaCharacterData'</code>
-      <code>'xmlStartElement'</code>
       <code>'xmlCharacterData'</code>
-      <code>'start_element'</code>
       <code>'character_data'</code>
-      <code>'start_element'</code>
       <code>'character_data'</code>
     </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="19">
@@ -17915,9 +16369,6 @@
     </EmptyArrayAccess>
   </file>
   <file src="src/www/include/utils.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$date</code>
-    </InvalidScalarArgument>
     <PossiblyFalseArgument occurrences="1">
       <code>$end_of_headers</code>
     </PossiblyFalseArgument>
@@ -17942,11 +16393,6 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$browse_column</code>
     </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/www/mail/index.php">
-    <TypeDoesNotContainType occurrences="1">
-      <code>$html_a</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/www/news/news_utils.php">
     <InvalidArgument occurrences="2">
@@ -17986,10 +16432,6 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$atid</code>
     </PossiblyUndefinedVariable>
-    <TypeDoesNotContainType occurrences="2">
-      <code>$name</code>
-      <code>$object_type</code>
-    </TypeDoesNotContainType>
     <UndefinedFunction occurrences="1">
       <code>get_news_name_from_forum_id($object_id)</code>
     </UndefinedFunction>
@@ -18001,10 +16443,6 @@
     <InvalidIterator occurrences="1">
       <code>$subEventsBox</code>
     </InvalidIterator>
-    <InvalidParamDefault occurrences="2">
-      <code>Array</code>
-      <code>unknown_type</code>
-    </InvalidParamDefault>
     <PossiblyNullArgument occurrences="1">
       <code>$event</code>
     </PossiblyNullArgument>
@@ -18012,13 +16450,6 @@
       <code>$event</code>
       <code>$event</code>
     </PossiblyNullOperand>
-    <UndefinedDocblockClass occurrences="1">
-      <code>unknown_type</code>
-    </UndefinedDocblockClass>
-    <UndefinedFunction occurrences="2">
-      <code>build_csv_header($col_list, $documents_title)</code>
-      <code>build_csv_header($col_list, array())</code>
-    </UndefinedFunction>
   </file>
   <file src="src/www/project/admin/ugroup_utils.php">
     <InvalidReturnStatement occurrences="1">
@@ -18079,19 +16510,7 @@
       <code>$group_id</code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/project/export/index.php">
-    <PossiblyNullOperand occurrences="5">
-      <code>$entry_data_export_format_links[$key]</code>
-      <code>$history_data_export_links[$key]</code>
-      <code>$history_data_export_format_links[$key]</code>
-      <code>$dependencies_data_export_links[$key]</code>
-      <code>$dependencies_data_export_format_links[$key]</code>
-    </PossiblyNullOperand>
-  </file>
   <file src="src/www/project/export/project_export_utils.php">
-    <InvalidStaticInvocation occurrences="1">
-      <code>SimpleSanitizer::unsanitize(join(",",$label_values))</code>
-    </InvalidStaticInvocation>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$pickone</code>
       <code>$values</code>
@@ -18348,11 +16767,10 @@
       <code>$extrafields_with_id</code>
       <code>$extrafields_with_id</code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="32">
+    <InvalidArgument occurrences="31">
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
-      <code>$field-&gt;getDefaultValue()</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
@@ -18633,33 +17051,12 @@
       <code>int</code>
       <code>bool</code>
     </InvalidReturnType>
-    <InvalidStaticInvocation occurrences="18">
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;data_array['name'])</code>
-      <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;data_array['description'])</code>
-      <code>SimpleSanitizer::unsanitize(db_result($result,$j,1))</code>
-      <code>SimpleSanitizer::unsanitize(($cols &gt; 2) ? db_result($result,$j,4) : '')</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($field-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getName())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getLabel())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescription())</code>
-      <code>SimpleSanitizer::unsanitize($result_fieldset-&gt;getDescriptionText())</code>
-      <code>SimpleSanitizer::unsanitize($at-&gt;data_array['name'])</code>
-      <code>SimpleSanitizer::unsanitize($at-&gt;data_array['description'])</code>
-      <code>SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name'))</code>
-      <code>SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment'))</code>
-    </InvalidStaticInvocation>
     <PossiblyUndefinedVariable occurrences="2">
       <code>$array</code>
       <code>$array</code>
     </PossiblyUndefinedVariable>
-    <TooManyArguments occurrences="2">
+    <TooManyArguments occurrences="1">
       <code>updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response)</code>
-      <code>util_make_links(db_result($followups_res, $i, 'new_value'),$group_id,$group_artifact_id)</code>
     </TooManyArguments>
     <TypeDoesNotContainType occurrences="80">
       <code>is_object($atf)</code>
@@ -18848,10 +17245,6 @@
       <code>$path</code>
       <code>$limit</code>
     </PossiblyUndefinedVariable>
-    <UndefinedFunction occurrences="2">
-      <code>svn_data_get_technicians($group_id)</code>
-      <code>svn_data_get_svn_history($group_id)</code>
-    </UndefinedFunction>
     <UndefinedVariable occurrences="1">
       <code>$pref_stg</code>
     </UndefinedVariable>
@@ -18868,13 +17261,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Theme\BurningParrot\Navbar\Presenter</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/www/themes/BurningParrot/HomePagePresenter.php">
-    <InvalidClass occurrences="3">
-      <code>StatisticsCollection</code>
-      <code>$statistics_collection</code>
-      <code>$statistics_collection</code>
-    </InvalidClass>
   </file>
   <file src="src/www/themes/BurningParrot/JavascriptPresenter.php">
     <UndefinedDocblockClass occurrences="1">
@@ -18897,11 +17283,6 @@
       <code>$this-&gt;clear_history</code>
       <code>$this-&gt;project_icon</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/www/themes/common/tlp/doc/index.php">
-    <MissingFile occurrences="1">
-      <code>require_once __DIR__ . '/../../../../include/pre.php'</code>
-    </MissingFile>
   </file>
   <file src="src/www/tracker/add.php">
     <UndefinedGlobalVariable occurrences="1">

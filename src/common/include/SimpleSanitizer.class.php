@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,31 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once("Sanitizer.class.php");
-
-/**
- * SimpleSanitizer 
- */
-class SimpleSanitizer extends Tuleap_Sanitizer {
-    
-    function __construct() {
-        $this->_construct();
-    }
-
-    /**
-     * @see Constructor
-     */
-    function _construct() {
-        parent::_construct();
-    }
-
-
+class SimpleSanitizer
+{
     /**
      * sanitize the string
      * @param $html the string which may contain invalid
      * @deprecated See Codendi_HTMLPurifier
      */
-    function sanitize($html) {
+    public static function sanitize($html)
+    {
         $pattern = array('@<@', '@>@');
         $replacement = array('&lt;', '&gt;');
         return preg_replace($pattern, $replacement, $html);
@@ -52,7 +36,8 @@ class SimpleSanitizer extends Tuleap_Sanitizer {
     /**
      * @deprecated
      */
-    function unsanitize($html) {
+    public static function unsanitize($html)
+    {
         $pattern = array('@&lt;@', '@&gt;@');
         $replacement = array('<', '>');
         return preg_replace($pattern, $replacement, $html);

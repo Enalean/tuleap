@@ -29,6 +29,9 @@ use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 
 require_once('www/news/news_utils.php');
 
+/**
+ * @template-extends Actions<Docman_Controller>
+ */
 class Docman_Actions extends Actions {
 
     var $event_manager;
@@ -439,6 +442,7 @@ class Docman_Actions extends Actions {
                             break;
 
                         case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                            assert($new_item instanceof Docman_Wiki);
                             $this->event_manager->processEvent(
                                 'plugin_docman_event_new_wikipage',
                                 array(

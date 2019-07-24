@@ -493,7 +493,7 @@ class FileModuleMonitorFactory {
                         break;
                 }
                 if ($performAction) {
-                    $GLOBALS['Response']->redirect('showfiles.php?group_id='.urlencode($groupId));
+                    $GLOBALS['Response']->redirect('showfiles.php?group_id='.urlencode((string) $groupId));
                 }
             }
         }

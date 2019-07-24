@@ -197,6 +197,8 @@ class SampleGraph
             $this->maxyear  = $endarray[1];
         }
 
+        $nbmonth = 1;
+
         //advanced search display per day
         if ($this->advsrch == 3) {
             $datagraph = array();

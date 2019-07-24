@@ -315,7 +315,7 @@ function _getUserIdByUserName($userName) {
  * @param string       $sessionKey   Session Key
  * @param int          $group_id     Group ID
  * @param array        $params       Request parameters
- * @return unknown                   Request response
+ * @return mixed                   Request response
  */
 function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) {
     $actor ="_makeDocmanRequest ($action)";

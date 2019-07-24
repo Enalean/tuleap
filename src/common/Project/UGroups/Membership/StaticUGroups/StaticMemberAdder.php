@@ -35,7 +35,6 @@ class StaticMemberAdder
      */
     public function addUserToStaticGroup($group_id, $ugroup_id, $user_id)
     {
-        /** @psalm-suppress MissingFile */
         include_once __DIR__.'/../../../../../www/project/admin/ugroup_utils.php';
         ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
     }

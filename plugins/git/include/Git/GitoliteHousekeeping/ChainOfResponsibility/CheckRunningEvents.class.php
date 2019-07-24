@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,18 @@
  */
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
 
-    /** @var SystemEventDao */
-    private $system_event_dao;
+    /**
+     * @var SystemEventProcessManager
+     */
+    private $process_manager;
+    /**
+     * @var SystemEventProcess
+     */
+    private $process;
+    /**
+     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse
+     */
+    private $response;
 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,

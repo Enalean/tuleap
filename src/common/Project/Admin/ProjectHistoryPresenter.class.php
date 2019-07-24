@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,12 @@ class ProjectHistoryPresenter {
 
     /** @var string */
     public $value;
+
+    /** @var string */
+    public $start_date;
+
+    /** @var string */
+    public $end_date;
 
     /** @var string */
     public $start_field_date;

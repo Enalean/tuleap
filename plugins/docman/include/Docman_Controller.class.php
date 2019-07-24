@@ -203,7 +203,7 @@ class Docman_Controller extends Controler {
     }
 
     /**
-     * @return null|PFUser
+     * @return PFUser
      */
     function getUser() {
         if($this->user === null) {

@@ -534,7 +534,7 @@ class SystemEventManager {
      * @return array
      */
     public function getTypes() {
-        $reflect = new ReflectionClass('SystemEvent');
+        $reflect = new ReflectionClass(SystemEvent::class);
         $consts  = $reflect->getConstants();
         array_walk($consts, array($this, 'filterConstants'));
         $types = array_filter($consts);

@@ -380,7 +380,7 @@ class Tracker_ArtifactFactory {
      * @param Tracker $tracker           The tracker this artifact belongs to
      * @param array   $fields_data       The data of the artifact to create
      * @param PFUser    $user              The user that want to create the artifact
-     * @param string  $email             The email if the user is anonymous (null if anonymous)
+     * @param string|null  $email             The email if the user is anonymous (null if anonymous)
      * @param bool $send_notification true if a notification must be sent, false otherwise
      *
      * @return Tracker_Artifact|false false if an error occurred

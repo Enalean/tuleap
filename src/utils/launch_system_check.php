@@ -28,10 +28,21 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
+use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
+use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
+use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 
 $application                 = new Application();
-$launch_system_check_command = new QueueSystemCheckCommand(EventManager::instance(), DBFactory::getMainTuleapDBConnection());
+$launch_system_check_command = new QueueSystemCheckCommand(
+    EventManager::instance(),
+    DBFactory::getMainTuleapDBConnection(),
+    new ExecutionDelayedLauncher(
+        new ConditionalTuleapCronEnvExecutionDelayer(
+            new ExecutionDelayerRandomizedSleep(1799)
+        )
+    )
+);
 $application->add($launch_system_check_command);
 $application->setDefaultCommand($launch_system_check_command->getName(), $is_single_command = true);
 
