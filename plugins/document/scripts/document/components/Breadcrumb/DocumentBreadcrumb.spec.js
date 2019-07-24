@@ -77,6 +77,27 @@ describe("DocumentBreadcrumb", () => {
         expect(wrapper.contains("[data-test=breadcrumb-ellipsis]")).toBeTruthy();
     });
 
+    it(`Given ascendant hierarchy has more than 5 ascendants and given we're still loading the ascendent hierarchy
+        When we display the breadcrumb
+        Then ellipsis is not displayed`, () => {
+        store.state.is_user_administrator = false;
+        store.state.is_loading_ascendant_hierarchy = true;
+        store.state.current_folder_ascendant_hierarchy = [
+            { id: 1, title: "My first folder" },
+            { id: 2, title: "My second folder" },
+            { id: 3, title: "My third folder" },
+            { id: 4, title: "My fourth folder" },
+            { id: 5, title: "My fifth folder" },
+            { id: 6, title: "My sixth folder" },
+            { id: 7, title: "My seventh folder" }
+        ];
+
+        const wrapper = shallowMount(DocumentBreadcrumb, component_options);
+
+        expect(wrapper.contains("[data-test=breadcrumb-ellipsis]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-breadcrumb-skeleton]")).toBeTruthy();
+    });
+
     it(`Given a list of folders which are in different hierarchy level
         When we display the breadcrumb
         Then folders which are in the root folder (parent_id === 0) are removed`, () => {

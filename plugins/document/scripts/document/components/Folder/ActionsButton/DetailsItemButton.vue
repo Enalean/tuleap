@@ -22,6 +22,7 @@
         v-on:click="goToDetails"
         class="tlp-button-primary"
         v-bind:class="buttonClass"
+        data-test="docman-go-to-details"
     >
         <i class="fa fa-list tlp-button-icon"></i>
         <translate>Details</translate>
@@ -30,6 +31,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { redirectToUrl } from "../../../helpers/location-helper.js";
 export default {
     props: {
         item: Object,
@@ -40,7 +42,7 @@ export default {
     },
     methods: {
         goToDetails() {
-            window.location.assign(
+            redirectToUrl(
                 `/plugins/docman/?group_id=${this.project_id}&id=${
                     this.item.id
                 }&action=details&section=details`

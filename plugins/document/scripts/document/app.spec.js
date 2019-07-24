@@ -20,9 +20,14 @@
 import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
+
 import "./store/actions.spec.js";
+
 import "./store/actions-helpers/load-ascendant-hierarchy.spec.js";
 import "./store/actions-helpers/load-folder-content.spec.js";
+import "./store/actions-helpers/adjust-item-to-content-after-item-creation-in-folder.spec.js";
+import "./store/actions-helpers/build-parent-paths.spec.js";
+
 import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
@@ -30,7 +35,7 @@ import "./helpers/metadata-helpers/check-item-title.spec.js";
 import "./helpers/metadata-helpers/data-transformatter-helper.spec.js";
 
 import "./store/error/error-mutations.spec.js";
-import "./store/error/error-getters.js";
+import "./store/error/error-getters.spec.js";
 
 import "./store/clipboard/clipboard-mutations.spec.js";
 import "./store/clipboard/clipboard-actions.spec.js";
@@ -54,6 +59,8 @@ import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
 import "./components/Folder/ActionsButton/NewItemVersionButton.spec.js";
+import "./components/Folder/ActionsButton/DetailsItemButton.spec.js";
+import "./components/Folder/ActionsButton/NewItemButton.spec.js";
 
 import "./components/Folder/DropDown/CopyItem.spec.js";
 import "./components/Folder/DropDown/CutItem.spec.js";
@@ -72,6 +79,7 @@ import "./components/Folder/DropDown/LockItem.spec.js";
 import "./components/Folder/DropDown/UnlockItem.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
+import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";
 
 import "./components/Folder/ItemDisplay/ActionsHeader.spec.js";
 import "./components/Folder/ItemDisplay/DisplayEmbedded.spec.js";

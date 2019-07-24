@@ -27,13 +27,18 @@
            data-test="toggle"
         ></i>
         <i class="document-folder-icon-color fa fa-fw document-folder-content-icon"
+           data-test="document-folder-icon-open"
            v-bind:class="{
                'fa-folder': is_closed,
                'fa-folder-open': is_folder_open,
                'fa-circle-o-notch fa-spin': is_loading
            }"
         ></i>
-        <a v-on:click.prevent="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
+        <a v-on:click.prevent="goToFolder"
+           v-bind:href="folder_href"
+           class="document-folder-subitem-link"
+           data-test="document-go-to-folder-link"
+        >
             {{ title }}
         </a>
     </div>
@@ -66,9 +71,6 @@ export default {
             });
 
             return href;
-        },
-        folder_id() {
-            return this.item.id;
         },
         is_folder_open() {
             return !this.is_loading && !this.is_closed;

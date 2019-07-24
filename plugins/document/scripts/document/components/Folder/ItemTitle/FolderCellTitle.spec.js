@@ -23,6 +23,10 @@ import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import {
+    rewire$abortCurrentUploads,
+    restore as restoreAbortCurrentUploads
+} from "../../../helpers/abort-current-uploads.js";
 
 describe("FolderCellTitle", () => {
     let router, item, component_options, store_options, store;
@@ -70,6 +74,9 @@ describe("FolderCellTitle", () => {
         await Vue.nextTick();
         const toggle = wrapper.find("[data-test=toggle]");
         expect(toggle.classes()).toContain("fa-caret-down");
+        expect(wrapper.find("[data-test=document-folder-icon-open]").classes()).toContain(
+            "fa-folder-open"
+        );
 
         expect(wrapper.vm.is_loading).toBeFalsy();
         expect(wrapper.vm.have_children_been_loaded).toBeTruthy();
@@ -247,6 +254,68 @@ describe("FolderCellTitle", () => {
                 item.id,
                 true
             ]);
+        });
+    });
+
+    describe("go to folder", () => {
+        let router, item, component_options, store_options, abortCurrentUploads;
+        beforeEach(() => {
+            router = new VueRouter({
+                routes: [
+                    {
+                        path: "/folder/42",
+                        name: "folder"
+                    }
+                ]
+            });
+
+            item = {
+                id: 42,
+                title: "my folder name",
+                is_expanded: true
+            };
+
+            store_options = {
+                state: {}
+            };
+
+            store = createStoreMock(store_options);
+
+            component_options = {
+                localVue,
+                router,
+                propsData: {
+                    item
+                },
+                mocks: { $store: store }
+            };
+
+            abortCurrentUploads = jasmine.createSpy("abortCurrentUploads");
+            rewire$abortCurrentUploads(abortCurrentUploads);
+        });
+
+        afterEach(() => {
+            restoreAbortCurrentUploads();
+        });
+
+        it(`Given there is an on going upload and user refuse confirmation
+            Then user won't be redirected`, () => {
+            store.getters.is_uploading = true;
+            const wrapper = shallowMount(FolderCellTitle, component_options);
+            wrapper.find("[data-test=document-go-to-folder-link]").trigger("click");
+            abortCurrentUploads.and.returnValue(false);
+
+            expect(store.commit).not.toHaveBeenCalledWith("appendFolderToAscendantHierarchy");
+        });
+
+        it(`Given there no upload
+            Then the user is redirect to parent folder`, () => {
+            store.getters.is_uploading = false;
+            const wrapper = shallowMount(FolderCellTitle, component_options);
+            wrapper.find("[data-test=document-go-to-folder-link]").trigger("click");
+            abortCurrentUploads.and.returnValue(false);
+
+            expect(store.commit).toHaveBeenCalledWith("appendFolderToAscendantHierarchy", item);
         });
     });
 });

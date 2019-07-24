@@ -18,42 +18,56 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import QuickLookButton from "./QuickLookButton.vue";
-import { TYPE_FOLDER } from "../../../constants.js";
-import {
-    rewire as rewireEventBus,
-    restore as restoreEventBus
-} from "../../../helpers/event-bus.js";
+import DetailsItemButton from "./DetailsItemButton.vue";
 
-describe("QuickLookButton", () => {
-    let factory, store, event_bus;
+import localVue from "../../../helpers/local-vue.js";
+import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+
+describe("CreateNewItemVersionButton", () => {
+    let factory, redirect_to_url;
     beforeEach(() => {
-        store = createStoreMock({});
-        store.getters.is_item_a_folder = () => true;
+        const state = {
+            project_id: 101
+        };
+
+        const store_options = {
+            state
+        };
+
+        const store = createStoreMock(store_options);
+
         factory = (props = {}) => {
-            return shallowMount(QuickLookButton, {
+            return shallowMount(DetailsItemButton, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
             });
         };
-        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
-        rewireEventBus(event_bus);
+
+        redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
     });
 
     afterEach(() => {
-        restoreEventBus();
+        restore();
     });
 
-    it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {
-        const item = { type: TYPE_FOLDER, user_can_write: true };
-        const wrapper = factory({ item });
-
-        wrapper.find("[data-test=document-quick-look-button]").trigger("click");
-        expect(event_bus.$emit).toHaveBeenCalledWith("toggle-quick-look", {
-            details: { item }
+    it(`Given user click on details,
+        Then he should be redirected to the legacy page`, () => {
+        const wrapper = factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "empty",
+                user_can_write: true
+            }
         });
+
+        wrapper.find("[data-test=docman-go-to-details]").trigger("click");
+
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/plugins/docman/?group_id=101&id=1&action=details&section=details"
+        );
     });
 });

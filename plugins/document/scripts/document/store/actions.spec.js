@@ -268,6 +268,26 @@ describe("Store actions", () => {
             );
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
+
+        it("When an error occurred, then the translated exception will be raised", async () => {
+            const error_message = "My translated exception";
+            mockFetchError(getProject, {
+                status: 404,
+                error_json: {
+                    error: {
+                        i18n_error_message: error_message
+                    }
+                }
+            });
+
+            await loadRootFolder(context);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setFolderLoadingError",
+                error_message
+            );
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
+        });
     });
 
     describe("loadFolder", () => {
@@ -969,6 +989,33 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
             expect(uploadVersion).not.toHaveBeenCalled();
         });
+
+        it("throws an error when there is a problem with the version creation", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const update_fail = {};
+
+            mockFetchError(createNewVersion, {
+                status: 400
+            });
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+
+            await createNewFileVersionFromModal(context, [
+                item,
+                update_fail,
+                version_title,
+                version_changelog
+            ]);
+
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setModalError",
+                "Internal server error"
+            );
+            expect(uploadVersion).not.toHaveBeenCalled();
+        });
     });
 
     describe("createNewEmbeddedFileVersionFromModal", () => {
@@ -1195,6 +1242,51 @@ describe("Store actions", () => {
                 "Internal server error"
             );
         });
+
+        it("throw error permission error if user does not have enough permissions", async () => {
+            mockFetchError(getItem, {
+                status: 403
+            });
+
+            await loadDocumentWithAscendentHierarchy(context, 42);
+            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+
+            expect(context.commit).toHaveBeenCalledWith("error/switchItemPermissionError");
+        });
+
+        it("throw translated exceptions", async () => {
+            mockFetchError(getItem, {
+                status: 400,
+                error_json: {
+                    error: {
+                        i18n_error_message: "My translated error"
+                    }
+                }
+            });
+
+            await loadDocumentWithAscendentHierarchy(context, 42);
+            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setItemLoadingError",
+                "My translated error"
+            );
+        });
+
+        it("throw internal server error if something bad happens", async () => {
+            mockFetchError(getItem, {
+                status: 400,
+                response: {}
+            });
+
+            await loadDocumentWithAscendentHierarchy(context, 42);
+            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setItemLoadingError",
+                "Internal server error"
+            );
+        });
     });
 
     describe("deleteItem()", () => {
@@ -1329,6 +1421,52 @@ describe("Store actions", () => {
                 "removeItemFromFolderContent",
                 item_to_delete
             );
+            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
+        });
+
+        it("display erorr if something wrong happens", async () => {
+            const folder_item = {
+                id: 222,
+                title: "My folder",
+                type: TYPE_FOLDER
+            };
+
+            context.state.currently_previewed_item = item_to_delete;
+
+            mockFetchError(deleteFolder, {
+                status: 400
+            });
+
+            await deleteItem(context, [folder_item]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setModalError",
+                "Internal server error"
+            );
+        });
+
+        it("mark item as unknown when rest route fails with 404", async () => {
+            const folder_item = {
+                id: 222,
+                title: "My folder",
+                type: TYPE_FOLDER
+            };
+
+            context.state.currently_previewed_item = item_to_delete;
+
+            mockFetchError(deleteFolder, {
+                error_json: {
+                    error: {
+                        code: 404,
+                        i18n_error_message: "not found"
+                    }
+                }
+            });
+
+            await deleteItem(context, [folder_item]);
+
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", "not found");
+            expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", folder_item);
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
         });
     });
@@ -1468,6 +1606,49 @@ describe("Store actions", () => {
                 item_to_lock,
                 { user_id: 123 }
             ]);
+        });
+
+        it("it should raise a translated exception when user can't lock a document", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE
+            };
+
+            mockFetchError(postLockFile, {
+                status: 400,
+                error_json: {
+                    error: {
+                        i18n_error_message: "Item is already locked"
+                    }
+                }
+            });
+
+            await lockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setLockError",
+                "Item is already locked"
+            );
+        });
+
+        it("it should raise a translated exception when user can't lock a document", async () => {
+            const item_to_lock = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE
+            };
+
+            mockFetchError(postLockFile, {
+                status: 400
+            });
+
+            await lockDocument(context, item_to_lock);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setLockError",
+                "Internal server error"
+            );
         });
 
         it("it should lock an embedded file and then update its information", async () => {

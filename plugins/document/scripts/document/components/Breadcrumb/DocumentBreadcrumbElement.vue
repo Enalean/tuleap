@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <span class="breadcrumb-item" v-bind:title="document_tree_title">
+    <span class="breadcrumb-item" v-bind:title="item.title">
         <router-link v-bind:to="{ name: 'folder', params: { item_id: item.id }}" class="breadcrumb-link">
             {{ item.title }}
         </router-link>
@@ -30,11 +30,6 @@ export default {
     name: "DocumentBreadcrumbElement",
     props: {
         item: Object
-    },
-    computed: {
-        document_tree_title() {
-            return this.item.title;
-        }
     }
 };
 </script>

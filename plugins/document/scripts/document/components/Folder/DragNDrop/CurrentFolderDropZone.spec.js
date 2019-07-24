@@ -47,23 +47,97 @@ describe("CurrentFolderDropZone", () => {
         };
     });
 
-    it(`Given user has write permission
-        When we display the drop zone
-        Then user should have a success message`, () => {
-        const wrapper = current_folder_drop_zone_factory({
-            user_can_dragndrop_in_current_folder: true
+    describe("Error messages", () => {
+        it(`Given user has write permission
+            When we display the drop zone
+            Then user should have a success message`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                user_can_dragndrop_in_current_folder: true
+            });
+
+            expect(
+                wrapper.contains("[data-test=document-current-folder-success-dropzone]")
+            ).toBeTruthy();
+            expect(
+                wrapper.contains("[data-test=document-current-folder-error-dropzone]")
+            ).toBeFalsy();
         });
 
-        expect(wrapper.contains(".fa-mail-forward")).toBeTruthy();
+        it(`Given user is document reader
+            When we display the drop zone
+            Then user should have an error message`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                user_can_dragndrop_in_current_folder: false
+            });
+
+            expect(
+                wrapper.contains("[data-test=document-current-folder-success-dropzone]")
+            ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-current-folder-error-dropzone]")
+            ).toBeTruthy();
+        });
     });
 
-    it(`Given user is document reader
-        When we display the drop zone
-        Then user should have an error message`, () => {
-        const wrapper = current_folder_drop_zone_factory({
-            user_can_dragndrop_in_current_folder: false
+    describe("Highlighted classes", () => {
+        it(`Given drop zone is highlighted and user can write
+                When we display the drop zone
+                Then the highlighted zone has success class`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                is_dropzone_highlighted: true,
+                user_can_dragndrop_in_current_folder: true
+            });
+
+            const current_folder_drop_zone = wrapper.find(
+                "[data-test=document-current-folder-dropzone]"
+            );
+            expect(current_folder_drop_zone.classes()).toContain("shown-success");
         });
 
-        expect(wrapper.contains(".fa-ban")).toBeTruthy();
+        it(`Given drop zone is highlighted and user can read
+                When we display the drop zone
+                Then the highlighted zone has error class`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                is_dropzone_highlighted: true,
+                user_can_dragndrop_in_current_folder: false
+            });
+
+            const current_folder_drop_zone = wrapper.find(
+                "[data-test=document-current-folder-dropzone]"
+            );
+            expect(current_folder_drop_zone.classes()).toContain("shown-error");
+        });
+
+        it(`Given drop zone is NOT highlighted and user can write
+                When we display the drop zone
+                Then the highlighted zone has no specific class`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                is_dropzone_highlighted: false,
+                user_can_dragndrop_in_current_folder: true
+            });
+
+            const current_folder_drop_zone = wrapper.find(
+                "[data-test=document-current-folder-dropzone]"
+            );
+            expect(current_folder_drop_zone.classes()).toEqual([
+                "document-upload-to-current-folder"
+            ]);
+        });
+
+        it(`Given drop zone is NOT highlighted and user can read
+                When we display the drop zone
+                Then the highlighted zone has no specific class`, () => {
+            const wrapper = current_folder_drop_zone_factory({
+                is_dropzone_highlighted: false,
+                user_can_dragndrop_in_current_folder: false
+            });
+
+            const current_folder_drop_zone = wrapper.find(
+                "[data-test=document-current-folder-dropzone]"
+            );
+            expect(current_folder_drop_zone.classes()).toEqual([
+                "document-upload-to-current-folder"
+            ]);
+        });
     });
 });

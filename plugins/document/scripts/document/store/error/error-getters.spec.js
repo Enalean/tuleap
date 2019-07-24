@@ -74,7 +74,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = false;
             state.has_document_lock_error = false;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.does_document_have_any_error(state);
 
             expect(result).toEqual(true);
         });
@@ -84,7 +84,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = true;
             state.has_document_lock_error = false;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.does_document_have_any_error(state);
 
             expect(result).toEqual(true);
         });
@@ -94,7 +94,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = false;
             state.has_document_lock_error = true;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.does_document_have_any_error(state);
 
             expect(result).toEqual(true);
         });
@@ -116,7 +116,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = false;
             state.has_document_lock_error = false;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.has_any_loading_error(state);
 
             expect(result).toEqual(true);
         });
@@ -126,7 +126,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = true;
             state.has_document_lock_error = false;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.has_any_loading_error(state);
 
             expect(result).toEqual(true);
         });
@@ -136,7 +136,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = false;
             state.has_document_lock_error = true;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.has_any_loading_error(state);
 
             expect(result).toEqual(true);
         });
@@ -146,7 +146,7 @@ describe("error_getters", () => {
             state.has_document_loading_error = false;
             state.has_document_lock_error = false;
 
-            const result = getters.does_folder_have_any_error(state);
+            const result = getters.has_any_loading_error(state);
 
             expect(result).toEqual(false);
         });

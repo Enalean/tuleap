@@ -16,29 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { shallowMount } from "@vue/test-utils";
+import NewItemButton from "./NewItemButton.vue";
+
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import QuickLookButton from "./QuickLookButton.vue";
-import { TYPE_FOLDER } from "../../../constants.js";
 import {
     rewire as rewireEventBus,
     restore as restoreEventBus
 } from "../../../helpers/event-bus.js";
 
-describe("QuickLookButton", () => {
-    let factory, store, event_bus;
+describe("NewItemButton", () => {
+    let factory, event_bus;
     beforeEach(() => {
-        store = createStoreMock({});
-        store.getters.is_item_a_folder = () => true;
+        const state = {
+            project_id: 101
+        };
+
+        const store_options = {
+            state
+        };
+
+        const store = createStoreMock(store_options);
+
         factory = (props = {}) => {
-            return shallowMount(QuickLookButton, {
+            return shallowMount(NewItemButton, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
             });
         };
+
         event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
         rewireEventBus(event_bus);
     });
@@ -47,13 +55,22 @@ describe("QuickLookButton", () => {
         restoreEventBus();
     });
 
-    it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {
-        const item = { type: TYPE_FOLDER, user_can_write: true };
-        const wrapper = factory({ item });
-
-        wrapper.find("[data-test=document-quick-look-button]").trigger("click");
-        expect(event_bus.$emit).toHaveBeenCalledWith("toggle-quick-look", {
-            details: { item }
+    it(`When user clicks on New item button
+        Then it should open a modal`, () => {
+        const wrapper = factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true
+            }
         });
+
+        wrapper.find("[data-test=docman-new-item-button]").trigger("click");
+
+        expect(event_bus.$emit).toHaveBeenCalledWith(
+            "show-new-document-modal",
+            jasmine.any(Object)
+        );
     });
 });
