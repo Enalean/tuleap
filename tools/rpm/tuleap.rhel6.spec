@@ -45,9 +45,6 @@ AutoReqProv: no
 
 Requires: vixie-cron >= 4.1-9
 # Php and web related stuff
-Requires: php72-php-mysqlnd, php72-php-pdo, php72-php-xml, php72-php-mbstring, php72-php-gd
-Requires: php72-php-soap, php72-php-intl, php72-php-process, php72-php-cli
-Requires: php72-php-bcmath, php72-php-fpm, php72-php-opcache, php72-php-json, php72-php-pecl-zip, php72-php-pecl-redis, php72-php-sodium
 Requires: php73-php-mysqlnd, php73-php-pdo, php73-php-xml, php73-php-mbstring, php73-php-gd
 Requires: php73-php-soap, php73-php-intl, php73-php-process, php73-php-cli
 Requires: php73-php-bcmath, php73-php-fpm, php73-php-opcache, php73-php-json, php73-php-pecl-zip, php73-php-pecl-redis, php73-php-sodium
@@ -159,7 +156,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php72-php-pecl-mailparse, php73-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php73-php-pecl-mailparse
 Requires: tuleap-core-mailman
 Provides: tuleap-plugin-forumml = %{version}
 %description plugin-forumml
@@ -231,7 +228,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, php72-php-ldap, php73-php-ldap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, php73-php-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
@@ -280,7 +277,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php72-php-pecl-mailparse, php73-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php73-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -547,7 +544,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/sass.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php72/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json

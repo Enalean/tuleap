@@ -25,8 +25,8 @@ use Tuleap\Plugin\PluginLoader;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
-if (PHP_VERSION_ID < 70200) {
-    die('Tuleap must be run on a PHP 7.2 (or greater) engine.');
+if (PHP_VERSION_ID < 70300) {
+    die('Tuleap must be run on a PHP 7.3 (or greater) engine.');
 }
 
 require_once __DIR__ . '/../../vendor/autoload.php';

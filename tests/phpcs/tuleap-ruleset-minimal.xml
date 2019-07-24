@@ -12,6 +12,8 @@
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/src/www/assets/*</exclude-pattern>
     <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
+    <!-- Exclude generated files -->
+    <exclude-pattern>plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/Parser.php</exclude-pattern>
 
     <!-- PSR-2 rules -->
     <!-- Indenting - 4 spaces - no tabs -->
@@ -97,5 +99,5 @@
 
     <!-- Ensure code is compatible with the targeted version of PHP -->
     <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.2-7.3"/>
+    <config name="testVersion" value="7.3-7.4"/>
 </ruleset>

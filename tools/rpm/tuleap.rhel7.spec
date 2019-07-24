@@ -35,7 +35,6 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php72-php, php72-php-mysql, php72-php-xml, php72-php-json, php72-php-mbstring, php72-php-gd, php72-php-soap, php72-php-intl, php72-php-process, php72-php-opcache, php72-php-fpm, php72-php-pecl-redis, php72-php-sodium, rh-mysql57-mysql
 Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap, php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium, rh-mysql57-mysql
 
 Requires: perl-DBI, perl-DBD-MySQL
@@ -104,7 +103,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php72-php-pecl-mailparse, php73-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php73-php-pecl-mailparse
 Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
@@ -157,7 +156,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: php72-php-ldap, php73-php-ldap, perl-LDAP
+Requires: php73-php-ldap, perl-LDAP
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -205,7 +204,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php72-php-pecl-mailparse, php73-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php73-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -472,7 +471,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/sass.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php72/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
@@ -504,7 +502,6 @@ done
 %{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
-%{__install} src/utils/systemd/tuleap-php72-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-git.timer $RPM_BUILD_ROOT/%{_unitdir}
@@ -750,7 +747,6 @@ if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
         tuleap.service \
         tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask php72-php-fpm || :
     /usr/bin/systemctl mask php73-php-fpm || :
 fi
 
@@ -788,7 +784,6 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
-/usr/bin/systemctl unmask php72-php-fpm || :
 /usr/bin/systemctl unmask php73-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
@@ -925,7 +920,6 @@ fi
 # Unit files
 %attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
-%attr(00644,root,root) %{_unitdir}/tuleap-php72-fpm.service
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.service
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-system-check.timer

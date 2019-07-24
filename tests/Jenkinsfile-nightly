@@ -29,31 +29,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage ('PHP 7.2') {
-                    stages {
-                        stage('UT PHPUnit PHP 7.2') {
-                            steps { script { actions.runPHPUnitTests('72') } }
-                            post {
-                                always {
-                                    junit 'results/ut-phpunit/*/phpunit_tests_results.xml'
-                                    step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-72/coverage/', cloverReportFileName: 'clover.xml'])
-                                }
-                            }
-                        }
-                        stage('UT SimpleTest PHP 7.2') {
-                            steps { script { actions.runSimpleTestTests('72') } }
-                            post { always { junit 'results/ut-simpletest/php-72/results.xml' } }
-                        }
-                        stage('REST CentOS 6 PHP 7.2') {
-                            steps { script { actions.runRESTTests('c6-php72-mysql57') } }
-                            post { always { junit 'results/api-rest/*/rest_tests.xml' } }
-                        }
-                        stage ('SOAP PHP 7.2') {
-                            steps { script { actions.runSOAPTests('php-72', '4') } }
-                            post { always { junit "results/api-soap/*/soap_tests.xml" } }
-                        }
-                    }
-                }
                 stage ('PHP 7.4') {
                     stages {
                         stage('UT PHPUnit PHP 7.4') {
