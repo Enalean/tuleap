@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,7 @@ use Tuleap\Queue\QueueServerConnectionException;
  */
 class RedisPersistentQueue implements PersistentQueue
 {
-    public const MAX_MESSAGES = 1000;
+    private const MAX_MESSAGES = 50;
 
     /**
      * @var Logger
