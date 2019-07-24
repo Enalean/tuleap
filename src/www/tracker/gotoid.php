@@ -49,7 +49,7 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
 
 // Start of main code
 
-$location = 'Location: /';
+$location = 'Location: ';
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'
