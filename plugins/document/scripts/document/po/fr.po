@@ -155,9 +155,6 @@ msgstr "État de la table d’approbation actuel: {{ table_state }}"
 msgid "Cut"
 msgstr "Couper"
 
-msgid "Cut / Copy / Paste documents"
-msgstr "Couper / Copier / Coller des documents"
-
 msgid "Declined"
 msgstr "Décliné"
 

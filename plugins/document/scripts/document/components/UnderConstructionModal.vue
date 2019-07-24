@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -32,7 +32,6 @@
                 <b>The new interface is under construction</b>, all features are not available for now. Here's the list of what is yet to be implemented:
             </p>
             <ul>
-                <li v-translate>Cut / Copy / Paste documents</li>
                 <li v-translate>Modal "create a new version" for documents of type "empty"</li>
                 <li v-translate>Set the values of custom document properties in the document creation and "update properties" modals</li>
                 <li v-translate>Set the read and write permissions of a document in the document creation and "update properties" modals</li>
