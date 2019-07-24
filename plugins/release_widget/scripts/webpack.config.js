@@ -25,11 +25,12 @@ const assets_public_path = "/assets/releasewidget/scripts/";
 
 const webpack_config = {
     entry: {
-        releasewidget: "./releasewidget/index.js"
+        releasewidget: "./releasewidget/index.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     resolve: {
+        extensions: [".js", ".ts", ".vue"],
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_mocks_alias,
             webpack_configurator.vue_components_alias
@@ -40,7 +41,9 @@ const webpack_config = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_karma
+            ),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]

@@ -33,7 +33,7 @@
     </section>
 </template>
 
-<script>
+<script lang="ts">
 import { mapState, mapGetters } from "vuex";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";

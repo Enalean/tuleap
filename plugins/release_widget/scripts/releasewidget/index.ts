@@ -24,8 +24,8 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
-import { createStore } from "./src/store/index.js";
-import { setUserLocale } from "./src/helpers/user-locale-helper.js";
+import { createStore } from "./src/store/index";
+import { setUserLocale } from "./src/helpers/user-locale-helper";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {

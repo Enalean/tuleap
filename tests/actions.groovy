@@ -64,7 +64,7 @@ def runBuildAndRun(String os) {
 }
 
 def runJavascriptCodingStandards() {
-    sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,vue}"'
+    sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,ts,vue}"'
 }
 
 def runESLint() {

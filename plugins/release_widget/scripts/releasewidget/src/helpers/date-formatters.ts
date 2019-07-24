@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getUserLocale } from "./user-locale-helper.js";
+import { getUserLocale } from "./user-locale-helper";
 
 export { formatDateYearMonthDay };
 

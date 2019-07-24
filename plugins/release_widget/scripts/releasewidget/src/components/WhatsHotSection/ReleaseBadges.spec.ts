@@ -24,7 +24,7 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 
 let releaseData = {};
-let total_sprint = 10;
+const total_sprint = 10;
 let initial_effort = 10;
 let component_options = {};
 const project_id = "102";

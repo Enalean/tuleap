@@ -32,9 +32,9 @@ module.exports = function(config) {
     );
 
     Object.assign(base_config, {
-        files: ["./*/src/app.spec.js"],
+        files: ["./*/src/app.spec.ts"],
         preprocessors: {
-            "./*/src/app.spec.js": ["webpack"]
+            "./*/src/app.spec.ts": ["webpack"]
         }
     });
 

@@ -26,6 +26,7 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
+
 const rule_configurations = require("./webpack-rule-configs.js");
 const aliases = require("./webpack-aliases.js");
 

@@ -38,7 +38,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { formatDateYearMonthDay } from "../../../helpers/date-formatters";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";

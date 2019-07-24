@@ -2,7 +2,7 @@
 # prettier pre-commit hook for git
 
 get_list_of_files() {
-    git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\.(js|vue)$'
+    git diff --cached --name-only --diff-filter=ACMRTUXB | grep -E '\.(js|ts|vue)$'
 }
 
 main() {
