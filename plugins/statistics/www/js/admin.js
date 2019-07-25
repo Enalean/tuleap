@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tlp:readonly CKEDITOR:readonly tuleap:readonly */
+
 document.addEventListener("DOMContentLoaded", function() {
     var date_picker_elements = document.querySelectorAll(".tlp-input-date");
 
@@ -50,7 +52,9 @@ document.addEventListener("DOMContentLoaded", function() {
     [].forEach.call(modal_buttons, function(button) {
         var modal_element = document.getElementById(button.dataset.modalId);
         if (!modal_element) {
-            throw "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'";
+            throw new Error(
+                "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'"
+            );
         }
 
         var modal = tlp.modal(modal_element);

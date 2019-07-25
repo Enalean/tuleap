@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tuleap:readonly */
+
 document.addEventListener("DOMContentLoaded", function() {
     var input = document.querySelector("#add_mail");
 

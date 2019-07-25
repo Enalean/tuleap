@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 (function($) {
     function confirmDeletionPopover() {
         $(".svn-notification-delete").each(function() {

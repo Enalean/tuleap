@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, patch, select2 } from "tlp";
+import { select2 } from "tlp";
 import { render } from "mustache";
 
-export async function create(container, labels_endpoint, selected_labels) {
+export function create(container, labels_endpoint, selected_labels) {
     initiateSelect2(container, selected_labels, labels_endpoint);
 }
 

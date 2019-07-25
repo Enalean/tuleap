@@ -1,3 +1,15 @@
+/* global
+    codendi:readonly
+    Template: readonly
+    $:readonly
+    codendi:readonly
+    tuleap:readonly
+    $F:readonly
+    PeriodicalExecuter:readonly
+    Ajax:readonly
+    $$:readonly
+*/
+
 codendi.git = codendi.git || {};
 codendi.git.base_url = "/plugins/git/";
 
@@ -11,6 +23,7 @@ document.observe("dom:loaded", function() {
 
         var tpl = new Template("<div>#{dest}/#{path}#{repo}</div>");
 
+        //eslint-disable-next-line no-inner-declarations
         function getPreviewUpdater(table, previewPos) {
             table
                 .down("thead > tr > td", previewPos)
@@ -75,14 +88,16 @@ document.observe("dom:loaded", function() {
         var submitted = false;
         var table = fork_repositories_prefix.up("table");
 
+        //eslint-disable-next-line no-unused-vars
         var periodicalExecuter = new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
 
         // On fork, disable submit button
-        submit.up("form").observe("submit", function(event) {
+        submit.up("form").observe("submit", function() {
             submit.disable();
             submitted = true;
         });
 
+        //eslint-disable-next-line no-inner-declarations
         function toggleDestination() {
             var optionBox = $("choose_project");
             if (optionBox !== null && optionBox.checked) {
@@ -98,6 +113,7 @@ document.observe("dom:loaded", function() {
             }
         }
 
+        //eslint-disable-next-line no-inner-declarations
         function disabledForkDestination() {
             if (fork_destination !== null) {
                 fork_destination.disable();
@@ -191,6 +207,7 @@ document.observe("dom:loaded", function() {
                 }
                 new Ajax.Request(codendi.git.base_url + query, {
                     onFailure: function() {
+                        //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_gerrit_config);
                     },
                     onSuccess: function(transport) {
@@ -219,6 +236,7 @@ document.observe("dom:loaded", function() {
                 }
                 new Ajax.Request(codendi.git.base_url + query, {
                     onFailure: function() {
+                        //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function(transport) {
@@ -260,6 +278,7 @@ document.observe("dom:loaded", function() {
 
                 new Ajax.Request(codendi.git.base_url + query, {
                     onFailure: function() {
+                        //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function(transport) {
@@ -298,6 +317,7 @@ document.observe("dom:loaded", function() {
 
                 new Ajax.Request(codendi.git.base_url + query, {
                     onFailure: function() {
+                        //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
                     onSuccess: function(transport) {

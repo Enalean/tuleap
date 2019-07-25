@@ -1,37 +1,53 @@
+/* global Ajax:readonly $:readonly */
+
 function folder_expand(caller, node) {
     caller.src = "20_joinbottom_minus.gif";
     caller.onclick = jsCollapseFolder;
     //alert('ok');
 
-    match = node.id.split("_");
-    nodeId = match[1];
+    const match = node.id.split("_");
+    const nodeId = match[1];
 
-    expandUrl =
+    const expandUrl =
         "/plugins/docman/index.php?group_id=101&view=rawDisplay&act=expandFolder&id=" + nodeId;
 
     new Ajax.Updater("subdir_" + nodeId, expandUrl, { asynchronous: true });
 }
 
 function jsExpandFolder(e) {
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if (e.srcElement) targ = e.srcElement;
+    if (!e) {
+        //eslint-disable-next-line no-redeclare
+        var e = window.event;
+    }
+    var targ;
+    if (e.target) {
+        targ = e.target;
+    } else if (e.srcElement) {
+        targ = e.srcElement;
+    }
 
     var parentN = targ.parentNode;
-    match = parentN.id.split("_");
-    nodeId = match[1];
+    const match = parentN.id.split("_");
+    const nodeId = match[1];
 
     folder_expand(targ, $("subdir_" + nodeId));
 }
 
 function jsCollapseFolder(e) {
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if (e.srcElement) targ = e.srcElement;
+    if (!e) {
+        //eslint-disable-next-line no-redeclare
+        var e = window.event;
+    }
+    var targ;
+    if (e.target) {
+        targ = e.target;
+    } else if (e.srcElement) {
+        targ = e.srcElement;
+    }
 
     var parentN = targ.parentNode;
-    match = parentN.id.split("_");
-    nodeId = match[1];
+    const match = parentN.id.split("_");
+    const nodeId = match[1];
 
     folder_collapse(targ, $("subdir_" + nodeId));
 }
@@ -41,10 +57,10 @@ function folder_collapse(caller, node) {
     div.className = "subdir";
     div.id = node.id;
 
-    match = node.id.split("_");
-    nodeId = match[1];
+    const match = node.id.split("_");
+    const nodeId = match[1];
 
-    collapseUrl = "/plugins/docman/?group_id=101&act=collapseFolder&id=" + nodeId;
+    const collapseUrl = "/plugins/docman/?group_id=101&act=collapseFolder&id=" + nodeId;
 
     new Ajax.Request(collapseUrl, { method: "get" });
 
@@ -64,10 +80,10 @@ function HTTPRequest() {
     this.request = window.location.search;
     this.params = new Array();
 
-    paramArray = this.request.slice(1).split("&");
-    for (i = 0; i < paramArray.length; i++) {
-        name = paramArray[i].slice(0, paramArray[i].indexOf("="));
-        value = paramArray[i].slice(paramArray[i].indexOf("=") + 1, paramArray[i].length);
+    const paramArray = this.request.slice(1).split("&");
+    for (var i = 0; i < paramArray.length; i++) {
+        const name = paramArray[i].slice(0, paramArray[i].indexOf("="));
+        const value = paramArray[i].slice(paramArray[i].indexOf("=") + 1, paramArray[i].length);
         this.params[name] = value;
     }
 }
@@ -78,14 +94,14 @@ HTTPRequest.prototype.get = function(param) {
 
 function LI_folder_expand(node) {
     // retreive nodeid
-    match = node.id.split("_");
-    nodeId = match[1];
+    const match = node.id.split("_");
+    const nodeId = match[1];
 
     // retreive group_id
-    request = new HTTPRequest();
-    groupId = request.get("group_id");
+    const request = new HTTPRequest();
+    const groupId = request.get("group_id");
 
-    expandUrl = "/plugins/docman/index.php?group_id=" + groupId;
+    var expandUrl = "/plugins/docman/index.php?group_id=" + groupId;
     expandUrl += "&view=ulsubfolder&act=expandFolder";
     expandUrl += "&id=" + nodeId;
 
@@ -102,21 +118,28 @@ function LI_folder_expand(node) {
 }
 
 function LI_jsExpandFolder(e) {
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if (e.srcElement) targ = e.srcElement;
+    if (!e) {
+        //eslint-disable-next-line no-redeclare
+        var e = window.event;
+    }
+    var targ;
+    if (e.target) {
+        targ = e.target;
+    } else if (e.srcElement) {
+        targ = e.srcElement;
+    }
 
     LI_folder_expand(targ);
 }
 
 function LI_collapse_folder(caller, node) {
-    match = node.id.split("_");
-    nodeId = match[1];
+    const match = node.id.split("_");
+    const nodeId = match[1];
 
-    request = new HTTPRequest();
-    groupId = request.get("group_id");
+    const request = new HTTPRequest();
+    const groupId = request.get("group_id");
 
-    collapseUrl = "/plugins/docman/index.php?group_id=" + groupId;
+    var collapseUrl = "/plugins/docman/index.php?group_id=" + groupId;
     collapseUrl += "&act=collapseFolder";
     collapseUrl += "&id=" + nodeId;
 
@@ -130,16 +153,24 @@ function LI_collapse_folder(caller, node) {
 }
 
 function LI_jsCollapseFolder(e) {
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if (e.srcElement) targ = e.srcElement;
+    if (!e) {
+        //eslint-disable-next-line no-redeclare
+        var e = window.event;
+    }
+    var targ;
+    if (e.target) {
+        targ = e.target;
+    } else if (e.srcElement) {
+        targ = e.srcElement;
+    }
 
-    ularray = targ.getElementsByTagName("ul");
+    const ularray = targ.getElementsByTagName("ul");
     if (ularray.length != 1) {
-        divarray = targ.getElementsByTagName("div");
+        const divarray = targ.getElementsByTagName("div");
         if (divarray.length != 1) {
             LI_collapse_folder(targ, divarray[0]);
         } else {
+            //eslint-disable-next-line no-alert
             alert("Error");
         }
     } else {

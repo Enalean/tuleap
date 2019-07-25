@@ -74,7 +74,7 @@ describe("CrossTrackerWidget", () => {
             }
         });
         vm.$mount();
-        spyOn(vm.$store, "commit");
+        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
 
         state.is_user_admin = false;
         state.invalid_trackers = [];

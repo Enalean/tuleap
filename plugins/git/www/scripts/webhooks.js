@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly jQuery:readonly */
+
 (function($) {
     function confirmDeletionPopover() {
         $(".remove-hook").each(function() {

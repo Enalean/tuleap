@@ -51,12 +51,13 @@ function hasOptions(obj) {
 // -------------------------------------------------------------------
 function selectUnselectMatchingOptions(obj, regex, which, only) {
     if (window.RegExp) {
+        var selected1, selected2;
         if (which == "select") {
-            var selected1 = true;
-            var selected2 = false;
+            selected1 = true;
+            selected2 = false;
         } else if (which == "unselect") {
-            var selected1 = false;
-            var selected2 = true;
+            selected1 = false;
+            selected2 = true;
         } else {
             return;
         }
@@ -81,6 +82,7 @@ function selectUnselectMatchingOptions(obj, regex, which, only) {
 //  This function selects all options that match the regular expression
 //  passed in. Currently-selected options will not be changed.
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function selectMatchingOptions(obj, regex) {
     selectUnselectMatchingOptions(obj, regex, "select", false);
 }
@@ -89,6 +91,7 @@ function selectMatchingOptions(obj, regex) {
 //  This function selects all options that match the regular expression
 //  passed in. Selected options that don't match will be un-selected.
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function selectOnlyMatchingOptions(obj, regex) {
     selectUnselectMatchingOptions(obj, regex, "select", true);
 }
@@ -123,17 +126,17 @@ function sortSelect(obj) {
         return;
     }
     o = o.sort(function(a, b) {
-        if (a.text + "" < b.text + "") {
+        if (String(a.text) < String(b.text)) {
             return -1;
         }
-        if (a.text + "" > b.text + "") {
+        if (String(a.text) > String(b.text)) {
             return 1;
         }
         return 0;
     });
 
-    for (var i = 0; i < o.length; i++) {
-        obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+    for (var j = 0; j < o.length; j++) {
+        obj.options[j] = new Option(o[j].text, o[j].value, o[j].defaultSelected, o[j].selected);
     }
 }
 
@@ -186,19 +189,20 @@ function moveSelectedOptions(from, to) {
     for (var i = 0; i < from.options.length; i++) {
         var o = from.options[i];
         if (o.selected) {
+            var index;
             if (!hasOptions(to)) {
-                var index = 0;
+                index = 0;
             } else {
-                var index = to.options.length;
+                index = to.options.length;
             }
             to.options[index] = new Option(o.text, o.value, false, false);
         }
     }
     // Delete them from original
-    for (var i = from.options.length - 1; i >= 0; i--) {
-        var o = from.options[i];
-        if (o.selected) {
-            from.options[i] = null;
+    for (var j = from.options.length - 1; j >= 0; j--) {
+        var p = from.options[j];
+        if (p.selected) {
+            from.options[j] = null;
         }
     }
     if (arguments.length < 3 || arguments[2] == true) {
@@ -224,18 +228,19 @@ function copySelectedOptions(from, to) {
     if (!hasOptions(from)) {
         return;
     }
-    for (var i = 0; i < from.options.length; i++) {
-        var o = from.options[i];
+    for (var j = 0; j < from.options.length; j++) {
+        var o = from.options[j];
         if (o.selected) {
             if (
                 options[o.value] == null ||
                 options[o.value] == "undefined" ||
                 options[o.value] != o.text
             ) {
+                var index;
                 if (!hasOptions(to)) {
-                    var index = 0;
+                    index = 0;
                 } else {
-                    var index = to.options.length;
+                    index = to.options.length;
                 }
                 to.options[index] = new Option(o.text, o.value, false, false);
             }
@@ -252,6 +257,7 @@ function copySelectedOptions(from, to) {
 // moveAllOptions(select_object,select_object[,autosort(true/false)[,regex]])
 //  Move all options from one select box to another.
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function moveAllOptions(from, to) {
     selectAllOptions(from);
     if (arguments.length == 2) {
@@ -268,6 +274,7 @@ function moveAllOptions(from, to) {
 //  Copy all options from one select box to another, instead of
 //  removing items. Duplicates in the target list are not allowed.
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function copyAllOptions(from, to) {
     selectAllOptions(from);
     if (arguments.length == 2) {
@@ -297,11 +304,12 @@ function swapOptions(obj, i, j) {
 // moveOptionUp(select_object)
 //  Move selected option in a select list up one
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function moveOptionUp(obj) {
     if (!hasOptions(obj)) {
         return;
     }
-    for (i = 0; i < obj.options.length; i++) {
+    for (var i = 0; i < obj.options.length; i++) {
         if (obj.options[i].selected) {
             if (i != 0 && !obj.options[i - 1].selected) {
                 swapOptions(obj, i, i - 1);
@@ -315,11 +323,12 @@ function moveOptionUp(obj) {
 // moveOptionDown(select_object)
 //  Move selected option in a select list down one
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function moveOptionDown(obj) {
     if (!hasOptions(obj)) {
         return;
     }
-    for (i = obj.options.length - 1; i >= 0; i--) {
+    for (var i = obj.options.length - 1; i >= 0; i--) {
         if (obj.options[i].selected) {
             if (i != obj.options.length - 1 && !obj.options[i + 1].selected) {
                 swapOptions(obj, i, i + 1);
@@ -334,6 +343,7 @@ function moveOptionDown(obj) {
 //  Remove all selected options from a list
 //  (Thanks to Gene Ninestein)
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function removeSelectedOptions(from) {
     if (!hasOptions(from)) {
         return;
@@ -355,6 +365,7 @@ function removeSelectedOptions(from) {
 // removeAllOptions(select_object)
 //  Remove all options from a list
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function removeAllOptions(from) {
     if (!hasOptions(from)) {
         return;
@@ -369,6 +380,7 @@ function removeAllOptions(from) {
 // addOption(select_object,display_text,value,selected)
 //  Add an option to a list
 // -------------------------------------------------------------------
+//eslint-disable-next-line no-unused-vars
 function addOption(obj, text, value, selected) {
     if (obj != null && obj.options != null) {
         obj.options[obj.options.length] = new Option(text, value, false, selected);

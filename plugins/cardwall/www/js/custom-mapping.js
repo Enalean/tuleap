@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 /**
  * This script manage the admin/config of cardwall in tracker administration
  */

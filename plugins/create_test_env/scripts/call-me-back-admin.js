@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global CKEDITOR:readonly tuleap:readonly */
+
 document.addEventListener("DOMContentLoaded", () => {
     const selector = document.getElementById("call-me-back-message-select-language");
 

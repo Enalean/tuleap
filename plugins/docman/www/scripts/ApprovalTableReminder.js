@@ -15,6 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly codendi:readonly UserAutoCompleter:readonly */
+
 /**
  * Script of the approval table reminder
  */

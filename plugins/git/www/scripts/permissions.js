@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly codendi:readonly */
+
 (function($) {
     function bindAddPermission() {
         $(".add-fine-grained-permission").click(function(event) {
@@ -31,27 +33,27 @@
                 permission_template = $("#add-fine-grained-permission-template"),
                 index = getNewIndex(type);
 
-            (new_row = ""),
-                (input_tag =
-                    '<input type="text" name="add-' +
-                    type +
-                    "-name[" +
-                    index +
-                    ']" placeholder="' +
-                    codendi.getText("git", "add_" + type + "_permission_placeholder") +
-                    '">'),
-                (label_regexp_enabled =
-                    '<p class="text-info">' +
-                    codendi.getText("git", "regexp_permission_enabled_info") +
-                    "</p>");
-            (write_permission_tag = permission_template
+            var new_row = "";
+            var input_tag =
+                '<input type="text" name="add-' +
+                type +
+                "-name[" +
+                index +
+                ']" placeholder="' +
+                codendi.getText("git", "add_" + type + "_permission_placeholder") +
+                '">';
+            var label_regexp_enabled =
+                '<p class="text-info">' +
+                codendi.getText("git", "regexp_permission_enabled_info") +
+                "</p>";
+            var write_permission_tag = permission_template
                 .clone()
                 .removeAttr("id")
-                .attr("name", "add-" + type + "-write[" + index + "][]")[0].outerHTML),
-                (rewind_permission_tag = permission_template
-                    .clone()
-                    .removeAttr("id")
-                    .attr("name", "add-" + type + "-rewind[" + index + "][]")[0].outerHTML);
+                .attr("name", "add-" + type + "-write[" + index + "][]")[0].outerHTML;
+            var rewind_permission_tag = permission_template
+                .clone()
+                .removeAttr("id")
+                .attr("name", "add-" + type + "-rewind[" + index + "][]")[0].outerHTML;
 
             new_row += "<tr>";
 
@@ -70,7 +72,7 @@
     }
 
     function bindToggleFineGrainedPermissions() {
-        $(".toggle-fine-grained-permissions").change(function(event) {
+        $(".toggle-fine-grained-permissions").change(function() {
             $(".plugin_git_write_permissions_select, .plugin_git_rewind_permissions_select")
                 .prop("disabled", function(index, value) {
                     return !value;

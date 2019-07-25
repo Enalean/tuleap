@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global codendi:readonly jQuery:readonly */
+
 /**
  * This script manage the fullscreen mode of the cardwall
  */
@@ -134,12 +136,11 @@
         }
 
         function browserIsIE() {
+            //eslint-disable-next-line no-eval
             return eval("/*@cc_on !@*/false");
         }
 
-        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function(
-            evt
-        ) {
+        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function() {
             var fullscreenElement =
                 document.fullscreenElement ||
                 document.mozFullScreenElement ||
@@ -159,7 +160,7 @@
                 content: codendi.locales.cardwall.no_fullscreen_content
             });
         } else {
-            button.on("click", function(evt) {
+            button.on("click", function() {
                 (function fullscreen() {
                     if (
                         RunPrefixMethod(document, "FullScreen") ||

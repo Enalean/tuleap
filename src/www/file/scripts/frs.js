@@ -1,3 +1,31 @@
+/* global
+    $:readonly
+    Ajax:readonly
+    $H:readonly
+    Builder:readonly
+    codendi:readonly
+
+    processor_id:readonly
+    processor_name:readonly
+    type_id:readonly
+    type_name:readonly
+    group_id:readonly
+    choose:readonly
+    browse:readonly
+    local_file:readonly
+    scp_ftp_files:readonly
+    upload_text:readonly
+    add_file_text:readonly
+    add_change_log_text:readonly
+    view_change_text:readonly
+    refresh_files_list:readonly
+    release_mode:readonly
+    ftp_scp_upload_enabled:readonly
+
+    default_permissions_text:writable
+    ugroups_name:readonly
+*/
+
 function replace(expr, a, b) {
     var i = 0;
     while (i != -1) {
@@ -10,6 +38,7 @@ function replace(expr, a, b) {
     return expr;
 }
 
+//eslint-disable-next-line no-unused-vars
 function update_news() {
     var rel_name = $("release_name");
     var subject = $("release_news_subject");
@@ -20,8 +49,8 @@ function update_news() {
     var expr1 = subject.value;
     var expr2 = details.value;
 
-    new_subject = replace(expr1, a, b);
-    new_details = replace(expr2, a, b);
+    var new_subject = replace(expr1, a, b);
+    var new_details = replace(expr2, a, b);
     subject.value = new_subject;
     details.value = new_details;
 }
@@ -129,7 +158,7 @@ function add_new_file() {
 
     //TD tag constuction, add the select processor type boxe to this tag (used to choose the processor)
     cell = Builder.node("td");
-    var select = Builder.node("select", { id: "processor_" + id }, builder_node_processor);
+    select = Builder.node("select", { id: "processor_" + id }, builder_node_processor);
     select.options[0].selected = "selected";
     cell.appendChild(select);
     row.appendChild(cell);
@@ -142,7 +171,7 @@ function add_new_file() {
 
     //TD tag constuction, add the select file type boxe to this tag (used to choose the type)
     cell = Builder.node("td");
-    var select = Builder.node("select", { id: "type_" + id }, builder_node_type);
+    select = Builder.node("select", { id: "type_" + id }, builder_node_type);
     select.options[0].selected = "selected";
     cell.appendChild(select);
     row.appendChild(cell);
@@ -172,6 +201,7 @@ function add_new_file() {
     current_select_number++;
 }
 
+//eslint-disable-next-line no-unused-vars
 function add_new_link(event) {
     event.preventDefault();
     var table = document.getElementById("frs-uploaded-link-creation");
@@ -210,8 +240,8 @@ function add_new_link(event) {
 }
 
 function onselectchange(select, number, id, cell_trash, image) {
+    var h = {};
     if (select.options[select.selectedIndex].value == "-2") {
-        var h = {};
         $H(selects).each(function(pair) {
             if (pair.key != number) {
                 h[pair.key] = pair.value;
@@ -229,7 +259,6 @@ function onselectchange(select, number, id, cell_trash, image) {
         $("comment_" + id).name = "comment[]";
         cell_trash.appendChild(image);
     } else if (select.options[select.selectedIndex].value != "-1") {
-        var h = {};
         $H(selects).each(function(pair) {
             if (pair.key != number) {
                 h[pair.key] = pair.value;
@@ -259,9 +288,9 @@ function onselectchange(select, number, id, cell_trash, image) {
     }
 }
 
+//eslint-disable-next-line no-unused-vars
 function delete_file(row_id, id) {
     nb_files--;
-    var file = $("file_" + id);
     if ($("file_" + id) == null) {
         // we remove the file from the used ftp files list
         used_ftp_files = used_ftp_files.without($("ftp_file_" + id).value);
@@ -280,6 +309,7 @@ function delete_file(row_id, id) {
     }
 }
 
+//eslint-disable-next-line no-unused-vars
 function show_upload_change_log() {
     Element.hide("cl_upload_link");
     Element.hide("change_log_area");
@@ -287,6 +317,7 @@ function show_upload_change_log() {
     Element.show("cancel_change_log");
 }
 
+//eslint-disable-next-line no-unused-vars
 function cancel_update_change_log() {
     Element.show("change_log_area");
     Element.show("cl_upload_link");
@@ -304,6 +335,7 @@ function cancel_update_change_log() {
     Element.hide("cancel_change_log");
 }
 
+//eslint-disable-next-line no-unused-vars
 function add_change_log() {
     Element.hide("add_change_log");
     Element.show("change_log_title");
@@ -320,6 +352,7 @@ function add_change_log() {
     });
 }
 
+//eslint-disable-next-line no-unused-vars
 function show_upload_notes() {
     Element.show("upload_notes");
     Element.hide("rn_upload_link");
@@ -330,6 +363,7 @@ function show_upload_notes() {
     Element.hide("release_notes_area");
 }
 
+//eslint-disable-next-line no-unused-vars
 function cancel_update_notes() {
     Element.show("release_notes_area");
     Element.show("rn_upload_link");
@@ -347,17 +381,20 @@ function cancel_update_notes() {
     Element.hide("cancel_notes");
 }
 
+//eslint-disable-next-line no-unused-vars
 function view_change_permissions() {
     Element.hide("default_permissions");
     Element.show("permissions");
 }
 
+//eslint-disable-next-line no-unused-vars
 function refresh_file_list() {
     var url = "frsajax.php?group_id=" + group_id + "&action=refresh_file_list";
 
     new Ajax.Request(url, {
         method: "get",
         onSuccess: function(transport) {
+            //eslint-disable-next-line no-eval
             var json = eval("(" + transport.responseText + ")");
             available_ftp_files = json.msg.split(",");
             $H(selects)
@@ -365,7 +402,7 @@ function refresh_file_list() {
                 .each(function(number) {
                     build_select_file(number);
                 });
-        }.bind(this)
+        }
     });
 }
 
@@ -511,7 +548,7 @@ document.observe("dom:loaded", function() {
             return;
         }
 
-        var total_bytes = input_files.inject(0, function(total_bytes, input_file) {
+        total_bytes = input_files.inject(0, function(total_bytes, input_file) {
             var files = input_file.files,
                 length = files.length;
 
@@ -536,14 +573,15 @@ document.observe("dom:loaded", function() {
 
     function checkParametersOnServer() {
         $("feedback").innerHTML = "";
-        var valide = false;
+        var url;
         if (release_mode == "creation") {
+            var package_id;
             if ($("package_id")) {
-                var package_id = $("package_id").value;
+                package_id = $("package_id").value;
             } else {
-                var package_id = null;
+                package_id = null;
             }
-            var url =
+            url =
                 "frsajax.php?group_id=" +
                 group_id +
                 "&action=validator_frs_create&package_id=" +
@@ -553,7 +591,7 @@ document.observe("dom:loaded", function() {
                 "&name=" +
                 encodeURIComponent($("release_name").value);
         } else {
-            var url =
+            url =
                 "frsajax.php?group_id=" +
                 group_id +
                 "&action=validator_frs_update&package_id=" +

@@ -40,7 +40,7 @@ describe("TrackerSelection", () => {
             }
         });
         vm.$mount();
-        spyOn(vm.$store, "commit");
+        spyOn(vm.$store, "commit"); //eslint-disable-line jasmine/no-unsafe-spy
 
         return vm;
     }

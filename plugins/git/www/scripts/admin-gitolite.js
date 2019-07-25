@@ -18,6 +18,7 @@
  */
 
 import { filterInlineTable } from "tlp";
+import tuleap from "tuleap";
 
 document.addEventListener("DOMContentLoaded", () => {
     const bindProjectSelectors = () => {

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global codendi:readonly */
+
 codendi.locales["cardwall_field_validation"] = {
     error_message: {
         float_type: "la valeur doit être de type décimal",

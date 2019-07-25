@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 jQuery(document).ready(function($) {
     if (document.getElementById("tracker-key")) {
         var tracker_key = document.getElementById("tracker-key").textContent;

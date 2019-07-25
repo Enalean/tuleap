@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+/* global Ajax:readonly Class:readonly jQuery:readonly Field:readonly */
+
 /**
  * Adapted from https://groups.google.com/forum/?fromgroups=#!topic/prototype-scriptaculous/HcCxMmdAyjk
  */

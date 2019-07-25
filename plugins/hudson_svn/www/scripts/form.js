@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global jQuery:readonly */
+
 !(function($) {
     var svn_checkbox, form;
 
     function changeSVNFormVisibility() {
-        console.log(svn_checkbox.is(":checked"));
-
         if (svn_checkbox.is(":checked")) {
             form.show();
         } else {
