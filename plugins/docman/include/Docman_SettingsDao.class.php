@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Docman_SettingsDao extends DataAccessObject {
 
     function searchByGroupId($group_id) {

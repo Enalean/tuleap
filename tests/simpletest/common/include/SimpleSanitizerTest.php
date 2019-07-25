@@ -20,7 +20,6 @@
  */
 
 require_once('SimpleSanitizerTestCase.class.php');
-require_once('common/include/SimpleSanitizer.class.php');
 
 class SimpleSanitizerTest extends SimpleSanitizerTestCase {
 

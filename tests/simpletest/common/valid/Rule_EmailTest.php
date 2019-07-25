@@ -22,7 +22,6 @@
  *
  */
 
-require_once('common/valid/Rule.class.php');
 
 class Rule_EmailTest extends TuleapTestCase {
 

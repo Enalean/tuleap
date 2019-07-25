@@ -23,7 +23,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
-require 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $fd = fopen("php://stdin", "r");
 $raw_mail = "";

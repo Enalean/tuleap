@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('./include/ReferenceAdministration.class.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/include/ReferenceAdministration.class.php';
 
 $refAdmin = new ReferenceAdministration();
 

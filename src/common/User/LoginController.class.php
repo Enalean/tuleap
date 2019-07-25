@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mvc2/Controller.class.php';
-require_once 'LoginPresenter.class.php';
-
 class User_LoginController extends MVC2_Controller {
 
     public function __construct(Codendi_Request $request) {

@@ -20,8 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/html/HTML_Element_Selectbox.class.php');
-
 /**
  * Define an html selectbox field for selectbox fields provided by the tracker
  */

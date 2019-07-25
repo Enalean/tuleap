@@ -26,7 +26,7 @@
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require('pre.php');
+require __DIR__ . '/../include/pre.php';
 
 $hp = Codendi_HTMLPurifier::instance();
 

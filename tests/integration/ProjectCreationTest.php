@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'exit.php';
-require_once 'html.php';
-require_once 'user.php';
+require_once __DIR__ . '/../../src/www/include/exit.php';
+require_once __DIR__ . '/../../src/www/include/html.php';
+require_once __DIR__ . '/../../src/www/include/user.php';
 
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;

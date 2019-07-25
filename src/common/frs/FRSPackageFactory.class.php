@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('FRSPackage.class.php');
-require_once('common/dao/FRSPackageDao.class.php');
-require_once('FRSReleaseFactory.class.php');
-require_once ('common/frs/FRSLog.class.php');
-
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPackagePaginatedCollection;
 use Tuleap\FRS\FRSPermissionManager;

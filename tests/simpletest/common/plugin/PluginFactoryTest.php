@@ -18,12 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginFactory.class.php');
 Mock::generatePartial('PluginFactory', 'PluginFactoryTestVersion', array('_getClassNameForPluginName'));
-require_once('common/dao/PluginDao.class.php');
 Mock::generate('PluginDao');
 Mock::generate('DataAccessResult');
-require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
 
 class officialPlugin extends Plugin {

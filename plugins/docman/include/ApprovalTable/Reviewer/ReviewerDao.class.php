@@ -29,7 +29,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
     }
 
     function getUgroupMembers($ugroupId, $groupId) {
-        require_once('www/project/admin/ugroup_utils.php');
+        require_once __DIR__ . '/../../../../../src/www/project/admin/ugroup_utils.php';
         if($ugroupId > 100) {
             $sql = ugroup_db_get_members($ugroupId);
         } else {

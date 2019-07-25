@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-require_once 'account.php';
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
 
 session_require(array('isloggedin' => 1));
 

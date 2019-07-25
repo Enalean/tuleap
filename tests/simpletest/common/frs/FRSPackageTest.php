@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/frs/FRSPackage.class.php');
-
 class FRSPackageTest extends TuleapTestCase {
 
     function testIsActive() {

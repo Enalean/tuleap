@@ -23,8 +23,6 @@
  *
  */
 
-require_once('common/valid/Valid.class.php');
-
 Mock::generate('Rule');
 Mock::generatePartial('Valid', 'ValidTestVersion', array('addFeedback'));
 

@@ -22,8 +22,8 @@ define ('get_artifact_report_fault', '3021');
 define('update_artifact_followup_fault','3022');
 define('delete_artifact_followup_fault','3023');
 
-require_once ('pre.php');
-require_once ('session.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../common/session.php';
 
 if (defined('NUSOAP')) {
 
@@ -2105,7 +2105,6 @@ if (defined('NUSOAP')) {
             $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
 
             //Check Field Dependencies
-            require_once('common/tracker/ArtifactRulesManager.class.php');
             $arm = new ArtifactRulesManager();
             if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
                 return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'addArtifact');
@@ -2263,7 +2262,6 @@ if (defined('NUSOAP')) {
             $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
 
             //Check Field Dependencies
-            require_once('common/tracker/ArtifactRulesManager.class.php');
             $arm = new ArtifactRulesManager();
             if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
                 return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');

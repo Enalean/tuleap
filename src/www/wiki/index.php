@@ -20,9 +20,7 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('pre.php');
-PHPWikiPluginRedirector::redirect();
-require_once('common/wiki/WikiService.class.php');
+require_once __DIR__ . '/../include/pre.php';
 
 \Tuleap\Project\ServiceInstrumentation::increment('phpwiki');
 

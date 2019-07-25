@@ -3,8 +3,8 @@
 // Copyright (c) Enalean, 2015. All rights reserved
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-require_once 'pre.php';
-require_once 'account.php';
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
 
 session_require(array('isloggedin' => 1));
 

@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-PHPWikiPluginRedirector::redirect();
-require_once('common/wiki/WikiServiceAdmin.class.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 
 $wiki = new WikiServiceAdmin($request->get('group_id'));

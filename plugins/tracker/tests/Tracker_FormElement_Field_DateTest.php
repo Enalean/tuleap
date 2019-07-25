@@ -51,8 +51,6 @@ Mock::generate('Tracker_FormElement_Field_Value_DateDao');
 
 Mock::generate('DataAccessResult');
 
-require_once('common/valid/Rule.class.php');    // unit test not really unit...
-
 class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
 
     /** @var XML_Security */

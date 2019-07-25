@@ -18,14 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/wiki/lib/WikiAttachment.class.php');
+
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../../common/wiki/lib/WikiAttachment.class.php';
 
 
 $attch = new WikiAttachment();
 $attch->setUri($_SERVER['REQUEST_URI']);
-
-PHPWikiPluginRedirector::redirect();
 
 if($attch->exist() && $attch->isActive()) {
     if($attch->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {

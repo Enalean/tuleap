@@ -21,10 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'pre.php';
-require_once 'XMLDocmanImport.class.php';
-require_once 'XMLDocmanUpdate.class.php';
-require_once 'parameters.php';
+require_once __DIR__ . '/../../../../src/www/include/pre.php';
+require_once __DIR__ . '/XMLDocmanImport.class.php';
+require_once __DIR__ . '/XMLDocmanUpdate.class.php';
+require_once __DIR__ . '/parameters.php';
 
 $console = new Log_ConsoleLogger();
 $usage = "

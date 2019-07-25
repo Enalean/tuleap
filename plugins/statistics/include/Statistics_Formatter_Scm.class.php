@@ -16,8 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Statistics_Formatter.class.php';
-require_once('www/project/export/project_export_utils.php');
+require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 /**
  * SCM statistics for SVN or CVS

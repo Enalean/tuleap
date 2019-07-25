@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/session/Codendi_Session.class.php');
-
 class Tracker_Report_Session extends Codendi_Session {
 
     protected $report_id;

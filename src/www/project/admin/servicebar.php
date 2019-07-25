@@ -31,8 +31,8 @@ use Tuleap\Project\Service\ServicePOSTDataBuilder;
 use Tuleap\Project\Service\ServicesPresenterBuilder;
 use Tuleap\Project\Service\ServiceUpdator;
 
-require_once('pre.php');
-require_once('www/project/admin/project_admin_utils.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/project_admin_utils.php';
 
 $request = HTTPRequest::instance();
 

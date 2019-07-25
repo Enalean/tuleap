@@ -26,8 +26,6 @@
     By Thierry Jacquin, Nov 2003
 
 */
-require_once('common/reference/CrossReferenceFactory.class.php');
-require_once('common/reference/ReferenceManager.class.php');
 
 function uniformat_date($format, $date) {
 

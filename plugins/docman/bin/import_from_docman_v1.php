@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'pre.php';
-require_once 'DocmanImport/ImportFromDocmanV1.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ . '/DocmanImport/ImportFromDocmanV1.class.php';
 
 if ($argc != 4) {
     die("*** Usage: ".basename($argv[0])." wsdl_url admin_loginame projectid\n");

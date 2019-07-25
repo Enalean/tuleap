@@ -25,8 +25,8 @@ use HTTPRequest;
 use ProjectManager;
 use TemplateRendererFactory;
 
-require_once('www/forum/forum_utils.php');
-require_once('www/project/admin/ugroup_utils.php');
+require_once __DIR__ . '/../../www/forum/forum_utils.php';
+require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
 class ChooseNewsItemController {
 

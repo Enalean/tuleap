@@ -28,13 +28,6 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-require_once ('FRSRelease.class.php');
-require_once ('common/dao/FRSReleaseDao.class.php');
-require_once ('common/frs/FRSFileFactory.class.php');
-require_once ('common/frs/FRSPackageFactory.class.php');
-require_once ('common/frs/FileModuleMonitorFactory.class.php');
-require_once ('common/frs/FRSLog.class.php');
-
 class FRSReleaseFactory {
     // Kept for legacy
     var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;

@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/html/HTML_Table_Bootstrap.class.php';
-
 class Tracker_DateReminderRenderer {
 
     protected $tracker;

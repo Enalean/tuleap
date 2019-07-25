@@ -23,7 +23,6 @@
  *
  */
 
-require_once('common/valid/ValidFactory.class.php');
 Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
 
 class ValidHelperTest extends TuleapTestCase {

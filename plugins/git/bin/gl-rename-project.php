@@ -21,9 +21,9 @@
  * Rename project in gitolite configuration
  */
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
-require_once dirname(__FILE__).'/../include/GitRepositoryUrlManager.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ .'/../include/Git_GitoliteDriver.class.php';
+require_once __DIR__ .'/../include/GitRepositoryUrlManager.class.php';
 
 if ($argc !== 3) {
     echo "Usage: ".$argv[0]." oldname newname".PHP_EOL;

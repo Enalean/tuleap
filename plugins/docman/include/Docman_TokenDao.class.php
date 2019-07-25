@@ -19,8 +19,6 @@
  */
 
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for Docman_Token
  */

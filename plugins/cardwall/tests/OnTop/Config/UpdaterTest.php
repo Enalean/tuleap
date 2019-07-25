@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__) .'/../../bootstrap.php';
-require_once 'common/include/Codendi_Request.class.php';
 
 class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase {
 

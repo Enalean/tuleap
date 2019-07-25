@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/session/PHP_Session.class.php');
 
 class Codendi_Session extends PHP_Session {
 

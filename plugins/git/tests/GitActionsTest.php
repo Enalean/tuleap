@@ -23,12 +23,6 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 
 require_once 'bootstrap.php';
-require_once (__DIR__.'/../include/GitActions.class.php');
-require_once (__DIR__.'/../include/Git.class.php');
-require_once (__DIR__.'/../include/GitRepository.class.php');
-require_once('common/language/BaseLanguage.class.php');
-require_once('common/include/Response.class.php');
-
 require_once 'builders/aGitRepository.php';
 
 class GitActionsTest extends TuleapTestCase {

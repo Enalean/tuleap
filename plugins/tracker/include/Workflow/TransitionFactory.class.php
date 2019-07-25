@@ -22,8 +22,6 @@
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\TransitionDeletionException;
 
-require_once('common/permission/PermissionsManager.class.php');
-
 class TransitionFactory //phpcs:ignoreFile
 {
 

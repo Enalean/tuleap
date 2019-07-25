@@ -24,7 +24,7 @@
 
 namespace Tuleap\Project\Admin\ProjectDetails;
 
-require_once('www/project/admin/project_admin_utils.php');
+require_once __DIR__ . '/../../../../www/project/admin/project_admin_utils.php';
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;

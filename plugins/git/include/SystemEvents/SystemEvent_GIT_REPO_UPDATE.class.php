@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/system_event/SystemEvent.class.php';
-
 class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
     public const NAME = 'GIT_REPO_UPDATE';
 

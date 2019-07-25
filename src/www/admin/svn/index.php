@@ -25,7 +25,7 @@ use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
 use Tuleap\SvnCore\Cache\ParameterSaver;
 
-require_once 'pre.php';
+require_once __DIR__ .  '/../../include/pre.php';
 
 $event_manager       = EventManager::instance();
 $parameter_dao       = new ParameterDao();

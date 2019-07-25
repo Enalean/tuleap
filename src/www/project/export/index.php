@@ -21,9 +21,9 @@
 
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 
-require_once('pre.php');
-require_once('../admin/project_admin_utils.php');
-require_once('./project_export_utils.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../admin/project_admin_utils.php';
+require_once __DIR__ . '/project_export_utils.php';
 
 // Inherited from old .htaccess
 ini_set('max_execution_time', 3600);

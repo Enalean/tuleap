@@ -28,7 +28,7 @@ use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
-require_once 'www/project/admin/permissions.php';
+include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 
 /**
  * GitViews

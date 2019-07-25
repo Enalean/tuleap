@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/plugin/PluginInfo.class.php';
-require_once 'AgileDashboardPluginDescriptor.class.php';
-
-
 /**
  * AgileDashboardPluginInfo
  */

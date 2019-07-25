@@ -18,7 +18,7 @@
  */
 
 
-require_once('pre.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 // Valid group id
 $valid_groupid = new Valid_GroupId();

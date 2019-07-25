@@ -24,8 +24,8 @@
 
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 
-require_once('pre.php');
-require_once('www/include/account.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../../include/account.php';
 
 if (! user_isloggedin()) {
     exit_not_logged_in();

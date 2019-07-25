@@ -25,9 +25,6 @@ class FakePluginDescriptor {
 
     public function __construct($basedir) {
         $this->basedir = $basedir;
-        ini_set('include_path', ini_get('include_path').':'.$basedir.'/src');
-
-        require('common/language/BaseLanguage.class.php');
 
         $GLOBALS['codendi_cache_dir']     = '/tmp';
         $GLOBALS['sys_incdir']            = $basedir.'/site-content';

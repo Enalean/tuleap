@@ -20,8 +20,6 @@
 
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 
-require_once 'common/TreeNode/TreeNodeMapper.class.php';
-
 /**
  * This presenter build the top view of a milestone (milestone title + switch on another milestone).
  * It delegates the display to an AgileDashboardPane for the content

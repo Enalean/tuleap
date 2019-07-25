@@ -2,8 +2,8 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-require_once('pre.php');
-require_once('../svn/svn_data.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../svn/svn_data.php';
 
 $vFunc = new Valid_WhiteList('func', array('detailrevision', 'browse','info'));
 

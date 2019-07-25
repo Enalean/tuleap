@@ -25,9 +25,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 
-require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
-
 /**
  * A pane to be displayed in AgileDashboard
  */

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $unsigned_int_validator = new Valid_UInt();
 if ($argc !== 2 || ! $unsigned_int_validator->validate($argv[1])) {

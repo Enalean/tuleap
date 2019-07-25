@@ -23,8 +23,6 @@
  *
  */
 
-require_once('common/include/Codendi_HTMLPurifier.class.php');
-
 class PluginViews {
 
     protected $request;

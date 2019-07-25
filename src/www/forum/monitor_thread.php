@@ -23,7 +23,7 @@
  */
 
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
 if ( !user_isloggedin()) {

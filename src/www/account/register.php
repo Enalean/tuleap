@@ -21,10 +21,10 @@
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require_once('pre.php');
-require_once('proj_email.php');
-require_once('account.php');
-require_once('timezones.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/proj_email.php';
+require_once __DIR__ . '/../include/account.php';
+require_once __DIR__ . '/../include/timezones.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
 $request = HTTPRequest:: instance();

@@ -23,8 +23,8 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-require_once('www/project/admin/permissions.php');
-require_once('WikiPage.class.php');
+require_once __DIR__ . '/../../../www/project/admin/permissions.php';
+require_once __DIR__ . '/WikiPage.class.php';
 /**
  * Manipulation of Wiki service.
  *

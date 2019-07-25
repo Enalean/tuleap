@@ -22,8 +22,8 @@
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\SessionManager;
 
-require_once('pre.php');
-require_once('account.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
 $request = HTTPRequest::instance();
 $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
 

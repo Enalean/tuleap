@@ -25,8 +25,7 @@
 
 
 try {
-    require_once 'pre.php';
-    require_once 'common/svn/hook/PostRevPropset.class.php';
+    require_once __DIR__ . '/../../www/include/pre.php';
 
     $repository         = $argv[1];
     $revision           = $argv[2];

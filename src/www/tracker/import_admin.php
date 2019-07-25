@@ -6,10 +6,8 @@
 //
 //
 //  Written for Codendi by Marie-Luise Schneider
-require_once('pre.php');
-require_once('www/project/admin/project_admin_utils.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../project/admin/project_admin_utils.php';
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);

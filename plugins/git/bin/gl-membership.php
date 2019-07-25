@@ -30,7 +30,7 @@
  * https://github.com/sitaramc/gitolite/blob/pu/contrib/ldap/ldap-query-example.pl
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 if (!isset($argv[1])) {
     echo "Usage: ".$argv[0]." username".PHP_EOL;

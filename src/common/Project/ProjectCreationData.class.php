@@ -185,7 +185,7 @@ class ProjectCreationData
             if ($are_restricted_enabled && $should_project_allow_restricted) {
                 return Project::ACCESS_PUBLIC_UNRESTRICTED;
             }
-            return PROJECT::ACCESS_PUBLIC;
+            return Project::ACCESS_PUBLIC;
         }
 
         if ($are_restricted_enabled && !$should_project_allow_restricted) {

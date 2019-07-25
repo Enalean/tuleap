@@ -31,12 +31,6 @@ use Tuleap\GraphOnTrackersV5\Chart\Visitable;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 use Tuleap\Widget\WidgetFactory;
 
-require_once('common/html/HTML_Element_Input_Hidden.class.php');
-require_once('common/html/HTML_Element_Input_Text.class.php');
-require_once('common/html/HTML_Element_Textarea.class.php');
-require_once('common/html/HTML_Element_Columns.class.php');
-require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
-
 /**
  * Describe a chart
  *

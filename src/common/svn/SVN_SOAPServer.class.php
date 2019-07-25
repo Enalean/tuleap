@@ -19,10 +19,6 @@
 
 use Tuleap\SOAP\SOAPRequestValidator;
 
-require_once 'SVN_RepositoryListing.class.php';
-require_once 'SVN_LogFactory.class.php';
-require_once 'common/date/TimeInterval.class.php';
-
 /**
  * Wrapper for subversion related SOAP methods
  */

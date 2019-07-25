@@ -342,7 +342,7 @@ class Docman_PermissionsManager {
     * @access protected
     */
     function _isUserDocmanAdmin($user) {
-        require_once('www/project/admin/permissions.php');
+        require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         $has_permission = false;
 
         $permission_type = self::PLUGIN_DOCMAN_ADMIN;

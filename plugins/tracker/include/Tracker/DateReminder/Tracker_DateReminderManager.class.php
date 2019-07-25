@@ -22,9 +22,6 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-require_once('common/mail/MailManager.class.php');
-require_once 'common/date/DateHelper.class.php';
-
 class Tracker_DateReminderManager {
 
     protected $tracker;

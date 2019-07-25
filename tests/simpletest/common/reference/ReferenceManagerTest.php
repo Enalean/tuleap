@@ -19,14 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('common/reference/ReferenceManager.class.php');
-
-require_once('common/dao/ReferenceDao.class.php');
 Mock::generate('ReferenceDao');
-require_once('common/dao/CrossReferenceDao.class.php');
 Mock::generate('CrossReferenceDao');
 Mock::generate('DataAccessResult');
 

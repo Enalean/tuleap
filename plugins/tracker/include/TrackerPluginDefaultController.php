@@ -39,7 +39,7 @@ class TrackerPluginDefaultController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        require_once 'www/project/admin/permissions.php';
+        require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
         ini_set('max_execution_time', 1800);
         $this->tracker_manager->process($request, $request->getCurrentUser());

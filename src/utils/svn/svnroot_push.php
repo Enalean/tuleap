@@ -19,7 +19,7 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../www/include/pre.php';
 
 $updater = new Tuleap\Svn\SvnrootUpdater(new Log_ConsoleLogger());
 $updater->push();

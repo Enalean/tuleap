@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/svn/SVN_Hooks.class.php';
-
 /**
  * Base class for a svn hook object
  */

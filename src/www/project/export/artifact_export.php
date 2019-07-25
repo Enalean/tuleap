@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/ArtifactFieldSetFactory.class.php');
-
-
 //    get the Group object
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);

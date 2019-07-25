@@ -21,8 +21,6 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject {
 
     public function __construct() {

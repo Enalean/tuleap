@@ -21,10 +21,8 @@
 
 use Tuleap\Layout\IncludeAssets;
 
-require_once 'pre.php';
-require_once 'adminPresenter.class.php';
-require_once 'common/dao/SystemEventsFollowersDao.class.php';
-require_once 'common/include/Toggler.class.php';
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/adminPresenter.class.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

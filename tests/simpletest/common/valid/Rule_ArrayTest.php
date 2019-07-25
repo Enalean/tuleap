@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/valid/Rule.class.php');
-require_once('common/valid/ValidFactory.class.php');
-
 class Rule_ArrayTest extends TuleapTestCase {
 
     function testTestsWetherTheArgumentIsAnArray() {

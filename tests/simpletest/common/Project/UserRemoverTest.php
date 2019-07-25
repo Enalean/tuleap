@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project;
 
-require_once 'exit.php';
+require_once __DIR__ . '/../../../../src/www/include/exit.php';
 
 use TuleapTestCase;
 

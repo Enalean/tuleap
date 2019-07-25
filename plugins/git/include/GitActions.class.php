@@ -19,8 +19,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('common/layout/Layout.class.php');
-
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GitViews\RepoManagement\Pane;

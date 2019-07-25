@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 // Step 1: fix bug with not deleted items
 // First delete all documents with deleted parents.

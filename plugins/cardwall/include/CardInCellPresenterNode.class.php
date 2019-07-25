@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../tracker/include/constants.php';
-require_once 'common/TreeNode/NodeDuplicator.class.php';
-
 /**
  * A TreeNode holding a CardInCellPresenter
  */

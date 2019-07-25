@@ -19,12 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactCanned.class.php');
-require_once('common/tracker/ArtifactRulesManager.class.php');
-require_once('common/dao/ArtifactGroupListDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/dao/TrackerIdSharingDao.class.php');
 
 class ArtifactTypeFactory {
 

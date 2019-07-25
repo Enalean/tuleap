@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Tracker_Report_CriteriaDao extends DataAccessObject {
     function __construct() {
         parent::__construct();

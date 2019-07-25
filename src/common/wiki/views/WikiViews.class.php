@@ -23,8 +23,6 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-require_once('common/mvc/Views.class.php');
-
 function exit_wiki_empty() {
     GLOBAL $HTML;
     global $group_id;

@@ -18,7 +18,7 @@
 
 use Tuleap\Layout\IncludeAssets;
 
-require_once('pre.php');
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
 $include_assets = new IncludeAssets($assets_path, '/assets');

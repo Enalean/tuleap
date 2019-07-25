@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('HTML_Element_Selectbox.class.php');
-
 /**
  * Define an html selectbox field for selectbox fields provided by the tracker
  */
@@ -31,8 +29,6 @@ class HTML_Element_Selectbox_TrackerFields_Selectboxes extends HTML_Element_Sele
     public function __construct($label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="") {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        require_once('common/tracker/ArtifactFieldFactory.class.php');
-        require_once('common/tracker/ArtifactType.class.php');
         $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);
         $aff = new ArtifactFieldFactory($at);
 

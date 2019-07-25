@@ -18,7 +18,6 @@
  */
 
 require_once __DIR__.'/../../bootstrap.php';
-require_once('common/layout/Layout.class.php');
 
 class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
 

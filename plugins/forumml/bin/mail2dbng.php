@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $list = $argv[1];
 $sql = sprintf('SELECT group_id, group_list_id FROM mail_group_list WHERE list_name = "%s"', db_escape_string($list));

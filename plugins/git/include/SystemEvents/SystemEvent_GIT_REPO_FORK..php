@@ -20,8 +20,6 @@
 
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 
-require_once 'common/system_event/SystemEvent.class.php';
-
 class SystemEvent_GIT_REPO_FORK extends SystemEvent {
     public const NAME =  'GIT_REPO_FORK';
 

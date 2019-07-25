@@ -30,7 +30,6 @@ Mock::generate('Tracker_RuleFactory');
 
 Mock::generate('Tracker_FormElementFactory');
 
-require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
 Mock::generate('Tracker_FormElement_Field_Selectbox');

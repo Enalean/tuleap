@@ -21,8 +21,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-require_once('www/project/stats/source_code_access_utils.php');
-require_once('www/project/export/project_export_utils.php');
+require_once __DIR__ . '/../stats/source_code_access_utils.php';
+require_once __DIR__ . '/project_export_utils.php';
 
 
 // Export files access logs for this group

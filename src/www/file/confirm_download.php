@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('pre.php');
-require_once('common/frs/FRSFileFactory.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

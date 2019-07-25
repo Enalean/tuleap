@@ -19,9 +19,6 @@
  */
 
 
-require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
-require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
-
 class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectSpanPadding {
 
     /**

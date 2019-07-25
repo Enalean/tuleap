@@ -35,7 +35,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
-require_once('pre.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 $request = HTTPRequest::instance();
 

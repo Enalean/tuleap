@@ -20,8 +20,6 @@
  */
 
 require_once('bootstrap.php');
-require_once('common/include/Response.class.php');
-require_once('common/language/BaseLanguage.class.php');
 
 abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     protected $fixture_dir;

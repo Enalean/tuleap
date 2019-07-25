@@ -20,8 +20,8 @@
  */
 
 
-require_once('pre.php');
-require_once('timezones.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/timezones.php';
 
 $em = EventManager::instance();
 $em->processEvent('before_change_timezone', array());

@@ -21,7 +21,7 @@
 use Tuleap\Statistics\DataExportPresenterBuilder;
 use Tuleap\Statistics\DataExportRouter;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $plugin_manager = PluginManager::instance();
 $plugin         = $plugin_manager->getPluginByName('statistics');

@@ -23,8 +23,6 @@
  *
  */
 
-require_once('common/tracker/ArtifactRuleValueView.class.php');
-
 /**
 * Javascript representation (JSON) of a rule
 *

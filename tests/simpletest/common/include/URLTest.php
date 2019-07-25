@@ -19,19 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/URL.class.php');
 Mock::generate('DataAccessResult');
 Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao', 'getProjectNameRule'));
 
-require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
-require_once('common/dao/ForumDao.class.php');
 Mock::generate('ForumDao');
-require_once('common/dao/NewsBytesDao.class.php');
 Mock::generate('NewsBytesDao');
-require_once('common/dao/ArtifactDao.class.php');
 Mock::generate('ArtifactDao');
-require_once('common/valid/Rule.class.php');
 Mock::generate('Rule_ProjectName');
 
 class URLTest extends TuleapTestCase {

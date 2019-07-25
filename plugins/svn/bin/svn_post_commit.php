@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__.'/../include/svnPlugin.class.php';
 
 use Tuleap\Mail\MailFilter;

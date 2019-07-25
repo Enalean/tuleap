@@ -22,9 +22,6 @@
  *
  */
 
-require_once('common/plugin/PluginDescriptor.class.php');
-
-
 class UserLogPluginDescriptor extends PluginDescriptor {
 
     function __construct() {

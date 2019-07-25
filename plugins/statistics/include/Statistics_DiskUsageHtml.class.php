@@ -23,10 +23,6 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-require_once 'Statistics_DiskUsageOutput.class.php';
-require_once 'ProjectQuotaManager.class.php';
-require_once 'common/chart/Chart.class.php';
-
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
     protected function _displayEvolutionData($row) {

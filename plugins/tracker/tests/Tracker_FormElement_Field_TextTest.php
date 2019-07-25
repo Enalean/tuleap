@@ -35,7 +35,6 @@ Mock::generate('DataAccessResult');
 
 Mock::generate('Tracker_Artifact');
 
-require_once('common/valid/Rule.class.php');
 Mock::generate('Rule_String');
 
 class Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_TextTestVersion

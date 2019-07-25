@@ -21,9 +21,7 @@
 
 // phpcs:ignoreFile
 
-require_once('common/tracker/ArtifactType.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
+require_once __DIR__ . '/../../../www/project/admin/ugroup_utils.php';
 
 class ArtifactTypeHtml extends ArtifactType {
 

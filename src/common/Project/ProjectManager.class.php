@@ -381,7 +381,7 @@ class ProjectManager
     public function activateWithoutNotifications(Project $project)
     {
         if ($this->_getDao()->updateStatus($project->getId(), 'A')) {
-            include_once 'proj_email.php';
+            include_once __DIR__ . '/../../www/include/proj_email.php';
 
             $this->removeProjectFromCache($project);
 

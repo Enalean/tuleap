@@ -8,7 +8,8 @@
 class LanguageFilesTest extends TuleapTestCase {
 
     function testLanguagesFiles() {
-        $cmd          = $GLOBALS['basedir'].'/src/utils/analyse_language_files.pl '.$GLOBALS['basedir'].' 2>&1';
+        $basedir      = __DIR__ . '/../../';
+        $cmd          = $basedir.'/src/utils/analyse_language_files.pl '.$basedir.' 2>&1';
         $return_value = 1;
         $output       = array();
         exec($cmd, $output, $return_value);

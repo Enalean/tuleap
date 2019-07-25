@@ -22,7 +22,6 @@
 use Tuleap\Tracker\Admin\GlobalAdminController;
 
 require_once('bootstrap.php');
-require_once 'common/constants.php';
 Mock::generate('Tracker_URL');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');

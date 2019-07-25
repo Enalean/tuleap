@@ -101,10 +101,8 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generate('Tracker_Artifact_ChangesetValue');

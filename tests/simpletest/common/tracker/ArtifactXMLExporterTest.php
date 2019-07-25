@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/tracker/ArtifactXMLExporter.class.php';
-
 abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
     /** @var ArtifactXMLExporter */
     protected $exporter;

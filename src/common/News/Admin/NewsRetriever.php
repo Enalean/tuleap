@@ -19,7 +19,7 @@
 */
 namespace Tuleap\News\Admin;
 
-require_once 'www/news/news_utils.php';
+require_once __DIR__ . '/../../../www/news/news_utils.php';
 
 class NewsRetriever
 {

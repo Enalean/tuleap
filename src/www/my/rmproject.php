@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('www/include/account.php');
-require_once('www/project/admin/ugroup_utils.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
+require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 
 if (user_isloggedin()) {
     $user_id = UserManager::instance()->getCurrentUser()->getId();

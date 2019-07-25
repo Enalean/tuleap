@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-require_once('Docman_ItemDao.class.php');
-
 class Docman_ReportDao
 extends DataAccessObject {
 

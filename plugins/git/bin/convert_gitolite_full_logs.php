@@ -21,7 +21,7 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__.'/../include/gitPlugin.class.php';
 
 use Tuleap\Git\Gitolite\Gitolite3LogParser;

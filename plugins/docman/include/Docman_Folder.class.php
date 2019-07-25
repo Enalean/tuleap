@@ -20,10 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Docman_Item.class.php');
-require_once('view/Docman_View_Browse.class.php');
-
-require_once('common/collection/PrioritizedList.class.php');
 
 /**
  * Folder is a transport object (aka container) used to share data between

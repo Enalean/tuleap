@@ -25,7 +25,6 @@ use Tracker_Semantic_Description;
 use SimpleXMLElement;
 
 require_once('bootstrap.php');
-require_once('common/language/BaseLanguage.class.php');
 
 class SemanticDescriptionTest extends TuleapTestCase
 {

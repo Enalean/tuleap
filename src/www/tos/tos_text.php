@@ -3,7 +3,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 include($Language->getContent('project/tos'));
 
 ?>

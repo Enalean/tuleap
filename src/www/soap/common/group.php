@@ -22,8 +22,8 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 
-require_once('user.php');
-require_once('common/include/GroupFactory.class.php');
+require_once __DIR__ . '/../../include/user.php';
+require_once __DIR__ . '/../../include/utils_soap.php';
 
 if (defined('NUSOAP')) {
 

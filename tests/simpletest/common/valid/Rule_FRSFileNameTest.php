@@ -20,9 +20,7 @@
  *
  */
 
-require_once('common/valid/Rule.class.php');
-
-require_once('utils.php');
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class Rule_FRSFileNameTest extends TuleapTestCase {
 

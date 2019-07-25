@@ -20,10 +20,6 @@
  */
 
 
-require_once('common/frs/FRSFileFactory.class.php');
-
-
-
 class FRSRelease {
     public const PERM_READ        = 'RELEASE_READ';
 

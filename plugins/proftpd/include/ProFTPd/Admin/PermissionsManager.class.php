@@ -97,7 +97,7 @@ class PermissionsManager {
     }
 
     public function savePermission(Project $project, $permission, array $ugroups) {
-        include_once 'www/project/admin/permissions.php';
+        include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 
         permission_process_selection_form(
             $project->getGroupId(),

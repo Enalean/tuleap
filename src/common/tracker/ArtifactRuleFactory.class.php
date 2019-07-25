@@ -18,9 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/dao/ArtifactRuleDao.class.php');
-
-require_once('ArtifactRuleValue.class.php');
 
 
 /**

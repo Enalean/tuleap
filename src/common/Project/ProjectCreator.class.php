@@ -16,25 +16,11 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'Project.class.php';
-require_once 'Project_InvalidShortName_Exception.class.php';
-require_once 'Project_InvalidFullName_Exception.class.php';
-require_once 'Project_Creation_Exception.class.php';
-require_once 'common/valid/Rule.class.php';
-require_once 'service.php';
-require_once 'www/forum/forum_utils.php';
-require_once 'www/admin/admin_utils.php';
-require_once 'common/tracker/ArtifactType.class.php';
-require_once 'common/tracker/ArtifactTypeFactory.class.php';
-require_once 'common/tracker/ArtifactFieldFactory.class.php';
-require_once 'common/tracker/ArtifactField.class.php';
-require_once 'common/tracker/ArtifactFieldSetFactory.class.php';
-require_once 'common/tracker/ArtifactFieldSet.class.php';
-require_once 'common/tracker/ArtifactReport.class.php';
-require_once 'common/tracker/ArtifactReportFactory.class.php';
-require_once 'common/reference/ReferenceManager.class.php';
-require_once 'trove.php';
-require_once 'common/wiki/lib/WikiCloner.class.php';
+require_once __DIR__ .  '/../../www/include/service.php';
+require_once __DIR__ . '/../../www/forum/forum_utils.php';
+require_once __DIR__ . '/../../www/admin/admin_utils.php';
+require_once __DIR__ . '/../../www/include/trove.php';
+require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.class.php';
 
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');

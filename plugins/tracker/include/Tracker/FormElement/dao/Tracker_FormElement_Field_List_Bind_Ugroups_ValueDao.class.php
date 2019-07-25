@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObject {
 
     function __construct() {

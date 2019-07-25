@@ -19,8 +19,6 @@
  *
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObject {
 
     public function setDescriptionFieldValue($group_id, $field_id_to_update, $value) {

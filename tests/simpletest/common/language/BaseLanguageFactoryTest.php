@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/language/BaseLanguageFactory.class.php';
-
 class BaseLanguageFactoryTest extends TuleapTestCase {
 
     public function setUp()

@@ -31,9 +31,6 @@ use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 
-require_once('common/valid/Rule.class.php');
-require_once('common/include/Codendi_HTTPPurifier.class.php');
-
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 {
     public function getCriteriaFrom($criteria) {

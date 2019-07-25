@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
-require_once('common/backend/BackendSystem.class.php');
 Mock::generatePartial('SystemEvent_UGROUP_MODIFY',
                       'SystemEvent_UGROUP_MODIFY_TestVersion',
                       array('getProject',

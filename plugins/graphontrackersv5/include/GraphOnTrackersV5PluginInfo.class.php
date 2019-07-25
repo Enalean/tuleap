@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/plugin/PluginInfo.class.php');
-require_once('GraphOnTrackersV5PluginDescriptor.class.php');
 
 class GraphOnTrackersV5PluginInfo extends PluginInfo {
 

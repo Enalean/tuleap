@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
 abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
 
     function searchById($changeset_value_id) {

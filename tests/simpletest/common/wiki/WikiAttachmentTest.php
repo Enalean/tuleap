@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/wiki/lib/WikiAttachment.class.php');
+require_once __DIR__ . '/../../../../src/common/wiki/lib/WikiAttachment.class.php';
 Mock::generate('WikiAttachmentDao');
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'getDao', 'isActive', 'exist'));

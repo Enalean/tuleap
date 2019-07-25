@@ -21,8 +21,6 @@
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-require_once('common/dao/include/DataAccessObject.class.php');
-require_once('common/dao/TrackerIdSharingDao.class.php');
 class TrackerDao extends DataAccessObject {
     function __construct() {
         parent::__construct();

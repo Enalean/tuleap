@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ .'/../include/Statistics_DiskUsageGraph.class.php';
 
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;

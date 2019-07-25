@@ -23,7 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\ArtifactPendingDeletionPresenter;
 
-require_once('pre.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);

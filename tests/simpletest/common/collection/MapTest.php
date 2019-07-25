@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/collection/Map.class.php');
-require_once('common/collection/Collection.class.php');
 
 class MapTest extends TuleapTestCase {
 

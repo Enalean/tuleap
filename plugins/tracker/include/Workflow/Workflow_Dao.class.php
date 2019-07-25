@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
 {
     public function __construct($da = null)

@@ -19,8 +19,8 @@
  */
 
 // the administrator can create a user account; we display the same page as user registration under the admin menu
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 HTTPRequest::instance()->checkUserIsSuperUser();
 
-require_once 'www/account/register.php';
+require_once __DIR__. '/../account/register.php';

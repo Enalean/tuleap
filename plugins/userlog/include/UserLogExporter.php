@@ -20,7 +20,7 @@
 
 namespace Tuleap\Userlog;
 
-require_once('www/project/export/project_export_utils.php');
+require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 class UserLogExporter
 {

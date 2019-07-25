@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/tracker/ArtifactType.class.php';
-require_once __DIR__ . '/../../../plugins/tracker/include/trackerPlugin.class.php';
 
 abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     private static $defect_tracker_converted = false;

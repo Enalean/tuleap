@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/html/HTML_Table_Bootstrap.class.php';
 require_once 'HTML_TableTest.php';
 
 class HTML_Table_BoostrapTest extends HTML_TableTest {

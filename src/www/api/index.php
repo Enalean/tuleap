@@ -18,8 +18,8 @@
  */
 
 define('IS_SCRIPT', true);
-require_once 'pre.php';
-require_once 'www/project/admin/permissions.php';
+require_once __DIR__. '/../include/pre.php';
+require_once __DIR__ . '/../project/admin/permissions.php';
 
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTAuthentication;

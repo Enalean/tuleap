@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/backend/BackendLogger.class.php';
-
 /**
  * I know how to speak to a Gerrit 2.5 remote server
  */

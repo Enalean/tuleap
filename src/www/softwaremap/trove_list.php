@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('trove.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/trove.php';
 
 if ($GLOBALS['sys_use_trove'] == 0) {
     exit_permission_denied();

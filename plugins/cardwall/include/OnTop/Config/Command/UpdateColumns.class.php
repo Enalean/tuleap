@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/layout/ColorHelper.class.php';
-
 /**
  * Update a column for a cardwall on top of a tracker
  */

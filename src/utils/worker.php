@@ -20,7 +20,7 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../www/include/pre.php';
 
 $worker = new \Tuleap\Queue\Worker();
 $worker->main();

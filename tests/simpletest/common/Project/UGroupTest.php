@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'www/project/admin/ugroup_utils.php';
-require_once 'utils.php';
+require_once __DIR__ . '/../../../../src/www/project/admin/ugroup_utils.php';
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class UGroup_RemoveUserTest extends TuleapTestCase

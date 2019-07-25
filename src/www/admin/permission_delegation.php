@@ -22,7 +22,7 @@ use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../include/pre.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

@@ -22,15 +22,8 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\URI\URIModifier;
 
-require_once ('pre.php');
-require_once ('session.php');
-require_once('common/frs/FRSPackage.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
-require_once('common/frs/FRSRelease.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/frs/FRSFile.class.php');
-require_once('common/frs/FRSFileFactory.class.php');
-require_once('common/include/lib/PHP_BigFile.class.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../../include/session.php';
 
 // define fault code constants
 define('invalid_package_fault', '3017');

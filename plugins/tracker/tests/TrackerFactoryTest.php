@@ -46,15 +46,12 @@ Mock::generatePartial('TrackerFactory',
 
 Mock::generate('TrackerDao');
 Mock::generate('ProjectManager');
-require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 Mock::generate('Project');
 Mock::generate('Tracker_CannedResponseFactory');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_ReportFactory');
-require_once('common/include/Response.class.php');
 Mock::generate('response');
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class TrackerFactoryTest extends TuleapTestCase {

@@ -96,7 +96,7 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
 
     echo "Load initial data"
-    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
+    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 setup_tuleap

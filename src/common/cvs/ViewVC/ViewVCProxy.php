@@ -20,8 +20,8 @@
 
 namespace Tuleap\CVS\ViewVC;
 
-require_once('viewvc_utils.php');
-require_once('www/cvs/commit_utils.php');
+require_once __DIR__ . '/../../../www/include/viewvc_utils.php';
+require_once __DIR__ . '/../../../www/cvs/commit_utils.php';
 
 use ForgeConfig;
 use HTTPRequest;

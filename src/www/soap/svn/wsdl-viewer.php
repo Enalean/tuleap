@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../include/pre.php';
 
 $wsdl_renderer = new SOAP_WSDLRenderer();
 $wsdl_renderer->render(HTTPRequest::instance()->getServerUrl()."/soap/svn/?wsdl");

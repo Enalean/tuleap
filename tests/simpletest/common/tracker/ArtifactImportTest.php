@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('www/include/utils.php');
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 Mock::generate('BaseLanguage');
 

@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/system_event/SystemEvent.class.php';
-require_once('www/project/admin/project_admin_utils.php');
+require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
 
 /**
  * Change project short name (unix_group_name)

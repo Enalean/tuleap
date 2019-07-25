@@ -36,7 +36,6 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
      * Builds bar chart object
      */
     function buildGraph() {
-        require_once('common/chart/Chart.class.php');
         if ($this->width == 0) {
             if (!is_null($this->xaxis)) {
                 $this->width = (count($this->data)*count($this->data[0])*25)+(2*150);

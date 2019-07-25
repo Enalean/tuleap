@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/templating/TemplateRenderer.class.php';
-
 /**
  * Concrete TemplateRenderer subclass, for mocking purpose.
  */

@@ -9,11 +9,7 @@
 //
 // Purpose: Display contextual help for artifact search criteria.
 //              Help depends upon the field type.
-require_once('pre.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-
+require_once __DIR__ . '/../include/pre.php';
 
 $request    = HTTPRequest::instance();
 $helpid     = $request->get('helpid');

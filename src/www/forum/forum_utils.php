@@ -29,7 +29,7 @@
 
 */
 
-require_once('www/news/news_utils.php');
+require_once __DIR__ . '/../news/news_utils.php';
 
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;

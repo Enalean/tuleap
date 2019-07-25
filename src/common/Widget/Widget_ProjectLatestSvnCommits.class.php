@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('Widget_ProjectLatestCommits.class.php');
-require_once('www/svn/svn_utils.php');
+require_once __DIR__ . '/../../www/svn/svn_utils.php';
 
 /**
 * Widget_ProjectLatestSvnCommits

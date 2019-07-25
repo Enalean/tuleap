@@ -103,7 +103,6 @@ class Toggler {
             EventManager::instance()->processEvent(Event::TOGGLE, array('id' => $id, 'user' => $current_user, 'done' => &$done));
             if (!$done) {
                 if (strpos($id, 'tracker_report_query_') === 0) {
-                    require_once('common/tracker/ArtifactReportFactory.class.php');
                     $report_id = (int)substr($id, strlen('tracker_report_query_'));
                     $report_factory = ArtifactReportFactory::instance();
                     if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {

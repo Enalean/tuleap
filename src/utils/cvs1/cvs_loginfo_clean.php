@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/backend/BackendCVS.class.php');
+require_once __DIR__ . '/../../www/include/pre.php';
 
 
 function cvs_loginfo_format_data($line) {

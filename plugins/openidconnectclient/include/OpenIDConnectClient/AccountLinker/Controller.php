@@ -135,7 +135,7 @@ class Controller {
                 Feedback::INFO,
                 sprintf(dgettext('tuleap-openidconnectclient', 'Your account has been successfully linked to %1$s'), $provider->getName())
             );
-            require_once('account.php');
+            require_once __DIR__ . '/../../../../../src/www/include/account.php';
             \account_redirect_after_login($request->get('return_to'));
         }
     }

@@ -21,8 +21,6 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-require_once 'common/backend/BackendLogger.class.php';
-
 class SystemEvent_GIT_USER_RENAME extends SystemEvent {
 
     public const NAME = "GIT_USER_RENAME";

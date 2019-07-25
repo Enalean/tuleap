@@ -21,9 +21,7 @@
 
 // Redirect to showfiles.php when no script name is given.
 // Avoid listing content of the directory!
-require_once('pre.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/valid/ValidFactory.class.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $request  = HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();

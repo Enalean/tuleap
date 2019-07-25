@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/Codendi_Request.class.php';
-
 class Codendi_RequestTest extends TuleapTestCase {
 
     private $project_manager;

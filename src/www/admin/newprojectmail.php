@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('pre.php');
-require_once('proj_email.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/proj_email.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

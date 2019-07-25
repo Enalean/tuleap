@@ -16,9 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginFileInfo.class.php');
-require_once('ArchiveDeletedItemsPluginDescriptor.class.php');
-
 /**
  * ArchiveDeletedItemsInfo
  */

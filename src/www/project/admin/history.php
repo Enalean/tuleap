@@ -2,10 +2,10 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-require_once('pre.php');
-require_once('www/project/admin/project_admin_utils.php');
-require_once('www/project/export/project_export_utils.php');
-require_once('www/project/admin/project_history.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/project_admin_utils.php';
+require_once __DIR__ . '/../export/project_export_utils.php';
+require_once __DIR__ . '/project_history.php';
 
 $group_id = $request->getValidated('group_id', 'uint', 0);
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));

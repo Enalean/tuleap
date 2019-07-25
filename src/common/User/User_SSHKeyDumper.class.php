@@ -17,9 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/backend/Backend.class.php';
-require_once 'User.class.php';
-
 /**
  * This class is very sensitive because it stronly interact with secuirty
  * mecanisms and it's designed to be run by root

@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/TreeNode/NodeDuplicator.class.php';
-
 /**
  * TreeNode containing a Tracker_CardPresenter
  */

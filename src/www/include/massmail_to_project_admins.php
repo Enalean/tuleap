@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-require_once 'common/mail/Codendi_Mail.class.php';
-require_once 'common/mail/MassmailSender.class.php';
+require_once __DIR__ . '/pre.php';
 
 $csrf = new CSRFSynchronizerToken('');
 $csrf->check('/my/');

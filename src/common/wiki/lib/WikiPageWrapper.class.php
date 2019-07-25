@@ -22,9 +22,8 @@
  */
 
 define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
-require_once(PHPWIKI_DIR.'/lib/prepend.php');
-require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
-require_once('common/wiki/lib/WikiEntry.class.php');
+require_once PHPWIKI_DIR.'/lib/prepend.php';
+require_once PHPWIKI_DIR.'/lib/IniConfig.php';
 
 /**
  * Wrapper to access to PhpWiki WikiPage objects
