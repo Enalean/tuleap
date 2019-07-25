@@ -64,6 +64,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
             $this->convertTrackers();
         }
 
+        PermissionsManager::clearInstance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory      = TrackerFactory::instance();
 
