@@ -15,7 +15,16 @@
     <!-- Exclude generated files -->
     <exclude-pattern>plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/Parser.php</exclude-pattern>
 
+    <!-- PHP code MUST use only UTF-8 without BOM. -->
+    <rule ref="Generic.Files.ByteOrderMark"/>
+
     <!-- PSR-2 rules -->
+    <!-- All PHP files MUST use the Unix LF (linefeed) line ending. -->
+    <rule ref="Generic.Files.LineEndings">
+        <properties>
+            <property name="eolChar" value="\n"/>
+        </properties>
+    </rule>
     <!-- Indenting - 4 spaces - no tabs -->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
