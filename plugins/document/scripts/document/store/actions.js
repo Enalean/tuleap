@@ -444,7 +444,7 @@ async function createNewFile(
     }
     const fake_item = {
         id: new_file.id,
-        title: dropped_file.name,
+        title: title,
         parent_id: parent.id,
         type: TYPE_FILE,
         file_type: dropped_file.type,
