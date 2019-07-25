@@ -20,7 +20,7 @@
 <template>
     <div>
         <div class="release-description" v-dompurify-html="releaseData.description"></div>
-        <a v-bind:href="getOverviewLink" data-test="overview-link">
+        <a v-bind:href="get_overview_link" data-test="overview-link">
             <i class="fa fa-long-arrow-right"></i>
             <translate> Go to release overview </translate>
         </a>
@@ -34,7 +34,7 @@ export default {
         releaseData: Object
     },
     computed: {
-        getOverviewLink() {
+        get_overview_link() {
             return (
                 "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(this.$store.state.project_id) +

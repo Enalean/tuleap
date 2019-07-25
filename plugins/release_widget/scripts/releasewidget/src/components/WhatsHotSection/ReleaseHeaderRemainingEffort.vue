@@ -20,14 +20,15 @@
 <template>
     <div class="release-remaining-badges">
         <div class="release-remaining tlp-tooltip tlp-tooltip-bottom"
-             v-bind:data-tlp-tooltip="getTooltipEffortDate"
+             v-bind:data-tlp-tooltip="get_tooltip_effort_date"
              data-test="display-remaining-days-tooltip"
         >
             <div class="release-remaining-header">
                 <i class="release-remaining-icon fa fa-calendar"></i>
                 <span class="release-remaining-value"
-                      v-bind:class="{ 'release-remaining-value-danger': areDatesCorrectlySet && !disabledDate, 'release-remaining-value-disabled': disabledDate }"
-                      data-test="display-remaining-day-text">
+                      v-bind:class="{ 'release-remaining-value-danger': are_dates_correctly_set && !disabled_date, 'release-remaining-value-disabled': disabled_date }"
+                      data-test="display-remaining-day-text"
+                >
                     {{ formatDate(releaseData.number_days_until_end) }}
                 </span>
                 <translate class="release-remaining-text" v-bind:translate-n="releaseData.number_days_until_end"
@@ -38,14 +39,15 @@
             </div>
         </div>
         <div class="release-remaining tlp-tooltip tlp-tooltip-bottom"
-             v-bind:data-tlp-tooltip="getTooltipEffortPoints"
+             v-bind:data-tlp-tooltip="get_tooltip_effort_points"
              data-test="display-remaining-points-tooltip"
         >
             <div class="release-remaining-header">
                 <i class="release-remaining-icon fa fa-flag-checkered"></i>
                 <span class="release-remaining-value"
-                      v-bind:class="{ 'release-remaining-value-disabled': disabledPoints, 'release-remaining-value-success': areAllEffortDefined && !disabledPoints}"
-                      data-test="display-remaining-points-text">{{ formatPoints(releaseData.remaining_effort) }}</span>
+                      v-bind:class="{ 'release-remaining-value-disabled': disabled_points, 'release-remaining-value-success': are_all_effort_defined && !disabled_points}"
+                      data-test="display-remaining-points-text"
+                >{{ formatPoints(releaseData.remaining_effort) }}</span>
                 <translate class="release-remaining-text" v-bind:translate-n="releaseData.remaining_effort"
                            translate-plural="pts to go"
                 >
@@ -64,27 +66,27 @@ export default {
     },
     data() {
         return {
-            disabledDate:
+            disabled_date:
                 (!this.releaseData.number_days_since_start &&
                     this.releaseData.number_days_since_start !== 0) ||
                 (!this.releaseData.number_days_until_end &&
                     this.releaseData.number_days_until_end !== 0),
-            disabledPoints:
+            disabled_points:
                 (!this.releaseData.remaining_effort && this.releaseData.remaining_effort !== 0) ||
                 !this.releaseData.initial_effort
         };
     },
     computed: {
-        areDatesCorrectlySet() {
+        are_dates_correctly_set() {
             return (
                 this.releaseData.number_days_since_start >= 0 &&
                 this.releaseData.number_days_until_end > 0
             );
         },
-        areAllEffortDefined() {
+        are_all_effort_defined() {
             return this.releaseData.remaining_effort > 0 && this.releaseData.initial_effort > 0;
         },
-        getTooltipEffortDate() {
+        get_tooltip_effort_date() {
             const days_since_start = this.releaseData.number_days_since_start;
             const days_until_end = this.releaseData.number_days_until_end;
 
@@ -115,7 +117,7 @@ export default {
                     .toString() + "%"
             );
         },
-        getTooltipEffortPoints() {
+        get_tooltip_effort_points() {
             const remaining_effort = this.releaseData.remaining_effort;
             const initial_effort = this.releaseData.initial_effort;
 
