@@ -34,6 +34,7 @@ use Tracker_REST_FormElement_FieldOpenListRepresentation;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 
 class FormElementRepresentationsBuilder
 {
@@ -51,15 +52,21 @@ class FormElementRepresentationsBuilder
      * @var HiddenFieldsetChecker
      */
     private $hidden_fieldset_checker;
+    /**
+     * @var PermissionsForGroupsBuilder
+     */
+    private $permissions_for_groups_builder;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
         PermissionsExporter $permissions_exporter,
-        HiddenFieldsetChecker $hidden_fieldset_checker
+        HiddenFieldsetChecker $hidden_fieldset_checker,
+        PermissionsForGroupsBuilder $permissions_for_groups_builder
     ) {
         $this->permissions_exporter    = $permissions_exporter;
         $this->form_element_factory    = $form_element_factory;
         $this->hidden_fieldset_checker = $hidden_fieldset_checker;
+        $this->permissions_for_groups_builder = $permissions_for_groups_builder;
     }
 
     /**
@@ -95,7 +102,8 @@ class FormElementRepresentationsBuilder
                 $form_element_representation->build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
-                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($form_element instanceof Tracker_FormElement_Field_Date) {
                 $form_element_representation = new Tracker_REST_FormElement_FieldDateRepresentation();
@@ -103,7 +111,8 @@ class FormElementRepresentationsBuilder
                 $form_element_representation->build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
-                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($form_element instanceof Tracker_FormElement_Field_OpenList) {
                 $form_element_representation = new Tracker_REST_FormElement_FieldOpenListRepresentation();
@@ -111,7 +120,8 @@ class FormElementRepresentationsBuilder
                 $form_element_representation->build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
-                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($artifact !== null && $form_element instanceof Tracker_FormElement_Container_Fieldset) {
                 $form_element_representation = new ContainerFieldsetInArtifactContextRepresentation();
@@ -120,6 +130,7 @@ class FormElementRepresentationsBuilder
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user),
                     $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
                 );
             } else {
@@ -128,7 +139,8 @@ class FormElementRepresentationsBuilder
                 $form_element_representation->build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
-                    $this->getPermissionsForFormElement($form_element, $artifact, $user)
+                    $this->getPermissionsForFormElement($form_element, $artifact, $user),
+                    $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             }
 

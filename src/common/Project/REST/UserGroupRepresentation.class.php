@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ namespace Tuleap\Project\REST;
 
 use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
-use User_ForgeUGroup;
 use Exception;
 
 class UserGroupRepresentation {
@@ -55,10 +54,14 @@ class UserGroupRepresentation {
      * @var String
      */
     public $short_name;
+    /**
+     * @var string
+     */
+    public $key;
 
     public function build($project_id, ProjectUGroup $ugroup) {
         $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
-        $this->uri        = UserGroupRepresentation::ROUTE . '/' . $this->id ;
+        $this->uri        = self::ROUTE . '/' . $this->id ;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         $this->key        = $ugroup->getName();
         $this->users_uri  = self::ROUTE . '/'. $this->id .'/users';

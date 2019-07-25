@@ -96,8 +96,109 @@ class TrackersTest extends TrackerBase
         $this->assertArrayHasKey('parent', $tracker);
         $this->assertArrayHasKey('structure', $tracker);
         $this->assertArrayHasKey('color_name', $tracker);
+        $this->assertArrayHasKey('permissions_for_groups', $tracker);
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetTrackersIdReturnsPermissionsForGroupsToTrackerAdmin()
+    {
+        $tracker = $this->getResponseByName(
+            \TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get($this->getReleaseTrackerUri())
+        )->json();
+
+        $all_user_groups = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/user_groups'))->json();
+        $developers_ugroup = [];
+        $static_ugroup_2   = [];
+        $project_members   = [];
+        foreach ($all_user_groups as $user_group) {
+            if ($user_group['short_name'] === 'developers') {
+                $developers_ugroup = $user_group;
+            }
+            if ($user_group['short_name'] === 'static_ugroup_2') {
+                $static_ugroup_2 = $user_group;
+            }
+            if ($user_group['short_name'] === 'project_members') {
+                $project_members = $user_group;
+            }
+        }
+
+        $this->assertEquals(
+            [
+                "can_access" => [
+                    [
+                        "id"         => "1",
+                        "uri"        => "user_groups/1",
+                        "label"      => "Anonymous",
+                        "users_uri"  => "user_groups/1/users",
+                        "short_name" => "all_users",
+                        "key"        => "ugroup_anonymous_users_name_key",
+                    ]
+                ],
+                "can_access_submitted_by_user"  => [],
+                "can_access_assigned_to_group"  => [],
+                "can_access_submitted_by_group" => [],
+                "can_admin"                     => [
+                    $developers_ugroup
+                ],
+            ],
+            $tracker['permissions_for_groups']
+        );
+
+        $status_field = $this->getStatusField($tracker);
+        $this->assertEquals(
+            [
+                'can_read'   => [
+                    [
+                        "id"         => "1",
+                        "uri"        => "user_groups/1",
+                        "label"      => "Anonymous",
+                        "users_uri"  => "user_groups/1/users",
+                        "short_name" => "all_users",
+                        "key"        => "ugroup_anonymous_users_name_key",
+                    ]
+                ],
+                'can_submit' => [
+                    [
+                        "id"         => "2",
+                        "uri"        => "user_groups/2",
+                        "label"      => "Registered users",
+                        "users_uri"  => "user_groups/2/users",
+                        "short_name" => "registered_users",
+                        "key"        => "ugroup_registered_users_name_key",
+                    ]
+                ],
+                'can_update' => [
+                    $project_members,
+                    $static_ugroup_2,
+                ],
+            ],
+            $status_field['permissions_for_groups']
+        );
+    }
+
+    public function testGetTrackersIdReturnsNoPermissionsForGroupsToRegularUsers()
+    {
+        $tracker = $this->getResponseByName(
+            \TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->get($this->getReleaseTrackerUri())
+        )->json();
+
+        $status_field = $this->getStatusField($tracker);
+
+        $this->assertEquals(null, $tracker['permissions_for_groups']);
+        $this->assertEquals(null, $status_field['permissions_for_groups']);
+    }
+
+    private function getStatusField(array $tracker) : array
+    {
+        foreach ($tracker['fields'] as $field) {
+            if ($field['label'] === 'Status') {
+                return $field;
+            }
+        }
+        return [];
     }
 
     public function testGetTrackersIdReports()

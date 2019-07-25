@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST;
 use Tuleap\REST\JsonCast;
 use Tracker;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentation;
 
 class CompleteTrackerRepresentation implements TrackerRepresentation
 {
@@ -85,6 +86,11 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     public $workflow;
 
     /**
+     * @var PermissionsRepresentation | null
+     */
+    public $permissions_for_groups;
+
+    /**
      * @var TrackerReference
      */
 
@@ -100,7 +106,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
      */
     public $color_name;
 
-    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null)
+    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null, ?PermissionsRepresentation $permissions = null)
     {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
@@ -123,6 +129,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
             )
         );
         $this->color_name  = $tracker->getColor()->getName();
+        $this->permissions_for_groups = $permissions;
 
         if ($tracker->getParent()) {
             $this->parent = new TrackerReference();

@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\PermissionsForGroups;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 class Tracker_REST_FormElementRepresentation //phpcs:ignore
 {
@@ -81,11 +84,16 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
     public $permissions = array();
 
     /**
+     * @var PermissionsForGroupsRepresentation | null
+     */
+    public $permissions_for_groups;
+
+    /**
      * @var mixed
      */
     public $default_value;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions)
+    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
     {
         $this->field_id = JsonCast::toInt($form_element->getId());
         $this->name     = $form_element->getName();
@@ -135,5 +143,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
             },
             $permissions
         );
+
+        $this->permissions_for_groups = $permissions_for_groups;
     }
 }

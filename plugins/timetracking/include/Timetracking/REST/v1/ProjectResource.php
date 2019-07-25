@@ -39,8 +39,11 @@ use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -95,6 +98,14 @@ class ProjectResource
             new TransitionExtractor()
         );
 
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
         $this->timetracking_overview_builder = new TimetrackingOverviewRepresentationsBuilder(
             new AdminDao(),
             $this->permissions_retriever,
@@ -104,13 +115,7 @@ class ProjectResource
                 new FormElementRepresentationsBuilder(
                     Tracker_FormElementFactory::instance(),
                     new PermissionsExporter(
-                        new FrozenFieldDetector(
-                            $transition_retriever,
-                            new FrozenFieldsRetriever(
-                                new FrozenFieldsDao(),
-                                Tracker_FormElementFactory::instance()
-                            )
-                        )
+                        $frozen_fields_detector
                     ),
                     new HiddenFieldsetChecker(
                         new HiddenFieldsetsDetector(
@@ -122,7 +127,16 @@ class ProjectResource
                             Tracker_FormElementFactory::instance()
                         ),
                         new FieldsExtractor()
+                    ),
+                    new PermissionsForGroupsBuilder(
+                        new \UGroupManager(),
+                        $frozen_fields_detector,
+                        new PermissionsFunctionsWrapper()
                     )
+                ),
+                new PermissionsRepresentationBuilder(
+                    new \UGroupManager(),
+                    new PermissionsFunctionsWrapper()
                 )
             )
         );

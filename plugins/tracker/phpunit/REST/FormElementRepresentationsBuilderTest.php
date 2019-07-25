@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,8 @@ use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 class FormElementRepresentationsBuilderTest extends TestCase
 {
@@ -35,6 +37,8 @@ class FormElementRepresentationsBuilderTest extends TestCase
 
     public function testItReturnsAnArrayEvenWhenFieldsAreNotReadable()
     {
+        $user    = Mockery::mock(PFUser::class);
+
         $field1 = Mockery::mock(Tracker_FormElement_Field_String::class);
         $field1->shouldReceive('getId')->andReturn(1);
         $field1->shouldReceive('getName')->andReturn('field_01');
@@ -77,11 +81,16 @@ class FormElementRepresentationsBuilderTest extends TestCase
         $form_element_factory    = Mockery::mock(Tracker_FormElementFactory::class);
         $permission_exporter     = Mockery::mock(PermissionsExporter::class);
         $hidden_fieldset_checker = Mockery::mock(HiddenFieldsetChecker::class);
+        $permissions_for_groups_builder = Mockery::mock(PermissionsForGroupsBuilder::class);
+
+        $permissions_for_groups_builder->shouldReceive('getPermissionsForGroups')->with($field1, null, $user)->once()->andReturn(new PermissionsForGroupsRepresentation([], [], []));
+        $permissions_for_groups_builder->shouldReceive('getPermissionsForGroups')->with($field3, null, $user)->once()->andReturn(new PermissionsForGroupsRepresentation([], [], []));
 
         $builder = new FormElementRepresentationsBuilder(
             $form_element_factory,
             $permission_exporter,
-            $hidden_fieldset_checker
+            $hidden_fieldset_checker,
+            $permissions_for_groups_builder
         );
 
         $form_element_factory->shouldReceive('getAllUsedFormElementOfAnyTypesForTracker')
@@ -92,7 +101,6 @@ class FormElementRepresentationsBuilderTest extends TestCase
         $permission_exporter->shouldReceive('exportUserPermissionsForFieldWithoutWorkflowComputedPermissions')
             ->andReturn([]);
 
-        $user    = Mockery::mock(PFUser::class);
         $tracker = Mockery::mock(Tracker::class);
 
         $collection = $builder->buildRepresentationsInTrackerContext($tracker, $user);

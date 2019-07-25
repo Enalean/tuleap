@@ -32,9 +32,12 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -179,18 +182,20 @@ class ProjectTrackersResource
             new TransitionExtractor()
         );
 
+        $frozen_fields_detector = new FrozenFieldDetector(
+            $transition_retriever,
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+
         $builder = new Tracker_REST_TrackerRestBuilder(
             Tracker_FormElementFactory::instance(),
             new FormElementRepresentationsBuilder(
                 Tracker_FormElementFactory::instance(),
                 new PermissionsExporter(
-                    new FrozenFieldDetector(
-                        $transition_retriever,
-                        new FrozenFieldsRetriever(
-                            new FrozenFieldsDao(),
-                            Tracker_FormElementFactory::instance()
-                        )
-                    )
+                    $frozen_fields_detector
                 ),
                 new HiddenFieldsetChecker(
                     new HiddenFieldsetsDetector(
@@ -202,7 +207,16 @@ class ProjectTrackersResource
                         Tracker_FormElementFactory::instance()
                     ),
                     new FieldsExtractor()
+                ),
+                new PermissionsForGroupsBuilder(
+                    new \UGroupManager(),
+                    $frozen_fields_detector,
+                    new PermissionsFunctionsWrapper()
                 )
+            ),
+            new PermissionsRepresentationBuilder(
+                new \UGroupManager(),
+                new PermissionsFunctionsWrapper()
             )
         );
         $tracker_representations = [];

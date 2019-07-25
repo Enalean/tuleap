@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
+
 class Tracker_REST_FormElement_FieldOpenListRepresentation extends  Tracker_REST_FormElementRepresentation
 {
 
@@ -26,9 +28,9 @@ class Tracker_REST_FormElement_FieldOpenListRepresentation extends  Tracker_REST
      */
     public $hint;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions)
+    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
     {
-        parent::build($form_element, $type, $permissions);
+        parent::build($form_element, $type, $permissions, $permissions_for_groups);
 
         if ($form_element instanceof Tracker_FormElement_Field_OpenList) {
             $this->hint = $form_element->getProperty('hint');

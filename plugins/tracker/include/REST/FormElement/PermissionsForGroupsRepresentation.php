@@ -16,31 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Tracker\REST;
+declare(strict_types=1);
 
-use Tracker_FormElement;
-use Tracker_FormElement_Container_Fieldset;
-use Tracker_REST_FormElementRepresentation;
-use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
+namespace Tuleap\Tracker\REST\FormElement;
 
-class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_FormElementRepresentation
+class PermissionsForGroupsRepresentation
 {
     /**
-     * @var bool
+     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
      */
-    public $is_hidden = false;
+    public $can_submit = [];
+    /**
+     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
+     */
+    public $can_read   = [];
+    /**
+     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
+     */
+    public $can_update = [];
 
-    public function buildInArtifactContext(
-        Tracker_FormElement_Container_Fieldset $form_element,
-        string $type,
-        array $permissions,
-        ?PermissionsForGroupsRepresentation $permissions_for_groups,
-        bool $is_hidden
-    ) {
-        $this->build($form_element, $type, $permissions, $permissions_for_groups);
-
-        $this->is_hidden = $is_hidden;
+    public function build(array $can_read, array $can_submit, array $can_update) : void
+    {
+        $this->can_read   = $can_read;
+        $this->can_submit = $can_submit;
+        $this->can_update = $can_update;
     }
 }

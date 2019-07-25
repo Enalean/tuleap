@@ -36,13 +36,13 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
      */
     public $max_size_upload;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions)
+    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
     {
         if (! $form_element instanceof Tracker_FormElement_Field_File) {
             throw new \LogicException('FieldFileRepresentation should only be built from File field');
         }
 
-        parent::build($form_element, $type, $permissions);
+        parent::build($form_element, $type, $permissions, $permissions_for_groups);
         $this->file_creation_uri = TrackerFieldsResource::ROUTE .'/'. (int) $form_element->getId() .'/files';
         $this->max_size_upload = \ForgeConfig::get('sys_max_size_upload');
     }
