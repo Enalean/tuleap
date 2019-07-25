@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,7 @@ class BackendSVN
         }
         $this->logger->info('Deploy new tuleap.conf');
         $this->replacePlaceHolderInto(
-            $this->tuleap_base_dir.'/src/etc/fpm72/tuleap.conf',
+            $this->tuleap_base_dir.'/src/etc/fpm73/tuleap.conf',
             '/etc/opt/remi/php73/php-fpm.d/tuleap.conf',
             array(
                 '%application_user%'

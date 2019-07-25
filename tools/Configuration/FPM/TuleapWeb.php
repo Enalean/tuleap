@@ -53,21 +53,6 @@ class TuleapWeb
         $this->previous_php_configuration_folders = $previous_php_configuration_folders;
     }
 
-    public static function buildForPHP72(
-        LoggerInterface $logger,
-        string $application_user,
-        bool $development
-    ) : self {
-        return new self(
-            $logger,
-            $application_user,
-            $development,
-            '/etc/opt/remi/php72',
-            '/usr/share/tuleap/src/etc/fpm72',
-            []
-        );
-    }
-
     public static function buildForPHP73(
         LoggerInterface $logger,
         string $application_user,
