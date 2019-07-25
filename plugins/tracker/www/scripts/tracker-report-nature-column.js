@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($, window, document) {
+/* global jQuery:readonly codendi:readonly tuleap:readonly */
+
+(function($) {
     function initNatureColumnEditor(cog) {
         $(cog).click(function(evt) {
             evt.preventDefault();
@@ -136,4 +138,4 @@
         $("body").on("click", ".cancel-nature-column-editor", cancelNatureColumnEditor);
         $("body").on("submit", ".save-nature-column-format", saveNatureColumnFormat);
     });
-})(jQuery, window, document);
+})(jQuery);

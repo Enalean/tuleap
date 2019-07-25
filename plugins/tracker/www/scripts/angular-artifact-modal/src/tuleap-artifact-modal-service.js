@@ -21,11 +21,11 @@ import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
 import _ from "lodash";
-import { setCreationMode, isInCreationMode } from "./modal-creation-mode-state.js";
+import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.js";
 import {
+    getArtifactWithCompleteTrackerStructure,
     getTracker,
-    getUserPreference,
-    getArtifactWithCompleteTrackerStructure
+    getUserPreference
 } from "./rest/rest-service.js";
 import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
@@ -244,7 +244,7 @@ function ArtifactModalService(
         }
         var workflow = getWorkflow(tracker);
 
-        var workflow_field = _.find(tracker.fields, { field_id: workflow.field_id });
+        const workflow_field = tracker.fields.find(field => field.field_id === workflow.field_id);
         if (!workflow_field) {
             return;
         }
@@ -294,7 +294,7 @@ function ArtifactModalService(
         var field_values = {};
 
         prefill_values.forEach(function(prefill) {
-            var field = _.find(tracker_fields, { name: prefill.name });
+            const field = tracker_fields.find(field => field.name === prefill.name);
             if (field) {
                 field_values[field.field_id] = Object.assign({}, prefill, {
                     field_id: field.field_id

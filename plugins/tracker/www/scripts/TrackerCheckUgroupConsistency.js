@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global $F:readonly $:readonly Ajax:readonly codendi:readonly */
+
 document.observe("dom:loaded", function() {
     function disableFeedback(check_consistency_feedback) {
         check_consistency_feedback.hide();

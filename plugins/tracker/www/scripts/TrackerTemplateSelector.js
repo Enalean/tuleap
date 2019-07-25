@@ -2,6 +2,8 @@
  *
  */
 
+/* global Class:readonly $:readonly Ajax:readonly $F:readonly ProjectAutoCompleter:readonly */
+
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
 
@@ -63,7 +65,7 @@ codendi.tracker.TemplateSelector = Class.create({
      * Refresh list of tracker templates given a project name
      */
     updateTrackerTemplateList: function(projectName) {
-        var m = projectName.match(/\(([^\(\)]+)\)$/);
+        var m = projectName.match(/\(([^()]+)\)$/);
         if (m && m[1]) {
             projectName = m[1];
         }
@@ -98,13 +100,13 @@ codendi.tracker.TemplateSelector = Class.create({
                     onSuccess: function(response) {
                         this.cacheTemplates[groupId] = response.responseText;
                     }.bind(this),
-                    onFailure: function(response) {
+                    onFailure: function() {
                         this.cacheTemplates[groupId] =
                             "<option>" +
                             codendi.getText("tracker_template", "no_template") +
                             "</option>";
                     }.bind(this),
-                    onComplete: function(transport) {
+                    onComplete: function() {
                         $("tracker_list_trackers_from_project").update(
                             this.cacheTemplates[groupId]
                         );

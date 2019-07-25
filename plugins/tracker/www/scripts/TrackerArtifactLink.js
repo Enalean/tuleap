@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global $$:readonly Ajax:readonly Class:readonly $:readonly $H:readonly Selector:readonly */
+
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
 codendi.tracker.artifact = codendi.tracker.artifact || {};
@@ -101,7 +103,7 @@ codendi.tracker.artifact.artifactLink = {
                             cursor: "pointer",
                             verticalAlign: "middle"
                         })
-                        .observe("click", function(evt) {
+                        .observe("click", function() {
                             codendi.tracker.artifact.artifactLink.toggle_unlink(
                                 checkbox,
                                 img,
@@ -114,10 +116,10 @@ codendi.tracker.artifact.artifactLink = {
                                 table.down(".tracker-artifact-link-mass-unlink").checked = false;
                             }
                         })
-                        .observe("mouseover", function(evt) {
+                        .observe("mouseover", function() {
                             img.src = checkbox.checked ? linked : unlinked;
                         })
-                        .observe("mouseout", function(evt) {
+                        .observe("mouseout", function() {
                             img.src = checkbox.checked ? unlinked : linked;
                         });
                     td.appendChild(img);
@@ -190,6 +192,7 @@ codendi.tracker.artifact.artifactLink = {
                 if (nature_select) {
                     nature = nature_select.value;
                 }
+                //eslint-disable-next-line no-unused-vars
                 var req = new Ajax.Request(codendi.tracker.base_url + "?", {
                     parameters: {
                         formElement: codendi.tracker.artifact.artifactLinker_currentField_id,
@@ -471,12 +474,9 @@ codendi.tracker.artifact.artifactLink = {
             var li = new Element("li");
             var a = new Element("a", {
                 href: "#show-tab-" + h2.innerHTML
-            }).observe(
-                "click",
-                function(evt) {
-                    self.showTrackerPanel(evt, tracker_panel, a, h2);
-                }.bind(this)
-            );
+            }).observe("click", function(evt) {
+                self.showTrackerPanel(evt, tracker_panel, a, h2);
+            });
 
             a.update(h2.innerHTML);
             if (tracker_panel.querySelector(".tracker-form-element-artifactlink-renderer-async")) {
@@ -504,7 +504,7 @@ codendi.tracker.artifact.artifactLink = {
                 )[1]; // class="tracker-form-element-artifactlink-tracker_974"
             }
 
-            var firstNotLabel = tab_list
+            var firstNotLabel = tab_list //eslint-disable-line no-unused-vars
                 .childElements()
                 .grep(new Selector(":not(li.tracker-form-element-artifactlink-list-nav-label)"))[0];
             var current_tab = tab_list.down(

@@ -23,6 +23,8 @@
  * reminder creation request and delegate process ot the right function within tracker class.
  */
 
+/* global jQuery:readonly */
+
 (function($) {
     $(document).ready(function() {
         var tracker_reminder_element = $("#tracker_reminder");
@@ -40,4 +42,4 @@
             });
         }
     });
-})(jQuery, codendi);
+})(jQuery);

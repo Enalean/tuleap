@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global tuleap:readonly */
+
 document.addEventListener("DOMContentLoaded", function() {
     var add_button_global_notif = document.getElementById("tracker-global-notifications-add"),
         add_row_global_notif = document.getElementById("tracker-global-notifications-row-add"),

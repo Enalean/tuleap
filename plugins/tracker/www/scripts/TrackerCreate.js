@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global $:readonly $$:readonly */
+
 document.observe("dom:loaded", function() {
     function displayMode(mode) {
         mode.up("h3")
@@ -33,7 +35,7 @@ document.observe("dom:loaded", function() {
         if (mode.checked) {
             displayMode(mode);
         }
-        mode.observe("click", function(evt) {
+        mode.observe("click", function() {
             hideAllModes();
             displayMode(mode);
         });
@@ -42,7 +44,7 @@ document.observe("dom:loaded", function() {
     // read xml template that has been choosen and prefill the form (name, desc, …)
     // Depends on presence of FileReader api (bye bye IE)
     var input_file = $("tracker_new_xml_file");
-    if (!!window.FileReader && input_file) {
+    if (Boolean(window.FileReader) && input_file) {
         var file_reader = new FileReader(),
             filter = /^text\/xml$/;
 
@@ -52,6 +54,7 @@ document.observe("dom:loaded", function() {
                 tracker = trackers[0] || undefined;
 
             if (!tracker) {
+                //eslint-disable-next-line no-alert
                 alert("You must select a valid template xml file!");
                 return;
             }
@@ -67,12 +70,13 @@ document.observe("dom:loaded", function() {
             )[0].textContent;
         };
 
-        input_file.observe("change", function(evt) {
+        input_file.observe("change", function() {
             if (input_file.files.length === 0) {
                 return;
             }
             var file = input_file.files[0];
             if (!filter.test(file.type)) {
+                //eslint-disable-next-line no-alert
                 alert("Not an xml file! (" + file.type + ")");
                 return;
             }

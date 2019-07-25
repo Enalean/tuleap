@@ -22,6 +22,8 @@
  *
  */
 
+/* global Class:readonly Draggable:readonly $:readonly Droppables:readonly Ajax:readonly $$:readonly */
+
 var codendi = codendi || {};
 
 codendi.reorder_columns = {};
@@ -53,6 +55,7 @@ codendi.ReorderColumns = Class.create({
                 }
             }.bind(this)
         );
+        //eslint-disable-next-line no-unused-vars
         var d = new Draggable(cell.down("table"), {
             handle: cell.down(".tracker_report_table_column_grip"),
             revert: true,
@@ -68,7 +71,7 @@ codendi.ReorderColumns = Class.create({
     registerDroppables: function(cell) {
         Droppables.add(cell, {
             hoverclass: "drop-over",
-            onDrop: function(dragged, dropped, evt) {
+            onDrop: function(dragged, dropped) {
                 dragged.undoPositioned();
                 var from = dragged.up("th").cellIndex;
                 var to = dropped.cellIndex;
@@ -105,7 +108,7 @@ codendi.ReorderColumns = Class.create({
                     }
 
                     //save the new column order
-                    var req = new Ajax.Request(
+                    var req = new Ajax.Request( //eslint-disable-line no-unused-vars
                         codendi.tracker.base_url +
                             "?report=" +
                             report_id +
@@ -113,7 +116,7 @@ codendi.ReorderColumns = Class.create({
                             renderer_id,
                         {
                             parameters: parameters,
-                            onSuccess: function(transport) {
+                            onSuccess: function() {
                                 this.reorder(dropped.up("table"), from, to);
                                 codendi.tracker.report.setHasChanged();
                             }.bind(this)

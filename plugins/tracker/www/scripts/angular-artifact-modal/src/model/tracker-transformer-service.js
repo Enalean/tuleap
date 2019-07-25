@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import _ from "lodash";
 import { copy, isUndefined } from "angular";
 
@@ -48,25 +67,21 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function excludeFieldsWithoutCreationPermissions(fields) {
-        var fields_with_create_permissions = _.filter(fields, function(field) {
-            var structural_field = fieldIsAStructuralField(field);
-            if (!structural_field) {
-                return _.contains(field.permissions, "create");
+        return fields.filter(field => {
+            const is_structural_field = fieldIsAStructuralField(field);
+            if (is_structural_field) {
+                return true;
             }
-            return true;
+            return field.permissions.includes("create");
         });
-
-        return fields_with_create_permissions;
     }
 
     function fieldIsAStructuralField(field) {
-        return _(TuleapArtifactModalStructuralFields).contains(field.type);
+        return TuleapArtifactModalStructuralFields.includes(field.type);
     }
 
     function transformFields(all_fields) {
-        var transformed_fields = _.map(all_fields, transformField);
-
-        return transformed_fields;
+        return all_fields.map(transformField);
     }
 
     function transformField(field) {
@@ -109,16 +124,18 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function displayI18NLabelIfAvailable(field_values) {
-        _.map(field_values, function(value) {
+        return field_values.map(value => {
             if (value.user_reference !== undefined) {
-                value.label = value.user_reference.real_name;
+                return { ...value, label: value.user_reference.real_name };
             } else if (value.ugroup_reference !== undefined) {
-                value.id = value.ugroup_reference.id;
-                value.label = value.ugroup_reference.label;
+                return {
+                    ...value,
+                    id: value.ugroup_reference.id,
+                    label: value.ugroup_reference.label
+                };
             }
+            return value;
         });
-
-        return field_values;
     }
 
     function addNoneValue(field) {
@@ -146,17 +163,20 @@ function TuleapArtifactModalTrackerTransformerService(
         var fields = copy(tracker.fields);
         var fields_bound_to_ugroups = getListFieldsBoundToUgroups(fields);
 
-        _(new_rules).map(function(rule) {
-            var source_field = fields_bound_to_ugroups[rule.source_field_id];
-            rule = replaceSourceFieldValueIdWithUgroupReferenceId(rule, source_field);
+        return new_rules.map(rule => {
+            const source_field = fields_bound_to_ugroups[rule.source_field_id];
+            const replaced_source_field_rule = replaceSourceFieldValueIdWithUgroupReferenceId(
+                rule,
+                source_field
+            );
 
-            var target_field = fields_bound_to_ugroups[rule.target_field_id];
-            rule = replaceTargetFieldValueIdWithUgroupReferenceId(rule, target_field);
-
-            return rule;
+            const target_field =
+                fields_bound_to_ugroups[replaced_source_field_rule.target_field_id];
+            return replaceTargetFieldValueIdWithUgroupReferenceId(
+                replaced_source_field_rule,
+                target_field
+            );
         });
-
-        return new_rules;
     }
 
     function getListFieldsBoundToUgroups(fields) {
@@ -190,7 +210,7 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function addFieldValuesToTracker(artifact_values, tracker) {
-        var transformed_fields = _.map(tracker.fields, function(field) {
+        const transformed_fields = tracker.fields.map(field => {
             var artifact_value = artifact_values[field.field_id];
 
             if (!artifact_value) {
@@ -246,10 +266,9 @@ function TuleapArtifactModalTrackerTransformerService(
 
         field.file_descriptions = artifact_value.file_descriptions;
 
-        _.map(field.file_descriptions, function(file) {
-            file.display_as_image = /^image/.test(file.type);
-
-            return file;
+        field.file_descriptions = field.file_descriptions.map(file => {
+            const display_as_image = /^image/.test(file.type);
+            return { ...file, display_as_image };
         });
 
         return field;

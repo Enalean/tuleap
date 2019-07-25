@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global codendi:readonly CKEDITOR:readonly jQuery:readonly */
+
 var tuleap = tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.textarea = tuleap.textarea || {};
@@ -160,12 +162,6 @@ tuleap.textarea = tuleap.textarea || {};
                         var $field_id = $(this)
                             .find(".add-field")
                             .data("field-id");
-                        var field_computed_manual_value = document.getElementsByName(
-                            "artifact[" + $field_id + "][manual_value]"
-                        );
-                        var field_computed_is_autocomputed = document.getElementsByName(
-                            "artifact[" + $field_id + "][is_autocomputed]"
-                        );
 
                         self.displayAutocomputed($element);
                         $element.find(".tracker_formelement_edit").on("click", function() {
@@ -264,7 +260,7 @@ tuleap.textarea = tuleap.textarea || {};
         },
 
         initModalInteraction: function(modal) {
-            tuleap_modal = modal.getDOMElement();
+            const tuleap_modal = modal.getDOMElement();
             codendi.Tooltip.load(tuleap_modal, true);
             codendi.Toggler.init(tuleap_modal);
             tuleap.dateTimePicker.init();
@@ -310,7 +306,7 @@ tuleap.textarea = tuleap.textarea || {};
 
             self.initModalInteraction(modal);
 
-            $("#tuleap-modal-submit").click(function(event) {
+            $("#tuleap-modal-submit").click(function() {
                 self.updateRichTextAreas();
                 $("#artifact-form-errors").hide();
 
@@ -394,13 +390,13 @@ tuleap.textarea = tuleap.textarea || {};
         },
 
         updateRichTextAreas: function() {
-            for (instance in CKEDITOR.instances) {
+            for (const instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].updateElement();
             }
         },
 
         destroyRichTextAreaInstances: function() {
-            for (instance in CKEDITOR.instances) {
+            for (const instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].destroy();
             }
         },

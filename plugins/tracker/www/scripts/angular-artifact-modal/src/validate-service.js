@@ -82,7 +82,7 @@ function ValidateService() {
 
         if (field.value !== undefined) {
             field = validateValue(field);
-        } else if (_.isArray(field.bind_value_ids)) {
+        } else if (Array.isArray(field.bind_value_ids)) {
             field.bind_value_ids = _.compact(field.bind_value_ids);
         }
 

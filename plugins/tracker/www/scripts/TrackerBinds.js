@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global Class:readonly $:readonly Sortable:readonly tuleap:readonly */
+
 var codendi = codendi || {};
 codendi.tracker = codendi.tracker || {};
 
@@ -185,5 +187,6 @@ codendi.tracker.bind.Editor = Class.create({
 });
 
 document.observe("dom:loaded", function() {
+    //eslint-disable-next-line no-unused-vars
     var e = new codendi.tracker.bind.Editor();
 });
