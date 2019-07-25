@@ -57,6 +57,8 @@ import "./components/Folder/Clipboard/ClipboardContentInformation.spec.js";
 import "./components/Folder/FolderContentRow.spec.js";
 import "./components/Folder/FolderHeaderAction.spec.js";
 import "./components/Folder/FolderContent.spec.js";
+import "./components/Folder/ChildFolder.spec.js";
+import "./components/Folder/RootFolder.spec.js";
 
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
@@ -82,6 +84,7 @@ import "./components/Folder/DropDown/UpdateProperties.spec.js";
 import "./components/Folder/DropDown/LockItem.spec.js";
 import "./components/Folder/DropDown/UnlockItem.spec.js";
 
+import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
 import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";
 

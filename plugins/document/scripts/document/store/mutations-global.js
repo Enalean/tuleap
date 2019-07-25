@@ -33,7 +33,8 @@ export {
     hidePostDeletionNotification,
     shouldDisplayEmbeddedInLargeMode,
     replaceCurrentFolder,
-    setProjectUserGroups
+    setProjectUserGroups,
+    toggleQuickLook
 };
 
 function initApp(
@@ -155,4 +156,8 @@ function shouldDisplayEmbeddedInLargeMode(state, is_embedded_in_large_view) {
 
 function setProjectUserGroups(state, project_ugroups) {
     state.project_ugroups = project_ugroups;
+}
+
+function toggleQuickLook(state, toogle) {
+    state.toggle_quick_look = toogle;
 }

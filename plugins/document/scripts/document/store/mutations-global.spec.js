@@ -86,4 +86,24 @@ describe("Store mutations", () => {
         mutations.setProjectUserGroups(state, retrieved_project_ugroups);
         expect(state.project_ugroups).toEqual(retrieved_project_ugroups);
     });
+
+    describe("toggle quick look", () => {
+        it("toggle quick look to true", () => {
+            const state = {
+                toggle_quick_look: false
+            };
+            mutations.toggleQuickLook(state, true);
+
+            expect(state.toggle_quick_look).toEqual(true);
+        });
+
+        it("toggle quick look to false", () => {
+            const state = {
+                toggle_quick_look: true
+            };
+            mutations.toggleQuickLook(state, false);
+
+            expect(state.toggle_quick_look).toEqual(false);
+        });
+    });
 });

@@ -41,7 +41,8 @@ const state = {
     is_item_status_metadata_used: false,
     is_obsolescence_date_metadata_used: false,
     show_post_deletion_notification: false,
-    is_embedded_in_large_view: true
+    is_embedded_in_large_view: true,
+    toggle_quick_look: false
 };
 
 export default state;
