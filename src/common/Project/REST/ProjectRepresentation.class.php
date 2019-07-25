@@ -29,18 +29,19 @@ use Tuleap\REST\JsonCast;
 class ProjectRepresentation extends MinimalProjectRepresentation
 {
     /**
-     * @var Array {@type Tuleap\Project\REST\ProjectResourceReference}
+     * @var array {@type Tuleap\Project\REST\ProjectResourceReference}
      */
     public $resources = array();
 
     /**
-     * @var Array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
+     * @var array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
      */
     public $additional_informations = array();
     /**
      * @var bool
      */
     public $is_member_of;
+
 
     public function build(Project $project, PFUser $user, array $resources, array $informations)
     {

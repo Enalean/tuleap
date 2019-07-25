@@ -210,6 +210,9 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
 
+        $this->assertArrayHasKey('access', $json_projects[0]);
+        $this->assertEquals('private', $json_projects[0]['access']);
+
         $this->assertArrayHasKey('is_member_of', $json_projects[0]);
         $this->assertTrue($json_projects[0]['is_member_of']);
 

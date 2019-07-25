@@ -53,6 +53,11 @@ class MinimalProjectRepresentation
      */
     public $status;
 
+    /**
+     * @var string {@choice unrestricted,public,private,private-wo-restr}
+     */
+    public $access;
+
     public function buildMinimal(Project $project)
     {
         $this->id        = JsonCast::toInt($project->getID());
@@ -62,5 +67,6 @@ class MinimalProjectRepresentation
         $this->status    = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
             $project->getStatus()
         );
+        $this->access    = $project->getAccess();
     }
 }
