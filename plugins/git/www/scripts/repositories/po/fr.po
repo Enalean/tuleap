@@ -83,7 +83,7 @@ msgstr ""
 "de slashes au début ou à la fin, le nom ne doit pas finir par \".git\"."
 
 msgid "Something went wrong, please check your network connection"
-msgstr "Quelque chose s'est mal passé, merci de vérifer votre connexion réseau"
+msgstr "Quelque chose s'est mal passé, merci de vérifier votre connexion réseau"
 
 msgid "Sort repositories alphabetically"
 msgstr "Trier les dépôts par ordre alphabétique"
