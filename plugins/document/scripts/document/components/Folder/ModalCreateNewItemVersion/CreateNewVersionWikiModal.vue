@@ -19,7 +19,10 @@
 
 <template>
     <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="createNewWikiVersion">
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
+        <modal-header v-bind:modal-title="modal_title"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-header-class="'fa-plus'"
+        />
         <modal-feedback/>
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
@@ -29,7 +32,11 @@
                 </div>
             </div>
         </div>
-        <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
+        <modal-footer v-bind:is-loading="is_loading"
+                      v-bind:submit-button-label="submit_button_label"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-submit-button-class="'fa-plus'"
+        />
     </form>
 </template>
 

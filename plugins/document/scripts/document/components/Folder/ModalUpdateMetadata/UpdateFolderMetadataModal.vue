@@ -20,7 +20,10 @@
 
 <template>
     <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="updateMetadata">
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
+        <modal-header v-bind:modal-title="modal_title"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-header-class="'fa-pencil'"
+        />
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
             <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
@@ -31,6 +34,7 @@
         <modal-footer v-bind:is-loading="is_loading"
                       v-bind:submit-button-label="submit_button_label"
                       v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-submit-button-class="'fa-pencil'"
         />
     </form>
 </template>

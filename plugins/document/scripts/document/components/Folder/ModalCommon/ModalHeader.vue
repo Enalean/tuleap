@@ -21,7 +21,7 @@
 <template>
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title document-modal-title" v-bind:id="ariaLabelledBy"  v-bind:title="modalTitle">
-            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            <i class="fa tlp-modal-title-icon" v-bind:class="iconHeaderClass"></i>
             {{ modalTitle }}
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
@@ -34,7 +34,8 @@ export default {
     name: "ModalHeader",
     props: {
         modalTitle: String,
-        ariaLabelledBy: String
+        ariaLabelledBy: String,
+        iconHeaderClass: String
     },
     computed: {
         close() {

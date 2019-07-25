@@ -41,15 +41,15 @@ describe("ModalFooter", () => {
     'When an item is created or updated
     'Then the button display the loading icon`, () => {
         const wrapper = footer_factory(false);
-        expect(wrapper.find(".fa-plus").exists()).toBeTruthy();
-        expect(wrapper.find(".fa-spin").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-modal-footer-icon]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-modal-footer-spinner]").exists()).toBeFalsy();
     });
 
     it(`Given: the footer is loading
     'When an item is created or updated
     'Then the button display the loading icon`, () => {
         const wrapper = footer_factory(true);
-        expect(wrapper.find(".fa-spin").exists()).toBeTruthy();
-        expect(wrapper.find(".fa-plus").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-modal-footer-icon]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-modal-footer-spinner]").exists()).toBeTruthy();
     });
 });
