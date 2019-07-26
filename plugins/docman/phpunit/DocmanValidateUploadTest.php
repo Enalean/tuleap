@@ -37,7 +37,7 @@ final class DocmanValidateUploadTest extends TestCase
 
     protected function tearDown() : void
     {
-        $GLOBALS['_FILES'] = [];
+        $_FILES = [];
     }
 
     public function testValidFileIsAccepted() : void

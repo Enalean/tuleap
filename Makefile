@@ -124,6 +124,7 @@ phpunit-ci-run:
 		--log-junit /tmp/results/phpunit_tests_results.xml \
 		--coverage-html=/tmp/results/coverage/ \
 		--coverage-clover=/tmp/results/coverage/clover.xml \
+		--random-order \
 		--do-not-cache-result
 
 run-as-owner:
@@ -147,8 +148,11 @@ phpunit-ci-74:
 phpunit-docker-74: ## Run PHPUnit tests in Docker container with PHP 7.4. Use FILES parameter to run specific tests.
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php74 scl enable php74 "make -C /tuleap phpunit FILES=$(FILES)"
 
+ifneq ($(origin SEED),undefined)
+    RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
+endif
 phpunit:
-	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result $(FILES)
+	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result --random-order $(RANDOM_ORDER_SEED_ARGUMENT) $(FILES)
 
 simpletest-73-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-73
