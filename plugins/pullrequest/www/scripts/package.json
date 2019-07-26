@@ -16,7 +16,7 @@
     "sprintf-js": "^1.1.1",
     "vue": "^2.6.10",
     "vue-gettext": "^2.1.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.3",
