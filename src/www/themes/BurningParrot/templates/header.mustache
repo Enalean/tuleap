@@ -18,14 +18,6 @@
         {{# stylesheets }}
             <link rel="stylesheet" type="text/css" href="{{ . }}">
         {{/ stylesheets }}
-
-        <style>
-            {{# unicode_icons }}
-                .tuleap-services-{{ service_name }}::before {
-                    content: '{{ unicode }}';
-                }
-            {{/ unicode_icons }}
-        </style>
     </head>
     <body class="{{ body_classes }}"
           data-user-locale="{{ user_locale }}"

@@ -26,6 +26,11 @@ use TemplateRendererFactory;
 
 class ServiceProFTPd extends Service {
 
+    public function getIcon(): string
+    {
+        return $this->getFontAwesomeIcon('fa-tlp-folder-globe');
+    }
+
     public function renderInPage(HTTPRequest $request, $title, $template, $presenter = null) {
         $this->displayServiceHeader($request, $title);
 

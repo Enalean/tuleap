@@ -24,7 +24,7 @@
                v-bind:href="repository_list_url"
                v-bind:title="repositories_title"
             >
-                <i class="breadcrumb-link-icon fa fa-fw tuleap-services-plugin_git"></i>
+                <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
                 <translate>Git repositories</translate>
             </a>
             <nav class="breadcrumb-switch-menu">

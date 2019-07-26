@@ -528,20 +528,6 @@ abstract class BaseLayout extends Response
     }
 
     /**
-     * @return array
-     */
-    protected function getListOfIconUnicodes()
-    {
-        $list_of_icon_unicodes = array();
-
-        EventManager::instance()->processEvent(Event::SERVICE_ICON, array(
-            'list_of_icon_unicodes' => &$list_of_icon_unicodes
-        ));
-
-        return $list_of_icon_unicodes;
-    }
-
-    /**
      * Set to true if HTML object is displayed through a Service
      *
      * @see Service

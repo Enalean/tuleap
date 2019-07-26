@@ -136,19 +136,6 @@ class FlamingParrot_Theme extends Layout {
         foreach (glob($custom_dir.'/*.css') as $custom_css_file) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('custom/'.basename($custom_css_file)) .'" />';
         }
-
-        $this->displayStylesheetForPluginsSidebarIcons();
-    }
-
-    private function displayStylesheetForPluginsSidebarIcons() {
-        $list_of_icon_unicodes = $this->getListOfIconUnicodes();
-
-        echo '<style>'. PHP_EOL;
-
-        foreach ($list_of_icon_unicodes as $service_name => $unicode) {
-            echo ".tuleap-services-$service_name:before { content: '$unicode'; }". PHP_EOL;
-        }
-        echo '</style>';
     }
 
     private function getCSSThemeFileURL(IncludeAssets $include_assets)

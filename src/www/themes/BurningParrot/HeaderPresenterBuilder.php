@@ -79,7 +79,6 @@ class HeaderPresenterBuilder
         $main_classes,
         $sidebar,
         $current_project_navbar_info_presenter,
-        $unicode_icons,
         URLRedirect $url_redirect,
         array $toolbar,
         array $breadcrumbs,
@@ -118,25 +117,10 @@ class HeaderPresenterBuilder
             $this->getMainClassesAsString(),
             $this->sidebar,
             $this->current_project_navbar_info_presenter,
-            $this->buildUnicodeIcons($unicode_icons),
             $toolbar,
             $breadcrumbs,
             $motd
         );
-    }
-
-    private function buildUnicodeIcons($unicode_icons)
-    {
-        $list_of_icon_unicodes = array();
-
-        foreach ($unicode_icons as $service_name => $unicode) {
-            $list_of_icon_unicodes[] = array(
-                'service_name' => $service_name,
-                'unicode'      => $unicode
-            );
-        }
-
-        return $list_of_icon_unicodes;
     }
 
     private function getExtraTabs()

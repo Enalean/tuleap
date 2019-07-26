@@ -40,6 +40,11 @@ class ServiceSvn extends Service
         $this->permissions_manager = null;
     }
 
+    public function getIcon(): string
+    {
+        return $this->getFontAwesomeIcon('fa-tlp-versioning-svn');
+    }
+
     private function getPermissionsManager()
     {
         if (empty($this->permissions_manager)) {

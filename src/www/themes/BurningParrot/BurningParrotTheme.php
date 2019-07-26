@@ -117,7 +117,6 @@ class BurningParrotTheme extends BaseLayout
             $main_classes,
             $sidebar,
             $current_project_navbar_info,
-            $this->getListOfIconUnicodes(),
             $url_redirect,
             $this->toolbar,
             $breadcrumbs,

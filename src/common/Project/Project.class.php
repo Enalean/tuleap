@@ -98,10 +98,10 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
             return;
         }
 
-        $this->serviceClassnames = array(
-            'file' => 'ServiceFile',
-            'svn'  => 'ServiceSVN'
-        );
+        $this->serviceClassnames = [
+            Service::FILE => ServiceFile::class,
+            Service::SVN  => ServiceSVN::class,
+        ];
 
         EventManager::instance()->processEvent(
             Event::SERVICE_CLASSNAMES,

@@ -61,7 +61,6 @@ class MediaWikiPlugin extends Plugin {
         $this->setName("mediawiki");
         $this->text = "Mediawiki" ; // To show in the tabs, use...
         $this->addHook('cssfile');
-        $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
 
@@ -138,10 +137,6 @@ class MediaWikiPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e812';
     }
 
     public function burning_parrot_get_stylesheets($params)
@@ -555,8 +550,9 @@ class MediaWikiPlugin extends Plugin {
         return new MediawikiManager($this->getDao());
     }
 
-    public function service_classnames(array $params) {
-        $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
+    public function service_classnames(array &$params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
     }
 
     public function rename_project($params) {

@@ -967,12 +967,6 @@ class Event {
 
     /**
      *  Parameters:
-     *      'list_of_icon_unicodes' => array
-     */
-    const SERVICE_ICON = 'service_icon';
-
-    /**
-     *  Parameters:
      *      'executed_events_ids' => array
      *      'queue_name'          => string
      */
