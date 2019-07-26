@@ -712,7 +712,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             Feedback::ERROR,
                             $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied')
                         );
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. urlencode($this->getTrackerId()));
+                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. urlencode((string) $this->getTrackerId()));
                     }
                     if ($request->get('func') === 'show-attachment') {
                         $field->showAttachment($request->get('attachment'));

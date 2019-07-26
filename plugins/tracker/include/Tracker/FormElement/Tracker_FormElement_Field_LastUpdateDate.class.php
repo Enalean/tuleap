@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2011 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,8 +20,6 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-
-require_once('common/date/DateHelper.class.php');
 
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly {
 
@@ -200,6 +198,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $timestamp = $value->getTimestamp();
         $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
         $html .= $value;
@@ -238,6 +237,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $output = '';
         switch ($format) {
             case 'html':
@@ -265,6 +265,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $value = $value->getTimestamp();
         $value = $value ? DateHelper::timeAgoInWords($value) : '';
         $html .= $value;

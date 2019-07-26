@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -21,13 +21,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @template ActionsController of Controler
+ */
 class Actions {
 
     /**
      * @var Controler
+     * @psalm-var ActionsController
      */
     public $_controler;
 
+    /**
+     * @psalm-param ActionsController $controler
+     */
     public function __construct($controler)
     {
         $this->_controler = $controler;

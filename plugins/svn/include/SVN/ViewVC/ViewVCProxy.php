@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -288,7 +288,7 @@ class ViewVCProxy
     private function getPermissionDeniedError(Project $project)
     {
         $purifier = $this->getPurifier();
-        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()));
+        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
 
         $title  = $purifier->purify($GLOBALS['Language']->getText('svn_viewvc', 'access_denied'));
         $reason = $GLOBALS['Language']->getText('svn_viewvc', 'acc_den_comment', $purifier->purify($url));

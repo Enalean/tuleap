@@ -871,8 +871,8 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
                 $hp = Codendi_HTMLPurifier::instance();
                 $hp->purify($name);
 
-                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, 0, $this->getId(), 1, false, '', null, 0);
-                $report->criterias = array();
+                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, false, $this->getId(), 1, false, '', null, 0);
+                $report->criteria = array();
 
                 $this->getReportFactory()->saveObject($this->id, $report);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());

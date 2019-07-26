@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -197,7 +197,7 @@ class ViewVCProxy
     private function getPermissionDeniedError(Project $project)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()));
+        $url      = session_make_url("/project/memberlist.php?group_id=" . urlencode((string) $project->getID()));
 
         $title  = $purifier->purify($GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'));
         $reason = $GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess_msg', $purifier->purify($url));

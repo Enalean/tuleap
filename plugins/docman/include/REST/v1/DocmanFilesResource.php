@@ -361,7 +361,6 @@ class DocmanFilesResource extends AuthenticatedResource
         $updator->updateDocumentMetadata(
             $representation,
             $item,
-            new \DateTimeImmutable(),
             $current_user
         );
     }

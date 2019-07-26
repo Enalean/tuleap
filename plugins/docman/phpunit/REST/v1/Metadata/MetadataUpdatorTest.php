@@ -140,7 +140,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
+        $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
 
     public function testDocumentUpdateIsRejectedIfNewOwnerCanNotBeFound(): void
@@ -173,7 +173,6 @@ final class MetadataUpdatorTest extends TestCase
         $this->updator->updateDocumentMetadata(
             $representation,
             $item,
-            new \DateTimeImmutable(),
             \Mockery::mock(\PFUser::class)
         );
     }
@@ -211,7 +210,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
+        $this->updator->updateDocumentMetadata($representation, $item, \Mockery::mock(\PFUser::class));
     }
 
     public function testDocumentStatusIsUpdated(): void
@@ -254,7 +253,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), $current_user);
+        $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
 
     public function testDocumentUpdateIsInterruptedWhenAnOtherItemHasTheSameTitle(): void
@@ -286,7 +285,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->expectException(RestException::class);
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
+        $this->updator->updateDocumentMetadata($representation, $item, \Mockery::mock(\PFUser::class));
     }
 
     public function testDocumentUpdateIsInterruptedWhenThereIsAnOnGoingUploadWIthTheSameTitle(): void
@@ -321,7 +320,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(true);
 
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
+        $this->updator->updateDocumentMetadata($representation, $item, \Mockery::mock(\PFUser::class));
     }
 
     public function testDocumentUpdateIsInterruptedWhenParentItemIsNotFound(): void
@@ -355,7 +354,7 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
 
-        $this->updator->updateDocumentMetadata($representation, $item, new \DateTimeImmutable(), \Mockery::mock(\PFUser::class));
+        $this->updator->updateDocumentMetadata($representation, $item, \Mockery::mock(\PFUser::class));
     }
 
     public function testFolderUpdateIsRejectedIfAnOtherItemHasTheSameTitle(): void

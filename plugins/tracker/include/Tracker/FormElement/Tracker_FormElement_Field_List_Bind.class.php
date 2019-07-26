@@ -444,8 +444,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         $this->getDefaultValueDao()->save($this->field->getId(), $default);
 
         if (!$no_redirect) {
+            $tracker = $this->field->getTracker();
+            if ($tracker === null) {
+                $GLOBALS['Response']->redirect('/');
+                return true;
+            }
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
-                    'tracker'            => $this->field->getTracker()->id,
+                    'tracker'            => $tracker->getId(),
                     'func'               => 'admin-formElements',
             )));
         }

@@ -1427,7 +1427,7 @@ class Artifact {
         $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=". db_ei($dependent_on_artifact_id) ." AND artifact_id=". db_ei($this->getID()) ;
         $res2 = db_query($sql);
         if (!$res2) {
-            $GLOBALS['Response']->addFeedback('error', " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2));
+            $GLOBALS['Response']->addFeedback('error', " - Error deleting dependency $dependent_on_artifact_id: ".db_error());
             return false;
         } else {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_removed'));
@@ -3671,7 +3671,7 @@ class Artifact {
      * @param int $groupId Project id
      * @param bool $commentFormat $value's format
      * @param String  $value         Comment content
-     * @param bool $output Output format
+     * @param int $output Output format
      *
      * @return String
      */

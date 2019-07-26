@@ -38,6 +38,10 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     var $get_action_on_title;
     var $get_class_for_link;
     var $hp;
+    /**
+     * @var Docman_View_GetActionOnIconVisitor
+     */
+    private $get_action_on_icon;
 
     function __construct($view, $params = null) {
         $this->view                = $view;

@@ -26,6 +26,8 @@ use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 class Docman_View_GetMenuItemsVisitor implements ItemVisitor
 {
     var $actions;
+    private $user;
+
     function __construct(&$user, $groupId) {
         $this->dPm = Docman_PermissionsManager::instance($groupId);
         $this->user = $user;

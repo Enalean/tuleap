@@ -98,7 +98,6 @@ class MetadataUpdator
     public function updateDocumentMetadata(
         PUTMetadataRepresentation $representation,
         \Docman_Item $item,
-        \DateTimeImmutable $current_time,
         PFUser $current_user
     ): void {
         if ($representation->title !== $item->getTitle() &&
@@ -110,10 +109,7 @@ class MetadataUpdator
 
         try {
             $status            = $this->status_mapper->getItemStatusIdFromItemStatusString($representation->status);
-            $obsolescence_date = $this->date_retriever->getTimeStampOfDate(
-                $representation->obsolescence_date,
-                $current_time
-            );
+            $obsolescence_date = $this->date_retriever->getTimeStampOfDate($representation->obsolescence_date);
         } catch (HardCodedMetadataException $e) {
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }

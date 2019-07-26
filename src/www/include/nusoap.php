@@ -1080,9 +1080,11 @@ class XMLSchema extends nusoap_base  {
 
             // Set the element handlers for the parser.
             if($type == "schema"){
+                /** @psalm-suppress UndefinedFunction */
                 xml_set_element_handler($this->parser, 'schemaStartElement','schemaEndElement');
                 xml_set_character_data_handler($this->parser,'schemaCharacterData');
             } elseif($type == "xml"){
+                /** @psalm-suppress UndefinedFunction */
                 xml_set_element_handler($this->parser, 'xmlStartElement','xmlEndElement');
                 xml_set_character_data_handler($this->parser,'xmlCharacterData');
             }
@@ -4165,6 +4167,7 @@ class wsdl extends nusoap_base {
         // Set the object for the parser.
         xml_set_object($this->parser, $this); 
         // Set the element handlers for the parser.
+        /** @psalm-suppress UndefinedFunction */
         xml_set_element_handler($this->parser, 'start_element', 'end_element');
         xml_set_character_data_handler($this->parser, 'character_data');
         // Parse the XML file.
@@ -5741,6 +5744,7 @@ class soap_parser extends nusoap_base {
          // Set the object for the parser.
             xml_set_object($this->parser, $this);
          // Set the element handlers for the parser.
+            /** @psalm-suppress UndefinedFunction */
             xml_set_element_handler($this->parser, 'start_element','end_element');
             xml_set_character_data_handler($this->parser,'character_data');
 

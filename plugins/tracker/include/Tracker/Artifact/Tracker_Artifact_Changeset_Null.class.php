@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -33,6 +33,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      * Constructor
      */
     public function __construct() {
+        /** @psalm-suppress NullArgument */
         parent::__construct(null, null, null, null, null);
     }
 

@@ -177,7 +177,7 @@ function get_history_entries() {
  * @param int $group_id Id of the project
  * @param Array   $res      Contains the retrieved results
  * @param bool $export Switch CSV export mode or HTML display
- * @param unknown_type $i   Line number indicator
+ * @param int $i   Line number indicator
  *
  * @return string html
  */
@@ -218,7 +218,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $ugroupList = explode(",", $val);
             $val ='';
             foreach ($ugroupList as $ugroup) {
-                if ($val) {
+                if ($val === '') {
                     $val.=', ';
                 }
                 $val .= util_translate_name_ugroup($ugroup);
@@ -236,6 +236,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                                      'val'   => $hp->purify($val),
                                      'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
                                      'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
+            require_once __DIR__ . '/../export/project_export_utils.php';
             $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
         } else {
             $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
