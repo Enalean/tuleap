@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// 
+//
 //
 //
 //    Originally by to the SourceForge Team,1999-2000
@@ -51,8 +51,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
         echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
         echo '</FORM>';
 
-
-    }    
+    }
 
 /**
      *  Display the update canned form
@@ -63,7 +62,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
         global $Language;
         echo "<P>";
         $atid = $this->ArtifactType->getID();
-        $id = 
+        $id =
         $g = $this->ArtifactType->getGroup();
         $group_id = $g->getID();
         $id = $this->getID();
@@ -105,18 +104,18 @@ class ArtifactCannedHtml extends ArtifactCanned {
         $result = $this->ArtifactType->getCannedResponses();
         $rows=db_numrows($result);
         echo "<P>";
-      
+
         if($result && $rows > 0) {
          /*
            Links to update pages
            */
             echo "\n<H3>".$Language->getText('tracker_include_canned','existing_responses')."</H3><P>";
-          
+
             $title_arr=array();
             $title_arr[]=$Language->getText('tracker_include_canned','title');
             $title_arr[]=$Language->getText('tracker_include_canned','body_extract');
             $title_arr[]=$Language->getText('tracker_include_canned','delete');
-         
+
             echo html_build_list_table_top ($title_arr);
             $atid = $this->ArtifactType->getID();
             $g = $this->ArtifactType->getGroup();
@@ -134,7 +133,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
                 '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A></td></TR>';
             }
             echo '</TABLE>';
-      
+
         } else {
             echo "\n<H3>".$Language->getText('tracker_include_canned','no_canned_response')."</H3>";
         }

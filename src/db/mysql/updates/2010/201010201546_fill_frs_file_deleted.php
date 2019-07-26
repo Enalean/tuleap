@@ -36,7 +36,7 @@ EOT;
     public function dependsOn() {
         return array('b201010191436_add_table_frs_file_deleted');
     }
-    
+
     public function up() {
         $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date, purge_date)'.
                ' SELECT f.file_id, f.filename, f.release_id, f.type_id, f.processor_id, f.release_time, f.file_size, f.post_date, f.status, 370514700, 370514700'.

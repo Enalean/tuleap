@@ -112,7 +112,6 @@ class GitAdminProcessTest extends TestCase
             ]
         );
 
-
         $this->admin               = new \Git_AdminGerritController(
             $this->csrf,
             $this->factory,

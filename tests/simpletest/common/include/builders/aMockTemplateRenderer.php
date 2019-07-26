@@ -24,7 +24,7 @@ require_once 'common/templating/TemplateRenderer.class.php';
  * Concrete TemplateRenderer subclass, for mocking purpose.
  */
 class DummyTemplateRenderer extends TemplateRenderer {
-    
+
     /**
      * @see TemplateRenderer
      */
@@ -37,7 +37,7 @@ class MockTemplateRendererBuilder {
     public function __construct() {
         $this->renderer = mock('DummyTemplateRenderer');
     }
-    
+
     public function build() {
         return $this->renderer;
     }

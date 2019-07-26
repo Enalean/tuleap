@@ -2,24 +2,24 @@
 /* Copyright (C) 2002,2004,2005 $ThePhpWikiProgrammingTeam
  *
  * This file is part of PhpWiki.
- * 
+ *
  * PhpWiki is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * PhpWiki is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with PhpWiki; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 /**
- * Customize output by themes: templates, css, special links functions, 
+ * Customize output by themes: templates, css, special links functions,
  * and more formatting.
  */
 
@@ -61,7 +61,7 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
     }
 
     $version = false;
-    
+
     if (isa($page_or_rev, 'WikiDB_PageRevision')) {
         $version = $page_or_rev->getVersion();
         if ($page_or_rev->isCurrent())
@@ -88,7 +88,7 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
         if (!$wikipage->isValid('strict'))
             return $WikiTheme->linkBadWikiWord($wikipage, $label);
     }
-    
+
     if ($type == 'auto' or $type == 'if_known') {
         if (isset($page)) {
             $exists = $page->exists();
@@ -109,8 +109,8 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
     // WikiLink makes A link, not a string of fancy ones.
     // (I think that the fancy split links are just confusing.)
     // Todo: test external ImageLinks http://some/images/next.gif
-    if (isa($wikipage, 'WikiPageName') and 
-        ! $label and 
+    if (isa($wikipage, 'WikiPageName') and
+        ! $label and
         strchr(substr($wikipage->shortName,1), SUBPAGE_SEPARATOR))
     {
         $parts = explode(SUBPAGE_SEPARATOR, $wikipage->shortName);
@@ -124,11 +124,11 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
                 $part = " " . $part;
             if ($part)
                 $link->pushContent($WikiTheme->linkExistingWikiWord($parent, $sep . $part));
-            $sep = $WikiTheme->_autosplitWikiWords 
+            $sep = $WikiTheme->_autosplitWikiWords
                    ? ' ' . SUBPAGE_SEPARATOR : SUBPAGE_SEPARATOR;
         }
         if ($exists)
-            $link->pushContent($WikiTheme->linkExistingWikiWord($wikipage, $sep . $last_part, 
+            $link->pushContent($WikiTheme->linkExistingWikiWord($wikipage, $sep . $last_part,
                                                                 $version));
         else
             $link->pushContent($WikiTheme->linkUnknownWikiWord($wikipage, $sep . $last_part));
@@ -191,7 +191,7 @@ function Button ($action, $label = false, $page_or_rev = false) {
 
 class Theme {
     var $HTML_DUMP_SUFFIX = '';
-    var $DUMP_MODE = false, $dumped_images, $dumped_css; 
+    var $DUMP_MODE = false, $dumped_images, $dumped_css;
 
     function __construct ($theme_name = 'default') {
         $this->_name = $theme_name;
@@ -217,7 +217,7 @@ class Theme {
 
     function file ($file) {
         return $this->_path . "$this->_theme/$file";
-    } 
+    }
 
     function _findFile ($file, $missing_okay = false) {
         if (file_exists($this->file($file)))
@@ -299,10 +299,10 @@ class Theme {
      */
     function formatDate ($time_t) {
         global $request;
-        
+
         $offset_time = $time_t + 3600 * $request->getPref('timeOffset');
         // strip leading zeros from date elements (ie space followed by zero)
-        return preg_replace('/ 0/', ' ', 
+        return preg_replace('/ 0/', ' ',
                             strftime($this->_dateFormat, $offset_time));
     }
 
@@ -353,13 +353,13 @@ class Theme {
      */
     function getDay ($time_t) {
         global $request;
-        
+
         if ($request->getPref('relativeDates') && ($date = $this->_relativeDay($time_t))) {
             return ucfirst($date);
         }
         return $this->formatDate($time_t);
     }
-    
+
     /**
      * Format the "last modified" message for a page revision.
      *
@@ -375,11 +375,11 @@ class Theme {
     function getLastModifiedMessage ($revision, $show_version = 'auto') {
         global $request;
         if (!$revision) return '';
-        
+
         // dates >= this are considered invalid.
         if (! defined('EPOCH'))
             define('EPOCH', 0); // seconds since ~ January 1 1970
-        
+
         $mtime = $revision->get('mtime');
         if ($mtime <= EPOCH)
             return fmt("Never edited");
@@ -391,7 +391,7 @@ class Theme {
             if ($this->_showModTime)
                 $date =  sprintf(_("%s at %s"),
                                  $date, $this->formatTime($mtime));
-            
+
             if ($show_version)
                 return fmt("Version %s, saved %s", $revision->getVersion(), $date);
             else
@@ -402,20 +402,20 @@ class Theme {
             $date = $this->formatDateTime($mtime);
         else
             $date = $this->formatDate($mtime);
-        
+
         if ($show_version)
             return fmt("Version %s, saved on %s", $revision->getVersion(), $date);
         else
             return fmt("Last edited on %s", $date);
     }
-    
+
     function _relativeDay ($time_t) {
         global $request;
-        
+
         if (is_numeric($request->getPref('timeOffset')))
           $offset = 3600 * $request->getPref('timeOffset');
-        else 
-          $offset = 0;      
+        else
+          $offset = 0;
 
         $now = time() + $offset;
         $today = localtime($now, true);
@@ -423,11 +423,11 @@ class Theme {
 
         if ($time['tm_yday'] == $today['tm_yday'] && $time['tm_year'] == $today['tm_year'])
             return _("today");
-        
+
         // Note that due to daylight savings chages (and leap seconds), $now minus
         // 24 hours is not guaranteed to be yesterday.
         $yesterday = localtime($now - (12 + $today['tm_hour']) * 3600, true);
-        if ($time['tm_yday'] == $yesterday['tm_yday'] 
+        if ($time['tm_yday'] == $yesterday['tm_yday']
             and $time['tm_year'] == $yesterday['tm_year'])
             return _("yesterday");
 
@@ -445,7 +445,7 @@ class Theme {
         if ($owner <> ADMIN_USER) {
             //display owner user_name according to the user choice: real name, or Codendi login
             $owner = UserHelper::instance()->getDisplayNameFromUserName($owner);
-        }            
+        }
         if ($owner) {
             /*
             if ( mayAccessPage('change',$page->getName()) )
@@ -468,7 +468,7 @@ class Theme {
             if (!$author) $author = $revision->get('author');
             if (!$author) return '';
             //display revision author user_name according to the user choice: real name, or Codendi login
-            if ($author <> "The PhpWiki programming team") $author = UserHelper::instance()->getDisplayNameFromUserName($author);            
+            if ($author <> "The PhpWiki programming team") $author = UserHelper::instance()->getDisplayNameFromUserName($author);
             if ( $dbi->isWikiPage($author) )
                 return fmt("by %s", WikiLink($author));
             else
@@ -535,7 +535,7 @@ class Theme {
              $default_text = $wikiword->shortName;
         else
              $default_text = $wikiword;
-         
+
         if (!empty($linktext)) {
             $link->pushContent($linktext);
             $link->setAttr('class', 'named-wiki');
@@ -561,7 +561,7 @@ class Theme {
         else {
             $default_text = $wikiword;
         }
-        
+
         if ($this->DUMP_MODE) { // HTML, PDF or XML
             $link = HTML::u( empty($linktext) ? $wikiword : $linktext);
             $link->addTooltip(sprintf(_("Empty link to: %s"), $wikiword));
@@ -569,9 +569,9 @@ class Theme {
             return $link;
         } else {
             // if AnonEditUnknownLinks show "?" only users which are allowed to edit this page
-            if (! $this->_anonEditUnknownLinks and 
-                ( ! $request->_user->isSignedIn() 
-                  or ! mayAccessPage('edit', $request->getArg('pagename')))) 
+            if (! $this->_anonEditUnknownLinks and
+                ( ! $request->_user->isSignedIn()
+                  or ! mayAccessPage('edit', $request->getArg('pagename'))))
             {
                 $text = HTML::span( empty($linktext) ? $wikiword : $linktext);
                 $text->setAttr('class', empty($linktext) ? 'wikiunknown' : 'named-wikiunknown');
@@ -609,7 +609,7 @@ class Theme {
 
     function linkBadWikiWord($wikiword, $linktext = '') {
         global $ErrorManager;
-        
+
         if ($linktext) {
             $text = $linktext;
         }
@@ -625,10 +625,10 @@ class Theme {
         else
             $message = sprintf(_("'%s': Bad page name"), $wikiword);
         $ErrorManager->warning($message);
-        
+
         return HTML::span(array('class' => 'badwikiword'), $text);
     }
-    
+
     ////////////////////////////////////////////////////////////////
     //
     // Images and Icons
@@ -678,10 +678,10 @@ class Theme {
         if ($this->DUMP_MODE) {
             if (empty($this->dumped_images)) $this->dumped_images = array();
             $path = "images/". basename($path);
-            if (!in_array($path,$this->dumped_images)) 
+            if (!in_array($path,$this->dumped_images))
                 $this->dumped_images[] = $path;
         }
-        return $path;    
+        return $path;
     }
 
     function setLinkIcon($proto, $image = false) {
@@ -700,8 +700,8 @@ class Theme {
         return false;
     }
 
-    var $_linkIcon = 'front'; // or 'after' or 'no'. 
-    // maybe also 'spanall': there is a scheme currently in effect with front, which 
+    var $_linkIcon = 'front'; // or 'after' or 'no'.
+    // maybe also 'spanall': there is a scheme currently in effect with front, which
     // spans the icon only to the first, to let the next words wrap on line breaks
     // see stdlib.php:PossiblyGlueIconToText()
     function getLinkIconAttr () {
@@ -738,7 +738,7 @@ class Theme {
                 $url
             );
         }
-        if (!$url) {// Jeff complained about png not supported everywhere. 
+        if (!$url) {// Jeff complained about png not supported everywhere.
                     // This was not PC until 2005.
             $url = $this->_findButton("$qtext.gif");
             if ($url && strstr($url, '%')) {
@@ -769,7 +769,7 @@ class Theme {
 
         foreach ($this->_button_path as $dir) {
             if ($path = $this->_findData("$dir/$button_file", 1))
-                return $path; 
+                return $path;
         }
         return false;
     }
@@ -780,7 +780,7 @@ class Theme {
         if (!file_exists($path_dir) || !is_dir($path_dir))
             return array();
         $path = array($button_dir);
-        
+
         $dir = dir($path_dir);
         while (($subdir = $dir->read()) !== false) {
             if ($subdir[0] == '.')
@@ -911,7 +911,7 @@ class Theme {
         $args = $version ? array('version' => $version) : false;
         if ($action) $args['action'] = $action;
 
-        return $this->makeButton($label ? $label : $pagename, 
+        return $this->makeButton($label ? $label : $pagename,
                                  WikiURL($pagename, $args), 'wiki');
     }
 
@@ -1026,14 +1026,14 @@ class Theme {
         if ($is_alt)
             $link->setAttr('title', $title);
 
-        if ($media) 
+        if ($media)
             $link->setAttr('media', $media);
         if ($this->DUMP_MODE) {
             if (empty($this->dumped_css)) $this->dumped_css = array();
             if (!in_array($css_file,$this->dumped_css)) $this->dumped_css[] = $css_file;
             $link->setAttr('href', basename($link->getAttr('href')));
         }
-        
+
         return $link;
     }
 
@@ -1087,7 +1087,7 @@ class Theme {
             foreach ($css_files as $media => $css_file) {
                 $css[] = $this->_CSSlink($title, $css_file, $media, $is_alt);
                 if ($is_alt) break;
-                
+
             }
             $is_alt = true;
         }
@@ -1103,7 +1103,7 @@ class Theme {
             if (isset($this->_default_theme)) {
                 $f2 = $this->_default_theme->file("templates/$name.tmpl");
                 trigger_error("$f1 nor $f2 found", E_USER_ERROR);
-            } else 
+            } else
                trigger_error("$f1 not found", E_USER_ERROR);
             return false;
         }
@@ -1158,7 +1158,7 @@ class Theme {
     /**
      * Custom UserPreferences:
      * A list of name => _UserPreference class pairs.
-     * Rationale: Certain themes should be able to extend the predefined list 
+     * Rationale: Certain themes should be able to extend the predefined list
      * of preferences. Display/editing is done in the theme specific userprefs.tmpl
      * but storage/sanification/update/... must be extended to the Get/SetPreferences methods.
      * These values are just ignored if another theme is used.
@@ -1173,7 +1173,7 @@ class Theme {
     }
 
     /** addPageListColumn(array('rating' => new _PageList_Column_rating('rating', _("Rate"))))
-     *  Register custom PageList types for special themes, like 
+     *  Register custom PageList types for special themes, like
      *  'rating' for wikilens
      */
     function addPageListColumn ($array) {
@@ -1185,7 +1185,7 @@ class Theme {
     }
 
     // Works only on action=browse. Patch #970004 by pixels
-    // Usage: call $WikiTheme->initDoubleClickEdit() from theme init or 
+    // Usage: call $WikiTheme->initDoubleClickEdit() from theme init or
     // define ENABLE_DOUBLECLICKEDIT
     function initDoubleClickEdit() {
         if (!$this->HTML_DUMP_SUFFIX)
@@ -1197,7 +1197,7 @@ class Theme {
     // Google's or acdropdown is better.
     function initLiveSearch() {
         if (!$this->HTML_DUMP_SUFFIX) {
-            $this->addMoreAttr('body', 'LiveSearch', 
+            $this->addMoreAttr('body', 'LiveSearch',
                                HTML::Raw(" onload=\"liveSearchInit()"));
             $this->addMoreHeaders(JavaScript('var liveSearchURI="'
                                              .WikiURL(_("TitleSearch"),false,true).'";'));
@@ -1317,10 +1317,10 @@ class SubmitImageButton extends SubmitButton {
 
 };
 
-/** 
+/**
  * A sidebar box with title and body, narrow fixed-width.
  * To represent abbrevated content of plugins, links or forms,
- * like "Getting Started", "Search", "Sarch Pagename", 
+ * like "Getting Started", "Search", "Sarch Pagename",
  * "Login", "Menu", "Recent Changes", "Last comments", "Last Blogs"
  * "Calendar"
  * ... See http://tikiwiki.org/
@@ -1342,7 +1342,7 @@ class SidebarBox {
     }
 }
 
-/** 
+/**
  * A sidebar box for plugins.
  * Any plugin may provide a box($args=false, $request=false, $basepage=false)
  * method, with the help of WikiPlugin::makeBox()
@@ -1369,7 +1369,7 @@ class PluginSidebarBox extends SidebarBox {
 
     function format($args = false) {
         return $this->_plugin->box($args ? array_merge($this->_args, $args) : $this->_args,
-                                   $GLOBALS['request'], 
+                                   $GLOBALS['request'],
                                    $this->_basepage);
     }
 }
@@ -1415,7 +1415,7 @@ class RelatedExternalLinksBox extends SidebarBox {
 }
 
 function listAvailableThemes() {
-    $available_themes = array(); 
+    $available_themes = array();
     $dir_root = 'themes';
     if (defined('PHPWIKI_DIR'))
         $dir_root = PHPWIKI_DIR . "/$dir_root";
@@ -1443,7 +1443,7 @@ function listAvailableLanguages() {
             if (is_dir($dir_root."/".$entry)
                 && (substr($entry,0,1) != '.')
                 && $entry != 'po'
-                && $entry != 'CVS') 
+                && $entry != 'CVS')
             {
                 array_push($available_languages, $entry);
             }

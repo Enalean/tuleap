@@ -4,19 +4,19 @@
  * Things which must be done and defined before anything else.
  */
 $RCS_IDS = '';
-function rcs_id ($id) { 
+function rcs_id ($id) {
     // Save memory
     if (defined('DEBUG') and DEBUG)
-        $GLOBALS['RCS_IDS'] .= "$id\n"; 
+        $GLOBALS['RCS_IDS'] .= "$id\n";
 }
 rcs_id('$Id: prepend.php,v 1.43 2005/09/14 06:06:43 rurban Exp $');
 
 // see lib/stdlib.php: phpwiki_version()
 define('PHPWIKI_VERSION', '1.3.12p2');
 
-/** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays'). 
+/** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays').
   *  See Bug #1180115
-  * We want to work with those old ones instead of the new superglobals, 
+  * We want to work with those old ones instead of the new superglobals,
   * for easier coding.
   */
 foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
@@ -77,7 +77,7 @@ class DebugTimer {
                        $this->getTime('utime', $now),
                        $this->getTime('stime', $now));
     }
-        
+
     function _CLK_TCK() {
         // FIXME: this is clearly not always right.
         // But how to figure out the right value?
@@ -113,12 +113,12 @@ function ExitWiki($errormsg = false)
 
     if ($in_exit)
         exit;
-    
+
     $in_exit = true;
 
     global $ErrorManager;
     $ErrorManager->flushPostponedErrors();
-   
+
     if(!empty($errormsg)) {
         PrintXML(HTML::br(), $errormsg);
         print "\n</body></html>";
@@ -140,5 +140,5 @@ if (!defined('DEBUG') or (defined('DEBUG') and DEBUG > 2)) {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

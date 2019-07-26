@@ -59,7 +59,6 @@ class FRSPackagePermissionManagerTest extends TuleapTestCase
         $this->permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
         $this->package_factory    = mock('FRSPackageFactory');
 
-
         $this->package_permission_manager = new PackagePermissionManager(
             $this->permission_manager,
             $this->package_factory

@@ -32,7 +32,7 @@ abstract class HTML_Element {
     protected $desc;
     protected $id;
     protected static $last_id = 0;
-    
+
     public function __construct($label, $name, $value, $desc='') {
         $this->name   = $name;
         $this->value  = $value;

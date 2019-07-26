@@ -52,7 +52,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * Seed the random number generator.
  *
  * better_srand() ensures the randomizer is seeded only once.
- * 
+ *
  * How random do you want it? See:
  * http://www.php.net/manual/en/function.srand.php
  * http://www.php.net/manual/en/function.mt-srand.php
@@ -62,7 +62,7 @@ function better_srand($seed = '') {
     if (!$wascalled) {
         if ($seed === '') {
             list($usec, $sec) = explode(" ", microtime());
-            if ($usec > 0.1) 
+            if ($usec > 0.1)
                 $seed = (double) $usec * $sec;
             else // once in a while use the combined LCG entropy
                 $seed = (double) 1000000 * substr(uniqid("", true), 13);
@@ -70,7 +70,7 @@ function better_srand($seed = '') {
         if (function_exists('mt_srand')) {
             mt_srand($seed); // mersenne twister
         } else {
-            srand($seed);    
+            srand($seed);
         }
         $wascalled = TRUE;
     }
@@ -83,7 +83,7 @@ function rand_ascii($length = 1) {
         // return only typeable 7 bit ascii, avoid quotes
         if (function_exists('mt_rand'))
             // the usually bad glibc srand()
-            $s .= chr(mt_rand(40, 126)); 
+            $s .= chr(mt_rand(40, 126));
         else
             $s .= chr(rand(40, 126));
     }

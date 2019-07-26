@@ -99,7 +99,6 @@ class AgileDashboardScrumConfigurationUpdater {
             }
         }
 
-
         if ($scrum_is_activated) {
             if ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === false) {
                 $this->first_scrum_creator->createFirstScrum();

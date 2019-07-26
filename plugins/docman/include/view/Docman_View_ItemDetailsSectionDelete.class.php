@@ -22,7 +22,7 @@
  */
 
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
-    
+
     var $token;
     function __construct($item, $url, $controller, $token) {
         parent::__construct($item, $url, false, true, $controller);
@@ -31,7 +31,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     function getContent($params = []) {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
         $item_type = $this->_controller->getItemFactory()->getItemTypeForItem($this->item);
-        
+
         $vVersion = new Valid_UInt('version');
         $vVersion->required();
         if ($this->_controller->request->valid($vVersion)) {
@@ -57,7 +57,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
         }
         $content .= '     <input type="hidden" name="section" value="actions" />';
-        
+
         if ($version !== false) {
             $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
             $content .= '     <input type="hidden" name="version" value="'.$version.'" />';
@@ -96,7 +96,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $output .= '<label for="cascadeWikiPageDeletion">';
         $output .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_cascade');
         $output .= '</label></p>';
-        
+
         return $output;
     }
 

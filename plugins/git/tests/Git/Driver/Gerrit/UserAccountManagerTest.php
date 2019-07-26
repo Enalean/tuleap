@@ -112,9 +112,9 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
             'Im another key',
             'Im an additional key',
         );
-        
+
         expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
-        
+
         expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[1]);
         expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server2, $this->user, $added_keys[1]);
         expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[0]);

@@ -58,7 +58,7 @@ class TransformedText extends CacheableMarkup {
  * Currently the only information encapsulated is how to format
  * the specific page type.  In the future or capabilities may be
  * added, e.g. the abilities to edit different page types (differently.)
- * e.g. Support for the javascript htmlarea editor, which can only edit 
+ * e.g. Support for the javascript htmlarea editor, which can only edit
  * pure HTML.
  *
  * IMPORTANT NOTE: Since the whole PageType class gets stored (serialized)
@@ -140,7 +140,7 @@ class PageType_interwikimap extends PageType
                 trigger_error(_("WARNING: InterWikiMap page is unlocked, so not using those links."));
                 $intermap = false;
             }
-            else 
+            else
                 $intermap = false;
         } else {
             $intermap = $this->_getMapFromWikiText($pagetext);
@@ -168,14 +168,14 @@ class PageType_interwikimap extends PageType
 
     function link ($link, $linktext = false) {
         list ($moniker, $page) = preg_split ("/:/D", $link, 2);
-        
+
         if (!isset($this->_map[$moniker])) {
             return HTML::span(array('class' => 'bad-interwiki'),
                               $linktext ? $linktext : $link);
         }
 
         $url = $this->_map[$moniker];
-        
+
         // Urlencode page only if it's a query arg.
         // FIXME: this is a somewhat broken heuristic.
         if($moniker == 'Attach' || $moniker == 'Upload') {
@@ -206,7 +206,7 @@ class PageType_interwikimap extends PageType
             $link->pushContent(PossiblyGlueIconToText('interwiki', $linktext));
             $link->setAttr('class', 'named-interwiki');
         }
-        
+
         return $link;
     }
 
@@ -223,7 +223,7 @@ class PageType_interwikimap extends PageType
         // Add virtual monikers Upload: Talk: User:
         // and expand special variables %u, %b, %d
 
-        // Upload: Should be expanded later to user-specific upload dirs. 
+        // Upload: Should be expanded later to user-specific upload dirs.
         // In the Upload plugin, not here: Upload:ReiniUrban/uploaded-file.png
         if (empty($map['Upload'])) {
             $map['Upload'] = getUploadDataPath();
@@ -232,7 +232,7 @@ class PageType_interwikimap extends PageType
             $map['Attach'] = getUploadDataPath();
         }
         // User:ReiniUrban => ReiniUrban or Users/ReiniUrban
-        // Can be easily overriden by a customized InterWikiMap: 
+        // Can be easily overriden by a customized InterWikiMap:
         //   User Users/%s
         if (empty($map["User"])) {
             $map["User"] = "%s";
@@ -255,22 +255,22 @@ class PageType_interwikimap extends PageType
             // %s is expanded later to the pagename
             if (strstr($map[$special], '%u'))
                 $map[$special] = str_replace($map[$special],
-                                             '%u', 
+                                             '%u',
                                              $GLOBALS['request']->_user->_userid);
             if (strstr($map[$special], '%b'))
                 $map[$special] = str_replace($map[$special],
-                                             '%b', 
+                                             '%b',
                                              PHPWIKI_BASE_URL);
             if (strstr($map[$special], '%d'))
                 $map[$special] = str_replace($map[$special],
-                                             '%d', 
+                                             '%d',
                                              // such as 2003-01-11T14:03:02+00:00
                                              Iso8601DateTime());
         }
 
         // Maybe add other monikers also - SemanticWeb link predicates
         // Should they be defined in a RDF? (strict mode)
-        // Or should the SemanticWeb lib add it by itself? 
+        // Or should the SemanticWeb lib add it by itself?
         // (adding only a subset dependent on the context = model)
         return $map;
     }
@@ -284,7 +284,7 @@ class PageType_interwikimap extends PageType
 
     function _getMapFromFile ($filename) {
         if (defined('WARN_NONPUBLIC_INTERWIKIMAP') and WARN_NONPUBLIC_INTERWIKIMAP) {
-            $error_html = sprintf(_("Loading InterWikiMap from external file %s."), 
+            $error_html = sprintf(_("Loading InterWikiMap from external file %s."),
                                   $filename);
             trigger_error( $error_html, E_USER_NOTICE );
         }
@@ -302,7 +302,7 @@ class PageType_interwikimap extends PageType
     function _getRegexp () {
         if (!$this->_map)
             return '(?:(?!a)a)'; //  Never matches.
-        
+
         foreach (array_keys($this->_map) as $moniker)
             $qkeys[] = preg_quote($moniker, '/');
         return "(?:" . join("|", $qkeys) . ")";
@@ -324,7 +324,7 @@ class PageFormatter {
         if (!empty($meta['markup']))
         $this->_markup = $meta['markup'];
         else
-        $this->_markup = 2; // dump used old-markup as empty. 
+        $this->_markup = 2; // dump used old-markup as empty.
         // FIXME: To be able to restore old plain-backups we should keep markup 1 as default.
         // New policy: default = new markup (old crashes quite often)
     }
@@ -344,7 +344,7 @@ class PageFormatter {
     }
 }
 
-class PageFormatter_wikitext extends PageFormatter 
+class PageFormatter_wikitext extends PageFormatter
 {
     function format($text) {
         return HTML::div(array('class' => 'wikitext'),
@@ -355,7 +355,7 @@ class PageFormatter_wikitext extends PageFormatter
 class PageFormatter_interwikimap extends PageFormatter
 {
     function format($text) {
-        return HTML::div(array('class' => 'wikitext'), 
+        return HTML::div(array('class' => 'wikitext'),
                          $this->_transform($this->_getHeader($text)),
                          $this->_formatMap($text),
                          $this->_transform($this->_getFooter($text)));
@@ -368,12 +368,12 @@ class PageFormatter_interwikimap extends PageFormatter
     function _getFooter($text) {
         return preg_replace('@.*?(</verbatim>|\Z)@s', '', $text, 1);
     }
-    
+
     function _getMap($pagetext) {
         $map = getInterwikiMap($pagetext);
         return $map->_map;
     }
-    
+
     function _formatMap($pagetext) {
         $map = $this->_getMap($pagetext);
         if (!$map)
@@ -381,14 +381,14 @@ class PageFormatter_interwikimap extends PageFormatter
 
         $mon_attr = array('class' => 'interwiki-moniker');
         $url_attr = array('class' => 'interwiki-url');
-        
+
         $thead = HTML::thead(HTML::tr(HTML::th($mon_attr, _("Moniker")),
                       HTML::th($url_attr, _("InterWiki Address"))));
         foreach ($map as $moniker => $interurl) {
             $rows[] = HTML::tr(HTML::td($mon_attr, new Cached_WikiLinkIfKnown($moniker)),
                  HTML::td($url_attr, HTML::tt($interurl)));
         }
-    
+
         return HTML::table(array('class' => 'interwiki-map'),
         $thead,
         HTML::tbody(false, $rows));
@@ -411,7 +411,7 @@ class FakePageRevision {
 class PageFormatter_attach extends PageFormatter
 {
     var $type, $prefix;
-    
+
     // Display templated contents for wikiblog, comment and wikiforum
     function format($text) {
         if (empty($this->type))
@@ -428,7 +428,7 @@ class PageFormatter_attach extends PageFormatter
         $meta = $this->_meta[$this->type];
         foreach(array('ctime', 'creator', 'creator_id') as $key)
             $tokens[$this->prefix . "_" . strtoupper($key)] = $meta[$key];
-        
+
         return new Template($this->type, $request, $tokens);
     }
 }
@@ -443,12 +443,12 @@ class PageFormatter_wikiforum extends PageFormatter_attach {
     var $type = 'wikiforum', $prefix = "FORUM";
 }
 
-/** wikiabuse for htmlarea editing. not yet used.  
+/** wikiabuse for htmlarea editing. not yet used.
  *
  * Warning! Once a page is edited with a htmlarea like control it is
  * stored in HTML and cannot be converted back to WikiText as long as
- * we have no HTML => WikiText or any other interim format (WikiExchangeFormat e.g. XML) 
- * converter. See lib/HtmlParser.php for ongoing work on that. 
+ * we have no HTML => WikiText or any other interim format (WikiExchangeFormat e.g. XML)
+ * converter. See lib/HtmlParser.php for ongoing work on that.
  * So it has a viral effect and certain plugins will not work anymore.
  * But a lot of wikiusers seem to like it.
  */

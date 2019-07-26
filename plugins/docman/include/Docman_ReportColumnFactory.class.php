@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify

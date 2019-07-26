@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
@@ -41,10 +41,10 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     }
 
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
      *
-     * @param bool $with_link true if you want links to entities. The returned 
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -54,7 +54,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
     }
-    
+
     /**
      * Process stored event
      *
@@ -173,7 +173,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     }
 
      /**
-     * Deletes ugroups assigned to recieve membership request notification 
+     * Deletes ugroups assigned to recieve membership request notification
      * And the message set from a given project.
      *
      * @param int $groupId Id of the project to be deleted
@@ -184,7 +184,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         $pm = $this->getProjectManager();
         return $pm->deleteMembershipRequestNotificationEntries($groupId);
     }
-    
+
 
     /**
      * Remove Files, releases and packages for a given project.
@@ -231,7 +231,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
 
     /**
      * Wrapper for ProjectManager
-     * 
+     *
      * @return ProjectManager
      */
     protected function getProjectManager() {

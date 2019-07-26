@@ -41,7 +41,7 @@ class tracker_date_reminderPlugin extends Plugin {
         // Tracker deletion
         $this->addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
 
-        // CSV artifact import 
+        // CSV artifact import
         $this->addHook('artifact_import_insert_artifact', 'tracker_create_artifact', false);
         // Create new artifact
         $this->addHook('tracker_postadd', 'tracker_create_artifact', false);
@@ -62,23 +62,23 @@ class tracker_date_reminderPlugin extends Plugin {
     private function isLoggingEnabled() {
         return $this->getPluginInfo()->getPropertyValueForName('enable_log');
     }
-    
+
     function codendi_daily_start($params) {
         include_once 'ArtifactDateReminder.class.php';
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
-        
+
         if ($this->isLoggingEnabled()) {
             $logfile = $GLOBALS['codendi_log']."/tracker_date_reminder.log";
         } else {
             $logfile = false;
         }
-        
+
         $logger = new TrackerDateReminder_Logger($logfile);
-        
+
         $artifactDateReminder = new ArtifactDateReminder($logger);
         $artifactDateReminder->codexDaily();
     }
-    
+
     function artifact_type_factory_delete_artifact_type($params) {
         // Delete artifact_date_reminder_settings
         $sql = sprintf('DELETE FROM artifact_date_reminder_settings'.
@@ -92,7 +92,7 @@ class tracker_date_reminderPlugin extends Plugin {
                        $params['tracker_id']);
         db_query ($sql);
     }
-    
+
     function artifact_type_html_display_notification_form($params) {
         if ($params['at']->userIsAdmin()) {
             echo '<br><h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','date_fields_mail_notif').' </h3>';
@@ -134,12 +134,12 @@ class tracker_date_reminderPlugin extends Plugin {
 
         echo "<HR>\n";
     }
-    
+
     /**
      * Hook: Tracker admin "controller"
-     * 
+     *
      * @param $params
-     * 
+     *
      * @return void
      */
     function tracker_graphic_report_admin($params) {
@@ -157,7 +157,6 @@ class tracker_date_reminderPlugin extends Plugin {
             exit_permission_denied();
             return;
         }
-
 
         $field_id = $request->getValidated('field_id', 'uint');
         $field    = $params['art_field_fact']->getFieldFromId($field_id);
@@ -187,7 +186,6 @@ class tracker_date_reminderPlugin extends Plugin {
                     } else if (!preg_match("/^[0-9]+$/",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_date_reminder','positive_value'));
                     } else {
-                        
 
                         //merge notified_users and notified_groups into one array
                         $notified = array();
@@ -218,7 +216,7 @@ class tracker_date_reminderPlugin extends Plugin {
             }
             $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('plugin_tracker_date_reminder','admin_date_field_notif'),
             'help' => 'tracker.html#email-notification-settings'));
-             
+
             echo '<H2>'.$GLOBALS['Language']->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$params['ath']->Group->getID().'&atid='.$params['ath']->getID().'">'.$params['ath']->getName().'</a>\' - '.$GLOBALS['Language']->getText('tracker_include_type','mail_notif').'</h2>';
 
             $tdrArtifactFieldHtml = new TrackerDateReminder_ArtifactFieldHtml();
@@ -230,9 +228,9 @@ class tracker_date_reminderPlugin extends Plugin {
 
     /**
      * Hook: Tracker field deletion
-     * 
+     *
      * @param $params
-     * 
+     *
      * @return void
      */
     function tracker_admin_field_delete($params) {
@@ -242,26 +240,26 @@ class tracker_date_reminderPlugin extends Plugin {
 
     /**
      * Hook: Artifact creation, copy & csv import
-     * 
+     *
      * Add the artifact to date reminder processing table, if relevant
-     * 
+     *
      * @param $params
-     * 
+     *
      * @return void
      */
-    function tracker_create_artifact($params) { 
+    function tracker_create_artifact($params) {
         if ($params['ah']->getStatusID() == 1) {
             $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
             $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
         }
     }
-    
-    
+
+
     /**
      * Hook: Artifact update in web interface
-     * 
+     *
      * @param $params
-     * 
+     *
      * @return void
      */
     function tracker_update_artifact($params) {

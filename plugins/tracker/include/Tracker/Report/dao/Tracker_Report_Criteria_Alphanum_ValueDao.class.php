@@ -24,7 +24,7 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
         parent::__construct();
         $this->table_name = 'tracker_report_criteria_alphanum_value';
     }
-    
+
     public function save($id, $value) {
         $id = $this->da->escapeInt($id);
         $value = trim($value);
@@ -36,10 +36,10 @@ class Tracker_Report_Criteria_Alphanum_ValueDao extends Tracker_Report_Criteria_
         }
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
-        $id = $this->da->escapeInt($id);        
-        $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";        
+        $id = $this->da->escapeInt($id);
+        $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
         return $this->update($sql);
     }
 }

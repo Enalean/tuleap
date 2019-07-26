@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -93,7 +93,7 @@ class Docman_MetadataValueDao extends DataAccessObject {
         if($field !== false) {
             $fields[] = $field;
             $types[]  = $dtype;
-            
+
             $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
                            ' ('.implode(',', $fields).')'.
                            ' VALUES ('.implode(',', $types).')',

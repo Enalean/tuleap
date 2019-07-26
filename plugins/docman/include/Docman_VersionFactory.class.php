@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -29,10 +29,10 @@ use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
  * Model/Controler and View layer of the application
  */
 class Docman_VersionFactory {
-    
+
     function __construct() {
     }
-    
+
     function create($row) {
         $dao = $this->_getVersionDao();
         return $dao->createFromRow($row);
@@ -127,10 +127,10 @@ class Docman_VersionFactory {
 
     /**
      * Delete given version of document
-     * 
+     *
      * @param Docman_Item $item
      * @param int $number
-     * 
+     *
      * @return bool
      */
     function deleteSpecificVersion($item, $number) {
@@ -204,9 +204,9 @@ class Docman_VersionFactory {
 
     /**
      * Restore one version
-     * 
+     *
      * @param Docman_Version $version
-     * 
+     *
      * @return bool
      */
     public function restore($version) {
@@ -253,7 +253,7 @@ class Docman_VersionFactory {
         }
         return false;
     }
-    
+
         /**
      * List pending versions ( marked as deleted but not physically removed yet)
      * in order to ease the restore

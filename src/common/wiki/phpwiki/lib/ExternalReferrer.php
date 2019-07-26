@@ -3,7 +3,7 @@
  * Detect external referrers
  * Currently only search engines, and highlight the searched item.
  *
- * Todo: 
+ * Todo:
  *   store all external referrers in (rotatable) log/db for a RecentReferrers plugin.
  */
 if (!function_exists('isExternalReferrer')) { // better define that in stdlib.php
@@ -21,7 +21,7 @@ if (!function_exists('isExternalReferrer')) { // better define that in stdlib.ph
 
 class SearchEngines {
 
-    var $searchEngines = 
+    var $searchEngines =
     array(
           "search.sli.sympatico.ca/" => array("engine" => "Sympatico", "query1" => "query=", "query2" => "", "url" => "http://www1.sympatico.ca/"),
           "www.search123.com/cgi-bin/" => array("engine" => "Search123", "query1" => "query=", "query2" => "", "url" => "http://www.search123.com/"),
@@ -62,10 +62,10 @@ class SearchEngines {
           "lycos." => array("engine" => "Lycos", "query1" => "query=", "query2" => "", "url" => "http://www.lycos.com/"),
           "msn." => array("engine" => "MSN", "query1" => "q=", "query2" => "", "url" => "http://search.msn.com/"),
           "dmoz." => array("engine" => "Dmoz", "query1" => "search=", "query2" => "", "url" => "http://www.dmoz.org/"),
-          
+
           );
 
-    /** 
+    /**
      * parseSearchQuery(url)
      * Parses the passed refering url looking for search engine data.  If search info is found,
      * the method determines the name of the search engine, it's URL, and the search keywords

@@ -49,7 +49,7 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_log table is missing');
         }
     }
-    
+
 }
 
 ?>

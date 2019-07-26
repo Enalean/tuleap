@@ -53,7 +53,7 @@ extends WikiPlugin
                    //'paging'   => 'auto'
                    ));
     }
-    
+
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
@@ -69,7 +69,7 @@ extends WikiPlugin
         }
         $columns = $info ? explode(",", $info) : array();
         array_unshift($columns, 'hits');
-        
+
         if (! $request->getArg('count')) {
             //$args['count'] = $dbi->numPages(false,$exclude);
             $allpages = $dbi->mostPopular(0, $sortby);

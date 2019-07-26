@@ -52,7 +52,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     public function getMaxFileSize() {
         return (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
-    
+
     /**
      * Returns the content of the folder
      * including indication about duplicate entries
@@ -266,18 +266,18 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $params['group_id'] = $this->getProject()->getGroupId();
             $params['ordering'] = 'beginning';
             $params['confirm']  = true;
-            
+
             // Item details
             $params['item']['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
             $params['item']['parent_id'] = $this->getItem()->getId();
             $params['item']['title']     = $name;
-            
+
             $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
     }
-    
+
     /**
      * Creates a new document under the folder
      *
@@ -301,7 +301,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 $params['item']['item_type']      = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
                 $params['item']['parent_id']      = $this->getItem()->getId();
                 $params['item']['title']          = $name;
-                
+
                 $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
@@ -329,11 +329,11 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $params['action']   = 'update';
             $params['group_id'] = $this->getProject()->getGroupId();
             $params['confirm']  = true;
-            
+
             // Item details
             $params['item']['id']    = $this->getItem()->getId();
             $params['item']['title'] = $name;
-            
+
             $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));

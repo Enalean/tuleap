@@ -27,7 +27,7 @@ require_once('www/project/admin/permissions.php');
 require_once('WikiPage.class.php');
 /**
  * Manipulation of Wiki service.
- * 
+ *
  * This class is a part of the Model of Wiki Service it aims to be the
  * interface between data corresponding to a Wiki Service (instance of
  * PhpWiki for Codendi) and Codendi application
@@ -84,26 +84,26 @@ class Wiki {
         global $feedback;
 
         /** @psalm-suppress DeprecatedFunction */
-        list ($ret, $feedback) = permission_process_selection_form($this->gid, 
-                                   'WIKI_READ', 
-                                   $this->gid, 
+        list ($ret, $feedback) = permission_process_selection_form($this->gid,
+                                   'WIKI_READ',
+                                   $this->gid,
                                    $groups);
         return $ret;
     }
 
- 
+
   /**
    * Reset access permissions.
    *
    * @return bool Modification status
    */
     function resetPermissions() {
-        return permission_clear_all($this->gid, 
-                                'WIKI_READ', 
+        return permission_clear_all($this->gid,
+                                'WIKI_READ',
                                 $this->gid);
     }
 
- 
+
   /**
    * Check WikiEntry existance for given project.
    * @return bool
@@ -127,8 +127,8 @@ class Wiki {
         .' FROM wiki_page, wiki_nonempty'
         .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
         .' AND wiki_nonempty.id=wiki_page.id');
-    
-        if(db_numrows($res) > 0) 
+
+        if(db_numrows($res) > 0)
         return db_result($res,0,'count');
         else
         return 0;
@@ -149,15 +149,15 @@ class Wiki {
         .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
         .' AND wiki_nonempty.id=wiki_page.id'
             .' AND wiki_page.pagename NOT IN ('.implode(',', $excluded_pages_db_escaped).')');
-    
-        if(db_numrows($res) > 0) 
+
+        if(db_numrows($res) > 0)
         return db_result($res,0,'count');
         else
         return 0;
     }
 
-  
-  /** 
+
+  /**
    * Get wiki language (set at creation time)
    * return 0 if no wiki document exist
    */
@@ -188,29 +188,24 @@ class Wiki {
         if(db_affected_rows($res) === 1)
         return true;
 
-    
     }
 
     function dropNonEmpty($id) {
         $res = db_query('  DELETE FROM wiki_nonempty'
         .' WHERE id='.db_ei($id));
 
-   
     }
 
     function dropRecent($id) {
         $res = db_query('  DELETE FROM wiki_recent'
         .' WHERE id='.db_ei($id));
 
-    
     }
 
     function dropVersion($id) {
         $res = db_query('  DELETE FROM wiki_version'
         .' WHERE id='.db_ei($id));
 
-   
-    
     }
 
     function dropPage($id) {
@@ -221,11 +216,10 @@ class Wiki {
     function drop() {
       //TODO: Drop entries
 
-
       // PhpWiki
         $res = db_query('  SELECT id FROM wiki_page'
         .' WHERE group_id='.db_ei($this->gid));
-    
+
         while($row = db_fetch_array($res)) {
             $pid = $row['id'];
 

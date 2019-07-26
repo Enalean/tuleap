@@ -38,7 +38,6 @@ class GitPullRequestReferenceRetrieverTest extends TestCase
         $pull_request  = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturns(1);
 
-
         $reference_retriever = new GitPullRequestReferenceRetriever($dao);
         $git_reference       = $reference_retriever->getGitReferenceFromPullRequest($pull_request);
 
@@ -51,7 +50,6 @@ class GitPullRequestReferenceRetrieverTest extends TestCase
         $dao->shouldReceive('getReferenceByPullRequestId')->andReturns([]);
         $pull_request  = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturns(1);
-
 
         $reference_retriever = new GitPullRequestReferenceRetriever($dao);
 

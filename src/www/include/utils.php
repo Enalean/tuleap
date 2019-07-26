@@ -90,10 +90,10 @@ function util_importdatefmt_to_unixtime($date) {
     if (strstr($date,"/") !== false) {
         list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
-      
+
         return array($time,true);
     }
-    
+
     if (strstr($date,"-") !== false) {
         list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
@@ -106,17 +106,17 @@ function util_importdatefmt_to_unixtime($date) {
 // Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
 function util_xlsdatefmt_explode($date) {
-  
+
     if ($u_pref = user_get_preference("user_csv_dateformat")) {
     } else {
         $u_pref = PFUser::DEFAULT_CSV_DATEFORMAT;
     }
-  
+
     $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
-    if ($res == 0) { 
+    if ($res == 0) {
       //if it doesn't work try (n/j/Y) only
         $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+)/",$date,$match);
-        if ($res == 0) { 
+        if ($res == 0) {
           // nothing is valid return Epoch time
             $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
         } else {
@@ -147,7 +147,7 @@ function util_date_to_unixtime($date) {
     if (!$date||$date=="") {
         return array($time,false);
     }
-    
+
     list($year,$month,$day) = util_date_explode($date);
     $time = mktime(0, 0, 0, $month, $day, $year);
     return array($time,true);
@@ -157,7 +157,7 @@ function util_date_to_unixtime($date) {
 // if DD and MM are not defined then default them to 1
 function util_date_explode($date) {
     $res = preg_match("/\s*(\d+)-(\d+)-(\d+)/",$date,$match);
-    if ($res == 0) { 
+    if ($res == 0) {
     // if it doesn't work try YYYY-MM only
         $res = preg_match("/\s*(\d+)-(\d+)/",$date,$match);
         if ($res == 0) {
@@ -169,11 +169,11 @@ function util_date_explode($date) {
             } else {
                 list(,$year) = $match ; $month='1'; $day='1';
             }
-        
+
         } else {
             list(,$year,$month) = $match ; $day='1';
         }
-    
+
     } else {
         list(,$year,$month,$day) = $match;
     }
@@ -189,7 +189,7 @@ function util_sysdatefmt_to_unixtime($date) {
     if (!$date||$date=="") {
         return array($time,false);
     }
-    
+
     list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
     $time = mktime($hour, $minute, 0, $month, $day, $year);
     return array($time,true);
@@ -201,11 +201,11 @@ function util_sysdatefmt_explode($date) {
     $months = array("Jan"=>1, "Feb"=>2, "Mar"=>3, "Apr"=>4, "May"=>5, "Jun"=>6, "Jul"=>7, "Aug"=>8, "Sep"=>9, "Oct"=>10, "Nov"=>11, "Dec"=>12);
 
     $res = preg_match("/\s*(\d+)-(.+)-(\d+) (\d+):(\d+)/",$date,$match);
-    if ($res == 0) { 
+    if ($res == 0) {
       //if it doesn't work try (Y-M-d) only
         $res = preg_match("/\s*(\d+)-(.+)-(\d+)/",$date,$match);
-        if ($res == 0) { 
-      
+        if ($res == 0) {
+
           // if it doesn't work try Y-M only
             $res = preg_match("/\s*(\d+)-(.+)/",$date,$match);
             if ($res == 0) {
@@ -217,11 +217,11 @@ function util_sysdatefmt_explode($date) {
                 } else {
                           list(,$year) = $match ; $month='1'; $day='1'; $hour='0'; $minute='0';
                 }
-    
+
             } else {
                 list(,$year,$month) = $match ; $day='1'; $hour='0'; $minute='0';
             }
-      
+
         } else {
             list(,$year,$month,$day) = $match; $hour='0'; $minute='0';
         }
@@ -241,8 +241,8 @@ function getMonth($month,&$ok) {
     } else if (in_array($month,$months)) {
         $ok = true;
         return $month;
-    } 
-    $ok = false; 
+    }
+    $ok = false;
     return 1;
 
 }
@@ -311,11 +311,11 @@ function util_wrap_find_space($string,$wrap) {
     $start=$wrap-5;
     $try=1;
     $found=false;
-    
+
     while (!$found) {
      //find the first space starting at $start
         $pos=@strpos($string,' ',$start);
-        
+
      //if that space is too far over, go back and start more to the left
         if (($pos > ($wrap+5)) || !$pos) {
             $try++;
@@ -323,19 +323,19 @@ function util_wrap_find_space($string,$wrap) {
          //if we've gotten so far left , just truncate the line
             if ($start<=10) {
                 return $wrap;
-            }       
+            }
             $found=false;
         } else {
             $found=true;
-        }       
-    }       
-    
+        }
+    }
+
     return $pos;
 }
 
 function util_line_wrap ($text, $wrap = 80, $break = "\n") {
     $paras = explode("\n", $text);
-            
+
     $result = array();
     $i = 0;
     while ($i < count($paras)) {
@@ -344,18 +344,18 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
             $i++;
         } else {
             $pos=util_wrap_find_space($paras[$i],$wrap);
-            
+
             $result[] = substr($paras[$i], 0, $pos);
-            
+
             $new = trim(substr($paras[$i], $pos, strlen($paras[$i]) - $pos));
             if ($new != '') {
                 $paras[$i] = $new;
                 $pos=util_wrap_find_space($paras[$i],$wrap);
             } else {
                 $i++;
-            }       
-        }       
-    }               
+            }
+        }
+    }
     return implode($break, $result);
 }
 
@@ -369,11 +369,11 @@ function util_make_reference_links ($data,$group_id) {
 }
 
 function util_user_link ($username) {
-    
+
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
-    if ( $username == $Language->getText('global','none') || empty($username)) { 
-        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ; 
+    if ( $username == $Language->getText('global','none') || empty($username)) {
+        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
     }
     return '<a href="/users/'.urlencode($username).'">'. $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
 }
@@ -381,25 +381,25 @@ function util_user_link ($username) {
 function util_user_nolink($username) {
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
-    if ( $username == $Language->getText('global','none') || empty($username)) { 
-        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ; 
+    if ( $username == $Language->getText('global','none') || empty($username)) {
+        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
     }
     return $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) ;
 }
 
 function util_multi_user_link ($usernames) {
-    
+
     $users = explode(", ",$usernames);
     if ( count($users) > 1 ) {
      // Multiple users
-                
+
         $str = "";
         for($i=0;$i<count($users)-1;$i++) {
             $str .= util_user_link($users[$i]).", ";
         }
         $str .= util_user_link($users[$i]);
         return $str;
-        
+
     } else {
      // Single user name
         return util_user_link ($usernames);
@@ -407,18 +407,18 @@ function util_multi_user_link ($usernames) {
 }
 
 function util_multi_user_nolink ($usernames) {
-    
+
     $users = explode(", ",$usernames);
     if ( count($users) > 1 ) {
      // Multiple users
-                
+
         $str = "";
         for($i=0;$i<count($users)-1;$i++) {
             $str .= util_user_nolink($users[$i]).", ";
         }
         $str .= util_user_nolink($users[$i]);
         return $str;
-        
+
     } else {
      // Single user name
         return util_user_nolink ($usernames);
@@ -426,7 +426,7 @@ function util_multi_user_nolink ($usernames) {
 }
 
 function util_double_diff_array($arr1, $arr2) {
-    
+
     // first transform both arrays in hashes
     $h1 = [];
     $h2 = [];
@@ -596,23 +596,23 @@ function util_validateCCList(&$arr_email, &$message, $strict=false) {
     $purifier = Codendi_HTMLPurifier::instance();
     foreach($arr_email as $key => $cc) {
         // Make sure that the address is valid
-        $ref = util_user_finder($cc, $strict);      
+        $ref = util_user_finder($cc, $strict);
         if(empty($ref)) {
             $valid = false;
             $message .= "'".$purifier->purify($cc)."'<br>";
             continue;
         }
-        else {        
+        else {
             $arr_email[$key] = $ref;
         }
     }
-        
+
     if (! $valid) {
         $message = $Language->getText('include_utils','address_problem').":"
             . "<blockquote>$message</blockquote>"
             . $Language->getText('include_utils','email_explain');
     }
-        
+
     return $valid;
 }
 
@@ -808,13 +808,13 @@ function util_get_group_name_from_id($group_id) {
  */
 function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
     $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".db_ei($aid);
-    
+
     $result = db_query($sql);
     if ($result && db_numrows($result) > 0) {
         $atid = db_result($result,0,0);
-        
+
         $sql = "SELECT group_id,item_name FROM artifact_group_list WHERE group_artifact_id = ".db_ei($atid);
-        
+
         $result = db_query($sql);
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
@@ -831,7 +831,7 @@ function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
 
 /**
  * Return the group id (i.e. project) the commit belongs to
- * 
+ *
  * @param cid: the commit id
  *
  * @return group_id, or 0 if group does not exist
@@ -854,7 +854,7 @@ function util_get_group_from_commit_id($cid) {
     $sql = "SELECT group_id FROM groups WHERE unix_group_name='".db_es($projname)."'";
     $res = db_query($sql);
     return db_result($res, 0, 'group_id');
-}    
+}
 
 /**
  * getStringFromServer - get a string from Server environment
@@ -872,9 +872,9 @@ function getStringFromServer($key) {
 }
 
 /**
- * If $text begins with $prefixe ends with $suffixe then returns the 
+ * If $text begins with $prefixe ends with $suffixe then returns the
  * translated name found in page $pagename. Else returns $name.
-**/ 
+**/
 function util_translate($text, $prefixe, $suffixe, $pagename) {
     $new_text = $text;
     if (strpos($new_text, $prefixe) === 0 && strpos($new_text, $suffixe)+strlen($suffixe) === strlen($new_text)) {
@@ -908,10 +908,10 @@ function util_return_to($url) {
 /**
  * @deprecated Use DateHelper::distanceOfTimeInWords() instead
  */
-function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {    
+function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {
     $distance_in_minutes = round((abs($to_time - $from_time))/60);
     $distance_in_seconds = round(abs($to_time - $from_time));
-    
+
     if ($distance_in_minutes <= 1) {
         if (!$include_seconds) {
             return $GLOBALS['Language']->getText('include_utils', ($distance_in_minutes == 0) ? 'less_1_minute' : '1_minute');

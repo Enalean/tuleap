@@ -22,11 +22,11 @@
  * PluginDescriptor
  */
 class PluginDescriptor {
-    
+
     var $name;
     var $version;
     var $description;
-    
+
     function __construct($name = '', $version = '', $description = '') {
         $this->name        = $name;
         $this->version     = $version;

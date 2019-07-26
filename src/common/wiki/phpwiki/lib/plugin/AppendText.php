@@ -81,7 +81,7 @@ extends WikiPlugin
                                             $pagename));
             return $message;
         }
-            
+
         $current = $page->getCurrentRevision();
         $oldtext = $current->getPackedContent();
         $text = $args['s'];
@@ -90,15 +90,15 @@ extends WikiPlugin
         if (!empty($args['before'])) {
             $before = preg_quote($args['before'], "/");
             // Insert before
-            $newtext = preg_match("/\n${before}/", $oldtext) 
+            $newtext = preg_match("/\n${before}/", $oldtext)
                 ? preg_replace("/(\n${before})/",
                                "\n" .  preg_quote($text, "/") . "\\1",
-                               $oldtext) 
+                               $oldtext)
                 : $this->_fallback($text, $oldtext, $args['before'], $message);
         } elseif (!empty($args['after'])) {
             // Insert after
             $after = preg_quote($args['after'], "/");
-            $newtext = preg_match("/\n${after}/", $oldtext) 
+            $newtext = preg_match("/\n${after}/", $oldtext)
                 ? preg_replace("/(\n${after})/",
                                "\\1\n" .  preg_quote($text, "/"),
                                $oldtext)
@@ -115,18 +115,18 @@ extends WikiPlugin
         if ($page->save($newtext, $current->getVersion() + 1, $meta)) {
             $message->pushContent(_("Page successfully updated."), HTML::br());
         }
-        
+
         // AppendText has been called from the same page that got modified
         // so we directly show the page.
         if ( $request->getArg($pagename) == $pagename ) {
-            // TODO: Just invalidate the cache, if AppendText didn't 
+            // TODO: Just invalidate the cache, if AppendText didn't
             // change anything before.
             return $request->redirect(WikiURL($pagename, false, 'absurl'), false);
 
         // The user asked to be redirected to the modified page
         } elseif ($args['redirect']) {
             return $request->redirect(WikiURL($pagename, false, 'absurl'), false);
-            
+
         } else {
             $link = HTML::em(WikiLink($pagename));
             $message->pushContent(HTML::Raw(sprintf(_("Go to %s."), $link->asXml())));
@@ -148,7 +148,7 @@ extends WikiPlugin
 // new regex search parser and SQL backends (90% complete, glob and pcre backends missing)
 //
 // Revision ext-1.4  2004/11/25 15:39:40  Pascal Giard <evilynux@gmail.com>
-// * Directly including modified page when AppendText got called from 
+// * Directly including modified page when AppendText got called from
 //   the page to be modified.
 // * Translatable link to page.
 //

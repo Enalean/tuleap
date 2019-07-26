@@ -275,7 +275,6 @@ class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends 
             ->build();
         stub($this->formelement_factory)->getUsedFormElementFieldById("$this->target_field_id")->returns($target_field);
 
-
         // field 1
         $this->trigger_field_id_1 = 369;
         $this->trigger_field_value_1 = aBindStaticValue()

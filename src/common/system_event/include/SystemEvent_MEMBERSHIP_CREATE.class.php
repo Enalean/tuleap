@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 
@@ -26,12 +26,12 @@
 *
 */
 class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -42,18 +42,18 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', user to add: '. $this->verbalizeUserId($user_id, $with_link);
         return $txt;
     }
-    
-    /** 
+
+    /**
      * Process stored event
      */
     function process() {
         list($group_id,$user_id) = $this->getParametersAsArray();
-        
+
         if ($project = $this->getProject($group_id)) {
             if ($user_id == 0) {
                 return $this->setErrorBadParam();
             }
-            
+
             // CVS writers
             if ($project->usesCVS()) {
                 if (!Backend::instance('CVS')->updateCVSwriters($group_id)) {
@@ -61,7 +61,7 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
                     return false;
                 }
             }
-            
+
             // SVN access file
             if ($project->usesSVN()) {
                 if (!Backend::instance('SVN')->updateSVNAccess($group_id, $project->getSVNRootPath())) {
@@ -76,7 +76,7 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
                     'project' => $project
                 )
             );
-            
+
             // Need to update system group cache
             Backend::instance('System')->setNeedRefreshGroupCache();
 

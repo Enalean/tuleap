@@ -400,8 +400,6 @@ class TrackerFactory {
             return false;
         }
 
-
-
         return true;
     }
 

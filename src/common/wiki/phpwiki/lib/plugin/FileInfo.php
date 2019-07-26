@@ -3,7 +3,7 @@
 rcs_id('$Id: FileInfo.php,v 1.4 2005/10/29 14:18:47 rurban Exp $');
 /*
  Copyright 2005 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@ rcs_id('$Id: FileInfo.php,v 1.4 2005/10/29 14:18:47 rurban Exp $');
  *
  * Usage:
  *   <?plugin FileVersion file=uploads/setup.exe display=version,date ?>
- *   <?plugin FileVersion file=uploads/setup.exe display=name,version,date 
+ *   <?plugin FileVersion file=uploads/setup.exe display=name,version,date
  *                        format="%s (version: %s, date: %s)" ?>
  *
  * @author: ReiniUrban
@@ -53,7 +53,7 @@ extends WikiPlugin
         return array(
                      'file'      => false, // relative path from PHPWIKI_DIR. (required)
                      'display'   => false, // version,size,date,mtime,owner,name,path,dirname,link.  (required)
-                     'format'    => false, // printf format string with %s only, all display modes 
+                     'format'    => false, // printf format string with %s only, all display modes
                             // from above vars return strings (optional)
                     );
     }
@@ -74,7 +74,7 @@ extends WikiPlugin
         $realfile = realpath($file);
         if (!string_starts_with($realfile, realpath(getUploadDataPath())))
         return $this->error("invalid path \"$file\"");
-        else 
+        else
         $isuploaded = 1;
         $s = array();
         $modes = explode(",", $display);
@@ -90,15 +90,15 @@ extends WikiPlugin
                 case 'dirname':  $s[] = dirname($file); break;
                 case 'magic':    $s[] = $this->magic($file); break;
                 case 'mime-typ': $s[] = $this->mime_type($file); break;
-                case 'link':    
+                case 'link':
                     if ($isuploaded) {
-                              $s[] = "[Upload:".basename($file)."]"; 
+                              $s[] = "[Upload:".basename($file)."]";
                     } else {
-                                $s[] = "[".basename($file)."]"; 
+                                $s[] = "[".basename($file)."]";
                     }
          break;
                 default:
-         return $this->error(sprintf(_("Unsupported argument: %s=%s"), 'display', $mode)); 
+         return $this->error(sprintf(_("Unsupported argument: %s=%s"), 'display', $mode));
                 break;
             }
         }
@@ -171,14 +171,14 @@ extends WikiPlugin
     // http://www.codeproject.com/dll/showver.asp
     function exeversion_showver($file) {
         $path = realpath($file);
-        $result = `showver $path`; 
+        $result = `showver $path`;
         return "?";
     }
 
     function exeversion_ffi($file) {
         if (!DEBUG)
         return "?"; // not yet stable
-        
+
         if (function_exists('ffi') or loadPhpExtension('ffi')) {
             $win32_idl = "
 struct VS_FIXEDFILEINFO {
@@ -214,7 +214,7 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
              $size = $ffi->GetFileVersionInfoSizeA($file, $dummy);
             //$pVer = str_repeat($size+1);
             $pVer = new ffi_struct($ffi, "VS_VERSIONINFO");
-            if ($ffi->GetFileVersionInfoA($file, 0, $size, $pVer) 
+            if ($ffi->GetFileVersionInfoA($file, 0, $size, $pVer)
                 and $pVer->wValueLength) {
          // analyze the VS_FIXEDFILEINFO(Value);
          // $pValue = new ffi_struct($ffi, "VS_FIXEDFILEINFO");
@@ -222,7 +222,7 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
                 return sprintf("%d.%d.%d.%d",
                  $pValue->dwFileVersionMS >> 16,
                  $pValue->dwFileVersionMS & 0xFFFF,
-                 $pValue->dwFileVersionLS >> 16, 
+                 $pValue->dwFileVersionLS >> 16,
                  $pValue->dwFileVersionLS & 0xFFFF);
             }
         }
@@ -250,17 +250,17 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
                 res_close($h);
                 if ($v) return $v;
             }
-          
-            /* The version consists of two 32-bit integers, defined by four 16-bit integers. 
-               For example, "FILEVERSION 3,10,0,61" is translated into two doublewords: 
+
+            /* The version consists of two 32-bit integers, defined by four 16-bit integers.
+               For example, "FILEVERSION 3,10,0,61" is translated into two doublewords:
                0x0003000a and 0x0000003d, in that order. */
-       /*        
+       /*
         $h = res_open(realpath($file));
-        
+
         echo "Res list of '$file': \n";
         $list= res_list_type($h, true);
         if( $list===FALSE ) err( "Can't list type" );
-    
+
         for( $i= 0; $i<count($list); $i++ ) {
          echo $list[$i]."\n";
          $res= res_list($h, $list[$i]);
@@ -269,20 +269,20 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
          }
         }
         echo "Res get: ".res_get( $h, 'A_TYPE', 'A_RC_NAME' )."\n\n";
-        res_close( $h );        
+        res_close( $h );
        */
             if ($v)
                 return "$v";
-            else 
+            else
                 return "";
         } else {
             return "";
         }
-    
+
     }
 };
 
-/* 
+/*
  $Log: FileInfo.php,v $
  Revision 1.4  2005/10/29 14:18:47  rurban
  add display=phonysize

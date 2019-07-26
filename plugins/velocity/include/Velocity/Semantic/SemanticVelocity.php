@@ -331,7 +331,6 @@ class SemanticVelocity extends Tracker_Semantic
             }
         }
 
-
         return false;
     }
 }

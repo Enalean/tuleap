@@ -56,7 +56,6 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->faq_tracker     = aTracker()->build();
         $this->story_tracker   = aTracker()->build();
 
-
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getParent($this->product_tracker)->returns($this->corp_tracker);
         stub($hierarchy_factory)->getParent($this->release_tracker)->returns($this->product_tracker);

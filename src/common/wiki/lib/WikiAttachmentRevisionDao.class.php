@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright STMicroelectronics, 2006
- * Originally written by Manuel VACELET, STMicroelectronics, 2006 
+ * Originally written by Manuel VACELET, STMicroelectronics, 2006
  *
  * This file is a part of Codendi.
  *
@@ -58,7 +58,7 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
                        $attachmentId,
                        $revision,
                        $date);
-        
+
         $inserted = $this->update($sql);
         return $inserted;
     }
@@ -75,7 +75,7 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
 
          return $this->retrieve($sql);
     }
-    
+
     /**
      * Fetch all revisions of a given attachment
      */
@@ -84,11 +84,11 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
                        .' WHERE attachment_id=%d'
                        .' ORDER BY date DESC',
                        $id);
-        
-        return $this->retrieve($sql);        
+
+        return $this->retrieve($sql);
     }
 
-    
+
 
 }
 

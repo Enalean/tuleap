@@ -26,16 +26,16 @@ require_once('Docman_Document.class.php');
  * Model/Controler and View layer of the application
  */
 class Docman_Wiki extends Docman_Document {
-    
+
     function __construct($data = null) {
         parent::__construct($data);
     }
-    
+
     var $pagename;
-    function getPagename() { 
-        return $this->pagename; 
+    function getPagename() {
+        return $this->pagename;
     }
-    function setPagename($pagename) { 
+    function setPagename($pagename) {
         $this->pagename = $pagename;
     }
 

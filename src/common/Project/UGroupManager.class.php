@@ -119,7 +119,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $project_id = self::FAKE_PROJECT_ID_FOR_DYNAMIC_GROUPS;
         }
 
-
         $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
 
         if ($row) {

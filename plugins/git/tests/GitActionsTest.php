@@ -681,7 +681,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-
         $this->actions = new GitActions(
            $this->controller,
            $this->system_event_manager,
@@ -739,7 +738,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         stub($this->user)->isAdmin($this->project_id)->returns(false);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
         $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(401)->once();
-
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }

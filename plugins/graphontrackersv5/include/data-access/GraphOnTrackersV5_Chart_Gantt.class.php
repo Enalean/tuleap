@@ -43,7 +43,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     protected $scale;
     protected $as_of_date;
     protected $summary;
-    
+
     public function loadFromSession() {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);
@@ -61,7 +61,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $this->registerInSession();
         }
     }
-    
+
     public function loadFromDb() {
         $arr = $this->getDao()->searchById($this->id)->getRow();
         $this->field_start      = $arr['field_start'];
@@ -76,7 +76,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         }
         $this->summary          = $arr['summary'];
     }
-    
+
     public function registerInSession() {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_start",      $this->field_start);
@@ -88,14 +88,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $this->report_session->set("$this->id.as_of_date",       $this->as_of_date);
         $this->report_session->set("$this->id.summary",          $this->summary);
     }
-    
+
     protected function getDao() {
         return new GraphOnTrackersV5_Chart_GanttDao();
     }
-    
+
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
-        
+
         $session->set("$id.field_start",      '');
         $session->set("$id.field_due",        '');
         $session->set("$id.field_finish",     '');
@@ -109,11 +109,11 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $c->registerInSession();
         return $c;
     }
-    
+
     public function setSession($graphic_report, $title, $description, $width, $height) {
         //TODO
     }
-    
+
     public function getField_start() { return $this->field_start; }
     public function setField_start($field_start) { return $this->field_start = $field_start; }
     public function getField_due() { return $this->field_due; }
@@ -132,14 +132,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     public function setSummary($summary) { return $this->summary = $summary; }
     public static function getDefaultHeight(){return 0; }
     public static function getDefaultWidth(){return 0;  }
-    
+
     protected function getEngine() {
         return new GraphOnTrackersV5_Engine_Gantt();
     }
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackersV5_Chart_GanttDataBuilder($this,$artifacts);
     }
-    
+
     public function getProperties() {
         $parent_properties=parent::getProperties();
         unset($parent_properties['dimensions']);
@@ -161,47 +161,47 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
                 new HTML_Element_Columns(
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
                     new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
-                    
+
                 ),
         ));
     }
-    
+
     public function createDb($id) {
-        
+
         $field_start = $this->getField_start();
         if (!is_string($field_start) && !is_int($field_start) && $field_start) {
             $field_start = $field_start->getid();
         }
-        
+
         $field_due = $this->getField_due();
         if (!is_string($field_due) && !is_int($field_due) && $field_due) {
             $field_due = $field_due->getid();
         }
-        
+
         $field_finish = $this->getField_finish();
         if (!is_string($field_finish) && !is_int($field_finish) && $field_finish) {
             $field_finish = $field_finish->getid();
         }
-        
+
         $field_percentage = $this->getField_percentage();
         if (!is_string($field_percentage) && !is_int($field_percentage) && $field_percentage) {
                 $field_percentage = $field_percentage->getid();
         }
-        
+
         $field_righttext = $this->getField_righttext();
         if (!is_string($field_righttext) && !is_int($field_righttext) && $field_righttext) {
                 $field_righttext = $field_righttext->getid();
         }
-        
+
         $field_summary = $this->getSummary();
         if (!is_string($field_summary) && !is_int($field_summary) && $field_summary) {
             $field_summary = $field_summary->getid();
         }
-        
+
         $as_of_date = $this->getAs_of_date();
-        
+
         return $this->getDao()->save(
-            $id, 
+            $id,
             $field_start,
             $field_due,
             $field_finish,
@@ -212,10 +212,10 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $field_summary
         );
     }
-    
+
     public function updateDb() {
         return $this->getDao()->save(
-            $this->id, 
+            $this->id,
             $this->getField_start(),
             $this->getField_due(),
             $this->getField_finish(),
@@ -226,11 +226,11 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $this->getSummary()
         );
     }
-    
+
     protected function updateSpecificProperties($row) {
-        
+
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        
+
         $session->set("$this->id.field_start", $row['field_start']);
         $session->set("$this->id.field_due", $row['field_due']);
         $session->set("$this->id.field_finish", $row['field_finish']);
@@ -241,7 +241,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $session->set("$this->id.summary", $row['summary']);
 
         $session->setHasChanged();
-        
+
         $this->setField_start($row['field_start']);
         $this->setField_due($row['field_due']);
         $this->setField_finish($row['field_finish']);
@@ -252,14 +252,14 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $this->setSummary($row['summary']);
         return true;
     }
-    
+
     function userCanVisualize(){
         $ff = Tracker_FormElementFactory::instance();
         $artifact_field_start = $ff->getFormElementById($this->field_start);
         $artifact_field_finish = $ff->getFormElementById($this->field_finish);
         $artifact_summary = $ff->getFormElementById($this->summary);
         $artifact_scale = $ff->getFormElementById($this->scale);
-        
+
         if (($artifact_field_start && $artifact_field_start->userCanRead()) ||
             ($artifact_field_finish && $artifact_field_finish->userCanRead()) ||
             ($artifact_summary && $artifact_summary->userCanRead()) ||
@@ -269,27 +269,27 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             return false;
         }
     }
-    
+
     public function getChartType() {
         return 'gantt';
     }
-    
+
     public function getSpecificRow() {
         return array(
-            'field_start'      => $this->getField_start(), 
-            'field_due'        => $this->getField_due(), 
-            'field_finish'     => $this->getField_finish(), 
-            'field_percentage' => $this->getField_percentage(), 
-            'field_righttext'  => $this->getField_righttext(), 
-            'scale'            => $this->getScale(), 
+            'field_start'      => $this->getField_start(),
+            'field_due'        => $this->getField_due(),
+            'field_finish'     => $this->getField_finish(),
+            'field_percentage' => $this->getField_percentage(),
+            'field_righttext'  => $this->getField_righttext(),
+            'scale'            => $this->getScale(),
             'as_of_date'       => $this->getAs_of_date(),
             'summary'          => $this->getSummary(),
         );
     }
-    
+
     /**
      * Sets the specific properties of the concrete chart from XML
-     * 
+     *
      * @param SimpleXMLElement $xml characterising the chart
      * @param array $formsMapping associating xml IDs to real fields
      */
@@ -319,10 +319,10 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $this->setField_percentage($formsMapping[(string)$xml['percentage']]);
         }
     }
-    
+
     /**
      * Creates an array of specific properties of this chart
-     * 
+     *
      * @return array containing the properties
      */
     public function arrayOfSpecificProperties() {
@@ -337,7 +337,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             'summary'          => $this->getSummary(),
         );
     }
-    
+
     public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML($root, $formsMapping);
         if ($this->scale) {
@@ -362,7 +362,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
             $root->addAttribute('righttext', $righttext);
         }
         if ($this->summary) {
-            if ($res = array_search($this->summary, $formsMapping)) { 
+            if ($res = array_search($this->summary, $formsMapping)) {
                 $root->addAttribute('summary', $res);
             }
         }

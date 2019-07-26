@@ -66,7 +66,7 @@ extends WikiPlugin
             return false;
         return array($page->name);
     }
-                
+
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
         if ($page) {
@@ -121,8 +121,8 @@ extends WikiPlugin
                     HTML::div(array('class' => 'transclusion'),
                               false, $content));
     }
-    
-    /** 
+
+    /**
      * handles the arguments: section, sectionhead, lines, words, bytes,
      * for UnfoldSubpages, IncludePage, ...
      */

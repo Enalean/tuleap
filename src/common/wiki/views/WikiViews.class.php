@@ -28,14 +28,13 @@ require_once('common/mvc/Views.class.php');
 function exit_wiki_empty() {
     GLOBAL $HTML;
     global $group_id;
-    
 
     $pm = ProjectManager::instance();
     $go = $pm->getProject($group_id);
     $uname = $go->getUnixName();
 
     $HTML->header(array('title'=>$GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')));
-    
+
     print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_activate', array($uname));
 
     $HTML->footer(array());
@@ -49,7 +48,6 @@ function exit_wiki_empty() {
 function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
     $pref_name = 'hide_'.$svc.$db_item_id;
 
- 
     if(empty($hide)) {
         $hide=$_REQUEST['hide_'.$svc];
     }
@@ -58,16 +56,16 @@ function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
     $old_hide = user_get_preference($pref_name);
 
   // Make sure they are both 0 if never set before
-    if ($old_hide == false) { 
+    if ($old_hide == false) {
         $noPref = true;
-        $old_hide = 0; 
+        $old_hide = 0;
     }
-  
+
   // If no given value for hide, keep the old one
     if (!isset($hide)) {
         $hide = $old_hide;
     }
-  
+
   // Update pref value if needed
     if ($old_hide != $hide) {
         user_set_preference($pref_name, $hide);
@@ -77,12 +75,12 @@ function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
         $hide_url = 'hide_'.$svc.'=1&hide_item_id='.$db_item_id;
         $hide_img = '<img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Expand">';
         $hide_now = true;
-    } else {        
+    } else {
         $hide_url = 'hide_'.$svc.'=2&hide_item_id='.$db_item_id;
         $hide_img = '<img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Collapse">';
         $hide_now = false;
     }
-  
+
     return array($hide_now, $hide_url, $hide_img);
 }
 
@@ -130,7 +128,7 @@ class WikiViews extends Views {
    * displayMenu - Public pure virtual
    */
     function displayMenu() {
-    
+
     }
 
   /**
@@ -149,7 +147,7 @@ class WikiViews extends Views {
     /**
     * pagePerms - public View
     */
-    function _pagePerms($postUrl='') { 
+    function _pagePerms($postUrl='') {
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
 

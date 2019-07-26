@@ -25,23 +25,23 @@ class MockFieldBuilder {
     public function __construct() {
         $this->field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
     }
-    
+
     public function withId($id) {
         stub($this->field)->getId()->returns($id);
         return $this;
     }
-    
+
     public function withTracker(Tracker $tracker) {
         stub($this->field)->getTracker()->returns($tracker);
         return $this;
     }
-    
+
     public function withValueForChangesetId($value_id, $changeset_id) {
         $bind = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
 
         stub($this->field)->getBind()->returns($bind);
         stub($bind)->getChangesetValues($changeset_id)->returns(array(array('id' => $value_id)));
-        
+
         return $this;
     }
 

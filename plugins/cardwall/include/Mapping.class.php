@@ -21,7 +21,7 @@
 /**
  * Mapping (column_is, field_id, value_id)
  *
- * Each artifact, must send its own values id depending on its status field 
+ * Each artifact, must send its own values id depending on its status field
  * and the column it has been dropped into.
  */
 class Cardwall_Mapping {

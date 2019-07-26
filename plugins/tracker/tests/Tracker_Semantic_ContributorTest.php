@@ -55,7 +55,7 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         $array_mapping = array('F13' => '102');
 
         $this->semantic->exportToXML($root, $array_mapping);
-        
+
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);

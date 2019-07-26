@@ -34,7 +34,7 @@ class DbaDatabase
                 $this->_error(
                     sprintf(
                         _("The DBA handler %s is unsupported!")."\n".
-                            _("Supported handlers are: %s"), 
+                            _("Supported handlers are: %s"),
                             $handler, join(",",dba_handlers())));
         }
         if ($mode)
@@ -44,11 +44,11 @@ class DbaDatabase
     function set_timeout($timeout) {
         $this->_timeout = $timeout;
     }
-    
+
     function open($mode = 'w') {
         if ($this->_dbh)
             return;             // already open.
-        
+
         $watchdog = $this->_timeout;
 
         global $ErrorManager;
@@ -108,7 +108,7 @@ class DbaDatabase
     function exists($key) {
         return dba_exists($key, $this->_dbh);
     }
-    
+
     function fetch($key) {
         $val = dba_fetch($key, $this->_dbh);
         if ($val === false)
@@ -126,7 +126,7 @@ class DbaDatabase
             return $this->_error("replace($key)");
     }
 
-    
+
     function firstkey() {
         return dba_firstkey($this->_dbh);
     }
@@ -172,11 +172,11 @@ class DbaDatabase
             return $this->_error("optimize()");
         return 1;
     }
-    
+
     function _error($mes) {
         trigger_error("DbaDatabase: $mes", E_USER_WARNING);
         return false;
-        
+
         trigger_error("$this->_file: dba error: $mes", E_USER_ERROR);
     }
 
@@ -200,5 +200,5 @@ class DbaDatabase
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

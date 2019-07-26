@@ -24,13 +24,13 @@ require_once('ReferenceAdministrationActions.class.php');
 
 class ReferenceAdministration extends Controler
 {
-    
+
     public function request()
     {
         $request = HTTPRequest::instance();
-        
+
         session_require(array('group'=>$request->get('group_id'),'admin_flags'=>'A'));
-        
+
         if ($request->exist('view')) {
             switch ($request->get('view')) {
                 case 'creation':
@@ -46,7 +46,7 @@ class ReferenceAdministration extends Controler
         } else {
             $this->view = 'browse';
         }
-        
+
         if ($request->exist('action')) {
             switch ($request->get('action')) {
                 case 'do_edit':

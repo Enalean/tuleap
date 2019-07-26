@@ -49,7 +49,6 @@ class ProjectListResultsPresenterBuilder
                 continue;
             }
 
-
             list($status_label, $status_class) = $this->getStatusDisplay($row['status']);
             $type_label = $this->getTypeLabel($row['type']);
             $project_name = util_unconvert_htmlspecialchars($row['group_name']);

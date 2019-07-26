@@ -21,7 +21,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 require_once 'common/date/TimeInterval.class.php';
 
 class SVN_LogDao extends DataAccessObject {
-    
+
     public function searchCommiters($group_id, TimeInterval $interval) {
         $group_id  = $this->da->escapeInt($group_id);
         $date_stmt = $this->inIntervalStatement($interval);
@@ -32,7 +32,7 @@ class SVN_LogDao extends DataAccessObject {
                 GROUP BY whoid";
         return $this->retrieve($sql);
     }
-    
+
     public function searchTopModifiedFiles($group_id, TimeInterval $interval, $limit, $where_forbidden) {
         $group_id   = $this->da->escapeInt($group_id);
         $limit      = $this->da->escapeInt($limit);
@@ -50,7 +50,7 @@ class SVN_LogDao extends DataAccessObject {
                  LIMIT $limit";
         return $this->retrieve($sql);
     }
-    
+
     private function inIntervalStatement(TimeInterval $interval) {
         $start_date = $this->da->escapeInt($interval->getStartTimestamp());
         $end_date   = $this->da->escapeInt($interval->getEndTimestamp());

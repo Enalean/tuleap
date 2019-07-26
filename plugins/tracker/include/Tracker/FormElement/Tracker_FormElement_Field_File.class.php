@@ -332,7 +332,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                     $add .= $this->fetchDeleteCheckbox($fileinfo, $submitted_values);
                 }
 
-
                 $add .= '<div class="tracker_artifact_preview_attachment_hover">';
                 if ($submitter_needed) {
                     $add .= '<div class="tracker_artifact_attachment_submitter">'. 'By '. $uh->getLinkOnUserFromUserId($fileinfo->getSubmittedBy()) .'</div>';
@@ -353,7 +352,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 } else {
                     $add .= '<div class="tracker_artifact_preview_attachment"></div>';
                 }
-
 
                 $link_goto = '<a href="'. $query_link .'"'.
                                  'title="'. $sanitized_description .'">';

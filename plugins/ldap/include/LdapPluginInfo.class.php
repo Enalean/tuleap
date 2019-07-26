@@ -35,11 +35,11 @@ class LdapPluginInfo extends PluginFileInfo
      *
      * @param Plugin $plugin Ldap plugin
      */
-    function __construct(Plugin $plugin) 
+    function __construct(Plugin $plugin)
     {
         parent::__construct($plugin, 'ldap');
         $this->setPluginDescriptor(new LdapPluginDescriptor());
     }
-    
+
 }
 ?>

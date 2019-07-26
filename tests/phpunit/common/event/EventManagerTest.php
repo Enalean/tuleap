@@ -66,7 +66,6 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $l3 = Mockery::mock();
         $l3->shouldNotReceive('doSomethingElse');
 
-
         //The events
         $e1 = 'event1';
         $e2 = 'event2';
@@ -196,7 +195,6 @@ class EventManagerTest extends TestCase // phpcs:ignore
         };
 
         $event_manager->addListener(get_class($unnamed_event), $listener, 'handleEvent', false);
-
 
         $unnamed_event = $event_manager->dispatch($unnamed_event);
 

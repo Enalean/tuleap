@@ -24,8 +24,8 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
     function __construct(&$docman) {
         $this->docman = $docman;
     }
-    
-    
+
+
     //docman_icons
     //current
     //hierarchy
@@ -62,7 +62,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         }
         $disabled = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
         $label_classes = $selected ? 'docman_item_actual_parent' : '';
-        
+
         $h  = '<li  class="'. Docman_View_Browse::getItemClasses(array('is_last' => $params['is_last'])) .'">';
         $h .= '<label for="item_parent_id_'. $folder['id'] .'" class="'. $label_classes .'" >';
         $h .= '<input type="radio" '. $selected .' name="'. $params['input_name'] .'" value="'. $folder['id'] .'" id="item_parent_id_'. $folder['id'] .'" '. $disabled .' />';
@@ -70,7 +70,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         $h .=  $hp->purify($folder['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</label>';
         $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem('. $folder['id'] .', '. $folder['parent_id'] .", '".  $hp->purify(addslashes($folder['title']), CODENDI_PURIFIER_CONVERT_HTML) ."');</script>\n";
         $h .= '<ul class="docman_items">';
-        
+
         $params['is_last'] = false;
         $nb = count($folder['items']);
         $i = 0;
@@ -83,12 +83,12 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         }
         return $h.'</ul></li>';
     }
-    
+
     function _itemCanBeFetched(&$item, $params) {
         $ok = !isset($params['excludes']) || !in_array($item->getId(), $params['excludes']);
         return $ok;
     }
-    
+
     function visitFolder(&$item, $params = array()) {
         $t = '';
         if ($this->docman->userCanRead($item->getId()) && $this->_itemCanBeFetched($item, $params)) {
@@ -99,7 +99,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
                 'items'     => array(),
                 'icon_src'  => $params['docman_icons']->getIconForItem($item, array('expanded' => true))
             );
-            
+
             $items = $item->getAllItems();
             $it = $items->iterator();
             while($it->valid()) {

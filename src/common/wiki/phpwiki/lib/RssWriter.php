@@ -45,7 +45,7 @@ class RssWriter extends XmlElement
         assert(!isset($this->_modules[$alias]));
         $this->_modules[$alias] = $uri;
     }
-        
+
     // Args should include:
     //  'title', 'link', 'description'
     // and can include:
@@ -53,7 +53,7 @@ class RssWriter extends XmlElement
     function channel($properties, $uri = false) {
         $this->_channel = $this->node('channel', $properties, $uri);
     }
-    
+
     // Args should include:
     //  'title', 'link'
     // and can include:
@@ -94,7 +94,7 @@ class RssWriter extends XmlElement
                 $seq->pushContent($this->ref('rdf:li', $item));
         }
         $channel->pushContent(new XmlElement('items', false, $seq));
-     
+
         if (isset($this->_image)) {
             $channel->pushContent($this->ref('image', $this->_image));
             $items[] = $this->_image;
@@ -111,7 +111,7 @@ class RssWriter extends XmlElement
         $this->spew();
         $this->_finished = true;
     }
-            
+
 
     /**
      * Write output to HTTP client.
@@ -122,8 +122,8 @@ class RssWriter extends XmlElement
         printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
         $this->printXML();
     }
-        
-    
+
+
     /**
      * Create a new RDF <em>typedNode</em>.
      */
@@ -191,5 +191,5 @@ class RssWriter extends XmlElement
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

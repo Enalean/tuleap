@@ -26,9 +26,9 @@
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 class PluginViews {
-    
+
     protected $request;
-    
+
     /**
      *
      * @var PluginController
@@ -48,12 +48,12 @@ class PluginViews {
 
     public function getData() {
         return $this->controller->getData();
-    }  
+    }
 
     public function display($name, $params=array()) {
         if ( empty($name) ) {
             return false;
-        }        
+        }
         call_user_func_array(array($this,$name), $params);
     }
 
@@ -61,6 +61,6 @@ class PluginViews {
         $linkTo = '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
         return $linkTo;
     }
-   
+
 }
 ?>

@@ -20,13 +20,13 @@
 
 
 class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField {
-    
+
     protected function fetchReadOnly() {
         $html = '';
         $html .= '<br class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" />';
         return $html;
     }
-    
+
     public function fetchAdmin($tracker) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
@@ -46,7 +46,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         $html .= '</div>';
         return $html;
     }
-    
+
     /**
      * Display the html field in the admin ui
      *
@@ -56,7 +56,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         $html = '<hr class="tracker-admin-linebreak" id="tracker-admin-formElements_'. $this->id .'" size="1" />';
         return $html;
     }
-    
+
     /**
      * getLabel - the label of this Tracker_FormElement_StaticField_LineBreak
      * The staticfield label can be internationalized.
@@ -73,33 +73,33 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
             return $label;
         }
     }
-    
+
     function getDescription() {
         // no description for Line Break
         return '';
     }
-    
+
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
     }
-    
+
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_description');
     }
-    
+
     /**
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray.png');
     }
-    
+
     /**
      * @return the path to the icon to create an element
      */

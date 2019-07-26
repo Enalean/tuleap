@@ -29,7 +29,7 @@ class Cardwall_CardInCellPresenterNodeTest extends TuleapTestCase {
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
         $this->assertEqual($presenter, $presenter_node->getCardInCellPresenter());
     }
-    
+
     public function itHasAnArtifact() {
         $artifact       = mock('Tracker_Artifact');
         $presenter      = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);

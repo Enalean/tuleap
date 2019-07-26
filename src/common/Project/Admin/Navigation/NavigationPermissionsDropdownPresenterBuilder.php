@@ -44,7 +44,6 @@ class NavigationPermissionsDropdownPresenterBuilder
             )
         );
 
-
         if ($project->usesTracker() || $project->usesSVN()) {
             $permission_links[] = new NavigationDropdownItemPresenter(
                 _('Permissions for deprecated services'),

@@ -139,7 +139,6 @@ class AttachmentForTusUploadCreatorTest extends TestCase
     {
         $submitted_value_info = ['tus-uploaded-id' => 42];
 
-
         $file_info = Mockery::mock(Tracker_FileInfo::class);
         $file_info->shouldReceive(['getId' => 42]);
 
@@ -149,7 +148,6 @@ class AttachmentForTusUploadCreatorTest extends TestCase
             ->andReturn($file_info);
 
         $this->ongoing_upload_dao->shouldReceive('deleteUploadedFileThatIsAttached')->with(42)->once();
-
 
         $this->assertEquals(
             $file_info,

@@ -26,7 +26,7 @@ class AdminDelegation_UserServiceLogDao extends DataAccessObject
         $sql = 'SELECT * FROM plugin_admindelegation_service_user_log';
         return $this->retrieve($sql);
     }
-    
+
     public function addLog($action, $serviceId, $userId, $time) {
         $sql = 'INSERT INTO plugin_admindelegation_service_user_log (service_id, user_id, date, action)'.
                ' VALUES ('.$this->da->escapeInt($serviceId).','.
@@ -36,5 +36,5 @@ class AdminDelegation_UserServiceLogDao extends DataAccessObject
                            ')';
         return $this->update($sql);
     }
-    
+
 }

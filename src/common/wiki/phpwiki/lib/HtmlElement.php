@@ -29,7 +29,7 @@ class HtmlElement extends XmlElement
         assert(count($args) >= 1);
         assert(is_string($args[0]));
         $this->_tag = array_shift($args);
-        
+
         if ($args && is_array($args[0]))
             $this->_attr = array_shift($args);
         else {
@@ -52,7 +52,7 @@ class HtmlElement extends XmlElement
             elseif ($args[0] === false)
                 array_shift($args);
         }
-        
+
         if (count($args) == 1 && is_array($args[0]))
             $args = $args[0];
         $this->_content = $args;
@@ -99,7 +99,7 @@ class HTML extends HtmlElement {
     function raw ($html_text) {
         return new RawXml($html_text);
     }
-    
+
     function getTagProperties($tag) {
         $props = &$GLOBALS['HTML_TagProperties'];
         return isset($props[$tag]) ? $props[$tag] : 0;
@@ -396,7 +396,7 @@ class HTML extends HtmlElement {
     }
     static function fieldset(/*...*/) {
         $el = new HtmlElement('fieldset');
-        return $el->_init2(func_get_args());    
+        return $el->_init2(func_get_args());
     }
     static function legend(/*...*/) {
         $el = new HtmlElement('legend');
@@ -530,7 +530,7 @@ function IfJavaScript($if_content = false, $else_content = false) {
     }
     return HTML($html);
 }
-    
+
 /**
  $Log: HtmlElement.php,v $
  Revision 1.47  2005/08/06 12:53:36  rurban

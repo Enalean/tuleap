@@ -61,7 +61,6 @@ class Git_RemoteServer_GerritServerPresenter
         $this->is_basic                       = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40).'...'.substr($this->replication_key, -40);
 
-
         $this->edit_title           = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
         $this->delete_title         = sprintf(dgettext('tuleap-git', 'Delete %1$s'), $server->getHost());
 

@@ -64,7 +64,7 @@ class WebDAVProject extends Sabre_DAV_Directory
         if ($this->usesFile()) {
             $children[$GLOBALS['Language']->getText('plugin_webdav_common', 'files')] = $this->getWebDAFRS();
         }
-        
+
         $em    = $this->getUtils()->getEventManager();
         $roots = array();
         $em->processEvent('webdav_root_for_service', array('project' => $this->getProject(),

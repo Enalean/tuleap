@@ -58,21 +58,21 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
     }
 
     /**
-     * 
+     *
      * @param Tracker_Rule_List $rule
      * @return int The ID of the saved tracker_rule
      */
     public function insert(Tracker_Rule_List $rule) {
         $rule_id         = $this->da->escapeInt($rule->getTrackerId());
         $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
-        
+
         $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
         if($rule->getSourceValue() instanceof Tracker_FormElement_Field_List_Value) {
             $source_value_id = $this->da->quoteSmart($rule->getSourceValue()->getId());
         } else {
             $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
         }
-        
+
         $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
         if($rule->getTargetValue() instanceof Tracker_FormElement_Field_List_Value) {
             $target_value_id = $this->da->quoteSmart($rule->getTargetValue()->getId());
@@ -82,9 +82,9 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
 
         $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
                                 VALUES ($rule_id, $rule_type)";
-        
+
         $this->startTransaction();
-        
+
         try{
             $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
@@ -106,12 +106,12 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
             $this->rollBack();
             throw $e;
         }
-        
+
         $this->commit();
 
         return $tracker_rule_id;
     }
-    
+
     /**
      * create a row in the table tracker_rule and in tracker_rule_list
      * @return true or id(auto_increment) if there is no error
@@ -123,7 +123,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
         $source_value_id = $this->da->escapeInt($source_value_id);
         $target_field_id = $this->da->escapeInt($target_field_id);
         $target_value_id = $this->da->escapeInt($target_value_id);
-        
+
         $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
                             VALUES ($tracker_id, $rule_type)";
 
@@ -142,13 +142,13 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
                         $source_value_id, 
                         $target_field_id, 
                         $target_value_id)";
-            
+
             $retrieve = $this->retrieve($sql);
         } catch (Exception $e) {
             $this->rollBack();
             throw $e;
         }
-        
+
         $this->commit();
         return $retrieve;
     }

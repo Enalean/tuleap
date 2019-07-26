@@ -19,27 +19,27 @@
  */
 
 interface Tracker_FormElement_IProvideFactoryButtonInformation {
-    
+
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel();
-    
+
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription();
-    
+
     /**
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt();
-    
+
     /**
      * @return the path to the icon to create an element
      */
     public static function getFactoryIconCreate();
-    
+
     /**
      * @return bool say if the element is a unique one
      */

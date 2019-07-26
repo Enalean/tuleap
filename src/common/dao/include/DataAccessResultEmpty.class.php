@@ -21,8 +21,8 @@
 require_once 'IProvideDataAccessResult.class.php';
 
 /**
- * Null object alternative for DataAccessResult 
- * 
+ * Null object alternative for DataAccessResult
+ *
  * Use it when you feel returning something empty without teadious if/else code
  * in calling method
  * @deprecated See \Tuleap\DB\DataAccessObject
@@ -55,7 +55,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     public function isError() {
         return false;
     }
-    
+
     /**
      * @see IProvideDataAccessResult
      * @deprecated
@@ -64,7 +64,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     public function current() {
         return false;
     }
-    
+
     /**
      * @see IProvideDataAccessResult
      * @deprecated
@@ -72,7 +72,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      */
     public function next() {
     }
-    
+
     /**
      * @see IProvideDataAccessResult
      * @deprecated
@@ -81,7 +81,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     public function valid() {
         return false;
     }
-    
+
     /**
      * @see IProvideDataAccessResult
      * @deprecated
@@ -89,7 +89,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
      */
     public function rewind() {
     }
-    
+
     /**
      * @see IProvideDataAccessResult
      * @deprecated

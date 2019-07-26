@@ -3,7 +3,7 @@
 rcs_id('$Id: WikiBlog.php,v 1.23 2005/10/29 09:06:37 rurban Exp $');
 /*
  Copyright 2002, 2003 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ require_once('lib/TextSearchQuery.php');
  * This plugin shows 'blogs' (comments/news) associated with a
  * particular page and provides an input form for adding a new blog.
  *
- * Now it is also the base class for all attachable pagetypes: 
+ * Now it is also the base class for all attachable pagetypes:
  *    wikiblog, comment and wikiforum
  *
  * HINTS/COMMENTS:
@@ -123,7 +123,7 @@ extends WikiPlugin
         // Get our form args.
         $blog = $request->getArg("blog");
         $request->setArg('blog', false);
-            
+
         if ($request->isPost() and !empty($blog['addblog'])) {
             $this->add($request, $blog); // noreturn
         }
@@ -135,7 +135,7 @@ extends WikiPlugin
             if (!empty($seen[$show]))
                 continue;
             $seen[$show] = 1;
-                
+
             switch ($show) {
                 case 'show':
                     $html->pushContent($this->showAll($request, $args));
@@ -163,7 +163,7 @@ extends WikiPlugin
         $now = time();
         $dbi = $request->getDbh();
         $user = $request->getUser();
-        
+
         /*
          * Page^H^H^H^H Blog meta-data
          * This method is reused for all attachable pagetypes: wikiblog, comment and wikiforum
@@ -181,7 +181,6 @@ extends WikiPlugin
                            'creator'    => $user->getId(),
                            'creator_id' => $user->getAuthenticatedId(),
                            );
-        
 
         // Version meta-data
         $summary = trim($blog['summary']);
@@ -237,7 +236,7 @@ extends WikiPlugin
                 SavePage($request, $pageinfo, '', '');
             }
 
-            $p = $dbi->getPage($prefix . $pagename . SUBPAGE_SEPARATOR 
+            $p = $dbi->getPage($prefix . $pagename . SUBPAGE_SEPARATOR
                                . str_replace("T", SUBPAGE_SEPARATOR, "$time"));
             $pr = $p->getCurrentRevision();
 
@@ -262,7 +261,7 @@ extends WikiPlugin
 
             $now++;
         }
-        
+
         $dbi->touch();
         $request->redirect($request->getURLtoSelf()); // noreturn
 
@@ -276,7 +275,7 @@ extends WikiPlugin
         // get results, so results are in alphabetical order.
         // When PageTypes fully implemented, could have smarter
         // blogSearch implementation / naming scheme.
-        
+
         $dbi = $request->getDbh();
 
         $parent = $args['pagename'];
@@ -303,7 +302,7 @@ extends WikiPlugin
                 }
                 $html->pushContent($content);
             }
-            
+
         }
         return $html;
     }
@@ -351,7 +350,7 @@ extends WikiPlugin
         return(strcmp($a->get('mtime'),
                       $b->get('mtime')));
     }
-    
+
     function showForm (&$request, $args, $template='blogform') {
         // Show blog-entry form.
         return new Template($template, $request,

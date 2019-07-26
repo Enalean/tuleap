@@ -20,11 +20,11 @@
 /**
  * Alias for OrphanedPages. Idea and name from mediawiki.
  *
-    "SELECT cur_title " . 
+    "SELECT cur_title " .
       "FROM cur LEFT JOIN links ON cur_title = l_from " .
       "WHERE l_from IS NULL " .
       "AND cur_namespace = 0 " .
-      "ORDER BY cur_title " . 
+      "ORDER BY cur_title " .
       "LIMIT {$offset}, {$limit}";
  *
  **/

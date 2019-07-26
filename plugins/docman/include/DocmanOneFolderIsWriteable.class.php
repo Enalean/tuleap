@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -21,12 +21,12 @@
  */
 
 class DocmanOneFolderIsWriteable /* implements Visitor */ {
-    
+
     var $docman;
     function __construct(&$docman) {
         $this->docman = $docman;
     }
-    
+
     function visitFolder(&$item, $params = array()) {
         $b = false;
         if ($this->docman->userCanWrite($item->getId())) {
@@ -42,7 +42,7 @@ class DocmanOneFolderIsWriteable /* implements Visitor */ {
         }
         return $b;
     }
-    
+
     function visitWiki(&$item, $params = array()) {
         return false;
     }

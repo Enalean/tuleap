@@ -9,7 +9,7 @@ rcs_id('$Id: BlogArchives.php,v 1.5 2005/10/29 09:06:37 rurban Exp $');
 require_once('lib/plugin/WikiBlog.php');
 
 /**
- * BlogArchives - List monthly links for the current users blog if signed, 
+ * BlogArchives - List monthly links for the current users blog if signed,
  * or the ADMIN_USER's Blog if not.
  * On month=... list the blog titles per month.
  *
@@ -37,7 +37,7 @@ extends WikiPlugin_WikiBlog
     function getDefaultArguments() {
         return //array_merge
                //(
-               //PageList::supportedArgs(), 
+               //PageList::supportedArgs(),
              array('user'     => '',
                    'order'    => 'reverse',        // latest first
                    'info'     => 'month,numpages', // ignored
@@ -63,9 +63,9 @@ extends WikiPlugin_WikiBlog
         }
         if (!$args['user'] or $args['user'] == ADMIN_USER) {
             if (BLOG_EMPTY_DEFAULT_PREFIX)
-                $args['user'] = '';         // "Blogs/day" pages 
+                $args['user'] = '';         // "Blogs/day" pages
             else
-                $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages 
+                $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages
         }
         $parent = (empty($args['user']) ? '' : $args['user'] . SUBPAGE_SEPARATOR);
 
@@ -73,7 +73,7 @@ extends WikiPlugin_WikiBlog
         //$pagelist = new PageList($args['info'], $args['exclude'], $args);
         //if (!is_array('pagename'), explode(',', $info))
         //    unset($pagelist->_columns['pagename']);
-        
+
         $sp = HTML::Raw('&middot; ');
         if (!empty($args['month'])) {
             $prefix = $parent . $this->_blogPrefix('wikiblog') . SUBPAGE_SEPARATOR . $args['month'];
@@ -105,11 +105,11 @@ extends WikiPlugin_WikiBlog
                 $blog = $this->_blog($rev);
                 $mon = $blog['month'];
                 if (empty($months[$mon]))
-                    $months[$mon] = 
+                    $months[$mon] =
                         array('title' => $this->_monthTitle($mon),
                               'num'   => 1,
                               'month' => $mon,
-                              'link'  => WikiURL($basepage, 
+                              'link'  => WikiURL($basepage,
                                          $this->_nonDefaultArgs(array('month' => $mon))));
                 else
                     $months[$mon]['num']++;
@@ -123,7 +123,7 @@ extends WikiPlugin_WikiBlog
                 return HTML(HTML::h3(_("Blog Archives:")), $html);
             else
                 return $html;
-        } else 
+        } else
             return '';
     }
 

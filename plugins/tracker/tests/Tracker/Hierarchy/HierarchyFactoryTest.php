@@ -223,7 +223,6 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
         $this->artifact_factory->setReturnValueAt(0, 'getInstanceFromRow', aMockArtifact()->withId(345)->build());
         $this->artifact_factory->setReturnValueAt(1, 'getInstanceFromRow', aMockArtifact()->withId(346)->build());
 
-
         stub($GLOBALS['Response'])->addFeedback('warning', '*', '*')->once();
 
         $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);

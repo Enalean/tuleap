@@ -64,7 +64,6 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         $text_field_02 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_02');
         stub($text_field_02)->getTracker()->returns($tracker);
 
-
         $changeset_01 = partial_mock(
             'Tracker_Artifact_Changeset',
             array(
@@ -147,7 +146,6 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         stub($changeset_04)->getSubmittedOn()->returns($timestamp_04);
         stub($changeset_04)->getValues()->returns(array($value_07));
         stub($changeset_04)->getValueDao()->returns($value_dao);
-
 
         $artifact_01 = anArtifact()->withTracker($tracker)->withId(101)->withChangesets(array($changeset_01, $changeset_02))->build();
         $artifact_02 = anArtifact()->withTracker($tracker)->withId(102)->withChangesets(array($changeset_03, $changeset_04))->build();

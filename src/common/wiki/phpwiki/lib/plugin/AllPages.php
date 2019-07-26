@@ -25,7 +25,7 @@ require_once('lib/PageList.php');
 
 /**
  * DONE: support author=[] (current user) and owner, creator
- * to be able to have pages: 
+ * to be able to have pages:
  * AllPagesCreatedByMe, AllPagesOwnedByMe, AllPagesLastAuthoredByMe
  */
 class WikiPlugin_AllPages
@@ -56,7 +56,7 @@ extends WikiPlugin
                    'debug'         => false
                    ));
     }
-    
+
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
@@ -70,41 +70,41 @@ extends WikiPlugin
         if ($args['debug'])
             $timer = new DebugTimer;
         $caption = _("All pages in this wiki (%d total):");
-        
+
         if ( !empty($args['owner']) ) {
             $pages = PageList::allPagesByOwner($args['owner'], $args['include_empty'],
                                                $args['sortby'], $args['limit']);
             if ($args['owner'])
-                $caption = fmt("List of pages owned by [%s] (%d total):", 
-                               WikiLink($args['owner'] == '[]' 
-                                        ? $request->_user->getAuthenticatedId() 
-                                        : $args['owner'], 
+                $caption = fmt("List of pages owned by [%s] (%d total):",
+                               WikiLink($args['owner'] == '[]'
+                                        ? $request->_user->getAuthenticatedId()
+                                        : $args['owner'],
                                         'if_known'),
                                count($pages));
         } elseif ( !empty($args['author']) ) {
             $pages = PageList::allPagesByAuthor($args['author'], $args['include_empty'],
                                                 $args['sortby'], $args['limit']);
             if ($args['author'])
-                $caption = fmt("List of pages last edited by [%s] (%d total):", 
-                               WikiLink($args['author'] == '[]' 
-                                        ? $request->_user->getAuthenticatedId() 
-                                        : $args['author'], 
-                                        'if_known'), 
+                $caption = fmt("List of pages last edited by [%s] (%d total):",
+                               WikiLink($args['author'] == '[]'
+                                        ? $request->_user->getAuthenticatedId()
+                                        : $args['author'],
+                                        'if_known'),
                                count($pages));
         } elseif ( !empty($args['creator']) ) {
             $pages = PageList::allPagesByCreator($args['creator'], $args['include_empty'],
                                                  $args['sortby'], $args['limit']);
             if ($args['creator'])
-                $caption = fmt("List of pages created by [%s] (%d total):", 
-                               WikiLink($args['creator'] == '[]' 
-                                        ? $request->_user->getAuthenticatedId() 
+                $caption = fmt("List of pages created by [%s] (%d total):",
+                               WikiLink($args['creator'] == '[]'
+                                        ? $request->_user->getAuthenticatedId()
                                         : $args['creator'],
-                                        'if_known'), 
+                                        'if_known'),
                                count($pages));
         //} elseif ($pages) {
         //    $args['count'] = count($pages);
         } else {
-            if (! $request->getArg('count'))  
+            if (! $request->getArg('count'))
                 $args['count'] = $dbi->numPages($args['include_empty'], $args['exclude']);
             else $args['count'] = $request->getArg('count');
         }
@@ -120,7 +120,7 @@ extends WikiPlugin
         if ($pages !== false)
             $pagelist->addPageList($pages);
         else
-            $pagelist->addPages( $dbi->getAllPages($args['include_empty'], $args['sortby'], 
+            $pagelist->addPages( $dbi->getAllPages($args['include_empty'], $args['sortby'],
                                                    $args['limit']) );
         if ($args['debug']) {
             return HTML($pagelist,

@@ -77,7 +77,7 @@ if ($action == 'permissions_frs_package') {
             $vDate = new Valid_String('date');
             $vDate->required();
             $vPackageId = new Valid_UInt('package_id');
-            $vPackageId->required();                  
+            $vPackageId->required();
             $vGroupId = new Valid_GroupId();
             $vGroupId->required();
             if ($request->valid($vName) &&
@@ -114,7 +114,7 @@ if ($action == 'permissions_frs_package') {
                 $vPackageId = new Valid_UInt('package_id');
                 $vPackageId->required();
                 $vReleaseId = new Valid_UInt('release_id');
-                $vReleaseId->required();                  
+                $vReleaseId->required();
                 $vGroupId = new Valid_GroupId();
                 $vGroupId->required();
                 if ($request->valid($vName) &&

@@ -29,16 +29,16 @@ extends WikiPlugin
     function getName() {
         return _("BackLinks");
     }
-    
+
     function getDescription() {
         return sprintf(_("List all pages which link to %s."), '[pagename]');
     }
-    
+
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
                             "\$Revision: 1.32 $");
     }
-    
+
     function getDefaultArguments() {
         return array_merge
             (
@@ -65,7 +65,7 @@ extends WikiPlugin
         if ($info) {
             $info = explode(",", $info);
             if (in_array('count',$info))
-                $args['types']['count'] = 
+                $args['types']['count'] =
                     new _PageList_Column_BackLinks_count('count', _("#"), 'center');
         }
         $args['dosort'] = !empty($args['sortby']); // override DB sort (??)
@@ -90,10 +90,10 @@ extends WikiPlugin
                     // the Un~WikiLink~ified (plain) name of the uncreated
                     // page currently being viewed.
                     $pagelink = $page;
-                    
+
                     if ($pagelist->isEmpty())
                         return HTML::p(fmt("No other page links to %s yet.", $pagelink));
-                    
+
                     if ($pagelist->getTotal() == 1)
                         $pagelist->setCaption(fmt("One page would link to %s:",
                                                   $pagelink));
@@ -110,12 +110,12 @@ extends WikiPlugin
             else {
                 // BackLinks plugin is being displayed on a normal page.
                 $pagelink = WikiLink($page, 'auto');
-                
+
                 if ($pagelist->isEmpty())
                     return HTML::p(fmt("No page links to %s.", $pagelink));
-                
+
                 //trigger_error("DEBUG: " . $pagelist->getTotal());
-                
+
                 if ($pagelist->getTotal() == 1)
                     $pagelist->setCaption(fmt("One page links to %s:",
                                               $pagelink));
@@ -132,7 +132,7 @@ extends WikiPlugin
         }
         return $pagelist;
     }
-    
+
 };
 
 // how many links from this backLink to other pages

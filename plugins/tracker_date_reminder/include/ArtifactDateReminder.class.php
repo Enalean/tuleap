@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
@@ -20,21 +20,21 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 require_once('ArtifactDateReminderFactory.class.php');
 
 // The artifact date reminder object
 class ArtifactDateReminder {
 
     private $logger;
-    
+
     function __construct(TrackerDateReminder_Logger $logger) {
         $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
     }
 
     function codexDaily() {
         $this->logger->info('Start');
-        
+
         $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
@@ -46,7 +46,7 @@ class ArtifactDateReminder {
                 $adrf->checkReminderStatus($_SERVER['REQUEST_TIME']);
             }
         }
-        
+
         $this->logger->info('End');
     }
 

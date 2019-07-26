@@ -35,6 +35,5 @@ class b201603231523_hook_commit_message_can_change extends ForgeUpgrade_Bucket {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the commit_message_can_change column for the plugin_svn_hook_config table.');
         }
 
-
     }
 }

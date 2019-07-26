@@ -42,7 +42,7 @@ abstract class Error_PermissionDenied {
      * @return String
      */
     abstract function getType();
-    
+
     /**
      * Returns the base on language file
      *
@@ -51,18 +51,18 @@ abstract class Error_PermissionDenied {
     function getTextBase() {
         return 'include_exit';
     }
-    
-    
+
+
      /**
      * Returns the build interface parameters
      *
      * @return Array
      */
     abstract function returnBuildInterfaceParam();
-    
+
     /**
      * Returns the url link after modification if needed else returns the same string
-     *  
+     *
      * @param String $link
      * @param BaseLanguage $language
      */
@@ -72,7 +72,7 @@ abstract class Error_PermissionDenied {
 
     /**
      * Build the user interface to ask for membership
-     * 
+     *
      */
     function buildInterface(PFUser $user, ?Project $project = null) {
         if ($user->isAnonymous()) {
@@ -157,17 +157,17 @@ abstract class Error_PermissionDenied {
      */
     function processMail($messageToAdmin) {
         $request =HTTPRequest::instance();
-        
+
         $pm = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));
-    
+
         $user_manager = $this->getUserManager();
         $user         = $user_manager->getCurrentUser();
-        
+
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
         $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
-        
+
         $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id='.$request->get('groupId');
         $urlData      = $request->getServerUrl() . $request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
@@ -175,8 +175,8 @@ abstract class Error_PermissionDenied {
 
 
     /**
-     * Send mail to administrators with the apropriate subject and body   
-     * 
+     * Send mail to administrators with the apropriate subject and body
+     *
      * @param Project $project
      * @param PFUser    $user
      * @param String  $urlData
@@ -215,7 +215,7 @@ abstract class Error_PermissionDenied {
 
     /**
      * Get an instance of UserManager. Mainly used for mock
-     * 
+     *
      * @return UserManager
      */
     protected function getUserManager() {
@@ -224,7 +224,7 @@ abstract class Error_PermissionDenied {
 
     /**
      * Get an instance of UserManager. Mainly used for mock
-     * 
+     *
      * @return ProjectManager
      */
     protected function getProjectManager() {
@@ -232,8 +232,8 @@ abstract class Error_PermissionDenied {
     }
 
     /**
-     * Get an instance of ProjectUGroup. 
-     * 
+     * Get an instance of ProjectUGroup.
+     *
      * @return ProjectUGroup
      */
     protected function getUGroup() {
@@ -246,7 +246,6 @@ abstract class Error_PermissionDenied {
     private function buildPermissionDeniedInterface(?Project $project = null) {
         $purifier = Codendi_HTMLPurifier::instance();
         $param    = $this->returnBuildInterfaceParam();
-
 
         site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
 

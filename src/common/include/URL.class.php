@@ -42,7 +42,7 @@ class URL {
      *
      * Retreives the project name from svn request uri
      * @param String $uri
-     * 
+     *
      * @return String
      */
     function getGroupNameFromSVNUrl($uri) {
@@ -162,15 +162,15 @@ class URL {
     function getProjectDao() {
         return new ProjectDao(CodendiDataAccess::instance());
     }
-    
+
     function getForumDao() {
         return new ForumDao(CodendiDataAccess::instance());
     }
-    
+
     function getNewsBytesDao() {
         return new NewsBytesDao(CodendiDataAccess::instance());
     }
-    
+
     function getArtifactDao() {
         return new ArtifactDao(CodendiDataAccess::instance());
     }

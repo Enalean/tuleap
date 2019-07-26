@@ -304,7 +304,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                     }
                 }
                 $type = implode(', ', $type);
-                
+
             }
             $type = $this->escapeHTML($type);
             $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';

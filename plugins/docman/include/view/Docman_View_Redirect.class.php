@@ -1,8 +1,8 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_Redirect
 */
@@ -10,7 +10,7 @@
 require_once('Docman_View_View.class.php');
 
 class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
-    
+
     /* protected */ function _content($params) {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];

@@ -35,13 +35,12 @@ EOT;
         $sql = "ALTER TABLE tracker_artifact ADD INDEX idx_last_changeset_id (last_changeset_id, id)";
         $msg = "adding index on `last_changeset_id` on `tracker_artifact`";
         $this->executeQuery($sql, $msg);
-        
-        
+
         $sql = "ALTER TABLE tracker_semantic_status ADD INDEX idx_ovi_fi (open_value_id, field_id)";
         $msg = "adding index on (`open_value_id`, `field_id`) on `tracker_semantic_status`";
         $this->executeQuery($sql, $msg);
     }
-    
+
     private function executeQuery($sql, $msg) {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -50,6 +49,6 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-    
+
 }
 ?>

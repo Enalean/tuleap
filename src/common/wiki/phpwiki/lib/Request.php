@@ -3,7 +3,7 @@
 rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
 /*
  Copyright (C) 2002,2004,2005 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -23,11 +23,11 @@ rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
 
 
 class Request {
-        
+
     function __construct() {
         $this->_fix_magic_quotes_gpc();
         $this->_fix_multipart_form_data();
-        
+
         switch($this->get('REQUEST_METHOD')) {
             case 'GET':
             case 'HEAD':
@@ -40,9 +40,9 @@ class Request {
                 $this->args = array();
             break;
         }
-        
+
         $this->session = new Request_SessionVars;
-        
+
         $GLOBALS['request'] = $this;
     }
 
@@ -76,14 +76,14 @@ class Request {
     function getArgs () {
         return $this->args;
     }
-    
+
     function setArg($key, $val) {
         if ($val === false)
             unset($this->args[$key]);
         else
             $this->args[$key] = $val;
     }
-    
+
     // Well oh well. Do we really want to pass POST params back as GET?
     function getURLtoSelf($args = false, $exclude = array()) {
         $get_args = $this->args;
@@ -127,13 +127,13 @@ class Request {
             return false;
         return (float) $m[1];
     }
-    
-    /* Redirects after edit may fail if no theme signature image is defined. 
+
+    /* Redirects after edit may fail if no theme signature image is defined.
      * Set DISABLE_HTTP_REDIRECT = true then.
      */
     function redirect($url, $noreturn = true) {
         $bogus = defined('DISABLE_HTTP_REDIRECT') && DISABLE_HTTP_REDIRECT;
-        
+
         if (!$bogus) {
             header("Location: $url");
             /*
@@ -162,7 +162,7 @@ class Request {
         if ($noreturn) {
             $this->discardOutput(); // This might print the gzip headers. Not good.
             $this->buffer_output(false);
-            
+
             include_once('lib/Template.php');
             $tmpl = new Template('redirect', $this, array('REDIRECT_URL' => $url));
             $tmpl->printXML();
@@ -213,11 +213,11 @@ class Request {
             $validator_set = new HTTP_ValidatorSet($validator_set);
         $this->_validators = $validator_set;
     }
-    
-    /** Append more validators for this response. 
+
+    /** Append more validators for this response.
      *  i.e dependencies on other pages mtimes
      *  now it may be called in init also to simplify client code.
-     */ 
+     */
     function appendValidators($validator_set) {
         if (!isset($this->_validators)) {
             $this->setValidators($validator_set);
@@ -225,7 +225,7 @@ class Request {
         }
         $this->_validators->append($validator_set);
     }
-    
+
     /** Check validators and set headers in HTTP response
      *
      * This sets the appropriate "Last-Modified" and "ETag"
@@ -238,7 +238,7 @@ class Request {
      */
     function checkValidators() {
         $validators = &$this->_validators;
-        
+
         // Set validator headers
         if ($this->_is_buffering_output or !headers_sent()) {
             if (($etag = $validators->getETag()) !== false)
@@ -252,7 +252,7 @@ class Request {
 
         if (CACHE_CONTROL == 'NO_CACHE')
             return;             // don't check conditionals...
-        
+
         // Check conditional headers in request
         $status = $validators->checkConditionalRequest($this);
         if ($status) {
@@ -283,7 +283,7 @@ class Request {
         header("Expires: " . Rfc1123DateTime(time() + $max_age));
         header("Vary: Cookie"); // FIXME: add more here?
     }
-    
+
     function setStatus($status) {
         if (preg_match('|^HTTP/.*?\s(\d+)|i', $status, $m)) {
             header($status);
@@ -320,18 +320,18 @@ class Request {
         }
         elseif (isCGI()) // necessary?
             $compress = false;
-            
+
         if ($this->getArg('start_debug'))
             $compress = false;
-        
+
         // Should we compress even when apache_note is not available?
         // sf.net bug #933183 and http://bugs.php.net/17557
         // This effectively eliminates CGI, but all other servers also. hmm.
-        if ($compress 
-            and (!function_exists('ob_gzhandler') 
-                 or !function_exists('apache_note'))) 
+        if ($compress
+            and (!function_exists('ob_gzhandler')
+                 or !function_exists('apache_note')))
             $compress = false;
-            
+
         // "output handler 'ob_gzhandler' cannot be used twice"
         // http://www.php.net/ob_gzhandler
         if ($compress and ini_get("zlib.output_compression"))
@@ -344,21 +344,21 @@ class Request {
                  or !strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip")))
             $compress = false;
 
-        // Most RSS clients are NOT(!) application/xml gzip compatible yet. 
+        // Most RSS clients are NOT(!) application/xml gzip compatible yet.
         // Even if they are sending the accept-encoding gzip header!
         // wget is, Mozilla, and MSIE no.
         // Of the RSS readers only MagpieRSS 0.5.2 is. http://www.rssgov.com/rssparsers.html
         // See also http://phpwiki.sourceforge.net/phpwiki/KnownBugs
-        if ($compress 
-            and $this->getArg('format') 
+        if ($compress
+            and $this->getArg('format')
             and strstr($this->getArg('format'), 'rss'))
             $compress = false;
 
         if ($compress) {
             ob_start('phpwiki_gzhandler');
-            
+
             // TODO: dont send a length or get the gzip'ed data length.
-            $this->_is_compressing_output = true; 
+            $this->_is_compressing_output = true;
             header("Content-Encoding: gzip");
             /*
              * Attempt to prevent Apache from doing the dreaded double-gzip.
@@ -391,15 +391,15 @@ class Request {
         }
     }
 
-    /** 
+    /**
      * Longer texts need too much memory on tiny or memory-limit=8MB systems.
      * We might want to flush our buffer and restart again.
      * (This would be fine if php would release its memory)
-     * Note that this must not be called inside Template expansion or other 
+     * Note that this must not be called inside Template expansion or other
      * sections with ob_buffering.
      */
     function chunkOutput() {
-        if (!empty($this->_is_buffering_output) or 
+        if (!empty($this->_is_buffering_output) or
             (@ob_get_level())) {
             $this->_do_chunked_output = true;
             if (empty($this->_ob_get_length)) $this->_ob_get_length = 0;
@@ -412,9 +412,9 @@ class Request {
 
     function finish() {
         $this->_finishing = true;
-        
+
         if (!empty($this->_is_buffering_output)) {
-            // if _is_compressing_output then ob_get_length() returns 
+            // if _is_compressing_output then ob_get_length() returns
             // the uncompressed length, not the gzip'ed as required.
             if (!headers_sent() and !$this->_is_compressing_output) {
                 if (empty($this->_do_chunked_output)) {
@@ -465,11 +465,11 @@ class Request {
     function deleteSessionVar($key) {
         return $this->session->delete($key);
     }
-    
+
     function getUploadedFile($key) {
         return Request_UploadedFile::getUploadedFile($key);
     }
-    
+
 
     function _fix_magic_quotes_gpc() {
         $needs_fix = array('_POST',
@@ -477,7 +477,7 @@ class Request {
                            '_COOKIE',
                            '_SERVER',
                            '_FILES');
-        
+
         // Fix magic quotes.
         if (get_magic_quotes_gpc()) {
             foreach ($needs_fix as $vars)
@@ -493,12 +493,12 @@ class Request {
         elseif (is_string($var))
             $var = stripslashes($var);
     }
-    
+
     function _fix_multipart_form_data () {
         if (preg_match('|^multipart/form-data|', $this->get('CONTENT_TYPE')))
             $this->_strip_leading_nl($_POST);
     }
-    
+
     function _strip_leading_nl(&$var) {
         if (is_array($var)) {
             foreach ($var as $key => $val)
@@ -513,19 +513,19 @@ class Request_SessionVars {
     function __construct() {
         // Prevent cacheing problems with IE 5
         session_cache_limiter('none');
-                                        
+
         // Avoid to get a notice if session is already started,
         // for example if session.auto_start is activated
         if (!session_id())
             session_start();
     }
-    
+
     function get($key) {
         if (isset($_SESSION[$key]))
             return $_SESSION[$key];
         return false;
     }
-    
+
     function set($key, $val) {
         if (!function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
             // This is funky but necessary, at least in some PHP's
@@ -533,7 +533,7 @@ class Request_SessionVars {
         }
         $_SESSION[$key] = $val;
     }
-    
+
     function delete($key) {
         if (!function_usable('ini_get'))
             unset($GLOBALS[$key]);
@@ -545,7 +545,7 @@ class Request_SessionVars {
 /* Win32 Note:
    [\winnt\php.ini]
    You must set "upload_tmp_dir" = "/tmp/" or "C:/tmp/"
-   Best on the same drive as apache, with forward slashes 
+   Best on the same drive as apache, with forward slashes
    and with ending slash!
    Otherwise "\\" => "" and the uploaded file will not be found.
 */
@@ -555,7 +555,7 @@ class Request_UploadedFile {
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
         if (!isset($_FILES[$postname]))
             return false;
-        
+
         $fileinfo = $_FILES[$postname];
         if ($fileinfo['error']) {
             // See https://sourceforge.net/forum/message.php?msg_id=3093651
@@ -599,7 +599,7 @@ class Request_UploadedFile {
                     /*
                     trigger_error(sprintf("Workaround for PHP/Windows is_uploaded_file() problem for %s.",
                                           $fileinfo['tmp_name'])."\n".
-                                  "Probably illegal TEMP environment or upload_tmp_dir setting.", 
+                                  "Probably illegal TEMP environment or upload_tmp_dir setting.",
                                   E_USER_NOTICE);
                     */
                     ;
@@ -612,7 +612,7 @@ class Request_UploadedFile {
         }
         return new Request_UploadedFile($fileinfo);
     }
-    
+
     function __construct($fileinfo) {
         $this->_info = $fileinfo;
     }
@@ -737,7 +737,7 @@ class HTTP_ValidatorSet {
     function __construct($validators) {
         $this->_mtime = $this->_weak = false;
         $this->_tag = array();
-        
+
         foreach ($validators as $key => $val) {
             if ($key == '%mtime') {
                 $this->_mtime = $val;
@@ -779,7 +779,7 @@ class HTTP_ValidatorSet {
     function getModificationTime() {
         return $this->_mtime;
     }
-    
+
     function checkConditionalRequest (&$request) {
         $result = max($this->_checkIfUnmodifiedSince($request),
                       $this->_checkIfModifiedSince($request),
@@ -1136,5 +1136,5 @@ class HTTP_ValidatorSet {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

@@ -27,7 +27,7 @@ class MapTest extends TuleapTestCase {
     function testEmptyMap() {
         $m = new Map();
         $this->assertTrue($m->isEmpty());
-    }    
+    }
     function testNonEmptyMap() {
         $key = 'key';
         $m = new Map();
@@ -122,7 +122,7 @@ class MapTest extends TuleapTestCase {
         $this->assertFalse($m->containsKey($key));
         $this->assertFalse($m->containsValue($value));
         $this->assertFalse($m->remove($key, $value));
-        
+
         $key    = 'key';
         $value1 = 'value';
         $value2 = 'value';

@@ -46,7 +46,7 @@ class PHP_Session
     public static function destroy() {
         unset($_SESSION);
         session_destroy();
-    } 
+    }
 
     public function clean() {
         $_SESSION = array();

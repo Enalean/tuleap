@@ -93,13 +93,13 @@ class FRSReleaseDao extends DataAccessObject {
 
     /**
      * Internal method to search releases
-     * 
+     *
      * This method use bitwise masks to manage extraFlags.
      * $extraFlags variable will be set with one or more parameters (only one
      * defined yet):
      * $extraFlags = FRSReleaseDao::INCLUDE_DELETED;
      * $extraFlags = FRSReleaseDao::INCLUDE_DELETED | FRSReleaseDao::INCLUDE_HIDDEN;
-     * 
+     *
      * Then, in this method we are doing a bitwise mask to check which values where set:
      * if (($extraFlags & self::INCLUDE_DELETED) != 0) {
      *     // Include deleted releases
@@ -107,9 +107,9 @@ class FRSReleaseDao extends DataAccessObject {
      * if (($extraFlags & self::INCLUDE_HIDDEN) != 0) {
      *     // Include hidden releases
      * }
-     * 
+     *
      * More info: http://stackoverflow.com/questions/261062/when-to-use-bitwise-operators-during-webdevelopment/261227#261227
-     * 
+     *
      * @param $where
      * @param $group
      * @param $order
@@ -266,7 +266,7 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
     /**
-     * Update a row in the table frs_release 
+     * Update a row in the table frs_release
      *
      * @return true if there is no error
      */

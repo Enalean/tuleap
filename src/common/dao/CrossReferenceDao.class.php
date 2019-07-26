@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once('include/DataAccessObject.class.php');
 
 class CrossReferenceDao extends DataAccessObject {
-    
+
     public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'cross_references';
@@ -32,15 +32,15 @@ class CrossReferenceDao extends DataAccessObject {
         $sql = sprintf("UPDATE $this->table_name SET target_keyword=%s WHERE target_keyword= %s and target_gid=%s",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($old_keyword),
-                       $this->da->quoteSmart($group_id));        
+                       $this->da->quoteSmart($group_id));
         return $this->update($sql);
     }
-    
+
     public function updateSourceKeyword($old_keyword, $keyword, $group_id) {
         $sql = sprintf("UPDATE $this->table_name SET source_keyword=%s WHERE source_keyword= %s and source_gid=%s",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($old_keyword),
-                       $this->da->quoteSmart($group_id));       
+                       $this->da->quoteSmart($group_id));
         return $this->update($sql);
     }
 

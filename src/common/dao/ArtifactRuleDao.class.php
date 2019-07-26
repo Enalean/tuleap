@@ -22,7 +22,7 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for ArtifactRule 
+ *  Data Access Object for ArtifactRule
  */
 class ArtifactRuleDao extends DataAccessObject {
     /**
@@ -33,9 +33,9 @@ class ArtifactRuleDao extends DataAccessObject {
         $sql = "SELECT * FROM artifact_rule";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches ArtifactRule by Id 
+    * Searches ArtifactRule by Id
     * @return DataAccessResult
     */
     function searchById($id) {
@@ -45,7 +45,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by GroupArtifactId 
+    * Searches ArtifactRule by GroupArtifactId
     * @return DataAccessResult
     */
     function searchByGroupArtifactId($groupArtifactId) {
@@ -55,7 +55,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by SourceFieldId 
+    * Searches ArtifactRule by SourceFieldId
     * @return DataAccessResult
     */
     function searchBySourceFieldId($sourceFieldId) {
@@ -65,7 +65,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by SourceValueId 
+    * Searches ArtifactRule by SourceValueId
     * @return DataAccessResult
     */
     function searchBySourceValueId($sourceValueId) {
@@ -75,7 +75,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by TargetFieldId 
+    * Searches ArtifactRule by TargetFieldId
     * @return DataAccessResult
     */
     function searchByTargetFieldId($targetFieldId) {
@@ -85,7 +85,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by RuleType 
+    * Searches ArtifactRule by RuleType
     * @return DataAccessResult
     */
     function searchByRuleType($ruleType) {
@@ -95,7 +95,7 @@ class ArtifactRuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches ArtifactRule by TargetValueId 
+    * Searches ArtifactRule by TargetValueId
     * @return DataAccessResult
     */
     function searchByTargetValueId($targetValueId) {
@@ -106,7 +106,7 @@ class ArtifactRuleDao extends DataAccessObject {
 
 
     /**
-    * create a row in the table artifact_rule 
+    * create a row in the table artifact_rule
     * @return true or id(auto_increment) if there is no error
     */
     function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id) {
@@ -125,13 +125,13 @@ class ArtifactRuleDao extends DataAccessObject {
             } else {
                 $inserted = $dar->isError();
             }
-        } 
+        }
         return $inserted;
     }
 
-    
+
     /**
-    * Searches ArtifactRule by GroupArtifactId 
+    * Searches ArtifactRule by GroupArtifactId
     * @return DataAccessResult
     */
     function searchByGroupArtifactIdWithOrder($groupArtifactId) {
@@ -154,7 +154,7 @@ class ArtifactRuleDao extends DataAccessObject {
         $this->da->quoteSmart($id));
         return $this->update($sql);
     }
-    
+
     function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types) {
         $quoted_types = array();
         foreach($rule_types as $type) {
@@ -203,7 +203,7 @@ class ArtifactRuleDao extends DataAccessObject {
         $this->da->quoteSmart($rule_type));
         return $this->update($sql);
     }
-    
+
     function deleteRulesByGroupArtifactId($artifact_type) {
         $sql = sprintf('DELETE FROM artifact_rule '.
                        ' WHERE group_artifact_id = %s ',

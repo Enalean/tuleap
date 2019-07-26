@@ -42,7 +42,7 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
 
     /**
      * Get Frestyle columns for Cardwall_OnTop, or status columns if none
-     * 
+     *
      * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
@@ -70,28 +70,28 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     public function getTrackers() {
         return false;
     }
-    
+
     /**
      * @param Tracker $mapping_tracker
-     * 
+     *
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
     public function getMappingFor(Tracker $mapping_tracker) {
         return null;
     }
-    
+
     private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
         return false;
     }
 
-    public function isInColumn(Tracker_Artifact                                     $artifact, 
-                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
+    public function isInColumn(Tracker_Artifact                                     $artifact,
+                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
                                Cardwall_Column                                      $column) {
         return false;
     }
 
     /**
-     * Get the column/field/value mappings by duck typing the colums labels 
+     * Get the column/field/value mappings by duck typing the colums labels
      * with the values of the given fields
      *
      * @param array $fields array of Tracker_FormElement_Field_Selectbox
@@ -101,14 +101,14 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns) {
         return false;
     }
-    
-    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings, 
-                                            array                                  $fields, 
+
+    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings,
+                                            array                                  $fields,
                                             Cardwall_OnTop_Config_ColumnCollection $columns) {
         return false;
     }
 
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings,
                                                   Cardwall_OnTop_Config_ColumnCollection $columns) {
     }
 }

@@ -29,9 +29,9 @@ class HTML_Element_Columns extends HTML_Element {
     /**
      * Constructor
      *
-     * Accepts any HTML_Element as parameter. 
+     * Accepts any HTML_Element as parameter.
      * Each HTML_Element will be displayed in its own column
-     * 
+     *
      * Usage:
      * <code>
      * $c = new ComponentsHTML_Columns(

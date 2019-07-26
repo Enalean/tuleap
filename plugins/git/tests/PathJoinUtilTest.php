@@ -31,29 +31,29 @@ class PathJoinUtilTest extends TuleapTestCase {
     function testEmptyArrayReturnsEmptyPath() {
         $this->assertEqual('', PathJoinUtil::unixPathJoin(array()));
     }
-    
+
     function testTheSlashInFrontOfTheFirstElementIsKept() {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('/toto')));
         $this->assertEqual('/toto/tata/', PathJoinUtil::unixPathJoin(array('/toto', 'tata/')));
-        
+
     }
-    
+
     function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne() {
         $this->assertEqual('toto/', PathJoinUtil::unixPathJoin(array('toto/')));
         $this->assertEqual('toto/tata/', PathJoinUtil::unixPathJoin(array('toto','tata/')));
-        
+
     }
-    
+
     function testRemoveSlashesWhenThereAreMoreThanOne() {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('//toto')));
         $this->assertEqual('toto/tata', PathJoinUtil::unixPathJoin(array('toto/', '/tata')));
         $this->assertEqual('/toto/tata/titi/tutu',PathJoinUtil::unixPathJoin(array('/toto/', '/tata/', '/titi/', '//tutu')));
     }
-    
+
     function testAllEmptyElementsAreIgnored() {
         $this->assertEqual('toto/0', PathJoinUtil::unixPathJoin(array('', null, 'toto', '0')));
     }
-    
+
     function testUserRepoPath_IsPrefixedByUsername() {
         $this->assertEqual('u/nicolas', PathJoinUtil::userRepoPath('nicolas', ''));
         $this->assertEqual('u/nicolas/toto', PathJoinUtil::userRepoPath('nicolas', 'toto'));

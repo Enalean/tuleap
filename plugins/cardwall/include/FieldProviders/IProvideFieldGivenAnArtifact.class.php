@@ -19,10 +19,10 @@
  */
 
 /**
- * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
+ * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */
 interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
-    
+
     /**
      * @return Tracker_FormElement_Field
      */

@@ -23,17 +23,17 @@
  * Manage values in changeset for numeric fields
  */
 abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_ChangesetValue {
-    
+
     /**
      * @var mixed (int or float)
      */
     protected $numeric;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $numeric) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->numeric = $numeric;
     }
-    
+
     /**
      * Get the numeric value
      *
@@ -74,7 +74,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
         }
         return false;
     }
-    
+
      /**
      * Returns the "set to" for field added later
      *

@@ -97,7 +97,7 @@ extends WikiPlugin_WikiAdminSelect
                 $ul->pushContent(HTML::li(fmt("Replaced '%s' with '%s' in page '%s'.", $from, $to, WikiLink($pagename))));
                 $count++;
             } else {
-                $ul->pushContent(HTML::li(fmt("Search string '%s' not found in content of page '%s'.", 
+                $ul->pushContent(HTML::li(fmt("Search string '%s' not found in content of page '%s'.",
                                               $from, WikiLink($pagename))));
             }
         }
@@ -110,15 +110,15 @@ extends WikiPlugin_WikiAdminSelect
                         HTML::p(fmt("No pages changed.")));
         }
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         // no action=replace support yet
         if ($request->getArg('action') != 'browse')
             return $this->disabled("(action != 'browse')");
-        
+
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
-            
+
         //TODO: support p from <!plugin-list !>
         $this->preSelectS($args, $request);
 
@@ -185,7 +185,6 @@ extends WikiPlugin_WikiAdminSelect
             $this->replaceForm($header, $post_args);
             $header->pushContent(HTML::p(_("Select the pages to search:")));
         }
-
 
         $buttons = HTML::p(Button('submit:admin_replace[rename]', $button_label, 'wikiadmin'),
                            Button('submit:admin_replace[cancel]', _("Cancel"), 'button'));

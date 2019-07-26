@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 
@@ -26,12 +26,12 @@
 *
 */
 class SystemEvent_PROJECT_CREATE extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -46,29 +46,28 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
         }
         return $txt;
     }
-    
-    /** 
+
+    /**
      * Process stored event
      */
     function process() {
 
         $groups=explode(',',$this->parameters);
-        
+
         $backendSystem = Backend::instance('System');
-        
+
         // Force NSCD flush (otherwise uid & gid will not exist)
         $backendSystem->flushNscdAndFsCache();
-        
+
         foreach ($groups as $group_id) {
-        
+
             if ($project = $this->getProject($group_id)) {
-                
+
                 if (!$backendSystem->createProjectHome($group_id)) {
                     $this->error("Could not create project home");
                     return false;
                 }
-            
-            
+
                 if ($project->usesCVS()) {
                     $backendCVS    = Backend::instance('CVS');
                     if (!$backendCVS->createProjectCVS($group_id)) {
@@ -78,7 +77,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     $backendCVS->setCVSRootListNeedUpdate();
                     $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
                 }
-            
+
                 if ($project->usesSVN()) {
                     $backendSVN    = Backend::instance('SVN');
                     if (!$backendSVN->createProjectSVN($group_id)) {
@@ -88,10 +87,9 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     $backendSVN->setSVNApacheConfNeedUpdate();
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic());
                 }
-                $backendSystem->log("Project ".$project->getUnixName()." created");            
+                $backendSystem->log("Project ".$project->getUnixName()." created");
             }
         }
-
 
         $this->done();
         return true;

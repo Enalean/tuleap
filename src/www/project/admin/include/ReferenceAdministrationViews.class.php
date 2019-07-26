@@ -173,7 +173,6 @@ class ReferenceAdministrationViews extends Views
             $nature_desc = $purifier->purify($ref->getNature());
         }
 
-
         echo '<TR>';
         if ($ref->getGroupId()==100) {
             echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getId().'</TD>';

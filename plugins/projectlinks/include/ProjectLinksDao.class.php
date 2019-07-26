@@ -30,7 +30,7 @@ class ProjectLinksDao extends DataAccessObject
 
     /**
      * Search all links of a given type
-     * 
+     *
      * @param int $linkTypeId
      * @return DataAccessResult
      */
@@ -42,10 +42,10 @@ class ProjectLinksDao extends DataAccessObject
                ' ORDER BY g.group_name';
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Search all the links from $groupId project to other prjs.
-     
+
      * @param int $groupId Group id
      * @return DataAccessResult
      */
@@ -66,7 +66,7 @@ class ProjectLinksDao extends DataAccessObject
 
     /**
      * Search all the links that point to $groupId project
-     * 
+     *
      * @param int $groupId Group id
      * @return DataAccessResult
      */
@@ -88,9 +88,9 @@ class ProjectLinksDao extends DataAccessObject
     /**
      * Return true if there are links from or toward this project or if there is
      * at least one link type defined in the project.
-     * 
+     *
      * @param int $groupId
-     * 
+     *
      * @return bool
      */
     function projectUsesProjectLinks($groupId) {

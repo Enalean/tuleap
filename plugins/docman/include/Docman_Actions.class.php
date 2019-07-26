@@ -2046,7 +2046,6 @@ class Docman_Actions extends Actions {
         $description = $this->_controler->_actionParams['description'];
         $image    = $this->_controler->_actionParams['sImage'];
 
-
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if($r == null) {

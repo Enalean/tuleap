@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@ class Docman_SettingsBo {
     }
 
     function getView() {
-        $this->_cacheGroupSettings();        
+        $this->_cacheGroupSettings();
 
         if(isset($this->row['view'])) {
             return $this->row['view'];
@@ -71,7 +71,7 @@ class Docman_SettingsBo {
     }
 
     function getMetadataUsage($metadata) {
-        $this->_cacheGroupSettings();        
+        $this->_cacheGroupSettings();
 
         if(isset($this->row['use_'.$metadata])) {
             return $this->row['use_'.$metadata];
@@ -81,7 +81,7 @@ class Docman_SettingsBo {
         }
     }
 
-    function settingsExist() {        
+    function settingsExist() {
         $this->_cacheGroupSettings();
         if($this->row === null) {
             return false;
@@ -100,10 +100,10 @@ class Docman_SettingsBo {
             return $dao->create($this->groupId, $view);
         }
     }
-    
+
     function updateMetadataUsage($label, $useIt) {
         $dao = $this->getDao();
-        if(!$this->settingsExist()) {            
+        if(!$this->settingsExist()) {
             $dao->create($this->groupId, 'Tree');
         }
         return $dao->updateMetadataUsageForGroupId($this->groupId, $label, $useIt);
@@ -134,7 +134,7 @@ class Docman_SettingsBo {
         $dstBo->_importMetadataUsage($this, 'obsolescence_date');
         $dstBo->_importMetadataUsage($this, 'status');
     }
-        
+
      /**
       * @access: private
       */
@@ -144,7 +144,7 @@ class Docman_SettingsBo {
             $this->updateMetadataUsage($label, true);
         }
     }
-        
+
 }
 
 ?>

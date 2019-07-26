@@ -136,10 +136,10 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->assertEqual($e->getMessage(), "No server found with the id: $unexisting_server_id");
         }
     }
-    
+
     public function itReturnsAGerritServer() {
         $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
-        
+
         $server = $this->factory->getServer($repo);
 
         $this->assertIsA($server, 'Git_RemoteServer_GerritServer');

@@ -93,7 +93,6 @@ class TrackerTest extends TestCase
         $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
         $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
 
-
         $tracker_artifact_factory->shouldReceive('getInstanceFromRow')->andReturns($artifact);
 
         $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andThrows(\Mockery::spy(\Tracker_Workflow_GlobalRulesViolationException::class));
@@ -142,7 +141,6 @@ class TrackerTest extends TestCase
         $user->shouldReceive('getId')->andReturns('107');
         $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
         $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
-
 
         $tracker_artifact_factory->shouldReceive('getInstanceFromRow')->andReturns($artifact);
 

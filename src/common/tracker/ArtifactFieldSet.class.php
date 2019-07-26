@@ -55,7 +55,7 @@ class ArtifactFieldSet {
      * @var    string $rank
      */
     var $rank;
-    
+
     /**
      * The array of ArtifactFields Object contained in this ArtifactFieldSet
      *
@@ -104,7 +104,7 @@ class ArtifactFieldSet {
         $this->description = $fieldset_array['description'];
         $this->rank = $fieldset_array['rank'];
     }
-    
+
     /**
      *  Set the fields of this field set
      *
@@ -121,7 +121,7 @@ class ArtifactFieldSet {
     function getArtifactFields() {
         return $this->ArtifactFields;
     }
-    
+
     /**
      * getArtifactType - get the ArtifactType object this ArtifactFieldSet is associated with.
      *
@@ -130,7 +130,7 @@ class ArtifactFieldSet {
     function &getArtifactType() {
         return $this->ArtifactType;
     }
-    
+
     /**
      * getID - get this ArtifactFieldSetID.
      *
@@ -139,7 +139,7 @@ class ArtifactFieldSet {
     function getID() {
         return $this->field_set_id;
     }
-    
+
     /**
      * getArtifactTypeID - get this ArtifactType ID.
      *
@@ -148,7 +148,7 @@ class ArtifactFieldSet {
     function getArtifactTypeID() {
         return $this->group_artifact_id;
     }
-    
+
     /**
      * getName - the name of this ArtifactFieldSet
      *
@@ -157,7 +157,7 @@ class ArtifactFieldSet {
     function getName() {
         return $this->name;
     }
-    
+
     /**
      * getDescription - the description of this ArtifactFieldSet
      *
@@ -166,7 +166,7 @@ class ArtifactFieldSet {
     function getDescription() {
         return $this->description;
     }
-    
+
     /**
      * getRank - the rank of this ArtifactFieldSet
      *
@@ -191,7 +191,7 @@ class ArtifactFieldSet {
             return $this->getName();
         }
     }
-    
+
     /**
      * getDescriptionText - the text of the description of this ArtifactFieldSet
      * The tracker descripiton can be internationalized.
@@ -207,7 +207,7 @@ class ArtifactFieldSet {
             return $this->getDescription();
         }
     }
-    
+
     /**
      * Returns if the fieldset name must be localized or not.
      * The field set name must be localized if the name looks like fieldset_{$fieldset_id}_lbl_key
@@ -219,7 +219,7 @@ class ArtifactFieldSet {
         $pattern = "/fieldset_(.*)_lbl_key/";
         return preg_match($pattern, $this->getName());
     }
-    
+
     /**
      * Returns if the fieldset description must be localized or not.
      * The field set description must be localized if the name looks like fieldset_{$fieldset_id}_desc_key
@@ -231,7 +231,7 @@ class ArtifactFieldSet {
         $pattern = "/fieldset_(.*)_desc_key/";
         return preg_match($pattern, $this->getDescription());
     }
-    
+
     /**
      *  Return all the fields used contained in this fieldset
      *
@@ -261,12 +261,12 @@ class ArtifactFieldSet {
         }
         return $result_fields;
     }
-    
-    /** 
+
+    /**
      * userCanSubmit : returns true if user has Submit permission on this fieldset (this means that at least one field of this fieldset has submit permissions)
      *
      * @param user_id: if not given or false take the current user
-     */ 
+     */
     function userCanSubmit($group_id, $group_artifact_id, $user_id = false) {
         $um = UserManager::instance();
         if (! $user_id) {
@@ -304,7 +304,7 @@ class ArtifactFieldSet {
         if (!$name || trim($name) == "") {
             return false;
         }
-        
+
         $sql = "UPDATE artifact_field_set 
                 SET name='". db_es($name) ."', 
                     description='". db_es($description) ."',

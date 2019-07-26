@@ -25,14 +25,14 @@ class SystemEventsFollowersDao extends DataAccessObject {
         parent::__construct($da);
         $this->table_name = 'system_events_followers';
     }
-    
+
     public function searchAll() {
         $sql = "SELECT *
                 FROM $this->table_name
                 ORDER BY id ASC";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByType($type)
     {
         $type = $this->da->quoteLikeValueSurround($type);
@@ -42,23 +42,23 @@ class SystemEventsFollowersDao extends DataAccessObject {
                 ORDER BY id ASC";
         return $this->retrieve($sql);
     }
-    
+
     public function create($emails, $types) {
         $emails = $this->da->quoteSmart($emails);
         $types  = $this->da->quoteSmart($types);
         $sql = "INSERT INTO $this->table_name(emails, types)
                 VALUES ($emails, $types)";
-        
+
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function delete($id) {
         $id = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name
                 WHERE id = $id";
         return $this->update($sql);
     }
-    
+
     public function save($id, $emails, $types) {
         $id = $this->da->escapeInt($id);
         $emails = $this->da->quoteSmart($emails);

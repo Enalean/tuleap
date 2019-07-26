@@ -162,7 +162,6 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
 
         list($from_status_statement, $where_status_statement) = $this->getStatusStatements($criterion, 'submilestones');
 
-
         return array(
             'from_statement'         => $from_status_statement,
             'where_status_statement' => $where_status_statement,

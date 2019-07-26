@@ -117,7 +117,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
             $this->logger
         );
 
-
         stub($this->user)->getAuthorizedKeysArray()->returns($new_keys);
 
         expect($this->logger)->error()->never();

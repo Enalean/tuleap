@@ -79,7 +79,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
 
         $types = array('some_type');
         stub($this->system_event_manager)->getTypesForQueue()->returns($types);
-        
+
         $this->system_event_dao->setReturnValueAt(0, 'checkOutNextEvent', TestHelper::arrayToDar(array('whatever')));
         stub($this->system_event_manager)->getInstanceFromRow()->returns($system_event);
 

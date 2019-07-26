@@ -218,8 +218,6 @@ class ViewVCProxy
             'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
             $this->getPythonLauncher() . ' ' . __DIR__.'/../../../bin/viewvc-epel.cgi 2>&1';
 
-
-
         $content = $this->setLocaleOnCommand($command, $return_var);
 
         if ($return_var === 128) {

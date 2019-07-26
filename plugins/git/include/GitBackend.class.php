@@ -24,8 +24,8 @@ require_once('common/backend/Backend.class.php');
  * Description of GitBackend
  */
 class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator {
-    
-    private $driver;    
+
+    private $driver;
     private $packagesFile;
     private $configFile;
     //path MUST end with a '/'
@@ -54,14 +54,14 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function setGitBackupDir($dir) {
         $this->gitBackupDir = $dir;
     }
-    
+
     public function setGitRootPath($gitRootPath) {
         $this->gitRootPath = $gitRootPath;
     }
 
     public function getGitRootPath() {
         return $this->gitRootPath;
-    }   
+    }
 
     public function getDao() {
         return $this->dao;
@@ -79,7 +79,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     }
 
     public function delete(GitRepository $repository) {
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();        
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
         $this->archive($repository);
         $this->getDriver()->delete($path);
     }
@@ -123,7 +123,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function changeRepositoryAccess($repository) {
         $access   = $repository->getAccess();
         $repoPath = $repository->getPath();
-        $path     = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repoPath;        
+        $path     = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repoPath;
         $this->getDriver()->setRepositoryAccess($path, $access);
         $this->getDao()->save($repository);
         return true;
@@ -170,7 +170,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     }
 
     /**
-     * Configure mail output to link commit to gitweb 
+     * Configure mail output to link commit to gitweb
      *
      * @param GitRepository $repository
      */
@@ -197,12 +197,12 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     }
 
     protected function createGitRoot() {
-        $gitRootPath    = $this->getGitRootPath();        
+        $gitRootPath    = $this->getGitRootPath();
         //create the gitroot directory
         if ( !is_dir($gitRootPath) ) {
             if ( !mkdir($gitRootPath, 0755) ) {
                 throw new GitBackendException( dgettext('tuleap-git', 'Error while creating root for Git repositories (Contact the site admin)').' -> '.$gitRootPath );
-            }            
+            }
         }
         return true;
     }
@@ -219,7 +219,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
             if ( !$this->chgrp($gitProjectPath, $groupName ) ) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while setting project root permissions (Contact the site admin)').$gitProjectPath.' group='.$groupName);
-            }            
+            }
         }
         return true;
     }
@@ -235,7 +235,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $archiveName = $repository->getBackupPath().'.tar.bz2';
         $cmd    = ' tar cjf '.$archiveName.' '.$path.' 2>&1';
         $rcode  = 0 ;
-        $output = $this->system( $cmd, $rcode );        
+        $output = $this->system( $cmd, $rcode );
         if ( $rcode != 0 ) {
             throw new GitBackendException($cmd.' -> '.$output);
         }
@@ -243,7 +243,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             $this->system( 'mv '.$this->getGitRootPath().'/'.$archiveName.' '.$this->gitBackupDir.'/'.$archiveName );
         }
         return true;
-    }    
+    }
 
     /**
      * Verify if given name is not already reserved on filesystem
@@ -262,7 +262,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
         return array('ssh' => $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git');
-        
+
     }
 
     /**
@@ -287,7 +287,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         }
         return false;
     }
-    
+
     /**
      * Obtain statistics about backend format for CSV export
      *

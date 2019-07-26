@@ -88,7 +88,7 @@ class Git_Driver_Gerrit_UserAccountManager {
         if (! $this->areThereKeysToUpdate($keys_to_add, $keys_to_remove)) {
             return;
         }
-        
+
         $errors = array();
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
@@ -109,7 +109,7 @@ class Git_Driver_Gerrit_UserAccountManager {
 
     /**
      * Makes sure there is one copy of each key on each remote server
-     * 
+     *
      * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
      * @return void
      * @throws Git_UserSynchronisationException
@@ -128,7 +128,7 @@ class Git_Driver_Gerrit_UserAccountManager {
 
         $errors = array();
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
-        
+
         foreach($remote_servers as $remote_server) {
             $errors += $this->removeKeys($remote_server, $user_keys, $gerrit_user);
             $errors += $this->addKeys($remote_server, $user_keys, $gerrit_user);

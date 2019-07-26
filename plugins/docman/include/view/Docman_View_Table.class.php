@@ -29,7 +29,7 @@ class Docman_View_Table extends Docman_View_Browse {
     /**
      * @access: protected
      */
-    function _content($params) {      
+    function _content($params) {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
         // Limit browsing
@@ -50,11 +50,11 @@ class Docman_View_Table extends Docman_View_Browse {
                                                     'filter' => $params['filter'],
                                                     'start' => $_low_limit,
                                                     'offset' => $offset));
-        
+
         // Default URL
         $this->_getDefaultUrlParams($params);
-        
-        // Generate table header 
+
+        // Generate table header
         $ci = $params['filter']->getColumnIterator();
         $ci->rewind();
         $table = '<table border="0" cellspacing="1" cellpadding="2" width="100%" data-test="docman_report_table">';
@@ -69,7 +69,7 @@ class Docman_View_Table extends Docman_View_Browse {
         // Generate table
         $altRowClass = 0;
         $itemIterator->rewind();
-        while($itemIterator->valid()) {            
+        while($itemIterator->valid()) {
             $item = $itemIterator->current();
             $trclass = html_get_alt_row_color($altRowClass++);
             $table .=  "<tr class=\"".$trclass."\">\n";
@@ -83,10 +83,10 @@ class Docman_View_Table extends Docman_View_Browse {
                 $ci->next();
             }
             $table .=  "</tr>\n";
-            $itemIterator->next();            
+            $itemIterator->next();
         }
         $table .= "</table>\n";
-        
+
         // Prepare Navigation Bar
         if($_low_limit > 0) {
             $firstUrl    = $this->_buildSearchUrl($params, array('start' => '0'));
@@ -95,7 +95,7 @@ class Docman_View_Table extends Docman_View_Browse {
         else {
             $first       = '&lt;&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_begin');
         }
-        
+
         $previousOffset = $_low_limit - $offset;
         if($_low_limit > 0) {
             if($previousOffset < 0) {
@@ -107,7 +107,7 @@ class Docman_View_Table extends Docman_View_Browse {
         else {
             $previous    = '&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous', $offset);
         }
-         
+
         if($_high_limit < $nbItemsFound) {
             $nextUrl     = $this->_buildSearchUrl($params, array('start' => $_high_limit));
             $next        = '<a href="'.$nextUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next', $offset).' &gt;</a>';

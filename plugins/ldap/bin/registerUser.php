@@ -52,7 +52,7 @@ function extract_params($argv) {
 $pluginManager = PluginManager::instance();
 $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
-    
+
 // -h --help help
 // --ldapid="" ldap_id(required)
 // --realname="" realname (required)

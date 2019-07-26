@@ -189,13 +189,13 @@ if (!$request->valid($vGroupId)) {
         }
     } else if ($set=='any') {
         $_commiter=100;
-    } 
+    }
 
     /*
      Display commits based on the form post - by user or status or both
     */
     $pm = ProjectManager::instance();
-    $project = $pm->getProject($group_id); 
+    $project = $pm->getProject($group_id);
     $root = $project->getUnixName(false);
 
     list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);
@@ -225,7 +225,7 @@ if (!$request->valid($vGroupId)) {
         '<TD>'. '<INPUT type="text" size="35" name="_path" value="'.$hp->purify($_path).'"></TD>'.
         '<TD>'. '<INPUT type="text" size="35" name="_srch" value="'.$hp->purify($_srch).'"></TD>'.
         '</TR></TABLE>'.
-    
+
         '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$hp->purify($Language->getText('global','btn_browse')).'">'.
         ' <input TYPE="text" name="chunksz" CLASS="input-mini" size="3" MAXLENGTH="5" '.
         'VALUE="'.$hp->purify($chunksz).'">'.$hp->purify($Language->getText('svn_browse_revision','commit_at_once')).

@@ -29,7 +29,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications
      *
-     * @param bool $with_link true if you want links to entities. The returned 
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -51,8 +51,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
 
         return $txt;
     }
-    
-    /** 
+
+    /**
      * Process stored event
      *
      * @return bool

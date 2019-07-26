@@ -186,7 +186,6 @@ class AddProjectMemberTest extends TestCase
         $this->user_manager->shouldReceive('assignNextUnixUid')->with($user)->once()->ordered();
         $this->user_manager->shouldReceive('updateDb')->with($user)->once()->ordered();
 
-
         $this->add_project_member->addProjectMember($user, $this->an_active_project);
     }
 

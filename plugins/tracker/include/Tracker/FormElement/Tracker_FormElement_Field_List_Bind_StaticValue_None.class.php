@@ -24,7 +24,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
     public const XML_VALUE_ID = "";
 
     /**
-     * 
+     *
      * @param int $id
      * @param string $label
      * @param string $description
@@ -37,7 +37,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_None extends Tracker_FormE
         $description = '';
         $rank = 0;
         $is_hidden = false;
-        
+
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }
 

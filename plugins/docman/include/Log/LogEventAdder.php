@@ -59,7 +59,6 @@ class LogEventAdder
             'plugin_docman_event_perms_change',
         ];
 
-
         foreach ($log_events as $event) {
             $this->event_manager->addListener($event, $this->logger, 'log', true);
         }

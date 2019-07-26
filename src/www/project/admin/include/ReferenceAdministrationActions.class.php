@@ -21,12 +21,12 @@
 
 class ReferenceAdministrationActions extends Actions
 {
-    
+
     public function __construct($controler)
     {
         parent::__construct($controler);
     }
-    
+
     /** Actions **/
 
     // Create a new reference
@@ -73,7 +73,6 @@ class ReferenceAdministrationActions extends Actions
             }
 
         }
-
 
     }
 
@@ -184,7 +183,7 @@ class ReferenceAdministrationActions extends Actions
         }
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','del_fail',db_error()));
-        } 
+        }
     }
 
     private function getCrossReferenceDao()

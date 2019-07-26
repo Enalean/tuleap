@@ -20,7 +20,7 @@
  */
 
 class WebDAV_Response extends Response {
-    
+
     public function __construct() {
         $this->_feedback = new Feedback();
     }

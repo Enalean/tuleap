@@ -29,13 +29,13 @@ class Rule_FRSFileNameTest extends TuleapTestCase {
     function testNameValid() {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto.txt'));
-        
+
         $this->assertTrue($r->isValid('toto tutu.txt'));
     }
 
     protected function _testStringWithChar($c) {
         $r = new Rule_FRSFileName();
-        
+
         // start
         $this->assertFalse($r->isValid($c.'tototutu'), $c." is not allowed");
 

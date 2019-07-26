@@ -24,12 +24,12 @@
  */
 require_once('common/include/lib/PHP_BigFile.class.php');
 class Docman_FileStorage {
-    
+
     var $root;
     function __construct($root) {
         $this->root       = $root;
     }
-    
+
     function upload($file, $group_id, $item_id, $version_number) {
         $path = $this->_getPath($file['name'], $group_id, $item_id, $version_number);
         if (move_uploaded_file($file['tmp_name'], $path)) {
@@ -40,29 +40,29 @@ class Docman_FileStorage {
     }
     function store($content, $group_id, $item_id, $version_number, $chunk_offset = 0, $chunk_size = 0) {
         $path = $this->_getPath('file', $group_id, $item_id, $version_number);
-        
+
         if (is_file($path)) {
             $mode = 'r+';
         } else {
             $mode = 'w';
         }
-        
+
         if ($f = fopen($path, $mode)) {
             fseek($f, $chunk_offset * $chunk_size);
-            
+
             if ($chunk_size > 0) {
                 fwrite($f, $content, $chunk_size);
             } else {
                 fwrite($f, $content);
             }
-            
+
             fclose($f);
             return $path;
         } else {
             return false;
         }
     }
-    
+
     function getFileMD5sum($path) {
         if (is_file($path)) {
             return PHP_BigFile::getMd5Sum($path);
@@ -70,10 +70,10 @@ class Docman_FileStorage {
             return false;
         }
     }
-    
+
     function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {
         $dstPath = $this->_getPath($dst_name, $dst_group_id, $dst_item_id, $dst_version_number);
-        
+
         if(copy($srcPath, $dstPath)) {
             return $dstPath;
         }
@@ -103,7 +103,7 @@ class Docman_FileStorage {
         $name = preg_replace('`_{2,}`', '_', $name);
         $hash1 = $item_id % 10;
         $hash2 = ( ($item_id - $hash1) / 10) % 10;
-        
+
         $path_elements = array($this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number);
         $path = '';
         foreach($path_elements as $elem) {
@@ -116,7 +116,7 @@ class Docman_FileStorage {
         $path .= $name;
         return $path;
     }
-    
+
     function _getGroupName($id) {
         $pm = ProjectManager::instance();
         $group = $pm->getProject($id);

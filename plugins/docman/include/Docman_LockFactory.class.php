@@ -21,7 +21,7 @@
 
 /**
  * Manage all the locking stuff of items
- * 
+ *
  * When an item is locked, it's modifiable (content and metadata) only by the
  * locker.
  * Once locked, only the locker or a Document Manager can release the lock.
@@ -63,9 +63,9 @@ class Docman_LockFactory
 
     /**
      * Get lock details for one item
-     * 
+     *
      * @param Docman_Item $item Item
-     * 
+     *
      * @return Array
      */
     function getLockInfoForItem($item) {
@@ -78,10 +78,10 @@ class Docman_LockFactory
 
     /**
      * Retrun true if given user locked given item
-     * 
+     *
      * @param Docman_Item $item Item to test
      * @param PFUser        $user User to test
-     * 
+     *
      * @return bool
      */
     function userIsLocker($item, $user) {
@@ -106,9 +106,9 @@ class Docman_LockFactory
 
     /**
      * Return true if item is locked
-     * 
+     *
      * @param Docman_Item $item Item to test
-     * 
+     *
      * @return bool
      */
     function itemIsLocked($item) {
@@ -117,9 +117,9 @@ class Docman_LockFactory
 
     /**
      * Return true if item is locked
-     * 
+     *
      * @param Docman_Item $item Item to test
-     * 
+     *
      * @return bool
      */
     function itemIsLockedByItemId($itemId) {
@@ -132,14 +132,14 @@ class Docman_LockFactory
 
     /**
      * Cache all locked items in a project
-     * 
+     *
      * We use item_id instead of group_id because of Docman_Permissions that only
      * deals with item_id. To avoid a lot of parameters to pass on, we use SQL
      * to look for all items that belongs to the same project than given item and
      * to retrieve only those that are locked.
-     * 
+     *
      * @param int $itemId An item_id in the project
-     * 
+     *
      * @return void
      */
     function _cacheLocksForProject($itemId) {
@@ -154,9 +154,9 @@ class Docman_LockFactory
 
     /**
      * Retreive lock info for several items.
-     * 
+     *
      * @param Array $itemIds
-     * 
+     *
      * @return DataAccessResult|false
      */
     function retreiveLocksForItems(array $itemIds) {

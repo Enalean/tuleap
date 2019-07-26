@@ -118,7 +118,6 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->docman_item->setParentId($parent_id);
         $parent->setParentId($parent_parent_id);
 
-
         $parent_parent_permissions = array(ProjectUGroup::PROJECT_MEMBERS);
         $parent_permissions        = array(ProjectUGroup::REGISTERED);
         $child_permissions         = array(ProjectUGroup::REGISTERED);

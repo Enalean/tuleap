@@ -20,12 +20,12 @@
 use Tuleap\SOAP\SOAPRequestValidator;
 
 class SVN_SOAPServerBaseTest extends TuleapTestCase {
-        
+
     public function setUp() {
         $this->session_key = 'whatever';
         $this->group_id    = 123;
         $this->svn_path    = '/tags';
-        
+
         $this->project = mock('Project');
         $this->user = mock('PFUser');
 
@@ -49,7 +49,7 @@ class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
 class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTest {
     public function setUp() {
         parent::setUp();
-        
+
         $this->svn_repository_listing = mock('SVN_RepositoryListing');
         stub($this->svn_repository_listing)->getSvnPathsWithLogDetails()->returns(array());
         $this->order = 'ASC';

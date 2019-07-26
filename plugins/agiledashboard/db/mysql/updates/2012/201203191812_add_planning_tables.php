@@ -39,7 +39,7 @@ EOT;
                   KEY idx(id, release_tracker_id)
                 )";
         $this->db->createTable('plugin_agiledashboard_planning', $sql);
-        
+
         $sql = "CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker (
                   planning_id int(11) NOT NULL,
                   tracker_id int(11) NOT NULL,
@@ -47,12 +47,12 @@ EOT;
                 )";
         $this->db->createTable('plugin_agiledashboard_planning_backlog_tracker', $sql);
     }
-    
+
     public function postUp() {
         if (!$this->db->tableNameExists('plugin_agiledashboard_planning')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_agiledashboard_planning table is missing');
         }
-        
+
         if (!$this->db->tableNameExists('plugin_agiledashboard_planning_backlog_tracker')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_agiledashboard_planning_backlog_tracker table is missing');
         }

@@ -55,7 +55,7 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_file_deleted table is missing');
         }
     }
-    
+
 }
 
 ?>

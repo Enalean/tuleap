@@ -29,21 +29,21 @@ define('FORUMML_CC', 34);
 
 // Get message headers
 function plugin_forumml_get_message_headers($id_message) {
-    
+
     $sql = sprintf('SELECT value'.
                     ' FROM plugin_forumml_messageheader'.
                     ' WHERE id_message = %d'.
                     ' AND id_header < 5'.
                     ' ORDER BY id_header',
                     db_ei($id_message));
-    $res = db_query($sql);                
-    return $res;                
+    $res = db_query($sql);
+    return $res;
 }
 
 // Display search results
 function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface $result,$group_id,$list_id)
 {
-    
+
     echo "<table width='100%'>
 			<tr>
 				<th class=forumml>".
@@ -66,7 +66,7 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
         } else {
             $class="boxitem";
         }
-    
+
         $sql1 = sprintf('SELECT value, body'.
          ' FROM plugin_forumml_message m, plugin_forumml_messageheader mh'.
          ' WHERE m.id_message = %d'.
@@ -78,7 +78,7 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
          db_ei($list_id),
          FORUMML_SUBJECT);
         $res1 = db_query($sql1);
-        $subject = mb_decode_mimeheader(db_result($res1,0,'value'));    
+        $subject = mb_decode_mimeheader(db_result($res1,0,'value'));
          $sql2 = sprintf('SELECT value FROM plugin_forumml_messageheader'.
          ' WHERE id_message = %d'.
                         ' LIMIT 1,2',
@@ -91,7 +91,7 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
         }
         $from = mb_decode_mimeheader($header[2]);
 
-           // Replace '<' by '&lt;' and '>' by '&gt;'. Otherwise the email adress won't be displayed 
+           // Replace '<' by '&lt;' and '>' by '&gt;'. Otherwise the email adress won't be displayed
            // because it will be considered as an xhtml tag.
            $from = preg_replace('/\</', '&lt;', $from);
            $from = preg_replace('/\>/', '&gt;', $from);
@@ -100,8 +100,8 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
      // purify message subject (CODENDI_PURIFIER_FORUMML level)
         $hp = ForumML_HTMLPurifier::instance();
         $subject = $hp->purify($subject,CODENDI_PURIFIER_FORUMML);
-        
-     // display the resulting threads in rows 
+
+     // display the resulting threads in rows
         printf ("<tr class='".$class."'>
 					<td class='subject'>
 						&nbsp;<img src='".$p->getThemePath()."/images/ic/comment.png'/>
@@ -114,14 +114,14 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
 						<font class='info'>%s</font>
 					</td>
 				</tr>",$subject,$date,$from);
-    }                                        
-    echo "</table>";                
-    
+    }
+    echo "</table>";
+
 }
 
 // List all threads
 function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
-    
+
     $chunks = 30;
     $request = HTTPRequest::instance();
 
@@ -149,7 +149,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
         ' LIMIT '.db_ei($offset).', '.db_ei($chunks);
     $result     = db_query($sql);
     $nbRowFound = db_numrows($result);
-    
+
     // Total number of threads
     $nbThreads = 0;
     $sql = 'SELECT FOUND_ROWS() as nb';
@@ -165,7 +165,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
     // all threads to be displayed
     $colspan = "";
     $item = $GLOBALS['Language']->getText('plugin_forumml','thread');
-        
+
     if (isset($offset) && $offset != 0) {
         $begin = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."\"><img src='".$p->getThemePath()."/images/ic/resultset_first.png' title='".$GLOBALS['Language']->getText('plugin_forumml','begin')."'/></a>";
         $previous = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($offset - $chunks)."\"><img src='".$p->getThemePath()."/images/ic/resultset_previous.png' 
@@ -173,17 +173,17 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
     } else {
         $begin = "<img src='".$p->getThemePath()."/images/ic/resultset_first_disabled.png'/>";
         $previous = "<img src='".$p->getThemePath()."/images/ic/resultset_previous_disabled.png' 
-                              title='".$GLOBALS['Language']->getText('plugin_forumml','previous', $chunks)."'/>"; 
-    }     
-        
+                              title='".$GLOBALS['Language']->getText('plugin_forumml','previous', $chunks)."'/>";
+    }
+
     if (($offset + $chunks ) < $nbThreads) {
         $next = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($offset + $chunks)."\"><img src='".$p->getThemePath()."/images/ic/resultset_next.png' title='".$GLOBALS['Language']->getText('plugin_forumml','next', $chunks)."'/></a>";
         $finish = "<a href=\"/plugins/forumml/message.php?group_id=".$request->get('group_id')."&list=".$list_id."&offset=".($chunks * (int) (($nbThreads - 1) / $chunks))."\"><img src='".$p->getThemePath()."/images/ic/resultset_last.png' title='".$GLOBALS['Language']->getText('plugin_forumml','end')."'/></a>";
     } else {
-        $next = "<img src='".$p->getThemePath()."/images/ic/resultset_next_disabled.png' title='".$chunks."'/>"; 
+        $next = "<img src='".$p->getThemePath()."/images/ic/resultset_next_disabled.png' title='".$chunks."'/>";
         $finish = "<img src='".$p->getThemePath()."/images/ic/resultset_last_disabled.png'/>";
     }
-        
+
     // display page-splitting information, at the top of threads table
     echo "<table width='100%'>
 				<tr>
@@ -205,15 +205,13 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 				</tr>	
 			</table>";
     if ($nbRowFound > 0) {
-    
+
         echo "<table class='border' width='100%' border='0'>
             <tr>
                 <th class='forumml' ".$colspan." width='60%'>".$item."</th>
                 <th class='forumml' width='15%'>".$GLOBALS['Language']->getText('plugin_forumml','submitted_on')."</th>
                 <th class='forumml' width='25%'>".$GLOBALS['Language']->getText('plugin_forumml','author')."</th>
             </tr>";
-
-
 
         $hp = ForumML_HTMLPurifier::instance();
         $i = 0;
@@ -232,14 +230,12 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
             // nb of children + message
             $count = 1 + plugin_forumml_nb_children(array($msg['id_message']), $list_id);
 
-            
-
             // all threads
             print "<tr class='".$class."'><a name='".$msg['id_message']."'></a>
                     <td class='subject'>";
             if ($count > 1) {
                 print "<img src='".$p->getThemePath()."/images/ic/comments.png'/>";
-            } 
+            }
             else {
                 print "<img src='".$p->getThemePath()."/images/ic/comment.png'/>";
             }
@@ -253,9 +249,9 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 			    </td>
                 <td class='info'>".DateHelper::formatForLanguage($GLOBALS['Language'], (int) strtotime($msg['date'])) ."</td>
                 <td class='info'>".$hp->purify($msg['sender'], CODENDI_PURIFIER_CONVERT_HTML)."</td>
-            </tr>";    
+            </tr>";
         }
-        
+
         echo '</table>';
         // display page-splitting information, at the bottom of threads table
         echo "<table width='100%'>
@@ -278,7 +274,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 					</tr>	
 				</table>";
     }
- 
+
 }
 
 function plugin_forumml_nb_children($parents, $list_id) {
@@ -352,7 +348,7 @@ function plugin_forumml_insert_msg_attach(&$thread, $result) {
             $curMsg = plugin_forumml_insert_in_thread($thread, $row);
             $thread[$curMsg]['attachments'] = array();
         }
-        
+
         $attch = plugin_forumml_new_attach($row);
         if ($attch) {
             $thread[$curMsg]['attachments'][] = $attch;
@@ -378,7 +374,7 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
             ' LEFT JOIN plugin_forumml_messageheader mh_cc ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = '.FORUMML_CC.') '.
             ' LEFT JOIN plugin_forumml_attachment a ON (a.id_message = m.id_message AND a.content_id = "")'.
             ' WHERE 
-                m.id_parent IN ('.implode(',', $parents).')' . 
+                m.id_parent IN ('.implode(',', $parents).')' .
                 "AND m.id_list = " . db_ei($list_id);
         //echo $sql.'<br>';
         $result = db_query($sql);
@@ -413,7 +409,7 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
  *                ),
  *   ...
  * );
- * 
+ *
  */
 function plugin_forumml_build_flattened_thread($topic, $list_id) {
     $thread = array();
@@ -481,12 +477,12 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     } else {
         $from_info = '<abbr title="'.  $hp->purify($from_info[0]['address'], CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($from_info[0]['display'], CODENDI_PURIFIER_CONVERT_HTML)  .'</abbr>';
     }
-        
+
     echo '<div class="plugin_forumml_message">';
-    // specific thread  
+    // specific thread
     echo '<div class="plugin_forumml_message_header boxitemalt" id="plugin_forumml_message_'. $msg['id_message'] .'">';
     echo '<div class="plugin_forumml_message_header_subject">'. $hp->purify($msg['subject'], CODENDI_PURIFIER_CONVERT_HTML) .'</div>';
-        
+
     echo '<a href="#'. $msg['id_message'] .'" title="message #'. $msg['id_message'] .'">';
     echo '<img src="'. $p->getThemePath() .'/images/ic/comment.png" id="'. $msg['id_message'] .'" style="vertical-align:middle" alt="#'. $msg['id_message'] .'" />';
     echo '</a>';
@@ -495,7 +491,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     echo ' <span class="plugin_forumml_message_header_date">'. $GLOBALS['Language']->getText('plugin_forumml','show_message_date', array($msg['date'])) .'</span>';
 
     echo '&nbsp;<a href="#" id="plugin_forumml_toogle_msg_'.$msg['id_message'].'" class="plugin_forumml_toggle_font">'.$GLOBALS['Language']->getText('plugin_forumml','toggle_font').'</a>';
-    
+
     // get CC
     $cc = trim($msg['cc']);
     if ($cc) {
@@ -515,7 +511,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
         }
         print '<div class="plugin_forumml_message_header_cc">'. $GLOBALS['Language']->getText('plugin_forumml','show_message_cc') .' '. $ccs .'</div>';
     }
-        
+
     // Message content
     if (strpos($msg['content_type'], 'multipart/') !== false) {
         $content_type = $msg['msg_type'];
@@ -551,14 +547,14 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             if (!$first) {
                 echo ',&nbsp;&nbsp;';
             }
-                
+
             echo "<img src='".$p->getThemePath()."/images/ic/attach.png'/>  <a href='upload.php?group_id=".$request->get('group_id')."&list=".$request->get('list')."&id=".$attachment['id_attachment']."&topic=".$id_parent."'>".$flink."</a>";
             $first = false;
         }
         echo '</div>';
     }
     echo '</div>';
-    
+
     print '<div id="plugin_forumml_message_content_'.$msg['id_message'].'" class="plugin_forumml_message_content_std">';
     $body = str_replace("\r\n","\n", $body);
 
@@ -572,7 +568,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             // Use CODENDI_PURIFIER_FULL for html mails
             $msg['cached_html'] = $hp->purify($body,CODENDI_PURIFIER_FULL,$request->get('group_id'));
         } else {
-            // CODENDI_PURIFIER_FORUMML level : no basic html markups, no forms, no javascript, 
+            // CODENDI_PURIFIER_FORUMML level : no basic html markups, no forms, no javascript,
             // Allowed: url + automagic links + <blockquote>
             $purified_body = $hp->purify($body,CODENDI_PURIFIER_CONVERT_HTML,$request->get('group_id'));
             $purified_body = str_replace('&gt;', '>', $purified_body);
@@ -623,9 +619,9 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     // If you click on 'Reply', load reply form
     $vMess = new Valid_UInt('id_mess');
     $vMess->required();
-    if ($request->valid($vMess) && $request->get('id_mess') == $msg['id_message']) {            
+    if ($request->valid($vMess) && $request->get('id_mess') == $msg['id_message']) {
         $vReply = new Valid_WhiteList('reply',array(0,1));
-        $vReply->required();                
+        $vReply->required();
         if ($request->valid($vReply) && $request->get('reply') == 1) {
             if ($is_html) {
                 $body = $hp->purify($body, CODENDI_PURIFIER_STRIP_HTML);
@@ -727,19 +723,19 @@ function plugin_forumml_process_mail($reply=false) {
 
     $request = HTTPRequest::instance();
     $hp = ForumML_HTMLPurifier::instance();
-    
+
     // Instantiate a new Mail class
     $mail = new Codendi_Mail();
-    
+
     // Build mail headers
     $to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];
     $mail->setTo($to);
 
     $current_user = UserManager::instance()->getCurrentUser();
-    
+
     $from = $current_user->getRealName()." <".$current_user->getEmail().">";
     $mail->setFrom($from);
-    
+
     $vMsg = new Valid_Text('message');
     if ($request->valid($vMsg)) {
         $message = $request->get('message');
@@ -747,15 +743,15 @@ function plugin_forumml_process_mail($reply=false) {
 
     $subject = $request->get('subject');
     $mail->setSubject($subject);
-    
+
     if ($reply) {
      // set In-Reply-To header
         $hres = plugin_forumml_get_message_headers($request->get('reply_to'));
-        $reply_to = db_result($hres,0,'value');            
+        $reply_to = db_result($hres,0,'value');
         $mail->addAdditionalHeader("In-Reply-To",$reply_to);
-    } 
+    }
     $continue = true;
-    
+
     if ($request->validArray(new Valid_Email('ccs')) && $request->exist('ccs')) {
         $cc_array = array();
         $idx = 0;
@@ -797,6 +793,6 @@ function plugin_forumml_process_mail($reply=false) {
         }
     }
     return $continue;
-    
+
 }
 

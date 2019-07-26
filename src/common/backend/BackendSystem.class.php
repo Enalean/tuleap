@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 class BackendSystem extends Backend {
@@ -33,9 +33,9 @@ class BackendSystem extends Backend {
      * This is required so that nscd (name service caching daemon) knows that it needs
      * to update its user data.
      *
-     * NOTE: Don't need to update cache on deleted user since shadow information are not cached, 
+     * NOTE: Don't need to update cache on deleted user since shadow information are not cached,
      * so even if the cache is not refreshed, a deleted user won't be able to login
-     * 
+     *
      * @return true on success, false otherwise
      */
     public function refreshUserCache() {
@@ -46,19 +46,19 @@ class BackendSystem extends Backend {
 
         return (system("/usr/sbin/nscd --invalidate=passwd") !== false);
     }
-    
+
     /**
      * set if we need to refresh the user cache
-     * 
+     *
      * @return null
      */
     public function setNeedRefreshUserCache() {
         $this->needRefreshUserCache = true;
     }
-    
+
     /**
      * Return if we need to refresh the user cache
-     * 
+     *
      * @return bool
      */
     public function getNeedRefreshUserCache() {
@@ -71,7 +71,7 @@ class BackendSystem extends Backend {
      * to update its group data.
      *
      * NOTE: Currently, we don't update group cache on deleted group, new user and deleted user
-     * 
+     *
      * @return true on success, false otherwise
      */
     public function refreshGroupCache() {
@@ -82,7 +82,7 @@ class BackendSystem extends Backend {
 
         return (system("/usr/sbin/nscd --invalidate=group") !== false);
     }
-    
+
     /**
      * set if we need to refresh the group cache
      *
@@ -94,7 +94,7 @@ class BackendSystem extends Backend {
 
     /**
      * Return if we need to refresh the groupo cache
-     * 
+     *
      * @return bool
      */
     public function getNeedRefreshGroupCache() {
@@ -103,9 +103,9 @@ class BackendSystem extends Backend {
 
     /**
      * Hard reset of system related stuff (nscd for uid/gid and fs cache).
-     * 
+     *
      * Should be used before modification of system (new user, project, etc)
-     * 
+     *
      * @return null
      */
     public function flushNscdAndFsCache() {
@@ -113,12 +113,12 @@ class BackendSystem extends Backend {
         $this->refreshUserCache();
         clearstatcache();
     }
-    
+
     /**
      * Ensure user home directory is created and has the right uid
-     * 
+     *
      * @param PFUser $user the user we want to sanitize his home
-     * 
+     *
      * @return null
      */
     public function userHomeSanityCheck(PFUser $user) {
@@ -134,15 +134,15 @@ class BackendSystem extends Backend {
             $this->setUserHomeOwnership($user);
         }
     }
-    
+
     /**
      * Create user home directory
-     * 
+     *
      * Also copy files from the skel directory to the new home directory.
      * If the directory already exists, nothing is done.
-     * 
+     *
      * @param PFUser $user the user we want to create a home
-     * 
+     *
      * @return true if directory is successfully created, false otherwise
      */
     public function createUserHome(PFUser $user) {
@@ -170,23 +170,23 @@ class BackendSystem extends Backend {
         }
         return true;
     }
-    
+
     /**
      * Verify if given name exists as user home directory
-     * 
+     *
      * @param String $username the user name to test if home exists
-     * 
+     *
      * @return bool
      */
     public function userHomeExists($username) {
         return (is_dir(ForgeConfig::get('homedir_prefix')."/".$username));
     }
-    
+
     /**
      * Verify is user home directory has the right uid
-     * 
+     *
      * @param PFUser $user the user needed to verify his home directory
-     * 
+     *
      * @return bool
      */
     private function isUserHomeOwnedByUser(PFUser $user) {
@@ -198,12 +198,12 @@ class BackendSystem extends Backend {
         }
         return true;
     }
-    
+
     /**
      * Set user's uid/gid on its home directory (recursively)
-     * 
+     *
      * @param PFUser $user user to set uid/gid
-     * 
+     *
      * @return null
      */
     private function setUserHomeOwnership(PFUser $user) {
@@ -215,13 +215,13 @@ class BackendSystem extends Backend {
             $no_filter_file_extension
         );
     }
-    
+
     /**
      * Create project home directory
      * If the directory already exists, nothing is done.
-     * 
+     *
      * @param int $group_id a group id
-     * 
+     *
      * @return true if directory is successfully created, false otherwise
      */
     public function createProjectHome($group_id) {
@@ -400,9 +400,9 @@ class BackendSystem extends Backend {
 
     /**
      * Archive the user home directory
-     * 
+     *
      * @param int $user_id a user id needed to find the home dir to archive
-     * 
+     *
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveUserHome($user_id) {
@@ -429,9 +429,9 @@ class BackendSystem extends Backend {
 
     /**
      * Archive the project directory
-     * 
-     * @param int $group_id the group id used to find the home directory to archive 
-     * 
+     *
+     * @param int $group_id the group id used to find the home directory to archive
+     *
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveProjectHome($group_id) {
@@ -450,7 +450,6 @@ class BackendSystem extends Backend {
             chmod($backupfile,0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
-
 
             // Remove lower-case symlink if it exists
             if ($project->getUnixName(true) != $project->getUnixName(false)) {
@@ -493,7 +492,7 @@ class BackendSystem extends Backend {
 
     /**
      * Remove deleted releases and released files
-     * 
+     *
      * @return bool the status
      */
     public function cleanupFRS()
@@ -521,7 +520,7 @@ class BackendSystem extends Backend {
 
     /**
      * dumps SSH authorized_keys into all users homedirs
-     * 
+     *
      * @return bool always true
      */
     public function dumpSSHKeys() {
@@ -535,13 +534,13 @@ class BackendSystem extends Backend {
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array());
         return true;
     }
-    
+
     /**
      * dumps SSH authorized_keys for a user in its homedir
-     * 
+     *
      * @param PFUser $user the user we want to dump his key
      * @param string $original_keys the original keys of the user
-     * 
+     *
      * @return bool if the ssh key was written
      */
     public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
@@ -551,9 +550,9 @@ class BackendSystem extends Backend {
 
     /**
      * Check if repository of given project exists
-     * 
+     *
      * @param Project $project project to test if home exist
-     * 
+     *
      * @return true is repository already exists, false otherwise
      */
     public function projectHomeExists($project) {
@@ -561,21 +560,21 @@ class BackendSystem extends Backend {
         $home_dir=ForgeConfig::get('grpdir_prefix')."/".$unix_group_name;
         if (is_dir($home_dir)) {
             return true;
-        } else return false; 
+        } else return false;
     }
 
     /**
      * Check if given name is not used by a repository or a file or a link under project directories
-     * 
+     *
      * Return false if repository or file  or link already exists:
      **  with the same name under the grp_dir
-     **  with its lower case name under the grp_dir 
+     **  with its lower case name under the grp_dir
      **  under FRS
-     **  under ftp anon 
+     **  under ftp anon
      * true otherwise
-     * 
+     *
      * @param String $name the project name to test
-     * 
+     *
      * @return bool
      */
     public function isProjectNameAvailable($name) {
@@ -585,7 +584,7 @@ class BackendSystem extends Backend {
         $dir = ForgeConfig::get('grpdir_prefix')."/".$name;
         $frs = $GLOBALS['ftp_frs_dir_prefix']."/".$name;
         $ftp = ForgeConfig::get('ftp_anon_dir_prefix')."/".$name;
-        
+
         if ($this->fileExists($dir)) {
             return false;
         } else if ($name != strtolower ($name)) {
@@ -601,12 +600,12 @@ class BackendSystem extends Backend {
         }
         return true;
     }
-    
+
     /**
      * Check if given name is not used by a repository or a file or a link under user directory
-     * 
+     *
      * @param String $name a user name to test availability
-     * 
+     *
      * @return bool false if repository or file  or link already exists, true otherwise
      */
     function isUserNameAvailable($name) {
@@ -616,14 +615,14 @@ class BackendSystem extends Backend {
         $path = ForgeConfig::get('homedir_prefix')."/".$name;
         return (!$this->fileExists($path));
     }
-    
-    
+
+
     /**
      * Rename project home directory (following project unix_name change)
-     * 
+     *
      * @param Project $project a project to rename
      * @param String  $newName the new name of the project
-     * 
+     *
      * @return bool
      */
     public function renameProjectHomeDirectory($project, $newName) {
@@ -650,13 +649,13 @@ class BackendSystem extends Backend {
             return $renamed;
         }
     }
-    
+
     /**
      * Rename Directory where the released files are located (following project unix_name change)
-     * 
+     *
      * @param Project $project a project
      * @param String  $newName a new name
-     * 
+     *
      * @return bool
      */
     public function renameFileReleasedDirectory($project, $newName) {
@@ -666,13 +665,13 @@ class BackendSystem extends Backend {
             return true;
         }
     }
-    
+
     /**
      * Rename anon ftp project homedir (following project unix_name change)
-     * 
+     *
      * @param Project $project a project
      * @param String  $newName a new name
-     * 
+     *
      * @return bool
      */
     public function renameAnonFtpDirectory($project, $newName) {
@@ -687,13 +686,13 @@ class BackendSystem extends Backend {
             return true;
         }
     }
-    
+
     /**
-     * Rename User home directory 
-     * 
+     * Rename User home directory
+     *
      * @param PFUser    $user    a user
      * @param String  $newName the new name of user home directory
-     * 
+     *
      * @return bool
      */
     public function renameUserHomeDirectory($user, $newName) {
@@ -704,10 +703,10 @@ class BackendSystem extends Backend {
 
         return rename(ForgeConfig::get('homedir_prefix').'/'.$user->getUserName(), ForgeConfig::get('homedir_prefix').'/'.$newName);
     }
-    
+
     /**
      * Wrapper for getFRSFileFactory
-     * 
+     *
      * @return FRSFileFactory
      */
     protected function getFRSFileFactory() {
@@ -716,12 +715,12 @@ class BackendSystem extends Backend {
 
     /**
      * Wrapper for getWikiAttachment
-     * 
+     *
      * @return WikiAttachment
      */
     protected function getWikiAttachment() {
         return new WikiAttachment();
     }
-    
+
 
 }

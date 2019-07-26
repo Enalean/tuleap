@@ -21,12 +21,12 @@
  */
 
 /**
- *  Data Access Object for Docman_LogDao 
+ *  Data Access Object for Docman_LogDao
  */
 class Docman_LogDao extends DataAccessObject
 {
     /**
-    * Searches Docman_LogDao by ItemId 
+    * Searches Docman_LogDao by ItemId
     * @return DataAccessResult
     */
     public function searchByItemId($itemId, $order = '')
@@ -61,7 +61,7 @@ class Docman_LogDao extends DataAccessObject
     }
 
     /**
-    * create a row in the table plugin_docman_log 
+    * create a row in the table plugin_docman_log
     * @return true or id(auto_increment) if there is no error
     */
     public function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null)
@@ -88,7 +88,7 @@ class Docman_LogDao extends DataAccessObject
         }
         $sql .= ')';
         $inserted = $this->update($sql);
-        
+
         return $inserted;
     }
 

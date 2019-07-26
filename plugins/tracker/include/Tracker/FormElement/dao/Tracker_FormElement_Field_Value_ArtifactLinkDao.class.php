@@ -24,7 +24,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_artifactlink';
     }
-    
+
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -93,7 +93,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
 
         return $this->update($sql);
     }
-    
+
     public function keep($from, $to) {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);

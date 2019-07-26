@@ -506,7 +506,7 @@ if (defined('NUSOAP')) {
 /**
  * package_to_soap : return the soap FRSPackage structure giving a PHP FRSPackage Object.
  * @access private
- * 
+ *
  * WARNING : We check the permissions here : only the readable packages are returned.
  *
  * @param Object{FRSPackage} $package the package to convert.
@@ -544,9 +544,9 @@ if (defined('NUSOAP')) {
  * @param int $status_id the ID of the status of the package
  * @param int $rank the rank of the package in the package list page (optionnal, by default set to 0)
  * @param int $approve_license true if we need to approve the license before downloading every file in this package, false otherwise.
- * @return int the ID of the new created package, 
+ * @return int the ID of the new created package,
  *              or a soap fault if :
- *              - group_id does not match with a valid project, 
+ *              - group_id does not match with a valid project,
  *              - the user does not have the permissions to create a package
  *              - the package creation failed.
  */
@@ -611,7 +611,7 @@ if (defined('NUSOAP')) {
             if (! $package->userCanRead() || ! $package->isActive()) {
                 return new SoapFault(invalid_package_fault,'Permission to this Package denied','getReleases');
             }
-        
+
             $release_fact = new FRSReleaseFactory();
             // we get only the active releases, even if we are project admin or file admin
             $releases = $release_fact->getActiveFRSReleases($package_id, $group_id);
@@ -624,7 +624,7 @@ if (defined('NUSOAP')) {
 /**
  * release_to_soap : return the soap FRSRelease structure giving a PHP FRSRelease Object.
  * @access private
- * 
+ *
  * WARNING : We check the permissions here : only the readable releases are returned.
  *
  * @param Object{FRSRelease} $release the release to convert.
@@ -669,9 +669,9 @@ if (defined('NUSOAP')) {
  * @param string $changes the changes of the release
  * @param int $status_id the ID of the status of the release
  * @param int $release_date the release date, in timestamp format
- * @return int the ID of the new created release, 
+ * @return int the ID of the new created release,
  *              or a soap fault if :
- *              - group_id does not match with a valid project, 
+ *              - group_id does not match with a valid project,
  *              - package_id does not match with a valid package,
  *              - package_id does not belong to the project group_id,
  *              - the user does not have the permissions to create a release
@@ -691,7 +691,7 @@ if (defined('NUSOAP')) {
             if (!$package || $package->getGroupID() != $group_id) {
                 return new SoapFault(invalid_package_fault,'Invalid Package','addRelease');
             }
-        
+
             $release_fact = new FRSReleaseFactory();
             if ($release_fact->userCanCreate($group_id)) {
                 if ($release_fact->isReleaseNameExist($name, $package_id)) {
@@ -789,13 +789,13 @@ if (defined('NUSOAP')) {
     }
 
 /**
- * getFiles - returns an array of FRSFiles that belongs to the release identified by release_id, in the package package_id, in project group_id, 
+ * getFiles - returns an array of FRSFiles that belongs to the release identified by release_id, in the package package_id, in project group_id,
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the array of files
  * @param int $package_id the ID of the package we want to retrieve the array of files
  * @param int $release_id the ID of the release we want to retrieve the array of files
- * @return array the array of SOAPFRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id 
+ * @return array the array of SOAPFRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id
  *         or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id, or if release_id does not match with package_id.
  */
     function getFiles($sessionKey,$group_id,$package_id,$release_id) {
@@ -816,7 +816,7 @@ if (defined('NUSOAP')) {
             if (! $package->userCanRead() || ! $package->isActive()) {
                 return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFiles');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
@@ -827,7 +827,7 @@ if (defined('NUSOAP')) {
             if (! $release->userCanRead() || ! $release->isActive()) {
                 return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
             }
-        
+
             $files_arr = $release->getFiles();
             return files_to_soap($files_arr);
         } else {
@@ -892,7 +892,7 @@ if (defined('NUSOAP')) {
 /**
  * file_to_soap : return the soap FRSFile structure giving a PHP FRSFile Object.
  * @access private
- * 
+ *
  * WARNING : We check the permissions here : only the readable files are returned.
  *
  * @param Object{FRSFile} $file the file to convert.
@@ -927,18 +927,18 @@ if (defined('NUSOAP')) {
     }
 
 /**
- * getFile - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
+ * getFile - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the content of file
  * @param int $package_id the ID of the package we want to retrieve the content of file
  * @param int $release_id the ID of the release we want to retrieve the content of file
  * @param int $file_id the ID of the file we want to retrieve the content
- * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id 
- *         or a soap fault if 
- *              - group_id does not match with a valid project or 
- *              - package_id does not match with group_id, or 
- *              - release_id does not match with package_id, or 
+ * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id
+ *         or a soap fault if
+ *              - group_id does not match with a valid project or
+ *              - package_id does not match with group_id, or
+ *              - release_id does not match with package_id, or
  *              - file_id does not match with release_id, or
  *              - the file is not present on the server
  */
@@ -962,7 +962,7 @@ if (defined('NUSOAP')) {
             if (! $package->userCanRead() || ! $package->isActive()) {
                 return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFile');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
@@ -973,20 +973,20 @@ if (defined('NUSOAP')) {
             if (! $release->userCanRead() || ! $release->isActive()) {
                 return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFile');
             }
-        
+
             $file_fact = new FRSFileFactory();
             $file      = $file_fact->getFRSFileFromDb($file_id);
             if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
                 return new SoapFault(invalid_file_fault,'Invalid File','getFile');
             }
-        
+
             if (!$file->fileExists()) {
                 return new SoapFault(invalid_file_fault,'File doesn\'t exist on the server','getFile');
             }
-        
+
             // Log the download action
             $file->logDownload();
-        
+
             $contents = $file->getContent();
             return base64_encode($contents);
         } else {
@@ -995,18 +995,18 @@ if (defined('NUSOAP')) {
     }
 
 /**
- * getFileChunk - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
+ * getFileChunk - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the content of file
  * @param int $package_id the ID of the package we want to retrieve the content of file
  * @param int $release_id the ID of the release we want to retrieve the content of file
  * @param int $file_id the ID of the file we want to retrieve the content
- * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id 
- *         or a soap fault if 
- *              - group_id does not match with a valid project or 
- *              - package_id does not match with group_id, or 
- *              - release_id does not match with package_id, or 
+ * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id
+ *         or a soap fault if
+ *              - group_id does not match with a valid project or
+ *              - package_id does not match with group_id, or
+ *              - release_id does not match with package_id, or
  *              - file_id does not match with release_id, or
  *              - the file is not present on the server
  */
@@ -1030,7 +1030,7 @@ if (defined('NUSOAP')) {
             if (! $package->userCanRead() || ! $package->isActive()) {
                 return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFileChunk');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
@@ -1041,20 +1041,20 @@ if (defined('NUSOAP')) {
             if (! $release->userCanRead() || ! $release->isActive()) {
                 return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFileChunk');
             }
-        
+
             $file_fact = new FRSFileFactory();
             $file      = $file_fact->getFRSFileFromDb($file_id);
             if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
                 return new SoapFault(invalid_file_fault,'Invalid File','getFileChunk');
             }
-        
+
             if (!$file->fileExists()) {
                 return new SoapFault(invalid_file_fault,'File doesn\'t exist on the server','getFileChunk');
             }
-        
+
             // Log the download action
             $file->logDownload();
-        
+
             $contents = $file->getContent($offset,$size);
             return base64_encode($contents);
         } else {
@@ -1075,9 +1075,9 @@ if (defined('NUSOAP')) {
  * @param int $processor_id the ID of the processor of the file
  * @param string $reference_md5 the md5sum of the file calculated in client side
  * @param string $comment A comment/description of the uploaded file
- * @return int the ID of the new created file, 
+ * @return int the ID of the new created file,
  *              or a soap fault if :
- *              - group_id does not match with a valid project, 
+ *              - group_id does not match with a valid project,
  *              - package_id does not match with a valid package,
  *              - package_id does not belong to the project group_id,
  *              - release_id does not match with a valid release,
@@ -1100,14 +1100,14 @@ if (defined('NUSOAP')) {
             if (!$package || $package->getGroupID() != $group_id) {
                 return new SoapFault(invalid_package_fault,'Invalid Package','addFile');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
                 return new SoapFault(invalid_release_fault,'Invalid Release','addFile');
             }
-        
+
             $file_fact = new FRSFileFactory();
             if ($file_fact->userCanAdd($group_id)) {
                 $tmpname = tempnam("/tmp", "codendi_soap_frs");
@@ -1117,16 +1117,16 @@ if (defined('NUSOAP')) {
                 }
                 fwrite($fh, base64_decode($base64_contents));
                 fclose($fh);
-            
+
                 // move the file in the incoming dir
                 if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
                     return new SoapFault(invalid_file_fault,'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
                 }
-            
+
                 // call addUploadedFile function
                 $uploaded_filename = basename($filename);
                 return addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $uploaded_filename, $type_id, $processor_id, $reference_md5, $comment);
-            
+
             } else {
                 return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
             }
@@ -1210,7 +1210,7 @@ if (defined('NUSOAP')) {
  * @param string $contents the content of the chunk, encoded in base64
  * @param bool $first_chunk indicates if the chunk to add is the first
  * @return int|SoapFault size of the chunk if added, or a soap fault if:
- *              - the sessionKey is not valid, 
+ *              - the sessionKey is not valid,
  *              - the file creation failed.
  */
     function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
@@ -1263,9 +1263,9 @@ if (defined('NUSOAP')) {
  * @param int $processor_id the ID of the processor of the file
  * @param string $reference_md5 the md5sum of the file calculated in client side
  * @param string $comment A comment/description of the uploaded file
- * @return int the ID of the new created file, 
+ * @return int the ID of the new created file,
  *              or a soap fault if :
- *              - group_id does not match with a valid project, 
+ *              - group_id does not match with a valid project,
  *              - package_id does not match with a valid package,
  *              - package_id does not belong to the project group_id,
  *              - release_id does not match with a valid release,
@@ -1290,14 +1290,14 @@ if (defined('NUSOAP')) {
             if (!$package || $package->getGroupID() != $group_id) {
                 return new SoapFault(invalid_package_fault,'Invalid Package','addUploadedFile');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
                 return new SoapFault(invalid_release_fault,'Invalid Release','addUploadedFile');
             }
-        
+
             $file_fact = new FRSFileFactory();
             if ($file_fact->userCanAdd($group_id)) {
                 $user = UserManager::instance()->getCurrentUser();
@@ -1331,9 +1331,9 @@ if (defined('NUSOAP')) {
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the file
- * @return array of string the names of the files present in the incoming directory, 
+ * @return array of string the names of the files present in the incoming directory,
  *              or a soap fault if :
- *              - group_id does not match with a valid project, 
+ *              - group_id does not match with a valid project,
  *              - the user does not have the permissions to see the incoming directory (must be project admin, file admin or super user)
  */
     function getUploadedFiles($sessionKey, $group_id) {
@@ -1389,14 +1389,14 @@ if (defined('NUSOAP')) {
             if (!$package || $package->getGroupID() != $group_id) {
                 return new SoapFault(invalid_package_fault,'Invalid Package','deleteFile');
             }
-        
+
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
                 return new SoapFault(invalid_release_fault,'Invalid Release','deleteFile');
             }
-        
+
             if ($release_fact->userCanUpdate($group_id, $release_id)) {
                 // retrieve the file
                 $file_fact = new FRSFileFactory();
@@ -1414,7 +1414,7 @@ if (defined('NUSOAP')) {
             } else {
                 return new SoapFault(invalid_release_fault,'User does not have permission to delete a file in this release.','deleteFile');
             }
-        
+
         } else {
             return new SoapFault(invalid_session_fault,'Invalid Session','deleteFile');
         }

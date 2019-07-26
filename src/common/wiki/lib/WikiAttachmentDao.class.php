@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright STMicroelectronics, 2006
- * Originally written by Manuel VACELET, STMicroelectronics, 2006 
+ * Originally written by Manuel VACELET, STMicroelectronics, 2006
  *
  * This file is a part of Codendi.
  *
@@ -39,7 +39,7 @@ class WikiAttachmentDao extends DataAccessObject {
         $res = $this->update($qry);
         return $res;
     }
-    
+
     /**
      * Retrun one DB entry corresponding to the given id.
      *
@@ -58,7 +58,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * Set the status of the attachment to deleted and add the entry to the wiki_attchment_deleted table.
      *
      * @param int $id Attachement id
-     * 
+     *
      * @return bool
      */
     function delete($id) {
@@ -111,7 +111,7 @@ class WikiAttachmentDao extends DataAccessObject {
 
         return $this->retrieve($qry);
     }
-    
+
     /**
      * Return attachment id for a file in a project.
      * The utf8_bin collation enforce case sensitivity within where clause
@@ -133,12 +133,12 @@ class WikiAttachmentDao extends DataAccessObject {
 
     /**
      * Retrieve all deleted Attachment not purged yet after a given period of time
-     * 
+     *
      * @param int $time Timestamp of the date to start the search
      * @param int $groupId
      * @param int $offset
      * @param int $limit
-     * 
+     *
      * @return DataAccessResult
      */
     function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0) {
@@ -157,9 +157,9 @@ class WikiAttachmentDao extends DataAccessObject {
 
     /**
      * Restore deleted wiki attachments
-     * 
+     *
      * @param int $id
-     * 
+     *
      * @return bool
      */
     function restoreAttachment($id) {

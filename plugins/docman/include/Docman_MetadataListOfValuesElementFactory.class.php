@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@ require_once('Docman_MetadataListOfValuesElement.class.php');
 require_once('Docman_MetadataListOfValuesElementDao.class.php');
 
 /**
- * High level class to manipulate elements of ListOfValues. 
+ * High level class to manipulate elements of ListOfValues.
  */
 class Docman_MetadataListOfValuesElementFactory {
     var $metadataId;
@@ -101,11 +101,11 @@ class Docman_MetadataListOfValuesElementFactory {
         $dao = $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
     }
-    
+
     private function instanciateLove($row)
     {
         $e = new Docman_MetadataListOfValuesElement();
-        $e->initFromRow($row);        
+        $e->initFromRow($row);
         return $e;
     }
 
@@ -123,9 +123,9 @@ class Docman_MetadataListOfValuesElementFactory {
             $res = array();
             while($dar->valid()) {
                 $row = $dar->current();
-                                
+
                 $res[] = $this->instanciateLove($row);
-                
+
                 $dar->next();
             }
             return $res;
@@ -148,7 +148,7 @@ class Docman_MetadataListOfValuesElementFactory {
                 $ea = $this->getStatusList();
                 $e  = $ea[$id];
             break;
-            
+
             default:
                 $dao = $this->getDao();
                 $dar = $dao->serachByValueId($id);
@@ -175,13 +175,13 @@ class Docman_MetadataListOfValuesElementFactory {
                 }
                 $ei = new ArrayIterator($ea);
             break;
-            
+
             default:
                 $dao = $this->getDao();
                 $dar = $dao->searchByName($this->metadataId, $name, true);
                 $ei  = $this->_returnLoveIteratorFromDar($dar);
         }
-        
+
         return $ei;
     }
 
@@ -197,10 +197,10 @@ class Docman_MetadataListOfValuesElementFactory {
      *
      * Returns the mapping between Ids in source project and id in target one.
      * This mapping is indexed by source metadata values ids.
-     * 
+     *
      * @param Docman_Metadata $srcMd         Source metadata
      * @param Docman_Metadata $dstMd         Destination metadata
-     * 
+     *
      * @return Array Map between source and destination
      */
     function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd) {
@@ -214,7 +214,7 @@ class Docman_MetadataListOfValuesElementFactory {
         }
         return $valuesMapping;
     }
-    
+
     /**
      * Export values in destination metadata.
      *
@@ -232,16 +232,16 @@ class Docman_MetadataListOfValuesElementFactory {
      * With reverse, the last element of the source list will
      * be the first to be treated. We insert it at the beginning so the last
      * element of the source list will appears before all the existing elements.
-     * Then each elements will be inserted at the beginning too so they will 
+     * Then each elements will be inserted at the beginning too so they will
      * appears in the right order.
-     * 
+     *
      * @param Docman_Metadata $srcMd   Source metadata
      * @param Docman_Metadata $dstMd   Destination metadata
      * @param Array           $loveMap Map between elements of $srcMd and $dstMd
      */
     function exportValues($srcMd, $dstMd, $loveMap) {
         $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
-        
+
         $srcLoveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
 
         // \o/ trick \o/
@@ -263,7 +263,7 @@ class Docman_MetadataListOfValuesElementFactory {
             }
         }
     }
-    
+
     /**
      * Try to find matching values between 2 metadata
      */
@@ -292,7 +292,7 @@ class Docman_MetadataListOfValuesElementFactory {
             }
 
             $loveIter->next();
-        }        
+        }
     }
 
     /**
@@ -336,7 +336,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_REJECTED] = $e;
         unset($e);
-        
+
         if($status === null) {
             return $ea;
         } else {
@@ -357,7 +357,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $ei = new ArrayIterator($ea);
         return $ei;
     }
-    
+
     function getMetadataListOfValuesElementFactory($metadataId=null) {
         return new Docman_MetadataListOfValuesElementFactory($metadataId);
     }

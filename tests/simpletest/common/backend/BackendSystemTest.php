@@ -56,7 +56,6 @@ class BackendSystemTest extends TuleapTestCase {
         ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
         ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
 
-
         mkdir(ForgeConfig::get('homedir_prefix'), 0770, true);
         mkdir(ForgeConfig::get('grpdir_prefix'), 0770, true);
         mkdir($GLOBALS['tmp_dir'], 0770, true);
@@ -102,7 +101,6 @@ class BackendSystemTest extends TuleapTestCase {
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
-
 
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
@@ -197,10 +195,8 @@ class BackendSystemTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-
 
         $backend->createProjectHome(142);
 
@@ -235,10 +231,8 @@ class BackendSystemTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-
 
         $backend->createProjectHome(142);
 
@@ -268,10 +262,8 @@ class BackendSystemTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-
 
         $backend->createProjectHome(142);
 
@@ -282,7 +274,6 @@ class BackendSystemTest extends TuleapTestCase {
         //$this->assertFalse(is_dir(ForgeConfig::get('grpdir_prefix')."/testproject"), "Old project home should no longer exists as directory (it's a link now)");
         $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/TestProject"), "Project home should be renamed");
         $this->assertEqual(readlink(ForgeConfig::get('grpdir_prefix').'/testproject'),ForgeConfig::get('grpdir_prefix').'/TestProject',"The lower case of project should be a link");
-
 
         // Cleanup
         $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/TestProject");
@@ -305,10 +296,8 @@ class BackendSystemTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-
 
         $backend->createProjectHome(142);
 

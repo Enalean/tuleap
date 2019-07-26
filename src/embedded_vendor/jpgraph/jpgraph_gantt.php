@@ -1005,7 +1005,6 @@ class GanttGraph extends Graph {
             $this->StrokeConstrains();
             $this->footer->Stroke($this->img);
 
-
             if( $this->iIconDepth == DEPTH_FRONT) {
                 $this->StrokeIcons();
             }
@@ -1025,7 +1024,6 @@ class GanttGraph extends Graph {
                 $this->iImgTransMinSize,$this->iImgTransFillColor,
                 $this->iImgTransBorder);
             }
-
 
             // If the filename is given as the special "__handle"
             // then the image handler is returned and the image is NOT
@@ -2391,7 +2389,6 @@ class GanttScale {
                 //'Intervall for minutes must divide the hour evenly, e.g. 1,5,10,12,15,20,30 etc You have specified an intervall of '.$minint.' minutes.');
             }
 
-
             $n = 60 / $minint;
             $datestamp = $this->iStartDate;
             $width = $this->GetHourWidth() / $n ;
@@ -2920,7 +2917,6 @@ class GanttScale {
 
         $this->actinfo->Stroke($img,$xt,$yt,$xb,$yb,$this->tableTitle->iShow);
 
-
         // Draw the horizontal dividing line
         $this->dividerh->Stroke($img,$xt,$yb,$img->width-$img->right_margin,$yb);
 
@@ -2974,7 +2970,6 @@ class GanttScale {
         $offd=$this->StrokeDays($offw,true);
         $offh=$this->StrokeHours($offd,true);
         $offmin=$this->StrokeMinutes($offh,true);
-
 
         // ... then we can stroke them in the "backwards order to ensure that
         // the larger scale gridlines is stroked over the smaller scale gridline
@@ -3383,11 +3378,8 @@ class GanttBar extends GanttPlotObject {
         if( $en <  $aScale->iStartDate || $st > $aScale->iEndDate )
             return;
 
-
         // Remember the positions for the bar
         $this->SetConstrainPos($xt,$yt,$xb,$yb);
-
-
 
         $prect->ShowFrame(false);
         $prect->SetBackground($this->iFillColor);

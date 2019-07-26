@@ -42,9 +42,9 @@ class Tracker_TooltipFactoryTest extends TuleapTestCase {
     //testing Tooltip import
     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTooltipTest.xml');
-        
+
         $tracker = new MockTracker();
-        
+
         $mapping = array(
                     'F8'  => 108,
                     'F9'  => 109,
@@ -52,7 +52,7 @@ class Tracker_TooltipFactoryTest extends TuleapTestCase {
                     'F14' => 114
                     );
         $tooltip = Tracker_TooltipFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
-        
+
         $this->assertEqual(count($tooltip->getFields()), 3);
         $fields = $tooltip->getFields();
         $this->assertTrue(in_array(108, $fields));
@@ -60,7 +60,7 @@ class Tracker_TooltipFactoryTest extends TuleapTestCase {
         $this->assertTrue(in_array(116, $fields));
         $this->assertFalse(in_array(114, $fields));
     }
-    
+
 }
 
 ?>

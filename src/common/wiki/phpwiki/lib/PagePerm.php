@@ -22,13 +22,13 @@ rcs_id('$Id: PagePerm.php,v 1.40 2005/10/29 14:16:58 rurban Exp $');
  */
 
 /**
-   Permissions per page and action based on current user, 
+   Permissions per page and action based on current user,
    ownership and group membership implemented with ACL's (Access Control Lists),
    opposed to the simplier unix like ugo:rwx system.
    The previous system was only based on action and current user. (lib/main.php)
 
-   Permissions may be inherited from its parent pages, a optional the 
-   optional master page ("."), and predefined default permissions, if "." 
+   Permissions may be inherited from its parent pages, a optional the
+   optional master page ("."), and predefined default permissions, if "."
    is not defined.
    Pagenames starting with "." have special default permissions.
    For Authentication see WikiUserNew.php, WikiGroup.php and main.php
@@ -36,19 +36,19 @@ rcs_id('$Id: PagePerm.php,v 1.40 2005/10/29 14:16:58 rurban Exp $');
 
    This file might replace the following functions from main.php:
      Request::_notAuthorized($require_level)
-       display the denied message and optionally a login form 
+       display the denied message and optionally a login form
        to gain higher privileges
      Request::getActionDescription($action)
-       helper to localize the _notAuthorized message per action, 
+       helper to localize the _notAuthorized message per action,
        when login is tried.
      Request::getDisallowedActionDescription($action)
-       helper to localize the _notAuthorized message per action, 
+       helper to localize the _notAuthorized message per action,
        when it aborts
      Request::requiredAuthority($action)
        returns the needed user level
        has a hook for plugins on POST
      Request::requiredAuthorityForAction($action)
-       just returns the level per action, will be replaced with the 
+       just returns the level per action, will be replaced with the
        action + page pair
 
      The defined main.php actions map to simplier access types:
@@ -89,7 +89,7 @@ function pagePermissions($pagename) {
     } elseif ($perm = getPagePermissions($page)) {
         return array('page',$perm);
     // or no permissions defined; returned inherited permissions, to be displayed in gray
-    } elseif ($pagename == '.') { // stop recursion in pathological case. 
+    } elseif ($pagename == '.') { // stop recursion in pathological case.
         // "." defined, without any acl
         return array('default', new PagePermission());
     } else {
@@ -141,10 +141,10 @@ function pagePermissionsAclFormat($perm_tree, $editable=false) {
         return $perm->asTable($type);
 }
 
-/** 
+/**
  * Check the permissions for the current action.
- * Walk down the inheritance tree. Collect all permissions until 
- * the minimum required level is gained, which is not 
+ * Walk down the inheritance tree. Collect all permissions until
+ * the minimum required level is gained, which is not
  * overruled by more specific forbid rules.
  * Todo: cache result per access and page in session?
  */
@@ -180,10 +180,10 @@ function action2access ($action) {
             if (!$page->exists())
             return 'create';
             else
-            return 'view'; 
+            return 'view';
         break;
         case 'upload':
-        case 'loadfile': 
+        case 'loadfile':
             // probably create/edit but we cannot check all page permissions, can we?
         case 'remove':
         case 'lock':
@@ -208,11 +208,11 @@ function action2access ($action) {
 // Maybe page-(current+edit+change?)action pairs will help
 function _requiredAuthorityForPagename($access, $pagename) {
     static $permcache = array();
-    
+
     if (array_key_exists($pagename, $permcache)
         and array_key_exists($access, $permcache[$pagename]))
         return $permcache[$pagename][$access];
-        
+
     global $request;
     $page = $request->getPage($pagename);
     // Page not found; check against default permissions
@@ -223,7 +223,7 @@ function _requiredAuthorityForPagename($access, $pagename) {
         return $result;
     }
     // no ACL defined; check for special dotfile or walk down
-    if (! ($perm = getPagePermissions($page))) { 
+    if (! ($perm = getPagePermissions($page))) {
         if ($pagename == '.') {
             $perm = new PagePermission();
             if ($perm->isAuthorized('change', $request->_user)) {
@@ -249,7 +249,7 @@ function _requiredAuthorityForPagename($access, $pagename) {
         return $authorized;
     } elseif ($pagename == '.') {
         return false;
-    } else {    
+    } else {
         return _requiredAuthorityForPagename($access, getParentPage($pagename));
     }
 }
@@ -267,12 +267,12 @@ function getParentPage($pagename) {
 }
 
 // Read the ACL from the page
-// Done: Not existing pages should NOT be queried. 
+// Done: Not existing pages should NOT be queried.
 // Check the parent page instead and don't take the default ACL's
 function getPagePermissions ($page) {
     if ($hash = $page->get('perm'))  // hash => object
         return new PagePermission(unserialize($hash));
-    else 
+    else
         return false;
 }
 
@@ -310,7 +310,7 @@ function array_diff_assoc_recursive($array1, $array2) {
                 $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
                 if ($new_diff != false) {
                     $difference[$key] = $new_diff;
-                } 
+                }
             }
         } elseif(!isset($array2[$key]) || $array2[$key] != $value) {
             $difference[$key] = $value;
@@ -320,7 +320,7 @@ function array_diff_assoc_recursive($array1, $array2) {
 }
 
 /**
- * The ACL object per page. It is stored in a page, but can also 
+ * The ACL object per page. It is stored in a page, but can also
  * be merged with ACL's from other pages or taken from the master (pseudo) dot-file.
  *
  * A hash of "access" => "requires" pairs.
@@ -328,7 +328,7 @@ function array_diff_assoc_recursive($array1, $array2) {
  *   "requires" required username or groupname or any special group => true or false
  *
  * Define any special rules here, like don't list dot-pages.
- */ 
+ */
 class PagePermission {
     var $perm;
 
@@ -352,7 +352,7 @@ class PagePermission {
 
     /**
      * The workhorse to check the user against the current ACL pairs.
-     * Must translate the various special groups to the actual users settings 
+     * Must translate the various special groups to the actual users settings
      * (userid, group membership).
      */
     function isAuthorized($access,$user) {
@@ -367,7 +367,7 @@ class PagePermission {
     }
 
     /**
-     * Translate the various special groups to the actual users settings 
+     * Translate the various special groups to the actual users settings
      * (userid, group membership).
      */
     function isMember($user, $group) {
@@ -377,14 +377,14 @@ class PagePermission {
         else $member = $this->_group;
         //$user = & $request->_user;
         if ($group === ACL_ADMIN)   // WIKI_ADMIN or member of _("Administrators")
-            return $user->isAdmin() or 
-                   ($user->isAuthenticated() and 
+            return $user->isAdmin() or
+                   ($user->isAuthenticated() and
                    $member->isMember(GROUP_ADMIN));
-        if ($group === ACL_ANONYMOUS) 
+        if ($group === ACL_ANONYMOUS)
             return ! $user->isSignedIn();
         if ($group === ACL_BOGOUSER)
             if (ENABLE_USER_NEW)
-                return isa($user,'_BogoUser') or 
+                return isa($user,'_BogoUser') or
                       (isWikiWord($user->_userid) and $user->_level >= WIKIAUTH_BOGO);
         else return isWikiWord($user->UserName());
         if ($group === ACL_HASHOMEPAGE)
@@ -397,19 +397,19 @@ class PagePermission {
             if (!$user->isAuthenticated()) return false;
             $page = $request->getPage();
             $owner = $page->getOwner();
-            return ($owner === $user->UserName() 
+            return ($owner === $user->UserName()
                     or $member->isMember($owner));
         }
         if ($group === ACL_CREATOR) {
             if (!$user->isAuthenticated()) return false;
             $page = $request->getPage();
             $creator = $page->getCreator();
-            return ($creator === $user->UserName() 
+            return ($creator === $user->UserName()
                     or $member->isMember($creator));
         }
         /* Or named groups or usernames.
-           Note: We don't seperate groups and users here. 
-           Users overrides groups with the same name. 
+           Note: We don't seperate groups and users here.
+           Users overrides groups with the same name.
         */
         return $user->UserName() === $group or
                $member->isMember($group);
@@ -439,17 +439,17 @@ class PagePermission {
             $perm['edit'] = array(ACL_SIGNED => true);
         // view:
         if (!ALLOW_ANON_USER) {
-            if (!ALLOW_USER_PASSWORDS) 
+            if (!ALLOW_USER_PASSWORDS)
                 $perm['view'] = array(ACL_SIGNED => true);
-            else        
+            else
                 $perm['view'] = array(ACL_AUTHENTICATED => true);
             $perm['view'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
         }
         // edit:
         if (!ALLOW_ANON_EDIT) {
-            if (!ALLOW_USER_PASSWORDS) 
+            if (!ALLOW_USER_PASSWORDS)
                 $perm['edit'] = array(ACL_SIGNED => true);
-            else        
+            else
                 $perm['edit'] = array(ACL_AUTHENTICATED => true);
             $perm['edit'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
             $perm['create'] = $perm['edit'];
@@ -475,7 +475,7 @@ class PagePermission {
         $diff = array_diff_assoc_recursive($this->perm, $otherperm);
         return empty($diff);
     }
-    
+
     /**
      * returns list of all supported access types.
      */
@@ -504,7 +504,7 @@ class PagePermission {
         $hash = $page->get('perm');
         if ($hash)  // hash => object
             $perm = new PagePermission(unserialize($hash));
-        else 
+        else
             $perm = new PagePermission();
         $perm->sanify();
         return $perm;
@@ -520,7 +520,7 @@ class PagePermission {
         if ($group[0] == '_') return constant("GROUP".$group);
         else return $group;
     }
-    
+
     /* type: page, default, inherited */
     function asTable($type) {
         $table = HTML::table();
@@ -541,11 +541,11 @@ class PagePermission {
             $table->setAttr('style','border: solid thin black; font-weight: bold;');
         return $table;
     }
-    
+
     /* type: page, default, inherited */
     function asEditableTable($type) {
         global $WikiTheme;
-        if (!isset($this->_group)) { 
+        if (!isset($this->_group)) {
             $this->_group = $GLOBALS['request']->getGroup();
         }
         $table = HTML::table();
@@ -557,7 +557,7 @@ class PagePermission {
                                      HTML::th(_("Grant")),
                                      HTML::th(_("Del/+")),
                                      HTML::th(_("Description"))));
-        
+
         $allGroups = $this->_group->_specialGroups();
         foreach ($this->_group->getAllGroupsIn() as $group) {
             if (!in_array($group,$this->_group->specialGroups()))
@@ -686,33 +686,33 @@ class PagePermission {
         $perm = $this->perm;
         // get effective user and group
         $s = '---------+';
-        if (isset($perm['view'][$owner]) or 
+        if (isset($perm['view'][$owner]) or
             (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[0] = 'r';
-        if (isset($perm['edit'][$owner]) or 
+        if (isset($perm['edit'][$owner]) or
             (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[1] = 'w';
-        if (isset($perm['change'][$owner]) or 
+        if (isset($perm['change'][$owner]) or
             (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[2] = 'x';
         if (!empty($group)) {
-            if (isset($perm['view'][$group]) or 
+            if (isset($perm['view'][$group]) or
                 (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
                 $s[3] = 'r';
-            if (isset($perm['edit'][$group]) or 
+            if (isset($perm['edit'][$group]) or
                 (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
                 $s[4] = 'w';
-            if (isset($perm['change'][$group]) or 
+            if (isset($perm['change'][$group]) or
                 (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
                 $s[5] = 'x';
         }
-        if (isset($perm['view'][ACL_EVERY]) or 
+        if (isset($perm['view'][ACL_EVERY]) or
             (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[6] = 'r';
-        if (isset($perm['edit'][ACL_EVERY]) or 
+        if (isset($perm['edit'][ACL_EVERY]) or
             (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[7] = 'w';
-        if (isset($perm['change'][ACL_EVERY]) or 
+        if (isset($perm['change'][ACL_EVERY]) or
             (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated()))
             $s[8] = 'x';
         return $s;

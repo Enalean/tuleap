@@ -38,7 +38,7 @@ class Widget_MyRss extends Widget_Rss
             UserDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }
-    
+
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_rss', 'description');

@@ -19,15 +19,15 @@
  */
 
 class b201206151041_delete_invalid_tracker_hierarchy_data extends ForgeUpgrade_Bucket {
-    
+
     public function description() {
         return 'Delete invalid tracker hierarchy data';
     }
-    
+
     public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
-    
+
     public function up() {
         $sql = <<<SQL
             DELETE h.*
@@ -42,12 +42,12 @@ class b201206151041_delete_invalid_tracker_hierarchy_data extends ForgeUpgrade_B
             OR    h.child_id  = 0
 SQL;
         $result = $this->db->dbh->exec($sql);
-        
+
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-    
+
 }
 ?>

@@ -21,7 +21,7 @@ rcs_id('$Id: Diff.php,v 1.3 2005/09/30 18:53:10 uckelman Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 /**
- * lib/diff.php converted to a plugin by electrawn, 
+ * lib/diff.php converted to a plugin by electrawn,
  * plugin cleaned up by rurban,
  * code by dairiki
  *
@@ -68,7 +68,7 @@ extends WikiPlugin {
 
             $iswikipage = (isWikiWord($author) && $dbi->isWikiPage($author));
             $authorlink = $iswikipage ? WikiLink($author) : $author;
-            
+
             $linked_version = WikiLink($rev, 'existing', $rev->getVersion());
             $row->pushContent(HTML::td(fmt("version %s", $linked_version)),
                               HTML::td($WikiTheme->getLastModifiedMessage($rev,
@@ -79,7 +79,7 @@ extends WikiPlugin {
         }
         return $row;
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
         if (is_array($versions)) {
@@ -142,11 +142,11 @@ extends WikiPlugin {
                 break;
             }
         }
-        
+
         $new_link = WikiLink($new, '', $new_version);
         $old_link = $old ? WikiLink($old, '', $old_version) : $old_version;
         $page_link = WikiLink($page);
-        
+
         $html = HTML(HTML::p(fmt("Differences between %s and %s of %s.",
                                  $new_link, $old_link, $page_link)));
 
@@ -166,7 +166,6 @@ extends WikiPlugin {
         }
         $html->pushContent($otherdiffs);
 
-        
         if ($old and $old->getVersion() == 0)
             $old = false;
 
@@ -177,7 +176,7 @@ extends WikiPlugin {
 
         if ($new && $old) {
             $diff = new Diff($old->getContent(), $new->getContent());
-            
+
             if ($diff->isEmpty()) {
                 $html->pushContent(HTML::hr(),
                                    HTML::p('[', _("Versions are identical"),
@@ -195,7 +194,7 @@ extends WikiPlugin {
 
         //$html = HTML::tt(fmt('%s: %s', $salutation, WikiLink($name, 'auto')),
         //                 THE_END);
-        
+
         return $html;
     }
 };
@@ -257,7 +256,6 @@ class WordLevelDiff extends MappedDiff
     function __construct ($orig_lines, $final_lines) {
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($final_words, $final_stripped) = $this->_split($final_lines);
-
 
         parent::__construct($orig_words, $final_words,
                           $orig_stripped, $final_stripped);

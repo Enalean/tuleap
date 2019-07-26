@@ -195,7 +195,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
             $this->user
         )->returns($this->computed_field);
 
-
     }
 
     public function tearDown() {

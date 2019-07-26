@@ -19,7 +19,7 @@
  */
 
 /**
- *  Data Access Object for Plugin 
+ *  Data Access Object for Plugin
  */
 class PluginDao extends DataAccessObject {
     /**
@@ -30,9 +30,9 @@ class PluginDao extends DataAccessObject {
         $sql = "SELECT * FROM plugin";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches Plugin by Id 
+    * Searches Plugin by Id
     * @return DataAccessResult
     */
     function searchById($id) {
@@ -42,7 +42,7 @@ class PluginDao extends DataAccessObject {
     }
 
     /**
-    * Searches Plugin by Name 
+    * Searches Plugin by Name
     * @return DataAccessResult
     */
     function searchByName($name) {
@@ -52,7 +52,7 @@ class PluginDao extends DataAccessObject {
     }
 
     /**
-    * Searches Plugin by Available 
+    * Searches Plugin by Available
     * @return DataAccessResult
     */
     function searchByAvailable($available) {
@@ -63,7 +63,7 @@ class PluginDao extends DataAccessObject {
 
 
     /**
-    * create a row in the table plugin 
+    * create a row in the table plugin
     * @return true or id(auto_increment) if there is no error
     */
     function create($name, $available) {
@@ -72,14 +72,14 @@ class PluginDao extends DataAccessObject {
                 $this->da->quoteSmart($available));
         return $this->updateAndGetLastId($sql);
     }
-    
+
     function updateAvailableByPluginId($available, $id) {
         $sql = sprintf("UPDATE plugin SET available = %s WHERE id = %s",
                 $this->da->quoteSmart($available),
                 $this->da->quoteSmart($id));
         return $this->update($sql);
     }
-    
+
     function removeById($id) {
         $sql = sprintf("DELETE FROM plugin WHERE id = %s",
                 $this->da->quoteSmart($id));
@@ -102,7 +102,7 @@ class PluginDao extends DataAccessObject {
                        $pluginId);
         return $this->retrieve($sql);
     }
-    
+
     function searchAvailableAndPriorities() {
         $sql = "SELECT p.*, h.hook AS hook, h.priority AS priority
                 FROM priority_plugin_hook h RIGHT JOIN plugin p ON (h.plugin_id = p.id) 

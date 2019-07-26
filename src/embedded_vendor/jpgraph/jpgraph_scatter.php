@@ -188,7 +188,6 @@ class ScatterPlot extends Plot {
             $xt = $xscale->Translate($i);
             $yt = $yscale->Translate($this->coords[0][$i]);
 
-
             if( $this->link->iShow && isset($yt_old) ) {
                 $img->SetColor($this->link->iColor);
                 $img->SetLineWeight($this->link->iWeight);

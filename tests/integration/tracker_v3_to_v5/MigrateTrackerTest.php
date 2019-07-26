@@ -91,7 +91,6 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         }
         $row = db_fetch_array($res);
 
-
         $defect_trackerv3_id = $row['group_artifact_id'];
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
         $project = ProjectManager::instance()->getProject(100);

@@ -141,7 +141,6 @@ class ChangePasswordController
 
         $this->user_manager->updateDb($current_user);
 
-
         $response->header(['title' => _('Email change complete')]);
 
         $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../../templates/user');

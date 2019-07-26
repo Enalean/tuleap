@@ -31,19 +31,19 @@ class b201211281116_remove_unused_keys_from_tracker_rule_tables extends ForgeUpg
     public function up() {
         $sql = "ALTER TABLE `tracker_rule_list`
                     DROP KEY `tracker_rule_id`;";
-        
+
         $result = $this->db->dbh->exec($sql);
-        
+
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
-        
+
         $sql2 = "ALTER TABLE `tracker_rule_date`
                     DROP KEY `tracker_rule_id`;";
-        
+
         $result2 = $this->db->dbh->exec($sql2);
-         
+
         if ($result2 === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);

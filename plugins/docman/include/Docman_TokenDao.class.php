@@ -22,12 +22,12 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for Docman_Token 
+ *  Data Access Object for Docman_Token
  */
 class Docman_TokenDao extends DataAccessObject {
 
     /**
-    * Searches Docman_Token by Url 
+    * Searches Docman_Token by Url
     * @return DataAccessResult
     */
     function searchUrl($user_id, $token) {
@@ -36,9 +36,9 @@ class Docman_TokenDao extends DataAccessObject {
         $this->da->quoteSmart($token));
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * create a row in the table plugin_docman_tokens 
+    * create a row in the table plugin_docman_tokens
     * @return true or id(auto_increment) if there is no error
     */
     function create($user_id, $token, $url) {
@@ -47,10 +47,10 @@ class Docman_TokenDao extends DataAccessObject {
         $this->da->quoteSmart($token),
         $this->da->quoteSmart($url));
         $inserted = $this->update($sql);
- 
+
         return $inserted;
     }
-    
+
     /**
     * delete a row in the table plugin_docman_tokens
     */
@@ -59,7 +59,7 @@ class Docman_TokenDao extends DataAccessObject {
         $this->da->quoteSmart($user_id),
         $this->da->quoteSmart($token));
         $deleted = $this->update($sql);
- 
+
         return $deleted;
     }
 

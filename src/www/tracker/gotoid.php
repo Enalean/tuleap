@@ -2,12 +2,12 @@
 // Copyright (c) Enalean, 2012-Present. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// 
+//
 //
 //
 //  Written for Codendi by Nicolas Guérin
 //
-// This script performs a redirection to the proper artifact page, given 
+// This script performs a redirection to the proper artifact page, given
 // only the artifact id, and possibly the artifact name detected in text and a group_id.
 // It is called from function util_make_links
 
@@ -17,7 +17,7 @@
    *    We only keep it for compatibility with existing commit messages and legacy trackers
    ********************************************************************/
 
- 
+
 require_once('../svn/svn_data.php');
 
 /**

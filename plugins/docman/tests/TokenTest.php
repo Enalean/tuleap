@@ -78,7 +78,6 @@ class TokenTest extends TuleapTestCase {
 
         $this->assertNull($t1->getToken(), 'Without referer, we should have a null token');
 
-
         $t2 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t2->allows(['_getDao' => $dao]);
         $t2->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
@@ -87,7 +86,6 @@ class TokenTest extends TuleapTestCase {
         $t2->__construct();
 
         $this->assertNotNull($t2->getToken());
-
 
         $t3 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t3->allows(['_getDao' => $dao]);

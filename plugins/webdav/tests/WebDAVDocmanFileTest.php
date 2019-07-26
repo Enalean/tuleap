@@ -103,18 +103,18 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
 
     function testPutBigFile() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectNever('processDocmanRequest');
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFile->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 20);
 
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
@@ -124,18 +124,18 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
 
     function testPutSucceed() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFile->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4096);
 
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
@@ -157,10 +157,10 @@ class WebDAVDocmanFileTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFile->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
 

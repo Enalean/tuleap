@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $newItemId = $this->_cloneItem($item, $params);
         if($newItemId > 0) {
             $params['parentId'] = $newItemId;
-            
+
             // Recurse
             $items = $item->getAllItems();
             if($items) {
@@ -139,9 +139,9 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                                      'filesize'  => $srcVersion->getFilesize(),
                                      'filetype'  => $srcVersion->getFiletype(),
                                      'path'      => $dstPath);
-            
+
             $versionId = $versionFactory->create($newVersionArray);
-            
+
         }
     }
 
@@ -176,7 +176,6 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         $parentId = $params['parentId'];
         $metadataMapping = $params['metadataMapping'];
         $ugroupsMapping = $params['ugroupsMapping'];
-
 
         // Clone Item
         $itemFactory = $this->_getItemFactory();
@@ -232,15 +231,15 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         //   project metadata)
         // * for list of values change the values (use mapping as behind).
         $newMdvFactory = $this->_getMetadataValueFactory($this->dstGroupId);
-        
+
         $oldMdFactory = $this->_getMetadataFactory($item->getGroupId());
         $oldMdFactory->appendItemMetadataList($item);
-        
+
         $oldMdIter = $item->getMetadataIterator();
         $oldMdIter->rewind();
         while($oldMdIter->valid()) {
             $oldMd = $oldMdIter->current();
-            
+
             if($oldMdFactory->isRealMetadata($oldMd->getLabel())) {
                 $oldValue = $oldMdFactory->getMetadataValue($item, $oldMd);
 
@@ -253,14 +252,14 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                         $oldValue->rewind();
                         while($oldValue->valid()) {
                             $e = $oldValue->current();
-                            
+
                             // no maping for value `100` (shared by all lists).
                             if(($e->getId() != 100) && isset($metadataMapping['love'][$e->getId()])) {
                                 $newE = clone $e;
                                 $newE->setId($metadataMapping['love'][$e->getId()]);
                                 $ea[] = $newE;
                             }
-                            
+
                             $oldValue->next();
                         }
                         // No match found: set None value.
@@ -280,12 +279,12 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             $oldMdIter->next();
         }
     }
-    
+
     function _metadataEnabled($srcGroupId, $mdLabel) {
         if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
             $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
-            $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel) 
+            $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel)
                                                     && $dstSettingsBo->getMetadataUsage($mdLabel));
         }
         return $this->_cacheMetadataUsage[$mdLabel];
@@ -329,7 +328,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     {
         return new Docman_MetadataFactory($groupId);
     }
-    
+
     function _getSettingsBo($groupId)
     {
         return Docman_SettingsBo::instance($groupId);

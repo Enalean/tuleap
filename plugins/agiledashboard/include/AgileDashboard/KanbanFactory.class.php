@@ -65,7 +65,6 @@ class AgileDashboard_KanbanFactory {
             throw new AgileDashboard_KanbanCannotAccessException();
         }
 
-
         return $this->instantiateFromRow($row);
     }
 

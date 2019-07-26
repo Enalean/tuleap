@@ -24,7 +24,7 @@ class Tracker_SharedFormElementFactory {
      */
     protected $factory;
     /**
-     * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
+     * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory
      */
     private $boundValuesFactory;
 
@@ -33,7 +33,7 @@ class Tracker_SharedFormElementFactory {
         $this->factory = $factory;
     }
 
-    
+
     public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking) {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
         if (!$formElement) {
@@ -42,14 +42,14 @@ class Tracker_SharedFormElementFactory {
         }
         $field = $this->getRootOriginalField($formElement);
         $this->assertFieldCanBeCopied($field, $user);
-        
+
         $data = $this->populateFormElementDataForASharedField($field);
         $type = $data['type'];
         $id = $this->factory->createFormElement($tracker, $type, $data, $tracker_is_empty, $force_absolute_ranking);
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
     }
-    
+
     private function getRootOriginalField(Tracker_FormElement $field) {
         $originalField = $field->getOriginalField();
         if ($originalField === null) {
@@ -70,15 +70,15 @@ class Tracker_SharedFormElementFactory {
         $this->assertFieldIsReadable($field, $user);
         $this->assertFieldIsStaticSelectbox($field);
     }
-    
+
     private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user) {
-        if ( ! ($field->userCanRead($user) 
+        if ( ! ($field->userCanRead($user)
               && $field->getTracker()->userCanView($user))) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
             throw new Exception($exception_message);
         }
     }
-    
+
     private function assertFieldIsStaticSelectbox(Tracker_FormElement $field) {
         if ( ! ($field instanceof Tracker_FormElement_Field_Selectbox
                 && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
@@ -86,7 +86,7 @@ class Tracker_SharedFormElementFactory {
             throw new Exception($exception_message);
         }
     }
-    
+
     private function populateFormElementDataForASharedField($originField) {
         return array(
             'type'              => $this->factory->getType($originField),

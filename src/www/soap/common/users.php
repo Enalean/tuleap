@@ -54,10 +54,10 @@ if (defined('NUSOAP')) {
         if (! session_continue($sessionKey)) {
             return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getUserInfo');
         }
-    
+
         $user_manager = UserManager::instance();
         $current_user = $user_manager->getCurrentUser();
-    
+
         try {
             $user      = $user_manager->getUserById($user_id);
             $user_info = user_to_soap($user_id, $user, $current_user);
@@ -99,7 +99,7 @@ if (defined('NUSOAP')) {
 
                 return $existingUsers;
             } catch (Exception $e) {
-                return new SoapFault('0', $e->getMessage(), 'checkUsersExistence');        
+                return new SoapFault('0', $e->getMessage(), 'checkUsersExistence');
             }
         } else {
             return new SoapFault(invalid_session_fault, 'Invalid Session ', 'checkUsersExistence');

@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ class Docman_Filter {
         $this->value = null;
         $this->md = $md;
     }
-  
+
     function setValue($v) {
         $this->value = $v;
     }
@@ -125,7 +125,7 @@ class Docman_FilterDate extends Docman_Filter {
 
     function setOperator($v) {
         $this->operator = $v;
-    } 
+    }
 
     function getOperator() {
         return $this->operator;
@@ -157,10 +157,10 @@ class Docman_FilterDate extends Docman_Filter {
             //}
         return $param;
     }
-   
+
     function _urlMatchUpdate($request) {
         // Simple date
-        if($request->exist($this->getFieldValueName())) { 
+        if($request->exist($this->getFieldValueName())) {
             $val = $request->get($this->getFieldValueName());
             if($this->isValidDateFormat($val)) {
                 $this->setValue($val);
@@ -272,10 +272,10 @@ extends Docman_FilterDate {
                 $endValue = true;
             }
         }
-            
+
         // If no values found, try to get values from simple search
         if(!$startValue && !$endValue) {
-            if($request->exist($this->getFieldOperatorName()) 
+            if($request->exist($this->getFieldOperatorName())
                && $request->exist($this->getFieldValueName())) {
                 switch($request->get($this->getFieldOperatorName())) {
                     case '-1': // '<'
@@ -291,7 +291,7 @@ extends Docman_FilterDate {
                 }
                 $fieldExist = true;
             }
-        } 
+        }
         return $fieldExist;
     }
 }
@@ -334,7 +334,7 @@ class Docman_FilterList extends Docman_Filter {
     function _urlMatchUpdate($request) {
         if(parent::_urlMatchUpdate($request)) {
             $v = $this->getValue();
-            
+
             if(is_array($v)) {
                 // Convert advanced filter value to simple
                 if(count($v) == 1 && $this->isValidListValue($v[0])) {
@@ -352,7 +352,7 @@ class Docman_FilterList extends Docman_Filter {
 /**
  * Advanced filter on ListOfValues: can select several values
  */
-class Docman_FilterListAdvanced 
+class Docman_FilterListAdvanced
 extends Docman_FilterList {
 
     function __construct($md) {

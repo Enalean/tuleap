@@ -37,7 +37,7 @@ class TrackerDateReminder_ArtifactField {
      * @return result set
      */
     function deleteFieldReminderSettings($field_id,$group_artifact_id) {
-    
+
         $del = sprintf('DELETE FROM artifact_date_reminder_settings'
                 .' WHERE field_id=%d'
                 .' AND group_artifact_id=%d',
@@ -47,10 +47,10 @@ class TrackerDateReminder_ArtifactField {
                 .' WHERE field_id=%d'
                 .' AND group_artifact_id=%d',
                 $field_id,$group_artifact_id);
-        $result = db_query($rem);   
-        
+        $result = db_query($rem);
+
     }
-    
+
 
     function populateProcessingForField(ArtifactType $at, $field_id,$group_artifact_id) {
         //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
@@ -65,9 +65,9 @@ class TrackerDateReminder_ArtifactField {
                 $tdrArtifactType->addArtifactToDateReminderProcessing($field_id, $arr['artifact_id'], $group_artifact_id);
             }
         }
-    
+
     }
-    
+
     /**
      *  updateDateFieldReminderSettings - use this to update the date-fields reminder settings in the database.
      *

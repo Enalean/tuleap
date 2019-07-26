@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -84,7 +84,7 @@ class Docman_MetadataValueList extends Docman_MetadataValue {
     var $listOfValues;
 
     function __construct() {
-        parent::__construct();        
+        parent::__construct();
         $this->listOfValues = null;
     }
 
@@ -116,13 +116,13 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
     var $valueString;
 
     function __construct() {
-        parent::__construct();        
+        parent::__construct();
         $this->valueText = null;
         $this->valueFloat = null;
         $this->valueDate = null;
-        $this->valueString = null;        
+        $this->valueString = null;
     }
-    
+
     function setValueText($v) {
         $this->valueText = $v;
     }
@@ -142,8 +142,8 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
     }
     function getValueString() {
         return $this->valueString;
-    }    
-    
+    }
+
     function getValue() {
         switch($this->type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:

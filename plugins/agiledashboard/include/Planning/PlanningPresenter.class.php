@@ -19,32 +19,32 @@
  */
 
 class PlanningPresenter {
-    
+
     /**
      * @var Planning
      */
     protected $planning;
-    
+
     public function __construct(Planning $planning) {
         $this->planning = $planning;
     }
-    
+
     public function planningId() {
         return $this->planning->getId();
     }
-    
+
     public function planningName() {
         return $this->planning->getName();
     }
-    
+
     public function groupId() {
         return $this->planning->getGroupId();
     }
-    
+
     public function planningBacklogTitle() {
         return $this->planning->getBacklogTitle();
     }
-    
+
     public function planningPlanTitle() {
         return $this->planning->getPlanTitle();
     }

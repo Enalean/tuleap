@@ -89,7 +89,6 @@ class BurndownDataBuilderForLegacy
 
         $this->logger->info("End calculating burndown " . $artifact->getId());
 
-
         date_default_timezone_set($user_timezone);
 
         return $efforts;

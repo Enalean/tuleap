@@ -51,14 +51,14 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
 
         $this->assertIdentical($value, $field->getComputedValue($user, $artifact, $timestamp));
     }
-    
+
     public function itReturnsZeroWhenUserDoesntHavePermissions() {
         $user           = aUser()->build();
         $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
         $artifact       = aMockArtifact()->withValue($artifact_value)->build();
         $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('userCanRead'));
         stub($field)->userCanRead($user)->returns(false);
-        
+
         $actual_value = $field->getComputedValue($user, $artifact);
         $this->assertEqual(0, $actual_value);
     }

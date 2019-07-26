@@ -19,7 +19,7 @@
  */
 
 class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
-    
+
     public function create($tv3_id, $tv5_id) {
         $this->insertDefaultValuesForMsb($tv3_id, $tv5_id);
         $this->insertDefaultValuesForDate($tv3_id, $tv5_id);
@@ -35,7 +35,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id);
         $this->insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id);
     }
-    
+
     private function insertDefaultValuesForMsb($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_msb (field_id, size)
                 SELECT id, CAST(display_size AS SIGNED INTEGER) AS size
@@ -46,7 +46,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                                         AND formElement_type = 'msb')";
         $this->update($sql);
     }
-    
+
     private function insertDefaultValuesForDate($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_date (field_id, default_value, default_value_type)
                 SELECT f.id, old.default_value, IF(old.default_value = '', 0, 1)
@@ -58,7 +58,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                     )";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForInt($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_int (field_id, default_value, maxchars, size)
                 SELECT f.id, 
@@ -74,7 +74,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                     )";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForFloat($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_float (field_id, default_value, maxchars, size)
                 SELECT f.id, 
@@ -89,7 +89,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                     )";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForText($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_text (field_id, default_value, rows, cols)
                 SELECT f.id, 
@@ -103,7 +103,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         AND f.formElement_type = 'text')";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForString($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_string (field_id, default_value, maxchars, size)
                 SELECT f.id, 
@@ -118,7 +118,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                     )";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForListBindStaticOnSbFields($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, new.id 
@@ -133,7 +133,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         AND new.field_id = f.id)";
         $this->update($sql);
     }
-    
+
     private function insertDefautValuesForListBindUsersOnSbFields($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, user.user_id 
@@ -148,7 +148,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         user.user_id <> 100)";
         $this->update($sql);
     }
-    
+
     private function insertDefaultValuesIsNoneForSbFields($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, old.default_value
@@ -158,9 +158,9 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
                         f.formElement_type = 'sb' AND
                         old.default_value = 100)";
-        $this->update($sql);                        
+        $this->update($sql);
     }
-    
+
     private function insertDefautSingleValueForListBindStaticOnMsbFields($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                SELECT f.id, new.id 
@@ -195,7 +195,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function insertDefaultValuesIsNoneForMsbFields($tv3_id, $tv5_id) {    
+    private function insertDefaultValuesIsNoneForMsbFields($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
                 SELECT f.id, old.default_value
                 FROM tracker_field AS f
@@ -206,7 +206,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         old.default_value = 100)";
         $this->update($sql);
     }
-    
+
     private function insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id) {
         $sql = "SELECT f.id, old.default_value
                 FROM tracker_field AS f
@@ -217,7 +217,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                     (old.value_function IS NULL OR old.value_function = '') AND 
                     POSITION(',' IN old.default_value) <> 0)";
         $res   = $this->retrieve($sql);
-        
+
         if ($res) {
             while($row = $res->getRow()) {
                 $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
@@ -229,7 +229,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
             }
         }
     }
-    
+
     private function insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id) {
         $sql = "SELECT f.id, old.default_value 
                 FROM tracker_field AS f
@@ -240,7 +240,7 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         (old.value_function IS NOT NULL AND old.value_function <> '') AND 
                         POSITION(',' IN old.default_value) <> 0)";
         $res   = $this->retrieve($sql);
-        
+
         if ($res) {
             while($row = $res->getRow()) {
                 $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)

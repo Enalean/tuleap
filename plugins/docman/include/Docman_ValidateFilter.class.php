@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 
 class Docman_ValidateFilterFactory {
     function __construct() {
-        
+
     }
 
     function getFromFilter($filter) {
@@ -39,11 +39,11 @@ class Docman_ValidateFilter {
     var $filter;
     var $message;
     var $isValid;
-    
+
     function __construct($filter) {
         $this->filter = $filter;
         $this->message = '';
-        $this->isValid = null; 
+        $this->isValid = null;
     }
 
     function validate() {
@@ -69,7 +69,7 @@ class Docman_ValidateFilterDate extends Docman_ValidateFilter {
             }
             elseif(preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
                               $this->filter->getValue())) {
-                $this->isValid = true;                
+                $this->isValid = true;
             }
             else {
                 $today = date("Y-n-j");

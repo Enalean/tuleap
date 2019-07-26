@@ -392,7 +392,6 @@ class TrackersTest extends TrackerBase
     {
         $response_report = $this->getResponse($this->client->get($this->report_uri))->json();
 
-
         foreach ($response_report['resources'] as $resource) {
             if ($resource['type'] == 'artifacts') {
                 return $resource['uri'];

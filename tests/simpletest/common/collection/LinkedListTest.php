@@ -30,6 +30,6 @@ class LinkedListTest extends LinkedListTestCase {
     function __construct($name = 'LinkedList test') {
         parent::__construct($name, 'LinkedList');
     }
-    
+
 }
 ?>

@@ -229,7 +229,6 @@ class ProjectDao extends DataAccessObject {
         WHERE ugroup_user.user_id = $user_id
           AND groups.status='A'";
 
-
         return $this->retrieve($sql);
     }
 
@@ -307,7 +306,6 @@ class ProjectDao extends DataAccessObject {
             $pattern = $this->da->quoteSmart('%'.$groupName.'%');
             $cond[] = '(group_name LIKE '.$pattern.' OR group_id LIKE '.$pattern.' OR unix_group_name LIKE '.$pattern.')';
         }
-
 
         if (count($cond) > 0) {
             $stm = ' WHERE '.implode(' AND ', $cond);
@@ -422,7 +420,6 @@ class ProjectDao extends DataAccessObject {
 
         $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
-
 
         if ($user->isSuperUser()) {
             $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*

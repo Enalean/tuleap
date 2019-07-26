@@ -70,13 +70,13 @@ if ($export == 'artifact_deps') {
 
     // Send the result in CSV format
     if ($result && $rows > 0) {
-    
+
             $tbl_name = str_replace(' ','_','artifact_deps_'.$at->getItemName());
         header ('Content-Type: text/csv');
         header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
-        
+
         echo build_csv_header($col_list, $lbl_list).$eol;
-    
+
         while ($arr = db_fetch_array($result)) {
             echo build_csv_record($col_list, $arr).$eol;
         }
@@ -100,7 +100,7 @@ if ($export == 'artifact_deps') {
 
     echo '<h3>'.$Language->getText('project_export_artifact_deps_export','deps_export_format').'</h3>';
     echo '<p>'.$Language->getText('project_export_artifact_deps_export','deps_export_format_msg').'</p>';
- 
+
     $record = pick_a_record_at_random($result, $rows, $col_list);
 
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);

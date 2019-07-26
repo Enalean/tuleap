@@ -19,7 +19,7 @@ extends WikiDB_backend_iterator
         $this->_backend = &$backend;
         if (!is_array($exclude))
             $this->exclude = $exclude ? PageList::explodePageList($exclude) : array();
-        else 
+        else
             $this->exclude = $exclude;
     }
 

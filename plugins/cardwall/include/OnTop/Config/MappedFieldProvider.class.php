@@ -27,18 +27,18 @@ require_once dirname(__FILE__) .'/../../constants.php';
 class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
 
     /**
-     * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever 
+     * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
      */
     private $semantic_status_provider;
-    
+
     /**
      * @var Cardwall_OnTop_Config
      */
     private $config;
-    
-    public function __construct(Cardwall_OnTop_Config                         $config, 
+
+    public function __construct(Cardwall_OnTop_Config                         $config,
                          Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider) {
-        
+
         $this->semantic_status_provider = $semantic_status_provider;
         $this->config                   = $config;
     }

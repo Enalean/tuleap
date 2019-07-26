@@ -25,12 +25,12 @@ class MockArtifactFactoryBuilder {
     public function __construct() {
         $this->factory = new MockTracker_ArtifactFactory();
     }
-    
+
     public function withArtifact($artifact) {
         $this->factory->setReturnValue('getArtifactById', $artifact, array($artifact->getId()));
         return $this;
     }
-    
+
     public function build() {
         return $this->factory;
     }

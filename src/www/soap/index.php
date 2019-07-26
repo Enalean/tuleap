@@ -57,7 +57,7 @@ try {
     require_once('common/users.php');
     require_once('tracker/tracker.php');
     require_once('frs/frs.php');
-    
+
     // include the <Plugin> API (only if plugin is available)
     $event_manager->processEvent('soap', array());
 } catch (Exception $e) {

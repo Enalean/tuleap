@@ -35,7 +35,7 @@ function svn_data_get_technicians($group_id) {
 }
 
 function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble, $svn_mandatory_ref, $svn_can_change_log) {
-    
+
     $query = "update groups set svn_tracker='".db_ei($svn_tracked).
     "', svn_preamble='".db_es(htmlspecialchars($svn_preamble)).
         "', svn_mandatory_ref='".db_ei($svn_mandatory_ref).
@@ -78,7 +78,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 
     //check user access rights
     $pm = ProjectManager::instance();
-    $project = $pm->getProject($group_id); 
+    $project = $pm->getProject($group_id);
 
     $forbidden = svn_utils_get_forbidden_paths(user_getname(), $project->getSVNRootPath());
     $where_forbidden = "";
@@ -88,7 +88,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
         }
     }
 
-    // if the subversion revision id is given then it akes precedence on 
+    // if the subversion revision id is given then it akes precedence on
     // the internal commit_id (this is to make it easy for users to build
     // URL to access a revision
     if ($rev_id) {

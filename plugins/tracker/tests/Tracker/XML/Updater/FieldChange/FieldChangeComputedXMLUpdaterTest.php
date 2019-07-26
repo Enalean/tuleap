@@ -74,7 +74,6 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-
         $this->assertEqual($this->field_change->is_autocomputed, '0');
         $this->assertEqual($this->field_change->manual_value, 1.5);
     }

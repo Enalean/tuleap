@@ -19,41 +19,41 @@
  */
 
 /**
- *  Data Access Object for Tracker_FormElement_Field 
+ *  Data Access Object for Tracker_FormElement_Field
  */
 class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificPropertiesDao {
-    
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field_text';
     }
-    
+
     public function save($field_id, $row) {
         $field_id  = $this->da->escapeInt($field_id);
-        
+
         if (isset($row['rows']) && (int)$row['rows']) {
             $rows = $this->da->escapeInt($row['rows']);
         } else {
             $rows = 10;
         }
-        
+
         if (isset($row['cols']) && (int)$row['cols']) {
             $cols = $this->da->escapeInt($row['cols']);
         } else {
             $cols = 50;
         }
-        
+
         if (isset($row['default_value'])) {
             $default_value = $this->da->quoteSmart($row['default_value']);
         } else {
             $default_value = "''";
         }
-        
+
         $sql = "REPLACE INTO $this->table_name (field_id, rows, cols, default_value)
                 VALUES ($field_id, $rows, $cols, $default_value)";
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Duplicate specific properties of field
      *
@@ -65,7 +65,7 @@ class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificProp
     public function duplicate($from_field_id, $to_field_id) {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id  = $this->da->escapeInt($to_field_id);
-        
+
         $sql = "REPLACE INTO $this->table_name (field_id, rows, cols, default_value)
                 SELECT $to_field_id, rows, cols, default_value FROM $this->table_name WHERE field_id = $from_field_id";
         return $this->update($sql);

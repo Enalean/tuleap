@@ -55,7 +55,6 @@ class Docman_LinkVersionDao extends DataAccessObject {
         $item_id   = $this->da->escapeInt($link->getId());
         $user_id   = $this->da->escapeInt($link->getOwnerId());
 
-
         $sql = "INSERT INTO plugin_docman_link_version (item_id, number, user_id, label, changelog, date, link_url)
                 SELECT $item_id, IFNULL(MAX(number), 0) + 1 as number, $user_id, $label, $changelog, $date, $link_url
                 FROM plugin_docman_link_version
@@ -73,7 +72,6 @@ class Docman_LinkVersionDao extends DataAccessObject {
         $link_url  = $this->da->quoteSmart($link->getUrl());
         $item_id   = $this->da->escapeInt($link->getId());
         $user_id   = $this->da->escapeInt($link->getOwnerId());
-
 
         $sql = "INSERT INTO plugin_docman_link_version (id, item_id, number, user_id, label, changelog, date, link_url) VALUES
                ($version, $item_id, $version, $user_id, $label, $changelog, $date, $link_url)";

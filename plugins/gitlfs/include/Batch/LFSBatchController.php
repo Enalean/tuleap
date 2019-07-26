@@ -98,7 +98,6 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             throw new ForbiddenException();
         }
 
-
         try {
             $response = $this->batch_successful_response_builder->build(
                 new \DateTimeImmutable(),

@@ -88,7 +88,6 @@ class DateScaleUtils {
         }
         ++$m;
 
-
         switch( $aType ) {
             case DSUTILS_YEAR1:
                 for($y=self::$startyear; $y <= self::$endyear; ++$y ) {

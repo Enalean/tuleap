@@ -65,7 +65,6 @@ class DynamicCredentialsResource
             throw new RestException(400, 'Invalid value specified for `expiration`. Expecting ISO8601 date.');
         }
 
-
         try {
             $account_creator->create($username, $password, $expiration_date);
         } catch (CredentialInvalidUsernameException $ex) {

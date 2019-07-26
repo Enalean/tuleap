@@ -24,44 +24,44 @@ function anIntFieldPostAction() {
 }
 
 class Test_Transition_PostAction_Field_Int_Builder {
-    
+
     private $id;
-    
+
     public function __construct() {
         $this->transition = aTransition()->build();
         $this->field      = anIntegerField()->build();
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTransition(Transition $transition) {
         $this->transition = $transition;
         return $this;
     }
-    
+
     public function withTransitionId($transition_id) {
         $this->transition = aTransition()->withId($transition_id)->build();
         return $this;
     }
-    
+
     public function withField(Tracker_FormElement_Field_Integer $field) {
         $this->field = $field;
         return $this;
     }
-    
+
     public function withFieldId($field_id) {
         $this->field = anIntegerField()->withId($field_id)->build();
         return $this;
     }
-    
+
     public function withValue($value) {
         $this->value = $value;
         return $this;
     }
-    
+
     public function build() {
         return new Transition_PostAction_Field_Int($this->transition,
                                                    $this->id,

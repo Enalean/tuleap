@@ -35,13 +35,13 @@ EOT;
         $sql = "ALTER TABLE tracker_hierarchy 
                     DROP KEY idx,
                     ADD PRIMARY KEY (child_id)";
-        
+
         $res = $this->db->dbh->exec($sql);
-        
+
         if ($res === false) {
             $error_detail  = implode(', ', $this->db->dbh->errorInfo());
             $error_message = 'An error occured while changing primary key to `child_id` on `tracker_hierarchy`: '.$error_detail;
-            
+
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }

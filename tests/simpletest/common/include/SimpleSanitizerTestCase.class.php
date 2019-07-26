@@ -31,7 +31,7 @@ class SimpleSanitizerTestCase extends SanitizerTestCase {
     }
     /**
      * Test the main function of the sanitizer : sanitize()
-     * 
+     *
      */
     function testSanitize() {
         $bad_tag   = "<tag";
@@ -39,7 +39,7 @@ class SimpleSanitizerTestCase extends SanitizerTestCase {
         $result    = $this->sanitizer->sanitize($html);
 
         $this->assertNoPattern("/".$bad_tag."/",$result);
-    }    
+    }
 }
 
 //We just tells SimpleTest to always ignore this testcase

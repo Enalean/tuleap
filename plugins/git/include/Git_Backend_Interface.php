@@ -57,7 +57,7 @@ interface Git_Backend_Interface {
 
     /**
      * Verify if given name is not already reserved on filesystem
-     * 
+     *
      * @return bool
      */
     public function isNameAvailable($newName);
@@ -85,7 +85,7 @@ interface Git_Backend_Interface {
      * Update list of people notified by post-receive-email hook
      *
      * @param GitRepository $repository
-     * 
+     *
      * @return bool
      */
     public function changeRepositoryMailingList($repository);
@@ -94,7 +94,7 @@ interface Git_Backend_Interface {
      * Change post-receive-email hook mail prefix
      *
      * @param GitRepository $repository
-     * 
+     *
      * @return bool
      */
     public function changeRepositoryMailPrefix($repository);

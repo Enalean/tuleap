@@ -79,7 +79,7 @@ extends WikiPlugin
     // info=mtime,hits,summary,version,author,locked,minor
     // exclude arg allows multiple pagenames
     // exclude=HomePage,RecentChanges
-    
+
     // Fixme: overcome limitation if two SiteMap plugins are in the same page!
     // static $VisitedPages still holds it
     function recursivelyGetBackLinks($startpage, $pagearr, $level = '*',
@@ -125,7 +125,7 @@ extends WikiPlugin
         $pagelinks = $startpage->getLinks($reversed);
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
-            if (($linkpagename != $startpagename) and 
+            if (($linkpagename != $startpagename) and
                 (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename)))
             {
                 if (!$this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
@@ -142,7 +142,7 @@ extends WikiPlugin
 
     function run($dbi, $argstr, &$request, $basepage) {
         include_once('lib/BlockParser.php');
-        
+
         $args = $this->getArgs($argstr, $request, false);
         extract($args);
         if (!$page)
@@ -188,7 +188,7 @@ extends WikiPlugin
         }
 
         reset($pagearr);
-        if (!empty($includepages)) { 
+        if (!empty($includepages)) {
             // disallow direct usage, only via child class IncludeSiteMap
             if (!isa($this,"WikiPlugin_IncludeSiteMap"))
                 $includepages = '';
@@ -207,8 +207,8 @@ extends WikiPlugin
                 // quote linkname, by Stefan Schorn
                 $plugin_args = 'page=\'' . $link->getName() . '\' ' . $includepages;
                 $pagehtml = $plugin->run($dbi, $plugin_args, $request, $basepage);
-                $html->pushContent($pagehtml); 
-                //$html->pushContent( HTML(TransformText($indenter, 1.0, $page), $pagehtml)); 
+                $html->pushContent($pagehtml);
+                //$html->pushContent( HTML(TransformText($indenter, 1.0, $page), $pagehtml));
                 //$out .= $indenter . $pagehtml . "\n";
             }
             else {
@@ -216,9 +216,9 @@ extends WikiPlugin
             }
         }
         if (empty($includepages)) {
-            return TransformText($out, 2.0, $page); 
+            return TransformText($out, 2.0, $page);
         } else {
-            return $html; 
+            return $html;
         }
     }
 };

@@ -79,7 +79,7 @@ abstract class SystemEvent {
     public const PRIORITY_HIGH   = 1;
     public const PRIORITY_MEDIUM = 2;
     public const PRIORITY_LOW    = 3;
-    
+
     public const PARAMETER_SEPARATOR        = '::';
     public const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
 
@@ -132,21 +132,21 @@ abstract class SystemEvent {
     function getParameters() {
         return $this->parameters;
     }
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
      */
     public abstract function verbalizeParameters($with_link);
-    
+
     /**
      * verbalize a user id.
-     * 
+     *
      * @param int $user_id The user id
      * @param bool $with_link true if you want links to entities. The returned string will be html instead of plain/text
      *
@@ -159,10 +159,10 @@ abstract class SystemEvent {
         }
         return $txt;
     }
-    
+
     /**
      * verbalize a project id.
-     * 
+     *
      * @param int $group_id The project id
      * @param bool $with_link true if you want links to entities. The returned string will be html instead of plain/text
      *
@@ -175,7 +175,7 @@ abstract class SystemEvent {
         }
         return $txt;
     }
-    
+
     function getParametersAsArray() {
         return explode(self::PARAMETER_SEPARATOR, $this->parameters);
     }
@@ -207,11 +207,11 @@ abstract class SystemEvent {
     function getCreateDate() {
         return $this->create_date;
     }
-    
+
     function getProcessDate() {
         return $this->process_date;
     }
-    
+
     function getEndDate() {
         return $this->end_date;
     }
@@ -243,15 +243,15 @@ abstract class SystemEvent {
 
         return $duration->format($format);
     }
-    
+
     public function setProcessDate($process_date) {
         $this->process_date = is_numeric($process_date) ? date('Y-m-d H:i:s', $process_date) : $process_date;
     }
-    
+
     public function setEndDate($end_date) {
         $this->end_date = is_numeric($end_date) ? date('Y-m-d H:i:s', $end_date) : $end_date;
     }
-    
+
     /**
      * Checks if the given value represents integer
      * is_int() won't work on string containing integers...
@@ -292,7 +292,7 @@ abstract class SystemEvent {
     }
 
 
-    /** 
+    /**
      * Process stored event
      * Virtual method redeclared in children
      */
@@ -321,7 +321,7 @@ abstract class SystemEvent {
         $this->setStatus($status);
         $this->setLog($msg);
     }
-    
+
     /**
      * Set the status of the event to STATUS_ERROR
      * and log the msg
@@ -330,7 +330,7 @@ abstract class SystemEvent {
     protected function error($msg) {
         $this->logStatus(self::STATUS_ERROR, $msg);
     }
-    
+
     /**
      * Set the status of the event to STATUS_DONE
      * and log the msg
@@ -339,7 +339,7 @@ abstract class SystemEvent {
     protected function done($msg = 'OK') {
         $this->logStatus(self::STATUS_DONE, $msg);
     }
-    
+
     /**
      * Set the status of the event to STATUS_WARNING
      * and log the msg
@@ -348,7 +348,7 @@ abstract class SystemEvent {
     protected function warning($msg) {
         $this->logStatus(self::STATUS_WARNING, $msg);
     }
-    
+
     /**
      * Initialize a project from the given $group_id
      * @param int $group_id the id of the project
@@ -358,13 +358,13 @@ abstract class SystemEvent {
         if (!$group_id) {
             return $this->setErrorBadParam();
         }
-        
+
         $project = ProjectManager::instance()->getProject($group_id);
-        
+
         if (!$project) {
             $this->error("Could not create/initialize project object");
         }
-        
+
         return $project;
     }
 
@@ -377,24 +377,24 @@ abstract class SystemEvent {
         if (!$user_id) {
             return $this->setErrorBadParam();
         }
-        
+
         $user = UserManager::instance()->getUserById($user_id);
-        
+
         if (!$user) {
             $this->error("Could not create/initialize user object");
         }
-        
+
         return $user;
     }
     /**
      * Wrapper for event manager
-     * 
+     *
      * @return EventManager
      */
     protected function getEventManager() {
         return EventManager::instance();
     }
-    
+
     /**
      * Notify people that listen to the status of the event
      */
@@ -428,12 +428,12 @@ End Date:     {$this->getEndDate()}
             $m->send();
         }
     }
-    
+
     /**
      * Wrapper for Backend
-     * 
+     *
      * @param String $type Backend type
-     * 
+     *
      * @return Backend
      */
     protected function getBackend($type) {

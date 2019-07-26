@@ -52,7 +52,7 @@ if ($request->exist('wsdl')) {
         )
     );
     $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), $user_manager);
-    
+
     $server = new TuleapSOAPServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
     $server->setClass($serviceClass, $soap_request_validator, $svn_repository_listing);

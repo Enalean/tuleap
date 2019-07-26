@@ -46,7 +46,7 @@ class Tracker_FormElement_Field_List_Bind_UsersDao extends DataAccessObject {
                 VALUES ($field_id, $value_function)";
         return $this->update($sql);
     }
-    
+
     public function searchChangesetValues($changeset_id, $field_id, $display_name_query, $display_name_order) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);

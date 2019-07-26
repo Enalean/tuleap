@@ -1,8 +1,8 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_Admin_View
 */
@@ -12,7 +12,7 @@ require_once('Docman_View_Browse.class.php');
 
 require_once(dirname(__FILE__).'/../Docman_SettingsDao.class.php');
 class Docman_View_Admin_View extends Docman_View_Extra {
-    
+
     function _title($params) {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_title') .'</h2>';
     }
@@ -34,7 +34,7 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         $html .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
         echo $html;
     }
-    
+
     /* protected */ function _getSettingsDao() {
         $dao = new Docman_SettingsDao(CodendiDataAccess::instance());
         return $dao;

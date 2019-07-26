@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 
@@ -26,12 +26,12 @@
 *
 */
 class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -42,13 +42,13 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
         $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', cvs is private: '. ($cvs_is_private ? 'true' : 'false');
         return $txt;
     }
-    
-    /** 
+
+    /**
      * Process stored event
      */
     function process() {
         list($group_id, $cvs_is_private) = $this->getParametersAsArray();
-        
+
         if ($project = $this->getProject($group_id)) {
             if ($project->usesCVS()) {
                 if (!Backend::instance('CVS')->setCVSPrivacy($project, $cvs_is_private)) {
@@ -56,7 +56,7 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
                     return false;
                 }
             }
-            
+
             $this->done();
             return true;
         }

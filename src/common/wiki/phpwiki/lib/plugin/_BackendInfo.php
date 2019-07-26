@@ -53,7 +53,6 @@ extends WikiPlugin
         $html = HTML(HTML::h3(fmt("Querying backend directly for '%s'",
                                   $page)));
 
-
         $table = HTML::table(array('border' => 1,
                                    'cellpadding' => 2,
                                    'cellspacing' => 0));
@@ -131,7 +130,7 @@ extends WikiPlugin
         }
         unset($data['%pagedata']); // problem in backend
     }
-            
+
     function _showhash ($heading, $hash, $pagename = '') {
         $rows = array();
         if ($heading)

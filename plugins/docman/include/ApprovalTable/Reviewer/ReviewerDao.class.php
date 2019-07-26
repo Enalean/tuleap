@@ -179,7 +179,6 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
             ' AND '.Docman_ItemDao::getCommonExcludeStmt('i').
             ' AND g.status = \'A\'';
 
-
         // Version
         $sql_ver = 'SELECT u.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name'.
             ' FROM plugin_docman_approval_user u '.

@@ -1,8 +1,8 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_PositionWithinFolder
 */
@@ -10,7 +10,7 @@
 require_once('Docman_View_View.class.php');
 
 class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/ {
-    
+
     /* protected */ function _content($params) {
         echo '<select name="ordering">';
         echo '<option value="beginning" '. ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</option>';
@@ -20,7 +20,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
             'force_ordering' => $params['force_ordering'],
             'exclude'         => $params['exclude']
         ));
-        
+
         echo '</select>';
     }
     function _displayItem($item, $params) {
@@ -42,7 +42,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
             }
         }
     }
-    
+
     function visitDocument(&$item, $params = array()) {
         if ($item->getParentId() == $params['parent_id']) {
             $this->_displayItem($item, $params);
@@ -60,7 +60,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    
+
     function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }

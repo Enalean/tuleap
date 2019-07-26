@@ -94,7 +94,7 @@ extends WikiPlugin
                 }
             }
             $dbi->touch();
-            $url = $request->getURLtoSelf(false, 
+            $url = $request->getURLtoSelf(false,
                                           array('metaedit','metafield','metavalue'));
             $request->redirect($url);
             // The rest of the output will not be seen due to the

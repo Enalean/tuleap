@@ -27,16 +27,16 @@ require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class.php');
 
 class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
-  
+
     function __construct($id) {
         global $LANG, $is_wiki_page;
-    
+
       //used so the search box will add the necessary element to the pop-up box
         $is_wiki_page = 1;
-    
+
         $this->gid = (int) $id;
-    
-        if(empty($this->gid)) 
+
+        if(empty($this->gid))
         exit_no_group();
 
         if(! user_ismember($this->gid, 'W2') && ! user_ismember($this->gid, 'A')) {
@@ -64,7 +64,7 @@ class WikiServiceAdmin extends Controler {
 
         if(!empty($_REQUEST['view']))
         $this->view = $_REQUEST['view'];
-    
+
         if(!empty($_REQUEST['action'])) {
             $this->action = $_REQUEST['action'];
         }

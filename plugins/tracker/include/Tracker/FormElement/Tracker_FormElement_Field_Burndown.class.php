@@ -159,7 +159,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $value_retriever->getTimePeriod($artifact, $user)
             );
 
-
             if ($burndown_data->isBeingCalculated()) {
                 $warning = dgettext(
                     'tuleap-tracker',

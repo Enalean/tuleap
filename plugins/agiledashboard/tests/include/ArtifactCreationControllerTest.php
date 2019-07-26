@@ -23,26 +23,26 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
-        
+
         $planning_id         = "99876387";
         $aid                 = -1;
         $this->planning_tracker_id = 66;
         $this->request = aRequest()->withUri("/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid")->build();
-        
+
         $this->planning = aPlanning()
             ->withId($planning_id)
             ->withPlanningTrackerId($this->planning_tracker_id)
             ->build();
-        
+
         $planning_factory = mock('PlanningFactory');
-        
+
         stub($planning_factory)->getPlanning($planning_id)->returns($this->planning);
-        
+
         $this->controller = new Planning_ArtifactCreationController($planning_factory, $this->request);
     }
 
@@ -50,10 +50,10 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         ForgeConfig::restore();
         parent::tearDown();
     }
-    
+
     public function itRedirectsToArtifactCreationForm() {
         $new_artifact_url = preg_quote(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&planning[{$this->planning->getId()}]=-1");
-        
+
         $this->expectRedirectTo(new PatternExpectation("@$new_artifact_url@"));
         $this->controller->createArtifact();
     }

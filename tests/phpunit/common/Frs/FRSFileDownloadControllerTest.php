@@ -110,7 +110,6 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $this->file_factory->shouldReceive('getFRSFileFromDb')->andReturn(null);
 
-
         $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
@@ -193,7 +192,6 @@ final class FRSFileDownloadControllerTest extends TestCase
         $frs_file->shouldReceive('isActive')->andReturn(true);
         $frs_file->shouldReceive('fileExists')->andReturn(false);
         $frs_file->shouldReceive('getFileID')->andReturn(12);
-
 
         $this->url_verification->shouldReceive('userCanAccessProject');
 

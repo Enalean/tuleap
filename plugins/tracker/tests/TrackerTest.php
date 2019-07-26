@@ -116,7 +116,6 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->shouldReceive('getGroupId')->andReturns($group_id);
         $this->tracker2->shouldReceive('getId')->andReturns(112);
 
-
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
             1 => array('PERM_1'),
             3 => array('PERM_2'),
@@ -958,14 +957,12 @@ class TrackerTest extends TuleapTestCase {
         $artifact4 = \Mockery::spy(\Tracker_Artifact::class);
         $artifact4->shouldReceive('getId')->andReturns('4');
 
-
         $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
         $af->shouldReceive('getArtifactById')->with('1')->andReturns($artifact1);
         $af->shouldReceive('getArtifactById')->with('2')->andReturns($artifact2);
         $af->shouldReceive('getArtifactById')->with('3')->andReturns($artifact3);
         $af->shouldReceive('getArtifactById')->with('4')->andReturns($artifact4);
-
 
         $this->tracker->shouldReceive('aidExists')->andReturns(true);
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));

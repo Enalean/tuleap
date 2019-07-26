@@ -18,7 +18,6 @@ function bookmark_add ($bookmark_url, $bookmark_title="") {
                            " AND bookmark_url='".db_es($bookmark_url)."' AND bookmark_title='".db_es($bookmark_title)."'");
         return db_result($result, 0, "bookmark_id");
 
-
 }
 
 function bookmark_edit ($bookmark_id, $bookmark_url, $bookmark_title) {

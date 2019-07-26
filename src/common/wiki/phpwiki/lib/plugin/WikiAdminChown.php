@@ -48,7 +48,7 @@ extends WikiPlugin_WikiAdminSelect
     }
 
     function getDefaultArguments() {
-        return array_merge 
+        return array_merge
             (
              PageList::supportedArgs(),
              array(
@@ -64,7 +64,7 @@ extends WikiPlugin_WikiAdminSelect
         $count = 0;
         foreach ($pages as $name) {
             $page = $dbi->getPage($name);
-            if ( ($owner = $page->getOwner()) and 
+            if ( ($owner = $page->getOwner()) and
                  $newowner != $owner ) {
                 if (!mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.",
@@ -76,7 +76,7 @@ extends WikiPlugin_WikiAdminSelect
                                                       WikiLink($name), WikiLink($newowner))));
                         $count++;
                     } else {
-                        $ul->pushContent(HTML::li(fmt("Couldn't chown page '%s' to '%s'.", 
+                        $ul->pushContent(HTML::li(fmt("Couldn't chown page '%s' to '%s'.",
                                                       WikiLink($name), $newowner)));
                     }
                 }
@@ -90,13 +90,13 @@ extends WikiPlugin_WikiAdminSelect
             return HTML($ul, HTML::p(fmt("No pages changed.")));
         }
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if ($request->getArg('action') != 'browse')
             if (!$request->getArg('action') == _("PhpWikiAdministration/Chown"))
                 return $this->disabled("(action != 'browse')");
-            
+
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
         if (empty($args['user']))
@@ -126,7 +126,7 @@ extends WikiPlugin_WikiAdminSelect
             // DONE: error message if not allowed.
             if ($post_args['action'] == 'verify') {
                 // Real action
-                return $this->chownPages($dbi, $request, array_keys($p), 
+                return $this->chownPages($dbi, $request, array_keys($p),
                                           $post_args['user']);
             }
             if ($post_args['action'] == 'select') {
@@ -139,7 +139,7 @@ extends WikiPlugin_WikiAdminSelect
         }
         if ($next_action == 'select' and empty($pages)) {
             // List all pages to select from.
-            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], 
+            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'],
                                          $args['exclude']);
         }
         /* // let the user decide which info

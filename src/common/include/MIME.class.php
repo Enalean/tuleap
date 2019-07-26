@@ -1,8 +1,8 @@
 <?php
-/** 
+/**
  * MIME.php, provides functions for determining MIME types and getting info about MIME types
  * Copyright (C) 2003 Arend van Beelen, Auton Rijnsburg. arend@auton.nl
- * 
+ *
  * Updated for Codendi by Nicolas Terray 2008
  *
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -23,19 +23,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class MIME {
-    
+
     /**
      * Hold an instance of the class
      */
     private static $_instance;
-    
+
     /**
      * A private constructor; prevents direct creation of object
      */
     private function __construct() {
         $this->XDG_DATA_DIRS = explode(':', (isset($_ENV['XDG_DATA_DIRS'])?$_ENV['XDG_DATA_DIRS']:'/usr/local/share/:/usr/share/'));
     }
-    
+
     /**
      * Singleton
      * @return MIME
@@ -47,7 +47,7 @@ class MIME {
         }
         return self::$_instance;
     }
-    
+
     /**
      * tries to determine the mimetype of the given file
      * if the second variable is false, the file won't be opened and magic checking will be skipped

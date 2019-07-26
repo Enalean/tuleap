@@ -25,10 +25,10 @@
  * Description of DVCSRepository
  */
 interface DVCSRepository {
-   
 
-    
-    
+
+
+
 }
 
 ?>

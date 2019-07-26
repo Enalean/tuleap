@@ -25,16 +25,16 @@ require_once('PluginDescriptor.class.php');
  * PluginInfo
  */
 class PluginInfo {
-    
+
     var $plugin;
     var $pluginDescriptor;
     var $propertyDescriptors;
-    
+
     public function __construct($plugin) {
         $this->plugin              = $plugin;
         $this->propertyDescriptors = new Map();
     }
-    
+
     function setPluginDescriptor($descriptor) {
         $this->pluginDescriptor = $descriptor;
     }
@@ -49,7 +49,7 @@ class PluginInfo {
     function getPropertyDescriptors() {
         return $this->propertyDescriptors;
     }
-    
+
     function _addPropertyDescriptor($descriptor) {
         $name = $descriptor->getName();
         $this->propertyDescriptors->put($name, $descriptor);
@@ -58,13 +58,13 @@ class PluginInfo {
         $name = $descriptor->getName();
         return $this->propertyDescriptors->remove($name, $descriptor);
     }
-    
+
     function loadProperties() {
     }
-    
+
     function saveProperties() {
     }
-    
+
     function getPropertyDescriptorForName($name) {
         $n =  $name;
         return $this->propertyDescriptors->get($n);

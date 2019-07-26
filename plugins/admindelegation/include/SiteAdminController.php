@@ -137,7 +137,6 @@ class SiteAdminController implements DispatchableWithRequest
             $layout->redirect('/plugins/admindelegation/');
         }
 
-
         $delegation_builder = new AdminDelegationBuilder($this->user_delegation_manager, $this->user_manager);
         $users              = $delegation_builder->buildUsers();
         $services           = $delegation_builder->buildServices();

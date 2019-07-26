@@ -33,7 +33,7 @@ class ImgData_Bevels extends ImgData {
         'CJ5ahdhy0XKQkxld1kxb45j7dp0x2lBNOyVgQpMaoadX7Hs7zr'.
         'P1yKj47DKBnKaBKiSAkNss7O6PkMx6kIgYXISQJpcZCqdY6KR+'.
         'J1PkS5Xob/h7MNz8x6D3fz5DKQjpkZOBYAAAAABJRU5ErkJggg'.
-        '==' ; 
+        '==' ;
 
         //==========================================================
         // File: bullets_balls_green_013.png
@@ -49,7 +49,7 @@ class ImgData_Bevels extends ImgData {
         'nLmWmebmt5F5p2AR0+C9AWpLBjXRaZsCAT3SqklVp0YkAWaGtd'.
         'c5Z41/STYpPzW7BjyiRrwkVmQto/Cw9tNEMvsgcekyCyFPboIu'.
         'IsuXiKffYB4NK4r/h6d4g9HPPwCR7i8+GscIiiaonUAAAAAASU'.
-        'VORK5CYII=' ; 
+        'VORK5CYII=' ;
 
         //==========================================================
         // File: bullets_balls_oy_035.png
@@ -65,7 +65,7 @@ class ImgData_Bevels extends ImgData {
         'Y8SOMF0NogBj30ioGRGLZgiPvce1TbIRz6oBQEbOFGK0rIoxrn'.
         '5hDomMA1cfGRCaRVhjS3gkzheM+4HtnlkXcvdZhWG4qZawewe6'.
         '9Jnz/TKLB/ML6HUepn//QczazuwFO/0Ivpolhi4AAAAASUVORK'.
-        '5CYII=' ; 
+        '5CYII=' ;
 
         //==========================================================
         // File: bullets_balls_oy_036.png
@@ -95,7 +95,7 @@ class ImgData_Bevels extends ImgData {
         'ZV/7JfEwMvFIWUlkTMVNInbVv5ZeJqG7Smh2QTBwJBpsdizAZP'.
         '5NyW0awhK8kYodnZxS6ECvPRp2sI+y7PBv1mN02KH7h77QCJ8D'.
         '4VvY5NUgEmCwj6ZMzHtJRgRSXwC1gfcqJJH0GBnSnK1kUQ72DY'.
-        'CPBv+MCS/e0jib77eQAJxwiEWm7hFwAAAABJRU5ErkJggg==' ; 
+        'CPBv+MCS/e0jib77eQAJxwiEWm7hFwAAAABJRU5ErkJggg==' ;
 
     }
 }

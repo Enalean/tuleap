@@ -39,7 +39,7 @@ class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
           ) ENGINE=InnoDB;";
 
         $this->createTable('tracker_rule_list', $sql);
-        
+
         $sql = "INSERT INTO tracker_rule_list (
                     tracker_rule_id, 
                     source_field_id, 
@@ -49,23 +49,23 @@ class b201211211457_refactor_tracker_rule_tables extends ForgeUpgrade_Bucket {
                 ) 
                 SELECT id, source_field_id, source_value_id, target_field_id, target_value_id
                 FROM tracker_rule ";
-        
+
         $result = $this->db->dbh->exec($sql);
-         
+
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
-        
+
         $sql = "ALTER TABLE tracker_rule
                     DROP COLUMN source_field_id,
                     DROP COLUMN source_value_id,
                     DROP COLUMN target_field_id,
                     DROP COLUMN target_value_id
                 ";
-         
+
          $result = $this->db->dbh->exec($sql);
-         
+
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);

@@ -25,28 +25,28 @@ function aCIBuildPostAction() {
 }
 
 class Test_Transition_PostAction_CIBuild_Builder {
-    
+
     private $id;
-    
+
     public function __construct() {
         $this->transition = aTransition()->build();
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTransition(Transition $transition) {
         $this->transition = $transition;
         return $this;
     }
-    
+
     public function withTransitionId($transition_id) {
         $this->transition = aTransition()->withId($transition_id)->build();
         return $this;
     }
-    
+
     public function withValue($value) {
         $this->value = $value;
         return $this;
@@ -56,7 +56,7 @@ class Test_Transition_PostAction_CIBuild_Builder {
         $this->ci_client = $ci_client;
         return $this;
     }
-    
+
     public function build() {
         return new Transition_PostAction_CIBuild(
             $this->transition,

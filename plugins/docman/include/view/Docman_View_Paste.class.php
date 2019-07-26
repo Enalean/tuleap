@@ -25,15 +25,15 @@ require_once('Docman_View_Details.class.php');
 require_once('Docman_View_ItemDetailsSectionPaste.class.php');
 
 class Docman_View_Paste extends Docman_View_Details {
-    
+
     function _getTitle($params) {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_title', array( 
-            $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) , 
-            $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) 
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_title', array(
+            $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
+            $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
         ));
     }
-    
+
     function _content($params, $view = null, $section = null) {
         $vSection = new Docman_View_ItemDetailsSectionPaste(
             $params['item'],

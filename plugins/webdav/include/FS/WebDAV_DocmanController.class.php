@@ -21,11 +21,11 @@
 
 /**
  * WebDav / Docman interactions aims to be done through the standard MVC pattern.
- * 
+ *
  * WebDav plugin issue a new "WebDav" kind of request to Docman controller.
  * Then Docman controller dispatch to the right action depending of the 'action' request
  * parameter. And finally, we use default docman actions defined ind DocmanActions class.
- * 
+ *
  * Using this pattern, we ensure a perfect alignment between WebDav access code and Docman
  * access code.
  */

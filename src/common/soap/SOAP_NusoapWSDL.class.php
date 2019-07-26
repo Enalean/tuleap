@@ -27,28 +27,28 @@ class SOAP_NusoapWSDL {
     private $className;
     private $serviceName;
     private $uri;
-    
+
     public function __construct($className, $serviceName, $uri) {
         $this->className   = $className;
         $this->serviceName = $serviceName;
         $this->uri         = $uri;
     }
-    
+
     public function dumpWSDL() {
         // Instantiate server object
         $server = new soap_server();
         $server->configureWSDL($this->serviceName, $this->uri, false, 'rpc', 'http://schemas.xmlsoap.org/soap/http', $this->uri);
-    
+
         $this->appendMethods($server);
         $this->appendTypes($server);
 
         // Call the service method to initiate the transaction and send the response
         $server->service(file_get_contents('php://input'));
     }
-    
+
     private function appendMethods(soap_server $server) {
         $reflection = new ReflectionClass($this->className);
-        
+
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             if ($method->getName() != '__construct') {
@@ -56,7 +56,7 @@ class SOAP_NusoapWSDL {
             }
         }
     }
-    
+
     private function appendOneMethod(soap_server $server, ReflectionMethod $method) {
         $wsdlGen    = new SOAP_WSDLMethodGenerator($method);
         $server->register(

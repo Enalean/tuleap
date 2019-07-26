@@ -73,7 +73,6 @@ class GitViewsTest extends TuleapTestCase {
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
 
-
     }
 
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled() {

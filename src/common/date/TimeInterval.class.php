@@ -25,7 +25,7 @@ class TimeInterval {
 
     /**
      * Creates a new time interval from UNIX timestamps.
-     * 
+     *
      * @param int $start
      * @param int $end
      * @return \ITimeInterval
@@ -33,17 +33,17 @@ class TimeInterval {
     public static function fromUnixTimestamps($start, $end) {
         return new TimeInterval($start, $end);
     }
-    
+
     /**
      * @var int
      */
     private $start;
-    
+
     /**
      * @var int
      */
     private $end;
-    
+
     /**
      * @return int
      */
@@ -62,11 +62,11 @@ class TimeInterval {
         $this->assertTimestampIsPositive($start, 'Start');
         $this->assertTimestampIsPositive($end, 'End');
         $this->assertStartIsStrictlyBeforeEnd($start, $end);
-        
+
         $this->start = $start;
         $this->end   = $end;
     }
-    
+
     private function assertTimestampIsPositive($timestamp, $name) {
         if ($timestamp <= 0) {
             throw new Exception("$name timestamp must be a positive number");

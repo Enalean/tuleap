@@ -24,47 +24,47 @@
  * It is also composed of a tracker id (eg: Releases tracker), the artifacts (eg: Release 1, Release 2...)of which will be planified
  */
 class Planning {
-    
+
     /**
      * @var int
      */
     private $id;
-    
+
     /**
      * @var string
      */
     private $name;
-    
+
     /**
      * @var int
      */
     private $group_id;
-    
+
     /**
      * @var string
      */
     private $backlog_title;
-    
+
     /**
      * @var string
      */
     private $plan_title;
-    
+
     /**
      * @var int[]
      */
     private $backlog_trackers_ids;
-    
+
     /**
      * @var int
      */
     private $planning_tracker_id;
-    
+
     /**
      * @var Tracker
      */
     private $planning_tracker;
-    
+
     /**
      * @var Tracker[]
      */
@@ -80,66 +80,66 @@ class Planning {
         $this->planning_tracker_id  = $planning_tracker_id;
         $this->planning_tracker     = new NullTracker();
     }
-    
+
     /**
      * @return int the planning id
      */
     public function getId () {
         return $this->id;
     }
-    
+
     /**
      * @return String the planning name
      */
     public function getName() {
         return $this->name;
     }
-    
+
     /**
      * @return int the group_id the planning belongs to
      */
     public function getGroupId() {
         return $this->group_id;
     }
-    
+
     /**
      * @return String the title of the backlog
      */
     public function getBacklogTitle() {
         return $this->backlog_title;
     }
-    
+
     /**
      * @return String the title of the plan
      */
     public function getPlanTitle() {
         return $this->plan_title;
     }
-    
+
     /**
      * @return int[] The id as the tracker used as backlog
      */
     public function getBacklogTrackersIds() {
         return $this->backlog_trackers_ids;
     }
-    
+
     /**
      * @return int The id of the tracker used as planning destination
      */
     public function getPlanningTrackerId() {
         return $this->planning_tracker_id;
     }
-    
+
     /**
      * @return Tracker The tracker used as planning destination
      */
     public function getPlanningTracker() {
         return $this->planning_tracker;
     }
-    
+
     /**
      * TODO: Pass the planning tracker at instanciation, and remove this setter.
-     * 
+     *
      * @param Tracker $planning_tracker The tracker used as planning destination
      */
     public function setPlanningTracker(Tracker $planning_tracker) {
@@ -147,7 +147,7 @@ class Planning {
         $this->planning_tracker_id = $planning_tracker->getId();
         return $this;
     }
-    
+
     /**
      * @param Tracker[] $backlog_tracker The trackers used as a backlog
      */
@@ -161,7 +161,7 @@ class Planning {
 
         return $this;
     }
-    
+
     /**
      * @return Tracker[]
      */

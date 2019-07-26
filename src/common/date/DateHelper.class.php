@@ -20,10 +20,10 @@
  */
 
 class DateHelper {
-    
+
     public const INCLUDE_SECONDS = 1;
     public const WITH_TITLE      = 1;
-    
+
     public const SECONDS_IN_A_DAY = 86400;
 
     /**
@@ -47,16 +47,16 @@ class DateHelper {
         }
         return $str;
     }
-    
+
     /**
      * Calculate the approximate distance between two times
      *
      * @return string
      */
-    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false) {    
+    public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false) {
         $distance_in_minutes = round((abs($to_time - $from_time))/60);
         $distance_in_seconds = round(abs($to_time - $from_time));
-        
+
         return self::getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds);
     }
 
@@ -102,7 +102,7 @@ class DateHelper {
             return $GLOBALS['Language']->getText('include_utils', 'over_X_years', round($distance_in_minutes / 525960));
         }
     }
-    
+
     /**
      * Get the date in the user's expected format (depends on its locale)
      *

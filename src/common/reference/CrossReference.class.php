@@ -2,8 +2,8 @@
 /**
  * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Cross Reference class
  * Stores a Cross Reference as extracted from some user text.
@@ -12,16 +12,16 @@
 require_once 'utils.php';
 
 class CrossReference {
-    var $id; 
+    var $id;
     var $userId;
     var $createdAt;
-    
+
     var $refSourceId;
     var $refSourceGid;
     var $refSourceType;
     var $sourceUrl;
     var $sourceKey;
-    
+
     var $refTargetId;
     var $refTargetGid;
     var $refTargetType;
@@ -30,9 +30,9 @@ class CrossReference {
     var $insertTargetType;
     var $insertSourceType;
 
-    /** 
-     * Constructor 
-     * 
+    /**
+     * Constructor
+     *
      */
     function __construct($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId) {
         $this->refSourceId=$refSourceId;
@@ -44,16 +44,16 @@ class CrossReference {
         $this->userId=$userId;
         $this->sourceUrl='';
         $this->targetUrl='';
-       
+
         $this->sourceKey= $refSourceKey;
         $this->insertSourceType = $refSourceType;
         $this->targetKey = $refTargetKey;
         $this->insertTargetType = $refTargetType;
-       
+
         $this->computeUrls();
-       
+
     }
-    
+
     /** Accessors */
     function getRefSourceId() { return $this->refSourceId;}
     function getRefSourceGid() { return $this->refSourceGid;}
@@ -69,8 +69,8 @@ class CrossReference {
     function getCreatedAt() { return $this->createdAt;}
     function getInsertSourceType() { return $this->insertSourceType;}
     function getInsertTargetType() { return $this->insertTargetType;}
-    
-    
+
+
     /**
      * Return true if current CrossReference is really "cross referenced" with $crossref
      *
@@ -85,7 +85,7 @@ class CrossReference {
                $crossref->getRefSourceGid() == $this->getRefTargetGid() &&
                $crossref->getRefSourceType() == $this->getRefTargetType();
     }
-    
+
     function computeUrls(){
         $server_url  = HTTPRequest::instance()->getServerUrl();
         $group_param = '';

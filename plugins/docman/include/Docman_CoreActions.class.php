@@ -22,6 +22,6 @@
  */
 require_once('Docman_HTTPActions.class.php');
 class Docman_CoreActions extends Docman_HTTPActions {
-    
+
 }
 ?>

@@ -31,26 +31,26 @@ class SVN_SOAPServer {
      * @var SOAPRequestValidator
      */
     private $soap_request_validator;
-    
+
     /**
      * @var SVN_RepositoryListing
      */
     private $svn_repository_listing;
-    
+
     public function __construct(SOAPRequestValidator $soap_request_validator,
                                 SVN_RepositoryListing $svn_repository_listing) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;
     }
-    
+
     /**
      * Returns the content of a directory in Subversion according to user permissions
-     * 
+     *
      * <ul>
      *   <li>If user cannot see the content it gets an empty array.</li>
      *   <li>The returned content is relative (/project/tags) gives array("1.0", "2.0").</li>
      * </ul>
-     * 
+     *
      * Error codes:
      * * 3001, Invalid session (wrong $sessionKey)
      * * 3002, User do not have access to the project
@@ -58,7 +58,7 @@ class SVN_SOAPServer {
      * @param String  $sessionKey Session key of the desired project admin
      * @param int $group_id ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
-     * 
+     *
      * @return ArrayOfString The list of directories
      */
     public function getSvnPath($sessionKey, $group_id, $path) {
@@ -66,7 +66,7 @@ class SVN_SOAPServer {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
-            
+
             return $this->svn_repository_listing->getSvnPaths($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -116,7 +116,7 @@ class SVN_SOAPServer {
             foreach ($path_logs as $path_log) {
                 $data[] = $path_log->exportToSoap();
             }
-            
+
             return $data;
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -125,7 +125,7 @@ class SVN_SOAPServer {
 
     /**
      * Retrieves the SVN revisions of the project visible by the requesting user.
-     *  
+     *
      *  Returned format:
      *  <code>
      *  array(
@@ -137,7 +137,7 @@ class SVN_SOAPServer {
      *      )
      *  )
      *  </code>
-     *  
+     *
      *  Example:
      *  <code>
      *  array(
@@ -174,26 +174,26 @@ class SVN_SOAPServer {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
-            
+
             $author    = $this->getUser($author_id);
             $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getRevisions($limit, $author);
 
             return $revisions;
-            
+
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
-    
+
     /**
      * Returns the list of active users (commiters) between start_date and end_date
-     * 
+     *
      * @param String  $sessionKey Session key of the requesting user
      * @param int $group_id ID of the project the subversion repository belongs to
      * @param int $start_date Start of period (unix timestamp)
      * @param int $end_date End of period   (unix timestamp)
-     * 
+     *
      * @return ArrayOfCommiter
      */
     public function getSvnStatsUsers($sessionKey, $group_id, $start_date, $end_date) {
@@ -201,7 +201,7 @@ class SVN_SOAPServer {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
-            
+
             $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getCommiters(TimeInterval::fromUnixTimestamps($start_date, $end_date));
 
@@ -210,16 +210,16 @@ class SVN_SOAPServer {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
-    
+
     /**
      * Return top most modified files during the given period
-     * 
+     *
      * @param String  $sessionKey Session key of the requesting user
      * @param int $group_id ID of the project the subversion repository belongs to
      * @param int $start_date Start of period (unix timestamp)
      * @param int $end_date End of period   (unix timestamp)
      * @param int $limit Max number of files to return
-     * 
+     *
      * @return ArrayOfSvnPathInfo
      */
     public function getSvnStatsFiles($sessionKey, $group_id, $start_date, $end_date, $limit) {
@@ -227,7 +227,7 @@ class SVN_SOAPServer {
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
-            
+
             $svn_log = new SVN_LogFactory($project);
             $files   = $svn_log->getTopModifiedFiles($current_user, TimeInterval::fromUnixTimestamps($start_date, $end_date), $limit);
 
@@ -241,8 +241,8 @@ class SVN_SOAPServer {
         if (! $author_id) {
             $no_user_in_particular = new PFUser(array('user_name' => ''));
             return $no_user_in_particular;
-        } 
-        
+        }
+
         $user = UserManager::instance()->getUserById($author_id);
         if ($user) {
             return $user;

@@ -50,11 +50,11 @@ class ForumMLPlugin extends Plugin {
 
         $this->addHook(CollectRoutesEvent::NAME);
 
-        // Set ForumML plugin scope to 'Projects' wide 
+        // Set ForumML plugin scope to 'Projects' wide
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->allowedForProject = array();
     }
-    
+
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
@@ -157,7 +157,7 @@ class ForumMLPlugin extends Plugin {
 
     /**
      * Hook to collect forumml disk size usage per project
-     * 
+     *
      * @param array $params
      */
     public function plugin_statistics_disk_usage_collect_project($params)
@@ -187,10 +187,10 @@ class ForumMLPlugin extends Plugin {
 
         $params['time_to_collect']['plugin_forumml'] += $time;
     }
-    
+
     /**
      * Hook to list forumml in the list of serices managed by disk stats
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_disk_usage_service_label($params) {
@@ -199,7 +199,7 @@ class ForumMLPlugin extends Plugin {
 
     /**
      * Hook to choose the color of the plugin in the graph
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_color($params) {

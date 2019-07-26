@@ -19,12 +19,12 @@
  */
 
 class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_ValueDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_text';
     }
-    
+
     public function create($changeset_value_id, $value) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $value              = $this->da->quoteSmart($value);
@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_
                  VALUES
                   ( ".implode(' , \'\' ),'."\n".' ( ', $changeset_value_ids).", '')";
         return $this->update($sql);
-    } 
+    }
 
     public function keep($from, $to) {
         $from = $this->da->escapeInt($from);

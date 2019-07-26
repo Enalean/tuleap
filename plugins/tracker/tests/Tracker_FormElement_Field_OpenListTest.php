@@ -121,7 +121,6 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $list_field->setReturnReference('getOpenValueDao', $open_value_dao);
         $list_field->setReturnReference('getBind', $bind);
 
-
         $changeset_value = $list_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));

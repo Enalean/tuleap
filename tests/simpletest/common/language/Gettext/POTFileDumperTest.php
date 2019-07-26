@@ -40,7 +40,6 @@ class POTFileDumperTest extends \TuleapTestCase
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('whenever, wherever', ''));
 
-
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
@@ -63,7 +62,6 @@ POT
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('whenever, wherever', ''));
         $collection->add('whatever', new POTEntry('We are meant to be together', ''));
-
 
         $dumper->dump($collection, $path);
 
@@ -90,7 +88,6 @@ POT
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('singular', 'plural'));
 
-
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
@@ -115,7 +112,6 @@ POT
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('" should be written escaped', ''));
 
-
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
@@ -138,7 +134,6 @@ POT
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('\\ should be written escaped', ''));
 
-
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
@@ -160,7 +155,6 @@ POT
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry("\n should be written escaped", ''));
-
 
         $dumper->dump($collection, $path);
 

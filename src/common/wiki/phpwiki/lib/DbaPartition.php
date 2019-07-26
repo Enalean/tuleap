@@ -28,11 +28,11 @@ class DbaPartition
     function open($mode = 'w') {
         $this->_h->open();
     }
-    
+
     function close() {
         $this->_h->close();
     }
-            
+
     function firstkey() {
         $dbh = &$this->_h;
         $prefix = &$this->_p;
@@ -58,7 +58,7 @@ class DbaPartition
     function exists($key) {
         return $this->_h->exists($this->_p . $key);
     }
-    
+
     function fetch($key) {
         return $this->_h->fetch($this->_p . $key);
     }
@@ -78,7 +78,7 @@ class DbaPartition
     function get($key) {
         return $this->_h->get($this->_p . $key);
     }
-    
+
     function set($key, $val) {
         return $this->_h->set($this->_p . $key, $val);
     }

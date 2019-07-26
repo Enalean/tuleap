@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -32,8 +32,8 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
     var $width;
     var $size_pie;
     var $legend;
-    
-    
+
+
     public function validData(){
         if ((is_array($this->data)) && (array_sum($this->data) > 0)){
             return true;
@@ -46,7 +46,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
             return false;
         }
     }
-    
+
     /**
      * Builds pie graph
      */
@@ -55,30 +55,29 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
         // title setup
         $this->graph->title->Set($this->title);
-        
+
         if (is_null($this->description)) {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
-        
+
         $colors = $this->getColors();
-        
+
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);
-            
+
             $p->setSliceColors($colors);
-            
+
             $p->SetCenter(0.4,0.6);
             $p->SetLegends($this->legend);
-                      
-                
+
             $p->value->HideZero();
             $p->value->SetFont($this->graph->getFont(), FS_NORMAL, 8);
             $p->value->SetColor($this->graph->getMainColor());
             $p->value->SetMargin(0);
-            
+
             $this->graph->Add($p);
-        }          
+        }
         return $this->graph;
     }
 

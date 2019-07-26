@@ -34,13 +34,13 @@ class ColorHelperTest extends TuleapTestCase {
 
     function testRGBToHexa() {
         foreach ($this->colorSet as $hexa => $rgb) {
-            $this->assertEqual($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2])); 
-        } 
+            $this->assertEqual($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2]));
+        }
     }
 
     function testHexaToRGB() {
         foreach ($this->colorSet as $hexa => $rgb) {
-            $this->assertEqual(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa)); 
+            $this->assertEqual(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa));
         }
     }
 }

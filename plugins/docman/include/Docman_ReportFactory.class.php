@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class Docman_ReportFactory {
             $this->initColumns($report, $request);
             return $report;
         }
-            
+
         $noDbReport = true;
         // First, try to find a report in DB
         //if($request->exist('report_id')) {
@@ -64,15 +64,14 @@ class Docman_ReportFactory {
                 $row = $dar->getRow();
                 $report = new Docman_Report();
                 $report->initFromRow($row);
-                        
+
                 $filterFactory = new Docman_FilterFactory($this->groupId);
                 $fa = $filterFactory->addFiltersToReport($report);
-                    
+
                 $this->initColumns($report, $request);
             }
         }
-            
-            
+
         if($noDbReport) {
             // Init from url
             $this->initReport($report, $request, $item);
@@ -89,9 +88,9 @@ class Docman_ReportFactory {
             $report->setUserId($user->getId());
 
             // New report
-            if($request->get('save_report') == 'newp' 
+            if($request->get('save_report') == 'newp'
                || $request->get('save_report') == 'newi') {
-                if($request->exist('report_name')) { 
+                if($request->exist('report_name')) {
                     $reportName = $request->get('report_name');
                     // todo Validate report name
                     $report->setScope('I');
@@ -116,15 +115,15 @@ class Docman_ReportFactory {
                         if($dpm->userCanAdmin($user)){
                             $updReportOk = true;
                         } else {
-                            if($refReport->getScope() == 'I' 
+                            if($refReport->getScope() == 'I'
                                && $refReport->getUserId() == $user->getId()) {
                                 $updReportOk = true;
                             }
                         }
                     }
-                    
+
                 }
-                
+
                 if($updReportOk) {
                     if($request->exist('report_name') && trim($request->get('report_name')) != '') {
                         $refReport->setName($request->get('report_name'));
@@ -136,11 +135,11 @@ class Docman_ReportFactory {
                     $this->saveReport($refReport);
                 }
             }
-                
+
         }
         return $report;
     }
-    
+
     function initReport(&$report, $request, $item) {
         if($request->exist('advsearch')
            && $request->get('advsearch') == 1) {
@@ -150,7 +149,7 @@ class Docman_ReportFactory {
         $report->setGroupId($this->groupId);
     }
 
-    function initFilters(&$report, $request, &$feedback) {        
+    function initFilters(&$report, $request, &$feedback) {
         $filterFactory = new Docman_FilterFactory($this->groupId);
 
         $mdFactory = new Docman_MetadataFactory($this->groupId);
@@ -165,7 +164,7 @@ class Docman_ReportFactory {
         // Special case for a fake metadata: generic text search
         $filter = $filterFactory->getGlobalSearchFilter($request);
         $this->_validateFilterAndCreate($report, $filter, $feedback);
-                
+
         $filter = $filterFactory->getItemTypeSearchFilter($request, $report->getAdvancedSearch());
         $this->_validateFilterAndCreate($report, $filter, $feedback);
     }
@@ -320,11 +319,11 @@ class Docman_ReportFactory {
 
     function createReport($report) {
         $dao = $this->getDao();
-        $res= $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope()); 
+        $res= $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope());
         if ($res){
             // report
             $id = $dao->create($report->getName(), $report->getTitle(), $report->getGroupId(), $report->getUserId(), $report->getItemId(), $report->getScope(), $report->getIsDefault(), $report->getAdvancedSearch(), $report->getDescription(), $report->getImage());
-        
+
             if($id) {
                 $report->setId($id);
                 // filters
@@ -345,7 +344,7 @@ class Docman_ReportFactory {
             return false;
         }
     }
-    
+
     /**
      * Clone reports of one project into another one
      *
@@ -384,7 +383,7 @@ class Docman_ReportFactory {
         $rId = $dstReportFactory->createReport($dstReport);
         if($rId !== false) {
             $dstReport->setId($rId);
-        
+
             // Copy filters
             $srcFilterFactory->copy($srcReport, $dstReport, $metadataMapping);
             return true;

@@ -19,7 +19,6 @@ function mail_header($params) {
         exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
     }
 
-
     site_project_header($params);
     echo '<P><B>';
     // admin link is only displayed if the user is a project administrator
@@ -46,7 +45,6 @@ function mail_header_admin($params) {
         exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
     }
 
-
     site_project_header($params);
     echo '
 		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A></B>
@@ -65,25 +63,25 @@ function mail_footer($params) {
 
 // Checks if the mailing-list (list_id) is public (return 1) or private (return 0)
 function mail_is_list_public($list) {
-    
+
     $sql = sprintf('SELECT is_public FROM mail_group_list'.
                       ' WHERE group_list_id = "%d"',
                       $list);
     $res = db_query($sql);
-      
+
     return db_result($res,0,'is_public');
 }
 
 //Checks if a mailing-list (list_id) exist and is active
 function mail_is_list_active($list) {
-     
+
     $sql = sprintf('SELECT status'.
                     ' FROM mail_group_list'.
                     ' WHERE group_list_id = "%d"',
                     $list);
     $res = db_query($sql);
     if (db_numrows($res) < 1) {
-        return false;                
+        return false;
     } else {
         $status = db_result($res,0,'status');
         if ($status <> 1) {
@@ -92,18 +90,18 @@ function mail_is_list_active($list) {
             return true;
         }
     }
-    
+
 }
 
 // Gets mailing-list name from list id
 function mail_get_listname_from_list_id($list_id) {
-    
+
     $sql = sprintf('SELECT list_name'.
                     ' FROM mail_group_list'.
                     ' WHERE group_list_id = %d',
                     $list_id);
     $res = db_query($sql);
-    return db_result($res,0,'list_name');                
+    return db_result($res,0,'list_name');
 }
 
 ?>

@@ -95,7 +95,6 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $lr->setReturnValue('getEmail',      'toto');
         $lr->setReturnValue('get',           'contractor', array('employeetype'));
 
-
         $sync = LDAP_UserSyncTestVersion::instance();
         $sync->sync($user, $lr);
     }

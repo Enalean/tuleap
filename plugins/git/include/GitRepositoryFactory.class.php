@@ -149,7 +149,6 @@ class GitRepositoryFactory
             }
         }
 
-
         return $repositories;
     }
 

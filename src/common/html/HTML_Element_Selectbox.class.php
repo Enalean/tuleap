@@ -30,7 +30,7 @@ class HTML_Element_Selectbox extends HTML_Element {
     public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc="") {
         parent::__construct($label, $name, $value, $desc);
         $this->options = array();
-        
+
         $this->onchange = $onchange;
         if ($with_none) {
             $this->addOption(new HTML_Element_Option($GLOBALS['Language']->getText('global', 'none_dashed'), "", ($this->value === "" || $this->value === null)));

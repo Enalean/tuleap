@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -24,7 +24,7 @@
 require_once('common/plugin/PluginDescriptor.class.php');
 
 class ProjectLinksPluginDescriptor extends PluginDescriptor {
-    
+
     function __construct() {
         parent::__construct($GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),
                             false,

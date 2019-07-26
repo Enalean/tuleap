@@ -27,7 +27,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     public function __construct($user, $project, $item) {
         parent::__construct($user, $project, $item);
     }
-    
+
     /**
      * This method is used to download the file
      *

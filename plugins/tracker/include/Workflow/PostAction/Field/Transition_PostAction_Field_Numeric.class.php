@@ -20,16 +20,16 @@
 
 
 /**
- * Base class for numeric field post actions. 
+ * Base class for numeric field post actions.
  */
 abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field
 {//phpcs:ignore
-    
+
     /**
      * @var int|float the value
      */
     protected $value;
-    
+
     /**
      * Constructor
      *
@@ -42,7 +42,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
         parent::__construct($transition, $id, $field);
         $this->value = $value;
     }
-    
+
     /**
      * Say if the action is well defined
      *
@@ -51,30 +51,30 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
     public function isDefined() {
         return $this->getField() && ($this->value !== null);
     }
-    
+
     /**
      * @return int|float The value set on the field by the post action.
      */
     public function getValue() {
         return $this->value;
     }
-    
+
     /**
      * Execute actions before transition happens
-     * 
+     *
      * @param Array &$fields_data Request field data (array[field_id] => data)
      * @param PFUser  $current_user The user who are performing the update
-     * 
+     *
      * @return void
      */
     public function before(array &$fields_data, PFUser $current_user) {
-        // Do something only if the value and the float field are properly defined 
+        // Do something only if the value and the float field are properly defined
         if ($this->isDefined()) {
             $field = $this->getField();
             if ($field->userCanRead($current_user)) {
                 $this->addFeedback('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $this->value));
             }
-           
+
             $fields_data[$this->field->getId()] = $this->value;
             $this->bypass_permissions = true;
         }

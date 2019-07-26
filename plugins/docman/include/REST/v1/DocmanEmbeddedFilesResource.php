@@ -473,7 +473,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             );
         }
 
-
         try {
             $docman_item_version_creator = $this->getEmbeddedFileVersionCreator();
             $docman_item_version_creator->createEmbeddedFileVersion(

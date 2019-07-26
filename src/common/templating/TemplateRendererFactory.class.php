@@ -21,7 +21,7 @@
 use Tuleap\Templating\TemplateCache;
 
 /**
- * Handles TemplateRenderer's instanciation. 
+ * Handles TemplateRenderer's instanciation.
  */
 class TemplateRendererFactory
 {
@@ -37,7 +37,7 @@ class TemplateRendererFactory
 
     /**
      * Creates a new factory instance.
-     * 
+     *
      * Mostly used at places where renderers where instanciated manually, and
      * where injecting a factory needed a lot of refactoring.
      *
@@ -55,10 +55,10 @@ class TemplateRendererFactory
     {
         return $this->template_cache;
     }
-    
+
     /**
      * Returns a new TemplateRenderer according to Config.
-     * 
+     *
      * @param string $plugin_templates_dir
      * @return TemplateRenderer
      */

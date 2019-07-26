@@ -63,7 +63,7 @@ extends WikiPlugin
         if (is_integer($pages)) {
             $numpages = $pages;
             $pages = false;
-        // fix new pages handling in arg preprozessor.    
+        // fix new pages handling in arg preprozessor.
         } elseif (is_array($pages)) {
             $numpages = (int)$pages[0];
             if ($numpages > 0 and !$dbi->isWikiPage($numpages)) $pages = false;

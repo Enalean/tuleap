@@ -22,7 +22,7 @@
  * Display the page header and footer for the current service.
  */
 interface Tracker_IDisplayTrackerLayout {
-    
+
     /**
      * Display header for the current service
      *
@@ -34,7 +34,7 @@ interface Tracker_IDisplayTrackerLayout {
      * @return void
      */
     public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params);
-    
+
     /**
      * Display footer for the current service.
      *

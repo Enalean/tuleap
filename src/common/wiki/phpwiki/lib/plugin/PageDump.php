@@ -5,7 +5,7 @@ rcs_id('$Id: PageDump.php,v 1.18 2004/10/14 19:19:34 rurban Exp $');
  * PhpWikiPlugin for PhpWiki developers to generate single page dumps
  * for checking into cvs, or for users or the admin to produce a
  * downloadable page dump of a single page.
- * 
+ *
  * This plugin will also be useful to (semi-)automatically sync pages
  * directly between two wikis. First the LoadFile function of
  * PhpWikiAdministration needs to be updated to handle URLs again, and
@@ -88,7 +88,7 @@ extends WikiPlugin
             $this->fixup_headers($mailified);
 
         if ($download) {
-            // TODO: we need a way to hook into the generated headers, to override 
+            // TODO: we need a way to hook into the generated headers, to override
             // Content-Type, Set-Cookie, Cache-control, ...
             $request->discardOutput(); // Hijack the http request from PhpWiki.
             ob_end_clean(); // clean up after hijacking $request
@@ -110,7 +110,7 @@ extends WikiPlugin
             Header("Content-Id: <" . $this->MessageId . ">");
             // be nice to http keepalive~s
             // FIXME: he length is wrong BTW. must strip the header.
-            Header("Content-Length: " . strlen($mailified)); 
+            Header("Content-Length: " . strlen($mailified));
 
             // Here comes our prepared mime file
             echo $mailified;

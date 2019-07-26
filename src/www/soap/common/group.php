@@ -35,13 +35,13 @@ if (defined('NUSOAP')) {
     'all',
     '',
     array(
-        'group_id' => array('name'=>'group_id', 'type'=>'xsd:int'), 
+        'group_id' => array('name'=>'group_id', 'type'=>'xsd:int'),
         'group_name' => array('name'=>'group_name', 'type'=>'xsd:string'),
         'unix_group_name' => array('name'=>'unix_group_name', 'type'=>'xsd:string'),
         'description' => array('name'=>'description', 'type'=>'xsd:string')
     )
     );
-    
+
     $server->wsdl->addComplexType(
     'ArrayOfGroup',
     'complexType',
@@ -62,7 +62,7 @@ if (defined('NUSOAP')) {
     'all',
     '',
     array(
-        'user_id'   => array('name'=>'user_id',   'type'=>'xsd:int'), 
+        'user_id'   => array('name'=>'user_id',   'type'=>'xsd:int'),
         'user_name' => array('name'=>'user_name', 'type'=>'xsd:string')
     )
     );
@@ -106,8 +106,8 @@ if (defined('NUSOAP')) {
 
 // Function definition
     $server->register('getMyProjects',               // method name
-    array('sessionKey' => 'xsd:string'               // input parameters          
-    ),                                   
+    array('sessionKey' => 'xsd:string'               // input parameters
+    ),
     array('return'   => 'tns:ArrayOfGroup'),           // output parameters
     $uri,                   // namespace
     $uri.'#getMyProjects',        // soapaction
@@ -200,7 +200,7 @@ if (defined('NUSOAP')) {
 
 
 } else {
-    
+
 
 /**
  * Returns a soap Group object corresponding to the Codendi Group object
@@ -285,7 +285,7 @@ if (defined('NUSOAP')) {
 
 /**
  * Returns the Ugroups associated to the given project
- * This function can only be called by members of the group 
+ * This function can only be called by members of the group
  */
     function getGroupUgroups($sessionKey, $group_id) {
         if (session_continue($sessionKey)) {

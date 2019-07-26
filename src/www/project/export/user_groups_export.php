@@ -45,7 +45,7 @@ $vExport = new Valid_WhiteList('export', array('user_groups', 'user_groups_forma
 $vExport->required();
 if ($request->valid($vExport)) {
     $export = $request->get('export');
-    
+
     $col_list = array('group', 'username', 'realname');
     $lbl_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group'),
                       'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', array($GLOBALS['sys_name'])),
@@ -86,7 +86,7 @@ if ($request->valid($vExport)) {
         case 'user_groups_format':
             echo '<h3>'.$Language->getText('project_export_user_groups','exp_format').'</h3>';
             echo '<p>'.$Language->getText('project_export_user_groups','exp_format_msg').'</p>';
-            
+
             // Pick-up a random project member
             $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id);
             if ($sqlUsers === null) {

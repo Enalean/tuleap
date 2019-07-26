@@ -136,69 +136,68 @@ class Rule_ProjectNameTest extends TuleapTestCase {
 
     function testIsNameAvailableSuccess() {
         $r = new Rule_ProjectNameTestVersion();
-    
+
         $backendSVN = new MockBackendSVN($this);
         $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
-        
+
         $backendCVS = new MockBackendCVS($this);
         $backendCVS->setReturnValue('isNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
-       
+
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->setReturnValue('isProjectNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSystem, array('System'));
-    
+
         $this->assertTrue($r->isNameAvailable('foobar'));
-    
+
     }
-    
+
     function testIsNameAvailableSVNFailure() {
         $r = new Rule_ProjectNameTestVersion();
-    
+
         $backendSVN = new MockBackendSVN($this);
         $backendSVN->setReturnValue('isNameAvailable', false, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
-        
+
         $backendCVS = new MockBackendCVS($this);
         $backendCVS->expectNever('isNameAvailable', array('foobar'));
-        
+
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
-    
+
     function testIsNameAvailableCVSFailure() {
         $r = new Rule_ProjectNameTestVersion();
-    
+
         $backendSVN = new MockBackendSVN($this);
         $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
-        
+
         $backendCVS = new MockBackendCVS($this);
         $backendCVS->setReturnValue('isNameAvailable', false, array('foobar'));
         $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
-       
-        
+
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->expectNever('isProjectNameAvailable', array('foobar'));
-        
+
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
-    
+
     function testIsNameAvailableSystemFailure() {
         $r = new Rule_ProjectNameTestVersion();
-    
+
         $backendSVN = new MockBackendSVN($this);
         $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
-        
+
         $backendCVS = new MockBackendCVS($this);
         $backendCVS->setReturnValue('isNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
-       
+
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->setReturnValue('isProjectNameAvailable', false, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSystem, array('System'));
-    
+
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 }

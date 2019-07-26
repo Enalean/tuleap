@@ -111,13 +111,13 @@ class DateHelperTest extends TuleapTestCase {
             unset($GLOBALS['Language']);
         }
     }
-    
+
     public function testFormatDateFormatsTheDateAccordingToLanguage() {
         $dayOnly = true;
         $this->assertPattern('#2011-\d+\d+#', $this->formatDate($dayOnly, 'Y-m-d'));
         $this->assertPattern('#2011/\d+/\d+#', $this->formatDate($dayOnly, "Y/d/m"));
     }
-    
+
     public function testFormatDateCanReturnTheTimeAsWell() {
         $dayOnly = false;
         $this->assertPattern('#2011-\d+-\d+ \d+:\d+#', $this->formatDate($dayOnly, "Y-m-d h:i"));

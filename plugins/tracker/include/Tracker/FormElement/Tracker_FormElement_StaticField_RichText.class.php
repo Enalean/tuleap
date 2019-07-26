@@ -20,19 +20,19 @@
 
 
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField {
-    
+
     public $default_properties = array(
         'static_value' => array(
             'value' => '',
             'type'  => 'rich_text',
         ),
     );
-    
+
     /**
      * The static text
      */
     protected $static_rich_text = null;
-    
+
     public function getRichText() {
         if ($row = $this->getDao()->searchByFieldId($this->id)->getRow()) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -41,14 +41,14 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         } else {
             return '';
         }
-        
+
     }
-    
+
     protected function getDao() {
         return new Tracker_FormElement_StaticField_RichTextDao();
     }
-    
-    
+
+
     protected function fetchReadOnly() {
         $html = '';
         $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
@@ -56,7 +56,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         $html .= '</div>';
         return $html;
     }
-    
+
     public function fetchAdmin($tracker) {
         $html = '';
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
@@ -73,7 +73,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         $html .= '</div>';
         return $html;
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -85,28 +85,28 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         $html .= '</div>';
         return $html;
     }
-        
+
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_label');
     }
-    
+
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_description');
     }
-    
+
     /**
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/edit-drop-cap.png');
     }
-    
+
     /**
      * @return the path to the icon to create an element
      */
@@ -117,7 +117,7 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     public function getDefaultValue() {
         return $this->getRichText();
     }
-    
+
 }
 
 ?>

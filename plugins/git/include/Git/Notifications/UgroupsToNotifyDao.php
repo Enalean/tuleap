@@ -115,7 +115,6 @@ class UgroupsToNotifyDao extends DataAccessObject
             $params_update[] = $project_id;
             $this->getDB()->safeQuery($sql, $params_update);
 
-
             $sql = "DELETE notif.*
                 FROM plugin_git_post_receive_notification_ugroup AS notif
                   INNER JOIN plugin_git AS git USING (repository_id)

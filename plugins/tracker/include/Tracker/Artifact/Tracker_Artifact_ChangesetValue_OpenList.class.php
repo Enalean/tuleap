@@ -32,7 +32,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitOpenList($this);
     }
-    
+
     /**
      * Get the value (an array of int)
      *

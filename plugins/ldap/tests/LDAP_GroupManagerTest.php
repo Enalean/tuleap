@@ -45,10 +45,10 @@ class LDAP_GroupManagerTest extends TuleapTestCase {
     protected function getLdapResult($method, $result) {
         $ldapRes = new MockLDAPResult($this);
         $ldapRes->setReturnValue($method, $result);
-        $ldapResIter = new MockLDAPResultIterator($this); 
+        $ldapResIter = new MockLDAPResultIterator($this);
         $ldapResIter->setReturnValue('count', 1);
         $ldapResIter->setReturnValue('current', $ldapRes);
-        return $ldapResIter; 
+        return $ldapResIter;
     }
 
     public function testDoesBuildANotificationOnUpdate()
@@ -94,18 +94,18 @@ class LDAP_GroupManagerTest extends TuleapTestCase {
         $ldapResIterUserA = $this->getLdapResult('getEdUid', 'edA');
         // Search for second user
         $ldapResIterUserE = $this->getLdapResult('getEdUid', 'edE');
-        
+
         $ldap = new LDAP4GroupManager($this);
         $ldap->setReturnValueAt(0, 'searchGroupMembers', $ldapResIterABCDEF);
         $ldap->setReturnValueAt(1, 'searchGroupMembers', $ldapResIterABC);
         $ldap->setReturnValueAt(2, 'searchGroupMembers', $ldapResIterDEF);
-        
+
         $ldap->setReturnValue('getLdapParam', 'ou=groups,dc=codendi,dc=com', array('grp_dn'));
         $ldap->setReturnValue('getLdapParam', 'eduid', array('eduid'));
         $ldap->setReturnValue('getLdapParam', 'cn', array('cn'));
         $ldap->setReturnValue('getLdapParam', 'uid', array('uid'));
         $ldap->setReturnValue('getLdapParam', 'mail', array('mail'));
-        
+
         $ldap->setReturnValueAt(0, 'searchDn', $ldapResIterUserA);
         $ldap->setReturnValueAt(1, 'searchDn', $ldapResIterUserE);
 
@@ -121,7 +121,7 @@ class LDAP_GroupManagerTest extends TuleapTestCase {
         );
 
         $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=codendi,dc=com');
-        
+
         $this->assertTrue((count($members) === 2));
         $this->assertIsA($members['edA'], 'MockLDAPResult');
         $this->assertIdentical($members['edA']->getEdUid(), 'edA');

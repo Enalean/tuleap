@@ -22,11 +22,11 @@ require_once(dirname(__FILE__).'/stdlib.php');
 
 /**
  * A class for finding files.
- * 
- * This should really provided by pear. We don't want really to mess around 
+ *
+ * This should really provided by pear. We don't want really to mess around
  * with all the lousy systems. (WindowsNT, Win95, Mac, VMS, ...)
  * But pear has only System and File, which do nothing.
- * Anyway, in good PHP style we ignore the rest of the world and try to behave 
+ * Anyway, in good PHP style we ignore the rest of the world and try to behave
  * as on unix only. That means we use / as pathsep in all our constants.
  */
 class FileFinder
@@ -92,7 +92,7 @@ class FileFinder
                         $path = '\\\\' . str_replace('\\\\','\\',substr($path,2));
                 }
                 return strtr($path, $from, $sep);
-            } else 
+            } else
                 return $path;
         }
     }
@@ -125,7 +125,7 @@ class FileFinder
     }
 
     /**
-     * The system-dependent path-separator character. 
+     * The system-dependent path-separator character.
      * UNIX,WindowsNT,MacOSX: /
      * Windows95: \
      * Mac:       :
@@ -143,12 +143,12 @@ class FileFinder
     }
 
     /**
-     * The path-separator character of the given path. 
+     * The path-separator character of the given path.
      * Windows accepts "/" also, but gets confused with mixed path_separators,
      * e.g "C:\Apache\phpwiki/locale/button"
-     * > dir "C:\Apache\phpwiki/locale/button" => 
+     * > dir "C:\Apache\phpwiki/locale/button" =>
      *       Parameterformat nicht korrekt - "locale"
-     * So if there's any '\' in the path, either fix them to '/' (not in Win95 or FAT?) 
+     * So if there's any '\' in the path, either fix them to '/' (not in Win95 or FAT?)
      * or use '\' for ours.
      *
      * @access private
@@ -171,7 +171,7 @@ class FileFinder
      *
      * @access private
      * @param $path string Path.
-     * @return bool True if path is absolute. 
+     * @return bool True if path is absolute.
      */
     function _is_abs($path) {
         if (preg_match('#^/#D', $path)) return true;
@@ -188,10 +188,10 @@ class FileFinder
      */
     function _strip_last_pathchar(&$path) {
         if (isMac()) {
-            if (substr($path,-1) == ':' or substr($path,-1) == "/") 
+            if (substr($path,-1) == ':' or substr($path,-1) == "/")
                 $path = substr($path,0,-1);
         } else {
-            if (substr($path,-1) == '/' or substr($path,-1) == "\\") 
+            if (substr($path,-1) == '/' or substr($path,-1) == "\\")
                 $path = substr($path,0,-1);
         }
         return $path;
@@ -243,7 +243,7 @@ class FileFinder
      */
     function _get_ini_separator () {
         return isWindows() ? ';' : ':';
-        // return preg_match('/^Windows/', php_uname()) 
+        // return preg_match('/^Windows/', php_uname())
     }
 
     /**
@@ -341,7 +341,7 @@ class FileFinder
             if (!empty($lang))
                 return $lang;
         }
-            
+
         foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES', 'LANG') as $var) {
             $lang = getenv($var);
             if (!empty($lang))
@@ -508,9 +508,9 @@ function FindLocalizedButtonFile ($file, $missing_okay = false, $re_init = false
     return $buttonfinder->findFile($file, $missing_okay);
 }
 
-/** 
+/**
  * Prefixes with PHPWIKI_DIR and slashify.
- * For example to unify with 
+ * For example to unify with
  *   require_once dirname(__FILE__).'/lib/file.php'
  *   require_once 'lib/file.php' loading style.
  * Doesn't expand "~" or symlinks yet. truename would be perfect.
@@ -535,7 +535,7 @@ function NormalizeLocalFileName($file) {
     }
 }
 
-/** 
+/**
  * Prefixes with DATA_PATH and slashify
  */
 function NormalizeWebFileName($file) {
@@ -582,10 +582,10 @@ function isWindowsNT() {
     return $winnt;
 }
 
-/** 
+/**
  * This is for the OLD Macintosh OS, NOT MacOSX or Darwin!
  * This has really ugly pathname semantics.
- * ":path" is relative, "Desktop:path" (I think) is absolute. 
+ * ":path" is relative, "Desktop:path" (I think) is absolute.
  * FIXME: Please fix this someone. So far not supported.
  */
 function isMac() {

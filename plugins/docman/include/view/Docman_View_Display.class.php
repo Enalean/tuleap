@@ -74,7 +74,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             }
         }
         $this->_initSearchAndSortParams($params);
-        $urlParams = array_merge($this->dfltSortParams, 
+        $urlParams = array_merge($this->dfltSortParams,
                                  $this->dfltSearchParams);
         $urlParams['action'] = $urlAction;
         $html = '';
@@ -92,7 +92,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $url = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $urlParams);
         $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></a>';
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
-        $this->javascript .= $this->getActionForItem($current_item); 
+        $this->javascript .= $this->getActionForItem($current_item);
         $html .= '</div>';
         $html .= '</td>';
 
@@ -104,7 +104,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $this->javascript .= "docman.initShowOptions();\n";
         parent::_javascript($params);
     }
-    
+
     function  _mode($params) {
         $html = '';
          // Close table opened in method 'breadCrumbs'.

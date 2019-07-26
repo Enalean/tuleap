@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -34,18 +34,18 @@ class Docman_SOAPActions extends Docman_Actions {
             $item_factory = $this->_getItemFactory();
             $item = $item_factory->getItemFromDb($item_id);
             $itemType = $item_factory->getItemTypeForItem($item);
-            
+
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                 $this->storeFileChunk($item);
             } else {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
-            
+
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
         }
     }
-    
+
     /**
      * Adds a chunk to the last version of an existing file
      */
@@ -59,7 +59,7 @@ class Docman_SOAPActions extends Docman_Actions {
             }
         }
     }
-    
+
     /**
      * Returns the MD5 checksum of a file (last version)
      */
@@ -74,7 +74,7 @@ class Docman_SOAPActions extends Docman_Actions {
                 $itemType = $item_factory->getItemTypeForItem($item);
                 if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     $fs = $this->_getFileStorage();
-                    
+
                     if ($request->existAndNonEmpty('all_versions')) {
                         $md5sum = array();
                         $vf = $this->_getVersionFactory();
@@ -85,7 +85,7 @@ class Docman_SOAPActions extends Docman_Actions {
 
                         // Sort by version order (ascending)
                         ksort($md5sum);
-                        
+
                         if (empty($md5sum)) {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
@@ -102,9 +102,9 @@ class Docman_SOAPActions extends Docman_Actions {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
                     }
-                    
+
                     $this->_controler->_viewParams['action_result'] = $md5sum;
-                    
+
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
                 }
@@ -115,9 +115,9 @@ class Docman_SOAPActions extends Docman_Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
         }
     }
-    
+
     /**
-     * Returns the (used) metadata of the given project 
+     * Returns the (used) metadata of the given project
      */
     function getProjectMetadata() {
         $request = $this->_controler->request;
@@ -126,7 +126,7 @@ class Docman_SOAPActions extends Docman_Actions {
         $metadataList = array_merge($metadataFactory->getRealMetadataList(true), $metadataFactory->getHardCodedMetadataList(true));
         $this->_controler->_viewParams['action_result'] = $metadataList;
     }
-    
+
     /**
      * Returns the list of values for the given list metadata.
      */
@@ -135,21 +135,21 @@ class Docman_SOAPActions extends Docman_Actions {
         $groupId = $request->get('group_id');
         $metadataFactory = new Docman_MetadataFactory($groupId);
         $metadataLovFactory = new Docman_MetadataListOfValuesElementFactory();
-        
+
         $label = $request->get('label');
-        
+
         $md = $metadataFactory->getFromLabel($label);
-        
+
         $res = array();
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, true) as $val) {
                 $res[] = $val;
             }
         }
-        
+
         $this->_controler->_viewParams['action_result'] = $res;
     }
-    
+
     /**
      * Returns the list of items contained in the arborescence of the given folder
      * The items are summarized by the following attributes: id, parent_id, title, type, update_date, nb_versions
@@ -157,17 +157,17 @@ class Docman_SOAPActions extends Docman_Actions {
     function getTreeInfo() {
         $request = $this->_controler->request;
         $groupId = $request->get('group_id');
-        
+
         $itemFactory = $this->_getItemFactory($groupId);
-        
+
         $nb = 0;
         $params['user'] = $this->_controler->getUser();
         $params['getall'] = true;
-        
+
         if ($request->exist('parent_id')) {
             $parent_id = $request->get('parent_id');
         }
-        
+
         if (isset($parent_id) && $parent_id != 0) {
             $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
             $itemList[] = $itemFactory->getItemFromDb($parent_id);
@@ -196,7 +196,7 @@ class Docman_SOAPActions extends Docman_Actions {
                              'nb_versions' => $nbVersions,
                          );
             }
-            
+
             $this->_controler->_viewParams['action_result'] = $res;
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param', 'parent_id'));

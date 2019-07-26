@@ -470,11 +470,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         chdir("$this->gerrit_tmpdir");
         exec('git remote -v', $output, $ret_val);
         chdir($cwd);
-        
+
         $port          = $this->server->getSSHPort();
         $identity_file = $this->server->getIdentityFile();
         $host_login    = $this->server->getLogin() . '@' . $this->server->getHost();
-        
+
         $this->assertEqual($output, array(
 //            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (fetch)",
 //            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",

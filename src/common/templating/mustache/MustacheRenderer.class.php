@@ -22,7 +22,7 @@ use Tuleap\Templating\Mustache\MustacheEngine;
 use Tuleap\Templating\TemplateCache;
 
 /**
- * Adapts the Mustache template engine to the expected Tuleap interface. 
+ * Adapts the Mustache template engine to the expected Tuleap interface.
  */
 class MustacheRenderer extends TemplateRenderer
 {
@@ -55,7 +55,7 @@ class MustacheRenderer extends TemplateRenderer
     {
         return new MustacheEngine($loader, $template_cache);
     }
-    
+
     /**
      * @see TemplateEngine
      * @return string

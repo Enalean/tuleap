@@ -324,7 +324,6 @@ final class EmailNotificationTask implements PostCreationTask
         $mailManager = new \MailManager();
         $format      = $mailManager->getMailPreferencesByUser($user);
 
-
         $htmlBody = '';
         if ($format == \Codendi_Mail_Interface::FORMAT_HTML) {
             $htmlBody .= $this->getBodyHtml($changeset, $is_update, $user, $lang, $ignore_perms);

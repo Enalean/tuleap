@@ -48,7 +48,6 @@ class NotificationLevelExtractor
             return Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
         }
 
-
         if ($notification_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL) {
             return Tracker::NOTIFICATIONS_LEVEL_DISABLED;
         }

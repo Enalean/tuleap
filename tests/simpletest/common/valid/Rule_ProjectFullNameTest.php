@@ -28,7 +28,7 @@ class Rule_ProjectFullNameTest extends TuleapTestCase {
     function __construct($name = 'Rule_ProjectFullNameFormat test') {
         parent::__construct($name);
     }
-    
+
     public function setUp()
     {
         parent::setUp();

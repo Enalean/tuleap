@@ -25,7 +25,7 @@
  *  + fetchTrackerSwitcher
  */
 interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
-    
+
     /**
      * Display a selectbox to switch to a tracker of:
      *  + any projects the user is member of

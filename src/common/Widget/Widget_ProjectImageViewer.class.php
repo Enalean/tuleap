@@ -25,9 +25,9 @@ require_once('Widget_ImageViewer.class.php');
 
 /**
 * Widget_ProjectImageViewer
-* 
+*
 * Project image viewer
-* 
+*
 */
 class Widget_ProjectImageViewer extends Widget_ImageViewer
 {

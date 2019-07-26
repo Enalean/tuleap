@@ -29,7 +29,7 @@ class WebDAVUtils {
 
     /**
      * Instance of docman plugin
-     * 
+     *
      * @var DocmanPlugin
      */
     protected $docmanPlugin;
@@ -206,7 +206,7 @@ class WebDAVUtils {
 
     /**
      * Returns event manager instance
-     * 
+     *
      * @return EventManager
      */
     function getEventManager() {
@@ -285,7 +285,7 @@ class WebDAVUtils {
 
     /**
      * Use Docman MVC model to perform webdav actions
-     * 
+     *
      * @param WebDAV_Request $request
      */
     function processDocmanRequest(WebDAV_Request $request) {

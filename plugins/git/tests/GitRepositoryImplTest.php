@@ -43,17 +43,17 @@ abstract class GitRepositoryImplTest extends TuleapTestCase {
         $this->assertFalse($creator->isNameValid('u/toto'));
         $this->assertTrue($creator->isNameValid('jambon/beurre'));
     }
-    
+
     public function itAllowsLettersNumbersDotsUnderscoresSlashesAndDashes() {
         $creator = $this->newCreator();
         $this->assertEqual($creator->getAllowedCharsInNamePattern(), 'a-zA-Z0-9/_.-');
     }
-    
+
     /**
-     * @return GitRepositoryCreator 
+     * @return GitRepositoryCreator
      */
     abstract function newCreator();
- 
+
 }
 
 class Git_Backend_Gitolite_isNameValidTest extends GitRepositoryImplTest {

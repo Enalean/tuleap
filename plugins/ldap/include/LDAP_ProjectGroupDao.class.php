@@ -60,7 +60,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
             return false;
         }
     }
-    
+
     /**
      * Associate one Codendi user group to an LDAP group
      *
@@ -78,12 +78,12 @@ class LDAP_ProjectGroupDao extends DataAccessObject
 
         return $this->update($sql);
     }
-    
+
     /**
      * Remove link between project members and a LDAP group
      *
      * @param int $groupId Project id
-     * 
+     *
      * @return bool
      */
     public function unlinkGroupLdap($groupId)
@@ -92,13 +92,13 @@ class LDAP_ProjectGroupDao extends DataAccessObject
             ' WHERE group_id = '.db_ei($groupId);
         return $this->update($sql);
     }
-    
+
     /**
      * Object oriented wrapper for account_add_user_to_group
      *
      * @param int $groupId Project id
      * @param String  $name    User unix name
-     * 
+     *
      * @return bool
      */
     public function addUserToGroup($groupId, $name)
@@ -112,7 +112,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      *
      * @param int $project_id Project id
      * @param int $user_id User id
-     * 
+     *
      * @return bool
      */
     public function removeUserFromGroup($project_id, $user_id)

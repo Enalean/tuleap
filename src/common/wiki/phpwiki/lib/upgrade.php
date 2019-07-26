@@ -22,26 +22,26 @@ rcs_id('$Id: upgrade.php,v 1.47 2005/02/27 19:13:27 rurban Exp $');
  */
 
 /**
- * Upgrade the WikiDB and config settings after installing a new 
+ * Upgrade the WikiDB and config settings after installing a new
  * PhpWiki upgrade.
- * Status: experimental, no queries for verification yet, 
+ * Status: experimental, no queries for verification yet,
  *         no merge conflict resolution (patch?), just overwrite.
  *
- * Installation on an existing PhpWiki database needs some 
+ * Installation on an existing PhpWiki database needs some
  * additional worksteps. Each step will require multiple pages.
  *
  * This is the plan:
- *  1. Check for new or changed database schema and update it 
+ *  1. Check for new or changed database schema and update it
  *     according to some predefined upgrade tables. (medium, complete)
- *  2. Check for new or changed (localized) pgsrc/ pages and ask 
- *     for upgrading these. Check timestamps, upgrade silently or 
+ *  2. Check for new or changed (localized) pgsrc/ pages and ask
+ *     for upgrading these. Check timestamps, upgrade silently or
  *     show diffs if existing. Overwrite or merge (easy, complete)
  *  3. Check for new or changed or deprecated index.php/config.ini settings
  *     and help in upgrading these. (hard)
  *  3a Convert old-style index.php into config/config.ini. (easy)
  *  4. Check for changed plugin invocation arguments. (hard)
  *  5. Check for changed theme variables. (hard)
- *  6. Convert the single-request upgrade to a class-based multi-page 
+ *  6. Convert the single-request upgrade to a class-based multi-page
  *     version. (hard)
 
  * Done: overwrite=1 link on edit conflicts at first occurence "Overwrite all".
@@ -54,7 +54,7 @@ require_once("lib/loadsave.php");
  * TODO: check for the pgsrc_version number, not the revision mtime only
  */
 function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
-    $dbi = $request->getDbh(); 
+    $dbi = $request->getDbh();
     $page = $dbi->getPage($pagename);
     if ($page->exists()) {
         // check mtime: update automatically if pgsrc is newer
@@ -99,7 +99,7 @@ function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
 
 /** Need the english filename (required precondition: urlencode == urldecode).
  *  Returns the plugin name.
- */ 
+ */
 function isActionPage($filename) {
     static $special = array("DebugInfo"     => "_BackendInfo",
                             "PhpWikiRecentChanges" => "RssFeed",
@@ -115,7 +115,7 @@ function isActionPage($filename) {
 
 function CheckActionPageUpdate(&$request, $checkonly=false)  {
     echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
-    $dbi = $request->getDbh(); 
+    $dbi = $request->getDbh();
     $path = FindFile('codendipgsrc');
     $pgsrc = new fileSet($path);
     // most actionpages have the same name as the plugin
@@ -126,13 +126,13 @@ function CheckActionPageUpdate(&$request, $checkonly=false)  {
         if (isActionPage($filename)) {
             $translation = gettext($pagename);
             if ($translation == $pagename)
-                doPgsrcUpdate($request, $pagename, $path, $filename, 
+                doPgsrcUpdate($request, $pagename, $path, $filename,
                         $checkonly);
             elseif (FindLocalizedFile('pgsrc/'.urlencode($translation),1))
-                doPgsrcUpdate($request, $translation, $loc_path, 
+                doPgsrcUpdate($request, $translation, $loc_path,
                               urlencode($translation), $checkonly);
             else
-                doPgsrcUpdate($request, $pagename, $path, $filename, 
+                doPgsrcUpdate($request, $pagename, $path, $filename,
                         $checkonly);
         }
     }
@@ -141,7 +141,7 @@ function CheckActionPageUpdate(&$request, $checkonly=false)  {
 // see loadsave.php for saving new pages.
 function CheckPgsrcUpdate(&$request, $checkonly=false) {
     echo "<h3>",_("check for necessary pgsrc updates"),"</h3>\n";
-    $dbi = $request->getDbh(); 
+    $dbi = $request->getDbh();
     $path = FindLocalizedFile(WIKI_PGSRC);
     $pgsrc = new fileSet($path);
     // fixme: verification, ...
@@ -249,13 +249,12 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
 }
 */
 
-// TODO: At which step are we? 
+// TODO: At which step are we?
 // validate and do it again or go on with next step.
 
 /** entry function from lib/main.php
  */
 function DoUpgrade($request) {
-    
 
     if (!$request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);
@@ -264,7 +263,7 @@ function DoUpgrade($request) {
                                    fmt("Upgrade disabled: user != isAdmin")));
         return;
     }
-    
+
     //print("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
     exit("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
 }

@@ -135,7 +135,6 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 
-
             $graph->Stroke();
         } else {
             $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));

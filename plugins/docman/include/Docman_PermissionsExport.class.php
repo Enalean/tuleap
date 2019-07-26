@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once('Docman_ItemFactory.class.php');
@@ -34,7 +34,7 @@ class Docman_PermissionsExport {
     public function __construct(Project $group) {
         $this->group = $group;
     }
-    
+
     public function fetchPerms($parentIds, &$output) {
         if(count($parentIds) == 0) {
             return;
@@ -102,7 +102,7 @@ class Docman_PermissionsExport {
         echo $GLOBALS['Language']->getText('plugin_docman','format_export_project').$sep.tocsv($this->group->getPublicName(), $sep).$sep.tocsv($this->group->getUnixName(), $sep).$sep.$this->group->getId().PHP_EOL;
         echo $GLOBALS['Language']->getText('plugin_docman','format_export_date').$sep.format_date(util_get_user_preferences_export_datefmt(), $_SERVER['REQUEST_TIME']).PHP_EOL;
         echo PHP_EOL;
-        
+
         // Datas
         echo $GLOBALS['Language']->getText('plugin_docman','format_id').$sep;
         echo $GLOBALS['Language']->getText('plugin_docman','format_path').$sep;
@@ -192,7 +192,7 @@ class Docman_PermissionsExport {
         echo "<td>/My Folder/My Document</td>";
         echo "<td>".$GLOBALS['Language']->getText('plugin_docman','format_path_desc')."</td>";
         echo "</tr>";
-        
+
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
         echo "<td><b>".$GLOBALS['Language']->getText('plugin_docman','format_type')."</b></td>";
         echo "<td>File</td>";

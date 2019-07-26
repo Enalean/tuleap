@@ -214,7 +214,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         );
         $this->event_manager->addListener(
             Event::SESSION_BEFORE_LOGIN,
-            $this, 
+            $this,
             'authenticationSucceed',
             false
         );

@@ -25,30 +25,30 @@ class ArtifactReportField extends ArtifactField {
 
     // Show this field for the query
     var $show_on_query;
-    
-    // Show this for the result 
+
+    // Show this for the result
     var $show_on_result;
-    
+
     // The place order for the query
     var $place_query;
-    
+
     // The place order for the result
     var $place_result;
-    
+
     // The column width
     var $col_width;
 
     /**
      *
      *
-     *    @param        
+     *    @param
      *    @return bool success.
      */
     function __construct() {
         parent::__construct();
         return true;
     }
-    
+
     /**
      *  Set the different field attributes, specific to a report field
      *
@@ -62,9 +62,9 @@ class ArtifactReportField extends ArtifactField {
         $this->place_query = $field_array['place_query'];
         $this->place_result = $field_array['place_result'];
         $this->col_width = $field_array['col_width'];
-        
+
     }
-    
+
     /**
      *  Get the attribute show_on_query
      *
@@ -74,7 +74,7 @@ class ArtifactReportField extends ArtifactField {
     function getShowOnQuery() {
         return $this->show_on_query;
     }
-    
+
     /**
      *  Get the attribute show_on_result
      *
@@ -84,7 +84,7 @@ class ArtifactReportField extends ArtifactField {
     function getShowOnResult() {
         return $this->show_on_result;
     }
-    
+
     /**
      *  Return if the show_on_query attribute is equal to 1
      *
@@ -114,7 +114,7 @@ class ArtifactReportField extends ArtifactField {
     function getPlaceQuery() {
         return $this->place_query;
     }
-    
+
     /**
      *  Get the attribute place_result
      *
@@ -124,7 +124,7 @@ class ArtifactReportField extends ArtifactField {
     function getPlaceResult() {
         return $this->place_result;
     }
-    
+
     /**
      *  Get the attribute col_width
      *
@@ -145,7 +145,7 @@ class ArtifactReportField extends ArtifactField {
          " - place_query=".$this->place_query.
          " - place_result=".$this->place_result.
          " - col_width=".$this->col_width;
-    }        
+    }
 }
 
 ?>

@@ -29,30 +29,30 @@
  */
 class LDAP {
     /**
-     * This is equivalent to searching the entire directory. 
+     * This is equivalent to searching the entire directory.
      */
     public const SCOPE_SUBTREE      = 1;
     public const SCOPE_SUBTREE_TEXT = 'subtree';
-    
+
     /**
-     * LDAP_SCOPE_ONELEVEL means that the search should only return information 
-     * that is at the level immediately below the base_dn given in the call. 
-     * (Equivalent to typing "ls" and getting a list of files and folders in 
+     * LDAP_SCOPE_ONELEVEL means that the search should only return information
+     * that is at the level immediately below the base_dn given in the call.
+     * (Equivalent to typing "ls" and getting a list of files and folders in
      * the current working directory.)
      */
     public const SCOPE_ONELEVEL      = 2;
     public const SCOPE_ONELEVEL_TEXT = 'onelevel';
-    
+
     /**
-     * It is equivalent to reading an entry from the directory. 
+     * It is equivalent to reading an entry from the directory.
      */
     public const SCOPE_BASE     = 3;
 
     /**
-     * Error value when search exceed either server or client size limit. 
+     * Error value when search exceed either server or client size limit.
      */
     public const ERR_SIZELIMIT = 0x04 ;
-    
+
     public const ERR_SUCCESS   = 0x00;
 
     public const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
@@ -65,7 +65,7 @@ class LDAP {
 
     /** @var Logger */
     private $logger;
-    
+
     /**
      * LDAP object constructor. Use gloabals for initialization.
      */
@@ -76,10 +76,10 @@ class LDAP {
         $this->errorsTrapped = true;
         $this->logger        = $logger;
     }
-    
+
     /**
      * Returns the whole LDAP parameters set by admin
-     * 
+     *
      * @return array
      */
     function getLDAPParams() {
@@ -88,23 +88,23 @@ class LDAP {
 
     /**
      * Returns one parameter from the list set by admin
-     * 
+     *
      * @param String $key Parameter name
-     * 
+     *
      * @return String
      */
     function getLDAPParam($key) {
         return isset($this->ldapParams[$key]) ?  $this->ldapParams[$key] : null;
     }
-    
+
     /**
      * Connect to LDAP server.
      * If several servers are listed, try first server first, then second, etc.
      * This funtion should not be called directly: it is always called
      * by a public function: authenticate() or search().
-     * 
+     *
      * @return bool true if connect was successful, false otherwise.
-     */ 
+     */
     function connect() {
         if (!$this->ds) {
             foreach (explode('[,;]', $this->ldapParams['server']) as $ldap_server) {
@@ -176,7 +176,7 @@ class LDAP {
      *
      * @param String $binddn DN to use to bind with
      * @param String $bindpw Password associated to the DN
-     * 
+     *
      * @return bool true if bind was successful, false otherwise.
      */
     function bind($binddn=null, $bindpw=null) {
@@ -213,7 +213,7 @@ class LDAP {
 
     /**
      * Unbinds from the LDAP directory
-     * 
+     *
      * According to http://www.php.net/manual/en/function.ldap-unbind.php#17203
      * ldap_unbind kills the link descriptor so we just have to force the rebind
      * for next query
@@ -221,7 +221,7 @@ class LDAP {
     function unbind() {
         $this->bound = false;
     }
-    
+
     /**
      * Connect and bind to the LDAP Directory
      *
@@ -241,22 +241,22 @@ class LDAP {
 
     /**
      * Return last error state
-     * 
+     *
      * @return int
      */
     function getErrno() {
         return ldap_errno($this->ds);
-    }    
-    
-    /** 
+    }
+
+    /**
      * Perform LDAP authentication of a user based on its login.
-     * 
+     *
      * First search the DN of the user based on its login then try to bind
      * with this DN and the given password
      *
      * @param string $login  Login name to authenticate with
      * @param string $passwd Password associated to the login
-     * 
+     *
      * @return bool true if the login and password match, false otherwise
      */
     function authenticate($login, $passwd) {
@@ -284,10 +284,10 @@ class LDAP {
             $this->unbind();
         }
     }
-    
+
     /**
      * Search in the LDAP directory
-     * 
+     *
      * @see http://php.net/ldap_search
      *
      * @param string  $baseDn     Base DN where to search
@@ -298,7 +298,7 @@ class LDAP {
      * @param int $sizeLimit Limit the size of the result set
      * @param int $timeLimit Limit the time spend to search for results
      * @param int $deref Dereference result
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     public function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER) {
@@ -310,11 +310,11 @@ class LDAP {
                 case self::SCOPE_BASE:
                     $sr = ldap_read($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
                 break;
-            
+
                 case self::SCOPE_ONELEVEL:
                     $sr = ldap_list($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
                 break;
-            
+
                 case self::SCOPE_SUBTREE:
                 default:
                     $sr = ldap_search($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
@@ -353,7 +353,7 @@ class LDAP {
      *
      * @param string $dn         DN to retreive
      * @param array  $attributes Restrict the LDAP fields to fetch
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     function searchDn($dn, $attributes=array()) {
@@ -369,7 +369,7 @@ class LDAP {
      * @param array $attributes
      *
      * @return LDAPResultIterator|false
-     */    
+     */
     public function searchLogin($name, $attributes = array()) {
         if (! $attributes) {
             $attributes = $this->getDefaultAttributes();
@@ -378,15 +378,15 @@ class LDAP {
         $filter = $this->ldapParams['uid'].'=' . ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $attributes);
     }
-    
+
     /**
      * Search if given argument correspond to a LDAP Identifier. This is the
      * uniq number that represent a user.
      *
      * @param string $name LDAP Id
-     * 
+     *
      * @return LDAPResultIterator|false
-     */  
+     */
     function searchEdUid($name) {
         $filter = $this->ldapParams['eduid'].'='. ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
@@ -396,7 +396,7 @@ class LDAP {
      * Search if a LDAP user match a filter defined in local conf.
      *
      * @param string $words User name to search
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     function searchUser($words) {
@@ -409,7 +409,7 @@ class LDAP {
      * Search if given identifier match a Common Name in the LDAP.
      *
      * @param string $name Common name to search
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     function searchCommonName($name) {
@@ -421,7 +421,7 @@ class LDAP {
      * Search ldap group by name
      *
      * @param string $name Group name to search
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     function searchGroup($name) {
@@ -435,12 +435,12 @@ class LDAP {
         $filter = $this->ldapParams['grp_cn'].'='.$name;
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
     }
-    
+
     /**
      * List members of a LDAP group
-     * 
+     *
      * @param string $groupDn Group DN
-     * 
+     *
      * @return LDAPResultIterator|false
      */
     function searchGroupMembers($groupDn) {
@@ -451,10 +451,10 @@ class LDAP {
      * Specific search of user common name, only the common name is returned
      *
      * This method is designed for speed and to limit the number of returned values.
-     * 
+     *
      * @param string   $name      Name of the group to look for
      * @param int $sizeLimit Limit the amount of result sent
-     * 
+     *
      * @return AppendIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
@@ -488,7 +488,7 @@ class LDAP {
             // Catch errors to detect if there are more results available than
             // the list actually returned (helps to refine the search)
             $this->trapErrors();
-            // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
+            // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch
             // of the directory to speed up the search.
             $peopleDn = explode(';', $this->ldapParams['people_dn']);
             foreach ($peopleDn as $count) {
@@ -522,10 +522,10 @@ class LDAP {
      * Specific search of group common name, only the common name is returned
      *
      * This method is designed for speed and to limit the number of returned values.
-     * 
+     *
      * @param string   $name      Name of the group to look for
      * @param int $sizeLimit Limit the amount of result sent
-     * 
+     *
      * @return LDAPResultIterator
      */
     function searchGroupAsYouType($name, $sizeLimit) {
@@ -624,15 +624,15 @@ class LDAP {
 
     /**
      * Enable fake error handler
-     * 
+     *
      * The fake error handler is enabled only for one query.
-     * 
+     *
      * @see _initErrorHandler()
      */
     private function trapErrors() {
         $this->errorsTrapped = true;
     }
-    
+
     /**
      * Setup fake error handler to be able to catch an error without displaying it
      *
@@ -641,7 +641,7 @@ class LDAP {
      * and even expected (see searchAsYouType*) because we set very restrictive
      * limits and of course the limit is exceeded easily. We need to catch it
      * but not to display a warning to the user.
-     * 
+     *
      * Note: don't enable it for each request, otherwise, you may hide unwanted
      * errors.
      */

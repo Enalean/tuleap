@@ -22,7 +22,7 @@ if (isset($GLOBALS['ErrorManager'])) return;
 
 // php5: ignore E_STRICT (var warnings)
 /*
-if (defined('E_STRICT') 
+if (defined('E_STRICT')
     and (E_ALL & E_STRICT)
     and (error_reporting() & E_STRICT)) {
     echo " errormgr: error_reporting=", error_reporting();
@@ -38,9 +38,9 @@ if (defined('E_DEPRECATED'))
 else
   define ('EM_NOTICE_ERRORS', E_NOTICE | E_USER_NOTICE);
 
-/* It is recommended to leave assertions on. 
+/* It is recommended to leave assertions on.
    You can simply comment the two lines below to leave them on.
-   Only where absolute speed is necessary you might want to turn 
+   Only where absolute speed is necessary you might want to turn
    them off.
 */
 if (1 or (defined('DEBUG') and DEBUG))
@@ -60,8 +60,8 @@ function wiki_assert_handler ($file, $line, $code) {
  * of it --- you can access the one instance via $GLOBALS['ErrorManager'].
  *
  * FIXME: more docs.
- */ 
-class ErrorManager 
+ */
+class ErrorManager
 {
     /**
      *
@@ -123,7 +123,7 @@ class ErrorManager
      *
      * This also flushes the postponed error queue.
      *
-     * @return object HTML describing any queued errors (or false, if none). 
+     * @return object HTML describing any queued errors (or false, if none).
      */
     function getPostponedErrorsAsHTML() {
         $flushed = $this->_flush_errors();
@@ -140,14 +140,14 @@ class ErrorManager
         }
         if ($worst_err->isNotice())
             return $flushed;
-        $class = $worst_err->getHtmlClass(); 
+        $class = $worst_err->getHtmlClass();
         $html = HTML::div(array('style' => 'border: none', 'class' => $class),
-                          HTML::h4(array('class' => 'errors'), 
+                          HTML::h4(array('class' => 'errors'),
                                    "PHP " . $worst_err->getDescription()));
         $html->pushContent($flushed);
         return $html;
     }
-    
+
     /**
      * Push a custom error handler on the handler stack.
      *
@@ -239,7 +239,7 @@ class ErrorManager
         if (!empty($GLOBALS['request']->_finishing)) {
             $this->_postpone_mask = 0;
         }
-        
+
         $in_handler = true;
 
         foreach ($this->_handlers as $handler) {
@@ -293,7 +293,7 @@ class ErrorManager
     function warning($msg, $errno = E_USER_NOTICE) {
         $this->handleError(new PhpWikiError($errno, $msg));
     }
-    
+
     /**
      * @access private
      */
@@ -335,7 +335,7 @@ class ErrorManager
             $request->_validators->_mtime = false;
         }
         if ($already) return;
-        
+
         // FIXME: Howto announce that to Request->cacheControl()?
         if (!headers_sent()) {
             header( "Cache-control: no-cache" );
@@ -350,15 +350,15 @@ class ErrorManager
  *
  * This is necessary since PHP's set_error_handler() does not allow
  * one to set an object method as a handler.
- * 
+ *
  * @access private
  */
-function ErrorManager_errorHandler($errno, $errstr, $errfile, $errline) 
+function ErrorManager_errorHandler($errno, $errstr, $errfile, $errline)
 {
     if (!isset($GLOBALS['ErrorManager'])) {
         $GLOBALS['ErrorManager'] = new ErrorManager;
     }
-    
+
     $error = new PhpErrorOnce($errno, $errstr, $errfile, $errline);
     $GLOBALS['ErrorManager']->handleError($error);
 }
@@ -437,7 +437,7 @@ class PhpError {
             return 'errors';
         }
     }
-    
+
     function getDescription() {
         if ($this->isNotice()) {
             return 'Notice';
@@ -458,7 +458,7 @@ class PhpError {
             $dir = str_replace('/','\\',$dir);
             $this->errfile = str_replace('/','\\',$this->errfile);
             $dir .= "\\";
-        } else 
+        } else
            $dir .= '/';
         $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         $lines = explode("\n", $this->errstr);
@@ -473,7 +473,7 @@ class PhpError {
                          $this->getDescription(),
                          array_shift($lines));
         }
-        
+
         $html = HTML::div(array('class' => $this->getHtmlClass()), HTML::p($msg));
         // The class is now used for the div container.
         // $html = HTML::div(HTML::p($msg));
@@ -483,7 +483,7 @@ class PhpError {
                 $list->pushContent(HTML::li($line));
             $html->pushContent($list);
         }
-        
+
         return $html;
     }
 
@@ -540,7 +540,7 @@ class PhpWikiError extends PhpError {
     }
 
     function _getDetail() {
-        return HTML::div(array('class' => $this->getHtmlClass()), 
+        return HTML::div(array('class' => $this->getHtmlClass()),
                          HTML::p($this->getDescription() . ": $this->errstr"));
     }
 }
@@ -548,7 +548,7 @@ class PhpWikiError extends PhpError {
 /**
  * A class representing a Php warning, printed only the first time.
  *
- * Similar to PhpError, except only the first same error message is printed, 
+ * Similar to PhpError, except only the first same error message is printed,
  * with number of occurences.
  */
 class PhpErrorOnce extends PhpError {
@@ -577,7 +577,7 @@ class PhpErrorOnce extends PhpError {
         }
         return $this->_count;
     }
-    
+
     function _getDetail($count=0) {
         // Codendi : don't display notices
         //if ($this->isNotice()) return;
@@ -587,7 +587,7 @@ class PhpErrorOnce extends PhpError {
             $dir = str_replace('/','\\',$dir);
             $this->errfile = str_replace('/','\\',$this->errfile);
             $dir .= "\\";
-        } else 
+        } else
            $dir .= '/';
         $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         if (is_string($this->errstr))
@@ -602,7 +602,7 @@ class PhpErrorOnce extends PhpError {
                        array_shift($lines),
                        $count > 1 ? sprintf(" (...repeated %d times)",$count) : ""
                        );
-        $html = HTML::div(array('class' => $this->getHtmlClass()), 
+        $html = HTML::div(array('class' => $this->getHtmlClass()),
                           HTML::p($msg));
         if ($lines) {
             $list = HTML::ul();
@@ -610,7 +610,7 @@ class PhpErrorOnce extends PhpError {
                 $list->pushContent(HTML::li($line));
             $html->pushContent($list);
         }
-        
+
         return $html;
     }
 }

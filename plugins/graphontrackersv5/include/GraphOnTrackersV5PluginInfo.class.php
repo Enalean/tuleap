@@ -24,7 +24,7 @@ require_once('common/plugin/PluginInfo.class.php');
 require_once('GraphOnTrackersV5PluginDescriptor.class.php');
 
 class GraphOnTrackersV5PluginInfo extends PluginInfo {
-    
+
     public function __construct($plugin) {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new GraphOnTrackersV5PluginDescriptor());

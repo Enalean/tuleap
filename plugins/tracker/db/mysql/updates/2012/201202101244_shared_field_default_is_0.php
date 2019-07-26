@@ -35,7 +35,7 @@ EOT;
         $this->updateFieldTable();
         $this->updateFieldListBindStaticValueTable();
     }
-    
+
     private function updateFieldTable() {
         $sql = "ALTER TABLE tracker_field ALTER COLUMN original_field_id SET DEFAULT '0'";
         $res = $this->db->dbh->exec($sql);

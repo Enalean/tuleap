@@ -879,7 +879,6 @@ class TrackersResource extends AuthenticatedResource
             throw new I18NRestException(404, dgettext('tuleap-tracker', 'Field not found.'));
         }
 
-
         $new_workflow_id = $workflow_factory->create($tracker->getId(), $field->getId());
         if (!$new_workflow_id) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created."));

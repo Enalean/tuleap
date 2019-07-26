@@ -30,17 +30,17 @@ EOT;
     public function preUp() {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
-    
+
     public function up() {
         $sql = "ALTER TABLE plugin_agiledashboard_planning
                 CHANGE release_tracker_id planning_tracker_id INT(11) NOT NULL";
-        
+
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming column release_tracker_id to plugin_agiledashboard_planning: '.implode(', ', $this->db->dbh->errorInfo()));
         }
     }
-    
+
     public function postUp() {
         if (!$this->db->columnNameExists('plugin_agiledashboard_planning', 'group_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while renaming column release_tracker_id to plugin_agiledashboard_planning');

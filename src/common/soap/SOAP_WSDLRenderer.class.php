@@ -22,7 +22,7 @@
  * This class allows a human to read a wsdl
  */
 class SOAP_WSDLRenderer {
-    
+
     /**
      * Output a html view of the given wsdl
      *
@@ -37,7 +37,7 @@ class SOAP_WSDLRenderer {
         $xslDoc = new DOMDocument();
         $xslDoc->load(ForgeConfig::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
         $proc->importStylesheet($xslDoc);
-        
+
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML($this->getWSDL($wsdl_uri));
         echo $proc->transformToXML($xmlDoc);

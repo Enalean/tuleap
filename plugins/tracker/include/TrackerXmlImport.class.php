@@ -732,7 +732,6 @@ class TrackerXmlImport
             $tracker_color = TrackerColor::fromNotStandardizedName($xml_tracker_color_name);
         }
 
-
         // set general settings
         // real id will be set during Database update
         $att = $xml->attributes();

@@ -45,18 +45,18 @@ class LastReleaseFinder {
     public function maxVersion($versions) {
         return array_reduce($versions, array($this, 'max'));
     }
-    
+
     private function max($v1, $v2) {
         return version_compare($v1, $v2, '>') ? $v1 : $v2;
     }
 }
 
 class ChangeDetector {
-    
+
     public function __construct(GitExec $git_exec, $candidate_paths) {
         $this->git_exec = $git_exec;
         $this->candidate_paths = $candidate_paths;
-    }    
+    }
 
     public function findPathsThatChangedSince($revision) {
         $changedPaths = array();
@@ -70,8 +70,8 @@ class ChangeDetector {
 }
 
 /**
- * find() => given set of changed paths, removes the paths for which the VERSION file 
- * was properly incremented 
+ * find() => given set of changed paths, removes the paths for which the VERSION file
+ * was properly incremented
  */
 class NonIncrementedPathFinder {
 
@@ -96,7 +96,7 @@ class NonIncrementedPathFinder {
     }
 
     private function getContentOfVERSIONFileAt($path, $revision) {
-        return $this->git_exec->fileContent($path."/VERSION", $revision);        
+        return $this->git_exec->fileContent($path."/VERSION", $revision);
     }
 }
 
@@ -105,12 +105,12 @@ class CheckReleaseReporter {
     public function __construct(NonIncrementedPathFinder $non_incremented_path_finder) {
         $this->non_incremented_paths_finder = $non_incremented_path_finder;
     }
-    
+
     public function reportViolations() {
         $COLOR_RED     = "\033[31m";
         $COLOR_GREEN   = "\033[32m";
         $COLOR_NOCOLOR = "\033[0m";
-        
+
         $non_incremented_paths = $this->non_incremented_paths_finder->pathsThatWereNotProperlyIncremented();
         foreach ($non_incremented_paths as $non_incremented_path) {
             echo "$COLOR_RED $non_incremented_path changed but wasn't incremented $COLOR_NOCOLOR".PHP_EOL;

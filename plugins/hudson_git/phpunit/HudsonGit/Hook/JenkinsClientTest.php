@@ -55,7 +55,6 @@ final class JenkinsClientTest extends TestCase
                 ->withBody(HTTPFactoryBuilder::streamFactory()->createStream($body_content))
         );
 
-
         $polling_response = $jenkins_client->pushGitNotifications(
             'https://jenkins.example.com',
             'https://myinstance.example.com/plugins/git/project/myrepo.git',

@@ -19,14 +19,14 @@
  */
 
 abstract class NodeDuplicatorContractTest extends TuleapTestCase {
-    
+
     public function itCopiesAllPropertiesOfTheGivenNode() {
         $tree_node      = aNode()->withId(3)
                                  ->withArtifact(mock('Tracker_Artifact'))
                                  ->withChildren(aNode(), aNode())
                                  ->withObject(mock('Tracker_Artifact'))
                                  ->build();
-        
+
         $presenter_node = $this->newNode($tree_node);
         $this->assertEqual($tree_node->getId(), $presenter_node->getId());
         $this->assertIdentical($tree_node->getData(), $presenter_node->getData());
@@ -35,7 +35,7 @@ abstract class NodeDuplicatorContractTest extends TuleapTestCase {
     }
 
     protected abstract function newNode(TreeNode $tree_node);
-    
+
 }
 
 

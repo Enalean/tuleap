@@ -22,7 +22,7 @@ use Tuleap\User\SessionNotCreatedException;
 Mock::generate('UserManager');
 
 class User_SOAPServerTest extends TuleapTestCase {
-    
+
     public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() {
         $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse'));
@@ -31,59 +31,58 @@ class User_SOAPServerTest extends TuleapTestCase {
         $this->GivenAUserManagerThatIsProgrammedToThrow(new SessionNotCreatedException())
                 ->thenLoginAsReturns(new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
-    
+
     public function testLoginAsReturnsASessionHash() {
         $admin_session_hash = 'admin_session_hash';
         $um = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
-        
+
         $user_soap_server      = new User_SOAPServer($um);
         $user_name             = 'toto';
         $expected_session_hash = 'expected_session_hash';
-        
-        
+
         $um->setReturnValue('loginAs', $expected_session_hash, array($user_name));
         $user_session_hash = $user_soap_server->loginAs($admin_session_hash, $user_name);
         $this->assertEqual($expected_session_hash, $user_session_hash);
     }
-    
+
     /**
      * @return Mock
      */
-    private function GivenAUserManagerWithValidAdmin($admin_session_hash) {        
+    private function GivenAUserManagerWithValidAdmin($admin_session_hash) {
         $adminUser = mock('PFUser');
         $adminUser->setReturnValue('isLoggedIn', true);
-        
+
         $um = new MockUserManager();
         $um->setReturnValue('getCurrentUser', $adminUser, array($admin_session_hash));
-        
+
         return $um;
     }
-    
+
     public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn() {
         $admin_session_hash = 'admin_session_hash';
-        
+
         $user = mock('PFUser');
         $user->setReturnValue('isLoggedIn', false);
-        
+
         $um = new MockUserManager();
         $um->setReturnValue('getCurrentUser', $user);
-        
+
         $user_soap_server = new User_SOAPServer($um);
         $user_name        = 'toto';
 
         $this->expectException('SoapFault');
- 
+
         $um->expectNever('loginAs');
         $user_soap_server->loginAs($admin_session_hash, $user_name);
     }
-    
+
     private function GivenAUserManagerThatIsProgrammedToThrow($exception) {
         $adminUser = mock('PFUser');
         $adminUser->setReturnValue('isLoggedIn', true);
-        
+
         $um = new MockUserManager();
         $um->setReturnValue('getCurrentUser', $adminUser);
-        
+
         $um->throwOn('loginAs', $exception);
         $server = new User_SOAPServer($um);
         return new UserManagerAsserter($server, $this);
@@ -99,7 +98,7 @@ class UserManagerAsserter {
         $this->server   = $server;
         $this->asserter = $asserter;
     }
-    
+
     public function thenLoginAsReturns(SoapFault $expected) {
         $returned = $this->server->loginAs(null, null);
         $this->asserter->assertIsA($returned, 'SoapFault');

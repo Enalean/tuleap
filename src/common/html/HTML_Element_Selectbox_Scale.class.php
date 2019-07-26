@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ class HTML_Element_Selectbox_Scale extends HTML_Element_Selectbox
     public function __construct($label, $name, $value, $with_none = false, $onchange = "",$desc="")
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
-        
+
         foreach (array('day', 'week', 'month', 'year') as $scale) {
             $selected = $this->value == $scale;
             $this->addOption(

@@ -73,7 +73,7 @@ extends WikiPlugin
                        . "  (?= ^\\1 | \\Z)/xm", // sec header (same or higher level) (or EOF)
                        implode("\n", $content),
                        $match)) {
-            $result = array();               
+            $result = array();
             //FIXME: return list of Wiki_Pagename objects
             foreach (explode("\n", $match[2]) as $line) {
                 $text = trim($line);
@@ -81,7 +81,7 @@ extends WikiPlugin
                 $text = preg_replace("/\\s*^-{4,}\\s*$/", "", $text);
                 // Strip leading list chars: * or #
                 $text = preg_replace("/^[\*#]+\s*(\S.+)$/", "\\1", $text);
-                // Strip surrounding [] 
+                // Strip surrounding []
                 // FIXME: parse [ name | link ]
                 $text = preg_replace("/^\[\s*(\S.+)\s*\]$/", "\\1", $text);
                 if (!empty($text))

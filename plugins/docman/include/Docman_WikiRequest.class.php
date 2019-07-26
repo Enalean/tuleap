@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2008
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify

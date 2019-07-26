@@ -29,7 +29,7 @@ class SOAPRequestTest extends TuleapTestCase {
         );
         $this->assertEqual($request->get('param_1'), 'value_1');
         $this->assertEqual($request->get('param_2'), 'value_2');
-        $this->assertFalse($request->get('does_not_exist')); 
+        $this->assertFalse($request->get('does_not_exist'));
     }
 }
 ?>

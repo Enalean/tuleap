@@ -155,7 +155,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
 
 class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
-    
+
     protected $parameters;
     protected $tracker;
     protected $artifact;
@@ -166,16 +166,16 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
     protected $client;
     protected $post_action_ci_build;
     protected $job_url;
-    
+
     public function setUp() {
         parent::setUp();
-        
+
         $build_user             = 'mickey mooouse';
         $project_id             = 9852614;
         $artifact_id            = 333558899;
         $tracker_id             = 5245;
         $value_triggering_build = 'the fat field';
-        
+
         $this->expected_parameters = array(
             Transition_PostAction_CIBuild::BUILD_PARAMETER_USER                => $build_user,
             Transition_PostAction_CIBuild::BUILD_PARAMETER_PROJECT_ID          => $project_id,
@@ -183,35 +183,35 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
             Transition_PostAction_CIBuild::BUILD_PARAMETER_TRACKER_ID          => $tracker_id,
             Transition_PostAction_CIBuild::BUILD_PARAMETER_TRIGGER_FIELD_VALUE => $value_triggering_build,
         );
-        
+
         $this->transition   = mock('Transition');
         $id                 = 123;
         $this->job_url      = 'http://example.com/job';
         $this->client       = mock('Jenkins_Client');
 
         $this->post_action_ci_build = new Transition_PostAction_CIBuild($this->transition, $id, $this->job_url, $this->client);
-        
+
         $this->tracker = mock('Tracker');
         $this->project = mock('Project');
         $this->artifact = mock('Tracker_Artifact');
         $this->changeset = mock('Tracker_Artifact_Changeset');
         $this->field = mock('Tracker_FormElement_Field_Selectbox');
-        
+
         stub($this->changeset)->getSubmittedBy()->returns($build_user);
-        
+
         stub($this->changeset)->getArtifact()->returns($this->artifact);
         stub($this->artifact)->getTracker()->returns($this->tracker);
         stub($this->tracker)->getProject()->returns($this->project);
         stub($this->project)->getId()->returns($project_id);
-        
+
         stub($this->artifact)->getId()->returns($artifact_id);
-        
+
         stub($this->tracker)->getId()->returns($tracker_id);
-        
+
         stub($this->transition)->getFieldValueTo()->returns($this->field);
         stub($this->field)->getLabel()->returns($value_triggering_build);
     }
-    
+
     public function itLaunchTheCIBuildOnAfter() {
         expect($this->client)->launchJobBuild($this->job_url, '*')->once();
         $this->post_action_ci_build->after($this->changeset);
@@ -225,7 +225,7 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
     public function itDisplayErrorFeedbackIfLaunchFailed() {
         $error_message = 'Oops';
         stub($this->client)->launchJobBuild($this->job_url, '*')->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
-        
+
         expect($GLOBALS['Response'])->addFeedback('error', $error_message)->once();
         $this->post_action_ci_build->after($this->changeset);
     }

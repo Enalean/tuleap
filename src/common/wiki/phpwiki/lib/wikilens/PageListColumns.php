@@ -25,8 +25,8 @@ rcs_id('$Id: PageListColumns.php,v 1.10 2005/09/30 18:41:39 uckelman Exp $');
 /**
  * wikilens specific Custom pagelist columns
  *
- * Rationale: Certain themes should be able to extend the predefined list 
- *  of pagelist types. E.g. certain plugins, like MostPopular might use 
+ * Rationale: Certain themes should be able to extend the predefined list
+ *  of pagelist types. E.g. certain plugins, like MostPopular might use
  *  info=pagename,hits,rating
  *  which displays the rating column whenever the wikilens theme is active.
  *  Similarly as in certain plugins, like WikiAdminRename or _WikiTranslation
@@ -47,13 +47,13 @@ class _PageList_Column_numbacklinks extends _PageList_Column_custom
         $theIter = $page_handle->getBackLinks();
         return $theIter->count();
     }
-    
+
     function _getSortableValue ($page_handle, &$revision_handle) {
         return $this->_getValue($page_handle, $revision_handle);
     }
 };
 
-class _PageList_Column_coagreement extends _PageList_Column_custom 
+class _PageList_Column_coagreement extends _PageList_Column_custom
 {
     function __construct ($params) {
         $this->_pagelist = $params[3];
@@ -61,7 +61,7 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
 
-    function _getValue ($page_handle, &$revision_handle) 
+    function _getValue ($page_handle, &$revision_handle)
     {
         global $request;
 
@@ -69,23 +69,23 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
 
         $active_user = $request->getUser();
         $active_userId = $active_user->getId();
-        $dbi = $request->getDbh();    
+        $dbi = $request->getDbh();
         $p = CoAgreement($dbi, $pagename, $this->_selectedBuddies, $active_userId);
         if($p == 1){
             $p = "yes";
         } elseif($p == 0){
             $p = "unsure";
         } elseif($p == -1){
-            $p = "no";    
+            $p = "no";
         } else {
-            $p = "error";    
-        }   
+            $p = "error";
+        }
         //FIXME: $WikiTheme->getImageURL()
         return HTML::img(array('src' => "../images/" . $p . ".gif"));
     }
 }
 
-class _PageList_Column_minmisery extends _PageList_Column_custom 
+class _PageList_Column_minmisery extends _PageList_Column_custom
 {
     function __construct ($params) {
         $this->_pagelist = $params[3];
@@ -93,7 +93,7 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
         $this->_selectedBuddies = $this->_pagelist->getOption('selectedBuddies');
     }
 
-    function _getValue ($page_handle, &$revision_handle) 
+    function _getValue ($page_handle, &$revision_handle)
     {
         global $request;
 
@@ -101,7 +101,7 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
 
         $active_user = $request->getUser();
         $active_userId = $active_user->getId();
-        $dbi = $request->getDbh();    
+        $dbi = $request->getDbh();
         $p = MinMisery($dbi, $pagename, $this->_selectedBuddies, $active_userId);
            $imgFix = floor($p * 2) / 2;
         //FIXME: $WikiTheme->getImageURL()
@@ -114,11 +114,11 @@ global $WikiTheme;
 $WikiTheme->addPageListColumn
   (array
    (
-    'numbacklinks' 
+    'numbacklinks'
     => array('_PageList_Column_numbacklinks','custom:numbacklinks', _("# things"), false),
-    'coagreement'  
+    'coagreement'
     => array('_PageList_Column_coagreement','custom:coagreement', _("Go?"), 'center'),
-    'minmisery'    
+    'minmisery'
     => array('_PageList_Column_minmisery','custom:minmisery', _("MinMisery"), 'center'),
     ));
 

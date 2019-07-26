@@ -31,7 +31,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      */
     protected $da;
-    
+
     /**
      * $result stores a resultset
      */
@@ -130,13 +130,13 @@ class DataAccessResult implements LegacyDataAccessResultInterface
             return $this->_row;
         }
     }
-    
+
     /**
-     * Move forward to next element. 
+     * Move forward to next element.
      *
      * @deprecated
      *
-     * @return void 
+     * @return void
      */
     public function next() {
         $this->_current++;
@@ -149,7 +149,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     protected function daFetch() {
         return $this->da->fetch($this->result);
     }
-    
+
     /**
      * Check if there is a current element after calls to rewind() or next().
      *
@@ -160,7 +160,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     public function valid() {
         return $this->_row !== false;
     }
-    
+
     /**
      * Rewind the Iterator to the first element.
      *
@@ -184,17 +184,17 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     }
 
     /**
-     * Return the key of the current element. 
+     * Return the key of the current element.
      *
      * @deprecated
      *
-     * @return mixed 
+     * @return mixed
      */
     public function key() {
         return $this->_current;
     }
     // }}}
-    
+
     // {{{ Countable
     /**
      * @deprecated

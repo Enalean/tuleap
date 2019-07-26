@@ -401,7 +401,6 @@ class BackendSVNTest extends TuleapTestCase {
         $pm->setReturnReference('getProject', $project1, array(102));
         $pm->setReturnReference('getProject', $project2, array(101));
 
-
         $backend->setReturnValue('repositoryExists', true);
         $backend->setReturnValue('updateSVNAccess', true);
 
@@ -414,7 +413,6 @@ class BackendSVNTest extends TuleapTestCase {
         $backend->expectCallCount('updateSVNAccess', 2);
         $backend->expectAt(0, 'updateSVNAccess', array(102));
         $backend->expectAt(1, 'updateSVNAccess', array(101));
-
 
     }
 }

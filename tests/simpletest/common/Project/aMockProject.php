@@ -23,17 +23,17 @@ function aMockProject() {
 }
 
 class MockProjectBuilder {
-    
+
     private $project;
     private $id        = false;
     private $unix_name = false;
     private $is_public = false;
-    
+
     public function __construct() {
         $this->project   = mock('Project');
         $this->id        = uniqid();
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;

@@ -24,66 +24,66 @@ class ArtifactField {
 
     // The field id
     var $field_id;
-    
+
     // The field name
     var $field_name;
-    
+
     // The data_type: 1: text, 2: int, 3: float, 4: date, 5: user - See constants $DATATYPE_xx
     var $data_type;
-    
+
     // Display type: SB: selectbox, TF: text field, DF: date field, TA: text area
     var $display_type;
-    
+
     // The size associated with display_type
     var $display_size;
-    
+
     // The label
     var $label;
-    
+
     // The description
     var $description;
-    
+
     // The scope of the field: S: system or P:project
     var $scope;
-    
-    // @deprecated 
-    // Is the field is required? 
+
+    // @deprecated
+    // Is the field is required?
     // !!! Caution !!!
     // This field shouldn't be used (always 0)
     // Use empty_ok (required <=> ! empty_ok)
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var $required;
-    
+
     // Is the field allowed to be empty?
     var $empty_ok;
-    
+
     // Keep the history changes
     var $keep_history;
-    
+
     // Is the field special?
     var $special;
-    
+
     // Special value to specify the field values: artifact_submitters
     var $value_function;
-    
+
     // Is the field used?
     var $use_it;
-        
+
     // Place on the form
     var $place;
-    
+
     // Default value
     var $default_value;
-    
+
     // Id of the fieldset that this field belong to
     var $field_set_id;
-    
-    
+
+
     // Constants for data_type
     var $DATATYPE_TEXT = 1;
     var $DATATYPE_INT = 2;
     var $DATATYPE_FLOAT = 3;
-    var $DATATYPE_DATE = 4;    
+    var $DATATYPE_DATE = 4;
     var $DATATYPE_USER = 5;
     /**
      * @var string
@@ -96,7 +96,7 @@ class ArtifactField {
 
     function __construct() {
     }
-    
+
     /**
      *  Retrieve and set the attributes values
      *
@@ -107,7 +107,7 @@ class ArtifactField {
      */
     function fetchData($group_artifact_id,$field_name) {
         global $display_debug;
-        
+
         $sql="SELECT af.field_id, field_name, data_type, display_type, ".
         "display_size,label, description,scope,required,empty_ok,keep_history,special, ".
         "value_function, ".
@@ -116,17 +116,17 @@ class ArtifactField {
         "WHERE af.field_name='". db_es($field_name) ."' and af.field_id = afu.field_id".
         " and afu.group_artifact_id=". db_ei($group_artifact_id) .
         " and af.group_artifact_id=". db_ei($group_artifact_id) ;
-        
+
      //echo "<DBG:ArtifactField.fetchData>sql=".$sql."<br>";
         $res = db_query($sql);
-    
+
         $field_array = db_fetch_array($res);
-        
+
         if ( $field_array ) {
             $this->setFromArray($field_array);
         }
-    
-    }    
+
+    }
 
     /**
      *  Set the attributes values
@@ -159,10 +159,10 @@ class ArtifactField {
         $this->place = $field_array['place'];
         $this->default_value = $field_array['default_value'];
         $this->field_set_id = $field_array['field_set_id'];
-        
+
      //echo $this->field_name."-".$this->data_type."<br>";
     }
-    
+
     /**
      *  Get the field_name attribute value
      *
@@ -171,7 +171,7 @@ class ArtifactField {
     function getName() {
         return $this->field_name;
     }
-    
+
     /**
      *  Get the field_id attribute value
      *
@@ -180,7 +180,7 @@ class ArtifactField {
     function getID() {
         return $this->field_id;
     }
-    
+
     /**
      *  Get the data_type attribute value
      *
@@ -189,7 +189,7 @@ class ArtifactField {
     function getDataType() {
         return $this->data_type;
     }
-    
+
     /**
      *  Get the display_type attribute value
      *
@@ -198,7 +198,7 @@ class ArtifactField {
     function getDisplayType() {
         return $this->display_type;
     }
-    
+
     /**
      *  Get the label of the field. The field type is a combination
      * of the field data type and the field display type
@@ -209,23 +209,23 @@ class ArtifactField {
         global $Language;
 
         if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        &&($this->display_type == "SB") ) 
+        &&($this->display_type == "SB") )
         return $Language->getText('tracker_include_type','sb');
-        
+
         if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        &&($this->display_type == "MB") ) 
+        &&($this->display_type == "MB") )
         return $Language->getText('tracker_include_type','mb');
-        
+
         if ( ($this->data_type == $this->DATATYPE_TEXT)
-        &&($this->display_type == "TF") ) 
+        &&($this->display_type == "TF") )
         return $Language->getText('tracker_include_type','tf');
-        
+
         if ( ($this->data_type == $this->DATATYPE_TEXT)
-        &&($this->display_type == "TA") ) 
+        &&($this->display_type == "TA") )
         return $Language->getText('tracker_include_type','ta');
 
         if ( ($this->data_type == $this->DATATYPE_DATE)
-        &&($this->display_type == "DF") ) 
+        &&($this->display_type == "DF") )
         return $Language->getText('tracker_include_type','df');
 
         if ( ($this->data_type == $this->DATATYPE_FLOAT)
@@ -233,7 +233,7 @@ class ArtifactField {
         return $Language->getText('tracker_include_type','ff');
 
         if ( ($this->data_type == $this->DATATYPE_INT)
-        &&($this->display_type == "TF") ) 
+        &&($this->display_type == "TF") )
         return $Language->getText('tracker_include_type','if');
 
         return $Language->getText('tracker_common_field','unkown');
@@ -247,7 +247,7 @@ class ArtifactField {
     function getDisplaySize() {
         return($this->display_size);
     }
-    
+
     /**
      *  Get the label attribute value
      *
@@ -256,7 +256,7 @@ class ArtifactField {
     function getLabel() {
         return $this->label;
     }
-    
+
     /**
      *  Get the description attribute value
      *
@@ -265,7 +265,7 @@ class ArtifactField {
     function getDescription() {
         return $this->description;
     }
-    
+
     /**
      *  Get the scope attribute value
      *
@@ -274,7 +274,7 @@ class ArtifactField {
     function getScope() {
         return $this->scope;
     }
-    
+
     /**
      * @deprecated Caution: don't use this function. Returned value always equal to 0. Use getEmptyOk (required <=> ! empty_ok)
      * Get the required attribute value
@@ -284,7 +284,7 @@ class ArtifactField {
     function getRequired() {
         return $this->required;
     }
-    
+
     /**
      *  Get the empty_ok attribute value
      *
@@ -293,7 +293,7 @@ class ArtifactField {
     function getEmptyOk() {
         return $this->empty_ok;
     }
-    
+
     /**
      *  Get the keep_history attribute value
      *  add CC and file_attachment into history for task #240
@@ -304,7 +304,7 @@ class ArtifactField {
         if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by') return true;
         else return $this->keep_history;
     }
-    
+
     /**
      *  Get the special attribute value
      *
@@ -313,7 +313,7 @@ class ArtifactField {
     function getSpecial() {
         return $this->special;
     }
-    
+
     /**
      *  Get the value_function attribute value
      *
@@ -322,8 +322,8 @@ class ArtifactField {
     function getValueFunction() {
         return $this->value_function;
     }
-    
-    
+
+
     /**
      *  Get the use_it attribute value
      *
@@ -332,7 +332,7 @@ class ArtifactField {
     function getUseIt() {
         return $this->use_it;
     }
-    
+
     /**
      *  Get the place attribute value
      *
@@ -341,7 +341,7 @@ class ArtifactField {
     function getPlace() {
         return $this->place;
     }
-    
+
     /**
      *  Get the default_value attribute value
      *
@@ -351,20 +351,20 @@ class ArtifactField {
             if ($for_insert) return $this->default_value;
 
         $def_val = $this->default_value;
-        if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) 
+        if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
         &&($this->display_type == "MB") ) {
             $res = explode(",", $def_val);
-            return $res; 
+            return $res;
         }
         return $this->default_value;
     }
 
-    
+
     function getFieldSetID() {
         return $this->field_set_id;
     }
-    
-    
+
+
     /**
      *  Dump attribute values
      *
@@ -388,8 +388,8 @@ class ArtifactField {
           " - place=".$this->place.
           " - default_value=".$this->default_value.
                " - field_set_id=".$this->field_set_id;
-    }    
-    
+    }
+
     /**
      *  Return true if the field is a selectbox (display_type attribute value = SB)
      *
@@ -398,7 +398,7 @@ class ArtifactField {
     function isSelectBox() {
         return ( $this->getDisplayType() == "SB" );
     }
-            
+
     /**
      *  Return true if the field is a multi selectbox (display_type attribute value = MB)
      *
@@ -407,7 +407,7 @@ class ArtifactField {
     function isMultiSelectBox() {
         return ( $this->getDisplayType() == "MB" );
     }
-            
+
     /**
      *  Return true if the field is a date field (display_type attribute value = DF)
      *
@@ -436,7 +436,7 @@ class ArtifactField {
     }
 
     /**
-     *  Return true if the field is a float 
+     *  Return true if the field is a float
      *
      * @return bool
      */
@@ -445,7 +445,7 @@ class ArtifactField {
     }
 
     /**
-     *  Return true if the field is a int 
+     *  Return true if the field is a int
      *
      * @return bool
      */
@@ -462,7 +462,7 @@ class ArtifactField {
         $val = $this->getEmptyOk();
         return($val);
     }
-    
+
     /**
      *  Return true if the field is special
      *
@@ -471,7 +471,7 @@ class ArtifactField {
     function isSpecial() {
         return( $this->special == 1 );
     }
-    
+
     /**
      *  Return true if the field is used
      *
@@ -480,9 +480,9 @@ class ArtifactField {
     function isUsed() {
         return( $this->use_it );
     }
-    
+
     /**
-     *  Return true if the field is standard (using if name - if this field value is stored into artifact table) 
+     *  Return true if the field is standard (using if name - if this field value is stored into artifact table)
      *
      * @return bool
      */
@@ -563,14 +563,14 @@ class ArtifactField {
         }
         return $t;
     }
-    
+
     /**
      * Simply return the value associated with a given value_id
      * for a given field of a given group. If associated value not
      * found then return value_id itself.
      * By doing so if this function is called by mistake on a field with type
      * text area or text field then it returns the text itself.
-     * 
+     *
      * WARNING: the value is not escaped for any output. Please purify it before usage
      *
      * @return bool|string
@@ -578,7 +578,7 @@ class ArtifactField {
     function getValue($group_artifact_id,$value_id,$by_field_id=false) {
         global $Language;
          $uh = UserHelper::instance();
-      
+
         // close_date and assigned_to fields are special select box fields
         $value_func = $this->getGlobalValueFunction();
         if (count($value_func) > 0) {
@@ -586,7 +586,7 @@ class ArtifactField {
       // to make a test for the type of value function it is
       // if ($value_func == '...')
             if(is_numeric($value_id)) {
-                return $uh->getDisplayNameFromUserId($value_id); 
+                return $uh->getDisplayNameFromUserId($value_id);
             }
             else {
                 return $Language->getText('tracker_common_field','not_found');
@@ -602,26 +602,26 @@ class ArtifactField {
         $result=db_query($sql);
         if ($result && db_numrows($result) > 0) {
             return db_result($result,0,'value');
-        } 
-    
+        }
+
         // check here if value is 100
         if ($value_id == 100) {
             return $Language->getText('global','none');
         }
         // No value found for this value id !!!
         return $value_id.$Language->getText('tracker_common_field','not_found');
-    
+
     }
 
     /** return the id of the ugroup in the value function
      * false if the value function does not concern a special
-     * ugroup (id > 100) 
+     * ugroup (id > 100)
      */
     function isUgroupValueFunction($value) {
 
         if (preg_match('/ugroup_([0-9]+)/', $value, $matches)) {
             if (strlen($matches[1]) > 2) {
-                  return $matches[1];        
+                  return $matches[1];
             }
         }
         return false;
@@ -642,7 +642,7 @@ class ArtifactField {
             global $ath, $RES_CACHE;
         // The "Assigned_to" box requires some special processing
         // because possible values  are project members) and they are
-        // not stored in the artifact_field_value table but in the user_group table        
+        // not stored in the artifact_field_value table but in the user_group table
         $value_func = $this->getGlobalValueFunction();
         $qry_value  = [];
         if (count($value_func) > 0) {
@@ -683,17 +683,17 @@ class ArtifactField {
                     $status_cond = "AND  status IN ('A','P') ";
                 }
             }
-        
+
       // CAUTION !! the fields value_id and value must be first in the
       // select statement because the output is used in the html_build_select_box
       // function
-        
+
       // Look for project specific values first
             $sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
             "FROM artifact_field_value_list ".
             "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id= ". db_ei($this->field_id) ." ".
             $status_cond." ORDER BY order_id ASC";
-                
+
       // Use cache ?
             if ( $use_cache ) {
                 if ( isset($RES_CACHE[$sql]) ) {
@@ -705,39 +705,39 @@ class ArtifactField {
             } else {
                 $res_value = db_query($sql);
             }
-            
+
             $rows=db_numrows($res_value);
 
         }
-    
+
         return($res_value);
-    
+
     }
 
     /**
      * Check if a value exists in the predefined values list
-     * 
+     *
      * @param group_artifact_id: the group artifact id
      * @param value: the value
      *
      * @return array
      */
     function checkValueInPredefinedValues ($group_artifact_id,$value) {
-            
+
         $res = $this->getFieldPredefinedValues ($group_artifact_id);
         while ($res_array = db_fetch_array($res)) {
             if ( $res_array[0] == $value ) {
                 return true;
             }
         } // while
-        
+
         return false;
     }
 
 
     /**
      * Return all the values for a select box field for a specified status (exclude binding values)
-     * 
+     *
      * @param group_artifact_id: the group artifact id
      * @param status: the status
      *
@@ -758,14 +758,14 @@ class ArtifactField {
             "ORDER BY order_id ASC";
             $res_value = db_query($sql);
         }
-    
+
         return($res_value);
-    
+
     }
 
     /**
      * Return the value informations
-     * 
+     *
      * @param group_artifact_id: the group artifact id
      * @param value_id: the value id
      *
@@ -773,7 +773,7 @@ class ArtifactField {
      */
     function getFieldValue ($group_artifact_id,$value_id) {
         $res = null;
-        $gvf = $this->getGlobalValueFunction();    
+        $gvf = $this->getGlobalValueFunction();
         if (!isset($gvf[0]) || !$gvf[0]) {
 
             $sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
@@ -783,9 +783,9 @@ class ArtifactField {
             $res_value = db_query($sql);
             $res = db_fetch_array($res_value);
         }
-    
+
         return $res;
-    
+
     }
 
     /**
@@ -794,9 +794,9 @@ class ArtifactField {
      * @return bool
      */
     function isUsername() {
-        
+
         return ($this->data_type == $this->DATATYPE_USER);
-        
+
     }
 
     /**
@@ -805,22 +805,22 @@ class ArtifactField {
      * @return bool
      */
     function getValueFieldName() {
-    
-     //echo "DT=".$this->getDataType()."<br>";    
+
+     //echo "DT=".$this->getDataType()."<br>";
         switch ( $this->getDataType() ) {
             case $this->DATATYPE_TEXT:
          return "valueText";
             break;
-            
+
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
          return "valueInt";
             break;
-            
+
             case $this->DATATYPE_FLOAT:
          return "valueFloat";
             break;
-            
+
             case $this->DATATYPE_DATE:
          return "valueDate";
             break;
@@ -829,101 +829,100 @@ class ArtifactField {
 
     /**
      * Update the field value for a specific artifact_id
-     * 
+     *
      * @param artifact_id: the artifact
      * @param value: the new value
      *
      * @return bool
      */
     function updateValue($artifact_id,$value) {
-    
+
         $sql = "update artifact_field_value set ";
         switch ( $this->getDataType() ) {
             case $this->DATATYPE_TEXT:
                   $sql .= "valueText='". db_es($value) ."'";
          break;
-            
+
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
                   $sql .= "valueInt=$value";
          break;
-            
+
             case $this->DATATYPE_FLOAT:
                   $sql .= "valueFloat=$value";
          break;
-            
+
             case $this->DATATYPE_DATE:
                   $sql .= "valueDate=$value";
          break;
         } // switch
-        
+
         $sql .= " where artifact_id = ". db_ei($artifact_id) ." and field_id = ". db_ei($this->getID()) ;
-        
+
         $result=db_query($sql);
-        
+
         if ( !$result ) {
             return false;
         } else {
             return true;
         }
-                 
+
     }
 
     /**
      * Update the field values for a specific artifact_id
-     * 
+     *
      * @param artifact_id: the artifact
      * @param values: a single value or an array of values
      *
      * @return bool
      */
     function updateValues($artifact_id,$values) {
-    
+
      // First delete the items
         $sql = "DELETE FROM artifact_field_value WHERE artifact_id=". db_ei($artifact_id) ." AND field_id=". db_ei($this->getID()) ;
-        
+
         $result=db_query($sql);
-        
+
         if ( !$result ) {
             return false;
         }
-
 
         return $this->insertValue($artifact_id,$values);
     }
 
     /**
      * Insert the field value for a specific artifact_id
-     * 
+     *
      * @param artifact_id: the artifact
      * @param value: the value (array or single value)
      *
      * @return bool
      */
     function insertValue($artifact_id,$value) {
-    
+
         if ( is_array($value) ) {
             $rc_update = true;
             for ($i=0;$i<count($value);$i++) {
                 if ((count($value) > 1) && ($value[$i]==100)) {
-                 //don't insert the row if there's more 
+                 //don't insert the row if there's more
                  //than 1 item selected and this item is None
                 } else {
-                    if ( !$this->insertSingleValue($artifact_id,$value[$i]) ) 
+                    if ( !$this->insertSingleValue($artifact_id,$value[$i]) )
                     $rc_update = false;
                 }
             }
             return $rc_update;
         } else {
             return $this->insertSingleValue($artifact_id,$value);
-        }                 
+        }
     }
 
     /**
      * Insert the field value for a specific artifact_id for a value
-     * 
+     *
      * @param Integer    artifact_id the artifact
-     * @param FieldValue value       the value 
+     * @param FieldValue value       the value
      *
      * @return bool
      */
@@ -949,12 +948,12 @@ class ArtifactField {
                     $values .= ($value? db_ei($value) :"0");
                 }
             break;
-        
+
             case $this->DATATYPE_FLOAT:
                 $name = "valueFloat";
                 $values .= ($value? db_es($value) :"0.0");
             break;
-        
+
             case $this->DATATYPE_DATE:
                 $name = "valueDate";
                 $values .= ($value? db_ei($value) :"0");
@@ -966,7 +965,7 @@ class ArtifactField {
 
     /**
      * Insert the field value for a specific artifact_id for a single value
-     * 
+     *
      * @param artifact_id: the artifact
      * @param value: the value (single value)
      *
@@ -985,7 +984,7 @@ class ArtifactField {
 
     /**
      * Insert the default field value for a specific artifact_id for a single value
-     * 
+     *
      * @param artifact_id: the artifact
      *
      * @return bool
@@ -1009,11 +1008,11 @@ class ArtifactField {
      */
     function buildMatchExpression($field_name,&$to_match)
     {
-    
+
         switch ( $this->getDataType() ) {
             case $this->DATATYPE_TEXT :
             case $this->DATATYPE_DATE :
-    
+
            // If it is sourrounded by /.../ the assume a regexp
            // else transform into a series of LIKE %word%
                 if (preg_match('/\/(.*)\//', $to_match, $matches))
@@ -1027,10 +1026,10 @@ class ArtifactField {
                      $expr = join(' AND ', $words);
                 }
       break;
-    
+
             case $this->DATATYPE_INT :
             case $this->DATATYPE_USER :
-    
+
            // If it is sourrounded by /.../ the assume a regexp
            // else assume an equality
                 if (preg_match('/\/(.*)\//', $to_match, $matches)) {
@@ -1042,20 +1041,20 @@ class ArtifactField {
                         $matches[2] = (string)((int)$matches[2]);
                         $expr = $field_name." ".$matches[1]." '".$matches[2]."' ";
                         $to_match = $matches[1].' '.$matches[2];
-        
+
                     } else if (preg_match("/\s*($int_reg)\s*-\s*($int_reg)/", $to_match, $matches)) {
                // it's a range number1-number2
                         $matches[1] = (string)((int)$matches[1]);
                         $matches[2] = (string)((int)$matches[2]);
                         $expr = $field_name." >= '".$matches[1]."' AND ".$field_name." <= '". $matches[2]."' ";
                         $to_match = $matches[1].'-'.$matches[2];
-        
+
                     } else if (preg_match("/\s*($int_reg)/", $to_match, $matches)) {
                // It's a number so use  equality
                         $matches[1] = (string)((int)$matches[1]);
                         $expr = $field_name." = '".$matches[1]."'";
                         $to_match = $matches[1];
-        
+
                     } else {
      // Invalid syntax - no condition
                         $expr = '1';
@@ -1063,31 +1062,31 @@ class ArtifactField {
                     }
                 }
       break;
-                 
+
             case $this->DATATYPE_FLOAT :
-    
+
            // If it is sourrounded by /.../ the assume a regexp
            // else assume an equality
                 if (preg_match('/\/(.*)\//', $to_match, $matches)) {
                      $expr = $field_name." RLIKE '".$matches[1]."' ";
                 } else {
                     $flt_reg = '[+\-0-9.eE]+';
-        
+
                     if (preg_match("/\s*(<|>|>=|<=)\s*($flt_reg)/", $to_match, $matches)) {
                 // It's < or >,  = and a number then use as is
                         $matches[2] = (string)((float)$matches[2]);
                         $expr = $field_name." ".$matches[1]." '".$matches[2]."' ";
                         $to_match = $matches[1].' '.$matches[2];
-        
+
                     } else if (preg_match("/\s*($flt_reg)\s*-\s*($flt_reg)/", $to_match, $matches) ) {
                // it's a range number1-number2
                         $matches[1] = (string)((float)$matches[1]);
                         $matches[2] = (string)((float)$matches[2]);
                         $expr = $field_name." >= '".$matches[1]."' AND ".$field_name." <= '". $matches[2]."' ";
                         $to_match = $matches[1].'-'.$matches[2];
-        
+
                     } else if (preg_match("/\s*($flt_reg)/", $to_match, $matches)) {
-        
+
                // It's a number so use  equality
                         $matches[1] = (string)((float)$matches[1]);
                         $expr = $field_name." = '".$matches[1]."'";
@@ -1099,56 +1098,56 @@ class ArtifactField {
                     }
                 }
       break;
-        
+
             default:
                  // All the rest (???) use =
                  $expr = $field_name." = '". db_es($to_match) ."'";
       break;
         }
-    
+
         //echo "<br>DBG expr to match for '".$field_name."' = $expr";
         return ' ('.$expr.') ';
-    
+
     }
 
     /**
      * Return the list of values for the field and a given artifact (for MB field type)
-     * 
+     *
      * @param artifact_id: the artifact
      *
      * @return array
      */
     function getValues($artifact_id) {
-    
+
         switch ( $this->getDataType() ) {
             case $this->DATATYPE_TEXT:
                   $name = "valueText";
          break;
-            
+
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
                   $name = "valueInt";
          break;
-            
+
             case $this->DATATYPE_FLOAT:
                   $name = "valueFloat";
          break;
-            
+
             case $this->DATATYPE_DATE:
                   $name = "valueDate";
          break;
         } // switch
-        
+
         $sql = "SELECT ".$name." FROM artifact_field_value WHERE artifact_id=". db_ei($artifact_id) ." AND field_id=". db_ei($this->field_id) ;
         $result=db_query($sql);
-        
+
         return util_result_column_to_array($result);
-                 
+
     }
-    
+
     /**
      * Return a list of label for a given id values
-     * 
+     *
      * @param group_artifact_id: the artifact type id
      * @param values: array of values (id)
      *
@@ -1158,7 +1157,7 @@ class ArtifactField {
         global $Language;
 
         $label_values = array();
-        
+
         $hash_values = array();
      // Retrieve the full list (id+label)
         if ( $this->isUserName() ) {
@@ -1192,12 +1191,12 @@ class ArtifactField {
      *  @return array
      */
     function getUsersList($values) {
-        
+
         $sql="SELECT user_id,user_name ".
          "FROM user ".
          "WHERE user_id IN (". db_es(join(",",$values)) .")";
         $res_value = db_query($sql);
-        
+
         return $res_value;
     }
 
@@ -1223,20 +1222,20 @@ class ArtifactField {
                          $display_size,$rank_on_screen,
                          $empty_ok,$keep_history,$special,$use_it, $fieldset_id) {
         global $Language;
-         
+
      // Check arguments
         if ( $field_name=="" || $data_type=="" || $display_type=="" ) {
             $this->setError($Language->getText('tracker_common_field','name_requ'));
             return false;
         }
-        
+
      // Default values
         $empty_ok = ($empty_ok?$empty_ok:0);
         $keep_history = ($keep_history?$keep_history:0);
         $use_it = ($use_it?$use_it:0);
         $special = ($special?$special:0);
         $rank_on_screen = ($rank_on_screen?$rank_on_screen:"''");
-        
+
      // First update the artifact_field
         $sql = "UPDATE artifact_field SET ".
          "field_name='". db_es($field_name) ."',".
@@ -1250,81 +1249,81 @@ class ArtifactField {
          "special=". db_ei($special) .",".
                "field_set_id=". db_ei($fieldset_id) ." ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
-                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','upd_err',array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
      // Then, update the artifact_field_usage
         $sql = "UPDATE artifact_field_usage SET ".
          "use_it=". db_ei($use_it) .",".
          "place=". db_ei($rank_on_screen) ." ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
-        
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','use_err',array($field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
         if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {
-            
+
          // We need to insert with the default value, records in artifact_field_value table
          // for the unused field
             $sql_artifacts='SELECT artifact_id '.
             'FROM artifact '.
             'WHERE group_artifact_id='.  db_ei($group_artifact_id) ;
-            
+
             $res = db_query($sql_artifacts);
-        
+
             while ($artifacts_array = db_fetch_array($res)) {
                 $id = $artifacts_array["artifact_id"];
-    
+
           // Check if there is an existing record
                 $sql = "SELECT * FROM artifact_field_value WHERE ".
                 "artifact_id = ". db_ei($id) ." AND field_id = ". db_ei($this->getID()) ;
                 $res_artifact = db_query($sql);
-                
+
                 if ( db_numrows($res_artifact) <= 0 ) {
                     // Insert artifact_field_value record
                     $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
                     $values =  db_ei($this->getID()) .",". db_ei($id) .",'". db_es($this->getDefaultValue()) ."'";
-                    
+
                     switch ( $this->getDataType() ) {
                         case $this->DATATYPE_TEXT:
                                  $name = "valueText";
                   break;
-                        
+
                         case $this->DATATYPE_INT:
                         case $this->DATATYPE_USER:
                             $name = "valueInt";
                   break;
-                        
+
                         case $this->DATATYPE_FLOAT:
                             $name = "valueFloat";
                   break;
-                        
+
                         case $this->DATATYPE_DATE:
                             $name = "valueDate";
                   break;
                     } // switch
-                    
+
                     $sql .= $name . ") VALUES (" . $values . ")";
-                    
+
                     $result=db_query($sql);
                 }
-                                            
+
             } // while
-            
+
         }
-    
+
      // Reload the field
         $this->fetchData($group_artifact_id,$field_name);
 
         return true;
-        
+
     }
 
     /**
@@ -1342,27 +1341,27 @@ class ArtifactField {
             $dtype = $this->DATATYPE_INT;
         } else {
             $dtype = $this->DATATYPE_USER;
-        }             
+        }
      // Update the artifact_field
         $sql = "UPDATE artifact_field SET ".
-         "value_function='". db_es(implode(",",$value_function)) ."', ".               
+         "value_function='". db_es(implode(",",$value_function)) ."', ".
          "data_type=".  db_ei($dtype) ." ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
-                                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','upd_err',array($field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
      // Set the data type to user
         $this->data_type = $dtype;
-        
+
      // Reload the field
         $this->fetchData($group_artifact_id,$this->field_name);
 
         return true;
-        
+
     }
 
     /**
@@ -1393,7 +1392,7 @@ class ArtifactField {
         } else {
             $value = $default_value;
         }
-        
+
      // Update the artifact_field
         $sql = "UPDATE artifact_field SET ".
          "default_value='". db_es($value) ."' ".
@@ -1404,12 +1403,12 @@ class ArtifactField {
             $this->setError($Language->getText('tracker_common_field','upd_err',array($field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
      // Reload the field
         $this->fetchData($group_artifact_id,$this->field_name);
 
         return true;
-        
+
     }
 
     /**
@@ -1421,7 +1420,7 @@ class ArtifactField {
      */
     function delete($group_artifact_id) {
         global $Language;
-                     
+
      // First delete the artifact_field
         $sql = "DELETE FROM artifact_field ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
@@ -1431,21 +1430,21 @@ class ArtifactField {
             $this->setError($Language->getText('tracker_common_field','del_err',array($field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
      // Delete the artifact_field_usage
         $sql = "DELETE FROM artifact_field_usage ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
-                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','use_del_err',array($field_id,$group_artifact_id,db_error())));
             return false;
         }
-        
+
      // Then, delete the artifact_field_value_list
         $sql = "DELETE FROM artifact_field_value_list ".
          "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;
-                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','del_err',array($field_id,$group_artifact_id,db_error())));
@@ -1456,23 +1455,23 @@ class ArtifactField {
         $sql_artifacts='SELECT artifact_id '.
         'FROM artifact '.
         'WHERE group_artifact_id='.  db_ei($group_artifact_id) ;
-        
+
         $res = db_query($sql_artifacts);
-    
+
         while ($artifacts_array = db_fetch_array($res)) {
             $id = $artifacts_array["artifact_id"];
 
-      // Delete artifact_field_value records            
+      // Delete artifact_field_value records
             $sql = "DELETE FROM artifact_field_value WHERE artifact_id = ". db_ei($id) ." AND field_id = ". db_ei($this->getID()) ;
-            
+
             db_query($sql);
-            
+
         } // while
 
         return true;
-        
+
     }
-    
+
     /**
      *  Check if a field value id or a field value already exists
      *
@@ -1487,7 +1486,7 @@ class ArtifactField {
      // Check id first
         $sql = "SELECT * FROM artifact_field_value_list WHERE group_artifact_id=". db_ei($group_artifact_id) .
          " AND field_id=". db_ei($this->getID()) ." AND value_id=". db_ei($value_id) ;
-               
+
         $result = db_query($sql);
         if ($result && db_numrows($result) > 0) {
             return true;
@@ -1495,7 +1494,7 @@ class ArtifactField {
          // Check value
             $sql = "SELECT * FROM artifact_field_value_list WHERE group_artifact_id=". db_ei($group_artifact_id) .
             " AND field_id=". db_ei($this->getID()) ." AND value='". db_es($value) ."'";
-                   
+
             $result = db_query($sql);
             if ($result && db_numrows($result) > 0) {
                 return true;
@@ -1503,8 +1502,8 @@ class ArtifactField {
                 return false;
             }
         }
-            
-    }    
+
+    }
 
     /**
      *  Create a new field value for select box field
@@ -1524,32 +1523,32 @@ class ArtifactField {
             $this->setError($Language->getText('tracker_common_field','val_requ'));
             return false;
         }
-        
+
         $value_id = $this->getNextValueID($group_artifact_id,$this->getID());
-        
+
      // Check if a field value id already exists
         if ( $this->existValue($group_artifact_id,$value_id,$value) ) {
             $this->setError($Language->getText('tracker_common_field','val_exist'));
             return false;
         }
-        
+
      // Default values
         $order_id = ($order_id?$order_id:0);
-        
+
      // Create the artifact_field_value_list
         $sql = "INSERT INTO artifact_field_value_list VALUES (".
         db_ei($this->getID()) .",". db_ei($group_artifact_id) .",". db_ei($value_id) .",'". db_es($value) ."','". db_es($description) ."',". db_ei($order_id) .",'A')";
-                
+
         $res_insert = db_query($sql);
         if (!$res_insert || db_affected_rows($res_insert) <= 0) {
             $this->setError($Language->getText('tracker_common_field','vl_ins_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }
-        
+
         return true;
-        
+
     }
-    
+
     /**
      *  Update a field value for select box field
      *
@@ -1571,10 +1570,10 @@ class ArtifactField {
             $this->setError($Language->getText('tracker_common_field','val_id_requ'));
             return false;
         }
-        
+
      // Default values
         $order_id = ($order_id?$order_id:0);
-        
+
      // Update the artifact_field_value_list
         $sql = "UPDATE artifact_field_value_list SET ".
                "value='". db_es($value) ."',".
@@ -1582,17 +1581,17 @@ class ArtifactField {
                "order_id=". db_ei($order_id) .",".
                "status='". db_es($status) ."' ".
          "WHERE field_id=". db_ei($this->getID()) ." AND group_artifact_id=". db_ei($group_artifact_id) ." AND value_id=". db_ei($value_id) ;
-                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','vl_upd_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }
-        
+
         return true;
-        
+
     }
-    
+
     /**
      *  Delete a field value for select box field
      *
@@ -1607,17 +1606,17 @@ class ArtifactField {
      // Delete the artifact_field_value_list
         $sql = "DELETE FROM artifact_field_value_list ".
         "WHERE field_id=". db_ei($this->getID()) ." AND group_artifact_id=". db_ei($group_artifact_id) ." AND value_id=". db_ei($value_id) ;
-                
+
         $res = db_query($sql);
         if (!$res) {
             $this->setError($Language->getText('tracker_common_field','vl_del_err',array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }
-        
+
         return true;
-        
+
     }
-    
+
     /**
      * Retrieve the next free value id (computed by max(id)+1)
      *
@@ -1630,7 +1629,7 @@ class ArtifactField {
         $sql = "SELECT max(value_id)+1 FROM artifact_field_value_list WHERE ".
         "field_id=". db_ei($field_id) ." AND group_artifact_id=".$group_artifact_id." ".
          "GROUP BY field_id,group_artifact_id";
-               
+
         $result = db_query($sql);
         if ($result && db_numrows($result) > 0) {
             $id = db_result($result, 0, 0);
@@ -1645,11 +1644,11 @@ class ArtifactField {
 
 
 
-    /** return true if user has Read or Update permission on this field 
+    /** return true if user has Read or Update permission on this field
      * @param group_id: the project this field is in
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
-    **/ 
+    **/
     function userCanRead($group_id,$group_artifact_id,$user_id=false) {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1658,17 +1657,17 @@ class ArtifactField {
         } else {
             $user = $um->getUserById($user_id);
         }
-        $ok = $user->isSuperUser() 
+        $ok = $user->isSuperUser()
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)))
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
     }
 
-    /** return true if user has Update permission on this field 
+    /** return true if user has Update permission on this field
      * @param group_id: the project this field is in
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
-    **/ 
+    **/
     function userCanUpdate($group_id,$group_artifact_id,$user_id=false) {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1682,11 +1681,11 @@ class ArtifactField {
     }
 
 
-    /** return true if user has Submit permission on this field 
+    /** return true if user has Submit permission on this field
      * @param group_id: the project this field is in
      * @param group_artifact_id: the trackers id this field is in
      * @param user_id: if not given or false take the current user
-    **/ 
+    **/
     function userCanSubmit($group_id,$group_artifact_id,$user_id=false) {
         $pm = PermissionsManager::instance();
         $um = UserManager::instance();
@@ -1700,10 +1699,10 @@ class ArtifactField {
     }
 
 
-    /** return true if users in ugroups have Submit permission on this field 
+    /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
-    **/ 
+    **/
     function ugroupsCanRead($ugroups,$group_artifact_id) {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $ugroups);
@@ -1711,10 +1710,10 @@ class ArtifactField {
     }
 
 
-    /** return true if users in ugroups have Submit permission on this field 
+    /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
-    **/ 
+    **/
     function ugroupsCanUpdate($ugroups,$group_artifact_id) {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $ugroups);
@@ -1722,10 +1721,10 @@ class ArtifactField {
     }
 
 
-    /** return true if users in ugroups have Submit permission on this field 
+    /** return true if users in ugroups have Submit permission on this field
      * @param ugroups: the ugroups users are part of
      * @param group_artifact_id: the trackers id this field is in
-    **/ 
+    **/
     function ugroupsCanSubmit($ugroups,$group_artifact_id) {
         $pm = PermissionsManager::instance();
         $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $ugroups);
@@ -1733,7 +1732,7 @@ class ArtifactField {
     }
 
 
-    
+
     /**
      * Retrieve users permissions (TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
      * on this field.

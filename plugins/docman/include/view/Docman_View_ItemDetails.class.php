@@ -22,19 +22,19 @@
  */
 
 class Docman_View_ItemDetails {
-    
+
     var $sections;
     var $item;
     var $current_section;
     var $url;
-    
+
     function __construct($item, $url) {
         $this->item             = $item;
         $this->url              = $url;
         $this->current_section  = null;
         $this->sections         = array();
     }
-    
+
     function addSection($section) {
         $this->sections[$section->getId()] = $section;
         if (!$this->current_section && count($this->sections) == 1) {
@@ -46,7 +46,7 @@ class Docman_View_ItemDetails {
     }
     function fetch() {
         $html = '';
-        
+
         $html .= '<br />';
         if (count($this->sections)) {
             $html .= '<ul class="docman_properties_navlist">';

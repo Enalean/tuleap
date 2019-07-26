@@ -27,7 +27,7 @@ class HTML_Element_Input_Date extends HTML_Element_Input_Text {
     public function  __construct($label, $name, $value, $desc="") {
         //provide a readable date
         $value = ($value != 0 ? date("Y-m-d",$value) : '');
-        
+
         parent::__construct($label, $name, $value, 10, $desc);
         $this->params['maxlength'] = 10;
         $this->params['class'] = 'highlight-days-67 format-y-m-d divider-dash no-transparency';

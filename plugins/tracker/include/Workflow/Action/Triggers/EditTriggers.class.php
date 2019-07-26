@@ -62,7 +62,6 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
         $this->template_renderer->renderToPage('trigger-pane', $presenter);
 
-
         $GLOBALS['HTML']->appendJsonEncodedVariable(
             'tuleap.trackers.trigger.existing',
             $this->rule_manager->getForTargetTracker($this->tracker)->fetchFormattedForJson()

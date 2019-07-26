@@ -66,7 +66,7 @@ class WikiServiceViews extends WikiViews {
    * <li>Empty Wiki Pages - _browseEmptyWikiPage</li>
    * <li>A form to create new pages - _newPageForm</li>
    * </ul>
-   * @access public 
+   * @access public
    */
     function browse() {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
@@ -87,9 +87,9 @@ class WikiServiceViews extends WikiViews {
    * <li>Empty Wiki Pages - _browseEmptyWikiPage</li>
    * <li>A form to create new pages - _newPageForm</li>
    * </ul>
-   * @access public 
+   * @access public
    */
-    function browsePages() {    
+    function browsePages() {
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
         $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', array($hurl));
@@ -205,16 +205,15 @@ class WikiServiceViews extends WikiViews {
             $title = $pagename;
 
             $title = $this->purifier->purify($title, CODENDI_PURIFIER_CONVERT_HTML);
- 
+
             $link = '/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($pagename);
-      
-      
+
           // Display title as emphasis if corresponding page does't exist.
             if($wikiPage->isEmpty()) {
                 $title = '<em>'.$title.'</em>';
                 $link .= '&action=edit';
             }
-      
+
           // Build Lock image if a permission is set on the corresponding page
             if($wikiPage->permissionExist()) {
                 $permLink = $this->wikiLink.'&view=pagePerms&id='.$wikiPage->getId();
@@ -238,7 +237,7 @@ class WikiServiceViews extends WikiViews {
    * displayMenu - public
    */
     function displayMenu() {
-    
+
         print '
     <table class="ServiceMenu">
       <tr>
@@ -250,14 +249,14 @@ class WikiServiceViews extends WikiViews {
         switch($language_id){
             case 'fr_FR':
                  $attatch_page     = "DéposerUnFichier";
-                $preferences_page = "PréférencesUtilisateurs";   
-       break;   
+                $preferences_page = "PréférencesUtilisateurs";
+       break;
             case 'en_US':
-            default :     
+            default :
                 $attatch_page     = 'UpLoad';
                 $preferences_page = 'UserPreferences';
                 break;
-        }    
+        }
         $attatch_menu     = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch');
         $preferences_menu = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs');
         $help_menu        = $GLOBALS['Language']->getText('global', 'help');
@@ -271,21 +270,20 @@ class WikiServiceViews extends WikiViews {
         if(user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
             print '<li><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
         }
-    
+
         print '</ul>';
-    
+
         print '
   </td>
   <td align="right" valign="top">';
-  
-  
+
         if(user_ismember($this->gid, 'W2') || user_ismember($this->gid, 'A')) {
               $wiki = new Wiki($this->gid);
               $permInfo="";
             if('wiki' == $this->view) {
             // User is browsing a wiki page
                 $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-          
+
                 $permLink = $this->wikiAdminLink.'&view=pagePerms&id='.$wp->getId();
                 if($wp->permissionExist()) {
                       $permInfo =  '<a href="'.$permLink.'"> '.'<img src="'.util_get_image_theme("ic/lock.png").'" border="0" alt="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_alt').'" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lock_title_spec').'"/></a>';
@@ -305,9 +303,8 @@ class WikiServiceViews extends WikiViews {
           <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
               $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
           </li>';
-        }  
+        }
 
- 
         print '
      </td>
     </tr>
@@ -319,7 +316,7 @@ class WikiServiceViews extends WikiViews {
    *
    * Page for Wiki Page permissions modifications.
    *
-   * @access public 
+   * @access public
    */
     function pagePerms() {
         $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';
@@ -359,7 +356,7 @@ class WikiServiceViews extends WikiViews {
             case 'empty':
                 $this->wiki();
           break;
-      
+
             case 'doinstall':
                   if(!empty($view)) $this->$view();
             break;
@@ -377,8 +374,8 @@ class WikiServiceViews extends WikiViews {
    * install: ask for confirmation and choose language
    */
     function install() {
-        echo $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 
-                            'install_intro', 
+        echo $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
+                            'install_intro',
                             array($GLOBALS['Language']->getText('global','btn_create')));
       // Display creation form
         echo '<form name="WikiCreation" method="post" action="'.$this->wikiLink.'">
@@ -398,7 +395,7 @@ class WikiServiceViews extends WikiViews {
         global $language_id;
         $language_id=$_REQUEST['language_id'];
         if (!$language_id || !$GLOBALS['Language']->isLanguageSupported($language_id)) {
-            $language_id = $GLOBALS['Language']->defaultLanguage; 
+            $language_id = $GLOBALS['Language']->defaultLanguage;
         }
         // Initial Wiki document is now created within phpWiki main()
         // Make sure phpWiki instantiates the right pages corresponding the the given language

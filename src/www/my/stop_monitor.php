@@ -37,7 +37,7 @@ if (user_isloggedin()) {
         $forum_id = $request->get('forum_id');
 
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-                    
+
         $forum_monitor_error = false;
         if (user_monitor_forum($forum_id, $user_id)) {
             // If already monitored then stop monitoring
@@ -54,7 +54,7 @@ if (user_isloggedin()) {
         echo '
 			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
         forum_footer(array());
-    } 
+    }
 
 } else {
     exit_not_logged_in();

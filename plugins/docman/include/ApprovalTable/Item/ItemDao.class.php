@@ -122,8 +122,6 @@ class Docman_ApprovalTableItemDao extends DataAccessObject {
             $_updStmt .= sprintf('notification_occurence = %d', $notificationOccurence);
         }
 
-
-
         if($owner !== null) {
             if($_updStmt != '') {
                 $_updStmt .= ',';

@@ -28,7 +28,7 @@ rcs_id('$Id: IncludePages.php,v 1.2 2005/09/30 18:41:39 uckelman Exp $');
  */
 
 include_once("lib/plugin/IncludePage.php");
- 
+
 class WikiPlugin_IncludePages
 extends WikiPlugin_IncludePage
 {
@@ -52,14 +52,14 @@ extends WikiPlugin_IncludePage
                            WikiPlugin_IncludePage::getDefaultArguments()
                            );
     }
-                
+
     function run($dbi, $argstr, &$request, $basepage) {
         $args = $this->getArgs($argstr, $request);
         $html = HTML();
         if (empty($args['pages']))
             return $html;
         $include = new WikiPlugin_IncludePage();
-        
+
         if (is_string($args['exclude']) and !empty($args['exclude'])) {
             $args['exclude'] = explodePageList($args['exclude']);
             $argstr = preg_replace("/exclude=\S*\s/", "", $argstr);
@@ -68,11 +68,11 @@ extends WikiPlugin_IncludePage
         }
         if (is_string($args['pages']) and !empty($args['pages'])) {
             $args['pages'] = explodePageList($args['pages']);
-            $argstr = preg_replace("/pages=\S*\s/", "", $argstr);    
+            $argstr = preg_replace("/pages=\S*\s/", "", $argstr);
         } elseif (is_array($args['pages'])) {
             $argstr = preg_replace("/pages=<\?plugin-list.*?\>/", "", $argstr);
         }
-        
+
         foreach ($args['pages'] as $page) {
             if (empty($args['exclude']) or !in_array($page, $args['exclude'])) {
                 $html = HTML($html, $include->run($dbi, "page='$page' ".$argstr, $request, $basepage));

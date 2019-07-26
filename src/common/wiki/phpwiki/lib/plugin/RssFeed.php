@@ -62,13 +62,13 @@ extends WikiPlugin
 
         if (!empty($rss_parser->channel['title'])) $feed = $rss_parser->channel['title'];
         if (!empty($rss_parser->channel['link']))  $url  = $rss_parser->channel['link'];
-        if (!empty($rss_parser->channel['description'])) 
+        if (!empty($rss_parser->channel['description']))
             $description = $rss_parser->channel['description'];
-        
+
         if (!empty($feed)) {
             if (!empty($url)) {
                 $titre = HTML::span(HTML::a(array('href'=>$rss_parser->channel['link']),
-                                            $rss_parser->channel['title'])); 
+                                            $rss_parser->channel['title']));
             } else {
                 $titre = HTML::span($rss_parser->channel['title']);
             }
@@ -83,7 +83,7 @@ extends WikiPlugin
         if (!empty($rss_parser->channel['date']))
             $th->pushContent(HTML::raw("<!--".$rss_parser->channel['date']."-->"));
         $html = HTML::div(array('class'=> 'rss'), $th);
-        if ($rss_parser->items) { 
+        if ($rss_parser->items) {
             // only maxitem's
             if ( $maxitem > 0 )
                 $rss_parser->items = array_slice($rss_parser->items, 0, $maxitem);

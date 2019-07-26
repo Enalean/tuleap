@@ -1,8 +1,8 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Tests the class Tracker_RuleValue
  */
@@ -28,7 +28,7 @@ class Tracker_Rule_ListTest extends TuleapTestCase {
         $this->assertFalse($trv->applyTo('tracker_id',       'source_field',        'source_value',       'false_target_field', 'false_value'       ));
         $this->assertFalse($trv->applyTo('tracker_id',       'source_field',        'source_value',       'false_target_field', 'false_target_value'));
     }
-    
+
     function testCanApplyTo() {
         $trv  = new Tracker_Rule_List();
         $trv->setSourceValue('source_value')
@@ -48,6 +48,6 @@ class Tracker_Rule_ListTest extends TuleapTestCase {
         $this->assertFalse($trv->canApplyTo('tracker_id',       'source_field',        'source_value',       'false_target_field', 'false_value'       ));
         $this->assertFalse($trv->canApplyTo('tracker_id',       'source_field',        'source_value',       'false_target_field', 'false_target_value'));
     }
-        
+
 }
 ?>

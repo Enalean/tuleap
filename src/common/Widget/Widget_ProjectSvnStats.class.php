@@ -90,7 +90,6 @@ class Widget_ProjectSvnStats extends Widget
                 $stats[$whoid]['by_week'] = $tmp_stats;
             }
 
-
             //fill-in the labels
             $dates = array();
             for($i = $start_of_period ; $i <= $today ; $i += $week) {

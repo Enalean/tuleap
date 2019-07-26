@@ -67,7 +67,6 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
               <agiledashboard/>
             </project>');
 
-
         $this->enhanced_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />

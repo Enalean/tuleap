@@ -23,7 +23,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
         parent::__construct();
         $this->table_name = 'tracker_report_renderer_table_sort';
     }
-    
+
     function searchByRendererId($renderer_id) {
         $renderer_id  = $this->da->escapeInt($renderer_id);
         $sql = "SELECT *
@@ -32,7 +32,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     function toggleByRendererIdAndFieldId($renderer_id, $field_id) {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
@@ -49,7 +49,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
         } else {
             $rank = $this->da->escapeInt($rank);
         }
-        
+
         if (!isset($is_desc)) {
             $is_desc = 0;
         } else {
@@ -59,22 +59,22 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
                                        VALUES($renderer_id, $field_id, $is_desc, $rank)";
         return $this->update($sql);
     }
-    
+
     function remove($renderer_id, $field_id) {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
-        
+
         $sql = "DELETE FROM $this->table_name 
                 WHERE renderer_id = $renderer_id
                   AND field_id = $field_id";
         return $this->update($sql);
     }
-    
+
     function delete($renderer_id) {
         $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
-    
+
     function shrink($renderer_id, $field_id_to_keep) {
         $renderer_id      = $this->da->escapeInt($renderer_id);
         $field_id_to_keep = $this->da->escapeInt($field_id_to_keep);
@@ -83,7 +83,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
                   AND field_id <> $field_id_to_keep";
         return $this->update($sql);
     }
-    
+
     function duplicate($from_renderer_id, $to_renderer_id, $field_mapping) {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_renderer_id   = $this->da->escapeInt($to_renderer_id);
@@ -92,7 +92,7 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);
-        
+
         foreach($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);

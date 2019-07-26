@@ -19,12 +19,12 @@
  */
 
 class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_ValueDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_date';
     }
-    
+
     public function create($changeset_value_id, $value) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === false) {
@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
      * create none value
      * @param int $tracker_id
      * @param int $field_id
-     * @return 
+     * @return
      */
     public function  createNoneValue($tracker_id, $field_id) {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
@@ -52,8 +52,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                  VALUES
                   ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
         return $this->update($sql);
-    }    
-    
+    }
+
     public function keep($from, $to) {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);

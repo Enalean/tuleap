@@ -26,7 +26,7 @@ require_once('ArtifactGlobalNotification.class.php');
 * ArtifactGlobalNotificationFactory
 */
 class ArtifactGlobalNotificationFactory {
-    
+
     function getGlobalNotificationsForTracker($tracker_id) {
         $notifs = array();
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
@@ -41,7 +41,7 @@ class ArtifactGlobalNotificationFactory {
         }
         return $notifs;
     }
-    
+
     function addGlobalNotificationForTracker($tracker_id) {
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->create($tracker_id, '', 0, 1);

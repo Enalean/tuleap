@@ -71,7 +71,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_User
             $this->changeset_value
         );
 
-
         $field_change = $this->changeset_xml->field_change;
         $this->assertEqual((string)$field_change['type'], 'open_list');
         $this->assertEqual((string)$field_change['bind'], 'users');
@@ -135,7 +134,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_Ugro
             $this->changeset_value
         );
 
-
         $field_change = $this->changeset_xml->field_change;
         $this->assertEqual((string)$field_change['type'], 'open_list');
         $this->assertEqual((string)$field_change['bind'], 'ugroups');
@@ -197,7 +195,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_Stat
             mock('Tracker_Artifact'),
             $this->changeset_value
         );
-
 
         $field_change = $this->changeset_xml->field_change;
         $this->assertEqual((string)$field_change['type'], 'open_list');

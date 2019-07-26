@@ -896,7 +896,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
             $html .= '</ul>';
 
-
             if ($current_renderer) {
                 $html .= '<div class="tracker_report_renderer"
                                id="tracker_report_renderer_current"
@@ -1367,7 +1366,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'Invalid copy name', CODENDI_PURIFIER_DISABLED);
                 }
-
 
                 $GLOBALS['Response']->redirect('?'. http_build_query(array(
                     'report'   => $redirect_to_report_id
@@ -1912,7 +1910,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->matching_ids = $this->getNoMatchingIds();
 
         return $this->matching_ids;
-
 
     }
 

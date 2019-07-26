@@ -15,7 +15,7 @@ class ArtifactFile {
 
     public const ROOT_DIRNAME = 'trackerv3';
 
-    /** 
+    /**
      * The artifact object.
      *
      * @var        object    $Artifact.
@@ -111,7 +111,7 @@ class ArtifactFile {
 			(artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by)
 			VALUES 
 			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','','". db_es($filename) ."',
-			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')"); 
+			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')");
 
         $id=db_insertid($res,'artifact_file','id');
 
@@ -163,7 +163,7 @@ class ArtifactFile {
     public static function getPathOnFilesystem(Artifact $artifact, $attachment_id) {
         return self::getParentDirectoryForArtifact($artifact->getArtifactType()) . DIRECTORY_SEPARATOR . $attachment_id;
     }
-        
+
     public static function getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id) {
         return self::getParentDirectoryForArtifactTypeId($artifact_type_id) . DIRECTORY_SEPARATOR . $attachment_id;
     }
@@ -175,7 +175,7 @@ class ArtifactFile {
      */
     function delete() {
         global $Language;
- 
+
         $old_value = $this->Artifact->getAttachedFileNames();
         $sql = "DELETE FROM artifact_file WHERE id=". db_ei($this->getID()) ;
      //echo "sql=$sql<br>";
@@ -245,7 +245,7 @@ class ArtifactFile {
     function getArtifact() {
         return $this->Artifact;
     }
-    
+
     /**
      *    getID - get this ArtifactFile's ID.
      *

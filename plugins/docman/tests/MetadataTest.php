@@ -36,7 +36,6 @@ class MetadataTest extends TuleapTestCase {
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $metadataMapping = array();
 
-
         // Factory to test
         $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

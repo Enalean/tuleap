@@ -201,7 +201,7 @@ class Tracker_Chart_Data_Burndown
                 return $effort;
             }
         }
-        
+
         return null;
     }
 

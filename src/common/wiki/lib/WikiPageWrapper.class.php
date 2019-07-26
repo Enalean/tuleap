@@ -29,7 +29,7 @@ require_once('common/wiki/lib/WikiEntry.class.php');
 /**
  * Wrapper to access to PhpWiki WikiPage objects
  *
- * This class wrap WikiDB object located in phpwiki/lib/WikiDB.php 
+ * This class wrap WikiDB object located in phpwiki/lib/WikiDB.php
  *
  */
 class WikiPageWrapper {
@@ -44,7 +44,7 @@ class WikiPageWrapper {
         $go = $pm->getProject($this->gid);
 
         $this->wikiname = ucfirst($go->getUnixName()).'Wiki';
- 
+
       // Set PhpWiki init values
         define('WIKI_NAME', $this->wikiname);
         define('GROUP_ID', $this->gid);
@@ -61,7 +61,7 @@ class WikiPageWrapper {
 
         require_once(PHPWIKI_DIR.'/lib/WikiDB.php');
         require_once(PHPWIKI_DIR.'/lib/main.php');
-    
+
         return new WikiRequest();
     }
 
@@ -141,7 +141,7 @@ class WikiPageWrapper {
         // Dirty hack to 'give' a WikiRequest object to phpwiki
         // So obscure functions seems require it.
         $request = $this->getRequest();
-        
+
         $dbi = $request->getDbh();
         require_once(PHPWIKI_DIR."/lib/loadsave.php");
         $pagehandle = $dbi->getPage("UpLoad");
@@ -165,7 +165,7 @@ Upload:num_rev/filename
 ';
             $meta['author'] = user_getname();
         }
-        
+
         $meta['summary'] = "Page created";
         $pagehandle->save($text, $version + 1, $meta);
     }
@@ -173,10 +173,10 @@ Upload:num_rev/filename
 
     function render($lite=false, $full_screen=false) {
         if($lite) {
-            define('THEME', 'Codendi-lite'); 
+            define('THEME', 'Codendi-lite');
         }
         if ($full_screen) {
-            define('THEME', 'Codendi-light-printer-version');  
+            define('THEME', 'Codendi-light-printer-version');
         }
 
         IniConfig(PHPWIKI_DIR."/config/config.ini");
@@ -190,9 +190,9 @@ Upload:num_rev/filename
    */
     function install() {
         if($this->gid == 1) {
-            if(!user_is_super_user()) {              
+            if(!user_is_super_user()) {
                 exit_error($GLOBALS['Language']->getText('global','error'),
-                         $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
+                         $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
                                                        'right_error'));
             }
         }
@@ -214,27 +214,27 @@ Upload:num_rev/filename
                 $we->setPage($page_en);
                 $we->setDesc($desc_en);
      break;
-         // French   
+         // French
             case 'fr_FR':   define('WIKI_PGSRC', 'pgsrc');
                 define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/locale/fr/pgsrc');
                 $we->setName($name_fr);
                 $we->setPage($page_fr);
                 $we->setDesc($desc_fr);
      break;
-          
+
             default : define('WIKI_PGSRC', 'codendipgsrc');
                 define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
                 $we->setName($name_en);
                 $we->setPage($page_en);
-                $we->setDesc($desc_en);            
+                $we->setDesc($desc_en);
         }
         $we->add();
         $this->render();
     }
-  
+
     function getNextGroupWithWiki($currentGroupId, &$nbMatchFound) {
         $nextId = null;
-          
+
         $sql = sprintf('SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id'.
                        ' FROM wiki_page'.
                        ' WHERE group_id > %d'.
@@ -245,34 +245,34 @@ Upload:num_rev/filename
         if($res) {
             if($row = db_fetch_array($res)) {
                 $nextId = $row['group_id'];
-          
+
                 $sql          = 'SELECT FOUND_ROWS() AS nb';
                 $res          = db_query($sql);
                 $row          = db_fetch_array($res);
                 $nbMatchFound = $row['nb'];
             }
         }
-          
+
           return $nextId;
     }
-          
+
     function upgrade() {
         global $request;
         global $WikiTheme;
-          
+
         define('WIKI_PGSRC', 'codendipgsrc');
         define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
         define('ENABLE_EMAIL_NOTIFIFICATION', false);
-          
+
         $request = $this->getRequest();
         $request->setArg('overwrite', 'true');
-          
+
         require_once(PHPWIKI_DIR."/lib/upgrade.php");
         // WikiTheme and those files are required because of the WikiLink
         // function used during upgrade process.
         require_once(PHPWIKI_DIR."/lib/Theme.php");
         require_once(PHPWIKI_DIR."/themes/Codendi/themeinfo.php");
-          
+
         $check = false;
         CheckActionPageUpdate($request, $check);
         CheckPgsrcUpdate($request, $check);

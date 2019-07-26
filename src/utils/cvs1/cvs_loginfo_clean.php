@@ -24,7 +24,7 @@ require_once('common/backend/BackendCVS.class.php');
 
 function cvs_loginfo_format_data($line) {
     $match=array();
-    preg_match_all('/\/cvsroot\/([^\/]*?)\/CVSROOT\/loginfo/', $line, $match);  
+    preg_match_all('/\/cvsroot\/([^\/]*?)\/CVSROOT\/loginfo/', $line, $match);
     return $match[1][0];
 }
 
@@ -52,7 +52,7 @@ foreach ( $file_list as $key=>$filename ) {
     }
     if ( !empty($lines_to_write) ) {
         if( !$backendCVS->writeArrayToFile($lines_to_write, $filename) ) {
-            $backendCVS->log("An error occured during file $filename was being written ... skipping commit!", Backend::LOG_ERROR); 
+            $backendCVS->log("An error occured during file $filename was being written ... skipping commit!", Backend::LOG_ERROR);
             continue;
         }
         if( !$backendCVS->_RcsCommit($filename, $output) ) {
@@ -63,7 +63,7 @@ foreach ( $file_list as $key=>$filename ) {
     } else {
         $backendCVS->log("Nothing to do for file $filename", Backend::LOG_INFO);
     }
-}    
+}
 $backendCVS->log(__FILE__." script execution done!");
 
 ?>

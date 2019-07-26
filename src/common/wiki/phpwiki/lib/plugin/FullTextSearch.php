@@ -92,7 +92,7 @@ extends WikiPlugin
         if (!$limit or !is_int($limit))
             $limit = 0;
         // expand all page wildcards to a list of pages which should be ignored
-        if ($exclude) $exclude = explodePageList($exclude); 
+        if ($exclude) $exclude = explodePageList($exclude);
         while ($page = $pages->next() and (!$limit or ($count < $limit))) {
             $name = $page->getName();
             if ($exclude and in_array($name,$exclude)) continue;
@@ -108,8 +108,8 @@ extends WikiPlugin
             $list->pushContent(HTML::dd(_("<no matches>")));
 
         if (!empty($pages->stoplisted))
-            $list = HTML(HTML::p(fmt(_("Ignored stoplist words '%s'"), 
-                                     join(', ', $pages->stoplisted))), 
+            $list = HTML(HTML::p(fmt(_("Ignored stoplist words '%s'"),
+                                     join(', ', $pages->stoplisted))),
                          $list);
         if ($noheader)
             return $list;

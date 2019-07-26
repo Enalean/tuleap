@@ -109,7 +109,7 @@ class FRSPackage {
     function setApproveLicense($approve_license) {
         $this->approve_license = $approve_license;
     }
-    
+
     /**
      * Determines if the package is active or not
      * @return bool true if the package is active, false otherwise
@@ -118,7 +118,7 @@ class FRSPackage {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_ACTIVE;
     }
-    
+
     /**
      * Determines if the package is hidden or not
      * @return bool true if the package is hidden, false otherwise
@@ -127,7 +127,7 @@ class FRSPackage {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_HIDDEN;
     }
-    
+
     /**
      * Determines if the package is deleted or not
      * @return bool true if the package is deleted, false otherwise
@@ -136,7 +136,7 @@ class FRSPackage {
         $frsrf = new FRSPackageFactory();
         return $this->getStatusID() == $frsrf->STATUS_DELETED;
     }
-    
+
     function initFromArray($array) {
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
         if (isset($array['group_id']))        $this->setGroupID($array['group_id']);
@@ -156,7 +156,7 @@ class FRSPackage {
         $array['approve_license'] = $this->getApproveLicense();
         return $array;
     }
-    
+
     /**
      * Associative array of data from db.
      *
@@ -179,7 +179,7 @@ class FRSPackage {
         }
         return $this->package_releases;
     }
-    
+
     public function userCanRead($user_id = 0)
     {
         $factory = new FRSPackageFactory();

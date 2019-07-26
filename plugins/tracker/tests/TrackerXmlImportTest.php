@@ -887,7 +887,6 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
 
         $this->hierarchy_dao = Mockery::spy(HierarchyDAO::class);
 
-
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->tracker_xml_importer = new TrackerXmlImport(

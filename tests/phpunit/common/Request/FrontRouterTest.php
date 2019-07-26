@@ -245,7 +245,6 @@ class FrontRouterTest extends TestCase
             }
         );
 
-
         $url_verification = Mockery::mock(\URLVerification::class);
         $url_verification->shouldReceive('assertValidUrl');
         $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);

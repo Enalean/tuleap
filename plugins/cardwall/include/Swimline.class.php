@@ -42,7 +42,7 @@ class Cardwall_Swimline {
      * @var bool
      */
     public $is_no_matching_column = false;
-    
+
     /**
      * @param string $title
      * @param array  $cells

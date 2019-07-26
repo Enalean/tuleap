@@ -191,7 +191,7 @@ extends WikiPluginCached
                      'treshold'    => $treshold,
                      'nmin'        => $nmin,
                      'mintreshold' => $mintreshold,
-                     'nmax'        => $nmax, 
+                     'nmax'        => $nmax,
                      'maxtreshold' => $maxtreshold);
     }
 

@@ -19,12 +19,12 @@
  */
 
 class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_FormElement_Field_ValueDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_permissionsonartifact';
     }
-    
+
     public function create($changeset_value_id, $use_perm, $value_ids) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $use_perm = $this->da->escapeInt($use_perm);
@@ -48,9 +48,9 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( $changeset_value_ids === false ) {
             return false;
-        }                   
+        }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id) VALUES (".implode(', 1, 1), ( ', $changeset_value_ids).", 1, 1) ";
-        $this->update($sql);        
+        $this->update($sql);
     }
 
     public function keep($from, $to) {
@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
     }
-    
+
     public function searchByChangesetValueId($changeset_value_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *

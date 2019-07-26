@@ -40,7 +40,7 @@ $sql="SELECT g.group_forum_id,g.forum_name, g.description, famc.count as total
 
 $result = db_query ($sql);
 
-$rows = db_numrows($result); 
+$rows = db_numrows($result);
 
 if (!$result || $rows < 1) {
     $pm = ProjectManager::instance();
@@ -66,9 +66,9 @@ echo '<P>'.$Language->getText('forum_index','choose_forum').'<P>';
   Put the result set (list of forums for this group) into a column with folders
 */
 
-for ($j = 0; $j < $rows; $j++) { 
+for ($j = 0; $j < $rows; $j++) {
     echo '<A HREF="forum.php?forum_id='. db_result($result, $j, 'group_forum_id') .'">'.
-        html_image("ic/cfolder15.png",array("border"=>"0")) . 
+        html_image("ic/cfolder15.png",array("border"=>"0")) .
         '&nbsp;' .
         db_result($result, $j, 'forum_name').'</A> ';
     //message count

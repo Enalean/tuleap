@@ -274,7 +274,6 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn($this->nature_no_nature);
         $this->project->shouldReceive('isActive')->andReturn(true);
 
-
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 

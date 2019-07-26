@@ -43,7 +43,7 @@ class ArtifactDateReminderFactory {
      * @var TrackerDateReminder_Logger
      */
     private $logger;
-    
+
     function __construct($notification_id, TrackerDateReminder_Logger $logger) {
 
         // Set object attributes
@@ -276,7 +276,7 @@ class ArtifactDateReminderFactory {
         } else {
             return 0;
         }
-         
+
     }
 
     /**
@@ -405,7 +405,7 @@ class ArtifactDateReminderFactory {
                 }
             }
         }
-         
+
         return $notified_people;
     }
 
@@ -435,13 +435,13 @@ class ArtifactDateReminderFactory {
      */
     function isUserAllowedToBeNotified($user_id) {
         global $art_field_fact;
-         
+
         $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $art = new Artifact($at,$this->getArtifactId(),false);
         $field = $art_field_fact->getFieldFromId($this->getFieldId());
-         
+
         return ($art->userCanView($user_id) && $field->userCanRead($this->getGroupId(),$this->getGroupArtifactId(),$user_id));
     }
 
@@ -455,7 +455,7 @@ class ArtifactDateReminderFactory {
 
         $logger = new TrackerDateReminder_Logger_Prefix($this->logger, '[handleNotification]');
         $logger->info("Start");
-        
+
         $group          = ProjectManager::instance()->getProject($this->getGroupId());
         $at             = new ArtifactType($group, $this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
@@ -464,7 +464,7 @@ class ArtifactDateReminderFactory {
 
         $logger->info("tracker: ".$this->getGroupArtifactId());
         $logger->info("artifact: ".$this->getArtifactId());
-        
+
         $sent = true;
         $week = date("W",$this->getDateValue());
 
@@ -482,7 +482,7 @@ class ArtifactDateReminderFactory {
         "\n\n______________________________________________________________________".
         "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_footer')."\n";
         $mail->setBodyText($body);
-        
+
         $allNotified = $this->getNotifiedPeople();
         $logger->info("notify: ".implode(', ', $allNotified));
         foreach ($allNotified as $notified) {
@@ -492,9 +492,9 @@ class ArtifactDateReminderFactory {
                 $sent = false;
             }
         }
-        
+
         $logger->info("End");
-        
+
         return $sent;
     }
 
@@ -510,7 +510,7 @@ class ArtifactDateReminderFactory {
      */
     function checkReminderStatus($current_time) {
         $this->logger->info("Start");
-        
+
         $notificationSent = $this->getNotificationSent();
         $recurse          = $this->getRecurse();
         $this->logger->info("notification_sent = $notificationSent");

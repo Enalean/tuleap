@@ -22,12 +22,12 @@
  * The user-configurable settings have been moved to IniConfig.php
  * The run-time code has been moved to lib/IniConfig.php:fix_configs()
  */
- 
+
 if (!defined("LC_ALL")) {
     define("LC_ALL",   0);
     define("LC_CTYPE", 2);
 }
-// debug flags: 
+// debug flags:
 define ('_DEBUG_VERBOSE',   1); // verbose msgs and add validator links on footer
 define ('_DEBUG_PAGELINKS', 2); // list the extraced pagelinks at the top of each pages
 define ('_DEBUG_PARSER',    4); // verbose parsing steps
@@ -38,12 +38,12 @@ define ('_DEBUG_LOGIN',    64); // verbose login debug-msg (settings and reason 
 define ('_DEBUG_SQL',     128);
 
 function isCGI() {
-    return (substr(php_sapi_name(),0,3) == 'cgi' and 
+    return (substr(php_sapi_name(),0,3) == 'cgi' and
             isset($_ENV['GATEWAY_INTERFACE']) and
             @preg_match('/CGI/',$_ENV['GATEWAY_INTERFACE']));
 }
 
-/** 
+/**
  * Browser Detection Functions
  *
  * Current Issues:
@@ -141,7 +141,7 @@ function guessing_lang ($languages=false) {
                 // No Q it is only a locale...
                 $lang_list[$list[$i]] = 100;
             } else {
-                // Has a Q rating        
+                // Has a Q rating
                 $q = explode(";",$list[$i]) ;
                 $loc = $q[0] ;
                 $q = explode("=",$q[1]) ;
@@ -187,8 +187,8 @@ function guessing_lang ($languages=false) {
  */
 function guessing_setlocale ($category, $locale) {
     $alt = array('en' => array('C', 'en_US', 'en_GB', 'en_AU', 'en_CA', 'english'),
-                 'de' => array('de_DE', 'de_DE', 'de_DE@euro', 
-                               'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch', 
+                 'de' => array('de_DE', 'de_DE', 'de_DE@euro',
+                               'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch',
                                'german', 'ge'),
                  'es' => array('es_ES', 'es_MX', 'es_AR', 'spanish'),
                  'nl' => array('nl_NL', 'dutch'),
@@ -199,13 +199,13 @@ function guessing_setlocale ($category, $locale) {
                  'ja.euc-jp' => array('ja_JP','ja_JP.eucJP','japanese.euc'),
                  'zh' => array('zh_TW', 'zh_CN'),
                  );
-    if (!$locale or $locale=='C') { 
+    if (!$locale or $locale=='C') {
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');
         if ($locale) {
             if (strstr($locale, '_')) list ($lang) = preg_split('/_/D', $locale);
             else $lang = $locale;
-            if (strlen($lang) > 2) { 
+            if (strlen($lang) > 2) {
                 foreach ($alt as $try => $locs) {
                     if (in_array($locale, $locs) or in_array($lang, $locs)) {
                         //if (empty($GLOBALS['LANG'])) $GLOBALS['LANG'] = $try;
@@ -217,11 +217,11 @@ function guessing_setlocale ($category, $locale) {
     }
     if (strlen($locale) == 2)
         $lang = $locale;
-    else 
+    else
         list ($lang) = preg_split('/_/D', $locale);
     if (!isset($alt[$lang]))
         return false;
-        
+
     foreach ($alt[$lang] as $try) {
         if ($res = setlocale($category, $try. '.' . $GLOBALS['charset']))
             return $res;
@@ -313,9 +313,9 @@ function IsProbablyRedirectToIndex () {
     return preg_match("%^${requri}[^/]*$%", $_SERVER['SCRIPT_NAME']);
 }
 
-/** 
+/**
  * wordwrap() might crash between 4.1.2 and php-4.3.0RC2, fixed in 4.3.0
- * See http://bugs.php.net/bug.php?id=20927 and 
+ * See http://bugs.php.net/bug.php?id=20927 and
  * http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-1396
  * Improved version of wordwrap2() in the comments at http://www.php.net/wordwrap
  */
@@ -324,8 +324,8 @@ function safe_wordwrap($str, $width=80, $break="\n", $cut=false) {
 }
 
 function getUploadFilePath() {
-    return defined('PHPWIKI_DIR') 
-        ? PHPWIKI_DIR . "/uploads/" 
+    return defined('PHPWIKI_DIR')
+        ? PHPWIKI_DIR . "/uploads/"
         : realpath(dirname(__FILE__) . "/../uploads/");
 }
 function getUploadDataPath() {

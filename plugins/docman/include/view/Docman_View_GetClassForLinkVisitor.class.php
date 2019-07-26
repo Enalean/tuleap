@@ -1,19 +1,19 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_GetClassForLinkVisitor
 */
 
 
 class Docman_View_GetClassForLinkVisitor /* implements Visitor*/ {
-    
+
     function visitFolder(&$item, $params = array()) {
         return $params['view']->getClassForFolderLink();
     }
-    
+
     function visitDocument($item, $params = array()) {
         return '';
     }
@@ -33,6 +33,6 @@ class Docman_View_GetClassForLinkVisitor /* implements Visitor*/ {
     function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    
+
 }
 ?>

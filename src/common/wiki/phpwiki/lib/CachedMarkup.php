@@ -3,17 +3,17 @@
  * Copyright (C) 2004, 2005 $ThePhpWikiProgrammingTeam
  *
  * This file is part of PhpWiki.
- * 
+ *
  * PhpWiki is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * PhpWiki is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with PhpWiki; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -47,7 +47,7 @@ class CacheableMarkup extends XmlContent {
         // ZLIB format has a five bit checksum in it's header.
         // Lets check for sanity.
         if (((ord($packed[0]) * 256 + ord($packed[1])) % 31 == 0)
-             and (substr($packed,0,2) == "\037\213") 
+             and (substr($packed,0,2) == "\037\213")
                   or (substr($packed,0,2) == "x\332"))   // 120, 218
         {
             if (function_exists('gzuncompress')) {
@@ -69,11 +69,11 @@ class CacheableMarkup extends XmlContent {
         if (preg_match("/^\w+$/", $packed))
             return $packed;
         // happened with _BackendInfo problem also.
-        trigger_error("Can't unpack bad cached markup. Probably php_zlib extension not loaded.", 
+        trigger_error("Can't unpack bad cached markup. Probably php_zlib extension not loaded.",
                       E_USER_WARNING);
         return false;
     }
-    
+
     /** Get names of wikipages linked to.
      *
      * @return array
@@ -82,7 +82,7 @@ class CacheableMarkup extends XmlContent {
     function getWikiPageLinks() {
         include_once('lib/WikiPlugin.php');
         $ploader = new WikiPluginLoader();
-        
+
         $links = array();
         foreach ($this->_content as $item) {
             if (!isa($item, 'Cached_DynamicContent'))
@@ -152,7 +152,7 @@ class CacheableMarkup extends XmlContent {
                              . ".*"
                              . "[.?!][\")]*\s*[\"(]*([[:upper:])]|$)";
         }
-        
+
         if (!isset($this->_description) and preg_match("/$two_sentences/sx", $text))
             $this->_description = preg_replace("/\s*\n\s*/", " ", trim($text));
     }
@@ -175,11 +175,11 @@ class CacheableMarkup extends XmlContent {
     function getDescription () {
         return isset($this->_description) ? $this->_description : '';
     }
-    
+
     function asXML () {
         $xml = '';
         $basepage = $this->_basepage;
-        
+
         foreach ($this->_content as $item) {
             if (is_string($item)) {
                 $xml .= $item;
@@ -205,7 +205,7 @@ class CacheableMarkup extends XmlContent {
                 print $item;
             }
             elseif ($item instanceof \Cached_DynamicContent)
-            {      // give the content the chance to know about itself or even 
+            {      // give the content the chance to know about itself or even
                 // to change itself
                 $val = $item->expand($basepage, $this);
                 $val->printXML();
@@ -215,7 +215,7 @@ class CacheableMarkup extends XmlContent {
             }
         }
     }
-}    
+}
 
 /**
  * The base class for all dynamic content.
@@ -243,7 +243,7 @@ class Cached_Link extends Cached_DynamicContent {
     function isInlineElement() {
         return true;
     }
-    
+
     function _getURL($basepage) {
         return $this->_url;
     }
@@ -262,7 +262,7 @@ class Cached_WikiLink extends Cached_Link {
     function _getType() {
         return 'internal';
     }
-    
+
     function getPagename($basepage) {
         $page = new WikiPageName($this->_page, $basepage);
         if ($page->isValid()) return $page->name;
@@ -316,8 +316,8 @@ class Cached_WikiLinkIfKnown extends Cached_WikiLink
     function expand($basepage, &$markup) {
         return WikiLink($this->_page, 'if_known');
     }
-}    
-    
+}
+
 class Cached_PhpwikiURL extends Cached_DynamicContent
 {
     function __construct ($url, $label) {
@@ -346,8 +346,8 @@ class Cached_PhpwikiURL extends Cached_DynamicContent
             return $this->_label;
         return $this->_url;
     }
-}    
-    
+}
+
 class Cached_ExternalLink extends Cached_Link {
 
     function __construct($url, $label=false) {
@@ -359,7 +359,7 @@ class Cached_ExternalLink extends Cached_Link {
     function _getType() {
         return 'external';
     }
-    
+
     function _getName($basepage) {
         $label = isset($this->_label) ? $this->_label : false;
         return ($label and is_string($label)) ? $label : $this->_url;
@@ -372,7 +372,7 @@ class Cached_ExternalLink extends Cached_Link {
         $link = LinkURL($this->_url, $label);
 
         if (GOOGLE_LINKS_NOFOLLOW) {
-            // Ignores nofollow when the user who saved the page was authenticated. 
+            // Ignores nofollow when the user who saved the page was authenticated.
             $page = $request->getPage($basepage);
             $current = $page->getCurrentRevision();
             if (!$current->get('author_id'))
@@ -389,7 +389,7 @@ class Cached_ExternalLink extends Cached_Link {
 }
 
 class Cached_InterwikiLink extends Cached_ExternalLink {
-    
+
     function __construct($link, $label=false) {
         $this->_link = $link;
         if ($label)
@@ -400,7 +400,7 @@ class Cached_InterwikiLink extends Cached_ExternalLink {
         $label = isset($this->_label) ? $this->_label : false;
         return ($label and is_string($label)) ? $label : $link;
     }
-    
+
     function _getURL($basepage) {
         $link = $this->expand($basepage, $this);
         return $link->getAttr('href');
@@ -420,7 +420,7 @@ class Cached_InterwikiLink extends Cached_ExternalLink {
 }
 
 // Needed to put UserPages to backlinks. Special method to markup userpages with icons
-// Thanks to PhpWiki:DanFr for finding this bug. 
+// Thanks to PhpWiki:DanFr for finding this bug.
 // Fixed since 1.3.8, prev. versions had no userpages in backlinks
 class Cached_UserLink extends Cached_WikiLink {
     function expand($basepage, &$markup) {
@@ -446,7 +446,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
         if ($top) $this->_tightenable |= 1;
         if ($bottom) $this->_tightenable |= 2;
     }
-    
+
     function isInlineElement() {
         return false;
     }
@@ -458,7 +458,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
         $div = HTML::div(array('class' => 'plugin'));
         if (is_array($plugin_cmdline = $loader->parsePI($this->_pi)) and $plugin_cmdline[1])
             $id = GenerateId($plugin_cmdline[1]->getName() . 'Plugin');
-        
+
         if (isset($this->_tightenable)) {
             if ($this->_tightenable == 3) {
                 $span = HTML::span(array('class' => 'plugin'), $xml);
@@ -505,5 +505,5 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

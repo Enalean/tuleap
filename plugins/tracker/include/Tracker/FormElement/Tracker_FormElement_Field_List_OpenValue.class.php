@@ -25,24 +25,24 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
     public const OPEN_PREFIX = 'o';
 
     protected $label;
-    
+
     public function __construct($id, $label) {
         parent::__construct($id, false);
         $this->label = $label;
     }
-    
+
     public function __toString() {
         return $this->getLabel();
     }
-    
+
     public function getLabel() {
         return $this->label;
     }
-    
+
     public function getJsonId() {
         return self::OPEN_PREFIX. $this->getId();
     }
-    
+
     public function getUsername() {
         return $this->getLabel();
     }

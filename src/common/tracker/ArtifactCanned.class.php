@@ -13,12 +13,12 @@
 
 class ArtifactCanned {
 
-    /** 
+    /**
      * The artifact type object.
      *
      * @var        object    $ArtifactType.
      */
-    var $ArtifactType; 
+    var $ArtifactType;
     var $atid;
 
     /**
@@ -148,7 +148,7 @@ class ArtifactCanned {
     function getArtifactType() {
         return $this->ArtifactType;
     }
-    
+
     /**
      *    getID - get this ArtifactCanned message's ID.
      *
@@ -189,7 +189,7 @@ class ArtifactCanned {
         if (!$this->ArtifactType->userIsAdmin()) {
             $this->setError($Language->getText('tracker_common_canned','perm_denied'));
             return false;
-        }   
+        }
 
         $sql="delete from artifact_canned_responses 
 			
@@ -203,7 +203,7 @@ class ArtifactCanned {
         } else {
              return true;
         }
-        
+
     }
 
     /**
@@ -219,11 +219,11 @@ class ArtifactCanned {
         if (!$this->ArtifactType->userIsAdmin()) {
             $this->setError($Language->getText('tracker_common_canned','perm_denied'));
             return false;
-        }   
+        }
         if (!$title || !$body) {
             $this->setError($Language->getText('tracker_common_canned','missing_param'));
             return false;
-        }   
+        }
 
         $sql="UPDATE artifact_canned_responses 
 			SET title='". db_es(htmlspecialchars($title))  ."',body='". db_es(htmlspecialchars($body))  ."'

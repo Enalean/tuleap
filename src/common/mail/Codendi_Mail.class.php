@@ -27,9 +27,9 @@ use Zend\Mime\Part as MimePart;
 
 /**
  * Class for sending an email using the zend lib.
- * 
+ *
  * It allows to send mails in html format
- * 
+ *
  */
 class Codendi_Mail implements Codendi_Mail_Interface {
     /**
@@ -54,7 +54,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     private $message;
 
     /**
-     * @var Tuleap_Template_Mail 
+     * @var Tuleap_Template_Mail
      */
     protected $look_and_feel_template;
 
@@ -118,7 +118,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      * Given a standard email definition, split the name and the email address
-     * 
+     *
      * "name" <email> gives array(email, name).
      * if doesn't match, assume it's only email.
      *
@@ -183,7 +183,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     {
         $this->message->setFrom(array());
     }
-    
+
     public function setSubject($subject)
     {
         $this->message->setSubject($subject);
@@ -232,7 +232,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     {
         return $this->getRecipientsFromHeader('To');
     }
-    
+
     /**
      *
      * @param String  $bcc
@@ -318,7 +318,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      * Returns the text part of the body mail
-     * 
+     *
      * @return String
      */
     public function getBodyText()
@@ -341,7 +341,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
         return $text_part;
     }
-        
+
     /**
      * Set hte template to use for look and feel in html mails
      *
@@ -352,7 +352,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     public function setLookAndFeelTemplate(Tuleap_Template_Mail $tpl) {
         $this->look_and_feel_template = $tpl;
     }
-    
+
     /**
      * Get the template to use for look and feel in html mails
      *
@@ -364,13 +364,13 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         }
         return $this->look_and_feel_template;
     }
-    
+
     /**
      * Set the html body part.
      *
-     * The default is to send it through the use of a template to send pretty html 
+     * The default is to send it through the use of a template to send pretty html
      * email in a common format shared across the platform. Some usages require
-     * to not use this template (eg: forumml, ...) it can be discarded with the 
+     * to not use this template (eg: forumml, ...) it can be discarded with the
      * second parameter $use_common_look_and_feel.
      *
      * @param String $message                  html code to send to the user
@@ -390,7 +390,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      * Returns the Html part of the body mail
-     * 
+     *
      * @return String
      */
     public function getBodyHtml()
@@ -446,7 +446,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param array of User $to
-     * 
+     *
      * @return array
      */
     public function setToUser($to)
@@ -463,7 +463,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param array of User $bcc
-     * 
+     *
      * @return array;
      */
     public function setBccUser($bcc)
@@ -480,7 +480,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param array $cc
-     * 
+     *
      * @return array
      */
     public function setCcUser($cc)
@@ -496,7 +496,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     /**
      * Send the mail
-     * 
+     *
      * @return bool
      */
     public function send()
@@ -568,7 +568,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $this->message->setCc(array());
         $this->message->setBcc(array());
     }
-    
+
     public function addAdditionalHeader($name, $value)
     {
         $header = new Mail\Header\GenericHeader($name, $value);

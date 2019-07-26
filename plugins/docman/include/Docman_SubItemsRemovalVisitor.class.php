@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
-    
+
     function visitFolder(&$item, $params = array()) {
         $item->removeAllItems();
     }
@@ -39,7 +39,7 @@ class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
-    
+
     function visitEmpty(&$item, $params = array()) {
         $this->visitDocument($item, $params);
     }

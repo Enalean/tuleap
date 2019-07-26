@@ -24,7 +24,7 @@
 use Tuleap\chart\GanttVerticalLine;
 
 class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
-    
+
     var $title;
     var $description;
     var $scale;
@@ -39,7 +39,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     var $summary;
     var $jp_graph_path;
     var $summary_label;
-    
+
     function setTitle($title) {
         $this->title = $title;
     }
@@ -47,55 +47,55 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     function setDescription($description) {
         $this->description = $description;
     }
-        
+
     function setScale($scale) {
         $this->scale = $scale;
     }
-    
+
     function setStart($start) {
         $this->start = $start;
     }
-    
+
     function setDue($due) {
         $this->due = $due;
     }
-    
+
     function setFinish($finish) {
         $this->finish = $finish;
     }
-    
+
     function setProgress($progress) {
         $this->progress = $progress;
     }
-    
-    
+
+
     function setRight($right) {
         $this->right = $right;
     }
-    
-    
+
+
     function setAsOfDate($asOfDate) {
         $this->asOfDate = $asOfDate;
     }
-    
+
     function setHint($hint) {
         $this->hint = $hint;
     }
-    
+
     function setSummary($summary) {
         $this->summary = $summary;
     }
-    
-    
+
+
     function setLinks($links) {
         $this->links = $links;
     }
-    
+
     function setData($data) {
         $this->data = $data;
     }
-      
-    
+
+
     function formatScale() {
         switch ($this->scale){
             case 'day':
@@ -103,7 +103,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
                 break;
             case 'week':
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK;
-                break; 
+                break;
             case 'month':
                 return GANTT_HYEAR | GANTT_HMONTH;
                 break;
@@ -111,9 +111,9 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             default:
                 return GANTT_HYEAR;
                 break;
-        }        
+        }
     }
-    
+
     function getScaleDim() {
         $scale_dim = null;
         switch ($this->scale){
@@ -122,7 +122,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
                 break;
             case 'week':
                 $scale_dim = 3;
-                break; 
+                break;
             case 'month':
                 $scale_dim = 7;
                 break;
@@ -133,8 +133,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         }
         return $scale_dim;
     }
-    
-    
+
+
     /**
     * Builds gantt graph
     */
@@ -143,12 +143,12 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
 
         // title setup
         $this->graph->title->Set($this->title);
-        
+
         if (is_null($this->description)) {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
-        
+
         //Try to fix issue with 'cut' right infos
         //TODO : more elegant way...
         $margin_right = 20;
@@ -156,8 +156,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             $margin_right = 100;
         }
         $this->graph->SetMargin(20, $margin_right, $this->graph->getTopMargin(), 30);
-        
-        // asOfDate setup 
+
+        // asOfDate setup
         if ($this->asOfDate == 0) {
             $dateRep  = date("Y-m-d", $_SERVER['REQUEST_TIME']);
             $dateDisp = date("m-d-Y", $_SERVER['REQUEST_TIME']);
@@ -168,16 +168,16 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             $vline = new GanttVerticalLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         }
         $vline->SetDayOffset(0.5);
-        $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7); 
+        $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7);
         $vline->title->SetColor($this->graph->getMainColor());
         $this->graph->Add($vline);
-        
+
         //scale setup
         $this->graph->ShowHeaders($this->formatScale());
         $scale_dim = $this->getScaleDim();
-        
+
         //add info to gantt graph
-        $this->graph->scale->actinfo->SetColTitles(array("Id", $this->summary_label));        
+        $this->graph->scale->actinfo->SetColTitles(array("Id", $this->summary_label));
 
         $format = "Y-m-d";
         $today  = strtotime('now');
@@ -234,36 +234,36 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             //Late bar, start to due to finish
             elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $d && $d < $f) {
                 $this->addBar($i, $this->data[$i], true, array(
-                    'start' => 'start', 
-                    'end' => 'due', 
+                    'start' => 'start',
+                    'end' => 'due',
                     'caption' => ""));
                 $bar = $this->addLateBar($i, $this->data[$i], false, array(
-                    'start' => date($format,( strtotime($this->data[$i]['due']) + $one_day)), 
-                    'end' => 'finish', 
+                    'start' => date($format,( strtotime($this->data[$i]['due']) + $one_day)),
+                    'end' => 'finish',
                     'label' => ""));
             }
             //Late bar, due to start
             elseif ($s != 0 && $d != 0 && $d < $s && ($f == 0 || $s == $f)) {
                 $bar = $this->addLateBar($i, $this->data[$i], true, array(
-                    'start' => 'due', 
+                    'start' => 'due',
                     'end' => 'start'));
             }
             //Late bar, due to finish
             elseif ($s != 0 && $d != 0 && $f != 0 && $d < $s && $s < $f) {
                 $bar = $this->addLateBar($i, $this->data[$i], true, array(
-                    'start' => 'due', 
+                    'start' => 'due',
                     'end' => 'finish'));
             }
             //Early bar
             elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $f && $f < $d) {
                 $this->addBar($i, $this->data[$i], true, array(
-                    'start' => 'start', 
-                    'end' => 'finish', 
+                    'start' => 'start',
+                    'end' => 'finish',
                     'caption' => ""));
                 $this->addBar($i, $this->data[$i], false, array(
-                    'start' => date($format, ( strtotime($this->data[$i]['finish']) + $one_day)), 
-                    'end' => 'due', 
-                    'label' => "", 
+                    'start' => date($format, ( strtotime($this->data[$i]['finish']) + $one_day)),
+                    'end' => 'due',
+                    'label' => "",
                     'height' => 0.2));
             }
             //Error
@@ -272,7 +272,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             }
         }
     }
-    
+
     protected function addBar($pos, $data, $progress, $params = array()) {
 
         $format = "Y-m-d";
@@ -286,7 +286,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         } else {
             $aStart = $data['start'];
         }
-       
+
         //end date
         if (isset($params['end'])) {
             if (in_array($params['end'], array('start', 'due', 'finish'))) {
@@ -300,7 +300,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         $aLabel        = isset($params['label']) ? $params['label'] : array($data['id'], html_entity_decode($data['summary']));
         $aCaption      = isset($params['caption']) ? $params['caption'] : $data['right'];
         $aHeightFactor = isset($params['height']) ? $params['height'] : 0.6; //default jpgraph value
-        
+
         $bar = new Chart_GanttBar($pos, $aLabel, $aStart, $aEnd, $aCaption, $aHeightFactor);
         if ($progress) {
             $bar->progress->Set($data['progress']);
@@ -309,7 +309,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         $this->graph->Add($bar);
         return $bar;
     }
-    
+
     protected function addMilestone($pos, $data, $params = array()) {
         $format = "Y-m-d";
         $aLabel   = isset($params['label']) ? $params['label'] : array($data['id'], html_entity_decode($data['summary']));
@@ -323,17 +323,17 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             $aDate = $data['due'];
         }
         $aCaption = isset($params['caption']) ? $params['caption'] : $data['right'];
-        
+
         $milestone = new Chart_GanttMileStone($pos, $aLabel, $aDate, $aCaption);
-        
+
         $milestone->SetCSIM($data['links'], $data['hint']);
         $this->graph->Add($milestone);
         return $milestone;
     }
-    
+
     protected function addErrorBar($pos, $data) {
         $format   = "Y-m-d";
-        
+
         $debut = null;
         $fin   = null;
         foreach(array('start', 'due', 'finish') as $date) {
@@ -356,12 +356,12 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         if (!$fin) {
             $fin = $debut;
         }
-        
+
         $bar = $this->addBar($pos, $data, false, array('start' => $debut, 'end' => $fin, 'height' => 0.2));
         $bar->SetColor($this->graph->getErrorBarColor().":0.7");
         $bar->SetPattern(GANTT_RDIAG,"black", 96);
     }
-    
+
     protected function addLateBar($pos, $data, $progress, $params = array()) {
         $bar = $this->addBar($pos, $data, $progress, $params);
         $bar->SetColor($this->graph->getLateBarColor().":0.7");

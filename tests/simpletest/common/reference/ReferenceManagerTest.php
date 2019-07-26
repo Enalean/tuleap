@@ -49,14 +49,14 @@ class ReferenceManagerTest extends TuleapTestCase {
         ));
         $this->rm->__construct();
     }
-    
+
     public function tearDown() {
         EventManager::clearInstance();
         ProjectManager::clearInstance();
         UserManager::clearInstance();
         parent::tearDown();
     }
-    
+
     function testSingleton() {
         $this->assertEqual(ReferenceManager::instance(), ReferenceManager::instance());
         $this->assertIsA(ReferenceManager::instance(), 'ReferenceManager');

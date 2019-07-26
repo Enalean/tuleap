@@ -79,7 +79,6 @@ class Router
         $user   = $request->getCurrentUser();
         $action = $request->get('action');
 
-
         try {
             switch ($action) {
                 case "admin-timetracking":

@@ -21,14 +21,14 @@
 
 
 /**
- *  Data Access Object for Tracker_GlobalNotification 
+ *  Data Access Object for Tracker_GlobalNotification
  */
 class Tracker_GlobalNotificationDao extends DataAccessObject {
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_global_notification';
     }
-   
+
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -37,9 +37,9 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
         $sql = "SELECT * FROM $this->table_name";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches Tracker_GlobalNotification by Id 
+    * Searches Tracker_GlobalNotification by Id
     * @return DataAccessResult
     */
     function searchById($id) {
@@ -49,7 +49,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_GlobalNotification by TrackerId 
+    * Searches Tracker_GlobalNotification by TrackerId
     * @return DataAccessResult
     */
     function searchByTrackerId($trackerId) {
@@ -59,7 +59,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_GlobalNotification by Addresses 
+    * Searches Tracker_GlobalNotification by Addresses
     * @return DataAccessResult
     */
     function searchByAddresses($addresses) {
@@ -69,7 +69,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_GlobalNotification by AllUpdates 
+    * Searches Tracker_GlobalNotification by AllUpdates
     * @return DataAccessResult
     */
     function searchByAllUpdates($allUpdates) {
@@ -79,7 +79,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_GlobalNotification by CheckPermissions 
+    * Searches Tracker_GlobalNotification by CheckPermissions
     * @return DataAccessResult
     */
     function searchByCheckPermissions($checkPermissions) {
@@ -107,7 +107,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
 
 
     /**
-    * create a row in the table tracker_global_notification 
+    * create a row in the table tracker_global_notification
     * @return true or id(auto_increment) if there is no error
     */
     function create($tracker_id, $addresses, $all_updates, $check_permissions) {
@@ -118,7 +118,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
         $this->da->quoteSmart($check_permissions));
         return $this->updateAndGetLastId($sql);
     }
-    
+
     function modify($id, $values) {
         $updates = array();
         foreach($values as $field => $value) {
@@ -127,14 +127,14 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
         $sql = "UPDATE $this->table_name SET ". implode(', ', $updates) ." WHERE id = ". $this->da->quoteSmart($id);
         return $this->update($sql);
     }
-    
+
     function delete($id, $tracker_id) {
         $sql = sprintf("DELETE FROM $this->table_name WHERE id = %s AND tracker_id = %s",
         $this->da->quoteSmart($id),
         $this->da->quoteSmart($tracker_id));
         return $this->update($sql);
     }
-    
+
     function duplicate($from_tracker_id, $to_tracker_id) {
         $from_tracker_id = $this->da->escapeInt($from_tracker_id);
         $to_tracker_id   = $this->da->escapeInt($to_tracker_id);

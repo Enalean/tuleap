@@ -43,12 +43,12 @@ class WikiService extends Controler {
    */
     function __construct($id) {
         global $LANG, $is_wiki_page;
-      
+
         //used so the search box will add the necessary element to the pop-up box
         $is_wiki_page = 1;
 
-      /* 
-       * Check given id 
+      /*
+       * Check given id
        */
         $this->gid = (int) $id;
 
@@ -57,12 +57,11 @@ class WikiService extends Controler {
 
         $pm = ProjectManager::instance();
         $go = $pm->getProject($this->gid);
-        if(!$go) 
+        if(!$go)
         exit_no_group();
 
         $this->wiki = new Wiki($this->gid);
-    
-    
+
       // Check access right
         $this->checkPermissions();
 
@@ -92,9 +91,9 @@ class WikiService extends Controler {
       // Check if user can access to whole wiki
         if(!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
             $GLOBALS['Response']->addFeedback(
-                                'error', 
+                                'error',
                                 $GLOBALS['Language']->getText(
-                                                        'wiki_wikiservice', 
+                                                        'wiki_wikiservice',
                                                         'acces_denied_whole',
                                                         session_make_url("/project/memberlist.php?group_id=".$this->gid)
                                 ),
@@ -108,9 +107,9 @@ class WikiService extends Controler {
             $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
             if(!$wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
                 $GLOBALS['Response']->addFeedback(
-                                'error', 
+                                'error',
                                 $GLOBALS['Language']->getText(
-                                                        'wiki_wikiservice', 
+                                                        'wiki_wikiservice',
                                                         'acces_denied_page',
                                                         session_make_url("/project/memberlist.php?group_id=".$this->gid)
                                 ),
@@ -128,23 +127,23 @@ class WikiService extends Controler {
         if (!isset($this->view))
         $this->view = 'browse';
 
-        if(!empty($_REQUEST['pagename'])) 
+        if(!empty($_REQUEST['pagename']))
         $this->view = 'empty';
 
-        if(isset($_REQUEST['format']) && 
+        if(isset($_REQUEST['format']) &&
          ($_REQUEST['format'] == 'rss') )
-          $this->view = 'empty'; 
+          $this->view = 'empty';
 
-        if(isset($_REQUEST['pv']) && ($_REQUEST['pv'] == 1 || $_REQUEST['pv'] == 2)) 
-          $this->view = 'empty'; 
+        if(isset($_REQUEST['pv']) && ($_REQUEST['pv'] == 1 || $_REQUEST['pv'] == 2))
+          $this->view = 'empty';
 
         if(isset($_REQUEST['action'])) {
-            if($_REQUEST['action'] == 'ziphtml') 
+            if($_REQUEST['action'] == 'ziphtml')
                 $this->view = 'empty';
-        
-            if($_REQUEST['action'] == 'zip') 
+
+            if($_REQUEST['action'] == 'zip')
                 $this->view = 'empty';
-        
+
             if($_REQUEST['action'] == 'add_temp_page')
                 $this->action = 'add_temp_page';
 

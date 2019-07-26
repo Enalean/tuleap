@@ -41,16 +41,16 @@ if ($request->valid(new Valid_UInt('id'))) {
 }
 
 $pm = ProjectManager::instance();
-// admin pages can be reached by news admin (N2) or project admin (A) 
+// admin pages can be reached by news admin (N2) or project admin (A)
 if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id,'N2'))) {
     /*
         Per-project admin pages.
         Shows their own news items so they can edit/update.
-        If their news is on the homepage, and they edit, it is removed from 
+        If their news is on the homepage, and they edit, it is removed from
             homepage.
     */
     if ($request->get('post_changes') && $request->get('approve')) {
-        
+
         $validIsPrivate = new Valid_WhiteList('is_private', array(0, 1));
         if ($request->valid($validIsPrivate)) {
             $is_private = $request->get('is_private');
@@ -66,21 +66,21 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         $validSummary = new Valid_String('summary');
         $validSummary->setErrorMessage('Summary is required');
         $validSummary->required();
-        
+
         $validDetails = new Valid_Text('details');
-        
+
         if ($request->valid($validSummary) && $request->valid($validDetails)) {
-        
+
             $sql="UPDATE news_bytes SET is_approved=". db_ei($status) .", summary='".db_es($request->get('summary'))."', ".
                 "details='".db_es($request->get('details'))."' WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
             $result=db_query($sql);
-            
+
             if (!$result) {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','group_update_err'));
-                
+
             } else {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','project_newsbyte_updated'));
-                
+
                 // update/create  news permissions
                 $qry1="SELECT * FROM news_bytes WHERE id=". db_ei($id);
                 $res1=db_query($qry1);
@@ -107,7 +107,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 
     news_header(array('title'=>$Language->getText('news_admin_index','title'),
               'help'=>'communication.html#news-service'));
-    
+
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
     echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index','choose_display').'</a>';
 
@@ -134,7 +134,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         } else {
             $check_private="CHECKED";
             $check_public="";
-        }    
+        }
 
         echo '
         <H3>'.$purifier->purify($Language->getText('news_admin_index','approve_for',$pm->getProject($group_id)->getUnconvertedPublicName())).'</H3>

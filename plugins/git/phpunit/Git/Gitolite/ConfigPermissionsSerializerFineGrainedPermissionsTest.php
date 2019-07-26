@@ -281,7 +281,6 @@ EOS;
         $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturn(array(1 => $this->permission_03));
         $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturn(array(2 => $this->permission_02));
 
-
         $writers          = array($this->ugroup_01, $this->ugroup_02);
         $rewinders        = array($this->ugroup_03);
 
@@ -386,7 +385,6 @@ EOS;
 
         $config = $this->serializer->getForRepository($this->repository);
 
-
         $expected = <<<EOS
  R   = @site_active @_project_members
  RW+ refs/heads/master$ = @ug_103
@@ -419,7 +417,6 @@ EOS;
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->with($this->repository)->andReturn(true);
 
         $config = $this->serializer->getForRepository($this->repository);
-
 
         $expected = <<<EOS
  R   = @site_active @_project_members

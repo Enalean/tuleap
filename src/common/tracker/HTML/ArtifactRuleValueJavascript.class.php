@@ -20,7 +20,7 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ *
  */
 
 require_once('common/tracker/ArtifactRuleValueView.class.php');
@@ -39,7 +39,7 @@ class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
     function __construct(&$rule) {
         parent::__construct($rule);
     }
-    
+
     function fetch() {
         $output  = '{id:'. (int)$this->rule->id .', ';
         $output .= 'group_artifact_id:'. (int)$this->rule->group_artifact_id .', ';

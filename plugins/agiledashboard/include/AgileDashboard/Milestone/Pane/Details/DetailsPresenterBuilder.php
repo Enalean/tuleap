@@ -91,7 +91,6 @@ class DetailsPresenterBuilder
     {
         $artifact = $milestone->getArtifact();
 
-
         $burndown_field     = $artifact->getABurndownField($user);
         $has_burndown       = false;
         $burndown_label     = null;

@@ -51,7 +51,6 @@ EOT;
         $sql                    = "SELECT * FROM plugin_mediawiki_database";
         $res                    = $this->queryDB($sql, 'An error occured while looking for all mediawiki databases');
 
-
         foreach ($res->fetchAll() as $database_mapping) {
             if (isset($database_mapping[0]) && isset($database_mapping[1])) {
                 $projects_table_mapping[$database_mapping[0]] = $database_mapping[1];

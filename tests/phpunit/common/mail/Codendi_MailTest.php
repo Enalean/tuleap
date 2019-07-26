@@ -76,7 +76,6 @@ class Codendi_MailTest extends TestCase // phpcs:ignore
         $tpl->shouldReceive('set')->never();
         $tpl->shouldReceive('fetch')->never();
 
-
         $mail = new Codendi_Mail();
         $mail->setLookAndFeelTemplate($tpl);
 

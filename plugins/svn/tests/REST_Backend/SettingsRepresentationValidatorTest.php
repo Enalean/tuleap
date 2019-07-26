@@ -48,7 +48,6 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
         $notification_representation_02->emails = array('user@example.com');
         $notification_representation_02->users  = array();
 
-
         $settings = new SettingsPOSTRepresentation();
         $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
 
@@ -67,7 +66,6 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
         $notification_representation_02->path   = "/trunks";
         $notification_representation_02->emails = array('user@example.com');
         $notification_representation_02->users  = array();
-
 
         $settings = new SettingsPOSTRepresentation();
         $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
@@ -133,7 +131,6 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
         $notification_representation_02->path = "/trunks";
         $notification_representation_02->emails = array('test@example.com');
 
-
         $settings = new SettingsPOSTRepresentation();
         $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
 
@@ -165,7 +162,6 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
         $notification_representation_02         = new NotificationRepresentation();
         $notification_representation_02->path   = "/trunks";
         $notification_representation_02->emails = array('test@example.com');
-
 
         $settings                      = new SettingsPUTRepresentation();
         $settings->email_notifications = array($notification_representation_01, $notification_representation_02);

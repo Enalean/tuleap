@@ -40,11 +40,11 @@ class FileModuleMonitorFactory {
         if ($dar->isError()) {
             return;
         }
-        
+
         if (!$dar->valid()) {
             return;
         }
-        
+
         $data_array = array();
         while ($dar->valid()) {
             $data_array[] = $dar->current();
@@ -74,7 +74,6 @@ class FileModuleMonitorFactory {
         $_id = (int) $id;
         $dao = $this->_getFileModuleMonitorDao();
         $dar = $dao->searchById($_id);
-        
 
         $data_array = array();
         if (!$dar->isError() && $dar->valid()) {
@@ -85,7 +84,7 @@ class FileModuleMonitorFactory {
         }
         return $data_array;
     }
-    
+
     /**
      * Is the user in the list of people monitoring this package.
      *
@@ -103,7 +102,6 @@ class FileModuleMonitorFactory {
         if ($dar->isError()) {
             return;
         }
-
 
         if (!$dar->valid() || $dar->rowCount() < 1) {
             return false;

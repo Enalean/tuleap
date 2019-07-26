@@ -629,7 +629,6 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase
         $planning = \Mockery::spy(\Planning::class);
         stub($planning)->getPlanningTrackerId()->returns(45);
 
-
         $project = \Mockery::spy(\Project::class);
         stub($project)->getID()->returns(3233);
 

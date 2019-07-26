@@ -23,7 +23,7 @@
  * Manager for PostActions
  */
 class Transition_PostActionManager {
-    
+
     /**
      * Process the artifact functions
      *
@@ -35,18 +35,18 @@ class Transition_PostActionManager {
      */
     public function process(Transition $transition, Codendi_Request $request, PFUser $current_user) {
         $tpaf = $this->getPostActionFactory();
-        
+
         // Create new post-action
         if ($request->existAndNonEmpty('add_postaction')) {
             $tpaf->addPostAction($transition, $request->get('add_postaction'));
         }
-        
+
         // Loop over defined actions and update them if relevant
         foreach ($transition->getAllPostActions() as $post_action) {
             $post_action->process($request);
         }
     }
-    
+
     /**
      * Wrapper for Transition_PostActionFactory
      *

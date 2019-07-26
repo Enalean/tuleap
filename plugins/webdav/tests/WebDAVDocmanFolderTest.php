@@ -314,18 +314,18 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
     function testCreateDirectorySuccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFolder->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanFolder->createDirectory('name');
     }
 
@@ -352,15 +352,15 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
     function testSetNameSuccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFolder->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
 
@@ -380,20 +380,19 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
     function testCreateFileBigFile() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectNever('processDocmanRequest');
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFolder->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 23);
-        
 
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
@@ -402,18 +401,18 @@ class WebDAVDocmanFolderTest extends TuleapTestCase {
 
     function testCreateFileSucceed() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanFolder->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 2000);
 
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');

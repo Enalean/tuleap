@@ -73,7 +73,7 @@ class FRSPackageFactory {
         if($dar->isError()){
             return;
         }
-        
+
         if(!$dar->valid()) {
             return;
         }
@@ -82,25 +82,25 @@ class FRSPackageFactory {
 
         return($this->getFRSPackageFromArray($data_array));
     }
-    
+
     function getFRSPackageByFileIdFromDb($file_id){
         $_id = (int) $file_id;
         $dao = $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
-        
+
         if($dar->isError()){
             return;
         }
-        
+
         if(!$dar->valid()) {
             return;
         }
-        
+
         $data_array = $dar->current();
 
         return($this->getFRSPackageFromArray($data_array));
     }
-    
+
     function getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
@@ -110,7 +110,7 @@ class FRSPackageFactory {
         if($dar->isError()){
             return;
         }
-        
+
         if(!$dar->valid()) {
             return;
         }
@@ -205,7 +205,7 @@ class FRSPackageFactory {
         if($dar->isError()){
             return;
         }
-        
+
         if(!$dar->valid()){
             return;
         }else{
@@ -222,10 +222,10 @@ class FRSPackageFactory {
         if($dar->isError()){
             return;
         }
-        
+
         return $dar->valid();
     }
-        
+
     function update($data) {
         if (is_a($data, 'FRSPackage')) {
             $data = $data->toArray();
@@ -239,22 +239,22 @@ class FRSPackageFactory {
         }
         return false;
     }
-    
-    
+
+
     function create($data_array) {
         $dao = $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
-            $package = new FRSPackage($data_array);   
-            $this->setDefaultPermissions($package);     
+            $package = new FRSPackage($data_array);
+            $this->setDefaultPermissions($package);
             $this->getEventManager()->processEvent('frs_create_package',
                                                    array('group_id' => $data_array['group_id'],
                                                          'item_id' => $id));
         }
         return $id;
     }
-    
+
     function _delete($package_id){
         $_id = (int) $package_id;
         $package = $this->getFRSPackageFromDb($_id);
@@ -273,15 +273,15 @@ class FRSPackageFactory {
      * first, make sure the package is theirs
      * and delete the package from the database
      * return false if release not deleted, true otherwise
-     * 
+     *
      * @param int $group_id
      * @param int $package_id
-     * 
+     *
      * @return bool
      */
     function delete_package($group_id, $package_id) {
         $package = $this->getFRSPackageFromDb($package_id, $group_id);
-        
+
         if (!$package_id) {
             //package not found for this project
             return false;
@@ -381,7 +381,7 @@ class FRSPackageFactory {
      * @param int $user_id if Not given or false, take the current user
      *
      * @return bool true of user can update the package $package_id, false otherwise
-     */ 
+     */
     function userCanUpdate($group_id, $package_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
     }
@@ -390,7 +390,7 @@ class FRSPackageFactory {
      * Returns true if user has permissions to Create packages
      *
      * @return bool true if the user has permission to create packages, false otherwise
-     */ 
+     */
     public function userCanCreate($project_id, $user_id = false)
     {
         $user_manager = $this->getUserManager();

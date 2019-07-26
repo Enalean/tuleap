@@ -63,7 +63,6 @@ class DocmanItemsEventAdder
             $notification_manager_subscribers
         );
 
-
         $adder->addNotificationManagement();
     }
 

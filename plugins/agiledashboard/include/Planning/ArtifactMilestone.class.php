@@ -226,7 +226,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
             $this->addChildrenNodes($node, $artifacts, $user);
         }
     }
-    
+
     public function hasAncestors() {
         return !empty($this->parent_milestones);
     }

@@ -78,7 +78,7 @@ if ($multiple_queries) {
     foreach($all_queries as $q) {
         $result = db_query($q);
         $all_results[] = $result;
-        $rows = db_numrows($result);    
+        $rows = db_numrows($result);
     }
 } else {
     $result = db_query($sql);
@@ -91,28 +91,28 @@ if ($result && $rows > 0) {
     $file_name = str_replace(' ','_','artifact_'.$ath->getItemName());
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
-  
+
     foreach($lbl_list as $k => $v) {
         $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
     }
     echo build_csv_header($col_list, $lbl_list).$eol;
-  
+
     if ($multiple_queries) {
         $multiarr = array();
         for ($i = 0; $i < $rows; $i++) {
             foreach ($all_results as $result) {
                 $multiarr = array_merge($multiarr,db_fetch_array($result));
             }
-      
+
             prepare_artifact_record($ath,$fields,$atid,$multiarr, 'csv');
             $curArtifact=new Artifact($ath, $multiarr['artifact_id']);
             if ($curArtifact->userCanView()) {
                 echo build_csv_record($col_list, $multiarr).$eol;
             }
         }
-    
+
     } else {
-        while ($arr = db_fetch_array($result)) {        
+        while ($arr = db_fetch_array($result)) {
             prepare_artifact_record($ath,$fields,$atid,$arr, 'csv');
             $curArtifact=new Artifact($ath, $arr['artifact_id']);
             if ($curArtifact->userCanView()) {
@@ -120,7 +120,7 @@ if ($result && $rows > 0) {
             }
         }
     }
-  
+
 } else {
     $params['group']=$group_id;
     $params['toptab']='tracker';
@@ -130,7 +130,7 @@ if ($result && $rows > 0) {
     $params['help']='tracker-v3.html';
     $params['pv']  = $request->exist('pv') ? $request->get('pv') : '';
     site_project_header($params);
-  
+
     echo '<h3>'.$Language->getText('project_export_artifact_export','art_export').'</h3>';
     if ($result) {
         echo '<P>'.$Language->getText('project_export_artifact_export','no_art_found');

@@ -192,7 +192,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException('Could not copy uploaded file for item #' . $item->getId() . ' of upload #' . $upload_id);
                 }
 
-
                 $current_time             = (new \DateTimeImmutable)->getTimestamp();
                 $has_version_been_created = $this->version_factory->create(
                     [

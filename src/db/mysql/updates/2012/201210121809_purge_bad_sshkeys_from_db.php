@@ -56,7 +56,7 @@ EOT;
         }
         if (file_exists($key_file)) {
             unlink($key_file);
-        }    
+        }
     }
 }
 

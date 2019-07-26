@@ -3,7 +3,7 @@
 rcs_id('$Id: PhotoAlbum.php,v 1.14 2005/10/12 06:19:07 rurban Exp $');
 /*
  Copyright 2003, 2004, 2005 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ rcs_id('$Id: PhotoAlbum.php,v 1.14 2005/10/12 06:19:07 rurban Exp $');
  *     christmas.gif; Merry Christmas!
  *
  *     Inside textfile, filenames and optional descriptions are seperated by
- *     semi-colon on each line. Listed files must be in same directory as textfile 
+ *     semi-colon on each line. Listed files must be in same directory as textfile
  *     itself, so don't use relative paths inside textfile.
  *
  * "url": defines the the webpath to the srcdir directory (formerly called weblocation)
@@ -82,7 +82,7 @@ class ImageTile extends HtmlElement
             $params .= "' width='" . $tag[0]['width'];
         if (!@empty($tag[0]['height']))
             $params .= "' height='" . $tag[0]['height'];
-        
+
         $params .= "' alt='" . $tag[0]['alt'] . "' />";
         return $el->raw ($params);
     }
@@ -128,7 +128,7 @@ extends WikiPlugin
                          // "desc"   - Only description (from textfile) shown
                          // "both"     - If no description found, then filename will be used
                      'link'    => true,     // show link to original sized photo
-                         // If true, each image will be hyperlinked to a page where the single 
+                         // If true, each image will be hyperlinked to a page where the single
                          // photo will be shown full-size. Only works when mode != 'normal'
                      'attrib'    => '',        // 'sort, nowrap, alt'
                          // attrib arg allows multiple attributes: attrib=sort,nowrap,alt
@@ -157,7 +157,7 @@ extends WikiPlugin
     // descriptions (instead of filenames) for image alt-tags
 
     function run($dbi, $argstr, &$request, $basepage) {
-    
+
         extract($this->getArgs($argstr, $request));
 
         $attributes = $attrib ? explode(",", $attrib) : array();
@@ -185,11 +185,11 @@ extends WikiPlugin
 
         if (in_array("sort", $attributes))
             sort($photos);
-        
+
         if ($p) {
             $mode = "normal";
         }
-    
+
         if ($mode == "column") {
             $mode="normal";
             $numcols="1";
@@ -206,7 +206,7 @@ extends WikiPlugin
             $cellwidth  = "auto";
             $width = 50;
         } elseif ($mode == 'slide' ) {
-            $tableheight = 0; 
+            $tableheight = 0;
             $cell_width = 0;
             $numcols = count($photos);
             $keep = $photos;
@@ -221,10 +221,10 @@ extends WikiPlugin
             $photos = $keep;
             unset ($x,$y,$s,$t,$key,$value,$keep);
         }
-    
+
         $row = HTML();
         $duration = 1000 * $duration;
-        if ($mode == 'slide') 
+        if ($mode == 'slide')
             $row->pushContent(JavaScript("
 i = 0;
 function display_slides() {
@@ -257,7 +257,7 @@ display_slides();"));
                             'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
                                     ? $value["desc"]
                                     : basename($value["name"]));
-            if (!@empty($value['location'])) 
+            if (!@empty($value['location']))
                 $params = array_merge($params, array("location" => $value['location']));
             // check description
             switch ($showdesc) {
@@ -273,18 +273,18 @@ display_slides();"));
                     if (!$value["desc"]) $value["desc"] = basename($value["name"]);
                 break;
             }
-    
+
             // FIXME: get getimagesize to work with names with spaces in it.
             // convert $value["name"] from webpath to local path
             $size = @getimagesize($value["name"]); // try " " => "\\ "
             if (!$size and !empty($value["src"])) {
                 $size = @getimagesize($value["src"]);
                 if (!$size) {
-                    trigger_error("Unable to getimagesize(".$value["name"].")", 
+                    trigger_error("Unable to getimagesize(".$value["name"].")",
                                   E_USER_NOTICE);
                 }
             }
-    
+
             $newwidth = $this->newSize($size[0], $width);
             if (($mode == 'thumbs' || $mode == 'tiles' || $mode == 'list')) {
                 if (!empty($size[0]))
@@ -294,14 +294,14 @@ display_slides();"));
             }
             else
                 $newheight = $this->newSize($size[1], $height);
-                  
+
             if ($width != 'auto' && $newwidth > 0) {
                 $params = array_merge($params, array("width" => $newwidth));
             }
             if ($height != 'auto' && $newheight > 0) {
                 $params = array_merge($params, array("height" => $newheight));
             }
-    
+
             // cell operations
             $cell = array('align'   => "center",
                           'valign'  => "top",
@@ -324,13 +324,13 @@ display_slides();"));
                                array("p" => basename($value["name"])))
                 . "#"
                 . basename($value["name"]);
- 
+
             $b_url    = WikiURL($request->getPage(),
                                 array("h" => basename($value["name"])))
                 . "#"
                 . basename($value["name"]);
-            $url_text   = $link 
-                ? HTML::a(array("href" => "$url"), basename($value["desc"])) 
+            $url_text   = $link
+                ? HTML::a(array("href" => "$url"), basename($value["desc"]))
                 : basename($value["name"]);
             if (! $p) {
                 if ($mode == 'normal' || $mode == 'slide') {
@@ -339,7 +339,7 @@ display_slides();"));
                     $url_image = $link ? HTML::a(array("id" => basename($value["name"])),
                                          HTML::a(array("href" => "$url"), HTML::img($params))) :  HTML::img($params);
                 } else {
-                    $keep = $params; 
+                    $keep = $params;
                     if (!@empty ($params['src_tile']))
                         $params['src'] = $params['src_tile'] ;
                     unset ($params['location'],$params['src_tile']);
@@ -392,14 +392,14 @@ display_slides();"));
                                                " x ".
                                                $size[1].
                                                " pixels"))));
-    
+
                 if ($desc != '')
                     $row->pushContent(
                         HTML::td(array("valign"  => "top",
                                        "nowrap"  => 0,
                                        "bgcolor" => $color),
                                        HTML::span(array('class'=>'gensmall'),$desc)));
-    
+
             } elseif ($mode == 'thumbs') {
                 $desc = ($showdesc != 'none') ?
                             HTML::p(HTML::a(array("href" => "$url"),
@@ -421,9 +421,9 @@ display_slides();"));
                                   HTML::span(array('class'=>'gensmall'),$desc)
                                   )));
             } elseif ($mode == 'slide') {
-                if ($newwidth == 'auto' || !$newwidth) 
+                if ($newwidth == 'auto' || !$newwidth)
                     $newwidth = $this->newSize($size[0],$width);
-                if ($newwidth == 'auto' || !$newwidth) 
+                if ($newwidth == 'auto' || !$newwidth)
                     $newwidth = $size[0];
                 if ($newheight != 'auto') $newwidth = round($size[0] *  $newheight / $size[1]);
                 $desc = ($showdesc != 'none') ? HTML::p($value["desc"]) : '';
@@ -476,7 +476,7 @@ display_slides();"));
             } else {
                 return $this->error(fmt("Invalid argument: %s=%s", 'mode', $mode));
             }
-    
+
             // no more images in one row as defined by $numcols
             if ( ($key + 1) % $numcols == 0 ||
                  ($key + 1) == count($photos) ||
@@ -495,7 +495,7 @@ display_slides();"));
                                   "cellpadding" => 5,
                                   "cellspacing" => 2,
                                   "width"       => $tablewidth);
-        
+
         if (!@empty($tableheight))
             $table_attributes = array_merge($table_attributes,
                                             array("height"  => $tableheight));
@@ -561,7 +561,7 @@ display_slides();"));
         if (preg_match('/^(http|ftp|https):\/\//i', $src)) {
             $contents = url_get_contents($src);
             $web_location = 1;
-        } else 
+        } else
             $web_location = 0;
         if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
             $src = PHPWIKI_DIR . "/$src";
@@ -619,7 +619,7 @@ display_slides();"));
                 return $this->error(fmt("Unable to read src='%s'", $src));
             }
             while ($data = fgetcsv($fp, 1024, ';')) {
-                if (count($data) == 0 || empty($data[0]) 
+                if (count($data) == 0 || empty($data[0])
                                       || preg_match('/^#/',$data[0])
                                       || preg_match('/^[[:space:]]*$/',$data[0]))
                     continue;
@@ -630,14 +630,14 @@ display_slides();"));
                                    "name_tile" => dirname($src)."/".trim($data[0]));
             }
             fclose ($fp);
-        
+
         } elseif ($web_location == 1) {
             //TODO: checks if the file is an image
             $contents = preg_split('/\n/',$contents);
             foreach ($contents as $value) {
                 $data = preg_split('/\;/',$value);
-                if (count($data) == 0 || empty($data[0]) 
-                                      || preg_match('/^#/',$data[0]) 
+                if (count($data) == 0 || empty($data[0])
+                                      || preg_match('/^#/',$data[0])
                                       || preg_match('/^[[:space:]]*$/',$data[0]))
                     continue;
                 if (empty($data[1])) $data[1] = '';

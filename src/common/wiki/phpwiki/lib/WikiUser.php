@@ -52,7 +52,7 @@ function UpgradeUser ($olduser, $user) {
     if (isa($user,'WikiUser') and isa($olduser,'WikiUser')) {
         // populate the upgraded class with the values from the old object
         foreach (get_object_vars($olduser) as $k => $v) {
-            $user->$k = $v;    
+            $user->$k = $v;
         }
         $GLOBALS['request']->_user = $user;
         return $user;
@@ -69,8 +69,8 @@ class WikiUser {
 
     /**
      *
-     * 
-     * Populates the instance variables and calls $this->_ok() 
+     *
+     * Populates the instance variables and calls $this->_ok()
      * to ensure that the parameters are valid.
      * @param mixed $userid String of username or WikiUser object.
      * @param int $authlevel Authorization level.
@@ -101,7 +101,7 @@ class WikiUser {
 
     /**
     * Get the string indicating how the user was authenticated.
-    * 
+    *
     * Get the string indicating how the user was authenticated.
     * Does not seem to be set - jbw
     * @return string The method of authentication.
@@ -112,8 +112,8 @@ class WikiUser {
 
     /**
      * Invariant
-     * 
-     * If the WikiUser object has a valid authorization level and the 
+     *
+     * If the WikiUser object has a valid authorization level and the
      * userid is a string returns true, else false.
      * @return bool If valid level and username string true, else false
      */
@@ -246,7 +246,7 @@ class WikiUser {
     }
 
     // No cookies anymore for all prefs, only the userid. PHP creates
-    // a session cookie in memory, which is much more efficient, 
+    // a session cookie in memory, which is much more efficient,
     // but not persistent. Get persistency with a homepage or DB Prefs
     //
     // Return the number of changed entries
@@ -282,7 +282,7 @@ class WikiUser {
                             // An "empty" page could still be
                             // intentionally locked by admin to
                             // prevent its creation.
-                            //                            
+                            //
                             // FIXME: This permission situation should
                             // probably be handled by the DB backend,
                             // once the new WikiUser code has been

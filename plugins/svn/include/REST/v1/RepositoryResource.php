@@ -222,7 +222,6 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager
         );
 
-
         $user_to_notify_dao           = new UsersToNotifyDao();
         $ugroup_to_notify_dao         = new UgroupsToNotifyDao();
         $this->representation_builder = new RepositoryRepresentationBuilder(

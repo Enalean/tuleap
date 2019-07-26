@@ -20,16 +20,16 @@
 
 class Cardwall_OnTop_ConfigFactory {
 
-    /** 
+    /**
      * @var TrackerFactory
      */
     private $tracker_factory;
-    
-    /** 
+
+    /**
      * @var Tracker_FormElementFactory
      */
     private $element_factory;
-    
+
     function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
         $this->tracker_factory = $tracker_factory;
         $this->element_factory = $element_factory;
@@ -37,7 +37,7 @@ class Cardwall_OnTop_ConfigFactory {
 
     /**
      * @param Tracker $tracker
-     * 
+     *
      * @return \Cardwall_OnTop_Config
      */
     public function getOnTopConfigByTrackerId($tracker_id) {
@@ -47,7 +47,7 @@ class Cardwall_OnTop_ConfigFactory {
 
     /**
      * @param Tracker $tracker
-     * 
+     *
      * @return \Cardwall_OnTop_Config
      */
     public function getOnTopConfig(Tracker $tracker) {

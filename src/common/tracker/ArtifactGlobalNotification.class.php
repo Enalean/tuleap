@@ -18,9 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class ArtifactGlobalNotification {
-    
+
     var $data;
-    
+
     /**
     * Constructor
     */

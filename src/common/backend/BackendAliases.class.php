@@ -23,12 +23,12 @@ class BackendAliases extends Backend {
 
     public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
-    protected $need_update=false;   
+    protected $need_update=false;
     protected $mailinglistdao = null;
 
     /**
      * Get the mainling list dao
-     * 
+     *
      * @return MailingListDao
      */
     protected function getMailingListDao() {
@@ -40,7 +40,7 @@ class BackendAliases extends Backend {
 
     /**
      * Set if we need to update mail aliases
-     * 
+     *
      * @return void
      */
     function setNeedUpdateMailAliases() {
@@ -49,7 +49,7 @@ class BackendAliases extends Backend {
 
     /**
      * Do we need to update mail aliases?
-     * 
+     *
      * @return bool
      */
     function aliasesNeedUpdate() {
@@ -58,7 +58,7 @@ class BackendAliases extends Backend {
 
 
     /**
-     * Write System email aliases: 
+     * Write System email aliases:
      * - generic aliases like codendi-admin
      * - mailing list aliases for mailman
      * - user aliases for addresses like user@codendi.server.name
@@ -94,7 +94,7 @@ class BackendAliases extends Backend {
     }
 
 
-    /** 
+    /**
      * Generic part: should be written first
      *
      * @param resource $fp A file system pointer resource that is typically created using fopen().
@@ -119,17 +119,17 @@ class BackendAliases extends Backend {
         return fwrite($fp, "\n\n");
     }
 
-    /** 
-     * Mailing list aliases for mailman 
-     * 
+    /**
+     * Mailing list aliases for mailman
+     *
      * @param resource $fp A file system pointer resource that is typically created using fopen().
-     * 
+     *
      * @return bool
      */
     protected function writeListAliases($fp) {
         // Determine the name of the mailman wrapper
         $mm_wrapper = $GLOBALS['mailman_wrapper'];
-        
+
         fwrite($fp, "### Begin Mailing List Aliases ###\n\n");
         $dar = $this->getMailingListDao()->searchAllActiveML();
         foreach ($dar as $row) {

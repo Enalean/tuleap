@@ -143,8 +143,6 @@ class ProjectMilestonesResource {
             $this->milestone_factory
         );
 
-
-
         $this->query_to_milestone_representation_builder_converter = new QueryToMilestoneRepresentationBuilderConverter(
             $milestone_representation_builder,
             new QueryToPeriodMilestoneRepresentationBuilderConverter(

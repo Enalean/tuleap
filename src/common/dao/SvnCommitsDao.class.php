@@ -23,12 +23,12 @@
 require_once('include/DataAccessObject.class.php');
 
 class SvnCommitsDao extends DataAccessObject {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'svn_commits';
     }
-    
+
     public function statsByGroupId($group_id, $duration) {
         $group_id = $this->da->escapeInt($group_id);
         $duration = $this->da->escapeInt($duration);

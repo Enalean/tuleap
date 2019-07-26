@@ -55,7 +55,7 @@ extends WikiPlugin__WikiTranslation
     }
 
     function getDefaultArguments() {
-        return 
+        return
             array( 'lang'      => false,
                    'pagename'  => '[pagename]',
                    'translate' => false,
@@ -68,7 +68,7 @@ extends WikiPlugin__WikiTranslation
             return $this->error(
                 _("This internal action page cannot viewed.")."\n".
                 _("You can only use it via the _WikiTranslation plugin."));
-           
+
         $this->lang = $lang;
         //action=save
         if (!empty($translate) and isset($translate['submit']) and $request->isPost()) {
@@ -102,7 +102,7 @@ extends WikiPlugin__WikiTranslation
                 $page->save($text, $version + 1, $meta);
                 // TODO: admin notification
                 return HTML(HTML::h2(_("Thanks for adding this translation!")),
-                            HTML::p(fmt("Your translated text doesn't yet appear in this %s, but the Administrator will pick it up and add to the installation.", 
+                            HTML::p(fmt("Your translated text doesn't yet appear in this %s, but the Administrator will pick it up and add to the installation.",
                                        WIKI_NAME)),
                             fmt("Your translation is stored in %s",WikiLink($transpagename)));
             }

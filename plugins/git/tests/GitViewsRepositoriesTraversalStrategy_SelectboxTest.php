@@ -25,11 +25,11 @@ Mock::generate('GitViews');
 Mock::generate('PFUser');
 
 class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest {
-    
+
     public function __construct() {
         parent::__construct('GitViewsRepositoriesTraversalStrategy_Selectbox');
     }
-    
+
     public function getExpectedPattern($repositories) {
         $nb_repositories = count($repositories);
         foreach ($repositories as $r) {
@@ -38,20 +38,20 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
             }
         }
         $li_regexp_for_repository_representation = '<option value="(?P<value>[^"]*)">(?P<repo>[^\(<]*)</option>';
-        
+
         $pattern = sprintf('<select (?P<args>[^>]*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
         return $pattern;
     }
-    
-    
+
+
     public function testRepoIDShouldBeTheValue() {
         $view = new MockGitViews();
         $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        
+
         $repositories    = $this->getFlatTree($strategy);
         $a_repository_id = 4;
-        
+
         $strategy->__construct($view);
         $this->assertPattern('`value="'. $a_repository_id .'"`', $strategy->fetch($repositories, $user));
     }

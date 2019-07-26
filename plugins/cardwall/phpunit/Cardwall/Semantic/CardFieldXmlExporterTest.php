@@ -81,7 +81,6 @@ class CardFieldXmlExporterTest extends TestCase
         $status_field = Mockery::spy(Tracker_FormElement_Field_List::class);
         $status_field->shouldReceive('getId')->andReturn(14);
 
-
         $fields = [
             $severity_field,
             $status_field

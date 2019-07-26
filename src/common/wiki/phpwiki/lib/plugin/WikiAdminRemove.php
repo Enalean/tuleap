@@ -81,7 +81,7 @@ extends WikiPlugin_WikiAdminSelect
         extract($this->_args);
 
         $now = time();
-        
+
         $allPages = $dbi->getAllPages('include_empty',$sortby,$limit);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
@@ -124,12 +124,12 @@ extends WikiPlugin_WikiAdminSelect
         return HTML($ul,
                     HTML::p(fmt("%d pages have been permanently removed.",$count)));
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         if ($request->getArg('action') != 'browse')
             if ($request->getArg('action') != _("PhpWikiAdministration/Remove"))
                 return $this->disabled("(action != 'browse')");
-        
+
         $args = $this->getArgs($argstr, $request);
         if (!is_numeric($args['min_age']))
             $args['min_age'] = -1;
@@ -178,8 +178,8 @@ extends WikiPlugin_WikiAdminSelect
             // List all pages to select from.
             $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
-        $pagelist = new PageList_Selectable($args['info'], $args['exclude'], 
-                                            array('types' => 
+        $pagelist = new PageList_Selectable($args['info'], $args['exclude'],
+                                            array('types' =>
                                                   array('remove'
                                                         => new _PageList_Column_remove('remove', _("Remove")))));
         $pagelist->addPageList($pages);
@@ -201,7 +201,7 @@ extends WikiPlugin_WikiAdminSelect
             else {
                 $header->pushContent(_("List all pages."));
             }
-            
+
             if ($args['max_age'] > 0) {
                 $header->pushContent(
                     " ",
@@ -209,7 +209,6 @@ extends WikiPlugin_WikiAdminSelect
                         $args['max_age']));
             }
         }
-
 
         $buttons = HTML::p(Button('submit:admin_remove[remove]', $button_label, 'wikiadmin'),
                            Button('submit:admin_remove[cancel]', _("Cancel"), 'button'));

@@ -44,7 +44,6 @@ class b201808100858_add_table_tuleap_synchro extends ForgeUpgrade_Bucket // @cod
                 webhook VARCHAR(17) NOT NULL PRIMARY KEY
                 ) ENGINE=InnoDB;";
 
-
         $this->db->createTable('plugin_tuleap_synchro_endpoint', $sql);
     }
 

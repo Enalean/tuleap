@@ -29,7 +29,7 @@ class TestHelper {
      *
      * @param String $className The class to mock
      * @param Array  $methods   The list of methods to mock
-     * 
+     *
      * @return Object
      */
     public static function getPartialMock($className, $methods) {
@@ -37,7 +37,7 @@ class TestHelper {
         Mock::generatePartial($className, $partialName, $methods);
         return new $partialName();
     }
-    
+
     /**
      * Generate a DataAccessResult
      */
@@ -52,7 +52,7 @@ class TestHelper {
     public static function emptyDar() {
         return self::arrayToDar();
     }
-    
+
     public static function errorDar() {
         return new ErrorDataAccessResult();
     }
@@ -71,15 +71,15 @@ class FakeDataAccessResult extends DataAccessResult {
     protected function daFetch() {
         return isset($this->data[$this->_current]) ? $this->data[$this->_current] : false;
     }
-    
+
     protected function daSeek() {
         $this->_current = -1;
     }
-    
+
     protected function daIsError() {
         return false;
     }
-    
+
     public function rowCount() {
         return count($this->data);
     }

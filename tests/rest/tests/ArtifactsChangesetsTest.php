@@ -105,8 +105,6 @@ class ArtifactsChangesetsTest extends RestBase {
             }
         }
 
-
-
         $pagination_offset = $response->getHeader('X-PAGINATION-OFFSET')->normalize()->toArray();
         $this->assertEquals($pagination_offset[0], 2);
 

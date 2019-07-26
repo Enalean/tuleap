@@ -100,7 +100,6 @@ class FieldDataFromRESTBuilder
             }
         }
 
-
         if ($artifact) {
             $this->markAsDeletedPreviouslyAttachedFilesThatAreNotSubmitted(
                 $artifact,

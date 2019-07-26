@@ -38,6 +38,5 @@ class b201602091209_create_plugin_svn_mailing_header extends ForgeUpgrade_Bucket
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the plugin_svn_mailing_header table for SVN plugin.');
         }
 
-
     }
 }

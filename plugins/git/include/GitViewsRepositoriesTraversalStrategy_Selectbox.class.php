@@ -23,12 +23,12 @@
  * Traverse a list of repositories and furnish a ul/li tree representation
  */
 class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy {
-    
+
     /**
      * @var GitViews
      */
     protected $view;
-    
+
     /**
      * Constructor
      *
@@ -38,7 +38,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
         parent::__construct();
         $this->view = $view;
     }
-    
+
     /**
      * Get the main wrapper of the whole representation
      *
@@ -49,7 +49,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
     protected function getMainWrapper($inner) {
         return '<select multiple size="7" id="fork_repositories_repo" name="repos[]">'. $inner .'</select>';
     }
-    
+
     /**
      * Get Item wrapper
      *
@@ -64,6 +64,6 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
         }
         return '';
     }
-    
+
 }
 ?>

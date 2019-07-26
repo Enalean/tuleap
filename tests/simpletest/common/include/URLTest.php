@@ -162,7 +162,7 @@ class URLTest extends TuleapTestCase {
         $exists = new MockDataAccessResult($this);
         $exists->setReturnValue('getRow', false);
         $dao->setReturnReference('searchByGroupForumId', $exists);
-        
+
         $url->setReturnReference('getForumDao', $dao);
         $this->assertFalse($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
@@ -183,32 +183,32 @@ class URLTest extends TuleapTestCase {
         $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), 1);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'), 1);
     }
-    
+
     function testNewsBytesDontExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
-        
+
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '42'));
         $dao->setReturnReference('searchByGroupForumId', $exists);
         $_REQUEST['forum_id']=1;
         $group_id = $url->setReturnReference('getForumDao', $dao);
         $this->assertNotEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
-               
+
     }
-    
+
     function testNewsBytesExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
-        
+
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => $GLOBALS['sys_news_group']));
         $dao->setReturnReference('searchByGroupForumId', $exists);
         $_REQUEST['forum_id']=1;
         $group_id = $url->setReturnReference('getForumDao', $dao);
-        
+
         $dao2 = new MockNewsBytesDao($this);
         $exists2 = new MockDataAccessResult($this);
         $exists2->setReturnValue('getRow', false);
@@ -216,21 +216,21 @@ class URLTest extends TuleapTestCase {
         $dao2->setReturnReference('searchByForumId', $exists2);
         $url->setReturnReference('getNewsBytesDao', $dao2);
         $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
-               
+
     }
 
-    
+
     function testArtifactDontExist(){
         $url = new URLTestVersion($this);
         $dao = new MockArtifactDao($this);
         $exists = new MockDataAccessResult($this);
         $exists->setReturnValue('getRow', false);
         $dao->setReturnReference('searchArtifactId', $exists);
-        
+
         $url->setReturnReference('getArtifactDao', $dao);
         $this->assertFalse($url->getGroupIdFromURL('/tracker/download.php?artifact_id=dontexist'));
     }
-    
+
     function testArtifactExist() {
         $url = new URLTestVersion($this);
         $dao = new MockArtifactDao($this);

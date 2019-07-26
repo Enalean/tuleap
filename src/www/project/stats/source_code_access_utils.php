@@ -17,7 +17,6 @@ function logs_cond($project, $span, $who) {
     $time_back["tm_sec"] = $time_back["tm_min"] = $time_back["tm_hour"] = 0;
     $begin_date = mktime($time_back["tm_hour"], $time_back["tm_min"], $time_back["tm_sec"], $time_back["tm_mon"]+1, $time_back["tm_mday"], $time_back["tm_year"]+1900);
 
-
     // For Debug
     // print join(" ",localtime($begin_date,0))."<BR>";
     // print "begin_date: $begin_date<BR>";
@@ -294,8 +293,6 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
         echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_access'));
     }
 
-
-
 }
 
 function svnaccess_logs_extract($project, $span, $who) {
@@ -386,8 +383,6 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
     } else {
         echo '<P>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'));
     }
-
-
 
 }
 

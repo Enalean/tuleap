@@ -20,12 +20,12 @@
 
 
 class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Field_Value_NumericDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_int';
     }
-    
+
     public function create($changeset_value_id, $value) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === "") {
@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Fie
         return $this->update($sql);
     }
 
-    public function createNoneValue($tracker_id, $field_id) {        
+    public function createNoneValue($tracker_id, $field_id) {
         $changeset_value_ids  = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( $changeset_value_ids === false)  {
             return false;

@@ -132,8 +132,6 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
             $yesterday = new DateTime();
             $yesterday->setTime(0, 0, 0);
 
-
-
             $this->cache_dao->deleteArtifactCacheValue(
                 $burndown_informations['id'],
                 $burndown_informations['remaining_effort_field_id']

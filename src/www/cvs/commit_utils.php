@@ -22,7 +22,7 @@
 
 /*
 
-    Commits Manager 
+    Commits Manager
     By Thierry Jacquin, Nov 2003
 
 */
@@ -193,17 +193,17 @@ function show_commitslist(
     } else {
         $orderstr = '';
     }
-    echo '<A name="results"></A>';  
+    echo '<A name="results"></A>';
     echo '<h3>'.$total_rows.' '.$GLOBALS['Language']->getText('cvs_commit_utils', 'matching').($total_rows>1 ? 's':'').$orderstr.'</h3>';
 
     $nav_bar ='<table width= "100%"><tr>';
     $nav_bar .= '<td width="20%" align ="left">';
 
-    if ($msort) { 
+    if ($msort) {
         $url_alternate_sort = str_replace('msort=1','msort=0',$url).
         '&order=#results';
         $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'deactivate');
-    } else {    
+    } else {
         $url_alternate_sort = str_replace('msort=0','msort=1',$url).
         '&order=#results';
         $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'activate');
@@ -226,7 +226,7 @@ function show_commitslist(
     }
 
     $nav_bar .= '</td>';
-    
+
     $offset_last = min($offset+$chunksz-1, $total_rows-1);
     $nav_bar .= '<td width= "60% " align = "center" class="small">Items '.($offset+1).' - '.
     ($offset_last+1)."</td>\n";
@@ -240,23 +240,22 @@ function show_commitslist(
             $offset_end = ($total_rows - ($total_rows % $chunksz));
             if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
 
-            $nav_bar .= 
+            $nav_bar .=
             '<A HREF="'.$url.'&offset='.($offset+$chunksz).
             '#results" class="small"><B>'.$GLOBALS['Language']->getText('global', 'next').' '.$chunksz.' &gt;</B></A>'.
             '&nbsp;&nbsp;&nbsp;&nbsp;'.
             '<A HREF="'.$url.'&offset='.($offset_end).
             '#results" class="small"><B>'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</B></A></td>';
         } else {
-            $nav_bar .= 
+            $nav_bar .=
             '<span class="disable">'.$GLOBALS['Language']->getText('global', 'next').' '.$chunksz.
             ' &gt;&nbsp;&nbsp;'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</span>';
         }
     }
     $nav_bar .= '</td>';
     $nav_bar .="</tr></table>\n";
- 
-    echo $nav_bar;
 
+    echo $nav_bar;
 
     $filter_str = '';
     if ($commiter != '100') {
@@ -271,7 +270,6 @@ function show_commitslist(
     if ($srch != '') {
         $filter_str = $filter_str."&srch='$srch'";
     }
-    
 
     $rows=db_numrows($result);
     $url .= "&order=";
@@ -381,7 +379,7 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
         }
         $arr[] = $order . '<';
     }
-    
+
     return(join(',', $arr));
 }
 
@@ -449,14 +447,14 @@ function show_commit_details ($group_id, $commit_id, $result)
     }
     echo '<h2>'.$hdr.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when')).'</h2></h2>';
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
-    
+
     $crossref_fact= new CrossReferenceFactory($commit_id, ReferenceManager::REFERENCE_NATURE_CVSCOMMIT, $group_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
         echo '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
         $crossref_fact->DisplayCrossRefs();
     }
-    
+
     echo '<h3>'.$GLOBALS['Language']->getText('cvs_commit_utils', 'impacted_file').'</h3>';
     $title_arr=array();
     $title_arr[]=$GLOBALS['Language']->getText('cvs_commit_utils', 'file');
@@ -487,7 +485,7 @@ function show_commit_details ($group_id, $commit_id, $result)
         $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', strtolower($type));
 
         if (($type == "Change") &&
-        ($added == 999) && 
+        ($added == 999) &&
         ($removed == 999)) { // the default values
           // back to rcs to complete
             $repo = db_result($result,$i,'repository');
@@ -497,7 +495,7 @@ function show_commit_details ($group_id, $commit_id, $result)
             $added = 0;
             $removed = 0;
             $l =0;
-            while ($l < count($output)) { // parse the rlog result till getting "state: Exp;  lines:" 
+            while ($l < count($output)) { // parse the rlog result till getting "state: Exp;  lines:"
                 $line = $output[$l];
                 $l++;
                 if (preg_match ('/state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$/', $line, $na)) {
@@ -510,12 +508,10 @@ function show_commit_details ($group_id, $commit_id, $result)
                        $res=db_query($sql_up);
                        break;
                 }
-        
+
             }
-          
 
         }
-
 
         if (!$filename) {
             $filename = '';
@@ -555,7 +551,7 @@ function show_commit_details ($group_id, $commit_id, $result)
             }
         }
         // $commits_url = '<A HREF="/commits/download.php/Commits'.$commit_id.'.txt?commit_id='.$id.'">'.$filename.'</a>';
-        
+
         echo '
 			<TR class="'. util_get_alt_row_color($i) .'">'.
         '<TD class="small"><b>'.$filename.'</b></TD>'.
@@ -564,7 +560,6 @@ function show_commit_details ($group_id, $commit_id, $result)
         '<TD class="small">'.$type.'</TD>'.
         '<TD class="small">'.$added.'</TD>'.
         '<TD class="small">'.$removed.'</TD></TR>';
-
 
     }
 
@@ -579,7 +574,7 @@ function show_commit_details ($group_id, $commit_id, $result)
         echo '&nbsp;';
     }
     echo '</TD><TD>&nbsp;</TD><TD COLSPAN="2" class="small">';
-    
+
     if ($rows==50) {
         echo '<A HREF="?func=browse&group_id='.$group_id.'&set='.$set.'&offset='.($offset+50).'"><B>'.$GLOBALS['Language']->getText('global', 'prev').' 50 &gt;</B></A>';
     } else {
@@ -592,7 +587,7 @@ function show_commit_details ($group_id, $commit_id, $result)
 // Are there any commits in the cvs history ?
 function format_cvs_history($group_id) {
     $res_cvsfullhist = get_cvs_history($group_id);
-  
+
     if (!$res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
         $output = '<P>'.$GLOBALS['Language']->getText('cvs_intro', 'no_history');
     } else {
@@ -601,16 +596,15 @@ function format_cvs_history($group_id) {
             $cvshist[$row_cvsfullhist['user_name']]['full'] = $row_cvsfullhist['commits'];
             $cvshist[$row_cvsfullhist['user_name']]['last'] = 0;
         }
-    
+
       // Now over the last 7 days
         $res_cvslasthist = get_cvs_history($group_id,7*24*3600);
-    
+
         while ($row_cvslasthist = db_fetch_array($res_cvslasthist)) {
             $cvshist[$row_cvslasthist['user_name']]['last'] = $row_cvslasthist['commits'];
         }
-    
-    
-      // Format output 
+
+      // Format output
         $output = '<P><b>'.$GLOBALS['Language']->getText('cvs_intro', 'nb_commits').'</b><BR>&nbsp;';
         foreach ($cvshist as $user => $value) {
             $output .= '<BR>'.$user.' ('.$cvshist[$user]['last'].'/'
@@ -626,10 +620,10 @@ function format_cvs_history($group_id) {
 // over the last "period" of time.
 // period is expressed in seconds
 function get_cvs_history($group_id, $period=false) {
-  
+
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-  
+
     if ($period) {
       // All times in cvs tables are stored in UTC ???
         $date_clause = "AND co.comm_when >= ".date("YmdHis",(gmdate('U')-$period))." ";
@@ -706,7 +700,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
         //no status was chosen, so don't add it to where clause
         $branch_str='';
     }
-    
+
     //if assigned to selected, and more to where clause
     if ($_commit_id != '') {
         $_commit_id = db_ei($_commit_id);
@@ -714,7 +708,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     } else {
         $commit_str='';
     }
-    
+
     if ($_commiter != 100) {
         $_commiter    = db_es($_commiter);
         $commiter_str = "AND user.user_id=cvs_checkins.whoid ".
@@ -723,30 +717,30 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
         //no assigned to was chosen, so don't add it to where clause
         $commiter_str='';
     }
-    
+
     if ($_srch != '') {
         $_srch    = db_es('%' . $_srch . '%');
         $srch_str = "AND cvs_descs.description like '$_srch' ";
     } else {
         $srch_str = "";
     }
-    
+
     //build page title to make bookmarking easier
     //if a user was selected, add the user_name to the title
     //same for status
-    
+
     //commits_header(array('title'=>'Browse Commits'.
     //    (($_assigned_to)?' For: '.user_getname($_assigned_to):'').
     //    (($_tag && ($_tag != 100))?' By Status: '. get_commits_status_nam//e($_status):''),
     //           'help' => 'CommitsManager.html'));
-    
+
     // get repository id
     $cvs_repository = db_es('/cvsroot/' . $project->getUnixName(false));
     $query = "SELECT id from cvs_repositories where cvs_repositories.repository='$cvs_repository' ";
     $rs = db_query($query);
     $repo_id = db_result($rs, 0, 0);
     $repo_id = $repo_id ? $repo_id : -1;
-    
+
     $select = 'SELECT distinct cvs_checkins.commitid as id, cvs_checkins.commitid as revision, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as date, cvs_commits.comm_when as f_when, user.user_name as who ';
     $from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
     $where = "WHERE cvs_checkins.descid=cvs_descs.id ".
@@ -763,11 +757,11 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     if (! $pv) {
         $limit = " LIMIT $offset,$chunksz";
     }
-    
+
     if (!$order_by) {
         $order_by = " ORDER BY id desc, f_when desc ";
     }
-    
+
     $sql=$select.
     $from.
     $where.
@@ -775,15 +769,15 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     $limit;
 
     $result=db_query($sql);
-    
+
     /* expensive way to have total rows number didn'get a cheaper one */
-    
+
     $sql1=$select.
     $from.
-    $where; 
+    $where;
     $result1=db_query($sql1);
     $totalrows = db_numrows($result1);
-    
+
     return array($result, $totalrows);
 }
 

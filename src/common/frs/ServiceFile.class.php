@@ -32,7 +32,7 @@ class ServiceFile extends Service
 
     /**
     * getPublicArea
-    * 
+    *
     * Return the link which will be displayed in public area in summary page
     */
     function getPublicArea() {
@@ -90,7 +90,7 @@ class ServiceFile extends Service
                 } else {
                     $monitor_img = '<i class="fa fa-bell"></i>';
                 }
-            
+
                 $ret['content'] .= '
                   <tr class="boxitem">
                   <td>
@@ -116,18 +116,18 @@ class ServiceFile extends Service
         ';
         return $ret;
     }
-    
+
     private function getFRSPackageFactory() {
         require_once('FRSPackageFactory.class.php');
         return new FRSPackageFactory();
     }
-    
+
     /**
     * _getPackagesForUser
-    * 
+    *
     * return the packages the user can see
     *
-    * @param  user_id  
+    * @param  user_id
     */
     function _getPackagesForUser($user_id) {
         $frspf = $this->getFRSPackageFactory();
@@ -153,7 +153,7 @@ class ServiceFile extends Service
                         // check access.
                         if (permission_exist('RELEASE_READ', $release_id)) {
                             $authorized=permission_is_authorized('RELEASE_READ',$release_id, $user_id ,$this->getGroupId());
-                        } else {  
+                        } else {
                             $authorized=permission_is_authorized('PACKAGE_READ',$package_id, $user_id ,$this->getGroupId());
                         }
                         if ($authorized) {

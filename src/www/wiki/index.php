@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright STMicroelectronics, 2005
  *
  * Originally written by Manuel Vacelet, STMicroelectronics, 2005.

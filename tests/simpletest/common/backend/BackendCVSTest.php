@@ -169,7 +169,6 @@ class BackendCVSTest extends TuleapTestCase {
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
         $backend->setReturnReference('_getServiceDao', $service_dao);
 
-
         $backend->setCVSRootListNeedUpdate();
         $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
 
@@ -191,7 +190,6 @@ class BackendCVSTest extends TuleapTestCase {
         $cvs_config_array2 = file($GLOBALS['cvs_root_allow_file'].".new");
         $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array2),"Project gpig should be listed in root.new file");
         $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array2),"Project TestProj should be listed in root.new file");
-
 
         // A project was added
         $service_dao2 = new MockServiceDao($this);
@@ -393,7 +391,6 @@ class BackendCVSTest extends TuleapTestCase {
         $projects =  array(102, 101);
         $user->setReturnValue('getProjects', $projects);
 
-
         $backend->setReturnValue('repositoryExists', true);
         $backend->setReturnValue('updateCVSwriters', true);
 
@@ -403,9 +400,7 @@ class BackendCVSTest extends TuleapTestCase {
         $pm->setReturnReference('getProject', $project1, array(102));
         $pm->setReturnReference('getProject', $project2, array(101));
 
-
         $this->assertEqual($backend->updateCVSWritersForGivenMember($user), true);
-
 
         $backend->expectCallCount('repositoryExists', 2);
         $backend->expectAt(0, 'repositoryExists', array($project1));
@@ -414,7 +409,6 @@ class BackendCVSTest extends TuleapTestCase {
         $backend->expectCallCount('updateCVSwriters', 2);
         $backend->expectAt(0, 'updateCVSwriters', array(102));
         $backend->expectAt(1, 'updateCVSwriters', array(101));
-
 
     }
 

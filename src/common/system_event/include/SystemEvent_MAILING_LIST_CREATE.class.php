@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
+ *
  */
 
 
@@ -26,12 +26,12 @@
 *
 */
 class SystemEvent_MAILING_LIST_CREATE extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -42,7 +42,7 @@ class SystemEvent_MAILING_LIST_CREATE extends SystemEvent {
         return $txt;
     }
 
-    /** 
+    /**
      * Process stored event
      */
     function process() {
@@ -57,10 +57,10 @@ class SystemEvent_MAILING_LIST_CREATE extends SystemEvent {
             $this->error("Could not create mailing list $group_list_id");
             return false;
         }
-            
+
         // Need to add list aliases
         Backend::instance('Aliases')->setNeedUpdateMailAliases();
-            
+
         $this->done();
         return true;
     }

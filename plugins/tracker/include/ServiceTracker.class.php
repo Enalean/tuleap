@@ -47,27 +47,27 @@ class ServiceTracker extends Service {
 
         parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
     }
-    
+
     /**
      * Duplicate this service from the current project to another
-     * 
+     *
      * @param int   $to_project_id  The target paroject Id
      * @param array $ugroup_mapping The ugroup mapping
-     * 
+     *
      * @return void
      */
     public function duplicate($to_project_id, $ugroup_mapping) {
         $tracker_manager = $this->getTrackerManager();
         $tracker_manager->duplicate($this->project->getId(), $to_project_id, $ugroup_mapping);
     }
-    
+
     /**
-     * @return TrackerManager 
+     * @return TrackerManager
      */
     protected function getTrackerManager() {
         return new TrackerManager();
     }
-    
+
     /**
      * Say if the service is allowed for the project
      *
@@ -83,7 +83,7 @@ class ServiceTracker extends Service {
         }
         return false;
     }
-    
+
     /**
      * Say if the service is restricted
      *
@@ -99,12 +99,12 @@ class ServiceTracker extends Service {
         }
         return false;
     }
-    
+
     /**
      * Trackers are cloned on project creation
-     * 
+     *
      * @see Service::isInheritedOnDuplicate()
-     * 
+     *
      * @return bool
      */
     public function isInheritedOnDuplicate() {

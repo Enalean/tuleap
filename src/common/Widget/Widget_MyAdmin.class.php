@@ -83,7 +83,6 @@ class Widget_MyAdmin extends Widget {
         $row = db_fetch_array();
         $validated_users = $row['count'];
 
-
         $sql="SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
         $result=db_query($sql);
         $pending_news = 0;

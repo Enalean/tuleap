@@ -199,7 +199,6 @@ class Widget_ProjectPublicAreas extends Widget {
             $html .= '</p>';
         }
 
-
         // ######################## AnonFTP (only for Active)
 
         if ($project->isActive()) {

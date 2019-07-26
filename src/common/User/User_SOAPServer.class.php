@@ -31,13 +31,13 @@ class User_SOAPServer {
     public function __construct(UserManager $userManager) {
         $this->userManager = $userManager;
     }
-    
+
    /**
     * loginAs allows the siteadmin to log as someone else
     *
     * @param string $admin_session_hash Session hash of an admin user
     * @param string $username
-    * 
+    *
     * @return string a session hash
     */
     public function loginAs($admin_session_hash, $username) {
@@ -54,13 +54,13 @@ class User_SOAPServer {
             return new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds');
         }
     }
-    
+
     /**
      *
      * @see session_continue
-     * 
+     *
      * @param String $sessionKey
-     * 
+     *
      * @return PFUser
      */
     private function continueSession($sessionKey) {
@@ -70,7 +70,7 @@ class User_SOAPServer {
         }
         throw new SoapFault('3001', 'Invalid session');
     }
-  
+
 }
 
 ?>

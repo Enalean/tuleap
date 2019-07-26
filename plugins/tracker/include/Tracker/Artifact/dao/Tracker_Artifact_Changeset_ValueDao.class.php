@@ -24,14 +24,14 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value';
     }
-     
+
     public function searchById($id) {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE changeset_id = $id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByFieldId($changeset_id, $field_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id = $this->da->escapeInt($field_id);
@@ -62,14 +62,14 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
         $sql = "INSERT INTO $this->table_name(changeset_id, field_id, has_changed) 
                 VALUES ($changeset_id, $field_id, $has_changed)";
         return $this->updateAndGetLastId($sql);
-    }    
+    }
 
     public function createFromLastChangesetByTrackerId($tracker_id, $field_id, $has_changed) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
         $has_changed = $has_changed ? 1 : 0;
-        $changesetValueDao = new Tracker_Artifact_ChangesetDao();        
-        
+        $changesetValueDao = new Tracker_Artifact_ChangesetDao();
+
         $sql = " INSERT INTO $this->table_name(changeset_id, field_id, has_changed)
                  SELECT C.id as changeset_id, $field_id, 1
                  FROM tracker_changeset AS C
@@ -77,8 +77,8 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
                    INNER JOIN ( SELECT artifact_id, MAX(id) as max_id
                                 FROM tracker_changeset 
                                 GROUP BY artifact_id ) AS C1 ON C.id = C1.max_id
-                 WHERE A.tracker_id = $tracker_id ";        
-        $this->update($sql);        
+                 WHERE A.tracker_id = $tracker_id ";
+        $this->update($sql);
         $sql = " SELECT GROUP_CONCAT(CV.id) as cv
                  FROM tracker_changeset AS C
                    INNER JOIN tracker_artifact AS A ON A.id = C.artifact_id
@@ -87,16 +87,16 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject {
                                 GROUP BY artifact_id ) AS C1 ON C.id = C1.max_id
                    INNER JOIN tracker_changeset_value AS CV ON C.id = CV.changeset_id
                  WHERE A.tracker_id = $tracker_id AND CV.field_id = $field_id AND has_changed = 1";
-        
-        $rs   = $this->retrieve($sql);        
-        $data = $rs->getRow();   
+
+        $rs   = $this->retrieve($sql);
+        $data = $rs->getRow();
         $changesetValueIds = false;
         if ( ! empty($data['cv']) ) {
             $changesetValueIds = explode(',', $data['cv']);
         }
         return $changesetValueIds;
     }
-    
+
     public function delete($changeset_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE

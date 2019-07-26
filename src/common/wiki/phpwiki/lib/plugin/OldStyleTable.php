@@ -85,8 +85,8 @@ extends WikiPlugin
         $lines = preg_split('/\s*?\n\s*/', $argstr);
         $table_args = array();
         $default_args = array_keys($default);
-        foreach ($default_args as $arg) { 
-            if ($args[$arg] == '' and $default[$arg] == '')  
+        foreach ($default_args as $arg) {
+            if ($args[$arg] == '' and $default[$arg] == '')
                 continue;            // ignore '' arguments
             if ($arg == 'caption')
                 $caption = $args[$arg];
@@ -96,7 +96,7 @@ extends WikiPlugin
         $table = HTML::table($table_args);
         if (!empty($caption))
             $table->pushContent(HTML::caption(array('valign'=>'top'),$caption));
-        if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) 
+        if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0]))
             $lines[0] = '';
         foreach ($lines as $line) {
             if (!$line)
@@ -120,7 +120,7 @@ extends WikiPlugin
     function _parse_row ($line, $basepage) {
         $brkt_link = "\\[ .*? [^]\s] .*? \\]";
         $cell_content  = "(?: [^[] | ".ESCAPE_CHAR."\\[ | $brkt_link )*?";
-        
+
         preg_match_all("/(\\|+) (v*) ([<>^]?) \s* ($cell_content) \s* (?=\\||\$)/x",
                        $line, $matches, PREG_SET_ORDER);
 

@@ -60,7 +60,7 @@ class Controler {
 
         if($this->action)
         $this->actionsManagement();
-    
+
         return $this->viewsManagement();
     }
 }

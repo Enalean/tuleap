@@ -467,7 +467,6 @@ class DocmanLinksResource extends AuthenticatedResource
             );
         }
 
-
         (new DocmanLinksValidityChecker())->checkLinkValidity($representation->link_properties->link_url);
 
         $docman_item_version_creator = $this->getLinkVersionCreator();

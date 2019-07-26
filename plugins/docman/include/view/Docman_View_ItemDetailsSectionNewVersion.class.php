@@ -26,7 +26,7 @@ use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
-    
+
     var $force;
     var $token;
     function __construct($item, $url, $controller, $force, $token) {
@@ -91,7 +91,6 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         if (isset($this->_controller->_viewParams['changelog'])) {
             $changelog = $this->_controller->_viewParams['changelog'];
         }
-
 
         $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
 

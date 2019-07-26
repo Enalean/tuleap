@@ -105,7 +105,6 @@ class LabeledItemCollectorTest extends TuleapTestCase
 
         $this->html_url_builder = mock('Tuleap\PullRequest\Reference\HTMLURLBuilder');
 
-
         $this->repository_factory = mock('GitRepositoryFactory');
         $repository = mock('GitRepository');
         stub($repository)->getName()->returns('repo001');

@@ -42,7 +42,7 @@ class ImgData_Diamonds extends ImgData {
         '+MC2D6unF+Cu0VJULQBAlsOQuueN3Hrp2nGUvqppemBZ0aU7Se'.
         'SXvYZFMKaLJn7MH3btJmZEMEmGSOreqy0SI/4ffo3uiUOYEACy'.
         'OFopmNWlP5uZd9uPWmUoxvK9ilO9NtBo6mS7KkZD0fOJYqgGBU'.
-        'S/T7OKCAA9tfsFOicXcbxt29cAAAAASUVORK5CYII=' ; 
+        'S/T7OKCAA9tfsFOicXcbxt29cAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: diam_pink.png
@@ -56,7 +56,7 @@ class ImgData_Diamonds extends ImgData {
         'kKojuCswABf2X6UEEiC+WF+PyDfoGEuvwXogq3Rk1Y6W0tBSG8'.
         '6Uwpla6CmJnpoYKRsjjb/Y63vo9kIkLcZCCsbGYGwMRqIzEp1R'.
         'OBmFk9HQGA2N0ZEIz5HX+h/jailYpfz4dAAAAABJRU5ErkJggg'.
-        '==' ; 
+        '==' ;
 
         //==========================================================
         // File: diam_blue.png
@@ -80,7 +80,7 @@ class ImgData_Diamonds extends ImgData {
         '6ufXjfXLm6pxPACSJIpRFAa+/26DhuK6qjbiON40k0N3skjOvm'.
         'NijBmchF5mi+1jhQqDmWyIzPp1hUlrv8On5l+6mMm1tigFNyrt'.
         '5R97g+FKKyGKkTNKesXPJTZXOFIrUoKiypcTQVHjK4g8H2dWEQ'.
-        'B8bvUDLSQXSr41rmEAAAAASUVORK5CYII=' ; 
+        'B8bvUDLSQXSr41rmEAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: diam_yellow.png
@@ -94,7 +94,7 @@ class ImgData_Diamonds extends ImgData {
         'kKojuCswABf2X6UEEiC+WF+PyDfoGEuvwXogq3Rk1Y6W0tBSG8'.
         '6Uwpla6CmJnpoYKRsjjb/Y63vo9kIkLcZCCsbGYGwMRqIzEp1R'.
         'OBmFk9HQGA2N0ZEIz5HX+h/jailYpfz4dAAAAABJRU5ErkJggg'.
-        '==' ; 
+        '==' ;
 
         //==========================================================
         // File: diam_lightblue.png
@@ -118,7 +118,7 @@ class ImgData_Diamonds extends ImgData {
         'N9eXVzuL7/Hn29frdKaamgcgy67L3HFG9gDefV+dm5qme4YRXL'.
         'oVR374mRqUELZYosf84XAxISFRQuMh4rrH8YxGSP6HX6H97NNQ'.
         'KEAaR08qCeuSnx2a8zIPWqUowtKHSRK91rAw0elmVYQFVc8mhq'.
-        '7p5RD7Ps3IIwA9sfsFxFUX6eZ4Zh4AAAAASUVORK5CYII=' ; 
+        '7p5RD7Ps3IIwA9sfsFxFUX6eZ4Zh4AAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: diam_purple.png
@@ -142,7 +142,7 @@ class ImgData_Diamonds extends ImgData {
         'n3b3+rimAWAYhP3xnXd7P6oc9vadPsa1wYEs00dFQRAFehlX21'.
         '25Sg9NOgwF5jeNTjVL9om0TjDc1lmeCKZ17nFPzhPtSRt6J06R'.
         'WKUoeG3MoXRa/wjLHGLodwZcotPqjsYngnWslRBZH91hWTbpD2'.
-        'EdF1ECWW1SAAAAAElFTkSuQmCC' ; 
+        'EdF1ECWW1SAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: diam_gray.png
@@ -156,7 +156,7 @@ class ImgData_Diamonds extends ImgData {
         'kKojuCswABf2X6UEEiC+WF+PyDfoGEuvwXogq3Rk1Y6W0tBSG8'.
         '6Uwpla6CmJnpoYKRsjjb/Y63vo9kIkLcZCCsbGYGwMRqIzEp1R'.
         'OBmFk9HQGA2N0ZEIz5HX+h/jailYpfz4dAAAAABJRU5ErkJggg'.
-        '==' ; 
+        '==' ;
 
         //==========================================================
         // File: diam_blgr.png
@@ -170,7 +170,7 @@ class ImgData_Diamonds extends ImgData {
         'kKojuCswABf2X6UEEiC+WF+PyDfoGEuvwXogq3Rk1Y6W0tBSG8'.
         '6Uwpla6CmJnpoYKRsjjb/Y63vo9kIkLcZCCsbGYGwMRqIzEp1R'.
         'OBmFk9HQGA2N0ZEIz5HX+h/jailYpfz4dAAAAABJRU5ErkJggg'.
-        '==' ; 
+        '==' ;
     }
 }
 

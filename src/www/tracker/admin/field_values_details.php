@@ -1,7 +1,7 @@
 <?php
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// 
+//
 //
 //
 //  Written for Codendi by Stephane Bouhet
@@ -31,8 +31,8 @@ $Language->getText('tracker_admin_field_values_details','manage_for', $hp->purif
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
     $ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
-        $val_func = $field->getValueFunction();    
-    if ( isset($val_func[0]) && $val_func[0] ) {      
+        $val_func = $field->getValueFunction();
+    if ( isset($val_func[0]) && $val_func[0] ) {
         $ath->displayValueFunctionForm($field_id,$val_func);
         $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$val_func);
     } else {

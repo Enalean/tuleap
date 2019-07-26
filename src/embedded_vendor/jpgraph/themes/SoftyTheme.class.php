@@ -2,7 +2,7 @@
 /**
 * Softy Theme class
 */
-class SoftyTheme extends Theme 
+class SoftyTheme extends Theme
 {
     protected $font_color       = '#000000';
     protected $background_color = '#F7F8F4';
@@ -57,14 +57,14 @@ class SoftyTheme extends Theme
         $graph->legend->SetMarkAbsSize(5);
 
         // xaxis
-        $graph->xaxis->title->SetColor($this->font_color);  
-        $graph->xaxis->SetColor($this->axis_color, $this->font_color);    
+        $graph->xaxis->title->SetColor($this->font_color);
+        $graph->xaxis->SetColor($this->axis_color, $this->font_color);
         $graph->xaxis->SetTickSide(SIDE_BOTTOM);
         $graph->xaxis->SetLabelMargin(10);
-                
+
         // yaxis
-        $graph->yaxis->title->SetColor($this->font_color);  
-        $graph->yaxis->SetColor($this->axis_color, $this->font_color);    
+        $graph->yaxis->title->SetColor($this->font_color);
+        $graph->yaxis->SetColor($this->axis_color, $this->font_color);
         $graph->yaxis->SetTickSide(SIDE_LEFT);
         $graph->yaxis->SetLabelMargin(8);
         $graph->yaxis->HideLine();
@@ -73,8 +73,8 @@ class SoftyTheme extends Theme
 
         // y2~
         if (isset($graph->y2axis)) {
-            $graph->y2axis->title->SetColor($this->font_color);  
-            $graph->y2axis->SetColor($this->axis_color, $this->font_color);    
+            $graph->y2axis->title->SetColor($this->font_color);
+            $graph->y2axis->SetColor($this->axis_color, $this->font_color);
             $graph->y2axis->SetTickSide(SIDE_LEFT);
             $graph->y2axis->SetLabelMargin(8);
             $graph->y2axis->HideLine();
@@ -84,8 +84,8 @@ class SoftyTheme extends Theme
         // yn
         if (isset($graph->y2axis)) {
             foreach ($graph->ynaxis as $axis) {
-                $axis->title->SetColor($this->font_color);  
-                $axis->SetColor($this->axis_color, $this->font_color);    
+                $axis->title->SetColor($this->font_color);
+                $axis->SetColor($this->axis_color, $this->font_color);
                 $axis->SetTickSide(SIDE_LEFT);
                 $axis->SetLabelMargin(8);
                 $axis->HideLine();
@@ -100,7 +100,6 @@ class SoftyTheme extends Theme
         $graph->xgrid->Show();
         $graph->xgrid->SetColor($this->grid_color);
         $graph->xgrid->SetLineStyle('dotted');
-
 
         // font
         $graph->title->SetColor($this->font_color);
@@ -129,9 +128,9 @@ class SoftyTheme extends Theme
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
             $graph->SetMargin(
-                $img->raw_left_margin, 
-                $img->raw_right_margin, 
-                $img->raw_top_margin, 
+                $img->raw_left_margin,
+                $img->raw_right_margin,
+                $img->raw_top_margin,
                 is_numeric($img->raw_bottom_margin) ? $img->raw_bottom_margin : $img->height * 0.25
             );
         }
@@ -140,7 +139,7 @@ class SoftyTheme extends Theme
     function ApplyPlot($plot) {
 
         switch (get_class($plot))
-        { 
+        {
             case 'BarPlot':
             {
                 $plot->Clear();
@@ -170,7 +169,6 @@ class SoftyTheme extends Theme
                 break;
             }
 
-
             case 'GroupBarPlot':
             {
                 foreach ($plot->plots as $_plot) {
@@ -194,13 +192,12 @@ class SoftyTheme extends Theme
                 break;
             }
 
-
             case 'PiePlot3D':
             {
                 $plot->SetSliceColors($this->GetThemeColors());
                 break;
             }
-    
+
             default:
             {
             }

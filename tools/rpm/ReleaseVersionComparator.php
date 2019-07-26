@@ -41,7 +41,7 @@ class ReleaseVersionComparator {
     public function iterateOverPaths($paths, $rpms, $verbose=false) {
         $iRpms = array_flip(array_map('strtolower', $rpms));
         foreach ($paths as $path) {
-            $versionPath = $path.'/VERSION';            
+            $versionPath = $path.'/VERSION';
             $curVersion  = $this->getCurrentVersion($versionPath);
             try {
                 $prevVersion = $this->getPreviousVersion($versionPath);
@@ -65,7 +65,7 @@ class ReleaseVersionComparator {
                 }
                 $flag .= '[RPM] ';
             }
-            echo "\t$flag".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.self::COLOR_NOCOLOR.PHP_EOL;        
+            echo "\t$flag".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.self::COLOR_NOCOLOR.PHP_EOL;
         }
     }
 
@@ -97,7 +97,7 @@ class ReleaseVersionComparator {
         }
         throw new Exception('Impossible to get remote file: '.$url);
     }
-    
+
     protected function getVersionContent($filePath) {
         return trim(file_get_contents($filePath));
     }

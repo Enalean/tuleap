@@ -88,7 +88,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
         }
         return 0;
     }
-    
+
     // if we got this far, it must be good
     $password_changer = new PasswordChanger(
             $user_manager,

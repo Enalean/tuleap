@@ -25,11 +25,11 @@ require_once('Docman_Document.class.php');
  * Model/Controler and View layer of the application
  */
 class Docman_File extends Docman_Document {
-    
+
     function __construct($data = null) {
         parent::__construct($data);
     }
-    
+
     var $currentVersion;
     public function setCurrentVersion($currentVersion)
     {

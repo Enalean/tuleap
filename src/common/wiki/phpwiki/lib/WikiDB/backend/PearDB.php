@@ -18,7 +18,7 @@ extends WikiDB_backend
         // if DB would have exported its version number, it would be easier.
         @require_once('DB/common.php'); // Either our local pear copy or the system one
         $name = 'escapeSimple';
-        // TODO: apparently some Pear::Db version adds LIMIT 1,0 to getOne(), 
+        // TODO: apparently some Pear::Db version adds LIMIT 1,0 to getOne(),
         // which is invalid for "select version()"
         if (!in_array($name, get_class_methods("DB_common"))) {
             $finder = new FileFinder;
@@ -73,9 +73,9 @@ extends WikiDB_backend
                     'maxversion'   => "MAX(version)",
                     'notempty'     => "<>''",
                     'iscontent'    => "content<>''");
-        
+
     }
-    
+
     /**
      * Close database connection.
      */
@@ -111,7 +111,7 @@ extends WikiDB_backend
                                     $dbh->escapeSimple($pagename),
                                     GROUP_ID));
     }
-        
+
     function get_all_pagenames() {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
@@ -129,7 +129,7 @@ extends WikiDB_backend
                             . " WHERE $nonempty_tbl.id=$page_tbl.id"
                             . "   AND $page_tbl.group_id=".GROUP_ID);
     }
-    
+
     function increaseHitCount($pagename) {
         $dbh = &$this->_dbh;
         // Hits is the only thing we can update in a fast manner.
@@ -187,7 +187,7 @@ extends WikiDB_backend
             $data = array();
             $this->_get_pageid($pagename, true); // Creates page record
         }
-        
+
         @$hits = (int)$data['hits'];
         unset($data['hits']);
 
@@ -200,7 +200,7 @@ extends WikiDB_backend
                 $data[$key] = $val;
         }
 
-        /* Portability issue -- not all DBMS supports huge strings 
+        /* Portability issue -- not all DBMS supports huge strings
          * so we need to 'bind' instead of building a simple SQL statment.
          * Note that we do not need to escapeSimple when we bind
         $dbh->query(sprintf("UPDATE $page_tbl"
@@ -236,7 +236,7 @@ extends WikiDB_backend
     }
 
     function _get_pageid($pagename, $create_if_missing = false) {
-        
+
         // check id_cache
         global $request;
         $cache = $request->_dbi->_cache->_id_cache;
@@ -248,7 +248,7 @@ extends WikiDB_backend
 
         $dbh = &$this->_dbh;
         $page_tbl = $this->_table_names['page_tbl'];
-        
+
         $query = sprintf("SELECT id FROM $page_tbl WHERE pagename='%s' AND group_id=%d",
                          $dbh->escapeSimple($pagename), GROUP_ID);
 
@@ -285,7 +285,7 @@ extends WikiDB_backend
     function get_previous_version($pagename, $version) {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        
+
         return
             (int)$dbh->getOne(sprintf("SELECT version"
                                       . " FROM $version_tbl, $page_tbl"
@@ -301,7 +301,7 @@ extends WikiDB_backend
                                       $version,
                                       GROUP_ID));
     }
-    
+
     /**
      * Get version data.
      *
@@ -317,12 +317,12 @@ extends WikiDB_backend
 
         assert(is_string($pagename) and $pagename != "");
         assert($version > 0);
-        
+
         //trigger_error("GET_REVISION $pagename $version $want_content", E_USER_NOTICE);
         // FIXME: optimization: sometimes don't get page data?
         if ($want_content) {
-            $fields = $this->page_tbl_fields 
-                . ",$page_tbl.pagedata as pagedata," 
+            $fields = $this->page_tbl_fields
+                . ",$page_tbl.pagedata as pagedata,"
                 . $this->version_tbl_fields;
         }
         else {
@@ -348,10 +348,10 @@ extends WikiDB_backend
             return false;
 
         $data = $this->_unserialize($query_result['versiondata']);
-        
+
         $data['mtime'] = $query_result['mtime'];
         $data['is_minor_edit'] = !empty($query_result['minor_edit']);
-        
+
         if (isset($query_result['content']))
             $data['%content'] = $query_result['content'];
         elseif ($query_result['have_content'])
@@ -377,10 +377,10 @@ extends WikiDB_backend
     function set_versiondata($pagename, $version, $data) {
         $dbh = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
-        
+
         $minor_edit = (int) !empty($data['is_minor_edit']);
         unset($data['is_minor_edit']);
-        
+
         $mtime = (int)$data['mtime'];
         unset($data['mtime']);
         assert(!empty($mtime));
@@ -389,7 +389,7 @@ extends WikiDB_backend
         unset($data['%content']);
 
         unset($data['%pagedata']);
-        
+
         $this->lock();
         $id = $this->_get_pageid($pagename, true);
 
@@ -398,7 +398,7 @@ extends WikiDB_backend
                             . " WHERE id=%d AND version=%d",
                             $id, $version));
 
-        /* mysql optimized version. 
+        /* mysql optimized version.
         $dbh->query(sprintf("INSERT INTO $version_tbl"
                             . " (id,version,mtime,minor_edit,content,versiondata)"
                             . " VALUES(%d,%d,%d,%d,'%s','%s')",
@@ -415,10 +415,10 @@ extends WikiDB_backend
 
         $this->_update_recent_table($id);
         $this->_update_nonempty_table($id);
-        
+
         $this->unlock();
     }
-    
+
     /**
      * Delete an old revision of a page.
      */
@@ -445,7 +445,7 @@ extends WikiDB_backend
     function purge_page($pagename) {
         $dbh = $this->_dbh;
         extract($this->_table_names);
-        
+
         $this->lock();
         if ( ($id = $this->_get_pageid($pagename, false)) ) {
             $dbh->query("DELETE FROM $version_tbl  WHERE id=$id");
@@ -504,7 +504,7 @@ extends WikiDB_backend
         }
         $this->unlock();
     }
-    
+
     /**
      * Find pages which link to or are linked from a page.
      */
@@ -521,7 +521,7 @@ extends WikiDB_backend
         if ($orderby) $orderby = ' ORDER BY $want.' . $orderby;
         if ($exclude) // array of pagenames
             $exclude = " AND $want.pagename NOT IN ".$this->_sql_set($exclude);
-        else 
+        else
             $exclude='';
 
         $qpagename = $dbh->escapeSimple($pagename);
@@ -543,7 +543,7 @@ extends WikiDB_backend
         } else {
             $result = $dbh->query($sql);
         }
-        
+
         return new WikiDB_backend_PearDB_iter($this, $result);
     }
 
@@ -579,7 +579,7 @@ extends WikiDB_backend
         if ($orderby) $orderby = ' ORDER BY ' . $orderby;
         if ($exclude) // array of pagenames
             $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
-        else 
+        else
             $exclude='';
 
         if (strstr($orderby, 'mtime ')) { // multiple columns possible
@@ -605,7 +605,7 @@ extends WikiDB_backend
         } else {
             if ($include_empty) {
                 $sql = "SELECT "
-                    . $this->page_tbl_fields 
+                    . $this->page_tbl_fields
                     ." FROM $page_tbl"
                     . ($exclude ? " WHERE $exclude AND $page_tbl.group_id=".GROUP_ID : " WHERE $page_tbl.group_id=".GROUP_ID)
                     . $orderby;
@@ -629,7 +629,7 @@ extends WikiDB_backend
         }
         return new WikiDB_backend_PearDB_iter($this, $result);
     }
-        
+
     /**
      * Title search.
      */
@@ -645,7 +645,7 @@ extends WikiDB_backend
         if (!class_exists($searchclass))
             $searchclass = "WikiDB_backend_PearDB_search";
         $searchobj = new $searchclass($search, $dbh);
-        
+
         $table = "$nonempty_tbl, $page_tbl";
         $join_clause = "$nonempty_tbl.id=$page_tbl.id";
         $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
@@ -664,7 +664,7 @@ extends WikiDB_backend
             $callback = new WikiMethodCb($searchobj, "_pagename_match_clause");
         }
         $search_clause = $search->makeSqlClauseObj($callback);
-        
+
         $sql = "SELECT $fields FROM $table"
             . " WHERE $join_clause"
             . "  AND ($search_clause)"
@@ -675,7 +675,7 @@ extends WikiDB_backend
         } else {
             $result = $dbh->query($sql);
         }
-        
+
         $iter = new WikiDB_backend_PearDB_iter($this, $result);
         $iter->stoplisted = @$searchobj->stoplisted;
         return $iter;
@@ -716,10 +716,10 @@ extends WikiDB_backend
     function most_popular($limit=20, $sortby='-hits') {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($limit < 0){ 
+        if ($limit < 0){
             $order = "hits ASC";
             $limit = -$limit;
-            $where = ""; 
+            $where = "";
         } else {
             $order = "hits DESC";
             $where = " AND hits > 0";
@@ -735,7 +735,7 @@ extends WikiDB_backend
         $sql = "SELECT "
             . $this->page_tbl_fields
             . " FROM $nonempty_tbl, $page_tbl"
-            . " WHERE $nonempty_tbl.id=$page_tbl.id" 
+            . " WHERE $nonempty_tbl.id=$page_tbl.id"
             . "  AND $page_tbl.group_id=".GROUP_ID
             . $where
             . $orderby;
@@ -766,8 +766,7 @@ extends WikiDB_backend
         $pick = array();
         if ($since)
             $pick[] = "mtime >= $since";
-            
-        
+
         if ($include_all_revisions) {
             // Include all revisions of each page.
             $table = "$page_tbl, $version_tbl";
@@ -788,7 +787,7 @@ extends WikiDB_backend
             $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
             $table .= ", $version_tbl";
             $join_clause .= " AND $version_tbl.id=$page_tbl.id";
-            
+
             if ($exclude_major_revisions) {
                 // Include only most recent minor revision
                 $pick[] = 'version=latestminor';
@@ -813,7 +812,7 @@ extends WikiDB_backend
             $where_clause .= " AND " . join(" AND ", $pick);
 
         // FIXME: use SQL_BUFFER_RESULT for mysql?
-        $sql = "SELECT " 
+        $sql = "SELECT "
                . $this->page_tbl_fields . ", " . $this->version_tbl_fields
                . " FROM $table"
                . " WHERE $where_clause"
@@ -843,7 +842,7 @@ extends WikiDB_backend
         $sql = "SELECT p.pagename, pp.pagename as wantedfrom"
             . " FROM $page_tbl p, $link_tbl linked "
             . " LEFT JOIN $page_tbl pp ON linked.linkto = pp.id"
-            . " LEFT JOIN $nonempty_tbl ne ON linked.linkto = ne.id" 
+            . " LEFT JOIN $nonempty_tbl ne ON linked.linkto = ne.id"
             . " WHERE ne.id is NULL"
         .       " AND p.id = linked.linkfrom"
             .       " AND p.group_id = ".GROUP_ID
@@ -873,7 +872,7 @@ extends WikiDB_backend
     function rename_page ($pagename, $to) {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        
+
         $this->lock();
         if (($id = $this->_get_pageid($pagename, false)) ) {
             if ($new = $this->_get_pageid($to, false)) {
@@ -934,7 +933,7 @@ extends WikiDB_backend
                     //. "  AND content<>''"
                     . "  AND content $notempty"
                     . ( $pageid ? " AND $recent_tbl.id=$pageid" : " AND $page_tbl.group_id=".GROUP_ID ));
-        
+
         $this->unlock();
     }
 
@@ -958,7 +957,7 @@ extends WikiDB_backend
     function _lock_tables($write_lock) {
         trigger_error("virtual", E_USER_ERROR);
     }
-    
+
     /**
      * Release a write lock on the tables in the SQL database.
      *
@@ -1016,7 +1015,7 @@ extends WikiDB_backend
         }
         return $s;
     }
-    
+
     /**
      * Callback for PEAR (DB) errors.
      *
@@ -1027,7 +1026,7 @@ extends WikiDB_backend
     function _pear_error_callback($error) {
         if ($this->_is_false_error($error))
             return;
-        
+
         $this->_dbh->setErrorHandling(PEAR_ERROR_PRINT);    // prevent recursive loops.
         $this->close();
         trigger_error($this->_pear_error_message($error), E_USER_ERROR);
@@ -1056,13 +1055,13 @@ extends WikiDB_backend
             //" <--kludge for brain-dead syntax coloring
             return false;
         }
-        
+
         if (! in_array('ismanip', get_class_methods('DB'))) {
             // Pear shipped with PHP 4.0.4pl1 (and before, presumably)
             // does not have the DB::isManip method.
             return true;
         }
-        
+
         if (DB::isManip($query)) {
             // If Pear thinks it's an isManip then it wouldn't have thrown
             // the error we're testing for....
@@ -1134,14 +1133,14 @@ extends WikiDB_backend
 class WikiDB_backend_PearDB_generic_iter
 extends WikiDB_backend_iterator
 {
-    function __construct($backend, $query_result, 
-                                                $field_list = NULL) 
+    function __construct($backend, $query_result,
+                                                $field_list = NULL)
     {
         if (DB::isError($query_result)) {
             // This shouldn't happen, I thought.
             $backend->_pear_error_callback($query_result);
         }
-        
+
         $this->_backend = &$backend;
         $this->_result = $query_result;
     }
@@ -1151,7 +1150,7 @@ extends WikiDB_backend_iterator
             return false;
         return $this->_result->numRows();
     }
-    
+
     function next() {
         $backend = &$this->_backend;
         if (!$this->_result)
@@ -1162,7 +1161,7 @@ extends WikiDB_backend_iterator
             $this->free();
             return false;
         }
-        
+
         return $record;
     }
 
@@ -1188,7 +1187,7 @@ extends WikiDB_backend_PearDB_generic_iter
             $this->free();
             return false;
         }
-        
+
         $pagedata = $backend->_extract_page_data($record);
         $rec = array('pagename' => $record['pagename'],
                      'pagedata' => $pagedata);
@@ -1197,12 +1196,12 @@ extends WikiDB_backend_PearDB_generic_iter
             $rec['versiondata'] = $backend->_extract_version_data($record);
             $rec['version'] = $record['version'];
         }
-        
+
         return $rec;
     }
 }
 
-class WikiDB_backend_PearDB_search extends WikiDB_backend_search_sql 
+class WikiDB_backend_PearDB_search extends WikiDB_backend_search_sql
 {
     // no surrounding quotes because we know it's a string
     // function _quote($word) { return $this->_dbh->addq($word); }
@@ -1438,5 +1437,5 @@ class WikiDB_backend_PearDB_search extends WikiDB_backend_search_sql
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

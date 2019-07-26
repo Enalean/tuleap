@@ -23,14 +23,14 @@
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
 interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable{
-    
+
     /**
      * get the permissions for thios tracker
      *
      * @return array
      */
     public function getPermissionsByUgroupId();
-    
+
 
     /**
      * Transforms FormElement into a SimpleXMLElement

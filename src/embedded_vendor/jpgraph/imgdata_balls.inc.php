@@ -25,13 +25,13 @@ class ImgData_Balls extends ImgData {
      'darkgray','greengray','gray','green',
      'greenblue','lightblue','lightred',
      'purple','red','white','yellow');
-     
+
 
     private $index_2 =  array('blue'=>9,'bluegreen'=>13,'brown'=>8,'cyan'=>12,
      'darkgray'=>5,'greengray'=>6,'gray'=>2,'green'=>10,
      'greenblue'=>3,'lightblue'=>1,'lightred'=>14,
      'purple'=>7,'red'=>0,'white'=>11,'yellow'=>4);
-     
+
     private $maxidx_2 = 14 ;
 
 
@@ -105,7 +105,7 @@ class ImgData_Balls extends ImgData {
         'k6vR0sldJUAwQNTU2dnX0TgOJTQLrSIYFY2dPW1NbW2TNxwtQp'.
         'U6ZMmjJt2rRGWNB3TO7vnzh5MsgSoB6gy7sREdY7bRrQEDAGOb'.
         'wXOQW0TJsOEpwClmxBTTbZ7UDVIPkp7dkYaYqhuLa5trYYUxwL'.
-        'AADzm6uekAAcXAAAAABJRU5ErkJggg==' ; 
+        'AADzm6uekAAcXAAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bl_bluegreen.png
@@ -148,7 +148,7 @@ class ImgData_Balls extends ImgData {
         'lP5tS65FN+6okn9U+n/sqb596dTvhOF+02myXTmkQNrOw7yD3H'.
         'j14E+UDQjp24/0E9/eKrbA4HH3aMK1b2ccvXvswjv//1J/s5ud'.
         'Due/hRPfP+OmfOrk7vrn7a48ihA3zh8CH+8Iuffiw/n4r9H1ZZ'.
-        '0zz7G56hAAAAAElFTkSuQmCC' ; 
+        '0zz7G56hAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bl_yellow.png
@@ -184,7 +184,7 @@ class ImgData_Balls extends ImgData {
         'K20VAeH2M0JvVgrZfL5Qqkiy0lRVaMBd7H7EZUmsiJJcrTdVja'.
         'wGpdbTLj3/3qwrUOjAfGgg4LnNA5tdQx14Hm00QFBm65hfNzAm'.
         '+yIFhFtzuj+z2MI/MQn6Uez5pz4Ua41G7VumB/6RX4zMr1TKBr'.
-        'SXAAAAAElFTkSuQmCC' ; 
+        'SXAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bl_silver.png
@@ -230,7 +230,7 @@ class ImgData_Balls extends ImgData {
         'MvPnSwPh3HasCbm3XUpv+nS5VtrkEkwAANSTpGHdye9PAAAASn'.
         'RFWHRzaWduYXR1cmUANGJkODkyYmE4MWZhNTk4MTIyNDJjNjUx'.
         'NzZhY2UxMDAzOGFhZjdhZWIyNzliNTM2ZGFmZDlkM2RiNDU3Zm'.
-        'NlNT9CliMAAAAASUVORK5CYII=' ; 
+        'NlNT9CliMAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bl_purple.png
@@ -267,7 +267,7 @@ class ImgData_Balls extends ImgData {
         'vaWlsb2tq6J0+bM2/RohVA81asbIcEYueU3t7JU6ZNnwNyGkhm'.
         '+cp5CRCppJnzZ8+ZM3/JUogECBbBIixr8Yqly8FCy8F6ltUgoj'.
         'lz7sqVK2ByK+cVMSCDxoUrwWDVysXt8WhJKqG4Y8bcuTP6qrGk'.
-        'QwwAABiMu7T4HMi4AAAAAElFTkSuQmCC' ; 
+        'QwwAABiMu7T4HMi4AAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bl_gray.png
@@ -298,7 +298,7 @@ class ImgData_Balls extends ImgData {
         'uWc3yic/oBo4yF374LGQs5Xw0GyQljI8bYmEsxVUoKxa6HMpAT'.
         'vgyhU2mR8uU1pXmsa8ezqb6U4mwWF/5MeY8uLtQ0nmmQ8UWYvb'.
         'EcJaYWar7QhztrO5Wr4Q4hDbAG/4hfTAF2iCiWrCEAAAAASUVO'.
-        'RK5CYII=' ; 
+        'RK5CYII=' ;
 
         //==========================================================
         // File: bl_brown.png
@@ -333,7 +333,7 @@ class ImgData_Balls extends ImgData {
         'U1SvWKZWom9nK/HfQ3+v2HYZSMStayTNN0PYKqg11P1nWsWq7u'.
         '4gJeY8g9PLrddNXRdW8Iryv86I3ja/9s26gvukhDdvUQnIjlKr'.
         'IdZCNH+3Xw779qbG63f//ZOzb6C4+ofdbzERrSAAAAAElFTkSu'.
-        'QmCC' ; 
+        'QmCC' ;
 
         //==========================================================
         // File: bl_darkgreen.png
@@ -369,7 +369,7 @@ class ImgData_Balls extends ImgData {
         'EdbqchPhjhVzGpeqhUKhWBQhLElr9fo3pDaQPrw5xOl1CGG1JE'.
         'k1uYEBIVkrb02+o6RItfq6rBhbw/tuINT96766KhuqYpY3UFPF'.
         'BbY/19yZ1XF1U0UNBa9T7rZsz80K0jWk6bpWGW55UzbvTHZ+3t'.
-        'vbAv/IT+K1uCmhIrKJAAAAAElFTkSuQmCC' ; 
+        'vbAv/IT+K1uCmhIrKJAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bl_green.png
@@ -415,7 +415,7 @@ class ImgData_Balls extends ImgData {
         '9/ySnnIXnUzOxXe1038mW3ZynNmam4yYWkO+f9cv+Oljz16/lV'.
         '9tDz/9nerc1hm8ZEScSRK7VvtYl1i1dklsOKyvc+zg/bzw1O8+'.
         '/efkajt56kR1ydlEJBc5H46xzbrJ3dY9wrB7hGcff+6/+279L+'.
-        '0fHxyiE8XMLl4AAAAASUVORK5CYII=' ; 
+        '0fHxyiE8XMLl4AAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bl_blue.png
@@ -453,7 +453,7 @@ class ImgData_Balls extends ImgData {
         '+vrp60GaDCGB6Ld6wfwFCxYCJZYsXQ+SmL6+FBryInVrFi1atH'.
         'jJkqVQsH6pNCzCJNvXrQW6CmQJREYFEc2CYevXrwMLAyXXl0oz'.
         'IAOt0vVQUGSIkabkDV3DwlzNVDAksAAAfUbNQRCwr88AAAAASU'.
-        'VORK5CYII=' ; 
+        'VORK5CYII=' ;
 
         //==========================================================
         // File: bs_red.png
@@ -471,8 +471,7 @@ class ImgData_Balls extends ImgData {
         '7JlFaG+CvIR3FvzPXgpLatxevVVS+Jzv0BDGk/UJwOkQ1ph2g/'.
         'Ct5ACX4wNT1o/zzUoJUFUGBiGfVnDTYGJgmrWy8iKEtp0Bpd2d'.
         'jLGu56MB7f4JOOfDJAwoNwslk/jOUi+Jts6RVNrC1hkhPy50Ef'.
-        'u79/ADQMQSGQ8bBywAAAAASUVORK5CYII=' ; 
-
+        'u79/ADQMQSGQ8bBywAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bs_lightblue.png
@@ -496,7 +495,7 @@ class ImgData_Balls extends ImgData {
         'E56kAhaRV9NQUjW2tPcMjs9wBYsY6Oobmlk7egRGpxZmgkW0zC'.
         '2s7Jy9giKT8gohaiQcnVzc/UNjkrMLCyHmcHr7BYREJKTlFxbm'.
         'QOxiEIuKTUzJKgQCaZibpdOzQfwCOZibGRi4dcJyw3S4iQ4HAL'.
-        'qvIlIAMH7YAAAAAElFTkSuQmCC' ; 
+        'qvIlIAMH7YAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_gray.png
@@ -517,7 +516,7 @@ class ImgData_Balls extends ImgData {
         '2N2xKDIAwF+bZ2kAa8cNFosBD//yvKWGh9dN+yk9kjxH28R7ze'.
         'wzBOYSX6CaNB927Z9qZ66KTSNmBM7UU9Hx2c5qjmJaWCaV5j4t'.
         'o1ANr40sn5a+x4biElrqHgrXMeac/c1nEpFHG0LSFoo/jO/BeF'.
-        'lJnFbT58ayUf0BpA8wAAAABJRU5ErkJggg==' ; 
+        'lJnFbT58ayUf0BpA8wAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bs_greenblue.png
@@ -537,7 +536,7 @@ class ImgData_Balls extends ImgData {
         'YjmX4ZaIEs2NeiWO19NNacl8rHAyD4LR6jjw6PMRdTjZE0JOiU'.
         'dDv2ALTlzRvSdCCfAHGCc7yRPSrAQRQOWxKc3C/IUjBlDdUcM8'.
         '97vFGwBY9QsZGBc/A4DWZNbeXIPWZEZI0c2lqSute/gCO9MXGY'.
-        '4/IOkAAAAASUVORK5CYII=' ; 
+        '4/IOkAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bs_yellow.png
@@ -557,7 +556,7 @@ class ImgData_Balls extends ImgData {
         'rL63zCoJ2ef2RLZDIqNqYexyvFrY9ePkxGWdpvfzC7tEGtIRly'.
         'nqzboFKMlizAXbNnZyiFUKAy4bZ+B6W0lRaQDLmg4h/k7eFwDL'.
         'OWIky8qhXUBQ7gKGmsxpC+ah1TdriwByqG8GQNDNr6kLjf/wAx'.
-        'KgEq+FpPbfAAAAAElFTkSuQmCC' ; 
+        'KgEq+FpPbfAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_darkgray.png
@@ -580,8 +579,7 @@ class ImgData_Balls extends ImgData {
         'yjo30TYr2BfG19G11b37CEeN84H38gX1HbwTUkOjo+zjfG3hLI'.
         'l1exCvCNCwnxjfMz0gTyRdXNHXx9fUNCQu2MwU6SN3ZwD42LCH'.
         'W30IK4T8vUJSAkNMhDiwPqYiktXWN9JZj7UQAAjWEfhlG+kScA'.
-        'AAAASUVORK5CYII=' ; 
-
+        'AAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bs_darkgreen.png
@@ -605,7 +603,7 @@ class ImgData_Balls extends ImgData {
         'LC/LwcFiZuvmH5WiAxZR0tRW1DC3dfYJS8zyAouYGBibWtm7+o'.
         'TEpZfkgEX0rG3snNx9Q2NSCksgaqRd3Ty8gyLiU/NKSiDmcPsF'.
         'BodHJ2UUlZTkQ+xikIlNSE7LLgECZagL2VQyc0H8YnV2uD94jS'.
-        'ILIo14iQ4HALarJBNwbJVNAAAAAElFTkSuQmCC' ; 
+        'ILIo14iQ4HALarJBNwbJVNAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_purple.png
@@ -623,8 +621,7 @@ class ImgData_Balls extends ImgData {
         'f7dK0Gv/Xb7J7vyzCK0NjtPsHuH/2wlhTE7LnTNLCO/TFQjjIp'.
         'hHAA6bY06LSqppMAY47x+04HXTba2kAFlmQKr+YuVDCGUG2k6/'.
         'rNwYK8rKwKCnPxHnVS0aA3rag4UQslUGhrlk0Kpv1+sx3tLZ6w'.
-        'dtYemMkOsnz8R3V9/hB87DEu2Wos5+AAAAAElFTkSuQmCC' ; 
-
+        'dtYemMkOsnz8R3V9/hB87DEu2Wos5+AAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_brown.png
@@ -649,7 +646,7 @@ class ImgData_Balls extends ImgData {
         'YW0VRW07Vw8vCLSMguLwCL6FlaObp6B0TGZxSXQ9TouHv6+IXG'.
         'JGYWlpdDzNEKCgmPjkvLKS0vL4LYxWAen5SelV8OBNZQFxrZ5h'.
         'aC+GX2MDczMBh7pZakehkTHQ4AA0Am/jsB5gkAAAAASUVORK5C'.
-        'YII=' ; 
+        'YII=' ;
 
         //==========================================================
         // File: bs_blue.png
@@ -667,7 +664,7 @@ class ImgData_Balls extends ImgData {
         'vtl/2A2CfxNlJRRp9IETYGraJeEb7ocLNKznia8A7Db7umWDUG'.
         'sxAzhurxRHxok4KQGqCuEhlL45oU1D2w5BztY4KRhj/bCAsetM'.
         '2uObjwvY8/oX50JItYDxSyZSTrO2mNhvGMbaWAevnbFIcpuTr7'.
-        't+5AkyfBIKSJHdSQAAAABJRU5ErkJggg==' ; 
+        't+5AkyfBIKSJHdSQAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bs_green.png
@@ -686,8 +683,7 @@ class ImgData_Balls extends ImgData {
         'YloTywsAbYr44FrlgrXCMJwHl3xxVtuuFkJAPIcw2tGB9GcFli'.
         'oqEf5GTkSUhVMw2TtD0XSlnDOw3SznE5520vNEi7CwW9+Ayjyq'.
         'U/3+yPuq5gvhkhL0xlGnqL//AFf14UIh4mkEkAAAAASUVORK5C'.
-        'YII=' ; 
-
+        'YII=' ;
 
         //==========================================================
         // File: bs_white.png
@@ -706,8 +702,7 @@ class ImgData_Balls extends ImgData {
         'mF53lIKYGfr3O73TDGoJQiTVO01nS73XqT4/FIs9kkCAIej0eZ'.
         'brPZEMcxSZKgtQZgMpmIWpN+vy+m06n1PK9yTx8Gy+WS/X5Pr9'.
         'er9GuHLYoiG4YhSilOpxPr9Zrtdlti/JriU5MPjUYjq7UuEWaz'.
-        '2d+P/b/qv/zi75oetJcv7QQXAAAAAElFTkSuQmCC' ; 
-
+        '2d+P/b/qv/zi75oetJcv7QQXAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_cyan.png
@@ -730,7 +725,7 @@ class ImgData_Balls extends ImgData {
         'BddrCIiJEGL6eklYO7X3iCOFhE2thESdHawdUnJDZFDiyiamZh'.
         'aevk5h0UlZSpBhaRtbN3dPHwDY5MSM+EqBFzc/f0DgiLTkjLzI'.
         'SYw6bjHxgaEZeckZmpD7GLQSAqJj4xNRMIBGFuFtRLA/ENhGBu'.
-        'ZmDgkJBXl5fgIDocAAKcINaFePT4AAAAAElFTkSuQmCC' ; 
+        'ZmDgkJBXl5fgIDocAAKcINaFePT4AAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bs_bluegreen.png
@@ -750,7 +745,7 @@ class ImgData_Balls extends ImgData {
         'RdOmkzmP7DDpilfX3SzvRgQ/Vr1uiZplfsCBiVf03RJd140wgj'.
         'kmNqMtuYXcxyYmNWJdRoYwzpM9qRvGujuCmSR7q7ARY00/MiWk'.
         'sCnjkobNEm1+HknDZgAqR0GKU43+wxdu2hYzbsHU6AAAAABJRU'.
-        '5ErkJggg==' ; 
+        '5ErkJggg==' ;
 
         //==========================================================
         // File: bs_lightred.png
@@ -789,7 +784,7 @@ class ImgData_Balls extends ImgData {
         'cwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUKBOgGhWjAAAAS0'.
         'lEQVR4nGNgQAEmunYmEJaMCKe1vBxYzJKVQ9lKBSSupKdnaKGi'.
         'zgdkiqs6WKnYcIGYJnK2HvzCwmCNgi42wsLCECNMeXlNUY0HAL'.
-        'DaB7Du8MiEAAAAAElFTkSuQmCC' ; 
+        'DaB7Du8MiEAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bxs_bluegreen.png
@@ -806,7 +801,7 @@ class ImgData_Balls extends ImgData {
         'AJcEhZcwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUKDVyF5Be'.
         'AAAASUlEQVR4nGNgQAFmYqJcEJaEOJ+UrD5YTJKFTZrfGCQuaq'.
         'glLWvMaQ5kqujo6hnbKIKYXPr68gp2dmCNJiZAlh3ECGsREWtU'.
-        '4wF1kwdpAHfnSwAAAABJRU5ErkJggg==' ; 
+        '4wF1kwdpAHfnSwAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bxs_navy.png
@@ -822,7 +817,7 @@ class ImgData_Balls extends ImgData {
         'cwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUJxXO4axZAAAAR0'.
         'lEQVR4nGNgQAGskhKsEJaslIi8ijpYTJaDU1FVAyQuKSujoKKh'.
         'LQ5kSigpqWro6oOYrOoaWroGBmCNWiCWAdQwUVFWVOMBOp4GCJ'.
-        's5S60AAAAASUVORK5CYII=' ; 
+        's5S60AAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bxs_gray.png
@@ -842,7 +837,7 @@ class ImgData_Balls extends ImgData {
         'AAsRAX9kX5EAAAAHdElNRQfTAwkUKC74clmyAAAAQklEQVR4nG'.
         'NgQAVBYVCGt5dXYEQ0mOnp5h4QFgVmeri6+4dHxYMVeHoFRUTH'.
         'gTUFBIZBWAwMkZEx8bFQM2Lj0UwHANc/DV6yq/BiAAAAAElFTk'.
-        'SuQmCC' ; 
+        'SuQmCC' ;
 
         //==========================================================
         // File: bxs_graypurple.png
@@ -863,7 +858,7 @@ class ImgData_Balls extends ImgData {
         'EAAAsRAX9kX5EAAAAHdElNRQfTAwkUKCgREfyHAAAATUlEQVR4'.
         'nGNgQAEcIko8EBY3M5Ougy+IxSXMwmTsFsAHZMqrSRvZB0W7A5'.
         'k6FlYugXEZICaPr394Um4uSAFDRFRCbm4uxAihsDAhVOMBHT0L'.
-        'hkeRpo8AAAAASUVORK5CYII=' ; 
+        'hkeRpo8AAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bxs_red.png
@@ -879,7 +874,7 @@ class ImgData_Balls extends ImgData {
         'cwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUIyjy5SVMAAAAS0'.
         'lEQVR4nGNgQAFsUpJsEJastIi8ijpYTJaDU0FVgxXIlJKVUVDR'.
         '0BYHMiUUlVQ1dPVBTDZ1dS1dAwOQAgYtbSDLAGIEq6goK6rxAD'.
-        'yXBg73lwGUAAAAAElFTkSuQmCC' ; 
+        'yXBg73lwGUAAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: bxs_yellow.png
@@ -897,7 +892,7 @@ class ImgData_Balls extends ImgData {
         'dElNRQfTAwkUIzoBXFQEAAAAS0lEQVR4nGNgQAFsDhJsEJaTo5'.
         '2skj5YzMnSSk7ZwBzIlOSUklPiMxYHMnW4FXT5VNVBTDZeXiNV'.
         'QUGQAgYBYyBLEGIEq5gYK6rxAH4kBmHBaMQQAAAAAElFTkSuQm'.
-        'CC' ; 
+        'CC' ;
 
         //==========================================================
         // File: bxs_greenblue.png
@@ -914,7 +909,7 @@ class ImgData_Balls extends ImgData {
         'dEAIgFHUgAAAAJcEhZcwAACxEAAAsRAX9kX5EAAAAHdElNRQfT'.
         'AwkUJy5/6kV9AAAATUlEQVR4nGNgQAGCyuyCEJaGugKHviVYzF'.
         'hO3sxCWwDIVNLTM9PXtpEGMhW12Cy0DR1ATEFLSxZ7BweQAgYd'.
-        'HUMHBweIEQKiogKoxgMAo/4H5AfSehsAAAAASUVORK5CYII=' ; 
+        'HUMHBweIEQKiogKoxgMAo/4H5AfSehsAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bxs_purple.png
@@ -930,7 +925,7 @@ class ImgData_Balls extends ImgData {
         'HUgAAAAJcEhZcwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUIj'.
         'mBTjT/AAAASUlEQVR4nGNgQAGskhKsEJaCrJiSuhZYTEFASFlD'.
         'GyQuqSCnrK6tJwpkiquoamgbGIGYrFpaugbGxmCNunpAljHECB'.
-        'ZBQRZU4wFSMAZsXeM71AAAAABJRU5ErkJggg==' ; 
+        'ZBQRZU4wFSMAZsXeM71AAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bxs_green.png
@@ -946,7 +941,7 @@ class ImgData_Balls extends ImgData {
         'AIgFHUgAAAAJcEhZcwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAw'.
         'kUKBrZxq0HAAAATElEQVR4nGNgQAGccrIcEJaivISyhjaIxa7I'.
         'I6CiqcMKZMopKqho6OhLA5kyqmqaOobGICartraeoYkJSAGDnj'.
-        '6QZQIxgk1Skg3VeABlVgbItqEBUwAAAABJRU5ErkJggg==' ; 
+        '6QZQIxgk1Skg3VeABlVgbItqEBUwAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: bxs_darkgreen.png
@@ -968,7 +963,7 @@ class ImgData_Balls extends ImgData {
         'RQfTAwkUKCFozUQjAAAATUlEQVR4nGNgQAGcoqrcEJYQB5OhSw'.
         'CIxSXGwWThGcIDZCppK5o7hyV6AZl6NnbuoSmFICZ3YHB0RkkJ'.
         'SAFDbEJaSUkJxAjeyEheVOMBQj4MOEkWew4AAAAASUVORK5CYI'.
-        'I=' ; 
+        'I=' ;
 
         //==========================================================
         // File: bxs_cyan.png
@@ -989,7 +984,7 @@ class ImgData_Balls extends ImgData {
         'AHdElNRQfTAwkUKQFKuFWqAAAATUlEQVR4nGNgQAGsUjJsEJaR'.
         'grC5qz9YzIiL28YriB3IlDZRsnYNiZUDMmXtHT2CE9JBTDb/wI'.
         'jkzEyQAoaomMTMzEyIERzy8hyoxgMAN2MLVPW0f4gAAAAASUVO'.
-        'RK5CYII=' ; 
+        'RK5CYII=' ;
 
         //==========================================================
         // File: bxs_orange.png
@@ -1011,7 +1006,7 @@ class ImgData_Balls extends ImgData {
         'X5EAAAAHdElNRQfTAwkUJBSSy88MAAAATUlEQVR4nGNgQAGqwo'.
         'paEBYPJ4eKezCIpc7HwmrqG6ENZMpLihm6RaWEAZl6Vo7ekRnF'.
         'IKZWSHhcTnk5SAFDfFJWeXk5xAjj1FRjVOMBeFwNcWYSLjsAAA'.
-        'AASUVORK5CYII=' ; 
+        'AASUVORK5CYII=' ;
 
         //==========================================================
         // File: bxs_lightblue.png
@@ -1032,7 +1027,7 @@ class ImgData_Balls extends ImgData {
         'gAAAAJcEhZcwAACxEAAAsRAX9kX5EAAAAHdElNRQfTAwkUJziL'.
         'PvAsAAAATUlEQVR4nGNgQAHsQgqcEJYgG5Oegy+IxSHOxmTiFs'.
         'gFZMprKBnbB8e7AplaFlbOQUl5ICanX0BEWmEhSAFDVGxKYWEh'.
-        'xAjusDBuVOMBJO8LrFHRAykAAAAASUVORK5CYII=' ; 
+        'xAjusDBuVOMBJO8LrFHRAykAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: bxs_darkgray.png
@@ -1054,7 +1049,7 @@ class ImgData_Balls extends ImgData {
         'ROnP1U1tPFYjJBRcbtzSf+GPsFTAQBq1n4AAAABKdEVYdHNpZ2'.
         '5hdHVyZQBiYzYyMDIyNjgwYThjODMyMmUxNjk0NWUzZjljOGFh'.
         'N2VmZWFhMjA4OTE2ZjkwOTdhZWE1MzYyMjk0MWRkM2I5EqaPDA'.
-        'AAAABJRU5ErkJggg==' ; 
+        'AAAABJRU5ErkJggg==' ;
     }
 }
 

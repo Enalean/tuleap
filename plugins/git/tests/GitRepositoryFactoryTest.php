@@ -68,7 +68,6 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
         $project = mock('Project');
         $backend = mock('Git_Backend_Interface');
 
-
         $repository = $this->factory->buildRepository($project, 'a', $user, $backend);
         $this->assertEqual($repository->getName(), 'a');
 

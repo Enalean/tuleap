@@ -52,17 +52,17 @@ if ($request->valid($vMsg)) {
 
         // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+        exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));
     }
-    
+
     //check if the message is a comment on a piece of news.  If so, check permissions on this news
     $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
     $res = db_query($qry);
     if (db_numrows($res) > 0) {
-        if (!forum_utils_news_access($forum_id)) {        
+        if (!forum_utils_news_access($forum_id)) {
             exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
         }
-    }   
+    }
 
     $params=array('title'=>db_result($result,0,'subject'),
                       'pv'   =>isset($pv)?$pv:false);
@@ -95,7 +95,7 @@ if ($request->valid($vMsg)) {
     echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
     echo $purifier->purify(db_result($result,0, 'body'), CODENDI_PURIFIER_BASIC, $group_id);
     echo "</TD></TR>";
-    
+
     $crossref_fact= new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
@@ -106,7 +106,7 @@ if ($request->valid($vMsg)) {
         echo ' </td>';
         echo '</tr>';
     }
-    
+
     echo "</TABLE>";
 
     if ($pv == 0) {
@@ -130,10 +130,10 @@ if ($request->valid($vMsg)) {
     }
 
 } else {
-    exit_error($Language->getText('global','error'),$Language->getText('forum_message','choose_msg_first'));            
+    exit_error($Language->getText('global','error'),$Language->getText('forum_message','choose_msg_first'));
 
 }
 
-forum_footer($params); 
+forum_footer($params);
 
 ?>

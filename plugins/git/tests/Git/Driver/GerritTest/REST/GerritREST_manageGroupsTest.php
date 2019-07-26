@@ -55,7 +55,6 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         )->once();
         stub($this->guzzle_client)->put()->returns($this->guzzle_request);
 
-
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
 

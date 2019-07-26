@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -65,7 +65,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
                 $it->next();
             }
         }
-        
+
         if ($one_item_has_not_been_deleted) {
             throw DeleteFailedException::fromFolder($item);
         } else {
@@ -108,7 +108,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
             $this->_getEventManager()
         ))->deleteWiki($wiki, $user, $should_propagate_deletion);
     }
-    
+
     public function visitLink(Docman_Link $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
@@ -186,11 +186,11 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     /**
      * Delete a version of a file
-     * 
+     *
      * @param Docman_File    $item
      * @param Docman_Version $version
      * @param PFUser           $user
-     * 
+     *
      * @return bool
      */
     function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user) {
@@ -202,7 +202,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     function _getEventManager() {
         return EventManager::instance();
     }
-    
+
     var $version_factory;
     function _getVersionFactory() {
         if (!$this->version_factory) {
@@ -210,7 +210,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         }
         return $this->version_factory;
     }
-    
+
     var $item_factory;
     function _getItemFactory() {
         if (!$this->item_factory) {
@@ -218,23 +218,23 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         }
         return $this->item_factory;
     }
-    
+
     var $lock_factory;
     function _getLockFactory() {
         if (!$this->lock_factory) {
             $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
         }
         return $this->lock_factory;
-    }   
-     
+    }
+
     function _getFileStorage() {
         return new Docman_FileStorage();
     }
-    
+
     function _getItemDao() {
         return new Docman_ItemDao(CodendiDataAccess::instance());
     }
-    
+
     function getPermissionManager($groupId) {
         return Docman_PermissionsManager::instance($groupId);
     }

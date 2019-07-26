@@ -41,7 +41,6 @@ class b201901161452_add_timetracking_report extends ForgeUpgrade_Bucket // @codi
 
         $this->db->createTable('plugin_timetracking_overview_report', $sql);
 
-
         $this->db->dbh->beginTransaction();
 
         $sql    = ' SELECT *

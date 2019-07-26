@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ class Docman_MetadataDao extends DataAccessObject {
 
     function __construct($da) {
         parent::__construct($da);
-        
+
         $this->deletedStmt    = 'special = 100';
         $this->notDeletedStmt = 'special != 100';
     }
@@ -51,7 +51,7 @@ class Docman_MetadataDao extends DataAccessObject {
         if(is_array($type) && count($type) > 0) {
             $where_clause .= ' AND data_type IN ('.implode(',', $type).')';
         }
-        
+
         $sql = sprintf('SELECT *'
                        .' FROM plugin_docman_metadata'
                        .' WHERE group_id = %d'
@@ -81,7 +81,7 @@ class Docman_MetadataDao extends DataAccessObject {
         if(!isset($row['field_id'])) {
             return false;
         }
-        $id = (int) $row['field_id'];        
+        $id = (int) $row['field_id'];
         if ($id) {
             $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
@@ -100,7 +100,7 @@ class Docman_MetadataDao extends DataAccessObject {
                 }
             }
         }
-        return $updated;        
+        return $updated;
     }
 
     function create($groupId, $name, $type, $description, $isRequired,

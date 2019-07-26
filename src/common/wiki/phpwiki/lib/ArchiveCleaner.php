@@ -23,7 +23,7 @@ class ArchiveCleaner
     function __construct ($expire_params) {
         $this->expire_params = $expire_params;
     }
-    
+
     function isMergeable($revision) {
         if ( ! $revision->get('is_minor_edit') )
             return false;
@@ -42,7 +42,7 @@ class ArchiveCleaner
         while ($page = $iter->next())
             $this->cleanPageRevisions($page);
     }
-        
+
     function cleanPageRevisions($page) {
 
         $expire = &$this->expire_params;
@@ -50,7 +50,7 @@ class ArchiveCleaner
             $counter[$class] = new ArchiveCleaner_Counter($expire[$class]);
 
         $authors_seen = array();
-        
+
         $current = $page->getCurrentRevision(false);
 
         for ( $revision = $page->getRevisionBefore($current,false);
@@ -108,11 +108,11 @@ class ArchiveCleaner_Counter
 
         if ($this->min_age > $this->max_age)
             $this->min_age = $this->max_age;
-            
+
         $this->now = time();
         $this->count = 0;
         $this->previous_supplanted = false;
-        
+
     }
 
     function computeAge($revision) {
@@ -139,11 +139,11 @@ class ArchiveCleaner_Counter
         $this->previous_supplanted = $supplanted;
         return ($this->now - $supplanted) / (24 * 3600);
     }
-        
+
     function keep($revision) {
         $count = ++$this->count;
         $age = $this->computeAge($revision);
-        
+
         if ($count > $this->max_keep)
             return false;
         if ($age <= $this->min_age || $count <= $this->min_keep)
@@ -159,5 +159,5 @@ class ArchiveCleaner_Counter
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

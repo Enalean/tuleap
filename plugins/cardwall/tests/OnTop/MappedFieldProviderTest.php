@@ -20,17 +20,17 @@
 require_once __DIR__ .'/../bootstrap.php';
 
 class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
-    
+
     public function itProvidesTheStatusFieldIfNoMapping() {
         $tracker  = \Mockery::spy(\Tracker::class);
 
         $status_field = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
         $status_retriever = mockery_stub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class)->getField()->returns($status_field);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider(\Mockery::spy(\Cardwall_OnTop_Config::class), $status_retriever);
-        
+
         $this->assertEqual($status_field, $provider->getField($tracker));
     }
-    
+
     public function itProvidesTheMappedFieldIfThereIsAMapping() {
         $tracker  = aTracker()->build();
 
@@ -39,10 +39,10 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $mapping = mockery_stub(\Cardwall_OnTop_Config_TrackerMapping::class)->getField()->returns($mapped_field);
         $config = mockery_stub(\Cardwall_OnTop_Config::class)->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
-        
+
         $this->assertEqual($mapped_field, $provider->getField($tracker));
     }
-    
+
     public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
         $tracker  = aTracker()->build();
 
@@ -51,7 +51,7 @@ class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
         $mapping = mockery_stub(\Cardwall_OnTop_Config_TrackerMapping::class)->getField()->returns(null);
         $config = mockery_stub(\Cardwall_OnTop_Config::class)->getMappingFor($tracker)->returns($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
-        
+
         $this->assertEqual(null, $provider->getField($tracker));
     }
 }

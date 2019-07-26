@@ -67,10 +67,10 @@ class FRSReleaseFactory {
 
     /**
      * Get one or more releases from the database
-     * 
+     *
      * $extraFlags allow to define if you want to include deleted releases into
      * the search (thanks to FRSReleaseDao::INCLUDE_DELETED constant)
-     * 
+     *
      * @param $release_id
      * @param $group_id
      * @param $package_id
@@ -91,7 +91,6 @@ class FRSReleaseFactory {
         }else{
             $dar = $dao->searchById($_id, $extraFlags);
         }
-        
 
         if ($dar->isError()) {
             return null;
@@ -162,10 +161,10 @@ class FRSReleaseFactory {
 
     /**
      * Returns the list of releases for a given proejct
-     * 
+     *
      * @param int $group_id
      * @param int $package_id
-     * 
+     *
      * @return Array
      */
     function getFRSReleasesInfoListFromDb($group_id, $package_id=null) {
@@ -213,7 +212,7 @@ class FRSReleaseFactory {
         if($dar->isError()){
             return;
         }
-        
+
         if(!$dar->valid()){
             return;
         }else{
@@ -232,7 +231,7 @@ class FRSReleaseFactory {
         return ($release_exists && count($release_exists) >=1);
     }
 
-    
+
     var $dao;
 
     function  _getFRSReleaseDao() {
@@ -286,10 +285,10 @@ class FRSReleaseFactory {
      * Third, delete the release itself from the deb
      * Fourth, put it into the delete_files to be removed from the download server
      * return false if release not deleted, true otherwise
-     * 
+     *
      * @param int $group_id
      * @param int $release_id
-     * 
+     *
      * @return bool
      */
     function delete_release($group_id, $release_id) {
@@ -359,7 +358,7 @@ class FRSReleaseFactory {
         if (! $user_id) {
             $user = $um->getCurrentUser();
         } else {
-            $user = $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
 
         if ($user === null) {
@@ -400,36 +399,36 @@ class FRSReleaseFactory {
         return $frspf->userCanRead($project->getID(), $package_id, $user->getId());
     }
 
-    /** 
-     * Return true if user has Update permission on this release 
+    /**
+     * Return true if user has Update permission on this release
      *
      * @param int $group_id The project this release is in
      * @param int $release_id The ID of the release to update
      * @param int $user_id If not given or false, take the current user
      *
      * @return bool true if user can update the release $release_id, false otherwise
-     */ 
+     */
     function userCanUpdate($group_id, $release_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
     }
-    
-    /** 
+
+    /**
      * Returns true if user has permissions to Create releases
-     * 
+     *
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
-     * 
+     *
      * @param int $group_id The project ID this release is in
      * @param int $user_id The ID of the user. If not given or false, take the current user
      *
      * @return bool true if the user has permission to create releases, false otherwise
-     */ 
+     */
     function userCanCreate($group_id, $user_id=false) {
         $um = $this->getUserManager();
         if (! $user_id) {
             $user = $um->getCurrentUser();
         } else {
-            $user = $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
         return $this->userCanAdmin($user, $group_id);
     }
@@ -441,7 +440,7 @@ class FRSReleaseFactory {
      * If no permission is set "explicitly" to package, release should be set to default one
      *
      * @param FRSRelease $release Release on which to apply permissions
-     * 
+     *
      * @return bool
      */
     function setDefaultPermissions(FRSRelease $release) {

@@ -21,8 +21,8 @@
 
 interface Cardwall_OnTop_Config_ColumnsVisitor {
     /**
-     * 
-     * @Pattern Visitor 
+     *
+     * @Pattern Visitor
      */
     function accept($visitor, $parameter = '');
 }

@@ -37,7 +37,7 @@ class Git_Hook_ParseLogTest extends TuleapTestCase {
         $this->extract_cross_ref = mock('Git_Hook_ExtractCrossReferences');
         $this->log_pushes        = mock('Git_Hook_LogPushes');
         $this->logger            = mock('Logger');
-        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);        
+        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
     }
 
     public function itExecutesExtractOnEachCommit() {
@@ -63,11 +63,10 @@ class Git_Hook_ParseLogTest extends TuleapTestCase {
 
         expect($this->extract_cross_ref)->execute()->count(2);
         expect($this->extract_cross_ref)->execute($push_details, '0fb0737')->at(1);
-        
+
         expect($this->logger)->error()->once();
         stub($this->extract_cross_ref)->execute($push_details, '469eaa9')->throws(new Git_Command_Exception('whatever', array('whatever'), '234'));
 
-        
         $this->parse_log->execute($push_details);
     }
 }
@@ -85,9 +84,9 @@ class Git_Hook_ParseLog_CountPushesTest extends TuleapTestCase {
         $this->extract_cross_ref = mock('Git_Hook_ExtractCrossReferences');
         $this->log_pushes        = mock('Git_Hook_LogPushes');
         $this->logger            = mock('Logger');
-        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);        
+        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
     }
-    
+
     public function itLogPush() {
         $push_details = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array('469eaa9'));
         expect($this->log_pushes)->executeForRepository($push_details)->once();
