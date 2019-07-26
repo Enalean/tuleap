@@ -35,6 +35,7 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\Password\PasswordSanityChecker;
+use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -143,6 +144,19 @@ $CLI_command_collector->addCommand(
                 new ConditionalTuleapCronEnvExecutionDelayer(
                     new ExecutionDelayerRandomizedSleep(1799)
                 )
+            )
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    TaskWorkerProcessCommand::NAME,
+    static function() use ($event_manager) : TaskWorkerProcessCommand  {
+        return new TaskWorkerProcessCommand(
+            $event_manager,
+            new TruncateLevelLogger(
+                new BackendLogger(Tuleap\Queue\Worker::DEFAULT_LOG_FILE_PATH),
+                ForgeConfig::get('sys_logger_level')
             )
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,8 +28,7 @@ use BrokerLogger;
 use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
-use EventManager;
-use Tuleap\DB\DBFactory;
+use Tuleap\Queue\TaskWorker\TaskWorkerProcess;
 use Tuleap\System\DaemonLocker;
 use System_Command;
 
@@ -86,15 +85,12 @@ class Worker
     {
         $this->logger->info('Wait for messages');
 
-        $event_manager = EventManager::instance();
-        $db_connection = DBFactory::getMainTuleapDBConnection();
+        $task_worker = new TaskWorkerProcess();
 
         $queue = QueueFactory::getPersistentQueue($this->logger, self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-        $queue->listen($this->id, '*', function ($event) use ($event_manager, $db_connection) {
+        $queue->listen($this->id, '*', function ($event) use ($task_worker) {
             $this->logger->info('Got message: ' .$event);
-            $db_connection->reconnectAfterALongRunningProcess();
-            $worker_queue_event = new WorkerEvent($this->logger, json_decode($event, true));
-            $event_manager->processEvent($worker_queue_event);
+            $task_worker->run($event);
         });
         $this->logger->info('All message processed, exiting');
         $this->locker->cleanExit();
