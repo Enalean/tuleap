@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div>
+    <div v-if="has_recursion_metadata" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
         <p v-translate>All the properties values that you define here will be proposed as default values for the items that will be created within this folder.</p>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import RecursionOptions from "./RecursionOptions.vue";
 import StatusMetadataWithCustomBindingForFolderUpdate from "./StatusMetadataWithCustomBindingForFolderUpdate.vue";
 
@@ -54,6 +55,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["is_item_status_metadata_used"]),
         recursion_option: {
             get() {
                 return "";
@@ -61,6 +63,9 @@ export default {
             set(value) {
                 this.currentlyUpdatedItem.status.recursion = value;
             }
+        },
+        has_recursion_metadata() {
+            return this.is_item_status_metadata_used;
         }
     }
 };

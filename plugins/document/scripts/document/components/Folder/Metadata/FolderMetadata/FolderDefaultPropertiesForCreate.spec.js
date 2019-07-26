@@ -20,9 +20,9 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../../helpers/local-vue.js";
-import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
+import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 
-describe("FolderDefaultPropertiesForUpdate", () => {
+describe("FolderDefaultPropertiesForCreate", () => {
     let default_property, state, store;
     beforeEach(() => {
         state = {
@@ -34,7 +34,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         store = createStoreMock(store_options);
 
         default_property = (props = {}) => {
-            return shallowMount(FolderDefaultPropertiesForUpdate, {
+            return shallowMount(FolderDefaultPropertiesForCreate, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
@@ -42,40 +42,23 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         };
     });
 
-    it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
+    it(`Display the update properties container when status is enabled for project`, () => {
         const wrapper = default_property({
             currentlyUpdatedItem: {
                 id: 123,
-                title: "My title",
-                description: "My description",
-                owner: {
-                    id: 102
-                },
-                metadata: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103
-                            }
-                        ]
-                    }
-                ],
-                status: {
-                    value: "rejected",
-                    recursion: "none"
-                }
+                title: "My title"
+            },
+            parent: {
+                id: 456,
+                title: "My parent"
             }
         });
 
         store.state.is_item_status_metadata_used = true;
 
-        wrapper.vm.recursion_option = "all_items";
-
         expect(
             wrapper.find("[data-test=document-folder-default-properties-container]").exists()
         ).toBeTruthy();
-        expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toEqual("all_items");
     });
 
     it(`Default properties are not displayed if project does not use status`, () => {
