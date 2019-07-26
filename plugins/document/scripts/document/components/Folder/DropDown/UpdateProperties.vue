@@ -18,34 +18,30 @@
   -->
 
 <template>
-    <dropdown-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="current_folder">
-        <a href="#" v-on:click.prevent="showNewFolderModal"
-           class="tlp-dropdown-menu-item"
-           role="menuitem"
-           v-if="current_folder.user_can_write"
-           data-test="new-folder-creation-button"
-        >
-            <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
-            <translate>New folder</translate>
-        </a>
-    </dropdown-menu>
+    <a v-on:click.prevent="showUpdateModal"
+       class="tlp-dropdown-menu-item"
+       role="menuitem"
+       data-test="document-dropdown-update-properties"
+    >
+        <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
+        <translate>
+            Update properties
+        </translate>
+    </a>
 </template>
-<script>
-import { mapState } from "vuex";
-import DropdownMenu from "./DropdownMenu.vue";
-import EventBus from "../../../helpers/event-bus.js";
 
+<script>
+import EventBus from "../../../helpers/event-bus.js";
 export default {
-    components: { DropdownMenu },
+    name: "UpdateProperties",
     props: {
-        isInFolderEmptyState: Boolean
-    },
-    computed: {
-        ...mapState(["current_folder"])
+        item: Object
     },
     methods: {
-        showNewFolderModal() {
-            EventBus.$emit("show-new-folder-modal", { detail: { parent: this.current_folder } });
+        showUpdateModal() {
+            EventBus.$emit("show-update-item-metadata-modal", {
+                detail: { current_item: this.item }
+            });
         }
     }
 };

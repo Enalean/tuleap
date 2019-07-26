@@ -72,7 +72,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             document.observe("dom:loaded", this.initShowOptionsEvent);
         }
 
-        // NewItem
+        // NewDocument
         this.parentFoldersForNewItem = {};
         this.initNewItemEvent = this.initNewItem.bindAsEventListener(this);
         if (this.options.action == "browse") {
@@ -109,7 +109,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     dispose: function() {
         // ShowOptions
         document.stopObserving("dom:loaded", this.initShowOptionsEvent);
-        // NewItem
+        // NewDocument
         document.stopObserving("dom:loaded", this.initNewItemEvent);
         $H(this.newItem.specificProperties)
             .values()
@@ -216,7 +216,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             );
     },
     //}}}
-    //{{{------------------------------ NewItem
+    //{{{------------------------------ NewDocument
     addParentFoldersForNewItem: function(id, parent_id, title) {
         this.parentFoldersForNewItem[id] = {
             id: id,

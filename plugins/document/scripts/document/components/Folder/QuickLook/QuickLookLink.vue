@@ -21,10 +21,11 @@
 <template>
     <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-                v-on:click="redirectUrl">
+                v-on:click="redirectUrl"
+        >
             <i class="fa fa-external-link tlp-button-icon"></i> <translate>Open link</translate>
         </button>
-        <quick-look-document-action-button v-bind:item="item"/>
+        <drop-down-quick-look v-bind:item="item"/>
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item"/>
     </div>
@@ -32,12 +33,12 @@
 
 <script>
 import { mapState } from "vuex";
-import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
+import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookLink",
-    components: { QuickLookDocumentActionButton, QuickLookDeleteButton },
+    components: { DropDownQuickLook, QuickLookDeleteButton },
     props: {
         item: Object
     },

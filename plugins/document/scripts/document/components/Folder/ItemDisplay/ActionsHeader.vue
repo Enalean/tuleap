@@ -32,9 +32,9 @@
                                      v-else
                                      data-test="item-action-details-button"
                 />
-                <dropdown-button v-bind:is-in-large-mode="false">
-                    <dropdown-menu-for-item-quick-look v-bind:item="item"/>
-                </dropdown-button>
+                <drop-down-button v-bind:is-in-large-mode="false">
+                    <drop-down-displayed-embedded/>
+                </drop-down-button>
             </div>
         </div>
     </div>
@@ -43,13 +43,13 @@
 <script>
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import DetailsItemButton from "../ActionsButton/DetailsItemButton.vue";
-import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
-import DropdownMenuForItemQuickLook from "../ActionsDropDown/DropdownMenuForItemQuickLook.vue";
+import DropDownButton from "../DropDown/DropDownButton.vue";
+import DropDownDisplayedEmbedded from "../DropDown/DropDownDisplayedEmbedded.vue";
 export default {
     name: "ActionsHeader",
     components: {
-        DropdownMenuForItemQuickLook,
-        DropdownButton,
+        DropDownDisplayedEmbedded,
+        DropDownButton,
         DetailsItemButton,
         CreateNewItemVersionButton
     },

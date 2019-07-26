@@ -22,26 +22,27 @@
         <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main"
                          v-bind:item="item"
                          v-if="item.user_can_write"
-                         data-test="item-action-new-button"
+                         data-test="document-item-action-new-button"
         />
         <details-item-button v-bind:item="item"
-                             v-else data-test="item-action-details-button"
+                             v-else
+                             data-test="document-item-action-details-button"
                              v-bind:button-class="'tlp-dropdown-split-button-main'"
         />
-        <dropdown-button>
-            <dropdown-menu-current-folder/>
-        </dropdown-button>
+        <drop-down-button>
+            <drop-down-current-folder/>
+        </drop-down-button>
     </div>
 </template>
 
 <script>
 import NewItemButton from "./ActionsButton/NewItemButton.vue";
 import DetailsItemButton from "./ActionsButton/DetailsItemButton.vue";
-import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
-import DropdownMenuCurrentFolder from "./ActionsDropDown/DropdownMenuCurrentFolder.vue";
+import DropDownButton from "./DropDown/DropDownButton.vue";
+import DropDownCurrentFolder from "./DropDown/DropDownCurrentFolder.vue";
 export default {
     name: "FolderHeaderAction",
-    components: { DropdownMenuCurrentFolder, DropdownButton, DetailsItemButton, NewItemButton },
+    components: { DropDownCurrentFolder, DropDownButton, DetailsItemButton, NewItemButton },
     props: {
         item: Object
     }

@@ -17,40 +17,17 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <a
-        v-if="can_unlock_document"
-        class="tlp-dropdown-menu-item"
-        role="menuitem"
-        data-test="dropdown-menu-unlock-item"
-        v-on:click.prevent="unlockDocument"
+
+<template functional>
+    <span
+        class="tlp-dropdown-menu-separator"
+        role="separator"
     >
-        <i class="fa fa-fw fa-unlock tlp-dropdown-menu-item-icon"></i>
-        <translate>Unlock</translate>
-    </a>
+    </span>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
-    name: "UnlockItem",
-    props: {
-        item: Object
-    },
-    computed: {
-        ...mapState(["user_id"]),
-        can_unlock_document() {
-            if (this.item.lock_info === null) {
-                return false;
-            }
-
-            return this.item.user_can_write;
-        }
-    },
-    methods: {
-        async unlockDocument() {
-            await this.$store.dispatch("unlockDocument", this.item);
-        }
-    }
+    name: "DropDownSeparator"
 };
 </script>

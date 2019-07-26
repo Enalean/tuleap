@@ -17,24 +17,24 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
+
 <template>
     <button
-        v-if="item.user_can_write"
         type="button"
-        class="tlp-button-small tlp-button-outline tlp-button-danger"
+        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
         v-on:click="processDeletion"
-        data-test="quick-look-delete-button"
+        v-if="item.user_can_write"
+        data-test="document-delete-item"
     >
-        <i class="fa fa-trash-o tlp-button-icon"></i>
+        <i class="fa fa-trash-o fa-fw tlp-dropdown-menu-item-icon"></i>
         <translate>Delete</translate>
     </button>
 </template>
 
 <script>
 import EventBus from "../../../helpers/event-bus.js";
-
 export default {
-    name: "QuickLookDeleteButton",
+    name: "DeleteItem",
     props: {
         item: Object
     },

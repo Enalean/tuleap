@@ -21,11 +21,12 @@
 <template>
     <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-                v-on:click="wikiPageRedirect">
+                v-on:click="wikiPageRedirect"
+        >
             <i class="fa fa-long-arrow-right tlp-button-icon"></i>
             <translate>Go to the wiki page</translate>
         </button>
-        <quick-look-document-action-button v-bind:item="item"/>
+        <drop-down-quick-look v-bind:item="item"/>
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item"/>
     </div>
@@ -33,12 +34,12 @@
 
 <script>
 import { mapState } from "vuex";
-import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
+import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookWiki",
-    components: { QuickLookDocumentActionButton, QuickLookDeleteButton },
+    components: { DropDownQuickLook, QuickLookDeleteButton },
     props: {
         item: Object
     },

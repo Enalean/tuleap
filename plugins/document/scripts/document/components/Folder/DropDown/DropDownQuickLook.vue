@@ -25,36 +25,57 @@
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
                 v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
                 v-if="! is_item_a_wiki_with_approval_table"
-                data-test="docman-quicklook-action-button-new-version"
+                data-test="document-quicklook-action-button-new-version"
             />
-            <dropdown-button
+            <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
                 v-bind:is-appended="item.user_can_write && ! is_item_a_wiki_with_approval_table"
             >
-                <dropdown-menu
+                <drop-down-menu
                     v-bind:item="item"
                     v-bind:is-in-quick-look-mode="true"
-                    v-bind:hide-item-title="true"
-                    v-bind:hide-details-entry="isDetailsButtonShown"
-                />
-            </dropdown-button>
+                >
+                    <template v-if="! is_item_a_folder(item) && item.user_can_write">
+                        <lock-item v-bind:item="item" data-test="document-dropdown-menu-lock-item" slot="lock-item"/>
+                        <unlock-item v-bind:item="item" data-test="document-dropdown-menu-unlock-item" slot="unlock-item"/>
+                        <drop-down-separator slot="display-item-title-separator"/>
+                    </template>
+
+                    <update-properties slot="update-properties" data-test="document-dropdown-menu-update-properties" v-bind:item="item" v-if="item.user_can_write"/>
+                </drop-down-menu>
+            </drop-down-button>
         </div>
     </div>
 </template>
-
 <script>
-import { TYPE_WIKI } from "../../../constants.js";
-import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
-import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
+import { mapGetters } from "vuex";
+import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
+import DropDownButton from "./DropDownButton.vue";
+import DropDownItemTitle from "./DropDownItemTitle.vue";
+import LockItem from "./LockItem.vue";
+import UnlockItem from "./UnlockItem.vue";
+import DropDownSeparator from "./DropDownSeparator.vue";
+import UpdateProperties from "./UpdateProperties.vue";
+import { TYPE_WIKI } from "../../../constants.js";
 
 export default {
-    components: { CreateNewItemVersionButton, DropdownButton, DropdownMenu },
+    name: "DropDownQuickLook",
+    components: {
+        UpdateProperties,
+        DropDownSeparator,
+        UnlockItem,
+        LockItem,
+        DropDownItemTitle,
+        DropDownButton,
+        CreateNewItemVersionButton,
+        DropDownMenu
+    },
     props: {
-        item: Object,
-        isDetailsButtonShown: Boolean
+        item: Object
     },
     computed: {
+        ...mapGetters(["is_item_a_folder"]),
         is_item_a_wiki_with_approval_table() {
             return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
         }

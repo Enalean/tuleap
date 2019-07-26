@@ -25,9 +25,9 @@
         </button>
         <div class="tlp-dropdown-split-button">
             <new-item-button v-if="item.user_can_write" class="tlp-button-primary tlp-button-small tlp-button-outline" v-bind:item="item"/>
-            <dropdown-button v-bind:is-in-quick-look-mode="true" v-bind:is-appended="item.user_can_write">
-                <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
-            </dropdown-button>
+            <drop-down-button v-bind:is-in-quick-look-mode="true" v-bind:is-appended="item.user_can_write">
+                <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true"/>
+            </drop-down-button>
         </div>
         <template v-if="can_delete_folder">
             <div class="document-header-spacer"></div>
@@ -38,13 +38,13 @@
 
 <script>
 import NewItemButton from "../ActionsButton/NewItemButton.vue";
-import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
-import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
+import DropDownButton from "../DropDown/DropDownButton.vue";
+import DropDownMenu from "../DropDown/DropDownMenu.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
-    components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookDeleteButton },
+    components: { NewItemButton, DropDownButton, DropDownMenu, QuickLookDeleteButton },
     props: {
         item: Object
     },

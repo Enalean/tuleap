@@ -23,7 +23,7 @@
         v-bind:class="button_classes"
         v-bind:data-tlp-tooltip="cannot_create_new_wiki_version_beacause_approval_table"
         v-on:click="goToUpdate"
-        data-test="docman-new-item-version-button"
+        data-test="document-new-item-version-button"
     >
         <i v-bind:class="iconClasses"></i>
         <translate>Create new version</translate>
@@ -36,7 +36,7 @@ import { redirectToUrl } from "../../../helpers/location-helper.js";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
-    name: "UpdateButton",
+    name: "NewItemVersionButton",
     props: {
         item: Object,
         buttonClasses: String,
