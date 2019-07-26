@@ -42,7 +42,6 @@
     }
   ],
   "require": {
-    "delight-im/cookie": "^3.1",
     "embed/embed": "^3.3",
     "ezyang/htmlpurifier": "^4.10",
     "firebase/php-jwt": "^5.0.0",

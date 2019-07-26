@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,57 +21,28 @@
 namespace Tuleap;
 
 use ForgeConfig;
-use Tuleap\Test\Network\HTTPHeaderStack;
 
 class CookieManagerTest extends \PHPUnit\Framework\TestCase
 {
+    use ForgeConfigSandbox;
+
     protected function setUp() : void
     {
-        ForgeConfig::store();
         ForgeConfig::set('sys_cookie_prefix', 'test');
     }
 
-    protected function tearDown() : void
+    public function testCookiePrefixIsUsedIfPossible() : void
     {
-        ForgeConfig::restore();
-        HTTPHeaderStack::clear();
-    }
-
-    public function testCookiePrefixIsSet() : void
-    {
-        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
-        $cookie_manager = new CookieManager();
-        $cookie_manager->setCookie('name', 'value');
 
-        $headers = HTTPHeaderStack::getStack();
-
-        $this->assertCount(1, $headers);
-        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: __Host-test_name=value; path=/; secure; httponly; SameSite=Lax');
+        $this->assertEquals('__Host-test_name', CookieManager::getCookieName('name'));
     }
 
-    public function testItDoesNotSetCookiePrefixIfHTTPSIsNotAvailable() : void
+    public function testItDoesNotUseCookiePrefixIfHTTPSIsNotAvailable() : void
     {
-        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
-        $cookie_manager = new CookieManager();
-        $cookie_manager->setCookie('name', 'value');
 
-        $headers = HTTPHeaderStack::getStack();
-
-        $this->assertCount(1, $headers);
-        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: test_name=value; path=/; httponly; SameSite=Lax');
-    }
-
-    public function testCookiesRemoval() : void
-    {
-        $cookie_manager = new CookieManager();
-        $cookie_manager->removeCookie('name');
-
-        $headers = HTTPHeaderStack::getStack();
-
-        $this->assertCount(1, $headers);
-        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
+        $this->assertEquals('test_name', CookieManager::getCookieName('name'));
     }
 
     public function testItDeterminesIfACookieCanUseSecureFlag() : void

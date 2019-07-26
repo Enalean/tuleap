@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,87 +21,57 @@
 
 namespace Tuleap;
 
-use Delight\Cookie\Cookie;
 use ForgeConfig;
 
-/**
- * Tuleap\CookieManager
- *
- * Manages cookies
- */
 class CookieManager
 {
-    public function setCookie($name, $value, $expire = 0)
-    {
-        $cookie = $this->buildCookie($name);
-        $cookie->setValue($value);
-        $cookie->setExpiryTime($expire);
+    private const PREFIX_HOST = '__Host-';
 
-        $this->sendHTTPHeader($cookie);
+    public function setCookie(string $name, string $value, int $expire = 0) : void
+    {
+        /** @psalm-suppress InvalidArgument https://github.com/vimeo/psalm/issues/1972 */
+        setcookie(
+            self::getCookieName($name),
+            $value,
+            [
+                'path'     => '/',
+                'expires'  => $expire,
+                'httponly' => true,
+                'secure'   => self::canCookieUseSecureFlag(),
+                'samesite' => 'Lax'
+            ]
+        );
     }
 
-    /**
-     * @return Cookie
-     */
-    private function buildCookie($name)
+    public static function canCookieUseSecureFlag() : bool
     {
-        $cookie = new Cookie(self::getCookieName($name));
-        $cookie->setHttpOnly(true);
-        $cookie->setSecureOnly(self::canCookieUseSecureFlag());
-        $cookie->setSameSiteRestriction(Cookie::SAME_SITE_RESTRICTION_LAX);
-
-        return $cookie;
+        return (bool) ForgeConfig::get('sys_https_host');
     }
 
-    /**
-     * @return bool
-     */
-    public static function canCookieUseSecureFlag()
+    public function getCookie(string $name) : ?string
     {
-        return (bool)ForgeConfig::get('sys_https_host');
+        return $_COOKIE[self::getCookieName($name)] ?? null;
     }
 
-    public function getCookie($name)
+    public function isCookie(string $name) : bool
     {
-        return Cookie::get(self::getCookieName($name), '');
+        return isset($_COOKIE[self::getCookieName($name)]);
     }
 
-    /**
-     * @return bool
-     */
-    public function isCookie($name)
+    public function removeCookie(string $name) : void
     {
-        return Cookie::exists(self::getCookieName($name));
+        $this->setCookie($name, '');
     }
 
-    public function removeCookie($name)
-    {
-        $cookie = $this->buildCookie($name);
-        $cookie->setValue('');
-        $this->sendHTTPHeader($cookie);
-    }
-
-    /**
-     * @return string
-     */
-    public static function getCookieName($name)
+    public static function getCookieName(string $name) : string
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
 
-        if (!self::canCookieUseSecureFlag()) {
+        if (! self::canCookieUseSecureFlag()) {
             return $cookie_name;
         }
 
-        return Cookie::PREFIX_HOST . $cookie_name;
-    }
-
-    private function sendHTTPHeader(Cookie $cookie) : void
-    {
-        $header = (string) $cookie;
-        if ($header === '' || headers_sent()) {
-            return;
-        }
-        header($header, false);
+        return self::PREFIX_HOST . $cookie_name;
     }
 }
