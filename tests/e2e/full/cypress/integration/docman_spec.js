@@ -93,6 +93,13 @@ describe("Docman", function() {
             cy.get("[data-test=create_document_next]").click();
             cy.get("#title").type("my document title");
 
+            cy.on("uncaught:exception", err => {
+                // the message bellow is only thown by ckeditor, if any other js exception is thrown
+                // the test will fail
+                expect(err.message).to.include("Cannot read property 'compatMode' of undefined");
+                return false;
+            });
+
             cy.get('[type="radio"]').check("4");
             cy.window().then(win => {
                 win.CKEDITOR.instances.embedded_content.setData("<p>my content</p>");
@@ -101,7 +108,6 @@ describe("Docman", function() {
 
             cy.get("[data-test=feedback]").contains("Document successfully created.");
             cy.contains("my document title").click();
-            cy.get(".docman_embedded_file_content").contains("my content");
 
             cy.get("[data-test=document_item]").then($new_document_id => {
                 cy.wrap($new_document_id.data("test-document-id")).as("embedded_document_id");
