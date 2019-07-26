@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div>
+    <div v-if="has_recursion_metadata" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
         <div class="tlp-property" v-translate>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import StatusMetadataWithCustomBindingForFolderCreate from "./StatusMetadataWithCustomBindingForFolderCreate.vue";
 export default {
     name: "FolderDefaultPropertiesForCreate",
@@ -36,6 +37,12 @@ export default {
     props: {
         currentlyUpdatedItem: Object,
         parent: Object
+    },
+    computed: {
+        ...mapState(["is_item_status_metadata_used"]),
+        has_recursion_metadata() {
+            return this.is_item_status_metadata_used === true;
+        }
     }
 };
 </script>

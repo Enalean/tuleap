@@ -110,6 +110,7 @@ import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBi
 import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBindingForFolderCreate.spec.js";
 import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBindingForFolderUpdate.spec.js";
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForUpdate.spec.js";
+import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForCreate.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";
