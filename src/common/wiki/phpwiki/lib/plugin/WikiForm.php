@@ -23,7 +23,7 @@ rcs_id('$Id: WikiForm.php,v 1.16 2004/07/01 13:14:01 rurban Exp $');
 
 /**
  * This is a replacement for MagicPhpWikiURL forms.
- * Just a few old actions are supported, which where previously 
+ * Just a few old actions are supported, which where previously
  * encoded with the phpwiki: syntax.
  *
  * See WikiFormMore for the more generic version.
@@ -91,7 +91,6 @@ extends WikiPlugin
             default:
             return HTML::p(fmt("WikiForm: %s: unknown action", $action));
         }
-
 
         $input = HTML::input($input);
         $input->addTooltip($buttontext);

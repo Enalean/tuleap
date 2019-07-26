@@ -3,11 +3,11 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
-// 
+//
 //
 //    Originally written by Laurent Julliard 2003, Codendi Team, Xerox
 //
-// Purpose: Display contextual help for artifact search criteria. 
+// Purpose: Display contextual help for artifact search criteria.
 //              Help depends upon the field type.
 require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
@@ -18,7 +18,7 @@ require_once('common/tracker/ArtifactField.class.php');
 $request    = HTTPRequest::instance();
 $helpid     = $request->get('helpid');
 $field_info = $request->get('field_info');
-// Get the group_id, group_artifact_id and field_name from the 
+// Get the group_id, group_artifact_id and field_name from the
 // help_id argument
 list($group_id, $artifact_type_id, $field_name) = explode('|',urldecode($helpid));
 
@@ -69,7 +69,7 @@ if ( $field->isSelectBox() ) {
         $cug_section = 'ArtifactIntegerField';
     } else if ($field->data_type == $field->DATATYPE_FLOAT){
         $cug_section = 'ArtifactFloatingPointNumberField';
-    } 
+    }
 } else if ($field->isDateField() ) {
     $cug_section = 'ArtifactDateField';
 } else if ($field->isTextArea() ) {
@@ -83,7 +83,7 @@ if ($field_info) {
     print '<TABLE class="contenttable" cellpadding="0" cellspacing="0" border="0">'."\n";
     print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_name').':</TD><TD><B>'.$field->getLabel()."</B></TD>\n";
     print '<TR><TD width="20%">'.$Language->getText('help_browse_bug_query_field','field_type').':</TD><TD><B>'.$field->getLabelFieldType()."</B></TD>\n";
-    print "</TABLE>\n"; 
+    print "</TABLE>\n";
     print '<hr><u>'.$Language->getText('help_browse_bug_query_field','description').'</u>:<I>'.$field->getDescription().'</I>'."\n";
     help_footer();
 } else {

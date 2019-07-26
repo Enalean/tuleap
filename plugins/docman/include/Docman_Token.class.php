@@ -21,14 +21,14 @@
 
 
 /**
- *  Docman_Token 
+ *  Docman_Token
  */
 class Docman_Token {
     var $tok;
     /**
      * Generate a random token for the current user.
      * This token is stored with the referer.
-     * @return the generated 
+     * @return the generated
      */
     function __construct() {
         $tok     = null;
@@ -77,7 +77,7 @@ class Docman_Token {
         }
         return $url;
     }
-    
+
     function getToken() {
         return $this->tok;
     }

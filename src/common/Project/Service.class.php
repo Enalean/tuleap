@@ -70,7 +70,7 @@ class Service
         $this->project = $project;
         $this->data    = $data;
     }
-    
+
     public function getProject() {
         return $this->project;
     }
@@ -111,7 +111,7 @@ class Service
     public function getScope() {
         return $this->data['scope'];
     }
-    
+
     /**
     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
     */
@@ -126,7 +126,7 @@ class Service
     function isRequestedPageDistributed(&$request) {
         return false;
     }
-    
+
     public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
         \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));
 
@@ -150,12 +150,12 @@ class Service
         if ($pv = (int)HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int)$pv;
         }
-        
+
         $this->displayDuplicateInheritanceWarning();
-        
+
         site_project_header($params);
     }
-    
+
     /**
      * Display a warning if the service configuration is not inherited on project creation
      */
@@ -164,7 +164,7 @@ class Service
             $GLOBALS['HTML']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
         }
     }
-    
+
     public function displayFooter() {
         $params = array(
             'group' => $this->project->group_id,
@@ -174,10 +174,10 @@ class Service
         }
         site_project_footer($params);
     }
-    
+
     public function duplicate($to_project_id, $ugroup_mapping) {
     }
-    
+
     /**
      * Say if the service is allowed for the project
      *
@@ -188,7 +188,7 @@ class Service
     protected function isAllowed($project) {
         return true;
     }
-    
+
      /**
      * Say if the service is restricted
      *
@@ -202,7 +202,7 @@ class Service
 
     /**
      * Return true if service configuration is inherited on clone
-     * 
+     *
      * @return bool
      */
     public function isInheritedOnDuplicate() {

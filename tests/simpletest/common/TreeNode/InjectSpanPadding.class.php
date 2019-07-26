@@ -37,7 +37,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
         $child1->addChild($child2);
         return $parent;
     }
-    
+
     /**
      * When visit a given tree node with an InjectSpanPadding visitor
      */
@@ -54,7 +54,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
         preg_match_all('%node-[a-z\-]+%sm', $givenData[$index], $actual);
         $this->assertEqual($actual[0], $expected);
     }
-    
+
     protected function then_GivenTreeNodeData_TreePadding_AssertPattern(TreeNode $givenTreeNode, $expected) {
         $this->assertMatchesEqualDataAtIndex('tree-padding', $givenTreeNode, $expected);
     }
@@ -62,15 +62,15 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     protected function then_GivenTreeNodeData_ContentTemplate_AssertPattern(TreeNode $givenTreeNode, $expected) {
         $this->assertMatchesEqualDataAtIndex('content-template', $givenTreeNode, $expected);
     }
-    
+
     /**
      * Build a regexp pattern from a more suitable user langage
-     */    
+     */
     protected function getPatternSuite($string) {
         $string = str_replace(' ', ' node-', $string);
         return explode(' ', trim($string));
     }
-    
+
     protected function getTreeNode($id, $title, $artifactLinks = '') {
         if (is_array($artifactLinks)) {
             $artifactLinks = implode(', ', $artifactLinks);
@@ -80,12 +80,12 @@ abstract class InjectSpanPadding extends TuleapTestCase {
             'title'         => $title,
             'artifactlinks' => $artifactLinks,
         );
-    
+
         $node = new TreeNode($nodeData);
         $node->setId($id);
         return $node;
     }
-    
+
     protected function setArtifactLinks( TreeNode $node, $artifactLinks) {
         if (is_array($artifactLinks)) {
             $artifactLinks = implode(', ', $artifactLinks);

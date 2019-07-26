@@ -24,7 +24,7 @@
  * Stores a reference as stored in the DB (with keyword, link, etc.)
  */
 class Reference {
-    
+
     /**
      * @var int the ID as stored in the 'Reference' DB table.
      */
@@ -39,7 +39,7 @@ class Reference {
     var $description;
 
     /**
-     * Originally, the 'link' contains parameters (like $1, $2) that are later converted with replaceLink() 
+     * Originally, the 'link' contains parameters (like $1, $2) that are later converted with replaceLink()
      * @var string link pointed by this reference
      */
     var $link;
@@ -54,14 +54,14 @@ class Reference {
      * @var string
      */
     var $service_short_name;
-    
+
     /**
      * Nature of the referenced item.
      * List of available natures is ReferenceManager : getAvailableNatures()
      * @var string
      */
     var $nature;
-    
+
     /**
      * @var bool
      */
@@ -76,7 +76,7 @@ class Reference {
      * @var int when set
      */
     var $num_param=null;
-    
+
     /**
      *
      * The constructor only builds full objects; Only the 'myid' and 'mygroup_id' params may be set to 0 if unknown.
@@ -95,7 +95,7 @@ class Reference {
     }
 
     /**
-     * Accessors 
+     * Accessors
      */
     function getId() {
         return $this->id;
@@ -126,11 +126,11 @@ class Reference {
     }
     /**
      * @return bool true if this is a system reference (false if project reference)
-     */ 
+     */
     function isSystemReference() {
         return ($this->scope == 'S');
     }
-    
+
 
 
     /**
@@ -138,7 +138,7 @@ class Reference {
      */
     function getNumParam() {
         // Compute number of parameters if not already done
-        if ($this->num_param == false) 
+        if ($this->num_param == false)
             $this->num_param=$this->computeNumParam($this->link);
         return $this->num_param;
     }
@@ -163,9 +163,9 @@ class Reference {
         $this->link = $link;
     }
 
-   /** 
+   /**
      * Replace original link with arguments
-     * 
+     *
      * Replacement rules
      * $projname -> project short name
      * $group_id -> project id
@@ -191,12 +191,12 @@ class Reference {
         }
     }
 
-    /** 
+    /**
      * Returns number of parameters needed to compute the link
      *
-     * For instance, if only '$3' is used in the original link, it 
+     * For instance, if only '$3' is used in the original link, it
      * does not mean that only one param is needed: 3 params are needed,
-     * but only one is used to compute the link. 
+     * but only one is used to compute the link.
      * Max number is 9 parameters.
      *
      * @param string $link original link containing '$1', '$2',... parameters
@@ -209,7 +209,7 @@ class Reference {
         }
         return 0;
     }
-        
+
     /**
      * @return ReferenceDao instance
      */

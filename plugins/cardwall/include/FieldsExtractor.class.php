@@ -24,7 +24,7 @@
  * index them by their id
  */
 class Cardwall_FieldsExtractor {
-    
+
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */
@@ -37,7 +37,7 @@ class Cardwall_FieldsExtractor {
         $artifacts = $this->getArtifactsFromSecondLevelAndDown($node);
         return $this->getIndexedStatusFieldsOf($artifacts);
     }
-    
+
     private function getArtifactsFromSecondLevelAndDown(TreeNode $root_node) {
         $leafs = array();
         foreach ($root_node->getChildren() as $child) {
@@ -48,7 +48,7 @@ class Cardwall_FieldsExtractor {
             $this->appendIfArtifactNode($artifacts, $node);
         }
         return $artifacts;
-        
+
     }
 
     private function appendIfArtifactNode(array &$artifacts, TreeNode $node) {
@@ -56,7 +56,7 @@ class Cardwall_FieldsExtractor {
             $artifacts[] = $node->getArtifact();
         }
     }
-                
+
     private function getIndexedStatusFieldsOf(array $artifacts) {
         $trackers = array();
         foreach ($artifacts as $artifact) {
@@ -66,7 +66,7 @@ class Cardwall_FieldsExtractor {
         $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
-    
+
     private function indexById(array $fields) {
         $indexed_array = array();
         foreach ($fields as $field) {

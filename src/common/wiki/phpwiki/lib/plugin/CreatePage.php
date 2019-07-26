@@ -22,12 +22,12 @@ rcs_id('$Id: CreatePage.php,v 1.7 2004/09/06 10:22:15 rurban Exp $');
  */
 
 /**
- * This allows you to create a page geting the new pagename from a 
- * forms-based interface, and optionally with the initial content from 
- * some template, plus expansion of some variables via %%variable%% statements 
+ * This allows you to create a page geting the new pagename from a
+ * forms-based interface, and optionally with the initial content from
+ * some template, plus expansion of some variables via %%variable%% statements
  * in the template.
  *
- * Put it <?plugin-form CreatePage ?> at some page, browse this page, 
+ * Put it <?plugin-form CreatePage ?> at some page, browse this page,
  * enter the name of the page to create, then click the button.
  *
  * Usage: <?plugin-form CreatePage template=SomeTemplatePage vars="year=2004&name=None" ?>
@@ -70,17 +70,17 @@ extends WikiPlugin
         $param = array('action' => 'edit');
         if ($template and $dbi->isWikiPage($template)) {
             $param['template'] = $template;
-        } elseif (!empty($initial_content)) { 
+        } elseif (!empty($initial_content)) {
             // Warning! Potential URI overflow here on the GET redirect. Better use template.
             $param['initial_content'] = $initial_content;
         }
-        // If the initial_content is too large, pre-save the content in the page 
+        // If the initial_content is too large, pre-save the content in the page
         // and redirect without that argument.
         // URI length limit:
         //   http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.2.1
         $url = WikiURL($s, $param, 'absurl');
         // FIXME: expand vars in templates here.
-        if (strlen($url) > 255 
+        if (strlen($url) > 255
             or (!empty($vars) and !empty($param['template']))
             or preg_match('/%%\w+%%/', $initial_content)) // need variable expansion
         {

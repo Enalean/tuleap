@@ -25,16 +25,16 @@ require_once('lib/TextSearchQuery.php');
 require_once('lib/PageList.php');
 
 /**
- * Display results of pagename search. 
+ * Display results of pagename search.
  * Provides no own input box, just <?plugin-form TitleSearch ?> is enough.
  * Fancier Inputforms can be made using WikiForm Rich, to support regex and case_exact args.
  *
- * If only one pages is found and auto_redirect is true, this page is displayed immediatly, 
+ * If only one pages is found and auto_redirect is true, this page is displayed immediatly,
  * otherwise the found pagelist is displayed.
- * The workhorse TextSearchQuery converts the query string from google-style words 
+ * The workhorse TextSearchQuery converts the query string from google-style words
  * to the required DB backend expression.
  *   (word and word) OR word, -word, "two words"
- * regex=auto tries to detect simple glob-style wildcards and expressions, 
+ * regex=auto tries to detect simple glob-style wildcards and expressions,
  * like xx*, *xx, ^xx, xx$, ^word$.
  */
 class WikiPlugin_TitleSearch

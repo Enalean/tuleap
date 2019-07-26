@@ -92,7 +92,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         $state = $ST_PATH;
                     }
                 }
-                
+
                 if ($state == $ST_GROUP) {
                     $m = preg_match($group_pat,$line,$matches);
                     if ($m) {
@@ -154,7 +154,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
             fwrite($fd, $newContent);
             fclose($fd);
         }
-    }    
+    }
 }
 
 $pluginManager = PluginManager::instance();

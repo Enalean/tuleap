@@ -24,29 +24,29 @@ function aDateFieldPostAction() {
 }
 
 class Test_Transition_PostAction_Field_Date_Builder {
-    
+
     private $id         = 0;
     private $value_type = 0;
-    
+
     public function __construct() {
         $this->transition = aTransition()->build();
     }
-    
+
     public function withTransitionId($transition_id) {
         $this->transition = aTransition()->withId($transition_id)->build();
         return $this;
     }
-    
+
     public function withFieldId($field_id) {
         $this->field = aMockDateWithoutTimeField()->withId($field_id)->build();
         return $this;
     }
-    
+
     public function withValueType($value_type) {
         $this->value_type = $value_type;
         return $this;
     }
-    
+
     public function build() {
         return new Transition_PostAction_Field_Date($this->transition, $this->id, $this->field, $this->value_type);
     }

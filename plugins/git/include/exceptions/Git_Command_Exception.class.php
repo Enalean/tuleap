@@ -18,12 +18,12 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 class Git_Command_Exception extends Exception {
     public $command;
     public $output;
     public $returnValue;
-    
+
     public function __construct($command, $output, $returnValue) {
         $message = 'Command execution failure: '.$command.' (return value: '.$returnValue."):\n".implode("\n", $output);
         parent::__construct($message, $returnValue);

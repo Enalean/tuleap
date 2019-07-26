@@ -2,13 +2,13 @@
 /**
  * What to do on ?format=rdf  What to do on ?format=owl
  *
- * Map relations on a wikipage to a RDF ressource to build a "Semantic Web" 
+ * Map relations on a wikipage to a RDF ressource to build a "Semantic Web"
  * - a web ontology frontend compatible to OWL (web ontology language).
  * http://www.w3.org/2001/sw/Activity
  * Simple RDF ontologies contain facts and rules, expressed by RDF triples:
  *   Subject (page) -> Predicate (verb, relation) -> Object (links)
- * OWL extents that to represent a typical OO framework. 
- *  OO predicates: 
+ * OWL extents that to represent a typical OO framework.
+ *  OO predicates:
  *    is_a, has_a, ...
  *  OWL predicates:
  *    subClassOf, restrictedBy, onProperty, intersectionOf, allValuesFrom, ...
@@ -20,7 +20,7 @@
  *
  * Purpose:
  * - Another way to represent various KB models in various DL languages. (OWL/DAML/other DL)
- * - Frontend to various KB model reasoners and representations. 
+ * - Frontend to various KB model reasoners and representations.
  * - Generation/update of static wiki pages based on external OWL/DL/KB (=> ModelTest/Categories)
  *   KB Blackboard and Visualization.
  * - OWL generation based on static wiki pages (ModelTest?format=owl)
@@ -29,7 +29,7 @@
  *  - Each page must be representable with an unique URL.
  *  - Each fact must be representable with an unique RDF triple.
  *  - A class is represented by a category page.
- *  - To represent more expressive description logic, "enriched" 
+ *  - To represent more expressive description logic, "enriched"
  *    links will not be enough (? variable symbolic objects).
  *
  * Rules: (may be represented by special content on a page)
@@ -38,9 +38,9 @@
  * RDF Triple: (representing facts)
  *   Subject (page) -> Predicate (verb, relation) -> Object (links)
  * Subject: a page
- * Verb: 
+ * Verb:
  *   Special link qualifiers represent RDF triples, based on RDF standard notation.
- *   See RDF standard DTD's on daml.org and w3.org, plus your custom predicates. 
+ *   See RDF standard DTD's on daml.org and w3.org, plus your custom predicates.
  *   (need your own DTD)
  *   Example: page [Ape] isa:Animal, ...
  * Object: special links on a page.
@@ -54,7 +54,7 @@
  * Of course *real* expert systems ("reasoners") will help/must be used in
  * optimization and maintainance of the SemanticWeb KB (Knowledge
  * Base). Hooks will be tested to KM (an interactive KB playground),
- * LISA (standard unifier), FaCT, RACER, ... 
+ * LISA (standard unifier), FaCT, RACER, ...
 
  * Maybe also ZEBU (parser generator) is needed to convert the wiki KB
  * syntax to the KB reasoner backend (LISA, KM, CLIPS, JESS, FaCT,
@@ -66,13 +66,13 @@
  *
  * SEAL (omntoweb.org) is similar to that, just on top of the Zope CMF.
  * FaCT uses e.g. this KB DTD:
-<!ELEMENT KNOWLEDGEBASE (DEFCONCEPT|DEFROLE|IMPLIESC|EQUALC|IMPLIESR|EQUALR|TRANSITIVE|FUNCTIONAL)*> 
-<!ELEMENT CONCEPT (PRIMITIVE|TOP|BOTTOM|AND|OR|NOT|SOME|ALL|ATMOST|ATLEAST)> 
-<!ELEMENT ROLE (PRIMROLE|INVROLE)> 
+<!ELEMENT KNOWLEDGEBASE (DEFCONCEPT|DEFROLE|IMPLIESC|EQUALC|IMPLIESR|EQUALR|TRANSITIVE|FUNCTIONAL)*>
+<!ELEMENT CONCEPT (PRIMITIVE|TOP|BOTTOM|AND|OR|NOT|SOME|ALL|ATMOST|ATLEAST)>
+<!ELEMENT ROLE (PRIMROLE|INVROLE)>
 ... (facts and rules described in XML)
  *
  * Links:
- *   http://phpwiki.org/SemanticWeb, 
+ *   http://phpwiki.org/SemanticWeb,
  *   http://en.wikipedia.org/wiki/Knowledge_representation
  *   http://www.ontoweb.org/
  *   http://www.semwebcentral.org/ (OWL on top of GForge)
@@ -129,7 +129,7 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
 }
 
 /**
- * OwlWriter - A class to represent a set of wiki pages (a DL model) as OWL. 
+ * OwlWriter - A class to represent a set of wiki pages (a DL model) as OWL.
  * Supports ?format=owl
  *
  * OwlWriter
@@ -140,7 +140,7 @@ class OwlWriter extends RdfWriter {
 };
 
 /**
- * ModelWriter - Export a KB as set of wiki pages. 
+ * ModelWriter - Export a KB as set of wiki pages.
  * Probably based on some convenient DL expression syntax. (deffact, defrule, ...)
  *
  * ModelWriter
@@ -194,5 +194,5 @@ class ReasonerBackend_KM extends ReasonerBackend {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

@@ -30,9 +30,9 @@ class Docman_View_AjaxReferenceTooltip extends Docman_View_View {
         $di = $this->_getDocmanIcons($params);
         $icon_src = $di->getIconForItem($params['item'], $params);
         echo '<img src="'. $icon_src .'" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
-        
+
         echo '<strong style="padding-left:6px;">'. $html_purifier->purify($params['item']->getTitle()) .'</strong>';
-        
+
         $desc = $params['item']->getDescription();
         if ($desc) {
             echo '<br />'. $html_purifier->purify($desc);

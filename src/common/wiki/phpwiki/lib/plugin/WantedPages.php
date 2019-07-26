@@ -3,7 +3,7 @@
 rcs_id('$Id: WantedPages.php,v 1.16 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright (C) 2002, 2004 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         if (!empty($args['exclude_from']))
             $args['exclude_from'] = is_string($args['exclude_from'])
-                ? explodePageList($args['exclude_from']) 
+                ? explodePageList($args['exclude_from'])
                 : $args['exclude_from']; // <! plugin-list !>
         extract($args);
         if ($page == _("WantedPages")) $page = "";
@@ -135,7 +135,7 @@ class _PageList_Column_WantedPages_wanted extends _PageList_Column {
         foreach($this->parentobj->_wpagelist[$page->getName()] as $page) {
             if ($html)
                 $html->pushContent(', ', WikiLink($page));
-            else 
+            else
                 $html = HTML(WikiLink($page));
         }
         return $html;

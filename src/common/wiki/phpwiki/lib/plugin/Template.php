@@ -33,7 +33,7 @@ rcs_id('$Id: Template.php,v 1.4 2005/09/11 13:30:22 rurban Exp $');
  *
  * Parameter expansion:
  *   vars="var1=value1&var2=value2"
- * We only support named parameters, not numbered ones as in mediawiki, and 
+ * We only support named parameters, not numbered ones as in mediawiki, and
  * the placeholder is %%var%% and not {{{var}}} as in mediawiki.
  *
  * The following predefined variables are automatically expanded if existing:
@@ -41,7 +41,7 @@ rcs_id('$Id: Template.php,v 1.4 2005/09/11 13:30:22 rurban Exp $');
  *   mtime     - last modified date + time
  *   ctime     - creation date + time
  *   author    - last author
- *   owner     
+ *   owner
  *   creator   - first author
  *   SERVER_URL, DATA_PATH, SCRIPT_NAME, PHPWIKI_BASE_URL and BASE_URL
  *
@@ -49,9 +49,9 @@ rcs_id('$Id: Template.php,v 1.4 2005/09/11 13:30:22 rurban Exp $');
  *
  * In work:
  * - ENABLE_MARKUP_TEMPLATE = true: (lib/InlineParser.php)
- *   Support a mediawiki-style syntax extension which maps 
+ *   Support a mediawiki-style syntax extension which maps
  *     {{TemplateFilm|title=Some Good Film|year=1999}}
- *   to 
+ *   to
  *     <?plugin Template page=TemplateFilm vars="title=Some Good Film&year=1999" ?>
  */
 
@@ -72,7 +72,7 @@ extends WikiPlugin
     }
 
     function getDefaultArguments() {
-        return array( 
+        return array(
                      'page'    => false, // the page to include
                      'vars'    => false,
                      'rev'     => false, // the revision (defaults to most recent)
@@ -91,7 +91,7 @@ extends WikiPlugin
             return false;
         return array($page->name);
     }
-                
+
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
         if ($page) {
@@ -129,7 +129,7 @@ extends WikiPlugin
         }
 
         if (preg_match('/<noinclude>.+<\/noinclude>/s', $initial_content)) {
-            $initial_content = preg_replace("/<noinclude>.+?<\/noinclude>/s", "", 
+            $initial_content = preg_replace("/<noinclude>.+?<\/noinclude>/s", "",
                                             $initial_content);
         }
         if (preg_match('/%%\w+%%/', $initial_content)) // need variable expansion

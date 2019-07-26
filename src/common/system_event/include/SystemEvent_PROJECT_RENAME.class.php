@@ -30,9 +30,9 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
 
     /**
      * Set multiple logs
-     *  
+     *
      * @param String $log Log string
-     * 
+     *
      * @return void
      */
     public function setLog($log) {
@@ -44,10 +44,10 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
     }
 
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -59,9 +59,9 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
         return $txt;
     }
 
-    /** 
+    /**
      * Process stored event
-     * 
+     *
      * @return bool
      */
     public function process() {
@@ -70,7 +70,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
         $renameState = true;
 
         if (($project = $this->getProject($group_id))) {
-            // Rename SVN   
+            // Rename SVN
             $backendSVN = $this->getBackend('SVN');
             if ($backendSVN->repositoryExists($project)) {
                 if ($backendSVN->isNameAvailable($new_name)) {
@@ -161,10 +161,10 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
 
     /**
      * Update database
-     * 
+     *
      * @param Project $project  Project to update
      * @param String  $new_name New name
-     * 
+     *
      * @return bool
      */
     protected function updateDB($project, $new_name) {

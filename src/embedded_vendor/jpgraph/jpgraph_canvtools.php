@@ -234,7 +234,7 @@ class Shape {
 
         switch( $aCorner ) {
             case 0: // Upper left
-                 
+
                 // Bottom line, left &  right arc
                 $this->img->Line($xt+$r,$yl,$xr-$r,$yl);
                 $this->img->Arc($xt+$r,$yl-$r,$r*2,$r*2,90,180);
@@ -319,7 +319,7 @@ class Shape {
 
                 // Right line
                 $this->img->Line($xr,$yt+$r,$xr,$yl-$ih-$r);
-                 
+
                 // Indent horizontal, Lower right arc
                 $this->img->Line($xr-$r,$yl-$ih,$xr-$iw+$r,$yl-$ih);
                 $this->img->Arc($xr-$r,$yl-$ih-$r,$r*2,$r*2,0,90);
@@ -353,7 +353,7 @@ class Shape {
 
                 // Left line
                 $this->img->Line($xt,$yt+$r,$xt,$yl-$ih-$r);
-                 
+
                 // Indent horizontal, Lower left arc
                 $this->img->Line($xt+$r,$yl-$ih,$xt+$iw-$r,$yl-$ih);
                 $this->img->Arc($xt+$r,$yl-$ih-$r,$r*2,$r*2,90,180);
@@ -471,7 +471,7 @@ class CanvasRectangleText {
         else {
             $this->iy = -$this->iy;
         }
-         
+
         list($this->iw,$this->ih) = $scale->Translate($this->iw,$this->ih) ;
 
         if( $this->iw == 0 )

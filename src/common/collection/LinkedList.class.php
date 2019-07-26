@@ -24,18 +24,18 @@ require_once('Collection.class.php');
  * LinkedList
  */
 class LinkedList extends Collection{
-    
+
     function __construct($initial_array = '') {
         parent::__construct($initial_array);
     }
-    
+
     /**
      * add the element add the end of the LinkedList
      */
     function add($element) {
         $this->elements[] = $element;
     }
-    
+
     /**
      * Compares the specified object with this LinkedList for equality.
      * @param obj the reference object with which to compare.

@@ -20,7 +20,7 @@
 require_once 'common/dao/include/DataAccessObject.class.php';
 
 class SOAP_RequestLimitatorDao extends DataAccessObject {
-    
+
     public function searchFirstCallToMethod($name, $delay) {
         $name  = $this->da->quoteSmart($name);
         $delay = $this->da->escapeInt($delay);
@@ -31,7 +31,7 @@ class SOAP_RequestLimitatorDao extends DataAccessObject {
                   ORDER BY date ASC LIMIT 1";
         return $this->retrieve($sql);
     }
-    
+
     public function saveCallToMethod($name, $time) {
         $name = $this->da->quoteSmart($name);
         $time = $this->da->escapeInt($time);

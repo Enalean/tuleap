@@ -74,15 +74,15 @@ switch($graphType){
             $services = array();
         }
     break;
-     
+
     case 'graph_user':
         $vUserId = new Valid_UInt('user_id');
         $vUserId->required();
         if ($request->valid($vUserId)) {
             $userId = $request->get('user_id');
-        } 
+        }
     break;
-        
+
     case 'graph_project':
         $vGroupId = new Valid_GroupId();
         $vGroupId->required();
@@ -98,7 +98,7 @@ switch($graphType){
             $services = array();
         }
     break;
-    
+
     default:
 }
 

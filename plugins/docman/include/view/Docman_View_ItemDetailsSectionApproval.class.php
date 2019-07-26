@@ -211,7 +211,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '</tr>';
                 $rIter->next();
             }
-            
+
             $html .= '</table>';
 
             $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_help').'</div>';
@@ -219,7 +219,7 @@ extends Docman_View_ItemDetailsSection {
         }
         return $html;
     }
-    
+
 
     function _getReviewCurrentVersion() {
         $version = null;
@@ -238,7 +238,7 @@ extends Docman_View_ItemDetailsSection {
         }
         return $version;
     }
-    
+
     function getReviewForm($user) {
         $html = '';
         $uh   = UserHelper::instance();
@@ -252,7 +252,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_title').'</h3>';
 
         $html .= '<table>';
-        
+
         // Doc title
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_name').'</td>';
@@ -322,7 +322,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= $this->hp->purify($this->table->getDescription(), CODENDI_PURIFIER_BASIC, $this->item->getGroupId());
         $html .= '</td>';
         $html .= '</tr>';
-        
+
         $html .= '</table>';
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_title').'</h3>';
@@ -378,7 +378,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= DateHelper::formatForLanguage($GLOBALS['Language'], $reviewer->getReviewDate(), true);
             $html .= '</td>';
             $html .= '</tr>';
-        }   
+        }
 
         // Review version
         if($reviewVersion) {
@@ -539,7 +539,7 @@ extends Docman_View_ItemDetailsSection {
             // We should keep this part of the test until CX_3_8.
             if(($request->exist('review') || $request->exist('user_id'))
                 && $this->table->isReviewer($user->getId())
-                && $this->table->isEnabled()) 
+                && $this->table->isEnabled())
             {
                 $html .= $this->getReviewForm($user);
             }

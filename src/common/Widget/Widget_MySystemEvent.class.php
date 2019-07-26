@@ -20,14 +20,14 @@
  */
 
 class Widget_MySystemEvent extends Widget {
-    
+
     /**
      * Constructor
      */
     public function __construct() {
         parent::__construct('mysystemevent');
     }
-    
+
     /**
      * Get the title of the widget.
      * @return string
@@ -35,7 +35,7 @@ class Widget_MySystemEvent extends Widget {
     public function getTitle() {
         return $GLOBALS['Language']->getText('admin_main', 'system_event');
     }
-    
+
     /**
      * Compute the content of the widget
      * @return string html
@@ -48,7 +48,7 @@ class Widget_MySystemEvent extends Widget {
         $content .= '<div style="text-align:center"><a href="/admin/system_events/">[ '. $GLOBALS['Language']->getText('global', 'more') .' ]</a></div>';
         return $content;
     }
-    
+
     /**
      * Says if the content of the widget can be displayed through an ajax call
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
@@ -57,7 +57,7 @@ class Widget_MySystemEvent extends Widget {
     public function isAjax() {
         return true;
     }
-    
+
      /**
      * Get the description of the widget
      * @return string html

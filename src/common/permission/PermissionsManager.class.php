@@ -26,9 +26,9 @@ class PermissionsManager implements IPermissionsManagerNG {
     var $_permission_dao;
     var $_permissions;
     var $_ugroups_for_user;
-    
+
     private static $_permissionmanager_instance;
-    
+
     public function __construct($permission_dao) {
         $this->_permission_dao   = $permission_dao;
         $this->_permissions      = array();
@@ -46,22 +46,22 @@ class PermissionsManager implements IPermissionsManagerNG {
         }
         return self::$_permissionmanager_instance;
     }
-    
+
     public static function setInstance($instance) {
         self::$_permissionmanager_instance = $instance;
     }
-    
+
     public static function clearInstance() {
         self::$_permissionmanager_instance = null;
     }
 
     /**
     * Returns if one of the user's ugroups has permission to access the object
-    * 
+    *
     * WARNING: THIS METHOD DOESN'T TAKE 'DEFAULT' PERMISSIONS !
-    * 
+    *
     * @access public
-    * 
+    *
     * @param  int     $object_id       The id of the object
     * @param  string  $permission_type The type of permission asked
     * @param  array   $ugroups         The user's ugroups
@@ -71,7 +71,7 @@ class PermissionsManager implements IPermissionsManagerNG {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
-        
+
         if (count(array_diff($ugroups, array_keys($this->_permissions[$object_id]))) > 0) {
             $this->retrievePermissions($object_id, $ugroups);
         }
@@ -84,14 +84,14 @@ class PermissionsManager implements IPermissionsManagerNG {
         }
         return false;
     }
-    
+
     /**
     * Returns all permissions for ugroups for a given object
-    * WARNING: since object_ids are not unique, some permissions returned 
+    * WARNING: since object_ids are not unique, some permissions returned
     * might not be relevant for the given object
-    * 
+    *
     * @access public
-    * 
+    *
     * @param  int     $object_id  The id of the object
     *
     * @return array
@@ -111,7 +111,7 @@ class PermissionsManager implements IPermissionsManagerNG {
         }
         return $perms;
     }
-    
+
     /**
      * Returns all ugroup name for a given object_id and permission_type
      * @param  int     $object_id       The id of the object
@@ -125,7 +125,7 @@ class PermissionsManager implements IPermissionsManagerNG {
 
         if (!$dar->valid()) {
             return;
-        }   
+        }
 
         $ugroups_name = array ();
         while ($dar->valid()) {
@@ -139,7 +139,7 @@ class PermissionsManager implements IPermissionsManagerNG {
         }
         return $ugroups_name;
     }
-     
+
     /**
      * Returns all ugroup id for a given object_id and permission_type
      *
@@ -159,11 +159,11 @@ class PermissionsManager implements IPermissionsManagerNG {
 
      /**
       * Return the list of the default ugroup_ids authorized to access the given permission_type
-      * 
+      *
       * @see permission_db_get_defaults
-      * 
+      *
       * @param String $permissionType
-      * 
+      *
       * @return DataAccessResult
       */
     public function getDefaults($permissionType, $withName = true) {
@@ -204,7 +204,7 @@ class PermissionsManager implements IPermissionsManagerNG {
         if (!$dar || $dar->isError()) {
             return array();
         }
-         
+
         $ugroups = array();
         foreach ($dar as $row) {
             $ugroups[] = $row['ugroup_id'];
@@ -286,9 +286,9 @@ class PermissionsManager implements IPermissionsManagerNG {
 
     /**
     * Store internally (in _permissions) all permissions for an object
-    * 
+    *
     * @access protected
-    * 
+    *
     * @param  int     $object_id  The id of the object
     * @param  array   $ugroups    A list of ugroups we want to see in permissions
     */
@@ -301,35 +301,35 @@ class PermissionsManager implements IPermissionsManagerNG {
         }
         $this->buildPermissionsCache($dar, $ugroups);
     }
-     
+
     public function clonePermissions($source, $target, $perms, $toGroupId=0) {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
-    
+
    /**
     * Duplicate permissions
-    * 
-    * @param int    $source 
+    *
+    * @param int    $source
     * @param int    $target
     * @param array  $permission_types
     * @param array  $ugroup_mapping, an array of ugroups
     * @param int    $duplicate_type What kind of duplication is going on
-    * 
+    *
     * @deprecated Use one of duplicateWithStatic, duplicateWithStaticMapping, duplicateWithoutStatic below
-    * 
+    *
     * @return bool
     */
     public function duplicatePermissions($source, $target, array $permission_types, $ugroup_mapping, $duplicate_type) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplicate_type, $ugroup_mapping);
     }
-    
+
     /**
      * Duplicate permission within the same project (copy perms for both dynamic and static groups)
-     * 
+     *
      * @param int    $source
      * @param int    $target
      * @param array  $permission_types
-     * 
+     *
      * @return bool
      */
     public function duplicateWithStatic($source, $target, array $permission_types) {
@@ -338,36 +338,36 @@ class PermissionsManager implements IPermissionsManagerNG {
 
     /**
      * Duplicate permission on project creation (straight copy perms for dynamic and translate static groups with ugroup_mapping)
-     * 
+     *
      * @param int    $source
      * @param int    $target
      * @param array  $permission_types
-     * @param array  $ugroup_mapping 
-     * 
+     * @param array  $ugroup_mapping
+     *
      * @return bool
      */
     public function duplicateWithStaticMapping($source, $target, array $permission_types, $ugroup_mapping) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
     }
-    
+
     /**
      * Duplicate permission from one project to another (straight copy perms for dynamic do not copy static groups)
-     * 
+     *
      * @param int    $source
      * @param int    $target
      * @param array $permission_types
-     * 
+     *
      * @return bool
      */
     public function duplicateWithoutStatic($source, $target, array $permission_types) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
     }
 
-    public function isPermissionExist($object_id, $ptype){        
+    public function isPermissionExist($object_id, $ptype){
         $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
         return $dar->valid();
     }
-    
+
     public function addPermission($permission_type, $object_id, $ugroup_id){
         return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
     }
@@ -382,10 +382,10 @@ class PermissionsManager implements IPermissionsManagerNG {
 
     /**
      * Clears permission for a given object
-     * 
+     *
      * @param String $permissionType Permission
      * @param String $objectId       Affected object's id
-     * 
+     *
      * @return bool
      */
     public function clearPermission($permissionType, $objectId) {

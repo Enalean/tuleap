@@ -27,7 +27,7 @@ require_once('common/include/HTTPRequest.class.php');
 class ArtifactFieldHtml extends ArtifactField {
     /**
      * If set to false, no JS will be generated in Read Only mode.
-     * 
+     *
      * @var bool
      */
     protected $isJavascriptEnabled = true;
@@ -52,12 +52,12 @@ class ArtifactFieldHtml extends ArtifactField {
         $this->value_function = $art_field->value_function;
         $this->use_it = $art_field->use_it;
         $this->place = $art_field->place;
-        
+
     }
 
     /**
      * Allow to disable JS generation in Read Only mode.
-     * 
+     *
      * Usefull in HTML Mail context when we need (read) HTML but no Javascript
      */
     function disableJavascript() {
@@ -65,9 +65,9 @@ class ArtifactFieldHtml extends ArtifactField {
     }
 
     /**
-     * 
+     *
      *  Returns the label display for this field (HTML code)
-     * 
+     *
      *  @param break: force a break line after the label
      *  @param ascii: display in ascii mode
      *
@@ -83,7 +83,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             $output = '<B>'. $output .'</B>';
         }
-        if ($break) 
+        if ($break)
         $output .= ($ascii?"\n":'<BR>');
         else
         $output .= ($ascii? ' ':'&nbsp;');
@@ -91,11 +91,11 @@ class ArtifactFieldHtml extends ArtifactField {
     }
 
     /**
-     * 
+     *
      *  Returns a multiplt select box populated with field values for this project
      *  if box_name is given then impose this name in the select box
      *  of the  HTML form otherwise use the field_name)
-     * 
+     *
      *  @param box_name: the selectbox name
      *  @param group_artifact_id: the artifact type id
      *  @param checked,show_none,text_none,show_any,text_any,show_value: values used by html_build_select_box function
@@ -128,7 +128,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             if (db_numrows($result)>0)
                 db_reset_result($result);
-            
+
             if ($box_name == '') {
                 $box_name = $this->field_name.'[]';
             }
@@ -146,18 +146,18 @@ class ArtifactFieldHtml extends ArtifactField {
             return $output;
         }
     }
-    
+
     function _isValueDefaultValue($value, $default_value) {
         return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
     }
     /**
      * _getValuesAsJavascript
-     * 
+     *
      * MV: I added the latest param in order to manage mass change in the safest way.
      * I didn't know why the $row[0] value is casted as Int so in order to avoid clashes
      * the value is not casted ONLY when it match $text_unchanged. We must pass the param
      * as it may change.
-     * 
+     *
      * @param $values
      * @param $default_value
      * @param $text_unchanged
@@ -178,23 +178,23 @@ class ArtifactFieldHtml extends ArtifactField {
             }
         }
         if (!$isDefaultValuePresent && !is_array($default_value)) {
-            // for single select box, if the default value is not present, 
+            // for single select box, if the default value is not present,
             // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
             $output .= "\n\t.addOption('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODENDI_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."', true)\n";
         }
             return $output;
-    }        
+    }
     /**
-     * 
+     *
      *  Returns a select box populated with field values for this project
      *  if box_name is given then impose this name in the select box
      *  of the  HTML form otherwise use the field_name)
-     * 
+     *
      *  @param box_name: the selectbox name
      *  @param group_artifact_id: the artifact type id
      *  @param checked,show_none,text_none,show_any,text_any: values used by html_build_select_box function
      *  @param display: to manage the display of the selectBox: In case of RO it is not dispalyed
-     *  
+     *
      *    @return    string
      */
     function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0, $display = true) {
@@ -226,7 +226,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             if (db_numrows($result)>0)
                 db_reset_result($result);
-    
+
             if ($box_name == '') {
                 $box_name = $this->field_name;
             }
@@ -258,9 +258,9 @@ class ArtifactFieldHtml extends ArtifactField {
     }
 
     /**
-     * 
+     *
      *  Returns a multi date field
-     * 
+     *
      *  @param date_begin: start date
      *  @param date_end: end date
      *  @param size: the field size
@@ -271,7 +271,7 @@ class ArtifactFieldHtml extends ArtifactField {
      */
     function multipleFieldDate($date_begin='',$date_end='',$size=10,$maxlength=10,$ro=false) {
         global $Language;
-      
+
         // CAUTION!!!! The Javascript below assumes that the date always appear
         // in a field called 'artifact_form'
         $hp = Codendi_HTMLPurifier::instance();
@@ -283,23 +283,22 @@ class ArtifactFieldHtml extends ArtifactField {
         } else {
             if (!$size || !$maxlength)
             list($size, $maxlength) = $this->getGlobalDisplaySize();
-        
-                
+
               $html = $Language->getText('tracker_include_field','start');
               $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->getName(), $date_begin, $size, $maxlength);
               $html .= "<br />";
               $html .= $Language->getText('tracker_include_field','end');
               $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id."_end", $this->getName()."_end", $date_end, $size, $maxlength);
         }
-    
+
         return($html);
-    
+
     }
-    
+
     /**
-     * 
+     *
      *  Returns a date operator field
-     * 
+     *
      *  @param value: initial value
      *  @param ro: if true, the field is read-only
      *
@@ -318,13 +317,13 @@ class ArtifactFieldHtml extends ArtifactField {
             '</SELECT>';
         }
         return($html);
-    
+
     }
 
     /**
-     * 
+     *
      *  Returns a date field
-     * 
+     *
      *  @param value: initial value
      *  @param size: the field size
      *  @param maxlength: the max field size
@@ -341,13 +340,13 @@ class ArtifactFieldHtml extends ArtifactField {
             $html = $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->field_name, $value, $size, $maxlength);
         }
         return($html);
-    
+
     }
-        
+
     /**
-     * 
+     *
      *  Returns a text field
-     * 
+     *
      *  @param value: initial value
      *  @param size: the field size
      *  @param maxlength: the max field size
@@ -358,7 +357,7 @@ class ArtifactFieldHtml extends ArtifactField {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$size || !$maxlength)
         list($size, $maxlength) = $this->getGlobalDisplaySize();
-    
+
         $maxlengtharg = ' maxlength="'.(int)$maxlength.'"';
         if($maxlength == "") {
             $maxlengtharg = "";
@@ -377,13 +376,13 @@ class ArtifactFieldHtml extends ArtifactField {
             .'>';
 
         return($html);
-    
+
     }
-    
+
     /**
-     * 
+     *
      *  Returns a text area field
-     * 
+     *
      *  @param value: initial value
      *  @param cols: number of columns
      *  @param rows: number of rows
@@ -394,17 +393,17 @@ class ArtifactFieldHtml extends ArtifactField {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$cols || !$rows)
         list($cols, $rows) = $this->getGlobalDisplaySize();
-    
+
         $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .
         '" id="tracker_'. $hp->purify( $this->field_name, CODENDI_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
-    
+
         return($html);
-    
+
     }
 
     /**
-     * 
-     * Display a artifact field either as a read-only value or as a read-write 
+     *
+     * Display a artifact field either as a read-only value or as a read-write
      * making modification possible
      *
      * @param group_artifact_id : the group artifact id (artifact type id)
@@ -426,7 +425,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *    @return    string
      */
     function display($group_artifact_id, $value='xyxy',
-                   $break=false, $label=true, $ro=false, $ascii=false, 
+                   $break=false, $label=true, $ro=false, $ascii=false,
                    $show_none=false, $text_none=0,
                    $show_any=false, $text_any=0,
                    $show_unchanged=false,$text_unchanged=0,
@@ -442,22 +441,22 @@ class ArtifactFieldHtml extends ArtifactField {
                 $value = htmlentities($request->get($this->field_name), ENT_QUOTES, 'UTF-8');
             }
         }
-        
+
         if (!$text_none) $text_none=$Language->getText('global','none');
         if (!$text_any) $text_any=$Language->getText('global','any');
         if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
-        
+
         $output = "";
-        
+
         if ($label) {
             $output = $this->labelDisplay($break,$ascii,!$ro);
         }
         // display depends upon display type of this field
         switch ( $this->getDisplayType() ) {
-    
+
             case 'SB':
                 if ($ro) {
-    
+
                       // if multiple selected values return a list of <br> separated values
                       $arr = ( is_array($value) ? $value : array($value));
                     for ($i=0;$i < count($arr); $i++) {
@@ -477,16 +476,16 @@ class ArtifactFieldHtml extends ArtifactField {
                     } else {
                         $output .= join('<br>', $arr);
                         if ($htmlEmail) {
-                            //The span is used to pass values that would be processed in JS as dependency sources' values  
+                            //The span is used to pass values that would be processed in JS as dependency sources' values
                             $output .= '<span id="'.$this->field_name.'" style="display: none;">'.$value.'</span>';
                         }
                         $output .= $this->fieldBox('',$group_artifact_id, $value,
                         $show_none,$text_none,$show_any,
-                        $text_any,$show_unchanged,$text_unchanged, false);    
+                        $text_any,$show_unchanged,$text_unchanged, false);
                     }
-    
+
                 } else {
-            
+
                     // Only show the 'None" label if empty value is allowed or
                     // if value is already none (it can happen if the field was not used in
                     // the artifact submission form)
@@ -494,7 +493,7 @@ class ArtifactFieldHtml extends ArtifactField {
                         $show_none=true;
                         $text_none=$Language->getText('global','none');
                     }
-        
+
                     if (is_array($value))
                     $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
                                $show_none,$text_none,$show_any,
@@ -502,10 +501,10 @@ class ArtifactFieldHtml extends ArtifactField {
                     else
                     $output .= $this->fieldBox('',$group_artifact_id, $value,
                          $show_none,$text_none,$show_any,
-                         $text_any,$show_unchanged,$text_unchanged);                   
+                         $text_any,$show_unchanged,$text_unchanged);
                 }
-     break; 
-    
+     break;
+
             case 'MB':
                 $arr = ( is_array($value) ? $value : array($value));
                 $valueArray = $arr;
@@ -526,7 +525,7 @@ class ArtifactFieldHtml extends ArtifactField {
                       $output .= join(",", $arr);
                     if (!$ascii) {
                         if ($htmlEmail) {
-                            //The span is used to pass values id that would be processed in JS as dependency sources' values  
+                            //The span is used to pass values id that would be processed in JS as dependency sources' values
                             $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
                         }
                         $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
@@ -542,7 +541,7 @@ class ArtifactFieldHtml extends ArtifactField {
                         $show_none=true;
                         $text_none=$Language->getText('global','none');
                     }
-        
+
                     //if (is_array($value))
                     $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
                                $show_none,$text_none,$show_any,
@@ -551,9 +550,9 @@ class ArtifactFieldHtml extends ArtifactField {
                  //    $output .= $this->fieldBox('',$group_artifact_id, $value,
                  //                   $show_none,$text_none,$show_any,
                  //                   $text_any);
-                               
+
                 }
-     break; 
+     break;
 
             case 'DF':
                 if ($value == $Language->getText('global','unchanged')) {
@@ -565,7 +564,7 @@ class ArtifactFieldHtml extends ArtifactField {
                     if ( $value == "" ) {
                         $value = time();
                     }
-                    if ($ascii) 
+                    if ($ascii)
                 // most date fields (except open_date) are real dates (without time), so do not use $sys_datefmt
                 // any more which can include an hour:min (than set on 00:00 for most dates). Especially in mail_follow_ups
                 // after changing an Artifact
@@ -578,7 +577,7 @@ class ArtifactFieldHtml extends ArtifactField {
                     }
                 }
      break;
-    
+
             case 'TF':
                 if ( $this->getDataType() == $this->DATATYPE_FLOAT ) {
                     if ($value == $Language->getText('global','unchanged')) {
@@ -589,23 +588,23 @@ class ArtifactFieldHtml extends ArtifactField {
                            $value = number_format($value, 2, '.', '');
                     }
                 }
-                if ($ascii) 
+                if ($ascii)
                 $output .= util_unconvert_htmlspecialchars($value);
                 else
                 $output .= ($ro ? $value: $this->fieldText($value));
      break;
-    
+
             case 'TA':
-                if ($ascii) 
+                if ($ascii)
                 $output .= util_unconvert_htmlspecialchars($value);
                 else
                 $output .= ($ro ? nl2br($value):$this->fieldTextarea($value));
      break;
-    
+
             default:
                 $output .= $Language->getText('tracker_include_field','unknown_display_type',$this->getName());
         }
-    
+
         return($output);
     }
 }

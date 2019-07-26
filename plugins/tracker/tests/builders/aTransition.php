@@ -29,44 +29,44 @@ function aTransition() {
 }
 
 class Test_Transition_Builder {
-    
+
     /**
      * @var int
      */
     private $transition_id = 0;
-    
+
     /**
      * @var int
      */
     private $workflow_id = 0;
-    
+
     /**
      * @var Tracker_FormElement_Field_List_Value
      */
     private $from_field_value;
-    
+
     /**
      * @var Tracker_FormElement_Field_List_Value
      */
     private $to_field_value;
-    
+
     public function withId($id) {
         $this->transition_id = $id;
         return $this;
     }
-    
+
     public function fromFieldValueId($id) {
         $this->from_field_value = mock('Tracker_FormElement_Field_List_Value');
         stub($this->from_field_value)->getId()->returns($id);
         return $this;
     }
-    
+
     public function toFieldValueId($id) {
         $this->to_field_value = mock('Tracker_FormElement_Field_List_Value');
         stub($this->to_field_value)->getId()->returns($id);
         return $this;
     }
-    
+
     public function build() {
         return new Transition($this->transition_id,
                               $this->workflow_id,

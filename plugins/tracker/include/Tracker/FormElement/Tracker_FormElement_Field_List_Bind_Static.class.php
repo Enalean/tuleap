@@ -207,7 +207,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             throw new Tracker_FormElement_InvalidFieldValueException();
         }
 
-
         return $this->values[$value_id];
     }
 

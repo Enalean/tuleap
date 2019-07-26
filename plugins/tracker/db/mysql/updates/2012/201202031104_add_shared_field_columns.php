@@ -40,7 +40,7 @@ EOT;
             $this->updateFieldListBindStaticValueTable();
         }
     }
-    
+
     private function updateFieldTable() {
         $sql = "ALTER TABLE tracker_field
                 ADD COLUMN original_field_id INT( 11 ) UNSIGNED NOT NULL AFTER notifications";
@@ -68,7 +68,7 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while initializing original_value_id with some data: '.implode(', ', $this->db->dbh->errorInfo()));
         }
     }
-    
+
     public function postUp() {
         if (!$this->db->columnNameExists('tracker_field', 'original_field_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column original_field_id to tracker_field table');

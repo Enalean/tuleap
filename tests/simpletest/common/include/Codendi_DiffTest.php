@@ -33,17 +33,17 @@ class Codendi_DiffTest extends TuleapTestCase {
         $this->f = array('Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5');
         $this->g = array('Line 10', 'Line 2', 'Line 3', 'Line 4', 'Line 50');
     }
-    
+
     public function testHtmlUnifiedDiffFormatter_NoChanges() {
-        
+
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
-        
-        $this->assertEqual($formatter->format(new Codendi_Diff($this->a, $this->b)), 
+
+        $this->assertEqual($formatter->format(new Codendi_Diff($this->a, $this->b)),
                            '');
     }
-    
+
     public function testHtmlUnifiedDiffFormatter_LineModified() {
-        
+
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->b, $this->c)),
                                 '<div class="block">'.
@@ -64,9 +64,9 @@ class Codendi_DiffTest extends TuleapTestCase {
                                     '</div>'.
                                 '</div>');
     }
-    
+
     public function testHtmlUnifiedDiffFormatter_LineDeleted() {
-        
+
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->b, $this->d)),
                                 '<div class="block">'.
@@ -82,9 +82,9 @@ class Codendi_DiffTest extends TuleapTestCase {
                                     '</div>'.
                                 '</div>');
     }
-    
+
     public function testHtmlUnifiedDiffFormatter_LineAdded() {
-        
+
         $formatter = new Codendi_HtmlUnifiedDiffFormatter();
         $this->assertEqual($formatter->format(new Codendi_Diff($this->e, $this->d)),
                                 '<div class="block">'.
@@ -95,7 +95,7 @@ class Codendi_DiffTest extends TuleapTestCase {
                                     '</div>'.
                                 '</div>');
     }
-    
+
     public function testHtmlUnifiedDiffFormatter_MultipleDiffs() {
         $formatter = new Codendi_HtmlUnifiedDiffFormatter(0);
         $this->assertEqual($formatter->format(new Codendi_Diff($this->f, $this->g)),

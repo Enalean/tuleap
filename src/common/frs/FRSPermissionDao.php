@@ -60,7 +60,6 @@ class FRSPermissionDao extends DataAccessObject
         $project_id      = $this->da->escapeInt($project_id);
         $permission_type = $this->da->quoteSmart($permission_type);
 
-
         $sql = "DELETE FROM frs_global_permissions WHERE project_id = $project_id AND permission_type = $permission_type";
         if (! $this->update($sql)) {
             $this->da->rollback();

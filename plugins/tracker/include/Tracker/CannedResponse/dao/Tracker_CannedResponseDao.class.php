@@ -23,7 +23,7 @@ class Tracker_CannedResponseDao extends DataAccessObject {
         parent::__construct();
         $this->table_name = 'tracker_canned_response';
     }
-    
+
     public function searchById($tracker_id, $id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id = $this->da->escapeInt($id);
@@ -33,7 +33,7 @@ class Tracker_CannedResponseDao extends DataAccessObject {
                   AND tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT * 
@@ -42,7 +42,7 @@ class Tracker_CannedResponseDao extends DataAccessObject {
                 ORDER BY title ASC";
         return $this->retrieve($sql);
     }
-    
+
     public function create($tracker_id, $title, $body) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $title      = $this->da->quoteSmart($title);
@@ -51,7 +51,7 @@ class Tracker_CannedResponseDao extends DataAccessObject {
                 VALUES ($tracker_id, $title, $body)";
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function save($canned) {
         $id         = $this->da->escapeInt($canned->id);
         $title      = $this->da->quoteSmart($canned->title);
@@ -62,7 +62,7 @@ class Tracker_CannedResponseDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $id = $this->da->escapeInt($id);
         $sql = "DELETE FROM $this->table_name 

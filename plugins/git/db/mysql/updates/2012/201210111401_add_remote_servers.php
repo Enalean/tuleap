@@ -58,7 +58,7 @@ EOT;
                         ADD FOREIGN KEY remote_server_idx (remote_server_id) REFERENCES plugin_git_remote_servers (id)';
         $this->execDB($foreign_key, 'An error occured while foreign key to plugin_git: ');
     }
-    
+
     protected function execDB($sql, $message) {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

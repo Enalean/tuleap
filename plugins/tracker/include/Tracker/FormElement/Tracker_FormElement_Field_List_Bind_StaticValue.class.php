@@ -24,47 +24,47 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
 
     /**
      *
-     * @var string 
+     * @var string
      */
     protected $label;
-    
+
     /**
      *
-     * @var string 
+     * @var string
      */
     protected $description;
-    
+
     /**
      *
-     * @var int 
+     * @var int
      */
     protected $rank;
-    
+
     public function __construct($id, $label, $description, $rank, $is_hidden) {
         parent::__construct($id, $is_hidden);
         $this->label       = $label;
         $this->description = $description;
         $this->rank        = $rank;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function __toString() {
         return $this->label ? $this->label : '';
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function getId() {
         return $this->id;
     }
-    
+
     /**
-     * 
+     *
      * @param int $id
      * @return \Tracker_FormElement_Field_List_Bind_StaticValue
      */
@@ -72,17 +72,17 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $this->id = (int) $id;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getLabel() {
         return $this->label;
     }
-    
+
     /**
-     * 
+     *
      * @param string $label
      * @return \Tracker_FormElement_Field_List_Bind_StaticValue
      */
@@ -90,17 +90,17 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $this->label = (string) $label;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getDescription() {
         return $this->description;
     }
-    
+
     /**
-     * 
+     *
      * @param string $description
      * @return \Tracker_FormElement_Field_List_Bind_StaticValue
      */
@@ -110,15 +110,15 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     }
 
     /**
-     * 
+     *
      * @return int
      */
     public function getRank() {
         return $this->rank;
     }
-    
+
     /**
-     * 
+     *
      * @param int $rank
      * @return \Tracker_FormElement_Field_List_Bind_StaticValue
      */

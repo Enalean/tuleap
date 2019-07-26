@@ -830,7 +830,6 @@ class DocmanPlugin extends Plugin
             </thead>
             <tbody>';
 
-
         if ($nbItems > 0) {
             foreach ($res as $row ) {
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);

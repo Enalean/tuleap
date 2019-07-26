@@ -137,7 +137,6 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
 
-
         $created_item_representation = $item_creator->createEmpty(
             $parent_item,
             $user,
@@ -185,7 +184,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-
 
         $created_item = \Mockery::mock(\Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -795,7 +793,6 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->status            = 'approved';
         $post_representation->obsolescence_date = '2019-10-11';
 
-
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
@@ -814,7 +811,6 @@ class DocmanItemCreatorTest extends TestCase
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
@@ -829,7 +825,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
-
 
         $created_item_representation = $item_creator->createEmpty(
             $parent_item,
@@ -867,7 +862,6 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->status                       = 'approved';
         $post_representation->obsolescence_date            = '2019-10-11';
 
-
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
@@ -885,7 +879,6 @@ class DocmanItemCreatorTest extends TestCase
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -948,7 +941,6 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->status                    = 'approved';
         $post_representation->obsolescence_date         = '2019-10-11';
 
-
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
@@ -966,7 +958,6 @@ class DocmanItemCreatorTest extends TestCase
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
 
         $created_item = \Mockery::mock(\Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -1050,8 +1041,6 @@ class DocmanItemCreatorTest extends TestCase
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
-
 
         $created_item = \Mockery::mock(\Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);

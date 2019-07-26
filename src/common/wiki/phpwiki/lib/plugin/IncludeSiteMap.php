@@ -29,7 +29,7 @@ rcs_id('$Id: IncludeSiteMap.php,v 1.2 2004/03/09 12:26:20 rurban Exp $');
  *
  * This is a quick mod of BackLinks to do the job recursively. If your
  * site is categorized correctly, and all the categories are listed in
- * CategoryCategory, then a RecBackLinks there will produce one BIG(!) 
+ * CategoryCategory, then a RecBackLinks there will produce one BIG(!)
  * contents page for the entire site.
  * The list is as deep as the recursion level ('reclimit').
  *

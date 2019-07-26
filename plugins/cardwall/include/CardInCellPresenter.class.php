@@ -18,16 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class Cardwall_CardInCellPresenter {
-    
+
     private $swimline_id;
     private $swimline_field_values;
     private $card_field_id;
-    
-    /** 
+
+    /**
      * @var Tracker_CardPresenter
      */
     private $card_presenter;
-    
+
     public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = array()) {
         $this->swimline_id           = $swimline_id;
         $this->swimline_field_values = $swimline_field_values;
@@ -62,11 +62,11 @@ class Cardwall_CardInCellPresenter {
     public function getCardPresenter() {
         return $this->card_presenter;
     }
-    
+
     public function getArtifact() {
         return $this->card_presenter->getArtifact();
     }
-    
+
     public function getId() {
         return $this->card_presenter->getId();
     }

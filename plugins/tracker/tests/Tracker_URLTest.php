@@ -27,8 +27,8 @@ Mock::generate('TrackerFactory');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_ReportFactory');
-Mock::generatePartial('Tracker_URL', 
-                      'Tracker_URLTestVersion', 
+Mock::generatePartial('Tracker_URL',
+                      'Tracker_URLTestVersion',
                       array(
                           'getTrackerFactory',
                           'getTracker_FormElementFactory',
@@ -41,34 +41,34 @@ Mock::generate('Codendi_Request');
 Mock::generate('PFUser');
 
 class Tracker_URLTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
         $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 666);
-        
+
         $this->artifact = new MockTracker_Artifact($this);
         $af = new MockTracker_ArtifactFactory($this);
         $af->setReturnReference('getArtifactById', $this->artifact, array('1'));
-        
+
         $this->report = new MockTracker_Report($this);
         $rf = new MockTracker_ReportFactory($this);
         $rf->setReturnReference('getReportById', $this->report, array('2', $this->user->getId(), true));
-        
+
         $this->tracker = new MockTracker($this);
         $this->tracker->setReturnValue('isActive', true);
         $this->tracker->setReturnValue('userCanView', true);
         $tf = new MockTrackerFactory($this);
         $tf->setReturnReference('getTrackerById', $this->tracker, array(3));
-        
+
         $this->formElement = new MockTracker_FormElement_Interface($this);
         $ff = new MockTracker_FormElementFactory($this);
         $ff->setReturnReference('getFormElementById', $this->formElement, array('4'));
-        
+
         $this->artifact->setReturnReference('getTracker', $this->tracker);
         $this->report->setReturnReference('getTracker', $this->tracker);
         $this->formElement->setReturnReference('getTracker', $this->tracker);
-        
+
         $this->url = new Tracker_URLTestVersion($this);
         $this->url->setReturnReference('getTrackerFactory', $tf);
         $this->url->setReturnReference('getTracker_FormElementFactory', $ff);
@@ -84,7 +84,7 @@ class Tracker_URLTest extends TuleapTestCase {
         unset($this->url);
         parent::tearDown();
     }
-    
+
     public function testGetArtifact() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '1', array('aid'));
@@ -94,7 +94,7 @@ class Tracker_URLTest extends TuleapTestCase {
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_Artifact');
     }
-    
+
     public function testGetReport() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '2', array('report'));
@@ -103,7 +103,7 @@ class Tracker_URLTest extends TuleapTestCase {
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_Report');
     }
-    
+
     public function testGetTracker() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', 3, array('tracker'));
@@ -111,7 +111,7 @@ class Tracker_URLTest extends TuleapTestCase {
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker');
     }
-    
+
     public function testGetTrackerWithAtid() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', 3, array('atid'));
@@ -119,14 +119,14 @@ class Tracker_URLTest extends TuleapTestCase {
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker');
     }
-    
+
     public function testGetField() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_FormElement_Interface');
     }
-    
+
     public function testGetNotMatchingElement() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '5', array('group_id'));

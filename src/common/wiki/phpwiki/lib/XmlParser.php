@@ -9,15 +9,15 @@ rcs_id('$Id: XmlParser.php,v 1.6 2004/11/03 16:34:11 rurban Exp $');
  * @author: Reini Urban
  *
  * TODO: Convert more perl Html::Element style to our XmlElement style
- * Needed additions to XmlElement: 
+ * Needed additions to XmlElement:
  *   Html::Element::parent() <=> XmlElement::parent
  *   Html::Element::attr()   <=> XmlElement::getAttr()
  *   Html::Element::tag      <=> XmlElement::_tag
  *   Html::Element::content_list() <=> ->getContent() ??? or ->_children[]
- *   all_external_attr_names() <=> 
+ *   all_external_attr_names() <=>
  *
  * Problems:
- * The HtmlParser object set by xml_parse() doesn't keep its parameters, 
+ * The HtmlParser object set by xml_parse() doesn't keep its parameters,
  * esp. $this->root is lost. So we have to this into a global.
  */
 
@@ -41,10 +41,10 @@ rcs_id('$Id: XmlParser.php,v 1.6 2004/11/03 16:34:11 rurban Exp $');
 
 /**
  * class XmlParser - Parse into a tree of XmlElement nodes.
- * 
+ *
  * PHP Problems:
  *   inside the handlers no globals are transported, only class vars.
- *   when leaving the handler class all class vars are destroyed, so we 
+ *   when leaving the handler class all class vars are destroyed, so we
  *   have to copy the root to a global.
  *
  */
@@ -56,7 +56,7 @@ class XmlParser {
         if ($encoding)
             $this->_parser = xml_parser_create($encoding);
         else
-            $this->_parser = xml_parser_create(); 
+            $this->_parser = xml_parser_create();
         xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, $GLOBALS['charset']);
         //xml_set_object($this->_parser, &$this);
         xml_set_element_handler($this->_parser,
@@ -76,7 +76,7 @@ class XmlParser {
 
         if (!empty($this->_parser)) xml_parser_free($this->_parser);
         unset($this->_parser);
-        
+
         if (isset($xml_parser_root)) {
             $xml_parser_root->_destruct();
             unset($xml_parser_root); // nested parsing forbidden!
@@ -101,7 +101,7 @@ class XmlParser {
                 }
             }
         } elseif (!empty($attrs) and is_array($attrs)) {
-            foreach ($attrs as $key => $val) {    
+            foreach ($attrs as $key => $val) {
                 $key = strtolower(trim($key));
                 $val = str_replace(array('"',"'"),'',trim($val));
                 $node->_attr[$key] = $val;
@@ -136,9 +136,9 @@ class XmlParser {
     }
 
     function parse($content, $is_final = true) {
-        xml_parse($this->_parser, $content, $is_final) or 
-            trigger_error(sprintf("XML error: %s at line %d", 
-                                  xml_error_string(xml_get_error_code($this->_parser)), 
+        xml_parse($this->_parser, $content, $is_final) or
+            trigger_error(sprintf("XML error: %s at line %d",
+                                  xml_error_string(xml_get_error_code($this->_parser)),
                                   xml_get_current_line_number($this->_parser)),
                           E_USER_WARNING);
     }
@@ -189,7 +189,7 @@ class XmlParser {
 // new XmlParser and HtmlParser, RssParser based on that.
 //
 //
-// 2004-04-09 16:30:50 rurban: 
+// 2004-04-09 16:30:50 rurban:
 //  added fsockopen allow_url_fopen = Off workaround
 
 // For emacs users

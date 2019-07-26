@@ -28,7 +28,7 @@ class SOAP_RequestLimitatorFactory {
 
     /**
      * Returns a Limitator object
-     * 
+     *
      * @return SOAP_RequestLimitator
      */
     function getLimitator() {

@@ -27,7 +27,7 @@ require_once('common/include/HTTPRequest.class.php');
 $pv=isset($pv)?$pv:false;
 
 function display_ml_details($group_id, $list_server, $result, $i) {
-    
+
     echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.db_result($result, $i, 'list_name').'</b> [';
     $list_is_public = db_result($result, $i, 'is_public');
     $html_a = '';
@@ -60,7 +60,7 @@ if ($group_id) {
               'help'=>'communication.html#mailing-lists',
                   'pv'   => isset($pv)?$pv:false);
     mail_header($params);
-    
+
     if (user_isloggedin() && user_ismember($group_id)) {
         $public_flag='0,1';
     } else {
@@ -93,24 +93,24 @@ if ($group_id) {
         }
     } else {
         $sql="SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag)";
-    
+
         $result = db_query ($sql);
-    
-        $rows = db_numrows($result); 
-    
-    
+
+        $rows = db_numrows($result);
+
+
         if (!$result || $rows < 1) {
             $pm = ProjectManager::instance();
             echo '
                 <H1>'.$Language->getText('mail_index','no_list_found_for').$pm->getProject($group_id)->getPublicName().'</H1>';
             echo '
                 <P>'.$Language->getText('mail_index','proj_admin_use_admin_link');
-                    mail_footer(array('pv'   => isset($pv)?$pv:false)); 
+                    mail_footer(array('pv'   => isset($pv)?$pv:false));
             exit;
         }
-    
+
         echo '<P>'.$Language->getText('mail_index','mail_list_via_gnu');
-    
+
         if ($pv) {
             echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
         } else {
@@ -120,14 +120,14 @@ if ($group_id) {
             echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
             echo "</TR></TABLE>";
         }
-    
+
         /*
             Put the result set (list of mailing lists for this group) into a column with folders
         */
-    
+
         echo "<table WIDTH=\"100%\" border=0>\n".
-            "<TR><TD VALIGN=\"TOP\">\n"; 
-    
+            "<TR><TD VALIGN=\"TOP\">\n";
+
         for ($j = 0; $j < $rows; $j++) {
             display_ml_details($group_id, $list_server, $result, $j);
         }
@@ -142,4 +142,4 @@ if ($group_id) {
     echo '
 		<H1>'.$Language->getText('mail_index','group_err').'</H1>';
 }
-mail_footer(array('pv'   => $pv)); 
+mail_footer(array('pv'   => $pv));

@@ -72,7 +72,6 @@ class BeforeMoveArtifactTest extends TestCase
         $this->source_contributor_field = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->source_external_field    = Mockery::mock(Tracker_FormElement_Field::class);
 
-
         $this->source_title_field->shouldReceive('getId')->andReturn(1);
         $this->source_description_field->shouldReceive('getId')->andReturn(2);
         $this->source_status_field->shouldReceive('getId')->andReturn(3);

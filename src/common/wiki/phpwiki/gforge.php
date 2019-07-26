@@ -34,7 +34,7 @@ if (!$group_id || !$project) {
         define('AUTH_SESS_LEVEL', 2);
         $USER_AUTH_ORDER = "Session : PersonalPage";
         $USER_AUTH_POLICY = "stacked";
-    
+
     // Override the default configuration for CONSTANTS before index.php
     //$LANG='de'; $LC_ALL='de_DE';
     define('THEME', 'gforge');
@@ -48,7 +48,7 @@ if (!$group_id || !$project) {
     // Override the default configuration for VARIABLES after index.php:
     // E.g. Use another DB:
     $DBParams['dbtype'] = 'SQL';
-    $DBParams['dsn']    = 'pgsql://' . $sys_dbuser . ':' . 
+    $DBParams['dsn']    = 'pgsql://' . $sys_dbuser . ':' .
                               $sys_dbpasswd . '@' . $sys_dbhost .'/' . $sys_dbname
     . '_wiki';
     $DBParams['prefix'] = $project->getUnixName() ."_";
@@ -61,7 +61,7 @@ if (!$group_id || !$project) {
             $_SESSION['user_id'] = user_getname();
 
     } else {
-            // clear out the globals, just in case... 
+            // clear out the globals, just in case...
 
     }
     // Start the wiki

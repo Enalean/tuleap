@@ -118,7 +118,7 @@ class FRSPackageFactoryTest extends TuleapTestCase
         $this->frs_package_factory = $this->_userCanReadWithSpecificPerms(true);
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
-    
+
     public function testUserCanReadWithSpecificPermsHasNoAccess()
     {
         $this->frs_package_factory = $this->_userCanReadWithSpecificPerms(false);
@@ -137,7 +137,7 @@ class FRSPackageFactoryTest extends TuleapTestCase
         $this->permission_manager->shouldReceive('isPermissionExist')->with($this->package_id, 'PACKAGE_READ')->once()->andReturns(false);
         $this->permission_manager->shouldReceive('userHasPermission')->with($this->package_id, 'PACKAGE_READ', array(1,2,76))->once()->andReturns(false);
         $this->frs_package_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
-        
+
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 

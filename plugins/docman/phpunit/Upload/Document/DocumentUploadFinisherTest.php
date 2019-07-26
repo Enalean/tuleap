@@ -78,7 +78,6 @@ class DocumentUploadFinisherTest extends TestCase
             new DBTransactionExecutorPassthrough()
         );
 
-
         $item_id_being_created = 12;
         $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);

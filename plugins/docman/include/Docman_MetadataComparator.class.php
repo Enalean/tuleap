@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -129,7 +129,7 @@ class Docman_MetadataComparator {
                     $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$rowStyle);
             }
             $html .= "</td>\n";
-            
+
             // Action
             $html .= "<td>";
             switch($rowStyle) {
@@ -165,7 +165,7 @@ class Docman_MetadataComparator {
 
         return $html;
     }
-    
+
     function getMetadataCompareTable(&$sthToImport) {
         $html = '';
 
@@ -189,7 +189,7 @@ class Docman_MetadataComparator {
 
         // Table
         $html .= "<table border=\"1\">\n";
-        
+
         $html .= "<tr>\n";
         $html .= "<th colspan=\"2\">".$GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_prop')."</th>\n";
         $html .= "<th>".$this->srcGo->getPublicName()."</th>\n";
@@ -217,7 +217,7 @@ class Docman_MetadataComparator {
             } else {
                 $dstMdLabel = $srcMd->getLabel();
             }
-            
+
             if(isset($dstMdArray[$dstMdLabel])) {
                 $dstMd = $dstMdArray[$dstMdLabel];
                 if($dstMd !== false) {
@@ -312,7 +312,7 @@ class Docman_MetadataComparator {
                     $html .= $this->getLoveCompareTable($srcMd, $dstMd, $mdMap, $sthToImport);
                 }
             }
-            
+
             unset($dstMd);
             $srcMdIter->next();
         }
@@ -347,7 +347,7 @@ class Docman_MetadataComparator {
                 $html .= "</tr>\n";
             }
         }
-        
+
         $html .= "</table>\n";
 
         return $html;

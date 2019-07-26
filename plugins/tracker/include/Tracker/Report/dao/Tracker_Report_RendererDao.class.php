@@ -23,7 +23,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
         parent::__construct();
         $this->table_name = 'tracker_report_renderer';
     }
-    
+
     function searchById($id) {
         $id      = $this->da->escapeInt($id);
         $sql = "SELECT *
@@ -31,7 +31,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->retrieve($sql);
     }
-    
+
     function searchByReportId($report_id) {
         $report_id = $this->da->escapeInt($report_id);
         $sql = "SELECT *
@@ -40,7 +40,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 ORDER BY rank, name";
         return $this->retrieve($sql);
     }
-    
+
     function searchByIdAndReportId($id, $report_id) {
         $id      = $this->da->escapeInt($id);
         $report_id = $this->da->escapeInt($report_id);
@@ -49,7 +49,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 WHERE id = $id AND report_id = $report_id";
         return $this->retrieve($sql);
     }
-    
+
     function create($report_id, $type, $name, $description, $rank) {
         $report_id   = $this->da->escapeInt($report_id);
         $type        = $this->da->quoteSmart($type);
@@ -61,7 +61,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 VALUES ($report_id, $type, $name, $description, $rank)";
         return $this->updateAndGetLastId($sql);
     }
-    
+
     function move($id, $report_id, $rank) {
         $id   = $this->da->escapeInt($id);
         $report_id   = $this->da->escapeInt($report_id);
@@ -69,7 +69,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
         $sql = "UPDATE $this->table_name SET rank = $rank WHERE id = $id";
         return $this->update($sql);
     }
-    
+
     function save($id, $name, $description, $rank) {
         $id          = $this->da->escapeInt($id);
         $name        = $this->da->quoteSmart($name);
@@ -82,12 +82,12 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
-    
+
     function rename($id, $name, $description) {
         $id   = $this->da->escapeInt($id);
         $name = $this->da->quoteSmart($name);
@@ -98,7 +98,7 @@ class Tracker_Report_RendererDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     function duplicate($from_renderer_id, $to_report_id) {
         $from_renderer_id = $this->da->escapeInt($from_renderer_id);
         $to_report_id     = $this->da->escapeInt($to_report_id);

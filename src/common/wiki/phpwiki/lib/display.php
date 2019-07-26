@@ -6,7 +6,7 @@ require_once('lib/Template.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
 /**
- * Extract keywords from Category* links on page. 
+ * Extract keywords from Category* links on page.
  */
 function GleanKeywords ($page) {
     if (!defined('KEYWORDS')) return '';
@@ -37,7 +37,7 @@ function RedirectorLink($pagename) {
                    $pagename);
 }
 
-    
+
 function actionPage(&$request, $action) {
     global $WikiTheme;
 
@@ -51,13 +51,13 @@ function actionPage(&$request, $action) {
     $actionpage = $dbi->getPage($action);
     $actionrev = $actionpage->getCurrentRevision();
 
-    $pagetitle = HTML(fmt("%s: %s", 
+    $pagetitle = HTML(fmt("%s: %s",
                           $actionpage->getName(),
                           $WikiTheme->linkExistingWikiWord($pagename, false, $version)));
 
     $validators = new HTTP_ValidatorSet(array('pageversion' => $revision->getVersion(),
                                               '%mtime' => $revision->get('mtime')));
-                                        
+
     $request->appendValidators(array('pagerev' => $revision->getVersion(),
                                      '%mtime' => $revision->get('mtime')));
     $request->appendValidators(array('actionpagerev' => $actionrev->getVersion(),
@@ -69,14 +69,14 @@ function actionPage(&$request, $action) {
     if (!headers_sent()) {
         //FIXME: does not work yet. document.write not supported (signout button)
         // http://www.w3.org/People/mimasa/test/xhtml/media-types/results
-        if (ENABLE_XHTML_XML 
+        if (ENABLE_XHTML_XML
             and (!isBrowserIE() and
                  strstr($request->get('HTTP_ACCEPT'),'application/xhtml+xml')))
             header("Content-Type: application/xhtml+xml; charset=" . $GLOBALS['charset']);
         else
             header("Content-Type: text/html; charset=" . $GLOBALS['charset']);
     }
-*/    
+*/
     GeneratePage($template, $pagetitle, $revision);
     $request->checkValidators();
     flush();
@@ -125,7 +125,7 @@ function displayPage(&$request, $template=false) {
             $backlink = HTML::h1($pagename);
         }
         $pageheader->pushContent($backlink);
-    
+
     } else {
         if ($pv != 2){
             $pageheader = HTML::a(array('href' => WikiURL($pagename,
@@ -139,10 +139,10 @@ function displayPage(&$request, $template=false) {
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
     }
-    
+
     // {{{ Codendi hook to insert stuff between navbar and header
     $eM = EventManager::instance();
-    
+
     $ref_html = '';
     $crossref_fact= new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
     $crossref_fact->fetchDatas();
@@ -165,7 +165,7 @@ function displayPage(&$request, $template=false) {
     } else {
         $beforeHeader = HTML();
         $beforeHeader->pushContent(HTML::raw($ref_html));
-        $toks['BEFORE_HEADER'] = $beforeHeader; 
+        $toks['BEFORE_HEADER'] = $beforeHeader;
     }
     // }}} /Codendi hook
 
@@ -174,8 +174,8 @@ function displayPage(&$request, $template=false) {
         $redirect_message = HTML::span(array('class' => 'redirectfrom'),
                                        fmt("(Redirected from %s)",
                                            RedirectorLink($redirect_from)));
-    // abuse the $redirected template var for some status update notice                                       
-    } elseif ($request->getArg('errormsg')) { 
+    // abuse the $redirected template var for some status update notice
+    } elseif ($request->getArg('errormsg')) {
         $redirect_message = $request->getArg('errormsg');
         $request->setArg('errormsg', false);
     }
@@ -191,7 +191,7 @@ function displayPage(&$request, $template=false) {
     if ($result = isExternalReferrer($request)) {
         if (DEBUG and !empty($result['query'])) {
             //$GLOBALS['SearchHighlightQuery'] = $result['query'];
-            /* simply add the SearchHighlight plugin to the top of the page. 
+            /* simply add the SearchHighlight plugin to the top of the page.
                This just parses the wikitext, and doesn't highlight the markup */
             include_once('lib/WikiPlugin.php');
             $loader = new WikiPluginLoader;
@@ -200,10 +200,10 @@ function displayPage(&$request, $template=false) {
                 foreach (array_reverse($xml) as $line) {
                     array_unshift($page_content->_content, $line);
                 }
-                array_unshift($page_content->_content, 
+                array_unshift($page_content->_content,
                             HTML::div(_("You searched for: "), HTML::strong($result['query'])));
             }
-            
+
             if (0) {
             /* Parse the transformed (mixed HTML links + strings) lines?
                This looks like overkill.
@@ -235,7 +235,7 @@ function displayPage(&$request, $template=false) {
     }
 
     $toks['CONTENT'] = new Template('browse', $request, $page_content);
-    
+
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
     $toks['revision'] = $revision;
@@ -246,7 +246,7 @@ function displayPage(&$request, $template=false) {
     $toks['PAGE_KEYWORDS'] = GleanKeywords($page);
     if (!$template)
         $template = new Template('html', $request);
-    
+
     $template->printExpansion($toks);
     $page->increaseHitCount();
 

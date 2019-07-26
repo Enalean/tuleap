@@ -67,12 +67,12 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
 
     /**
      * Add (by name) new users into a user group.
-     * 
+     *
      * @param Array   $userList List of user identifier (e.g. ldap login)
-     * 
+     *
      * @return void
      */
-    public function addListOfUsersToGroup($userList) 
+    public function addListOfUsersToGroup($userList)
     {
         $ldapUserManager = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         $userIds = $ldapUserManager->getUserIdsFromUserList($userList);

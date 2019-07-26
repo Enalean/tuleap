@@ -318,7 +318,6 @@ class XmlImportTest extends TestCase
             ->andReturn($changeset_3)
             ->once();
 
-
         $this->artifact_creator->shouldReceive('createBare')->once()->andReturn($artifact);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);

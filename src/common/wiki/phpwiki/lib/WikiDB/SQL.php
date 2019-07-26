@@ -31,7 +31,7 @@ class WikiDB_SQL extends WikiDB
         parent::__construct($backend);
     }
 
-    
+
     /**
      * Determine whether page exists (in non-default form).
      * @see WikiDB::isWikiPage for the slow generic version
@@ -46,7 +46,7 @@ class WikiDB_SQL extends WikiDB
         return $this->_cache->_id_cache[$pagename];
     }
 
-    // adds surrounding quotes 
+    // adds surrounding quotes
     function quote ($s) { return $this->_backend->_dbh->quoteSmart($s); }
     // no surrounding quotes because we know it's a string
     function qstr ($s) {  return $this->_backend->_dbh->escapeSimple($s); }

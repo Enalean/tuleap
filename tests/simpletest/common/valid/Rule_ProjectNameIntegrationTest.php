@@ -43,20 +43,17 @@ class Rule_ProjectNameIntegrationTest extends TuleapTestCase {
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
         $sm->setReturnValue('isProjectNameAvailable', true);
-       
-        
+
         $r = new Rule_ProjectNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
         $r->setReturnValue('_getSystemEventManager', $sm);
-        
-        
+
         $r->setReturnValue('isNameAvailable', true, array ("group-test"));
         $r->setReturnValue('isNameAvailable', true, array ("test"));
         $r->setReturnValue('isNameAvailable', true, array ("test1"));
-        
-         
+
         $this->assertTrue($r->isValid("group-test"));
         $this->assertTrue($r->isValid("test"));
         $this->assertTrue($r->isValid("test1"));

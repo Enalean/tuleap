@@ -24,7 +24,7 @@
  * Model/Controler and View layer of the application
  */
 class Docman_Document extends Docman_Item {
-    
+
     function __construct($data = null) {
         parent::__construct($data);
     }

@@ -77,17 +77,17 @@ class WikiRequest extends Request {
         $this->setArg('action', $this->_deduceAction());
 
         // Restore auth state. This doesn't check for proper authorization!
-        $userid = $this->_deduceUsername();    
+        $userid = $this->_deduceUsername();
         if (ENABLE_USER_NEW) {
-            if (isset($this->_user) and 
-                !empty($this->_user->_authhow) and 
+            if (isset($this->_user) and
+                !empty($this->_user->_authhow) and
                 $this->_user->_authhow == 'session')
             {
                 // users might switch in a session between the two objects.
                 // restore old auth level here or in updateAuthAndPrefs?
                 //$user = $this->getSessionVar('wiki_user');
                 // revive db handle, because these don't survive sessions
-                if (isset($this->_user) and 
+                if (isset($this->_user) and
                      ( ! isa($this->_user, WikiUserClassname())
                        or (strtolower(get_class($this->_user)) == '_passuser')))
                 {
@@ -95,21 +95,21 @@ class WikiRequest extends Request {
                 }
             // revive other db handle
                 if (isset($this->_user->_prefs->_method)
-                    and ($this->_user->_prefs->_method == 'SQL' 
-                         or $this->_user->_prefs->_method == 'ADODB' 
-                         or $this->_user->_prefs->_method == 'PDO' 
+                    and ($this->_user->_prefs->_method == 'SQL'
+                         or $this->_user->_prefs->_method == 'ADODB'
+                         or $this->_user->_prefs->_method == 'PDO'
                          or $this->_user->_prefs->_method == 'HomePage')) {
                     $this->_user->_HomePagehandle = $this->getPage($userid);
                 }
             // need to update the lockfile filehandle
-                if ( isa($this->_user, '_FilePassUser') 
-                     and $this->_user->_file->lockfile 
+                if ( isa($this->_user, '_FilePassUser')
+                     and $this->_user->_file->lockfile
                      and !$this->_user->_file->fplock )
                 {
                     //$level = $this->_user->_level;
-                    $this->_user = UpgradeUser($this->_user, 
-                                           new _FilePassUser($userid, 
-                                                                 $this->_user->_prefs, 
+                    $this->_user = UpgradeUser($this->_user,
+                                           new _FilePassUser($userid,
+                                                                 $this->_user->_prefs,
                                                                  $this->_user->_file->filename));
                            //$this->_user->_level = $level;
                 }
@@ -130,7 +130,7 @@ class WikiRequest extends Request {
         $_lang = @$this->_prefs->_prefs['lang'];
         if (isset($_lang->lang) and $_lang->lang != $GLOBALS['LANG']) {
             $user_lang = $_lang->lang;
-            //check changed LANG and THEME inside a session. 
+            //check changed LANG and THEME inside a session.
             // (e.g. by using another baseurl)
             if (isset($this->_user->_authhow) and $this->_user->_authhow == 'session')
                 $user_lang = $GLOBALS['LANG'];
@@ -146,14 +146,14 @@ class WikiRequest extends Request {
         $_theme = @$this->_prefs->_prefs['theme'];
         if ($_theme and isset($_theme->theme))
             $user_theme = $_theme->theme;
-        else 
+        else
             $user_theme = $this->getPref('theme');
-        //check changed LANG and THEME inside a session. 
+        //check changed LANG and THEME inside a session.
         // (e.g. by using another baseurl)
-        if (isset($this->_user->_authhow) 
-            and $this->_user->_authhow == 'session' 
-            and !isset($_theme->theme) 
-            and defined('THEME') 
+        if (isset($this->_user->_authhow)
+            and $this->_user->_authhow == 'session'
+            and !isset($_theme->theme)
+            and defined('THEME')
             and $user_theme != THEME)
         {
             include_once("themes/" . THEME . "/themeinfo.php");
@@ -180,22 +180,22 @@ class WikiRequest extends Request {
     function updateAuthAndPrefs () {
 
         if (isset($this->_user) and (!isa($this->_user, WikiUserClassname()))) {
-            $this->_user = false;    
+            $this->_user = false;
         }
         // Handle authentication request, if any.
         if ($auth_args = $this->getArg('auth')) {
             $this->setArg('auth', false);
             $this->_handleAuthRequest($auth_args); // possible NORETURN
         }
-        elseif ( ! $this->_user 
-                 or (isa($this->_user, WikiUserClassname()) 
+        elseif ( ! $this->_user
+                 or (isa($this->_user, WikiUserClassname())
                      and ! $this->_user->isSignedIn())) {
             // If not auth request, try to sign in as saved user.
             if (($saved_user = $this->getPref('userid')) != false) {
                 $this->_signIn($saved_user);
             }
         }
-        
+
         $action = $this->getArg('action');
 
         // Save preferences in session and cookie
@@ -207,7 +207,7 @@ class WikiRequest extends Request {
         $this->setSessionVar('wiki_user', $this->_user);
 
         // Ensure user has permissions for action
-        // HACK ALERT: We may not set the request arg to create, 
+        // HACK ALERT: We may not set the request arg to create,
         // since the pageeditor has an ugly logic for action == create.
         if ($action == 'edit' or $action == 'create') {
             $page = $this->getPage();
@@ -222,7 +222,7 @@ class WikiRequest extends Request {
                 $this->_notAuthorized($require_level); // NORETURN
         } else {
             // novatrope patch to let only _AUTHENTICATED view pages.
-            // If there's not enough authority or forbidden, ask for a password, 
+            // If there's not enough authority or forbidden, ask for a password,
             // unless it's explicitly unobtainable. Some bad magic though.
             if ($this->requiredAuthorityForAction($action) == WIKIAUTH_UNOBTAINABLE) {
                 $require_level = $this->requiredAuthority($action);
@@ -237,7 +237,7 @@ class WikiRequest extends Request {
         else
             return $GLOBALS['ForbiddenUser'];
     }
-    
+
     function & getGroup () {
         if (isset($this->_user) and isset($this->_user->_group))
             return $this->_user->_group;
@@ -273,7 +273,7 @@ class WikiRequest extends Request {
      */
     function getPage ($pagename = false) {
         //if (!isset($this->_dbi)) $this->getDbh();
-        if (!$pagename) 
+        if (!$pagename)
             $pagename = $this->getArg('pagename');
         return $this->_dbi->getPage($pagename);
     }
@@ -301,7 +301,7 @@ class WikiRequest extends Request {
         else
             return WikiURL($pagename, array('action' => $action));
     }
-    
+
     function _handleAuthRequest ($auth_args) {
         if (!is_array($auth_args))
             return;
@@ -325,9 +325,9 @@ class WikiRequest extends Request {
                 $fail_message = '';
             // If no password was submitted, it's not really
             // a failure --- just need to prompt for password...
-            if (!ALLOW_USER_PASSWORDS 
-                and ALLOW_BOGO_LOGIN 
-                and !isset($auth_args['passwd'])) 
+            if (!ALLOW_USER_PASSWORDS
+                and ALLOW_BOGO_LOGIN
+                and !isset($auth_args['passwd']))
             {
                 $fail_message = false;
             }
@@ -352,7 +352,7 @@ class WikiRequest extends Request {
             if (! $this->_user )
                 $this->_user = new _BogoUser($userid);
             // FIXME: is this always false? shouldn't we try passuser first?
-            if (! $this->_user ) 
+            if (! $this->_user )
                 $this->_user = new _PassUser($userid);
         }
         $user = $this->_user->AuthCheck(array('userid' => $userid));
@@ -398,7 +398,7 @@ class WikiRequest extends Request {
         else
             return _("ANON");
     }
-    
+
     function _notAuthorized ($require_level) {
         // Display the authority message in the Wiki's default
         // language, in case it is not english.
@@ -457,7 +457,7 @@ class WikiRequest extends Request {
         $this->finish();    // NORETURN
     }
 
-    // Fixme: for PagePermissions we'll need other strings, 
+    // Fixme: for PagePermissions we'll need other strings,
     // relevant to the requested page, not just for the action on the whole wiki.
     function getActionDescription($action) {
         static $actionDescriptions;
@@ -484,7 +484,7 @@ class WikiRequest extends Request {
         else
             return $action;
     }
-    
+
     /**
      TODO: check against these cases:
         if ($DisabledActions and in_array($action, $DisabledActions))
@@ -492,12 +492,12 @@ class WikiRequest extends Request {
 
         if (ENABLE_PAGEPERM and class_exists("PagePermission")) {
            return requiredAuthorityForPage($action);
-           
+
 => Browsing pages is disallowed on this wiki for authenticated user 'rurban' (level: BOGO).
     */
     function getDisallowedActionDescription($action) {
         static $disallowedActionDescriptions;
-        
+
         if (! $disallowedActionDescriptions) {
             $disallowedActionDescriptions
             = array('browse'     => _("Browsing pages"),
@@ -525,7 +525,7 @@ class WikiRequest extends Request {
     function requiredAuthority ($action) {
         $auth = $this->requiredAuthorityForAction($action);
         if (!ALLOW_ANON_USER) return WIKIAUTH_USER;
-        
+
         /*
          * This is a hook for plugins to require authority
          * for posting to them.
@@ -542,17 +542,17 @@ class WikiRequest extends Request {
         }
         return $auth;
     }
-        
+
     function requiredAuthorityForAction ($action) {
         global $DisabledActions;
-        
+
         if ($DisabledActions and in_array($action, $DisabledActions))
             return WIKIAUTH_UNOBTAINABLE;
-            
+
         if (ENABLE_PAGEPERM and class_exists("PagePermission")) {
             return requiredAuthorityForPage($action);
         } else {
-             // FIXME: clean up. 
+             // FIXME: clean up.
             switch ($action) {
                 case 'browse':
                 case 'viewsource':
@@ -627,7 +627,7 @@ class WikiRequest extends Request {
         SetupWiki($this);
         $this->finish();        // NORETURN
     }
-    
+
     // [574ms] mainly template:printexpansion: 393ms and template::expandsubtemplate [100+70+60ms]
     function handleAction () {
         $action = $this->getArg('action');
@@ -641,8 +641,8 @@ class WikiRequest extends Request {
                     $CONTENT = HTML::div
                         (
                          array('class' => 'wiki-edithelp'),
-                         fmt("%s: action forwarded to a moderator.", 
-                             $action), 
+                         fmt("%s: action forwarded to a moderator.",
+                             $action),
                          HTML::br(),
                          _("This action requires moderator approval. Please be patient."));
                        if (!empty($plugin->_tokens['CONTENT']))
@@ -655,7 +655,7 @@ class WikiRequest extends Request {
                     require_once("lib/Template.php");
                     $title = WikiLink($page->getName());
                     $title->pushContent(' : ', WikiLink(_("ModeratedPage")));
-                    GeneratePage(Template('browse', $plugin->_tokens), 
+                    GeneratePage(Template('browse', $plugin->_tokens),
                              $title,
                              $page->getCurrentRevision());
                        $this->finish();
@@ -673,7 +673,7 @@ class WikiRequest extends Request {
             $this->finish(fmt("%s: Bad action", $action));
         }
     }
-    
+
     function finish ($errormsg = false) {
         static $in_exit = 0;
 
@@ -704,7 +704,7 @@ class WikiRequest extends Request {
 
     /**
      * Generally pagename is rawurlencoded for older browsers or mozilla.
-     * Typing a pagename into the IE bar will utf-8 encode it, so we have to 
+     * Typing a pagename into the IE bar will utf-8 encode it, so we have to
      * fix that with fixTitleEncoding().
      * If USE_PATH_INFO = true, the pagename is stripped from the "/DATA_PATH/PageName&arg=value" line.
      * If false, we support either "/index.php?pagename=PageName&arg=value",
@@ -792,7 +792,7 @@ class WikiRequest extends Request {
         // Tuleap specific
         return user_getname();
     }
-    
+
     function _isActionPage ($pagename) {
         $dbi = $this->getDbh();
         $page = $dbi->getPage($pagename);
@@ -837,7 +837,7 @@ class WikiRequest extends Request {
         } else {
             $default = $translation;
         }
-        
+
         // check for english version
         if ($action != $translation and $action != $default) {
             if ($this->_isActionPage($action))
@@ -847,7 +847,7 @@ class WikiRequest extends Request {
         trigger_error("$action: Cannot find action page", E_USER_NOTICE);
         return $cache[$action] = false;
     }
-    
+
     function isActionPage ($pagename) {
         return $this->findActionPage($pagename);
     }
@@ -949,7 +949,7 @@ class WikiRequest extends Request {
     function action_create () {
         $this->action_edit();
     }
-    
+
     function action_viewsource () {
         $this->buffer_output();
         include "lib/editpage.php";
@@ -967,7 +967,7 @@ class WikiRequest extends Request {
             $plugin = WikiPluginLoader::getPlugin("ModeratedPage");
             if ($retval = $plugin->lock_check($this, $page, $moderated))
                 $this->setArg('errormsg', $retval);
-        } 
+        }
         // check if a link to ModeratedPage exists
         elseif ($action_page = $page->existLink(_("ModeratedPage"))) {
             require_once("lib/WikiPlugin.php");
@@ -996,7 +996,7 @@ class WikiRequest extends Request {
             RemovePage($this);
         }
     }
-    
+
     function action_revert () {
         include_once "lib/loadsave.php";
         RevertPage($this);
@@ -1033,7 +1033,7 @@ class WikiRequest extends Request {
         include_once("lib/loadsave.php");
         RakeSandboxAtUserRequest($this);
     }
-    
+
 }
 
 //FIXME: deprecated with ENABLE_PAGEPERM (?)
@@ -1101,14 +1101,14 @@ function main () {
         else
             define('WIKIDB_NOCACHE_MARKUP', false); // redundant, but explicit
     }
-    
+
     // Initialize with system defaults in case user not logged in.
     // Should this go into constructor?
     $request->initializeTheme();
 
     $request->updateAuthAndPrefs();
     $request->initializeLang();
-    
+
     //FIXME:
     //if ($user->is_authenticated())
     //  $LogEntry->user = $user->getId();
@@ -1137,7 +1137,7 @@ function main () {
     // to go the paranoid route here pending further study and testing.)
     $validators['%weak'] = true;
     $request->setValidators($validators);
-   
+
     $request->handleAction();
 
     if (DEBUG and DEBUG & _DEBUG_INFO) phpinfo(INFO_VARIABLES | INFO_MODULES);
@@ -1582,7 +1582,7 @@ if (!defined('PHPWIKI_NOMAIN') or !PHPWIKI_NOMAIN)
 // check for ALLOW_ANON_USER = false
 //
 // Revision 1.118  2004/02/26 01:32:03  rurban
-// fixed session login with old WikiUser object. 
+// fixed session login with old WikiUser object.
 // strangely, the errormask gets corrupted to 1, Pear???
 //
 // Revision 1.117  2004/02/24 17:19:37  rurban

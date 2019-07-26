@@ -97,7 +97,7 @@ class ImgData_PushPins extends ImgData {
         'xaX19vff/996ZhGC8qlkW9Wt1Onz073fXxxz+6MB+9e9dUjuO+'.
         '7ebq9wLdB9hoNCrr6+s/4wf3FCJW3fPmTZhXsNWCprjuW66Dfr'.
         '928KAfBhJAEgiJSLuzs7OSTqctoFkqlZRt26j/I+L/AGjPTN4d'.
-        'Nqn4AAAAAElFTkSuQmCC' ; 
+        'Nqn4AAAAAElFTkSuQmCC' ;
 
         //==========================================================
         // File: ppl_orange.png
@@ -177,7 +177,7 @@ class ImgData_PushPins extends ImgData {
         '1G6otS+H6V6z8u3tbVzXpdFooJRicXGRqakptre3uXXr1ltrcT'.
         'Qa8ezZszemWAE9rfUdYBOwtVLRbrPZ+48ff+wDvuu6Sr3MB4Dr'.
         'uty6desgfa1WC3iRyrNnz4pSSmezWUzTfGtYtNYcdvC/9sMlgP'.
-        'n5N4cAAAAASUVORK5CYII=' ; 
+        'n5N4cAAAAASUVORK5CYII=' ;
 
         //==========================================================
         // File: ppl_pink.png
@@ -258,7 +258,7 @@ class ImgData_PushPins extends ImgData {
         'pt4Dh+vLGhsrmcfv1iHzu01m89HjIdCon2fb8TBMHtvYeRUn50'.
         '1Oj4vqp3Ok1f5LYSadfr9dQfDN642P/XeF2DA+SBAuA4jkOhUK'.
         'BQKESO43S11p3BYBDt7u4y+CtB/i/q7jp1GMiw2AAAAABJRU5E'.
-        'rkJggg==' ; 
+        'rkJggg==' ;
 
         //==========================================================
         // File: ppl_blue.png
@@ -325,7 +325,7 @@ class ImgData_PushPins extends ImgData {
         '6Vu5aTheXCQXNdVeMzAwJSCGEA2XKpnF1cXIzlFnOVhJPIKdR+'.
         'c88ctq4AlVKsrKzw0UcfKcC5uXqzXnNqSzb2pwLxOHP/l7Z/BN'.
         'eB01LKt4HTrusKvGr8jB+hGn8MQAkYQMrfw4Nq/MFPtf+rdvDb'.
-        'k8QL+/5Z4Uepxm7bfwHuTAVUWpWaqAAAAABJRU5ErkJggg==' ; 
+        'k8QL+/5Z4Uepxm7bfwHuTAVUWpWaqAAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: ppl_green.png
@@ -408,8 +408,7 @@ class ImgData_PushPins extends ImgData {
         'e/cn73U3Hq1Cm5du2aPjs7a+ztcSIShmE4ajQa6tatWzQajZ+0'.
         'fbiKI+It4SvijVUj7kL2qvGfgkskEqTTaZmcnDROnTplJhIJTU'.
         'QiwPd9P/Q8T6XTaQzDIAiCfzjP/wFVfszuFqdHXgAAAABJRU5E'.
-        'rkJggg==' ; 
-
+        'rkJggg==' ;
 
         //==========================================================
         // File: pp_red.png
@@ -426,7 +425,7 @@ class ImgData_PushPins extends ImgData {
         'TtCsEWa6u5M1NeFs1NzgdtuhHGtj+9Q2IDppQUAL6Cyrlz0gDN'.
         'ohSMiJCt861672EiAhEhESG3woJ9V9OKTkwRKbdqz4cHmFLSFg'.
         's69+LvAZKdeZ/n89uLnd2g0S+gjd5g8zzjH5Y/eLLi+NPEAAAA'.
-        'AElFTkSuQmCC' ; 
+        'AElFTkSuQmCC' ;
 
         //==========================================================
         // File: pp_orange.png
@@ -443,7 +442,7 @@ class ImgData_PushPins extends ImgData {
         'OBr7geV1WupDqpmTAPKjCqLhxk/z0PImQmjKrAuI6vMXlhFroD'.
         'vfdqITXWqg2YMSJEAFcReoag6UXU2DzPG8w5t09YYsAyLWvHrL'.
         'HUy6D3XmvMAAhAay8kAJpBosX4vt0G4+4Jam6s6Rz1fgFG0ncA'.
-        'f3XfOQcA+Acv5IUSdQw9hgAAAABJRU5ErkJggg==' ; 
+        'f3XfOQcA+Acv5IUSdQw9hgAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: pp_pink.png
@@ -461,8 +460,7 @@ class ImgData_PushPins extends ImgData {
         'e5Hc5dC2bUgrXGKqWrwcXnNYDjmCrcCIiQgDcFYV05kQ8SXmnB'.
         'NgPiVN06wrTDGAhz5EWY/FOccTk+cTnHM/YNu2YYllgFxCWuUM'.
         'ikzGx+2Gc+4N+CoJW8n+5a2UKm2aBoBvGA6L7wfl8aoAAAAASU'.
-        'VORK5CYII=' ; 
-
+        'VORK5CYII=' ;
 
         //==========================================================
         // File: pp_blue.png
@@ -492,7 +490,7 @@ class ImgData_PushPins extends ImgData {
         'RQfTAwkWGTNerea3AAAAYUlEQVR4nHXNwQ3AIAxDUUfyoROxRZ'.
         'icARin0EBTIP3Hp1gBRqSqYo0seqjZpnngojlWBir5+b8o06lM'.
         'ha5uFKEpDZulV8l52axhVzqaCdxQp32qVSSwC1wN3fYiw7b76w'.
-        'bN4SMue4/KbwAAAABJRU5ErkJggg==' ; 
+        'bN4SMue4/KbwAAAABJRU5ErkJggg==' ;
 
         //==========================================================
         // File: pp_green.png
@@ -510,7 +508,7 @@ class ImgData_PushPins extends ImgData {
         'ZzUqu5IXbGDvBJf+hDisi77qFSuhq7Xpuu66TyJLRGbsXVUPxV'.
         'SxsgkzDMt0mKT3/RcjL8C5hHnvJToXY0xYRZ4xnVKsV/S+a8YA'.
         'AvCb3s9g13UhYj+TTo93B3fApRV1FVlEAD6H42DjN9/WvzDYuJ'.
-        'dL5b1/ji+/IX8EGWP4AwRii8PdFHTqAAAAAElFTkSuQmCC' ; 
+        'dL5b1/ji+/IX8EGWP4AwRii8PdFHTqAAAAAElFTkSuQmCC' ;
     }
 }
 

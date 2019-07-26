@@ -31,7 +31,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
     var $width;
     var $legend;
     var $xaxis;
-    
+
     /**
      * Builds bar chart object
      */
@@ -46,7 +46,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         }
 
         $right_margin = 50;
-        
+
         $this->graph = new Chart($this->width,$this->height);
         $this->graph->SetScale("textlint");
         $this->graph->title->Set($this->title);
@@ -54,21 +54,21 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
-        
+
         // x axis formating
         $this->graph->xaxis->SetTickSide(SIDE_DOWN);
-        
+
         $this->graph->xaxis->title->setMargin(60,20,20,20);
-        
+
         if (!is_null($this->xaxis)) {
             ksort($this->xaxis);
             $this->graph->xaxis->SetTickLabels(array_values($this->xaxis));
         } else {
             $this->graph->xaxis->SetTickLabels(array_values($this->legend));
         }
-        
+
         $colors = $this->getColors();
-        
+
         if (is_null($this->xaxis)) {
             if ((is_array($this->data)) && (array_sum($this->data)>0)) {
                 $this->graph->add($this->getBarPlot($this->data, $colors));
@@ -112,8 +112,8 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         }
         return $search_a - $search_b;
     }
-     
-    
+
+
     function getBarPlot($data, $color) {
         $b = new BarPlot($data);
         //parameters hard coded for the moment
@@ -124,13 +124,13 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $b->value->HideZero();
         $b->value->SetMargin(4);
         $b->value->SetFont($this->graph->getFont(), FS_NORMAL, 7);
-        
+
         $b->SetWidth(0.4);
         if(is_array($color)) {
             $b->SetColor('#FFFFFF:0.7');
         }
         else {
-            $b->SetColor($color.':0.7');  
+            $b->SetColor($color.':0.7');
         }
         $b->SetFillColor($color);
         // end hard coded parameter

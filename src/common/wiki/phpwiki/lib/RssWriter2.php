@@ -12,7 +12,7 @@ include_once("lib/RssWriter.php");
  *
  * @see http://blogs.law.harvard.edu/tech/rss,
  *      http://www.usemod.com/cgi-bin/mb.pl?ModWiki
- * no namespace! 
+ * no namespace!
  * http://sourceforge.net/mailarchive/forum.php?thread_id=4872845&forum_id=37467
  */
 class RssWriter2 extends RssWriter
@@ -48,9 +48,9 @@ class RssWriter2 extends RssWriter
     //  none
     function cloud($properties) {
         // soap or http-post
-        if (!isset($properties['port'])) 
-            $properties['port'] = !SERVER_PORT 
-                ? '80' 
+        if (!isset($properties['port']))
+            $properties['port'] = !SERVER_PORT
+                ? '80'
                 : (SERVER_PROTOCOL == 'https' ? '443' : '80');
         if (!isset($properties['domain'])) $properties['domain'] = SERVER_NAME;
         $this->_cloud = $this->node('cloud', $properties);
@@ -79,5 +79,5 @@ class RssWriter2 extends RssWriter
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

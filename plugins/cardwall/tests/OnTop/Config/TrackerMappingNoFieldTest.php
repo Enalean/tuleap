@@ -20,14 +20,14 @@
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends TuleapTestCase {
-    
+
     public function itHasAnEmptyValueMappings() {
         $tracker          = aMockTracker()->build();
         $available_fields = array();
         $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
         $this->assertEqual(array(), $mapping->getValueMappings());
     }
-    
+
     public function itsFieldIsNull() {
         $tracker          = aMockTracker()->build();
         $available_fields = array();

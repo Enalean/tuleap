@@ -184,7 +184,7 @@ class Project_SOAPServer {
         }
         throw new SoapFault('3100', 'Invalid template id ' . $id);
     }
-    
+
     /**
      * Ensure the given session key belong to an authenticated site admin
      *
@@ -303,7 +303,7 @@ class Project_SOAPServer {
      * @param int $groupId The Project id where the User Group is defined
      * @param int $ugroupId The User Group where the user should be added
      * @param int $userId The user id to add
-     * 
+     *
      * @return bool
      */
     public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
@@ -321,7 +321,7 @@ class Project_SOAPServer {
             throw new SoapFault('3203', "Invalid user id $userId");
         }
     }
-    
+
     /**
      * Remove User from User Group
      *
@@ -622,7 +622,7 @@ class Project_SOAPServer {
         }
         throw new SoapFault('3203', "User not member of project");
     }
-    
+
     /**
      * Return a Project is the given user is authorized to administrate it
      *
@@ -662,7 +662,7 @@ class Project_SOAPServer {
         }
         return $result;
     }
-    
+
     /**
      * Transform errors from feedback errors into SoapFault
      *

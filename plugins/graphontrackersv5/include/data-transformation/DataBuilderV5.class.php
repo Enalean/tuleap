@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -69,7 +69,7 @@ class DataBuilderV5 {
             $ff = Tracker_FormElementFactory::instance();
             $af_y = $ff->getFormElementById($this->field_Y);
         }
-        
+
         if ($af_x->isUsed() && (!isset($af_y) || $af_y->isUsed())) {
             $select   = "SELECT STRAIGHT_JOIN ";
             $from     = "FROM ";
@@ -80,7 +80,7 @@ class DataBuilderV5 {
             // We always join on artifact: it helps to restrict the data set and
             // with the current table schema it helps joins and mysql optimiser to
             // find the right indexes without FORCE INDEX statement. This was crucial
-            // on type 3 query because mysql was not able to use index on 
+            // on type 3 query because mysql was not able to use index on
             // (artifact_id, field_id, value_int) so perfs was horrible.
             $from     .= "artifact a ";
             $where    .= "a.artifact_id IN (".implode($this->artifacts,',').") ";
@@ -154,7 +154,7 @@ class DataBuilderV5 {
                 $order_by .= ",".$field." ASC";
             }
             $select .= ",COUNT(0) AS c ";
-            
+
             //artifact permissions
             $sql_group_id = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=". db_ei($this->atid);
             $result_group_id = db_query($sql_group_id);
@@ -186,17 +186,17 @@ class DataBuilderV5 {
             for($i=0;$i<db_numrows($res);$i++) {
                 $r[$i] = db_fetch_array($res);
                 $result['field1'][$i] = $r[$i]['field1'];
-          
+
                 if ($r[$i]['id1']==100){
                     $result['field1'][$i]=$GLOBALS['Language']->getText('global','none');
-                    
+
                 }
                 if (!is_null($this->field_Y)) {
                     $result['field2'][$i] = $r[$i]['field2'];
                     if ($r[$i]['id2']==100){
                         $result['field2'][$i]=$GLOBALS['Language']->getText('global','none');
-                    
-                    }  
+
+                    }
                 }
                 $result['c'][$i] = $r[$i]['c'];
             }
@@ -208,7 +208,6 @@ class DataBuilderV5 {
                 $this->x_values[count($this->x_values)] = $result['field1'][$i];
             }
         }
-
 
         if (!is_null($this->field_Y)) {
             for ($i=0;$i<count($result['field2']);$i++) {
@@ -229,7 +228,6 @@ class DataBuilderV5 {
                 $this->data[$i] = 0;
             }
         }
-
 
         for ($i=0;$i<count($result['c']);$i++) {
             $x = array_search($result['field1'][$i],$this->x_values);

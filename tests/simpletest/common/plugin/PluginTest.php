@@ -226,7 +226,6 @@ class PluginTest extends TuleapTestCase {
         rmdir($GLOBALS['sys_pluginsroot'].$shortname);
         rmdir($GLOBALS['sys_pluginsroot']);
 
-
         //Now plugin is custom
         mkdir($GLOBALS['sys_custompluginsroot']);
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname);

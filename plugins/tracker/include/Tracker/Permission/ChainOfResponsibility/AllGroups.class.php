@@ -70,7 +70,6 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tr
                 $permission_setter->grant(Tracker::PERMISSION_ADMIN, $ugroup_id);
                 break;
 
-
             case Tracker_Permission_Command::PERMISSION_NONE:
                 $permission_setter->revokeAll($ugroup_id);
                 break;

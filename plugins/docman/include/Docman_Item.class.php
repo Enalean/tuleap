@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -32,29 +32,29 @@ class Docman_Item {
     public $title            = null;
     public $titlekey         = null;
     public $description      = null;
-    
+
     public $createDate       = null;
     public $updateDate       = null;
     public $deleteDate       = null;
-    
+
     public $rank             = null;
-    
+
     public $parentId         = null;
     public $groupId          = null;
     public $ownerId          = null;
-    
+
     public $status           = null;
 
     public $obsolescenceDate = null;
     public $isObsolete       = null;
-    
+
     protected $_actions      = array();
     protected $_metadata     = array();
     public $pathId           = array();
     public $pathTitle        = array();
-    
-    
-    
+
+
+
     public function __construct($data = null) {
         if ($data) {
             $this->initFromRow($data);
@@ -69,7 +69,7 @@ class Docman_Item {
         return $this->id;
     }
 
-    public function setTitle($title) { 
+    public function setTitle($title) {
         if(strpos($title, '_lbl_key') !== FALSE) {
             $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
             $this->titlekey = $title;
@@ -78,15 +78,15 @@ class Docman_Item {
             $this->title = $title;
         }
     }
-    
+
     public function getTitle($key=false) {
         if($key && $this->titlekey !== null) {
             return $this->titlekey;
         }
-        return $this->title; 
+        return $this->title;
     }
 
-    public function setDescription($description) { 
+    public function setDescription($description) {
         $this->description = $description;
     }
 
@@ -153,7 +153,7 @@ class Docman_Item {
     public function setStatus($v) {
         $this->status = (int) $v;
     }
-    
+
     public function getStatus() {
         return $this->status;
     }
@@ -162,7 +162,7 @@ class Docman_Item {
         $this->obsolescenceDate = (int) $v;
         $this->isObsolete = null; // Clear cache
     }
-    
+
     public function getObsolescenceDate() {
         return $this->obsolescenceDate;
     }
@@ -203,7 +203,7 @@ class Docman_Item {
         if (isset($row['status']))      $this->setStatus($row['status']);
         if (isset($row['obsolescence_date'])) $this->setObsolescenceDate($row['obsolescence_date']);
     }
-    
+
     public function toRow() {
         $row = array();
         $row['item_id']     = $this->getId();
@@ -234,7 +234,7 @@ class Docman_Item {
     public function addMetadata(&$metadata) {
         $this->_metadata[$metadata->getLabel()] = $metadata;
     }
-    
+
     public function setMetadata(&$metadata) {
         $this->_metadata = $metadata;
     }
@@ -245,8 +245,8 @@ class Docman_Item {
     public function getMetadata() {
         return $this->_metadata;
     }
-   
-    public function getMetadataIterator() {        
+
+    public function getMetadataIterator() {
         return new ArrayIterator($this->_metadata);
     }
 
@@ -343,7 +343,7 @@ class Docman_Item {
     public function setPathId(&$path_id) {
         $this->pathId = $path_id;
     }
-    
+
     public function &getPathId() {
         return $this->pathId;
     }
@@ -351,7 +351,7 @@ class Docman_Item {
     public function setPathTitle(&$path_title) {
         $this->pathTitle = $path_title;
     }
-    
+
     public function &getPathTitle() {
         return $this->pathTitle;
     }
@@ -363,7 +363,7 @@ class Docman_Item {
                         'user'     => $user);
         $this->getEventManager()->processEvent($event, $params);
     }
-    
+
     protected function getEventManager() {
         return EventManager::instance();
     }

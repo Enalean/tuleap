@@ -63,7 +63,7 @@ if (user_isloggedin()) {
     }
     if(strlen($to) > 0) {
         $to = substr($to,0,-1);
-    
+
         $project=new Project($group_id);
         $project_name = $project->getPublicName();
 

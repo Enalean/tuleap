@@ -19,7 +19,7 @@
  */
 
 /**
- * Define methods needed by DataAccessResult to manipulate a 
+ * Define methods needed by DataAccessResult to manipulate a
  * database result set
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
@@ -38,7 +38,7 @@ interface IProvideDataAccessResult extends Iterator, Countable {
      * @return int
      */
     public function rowCount();
-    
+
     /**
      * Returns false if no errors or returns a MySQL error message
      * @deprecated

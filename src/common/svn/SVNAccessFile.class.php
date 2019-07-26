@@ -55,9 +55,9 @@ class SVNAccessFile {
      * @var String
      */
     private $ugroupOldName = null;
-    
+
     private $platformBlock = '';
-    
+
     /**
      * Detect if a line is correctly formatted and
      * corresponds to a defined group
@@ -151,11 +151,11 @@ class SVNAccessFile {
 
     /**
      * Comments the line corresponding to groups that are not defined
-     * 
+     *
      * @param Array   $groups  List of already defined groups
      * @param String  $line    Line to validate
      * @param bool $verbose Show feedback or not
-     * 
+     *
      * @return String
      */
     public function commentInvalidLine($groups, $line, $verbose = false) {
@@ -294,7 +294,7 @@ class SVNAccessFile {
         }
         return $this->platformBlock;
     }
-    
+
     /**
      * Define the platform default groups & root perms
      *

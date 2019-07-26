@@ -21,12 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
-    
+
     public $duration;
     public $start_date;
-    
+
     function validData(){
-        
+
         if ($this->duration && $this->duration > 0){
             return true;
         }else{
@@ -34,7 +34,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
             return false;
         }
     }
-    
+
     /**
      * @return Chart
      */
@@ -46,7 +46,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
         $burndown->setHeight($this->height);
         $burndown->setStartDate($this->start_date);
         $burndown->setDuration($this->duration);
-        
+
         $this->graph = $burndown->buildGraph();
         return $this->graph;
     }

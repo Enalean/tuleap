@@ -28,7 +28,7 @@ class DaoTest extends TuleapTestCase {
         $dar = new MockDataAccessResult($this);
         $da->setReturnReference('query', $dar);
         $dao = new DataAccessObject($da);
-        
+
         $result = $dao->retrieve("SELECT *");
         $this->assertIsA($result, 'MockDataAccessResult');
     }

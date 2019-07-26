@@ -20,7 +20,7 @@
 
 require_once('common/dao/include/DataAccessObject.class.php');
 abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
-    
+
     function searchById($changeset_value_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *
@@ -28,7 +28,7 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
                 WHERE changeset_value_id = $changeset_value_id ";
         return $this->retrieve($sql);
     }
-    
+
     function delete($changeset_value_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "DELETE
@@ -38,7 +38,7 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
     }
 
     /**
-     * Function that creates a value record for all artifact last changeset 
+     * Function that creates a value record for all artifact last changeset
      * @param int $tracker_id
      * @param int $field_id
      * @return mixed array of changeset_value_id or false if nothing inserted
@@ -51,6 +51,6 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
         }
         return $changeset_value_ids;
     }
-    
+
 }
 ?>

@@ -92,7 +92,7 @@ extends WikiPlugin_RecentChanges
             else
                 $fmt_class = '_RelatedChanges_HtmlFormatter';
         }
-  
+
         $fmt = new $fmt_class($args);
         return $fmt->format($changes);
     }

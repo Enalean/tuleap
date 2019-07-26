@@ -25,15 +25,15 @@
  * Only valid Reference Instances are created (i.e., the corresponding "Reference" object must exist).
  */
 class ReferenceInstance {
-    
+
     var $match;
     var $gotoLink;
     var $reference;
     var $value;
 
-    /** 
-     * Constructor 
-     * Note that we need a valid reference parameter 
+    /**
+     * Constructor
+     * Note that we need a valid reference parameter
      */
     function __construct($match,$ref,$value) {
         $this->reference = $ref;
@@ -63,7 +63,7 @@ class ReferenceInstance {
      * Compute GotoLink according to the extracted match.
      */
     function computeGotoLink($keyword,$value,$group_id) {
-        // If no group_id from context, the default is "100". 
+        // If no group_id from context, the default is "100".
         // Don't use it in the link...
         $group_param = '';
         if ($group_id!=100) { $group_param="&group_id=$group_id";}

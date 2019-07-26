@@ -21,7 +21,7 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_SettingsDao extends DataAccessObject {
-    
+
     function searchByGroupId($group_id) {
         $sql = sprintf('SELECT * FROM plugin_docman_project_settings WHERE group_id = %d', $group_id);
         return $this->retrieve($sql);
@@ -31,7 +31,7 @@ class Docman_SettingsDao extends DataAccessObject {
         $sql = 'SELECT view FROM plugin_docman_project_settings WHERE group_id = '. $this->da->quoteSmart($group_id);
         return $this->retrieve($sql);
     }
-    
+
     function create($group_id, $view, $use_obsolescence_date=0, $use_status=0) {
         $sql = sprintf('INSERT INTO plugin_docman_project_settings('.
                        'group_id, view, use_obsolescence_date, use_status'.

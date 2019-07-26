@@ -20,61 +20,61 @@
 
 /**
  * Handle toggler functionnality
- * 
- * A toggler is made of a dom element which toggle 
+ *
+ * A toggler is made of a dom element which toggle
  * the display of his siblings when the user click on it.
- * As it is pretty generic. The aim of this class is to provide 
+ * As it is pretty generic. The aim of this class is to provide
  * help on determining the classname of the element and handle
- * ajax calls to save the state of the display in 
+ * ajax calls to save the state of the display in
  * user preferences.
- * 
+ *
  * If the user is anonymous then no ajax call will be made or handled.
- * 
+ *
  * The methods here are based on a $id parameter. It is important
- * for Ajax calls that the id given is the same as the id of the 
+ * for Ajax calls that the id given is the same as the id of the
  * dom element used as toggler.
- * 
+ *
  * Example:
  * <div>
  *   <h3 class="toggler" id="meaning">The meaning of life</h3>
- *   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
- *      Quisque mi. Curabitur turpis mauris, malesuada tristique, 
- *      molestie nec, pulvinar eget, ipsum. Maecenas varius pede 
+ *   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *      Quisque mi. Curabitur turpis mauris, malesuada tristique,
+ *      molestie nec, pulvinar eget, ipsum. Maecenas varius pede
  *      id eros. Quisque convallis.</p>
- *   <p>Cum sociis natoque penatibus et magnis dis parturient montes, 
- *      nascetur ridiculus mus. Sed lorem justo, faucibus id, 
- *      tincidunt eu, consequat id, mi. Nunc euismod pede sit 
+ *   <p>Cum sociis natoque penatibus et magnis dis parturient montes,
+ *      nascetur ridiculus mus. Sed lorem justo, faucibus id,
+ *      tincidunt eu, consequat id, mi. Nunc euismod pede sit
  *      amet leo. Praesent bibendum libero sit amet sapien.</p>
  * </div>
  * => If the user click on the title "The meaning of life"
  *    Then all siblings will be hide/shown and an ajax call
  *    will be made to save the state of the id "meaning"
- * 
+ *
  * Classnames used:
- * - toggler: the siblings are initially shown. 
+ * - toggler: the siblings are initially shown.
  *            An ajax call will be made if the h3 has an id
- * - toggler-hide: the siblings are initially hidden. 
+ * - toggler-hide: the siblings are initially hidden.
  *                 An ajax call will be made if the h3 has an id
  * - toggler-noajax: the siblings are initially hidden. No ajax call.
  * - toggler-hide: the siblings are initially hidden. No ajax call.
- * 
- * For now the toggler is simple. The sibblings must be present 
- * in the dom as no ajax call will be made to fetch the content 
- * if it is initially hidden. This allows us to support no-javascript 
+ *
+ * For now the toggler is simple. The sibblings must be present
+ * in the dom as no ajax call will be made to fetch the content
+ * if it is initially hidden. This allows us to support no-javascript
  * browsers.
- * 
- * For some togglers, the state must be saved in other place than the 
- * user preferences. In that case, it is up to the service to handle 
+ *
+ * For some togglers, the state must be saved in other place than the
+ * user preferences. In that case, it is up to the service to handle
  * the save.
  */
 class Toggler {
-    
+
     /**
-     * 
+     *
      * @param string $id the id of the toggler
      * @param bool $force optionnal paremeter. Set it to true or false if you want to force show or hide
      * @param bool $noajax optinnal parameter. Set it to true if you don't want ajax for registered users
-     * 
+     *
      * @return string the classname of the toggler depending on the current state
      */
     public static function getClassname($id, $force = null, $noajax = false) {
@@ -90,10 +90,10 @@ class Toggler {
             }
         }
     }
-    
+
     /**
      * Save the state of the toggler
-     * 
+     *
      * @param string $id the id of the toggler
      */
     public static function toggle($id) {
@@ -116,7 +116,7 @@ class Toggler {
             }
         }
     }
-    
+
     /**
      * Returns true if the toggler should be displayed
      *
@@ -135,7 +135,7 @@ class Toggler {
         }
         return $default;
     }
-    
+
     /**
      * Toggle the preference.
      * Should not be called directly unless you know what you do

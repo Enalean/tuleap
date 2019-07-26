@@ -33,7 +33,7 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
 
     /** @var Git_Hook_LogAnalyzer */
     private $log_analyzer;
-    
+
 
     public function setUp() {
         parent::setUp();
@@ -134,7 +134,7 @@ class Git_Hook_LogAnalyzerTest extends TuleapTestCase {
         stub($this->git_exec)->revList()->throws(new Git_Command_Exception('cmd', array('stuff'), '233'));
 
         expect($this->logger)->error()->once();
-        
+
         $push_details = $this->log_analyzer->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/remotes/bla');
         $this->assertEqual($push_details->getType(), Git_Hook_PushDetails::ACTION_ERROR);
         $this->assertEqual($push_details->getRevisionList(), array());

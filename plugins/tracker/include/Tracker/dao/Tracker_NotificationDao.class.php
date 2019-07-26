@@ -19,12 +19,12 @@
  */
 
 class Tracker_NotificationDao extends DataAccessObject {
-    
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_notification';
     }
-    
+
     public function searchNotification($tracker_id, $user_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $user_id    = $this->da->escapeInt($user_id);
@@ -38,7 +38,7 @@ class Tracker_NotificationDao extends DataAccessObject {
                   AND e.tracker_id=". db_ei($tracker_id) ;
         return $this->retrieve($sql);
     }
-    
+
     public function searchRoles($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -47,7 +47,7 @@ class Tracker_NotificationDao extends DataAccessObject {
                 ORDER BY rank ASC";
         return $this->retrieve($sql);
     }
-    
+
     public function searchEvents($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *

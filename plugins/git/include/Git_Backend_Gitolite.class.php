@@ -39,7 +39,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @var GitDao
      */
     protected $dao;
-    
+
     /**
      * @var PermissionsManager
      */
@@ -138,7 +138,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     /**
      * Wrapper for GitDao
-     * 
+     *
      * @return GitDao
      */
     protected function getDao() {
@@ -147,7 +147,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         }
         return $this->dao;
     }
-    
+
     public function setDao($dao) {
         $this->dao = $dao;
     }
@@ -160,7 +160,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function isNameAvailable($newName) {
         return ! file_exists($this->getGitRootPath() .'/'. $newName);
     }
-    
+
     /**
      * Save the permissions of the repository
      *
@@ -213,14 +213,14 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return bool true if success, false otherwise
      */
     public function deletePermissions($repository) {
-        
+
         $group_id = $repository->getProjectId();
         $object_id = $repository->getId();
         return permission_clear_all($group_id, Git::PERM_READ, $object_id)
             && permission_clear_all($group_id, Git::PERM_WRITE, $object_id)
             && permission_clear_all($group_id, Git::PERM_WPLUS, $object_id);
     }
-    
+
 
     /**
      * Test is user can read the content of this repository and metadata
@@ -291,7 +291,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         if (is_dir($this->driver->getRepositoriesPath() .'/'. $project->getUnixName())) {
             $backend = $this->getBackend();
             $ok = rename(
-                $this->driver->getRepositoriesPath() .'/'. $project->getUnixName(), 
+                $this->driver->getRepositoriesPath() .'/'. $project->getUnixName(),
                 $this->driver->getRepositoriesPath() .'/'. $newName
             );
             if ($ok) {
@@ -310,7 +310,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     /**
      * Trigger rename of gitolite repositories in configuration files
-     * 
+     *
      * All the rename process is owned by 'root' user but gitolite modification has to be
      * modified as 'codendiadm' because the config is localy edited and then pushed in 'gitolite'
      * user repo. In order to make this work, the ~/.ssh/config is modified (otherwise git would
@@ -322,7 +322,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param String $oldName The old name of the project
      * @param String $newName The new name of the project
      * @throws Exception
-     * 
+     *
      * @return bool
      */
     protected function glRenameProject($oldName, $newName) {
@@ -398,7 +398,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     /**
-     * @throws GitRepositoryAlreadyExistsException 
+     * @throws GitRepositoryAlreadyExistsException
      */
     public function fork(GitRepository $old, GitRepository $new, array $forkPermissions) {
         $new_project = $new->getProject();
@@ -431,7 +431,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     public function clonePermissions(GitRepository $old, GitRepository $new) {
         $pm = $this->getPermissionsManager();
-        
+
         if ($this->inSameProject($old, $new)) {
             $pm->duplicateWithStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
         }
@@ -439,15 +439,15 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             $pm->duplicateWithoutStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
         }
     }
-    
+
     private function inSameProject(GitRepository $repository1, GitRepository $repository2) {
         return ($repository1->getProject()->getId() == $repository2->getProject()->getId());
     }
-    
+
     public function setPermissionsManager(PermissionsManager $permissionsManager) {
         $this->permissionsManager = $permissionsManager;
     }
-    
+
     public function getPermissionsManager() {
         if (!$this->permissionsManager) {
             $this->permissionsManager = PermissionsManager::instance();
@@ -477,7 +477,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function setDriver($driver) {
         $this->driver = $driver;
     }
-    
+
     /**
      * Wrapper for Backend object
      *
@@ -486,7 +486,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     protected function getBackend() {
         return Backend::instance();
     }
-    
+
     public function getDriver() {
         return $this->driver;
     }

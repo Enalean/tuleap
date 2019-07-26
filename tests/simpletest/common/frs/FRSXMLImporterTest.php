@@ -198,7 +198,6 @@ XML;
         $user_id = 42;
         stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
 
-
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id = 1337;
         $this->package_dao->expectAt(0, 'createFromArray', array($expected_package_array));

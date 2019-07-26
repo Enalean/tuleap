@@ -29,19 +29,19 @@ class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
         $this->other_tracker_id = $this->tracker->getId() + 1;
         $this->presenter        = new Planning_TrackerPresenter($this->planning, $this->tracker);
     }
-    
+
     public function itHasAnId() {
         $this->assertEqual($this->presenter->getId(), $this->tracker_id);
     }
-    
+
     public function itHasAName() {
         $this->assertEqual($this->presenter->getName(), $this->tracker->getName());
     }
-    
+
     protected function assertSelected($selected) {
         $this->assertTrue($selected);
     }
-    
+
     protected function assertNotSelected($selected) {
         $this->assertFalse($selected);
     }
@@ -53,11 +53,11 @@ class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPrese
         stub($this->planning)->getBacklogTrackersIds()->returns(array($this->tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->other_tracker_id);
     }
-    
+
     public function itIsSelectedAsABacklogTracker() {
         $this->assertSelected($this->presenter->selectedIfBacklogTracker());
     }
-    
+
     public function itIsNotSelectedAsAPlanningTracker() {
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
@@ -69,11 +69,11 @@ class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPres
         stub($this->planning)->getBacklogTrackersIds()->returns(array($this->other_tracker_id));
         stub($this->planning)->getPlanningTrackerId()->returns($this->tracker_id);
     }
-    
+
     public function itIsNotSelectedAsABacklogTracker() {
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
-    
+
     public function itIsSelectedAsABacklogTracker() {
         $this->assertSelected($this->presenter->selectedIfPlanningTracker());
     }
@@ -88,7 +88,7 @@ class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Plannin
     public function itIsNotSelectedAsABacklogTracker() {
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
-    
+
     public function itIsNotSelectedAsAPlanningTracker() {
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }

@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     function getContent($params = []) {
         return $this->item->accept($this);
     }
-    
+
     function _updateHeader($enctype = '') {
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
@@ -50,9 +50,9 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $content .= '<input type="hidden" name="action" value="update_wl" />';
         $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
-        
+
         $content .= '</form>';
-        
+
         $content .= '</dd></dl>';
         return $content;
     }
@@ -62,18 +62,18 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     }
     function visitDocument($item, $params = array()) {
         $content = '';
-        
+
         $content .= $this->_updateHeader();
-        
+
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         $content .= '<table>';
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
         }
         $content .= '</table>';
-        
+
         $content .= $this->_updateFooter();
-        
+
         return $content;
     }
     function visitWiki($item, $params = array()) {
@@ -96,7 +96,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $content .= $this->_updateHeader($enctype);
 
         require_once('Docman_View_NewDocument.class.php');
- 
+
         // Fetch type selector
         $newView = new Docman_View_NewDocument($this->_controller);
         $vparam = array();

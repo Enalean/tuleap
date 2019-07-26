@@ -22,7 +22,7 @@ rcs_id('$Id: WikiAdminChmod.php,v 1.14 2004/12/13 14:36:35 rurban Exp $');
  */
 
 /**
- * Set individual PagePermissions, simplifying effective ACLs to 
+ * Set individual PagePermissions, simplifying effective ACLs to
  * unix-like rwxr--r--+ permissions. (as in cygwin)
  *
  * Usage:   <?plugin WikiAdminChmod ?> or called via WikiAdminSelect
@@ -62,7 +62,7 @@ extends WikiPlugin_WikiAdminSelect
                    ));
     }
 
-    // todo: change permstring to some kind of default ACL hash. 
+    // todo: change permstring to some kind of default ACL hash.
     // See PagePermission class
     function chmodHelper($permstring) {
         $perm = array();
@@ -94,12 +94,12 @@ extends WikiPlugin_WikiAdminSelect
                         HTML::p(fmt("No pages changed.")));
         }
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if (!DEBUG)
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
-        
+
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
@@ -121,7 +121,7 @@ extends WikiPlugin_WikiAdminSelect
 
             if ($post_args['action'] == 'verify') {
                 // Real action
-                return $this->chmodPages($dbi, $request, array_keys($p), 
+                return $this->chmodPages($dbi, $request, array_keys($p),
                                           $post_args['perm']);
             }
             if ($post_args['action'] == 'select') {

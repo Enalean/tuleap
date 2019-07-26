@@ -52,13 +52,13 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanDocument->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        
+
         $webDAVDocmanDocument->delete();
     }
 
@@ -79,13 +79,12 @@ class WebDAVDocmanDocumentTest extends TuleapTestCase {
         $utils->setReturnValue('isWriteEnabled', true);
         $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
-        
+
         $project = new MockProject();
         $webDAVDocmanDocument->setReturnValue('getProject', $project);
-        
+
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        
 
         $webDAVDocmanDocument->setName('newName');
     }

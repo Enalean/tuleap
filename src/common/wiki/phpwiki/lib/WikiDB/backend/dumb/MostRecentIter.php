@@ -6,7 +6,7 @@ require_once('lib/WikiDB/backend.php');
 
 
 /**
- * An inefficient but general most_recent iterator. 
+ * An inefficient but general most_recent iterator.
  *
  * This iterator will work with any backends.
  */
@@ -54,11 +54,11 @@ extends WikiDB_backend_iterator
             array_splice($this->_revisions, $limit);
         }
     }
-    
+
     function next() {
         return array_shift($this->_revisions);
     }
-    
+
     function free() {
         unset($this->_revisions);
     }
@@ -83,5 +83,5 @@ function WikiDB_backend_dumb_MostRecentIter_sortf_rev($a, $b) {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

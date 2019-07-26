@@ -62,7 +62,6 @@ class DateUpdaterTest extends TestCase
     {
         $xml      = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/project4.xml'));
 
-
         $updater = new DateUpdater(
             new \DateTimeImmutable('2017-05-04'),
             new \DateTimeImmutable('2018-08-16')

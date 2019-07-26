@@ -70,7 +70,7 @@ class DbaListSet
         list( $prev , , ) = explode(':', $this->_dbh->fetch(intval($i)), 3);
         return intval($prev);
     }
-    
+
     function exists($i) {
         $i = intval($i);
         return $i && $this->_dbh->exists($i);
@@ -86,7 +86,7 @@ class DbaListSet
         list($prev, $next,) = explode(':', $dbh->fetch(intval($i)), 3);
         $dbh->replace($i, "$prev:$next:$data");
     }
-    
+
     function insert_before($i, $data) {
         assert(intval($i));
         return $this->_insert_before_nc($i, $data);
@@ -96,7 +96,7 @@ class DbaListSet
         assert(intval($i));
         return $this->_insert_after_nc($i, $data);
     }
-    
+
     function append($seq, $data) {
         $key = "s" . urlencode($seq);
         $this->_insert_before_nc($key, $data);
@@ -106,7 +106,7 @@ class DbaListSet
         $key = "s" . urlencode($seq);
         $this->_insert_after_nc($key, $data);
     }
-    
+
     function _insert_before_nc($i, &$data) {
         $newkey = $this->_new_key();
         $old_prev = $this->_setprev($i, $newkey);

@@ -28,7 +28,7 @@ rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
  *          The section extractor is currently quite unstable.
  * Usage:   <?plugin UnfoldSubpages sortby=-mtime words=50 maxpages=5 ?>
  * Author:  Reini Urban <rurban@x-ray.at>
- * 
+ *
  * Todo: follow RedirectTo
  */
 
@@ -63,7 +63,7 @@ extends WikiPlugin_IncludePage
                    'sortby'   => '',    // [+|-]pagename, [+|-]mtime, [+|-]hits
                    'maxpages' => false, // maximum number of pages to include (== limit)
                    'smalltitle' => false, // if set, hide transclusion-title,
-                               //  just have a small link at the start of 
+                               //  just have a small link at the start of
                             //  the page.
                    'words'   => false,     // maximum number of words
                                     //  per page to include
@@ -81,14 +81,14 @@ extends WikiPlugin_IncludePage
     function run($dbi, $argstr, &$request, $basepage) {
         static $included_pages = false;
         if (!$included_pages) $included_pages = array($basepage);
-        
+
         $args = $this->getArgs($argstr, $request);
         extract($args);
         $query = new TextSearchQuery($pagename . SUBPAGE_SEPARATOR . '*', true, 'glob');
         $subpages = $dbi->titleSearch($query, $sortby, $limit, $exclude);
         //if ($sortby)
         //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
-        //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false, 
+        //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false,
         //                            $sortby, $limit, $exclude);
         if (is_string($exclude) and !is_array($exclude))
             $exclude = PageList::explodePageList($exclude, false, false, $limit);
@@ -114,8 +114,8 @@ extends WikiPlugin_IncludePage
                 $r = $page->getCurrentRevision();
                 $c = $r->getContent();   // array of lines
                 // follow redirects
-                if (preg_match('/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/', 
-                               implode("\n", $c), $m)) 
+                if (preg_match('/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/',
+                               implode("\n", $c), $m))
                 {
                     // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {

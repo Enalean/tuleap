@@ -22,17 +22,17 @@ rcs_id('$Id: SyntaxHighlighter.php,v 1.7 2004/07/08 20:30:07 rurban Exp $');
  */
 
 /**
- * The SyntaxHighlighter plugin passes all its arguments through a C++ 
+ * The SyntaxHighlighter plugin passes all its arguments through a C++
  * highlighter called "highlight" (available at http://www.andre-simon.de/).
  *
  * @author: alecthomas
- * 
+ *
  * syntax: See http://www.andre-simon.de/doku/highlight/highlight.html
  * style = ["ansi", "gnu", "kr", "java", "linux"]
- 
+
 <?plugin SyntaxHighlighter syntax=c style=kr
  #include <stdio.h>
- 
+
  int main() {
  printf("Lalala\n");
  }
@@ -53,7 +53,7 @@ if (!defined('HIGHLIGHT_EXE'))
 //define('HIGHLIGHT_EXE','/home/groups/p/ph/phpwiki/bin/highlight');
 
 // highlight requires two subdirs themes and langDefs somewhere.
-// Best by highlight.conf in $HOME, but the webserver user usually 
+// Best by highlight.conf in $HOME, but the webserver user usually
 // doesn't have a $HOME
 if (!defined('HIGHLIGHT_DATA_DIR'))
     if (isWindows())

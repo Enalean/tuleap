@@ -18,7 +18,7 @@ extends WikiDB_backend_iterator
         $this->_backend = &$backend;
         $this->_target = $pagename;
     }
-    
+
     function next() {
         while ($page = $this->_pages->next()) {
             $pagename = $page['pagename'];
@@ -31,7 +31,7 @@ extends WikiDB_backend_iterator
             }
         }
     }
-    
+
     function free() {
         $this->_pages->free();
     }

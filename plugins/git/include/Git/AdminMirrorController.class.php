@@ -83,7 +83,6 @@ class Git_AdminMirrorController {
         $template_path = dirname(GIT_BASE_DIR).'/templates';
         $presenter     = null;
 
-
         switch ($request->get('action')) {
             case 'manage-allowed-projects':
                 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');

@@ -37,7 +37,6 @@ class VersionUploadCleanerTest extends TestCase
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $path_allocator = new UploadPathAllocator($tmp_dir->url() . '/document');
 
-
         $existing_version_id = 10;
         $existing_file_information = new FileBeingUploadedInformation($existing_version_id, 'Filename', 10, 0);
         $existing_version_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_file_information);

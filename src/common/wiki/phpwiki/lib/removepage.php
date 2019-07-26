@@ -25,7 +25,7 @@ require_once('lib/Template.php');
 
 function RemovePage (&$request) {
     global $WikiTheme;
-    
+
     $page = $request->getPage();
     $pagelink = WikiLink($page);
 
@@ -50,7 +50,7 @@ function RemovePage (&$request) {
                                 HiddenInputs(array('currentversion' => $version,
                                                    'pagename' => $page->getName(),
                                                    'action' => 'remove')),
-                                
+
                                 HTML::div(array('class' => 'toolbar'),
                                           $removeB,
                                           $WikiTheme->getButtonSeparator(),
@@ -62,7 +62,7 @@ function RemovePage (&$request) {
         foreach (explode("\n", firstNWordsOfContent(100, $current->getPackedContent())) as $s) {
             $sample->pushContent($s, HTML::br());
         }
-        $html->pushContent(HTML::div(array('class' => 'wikitext'), 
+        $html->pushContent(HTML::div(array('class' => 'wikitext'),
                                      $sample));
     }
     elseif ($request->getArg('currentversion') != $version) {
@@ -73,7 +73,7 @@ function RemovePage (&$request) {
         // Codendi specific: remove the deleted wiki page from ProjectWantedPages
         $projectPageName='ProjectWantedPages';
         $pagename = $page->getName();
-        
+
         $dbi = $request->getDbh();
         require_once(PHPWIKI_DIR."/lib/loadsave.php");
         $pagehandle = $dbi->getPage($projectPageName);
@@ -83,19 +83,19 @@ function RemovePage (&$request) {
             $text = $current->getPackedContent();
             $meta = $current->_data;
         }
-        
+
         $text = str_replace("* [$pagename]", "", $text);
-       
+
         $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
                                                       'page_added',
                                                       array($pagename));
         $meta['author'] = user_getname();
         $pagehandle->save($text, $version + 1, $meta);
-        
+
         //Codendi specific: remove permissions for this page @codenditodo: may be transferable otherwhere.
         require_once('common/wiki/lib/WikiPage.class.php');
         $wiki_page = new WikiPage(GROUP_ID, $_REQUEST['pagename']);
-        
+
         $wiki_page->resetPermissions();
         // Real delete.
         //$pagename = $page->getName();
@@ -116,7 +116,7 @@ function RemovePage (&$request) {
             )
         );
 
-        $link = HTML::a(array('href' => 'javascript:history.go(-2)'), 
+        $link = HTML::a(array('href' => 'javascript:history.go(-2)'),
                         _("Back to the previous page."));
         $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
                  HTML::div($link), HTML::hr());

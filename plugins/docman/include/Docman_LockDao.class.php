@@ -34,7 +34,7 @@ class Docman_LockDao extends DataAccessObject
     /**
      * Search all locks set on items that belongs to the same project than given
      * item id
-     * 
+     *
      * @param int $itemId
      * @return DataAccessResult
      */
@@ -49,7 +49,7 @@ class Docman_LockDao extends DataAccessObject
     }
 
     /**
-    * Search all locks set on items that belong to the same given project. 
+    * Search all locks set on items that belong to the same given project.
     *
     * @param int $groupId
     * @return DataAccessResult|false
@@ -65,9 +65,9 @@ class Docman_LockDao extends DataAccessObject
 
     /**
      * Retreive lock info for several items.
-     * 
+     *
      * @param Array $itemIds
-     * 
+     *
      * @return DataAccessResult|false
      */
     function searchLocksForItemIds(array $itemIds) {
@@ -78,7 +78,7 @@ class Docman_LockDao extends DataAccessObject
                ' AND '.Docman_ItemDao::getCommonExcludeStmt('i');
         return $this->retrieve($sql);
     }
-    
+
     function addLock($itemId, $userId, $date) {
         $sql = 'INSERT INTO plugin_docman_item_lock'.
                ' (item_id, user_id, lock_date)'.

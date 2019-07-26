@@ -65,7 +65,6 @@ class Git_Gitolite_GitoliteConfWriter {
         $git_modifications = new Git_Gitolite_GitModifications();
         $hostname          = $this->gitoliterc_reader->getHostname();
 
-
         if ($hostname) {
             $this->writeGitoliteConfigurationOnDisk($this->permissions_serializer->getGitoliteDotConfForHostname($this->getProjectList()), $git_modifications);
             $this->writeGitoliteIncludesInHostnameFile($hostname, $git_modifications, $this->getProjectList());
@@ -368,7 +367,6 @@ class Git_Gitolite_GitoliteConfWriter {
         $new_file = 'conf/projects/'.$new_name.'.conf';
 
         $this->proceedToFileMove($old_file, $new_file, $git_modifications);
-
 
         if (! $this->gitoliterc_reader->getHostname()) {
             return;

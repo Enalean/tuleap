@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ class Docman_MetadataValueFactory {
      */
     function &newMetadataValue($itemId, $fieldId, $type, $value) {
         $mdv = $this->createFromType($type);
-        
+
         $mdv->setFieldId($fieldId);
         $mdv->setItemId($itemId);
         $mdv->setType($type);
@@ -104,7 +104,7 @@ class Docman_MetadataValueFactory {
         else {
             $mdv->setValue($value);
         }
-          
+
         return $mdv;
     }
 
@@ -133,7 +133,7 @@ class Docman_MetadataValueFactory {
                     $eIter->next();
                 }
             break;
-            
+
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
@@ -162,7 +162,7 @@ class Docman_MetadataValueFactory {
 
         foreach($row as $md_name => $md_v) {
             $md = $mdFactory->getFromLabel($md_name);
-            
+
             if($md !== null) {
                 $this->validateInput($md, $md_v);
 
@@ -170,7 +170,7 @@ class Docman_MetadataValueFactory {
                                                 ,$md->getId()
                                                 ,$md->getType()
                                                 ,$md_v);
-                
+
                 $created = $this->create($mdv);
                 if(!$created) {
                     $this->setError($GLOBALS['Language']->getText('plugin_docman',
@@ -195,7 +195,7 @@ class Docman_MetadataValueFactory {
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 // First delete all previous values
                 $dao->delete($mdv->getFieldId(), $mdv->getItemId());
-            
+
                 // Now create new one
                 $pret = $this->create($mdv);
                 if($pret === false) {
@@ -205,7 +205,7 @@ class Docman_MetadataValueFactory {
                     $ret = true;
                 }
             break;
-            
+
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
@@ -279,7 +279,7 @@ class Docman_MetadataValueFactory {
         if($mdFactory->isRealMetadata($mdLabel)) {
             $md  = $mdFactory->getFromLabel($mdLabel);
             $dao = $this->getDao();
-            $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);   
+            $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);
         } else {
             $itemFactory = new Docman_ItemFactory($this->groupId);
             $itemFactory->massUpdate($srcItemId, $mdLabel, $itemIdArray);

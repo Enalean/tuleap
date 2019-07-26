@@ -502,7 +502,6 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackerById(45)->returns($backlog_tracker);
         stub($this->tracker_factory)->getTrackerById(78)->returns($planning_tracker);
 
-
         $planning = $this->planning_factory->getVirtualTopPlanning($this->user, 56);
 
         $this->assertIsA($planning, 'Planning');

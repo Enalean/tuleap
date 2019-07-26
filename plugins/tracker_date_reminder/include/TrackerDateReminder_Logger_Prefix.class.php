@@ -34,7 +34,7 @@ class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger {
         $this->logger = $logger;
         $this->prefix = $prefix;
     }
-    
+
     public function info($message) {
         $this->logger->info($this->prefix.' '.$message);
     }
@@ -42,7 +42,7 @@ class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger {
     public function warn($message) {
         $this->logger->warn($this->prefix.' '.$message);
     }
-    
+
     public function error($message) {
         $this->logger->error($this->prefix.' '.$message);
     }

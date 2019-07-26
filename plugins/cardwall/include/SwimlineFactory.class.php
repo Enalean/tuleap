@@ -29,7 +29,7 @@ class Cardwall_SwimlineFactory {
 
     /** @var Cardwall_OnTop_Config */
     private $config;
-    
+
     /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
     private $field_provider;
 
@@ -40,7 +40,7 @@ class Cardwall_SwimlineFactory {
 
     /**
      * public for testing
-     * 
+     *
      * @param array of Cardwall_Column $columns
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
@@ -70,7 +70,7 @@ class Cardwall_SwimlineFactory {
         $artifact        = $presenter->getArtifact();
         if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;
-            
+
         }
     }
 

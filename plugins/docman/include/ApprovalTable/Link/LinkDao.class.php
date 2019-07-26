@@ -45,7 +45,6 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao {
         $join = ' JOIN plugin_docman_link_version ver ON (ver.id = app.link_version_id)';
         $orderBy = ' ORDER BY ver.number DESC ';
 
-
         return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
     }
 }

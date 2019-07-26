@@ -111,7 +111,7 @@ extends WikiPlugin
                 return $this->disabled(_("Viewing redirecting page."));
             }
         }
-        
+
         return $request->redirect($url);
     }
 };

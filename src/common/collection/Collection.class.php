@@ -21,9 +21,9 @@
  */
 
 class Collection {
-    
+
     /* protected */ var $elements;
-    
+
     function __construct($initial_array = '') {
         if (is_array($initial_array)) {
             $this->elements = $initial_array;
@@ -31,14 +31,14 @@ class Collection {
             $this->elements = array();
         }
     }
-    
+
     /**
      * add the element to the collection
      */
     function add($element) {
         $this->elements[] = $element;
     }
-    
+
     /**
      * @return true if this collection contains the specified element
      */
@@ -58,7 +58,7 @@ class Collection {
         }
         return $found;
     }
-    
+
     /**
      * @return Iterator to iterate through the elements
      */
@@ -66,7 +66,7 @@ class Collection {
         $it = new ArrayIterator($this->elements);
         return $it;
     }
-    
+
     /**
      * Compares the specified object with this collection for equality.
      * @param obj the reference object with which to compare.
@@ -104,23 +104,23 @@ class Collection {
         }
         return false;
     }
-    
+
     /**
      * @return the number of elements in this collection
      */
     function size() {
         return count($this->elements);
     }
-    
+
     /**
      * @return true if the collection is empty
      */
     function isEmpty() {
          return $this->size() === 0;
     }
-    
+
     /**
-     * Removes a single instance of the specified element from this collection, 
+     * Removes a single instance of the specified element from this collection,
      * if it is present
      * @param element element to be removed from this collection, if present.
      * @return true if this collection changed as a result of the call
@@ -137,8 +137,8 @@ class Collection {
         }
         return false;
     }
-    
-    
+
+
     function toArray() {
         return $this->elements;
     }

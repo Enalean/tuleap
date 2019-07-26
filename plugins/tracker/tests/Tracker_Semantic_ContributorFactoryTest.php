@@ -42,23 +42,23 @@ class Tracker_Semantic_ContributorFactoryTest extends TuleapTestCase {
 
     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticContributorTest.xml');
-        
+
         $tracker = new MockTracker();
-        
+
         $f1 = new MockTracker_FormElement_Field_List();
         $f1->setReturnValue('getId', 111);
         $f2 = new MockTracker_FormElement_Field_List();
         $f2->setReturnValue('getId', 112);
         $f3 = new MockTracker_FormElement_Field_List();
         $f3->setReturnValue('getId', 113);
-        
+
         $mapping = array(
                     'F9'  => $f1,
                     'F13'  => $f2,
                     'F16' => $f3
                   );
         $semantic_contributor = Tracker_Semantic_ContributorFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
-        
+
         $this->assertEqual($semantic_contributor->getShortName(), 'contributor');
         $this->assertEqual($semantic_contributor->getFieldId(), 112);
     }

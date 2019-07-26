@@ -20,27 +20,27 @@
  */
 
 class PHP_BigFile {
-    
+
     /**
      * @var resource The current context, or NULL if no context was passed to the caller function
      */
     public $context;
-    
+
     /**
      * @var string The path to the file
      */
     protected $path;
-    
+
     /**
      * @var int The current offset
      */
     protected $offset = 0;
-    
+
     /**
      * @var int The size of the file
      */
     protected $filesize = 0;
-    
+
     /**
      * @var string the name of the protocol
      */
@@ -55,7 +55,7 @@ class PHP_BigFile {
 
     /**
      * Register the wrapper
-     * 
+     *
      * @throw RuntimeException if we cannot register the protocol
      * @return void
      */
@@ -64,12 +64,12 @@ class PHP_BigFile {
             throw new RuntimeException('Unable to register '. self::class .' protocol');
         }
     }
-    
+
     /**
      * Return the filesize of the file
      * handle big files (filesize() doesn't)
      * @see http://us3.php.net/manual/fr/function.filesize.php#80959
-     * 
+     *
      * @param string $file Path to the file
      *
      * @return int the size of the file $file
@@ -78,13 +78,13 @@ class PHP_BigFile {
         $filename = escapeshellarg($file);
         return (int) trim(`stat -c%s $filename`);
     }
-    
+
     /**
      * Workaround for the 2GB limitation
      * We can not use the php function md5_file
-     * 
+     *
      * @param string $file Path to the file
-     * 
+     *
      * @return string the md5sum of the file $file
      */
     public static function getMd5Sum($file) {
@@ -92,7 +92,7 @@ class PHP_BigFile {
         $filename = escapeshellarg($file);
         return trim(`md5sum $filename| awk '{ print $1 }'`);
     }
-    
+
     /**
      * Tell if $file is a file
      * Handle big files (is_file() doesn't)
@@ -109,18 +109,18 @@ class PHP_BigFile {
         exec("[ -f $filename ]", $tmp, $ret);
         return $ret == 0;
     }
-    
+
     /**
      * Open a (big) file
      *
      * @param string $path         Specifies the URL that was passed to the original function
      * @param string $mode         The mode to open the file, as detailed for fopen
-     * @param int    $options      Holds additional flags set by the streams API. 
+     * @param int    $options      Holds additional flags set by the streams API.
      *                             It can hold one or more of the following values OR'd together.
-     * @param string &$opened_path If the path is opened successfully, and STREAM_USE_PATH is set 
-     *                             in options, opened_path should be set to the full path of the 
-     *                             file/resource that was actually opened. 
-     * 
+     * @param string &$opened_path If the path is opened successfully, and STREAM_USE_PATH is set
+     *                             in options, opened_path should be set to the full path of the
+     *                             file/resource that was actually opened.
+     *
      * @return bool true on success or false on failure
      */
     public function stream_open($path, $mode, $options, &$opened_path) {
@@ -179,11 +179,11 @@ class PHP_BigFile {
     /**
      * Read for stream
      *
-     * This method is called in response to fread()  and fgets(). 
+     * This method is called in response to fread()  and fgets().
      *
      * @param int $count How many bytes of data from the current position should be returned.
      *
-     * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string. 
+     * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string.
      */
     public function stream_read($count) {
         if ($this->filesize < PHP_INT_MAX) {
@@ -259,7 +259,7 @@ class PHP_BigFile {
     /**
      * Tests for end-of-file on a file pointer
      *
-     * This method is called in response to feof(). 
+     * This method is called in response to feof().
      *
      * @return Should return TRUE if the read/write position is at the end of the stream and if no more data is available to be read, or FALSE otherwise.
      */
@@ -267,18 +267,18 @@ class PHP_BigFile {
         //echo "$this->offset > $this->filesize\n";
         return $this->offset >= $this->filesize;
     }
-    
+
     /**
      * Retrieve the current position of a stream
      *
-     * This method is called in response to ftell(). 
+     * This method is called in response to ftell().
      *
-     * @return int Should return the current position of the stream. 
+     * @return int Should return the current position of the stream.
      */
     public function stream_tell() {
         return $this->offset;
     }
-    
+
     /**
      * Seeks to specific location in a stream
      *
@@ -326,7 +326,7 @@ class PHP_BigFile {
                 return false;
         }
     }
-    
+
     /**
      * Retrieve information about a file resource
      *

@@ -56,7 +56,6 @@ class FRSRouter
 
         $action = $request->get('action');
 
-
         switch ($action) {
             case "edit-permissions":
                 $this->useDefaultRoute($project, $user);

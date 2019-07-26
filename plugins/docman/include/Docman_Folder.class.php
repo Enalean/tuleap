@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ require_once('common/collection/PrioritizedList.class.php');
  * Model/Controler and View layer of the application
  */
 class Docman_Folder extends Docman_Item {
-    
+
     function __construct($data = null) {
         parent::__construct($data);
         $this->_resetItems();
@@ -46,11 +46,11 @@ class Docman_Folder extends Docman_Item {
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
         return $row;
     }
-    
+
     function isRoot() {
         return $this->parent_id == 0;
     }
-    
+
     var $_items;
     function addItem(&$item) {
         $this->_items->add($item, -($item->getRank()));

@@ -22,7 +22,7 @@ rcs_id('$Id: WikiAdminUtils.php,v 1.18 2005/09/10 11:30:40 rurban Exp $');
  */
 
 /**
-  valid actions: 
+  valid actions:
         purge-cache
         purge-bad-pagenames
         purge-empty-pages
@@ -56,14 +56,14 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         $args['action'] = strtolower($args['action']);
         extract($args);
-        
+
         if (!$action)
             $this->error("No action specified");
         if (!($default_label = $this->_getLabel($action)))
             $this->error("Bad action");
         if ($request->getArg('action') != 'browse')
             return $this->disabled("(action != 'browse')");
-        
+
         $posted = $request->getArg('wikiadminutils');
 
         if ($request->isPost() and $posted['action'] == $action) { // a different form. we might have multiple
@@ -90,7 +90,7 @@ extends WikiPlugin
                                              WIKIAUTH_ADMIN)),
                           HiddenInputs($request->getArgs()));
     }
-    
+
     function do_action(&$request, $args) {
         $method = strtolower('_do_' . str_replace('-', '_', $args['action']));
         if (!method_exists($this, $method))
@@ -145,7 +145,7 @@ extends WikiPlugin
         }
     }
 
-    /** 
+    /**
      * Purge all non-referenced empty pages. Mainly those created by bad link extraction.
      */
     function _do_purge_empty_pages(&$request, $args) {
@@ -172,15 +172,15 @@ extends WikiPlugin
         else
             return HTML(fmt("Deleted %s unreferenced pages:", $count),
                         HTML::div(array('align'=>'left'), $list),
-                        ($notpurgable ? 
-        fmt("The %d not-purgable pages/links are links in some page(s). You might want to edit them.", 
+                        ($notpurgable ?
+        fmt("The %d not-purgable pages/links are links in some page(s). You might want to edit them.",
             $notpurgable)
                                       : ''));
     }
 
 
     function _do_convert_cached_html(&$request, $args) {
-        
+
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     }
 
@@ -190,7 +190,7 @@ extends WikiPlugin
     function _do_access_restrictions(&$request, &$args) {
         return _("Sorry. Access Restrictions not yet implemented");
     }
-    
+
     // pagelist with enable/disable button
     function _do_email_verification(&$request, &$args) {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
@@ -213,7 +213,7 @@ extends WikiPlugin
         foreach ($allusers as $username) {
             if (ENABLE_USER_NEW)
                 $user = WikiUser($username);
-            else 
+            else
                 $user = new WikiUser($request, $username);
             $prefs = $user->getPreferences();
             if ($prefs->get('email')) {
@@ -223,11 +223,11 @@ extends WikiPlugin
                 $class = ($group % 2) ? 'oddrow' : 'evenrow';
                 $row = HTML::tr(array('class' => $class));
                 $page_handle = $dbi->getPage($username);
-                $row->pushContent($pagelist->_columns[0]->format($pagelist, 
+                $row->pushContent($pagelist->_columns[0]->format($pagelist,
                                                                  $page_handle, $page_handle));
                 $row->pushContent($email->format($pagelist, $prefs, $page_handle));
                 if (!empty($args['verify'])) {
-                    $prefs->_prefs['email']->set('emailVerified', 
+                    $prefs->_prefs['email']->set('emailVerified',
                                                  empty($args['verified'][$username]) ? 0 : 2);
                     $user->setPreferences($prefs);
                 }
@@ -247,8 +247,8 @@ extends WikiPlugin
                           HiddenInputs(array('require_authority_for_post' =>
                                              WIKIAUTH_ADMIN)),
                           HiddenInputs($request->getArgs()),
-                          $pagelist->_generateTable(false),                   
-                          HTML::p(Button('submit:', _("Change Verification Status"), 
+                          $pagelist->_generateTable(false),
+                          HTML::p(Button('submit:', _("Change Verification Status"),
                                          'wikiadmin'),
                                   HTML::Raw('&nbsp;'),
                                   Button('cancel', _("Cancel")))
@@ -259,7 +259,7 @@ extends WikiPlugin
 
 require_once("lib/PageList.php");
 
-class _PageList_Column_email 
+class _PageList_Column_email
 extends _PageList_Column {
     function _getValue (&$prefs, $dummy) {
         return $prefs->get('email');

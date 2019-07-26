@@ -56,7 +56,7 @@ function extract_history($atid) {
                     ' FROM artifact_history ah, user, artifact a, artifact_field af'.
                     ' WHERE ah.artifact_id = a.artifact_id'.
                     ' AND a.group_artifact_id = %d'.
-                    ' AND af.group_artifact_id = a.group_artifact_id'. 
+                    ' AND af.group_artifact_id = a.group_artifact_id'.
                     ' AND user.user_id = ah.mod_by'.
                     ' AND ah.field_name = af.field_name)'.
                     ' UNION'.
@@ -69,9 +69,9 @@ function extract_history($atid) {
                     ' ORDER BY artifact_id, date DESC',
                     $atid,$atid,"cc","attachment","lbl_%_comment");
     return db_query($sql);
-    
+
 }
-                
+
 $col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type','label');
 $lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),
           'field_name' => $Language->getText('project_export_artifact_history_export','field_name'),
@@ -96,16 +96,16 @@ $dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_h
 $eol = "\n";
 
 $result = extract_history($atid);
-$rows = db_numrows($result);      
+$rows = db_numrows($result);
 
 if ($export == 'artifact_history') {
 
     // Send the result in CSV format
     if ($result && $rows > 0) {
-    
+
         $tbl_name = str_replace(' ','_','artifact_history_'.$at->getItemName());
         header ('Content-Type: text/csv');
-        header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');    
+        header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
         echo build_csv_header($col_list, $lbl_list).$eol;
 
         while ($arr = db_fetch_array($result)) {
@@ -132,7 +132,7 @@ if ($export == 'artifact_history') {
 
     echo '<h3>'.$Language->getText('project_export_artifact_history_export','hist_export_format').'</h3>';
     echo '<p>'.$Language->getText('project_export_artifact_history_export','hist_export_format_msg').'</p>';
-   
+
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_history_record($at,$art_field_fact,$record);
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);

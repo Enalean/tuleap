@@ -78,9 +78,9 @@ $WikiTheme->setAutosplitWikiWords(false);
 
 /**
  * Layout improvement with dangling links for mostly closed wiki's:
- * If false, only users with edit permissions will be presented the 
+ * If false, only users with edit permissions will be presented the
  * special wikiunknown class with "?" and Tooltip.
- * If true (default), any user will see the ?, but will be presented 
+ * If true (default), any user will see the ?, but will be presented
  * the PrintLoginForm on a click.
  */
 //$WikiTheme->setAnonEditUnknownLinks(false);
@@ -93,7 +93,7 @@ $WikiTheme->setAutosplitWikiWords(false);
  * Do not include the server's zone (%Z), times are converted to the
  * user's time zone.
  *
- * Suggestion for french: 
+ * Suggestion for french:
  *   $WikiTheme->setDateFormat("%A %e %B %Y");
  *   $WikiTheme->setTimeFormat("%H:%M:%S");
  * Suggestion for capable php versions, using the server locale:
@@ -107,28 +107,28 @@ $WikiTheme->setAutosplitWikiWords(false);
  * To suppress times in the "Last edited on" messages, give a
  * give a second argument of false:
  */
-//$WikiTheme->setDateFormat("%B %d, %Y", false); 
+//$WikiTheme->setDateFormat("%B %d, %Y", false);
 
 
 /**
  * Custom UserPreferences:
  * A list of name => _UserPreference class pairs.
- * Rationale: Certain themes should be able to extend the predefined list 
+ * Rationale: Certain themes should be able to extend the predefined list
  * of preferences. Display/editing is done in the theme specific userprefs.tmpl
  * but storage/sanification/update/... must be extended to the Get/SetPreferences methods.
  * See themes/wikilens/themeinfo.php
  */
-//$WikiTheme->customUserPreference(); 
+//$WikiTheme->customUserPreference();
 
 /**
  * Register custom PageList type and define custom PageList classes.
- * Rationale: Certain themes should be able to extend the predefined list 
- * of pagelist types. E.g. certain plugins, like MostPopular might use 
+ * Rationale: Certain themes should be able to extend the predefined list
+ * of pagelist types. E.g. certain plugins, like MostPopular might use
  * info=pagename,hits,rating
  * which displays the rating column whenever the wikilens theme is active.
  * See themes/wikilens/themeinfo.php
  */
-//$WikiTheme->addPageListColumn(); 
+//$WikiTheme->addPageListColumn();
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // (c-file-style: "gnu")
@@ -138,5 +138,5 @@ $WikiTheme->setAutosplitWikiWords(false);
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

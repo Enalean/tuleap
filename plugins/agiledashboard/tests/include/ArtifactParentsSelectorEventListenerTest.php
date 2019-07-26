@@ -55,7 +55,6 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         stub($this->selector)->getPossibleParents($this->epic_tracker, $this->sprint, $this->user)->returns(array($this->epic, $this->epic2));
         stub($this->selector)->getPossibleParents($this->epic_tracker, $this->epic2, $this->user)->returns(array($this->epic2));
 
-
         $this->event_listener = new Planning_ArtifactParentsSelectorEventListener($this->artifact_factory, $this->selector, $this->request);
     }
 

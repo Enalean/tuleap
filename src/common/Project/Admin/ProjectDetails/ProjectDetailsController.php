@@ -435,7 +435,6 @@ class ProjectDetailsController
             }
         }
 
-
         return $parent_project_info;
     }
 

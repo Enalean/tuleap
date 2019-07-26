@@ -24,11 +24,11 @@ require_once('common/plugin/PluginFileInfo.class.php');
  * CardwallPluginInfo
  */
 class CardwallPluginInfo extends PluginFileInfo {
-    
+
     function __construct($plugin) {
         parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new CardwallPluginDescriptor());
     }
-    
+
 }
 ?>

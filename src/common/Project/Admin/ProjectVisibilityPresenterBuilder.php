@@ -73,7 +73,6 @@ class ProjectVisibilityPresenterBuilder
             $this->project_visibility_options_generator
         );
 
-
         $truncated_mails_impacted_services = $this->service_truncated_mails_retriever->getServicesImpactedByTruncatedEmails($project);
         $truncated_presenter               = new ProjectTruncatedEmailsPresenter(
             $project,

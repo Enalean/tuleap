@@ -3,8 +3,8 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-require_once('pre.php');    
-require_once('../cvs/commit_utils.php');    
+require_once('pre.php');
+require_once('../cvs/commit_utils.php');
 
 
 // ######################## table for summary info
@@ -39,7 +39,7 @@ switch ($func) {
         $sql = "SELECT cvs_is_private FROM groups WHERE group_id=". db_ei($group_id);
         $result = db_query($sql);
         $initial_settings = db_fetch_array($result);
-   
+
         $feedback .= $GLOBALS['Language']->getText('cvs_index', 'config_updated');
         $status = $GLOBALS['Language']->getText('cvs_index', 'full_success');
 

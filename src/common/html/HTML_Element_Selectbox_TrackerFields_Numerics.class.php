@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -30,16 +30,16 @@ class HTML_Element_Selectbox_TrackerFields_Numerics extends HTML_Element_Selectb
 
     public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc="") {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
-        
+
         require_once('common/tracker/ArtifactFieldFactory.class.php');
         require_once('common/tracker/ArtifactType.class.php');
         $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);
         $aff = new ArtifactFieldFactory($at);
         foreach ($aff->getAllUsedFields() as $field) {
             if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())){
-        
-                if (($field->isSelectBox() || $field->isInt() || $field->isFloat()) 
-                    && !$field->isUsername() 
+
+                if (($field->isSelectBox() || $field->isInt() || $field->isFloat())
+                    && !$field->isUsername()
                     && !$field->isStandardField()
                 ) {
                     $selected = $this->value == $field->getName();

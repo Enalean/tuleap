@@ -63,7 +63,6 @@ class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_Field
             ->searchByTransitionId($this->transition_id)
             ->returnsEmptyDar();
 
-
         $post_action_array = $this->factory->loadPostActions($this->transition);
         $this->assertCount($post_action_array, 1);
 

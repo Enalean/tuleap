@@ -29,7 +29,7 @@ class Docman_Log { /* implements EventListener */
     function __construct() {
         $this->_getDao();
     }
-    
+
     function log($event, $params) {
         $event = constant(strtoupper($event));
         switch ($event) {
@@ -66,17 +66,16 @@ class Docman_Log { /* implements EventListener */
                 break;
         }
     }
-    
+
     function logsDaily($params) {
         $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
             'field' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_field'),
             'title' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_title')
         );
-       
-       
+
     }
-        
+
     var $dao;
     function _getDao() {
         if (!$this->dao) {
@@ -90,7 +89,7 @@ class Docman_Log { /* implements EventListener */
         $this->dif = new Docman_ItemFactory($group_id);
         return $this->dif;
     }
-    
+
     function fetchLogsForItem($item_id, $display_access_logs) {
         $html = '';
         $uh   = UserHelper::instance();
@@ -121,7 +120,7 @@ class Docman_Log { /* implements EventListener */
                         if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];
                             $_new_v = $row['new_value'];
-    
+
                             $mdFactory = new Docman_MetadataFactory($row['group_id']);
                             $md = $mdFactory->getFromLabel($row['field']);
                             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
@@ -133,7 +132,7 @@ class Docman_Log { /* implements EventListener */
                                 }
                                 if($_new_e !== null) {
                                     $_new_v = $_new_e->getName();
-                                }                            
+                                }
                             } else if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_DATE){
                                 $_old_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_old_v);
                                 $_new_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_new_v);
@@ -179,7 +178,7 @@ class Docman_Log { /* implements EventListener */
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
                         $html .= '</tr>';
-    
+
                         $_previous_date = $row['time'];
                         $_previous_auth = $row['user_id'];
                     }
@@ -195,7 +194,7 @@ class Docman_Log { /* implements EventListener */
         }
         return $html;
     }
-    
+
     function getText($type) {
         $txt = '';
         switch($type) {
@@ -227,10 +226,10 @@ class Docman_Log { /* implements EventListener */
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');    
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');
                 break;
             case PLUGIN_DOCMAN_EVENT_RESTORE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restore');

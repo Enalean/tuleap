@@ -19,12 +19,12 @@
  */
 
 class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_ValueDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_list';
     }
-    
+
     public function create($changeset_value_id, $value_ids) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();
@@ -52,7 +52,7 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
         return true;
     }
 
-    public function  createNoneValue($tracker_id, $field_id) {        
+    public function  createNoneValue($tracker_id, $field_id) {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
         if ( $changeset_value_ids === false ) {
             return false;

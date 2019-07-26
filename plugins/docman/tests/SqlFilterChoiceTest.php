@@ -56,6 +56,5 @@ class SqlFilterChoiceTest extends TuleapTestCase
         $this->assertEqual($docmanSf->getSearchType('cod*ex*')   , array('like' => false));
         $this->assertEqual($docmanSf->getSearchType('codex')     , array('like' => false));
 
-
     }
 }

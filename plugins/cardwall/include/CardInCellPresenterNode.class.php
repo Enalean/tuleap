@@ -28,16 +28,16 @@ class Cardwall_CardInCellPresenterNode extends TreeNode {
 
     /** @var Cardwall_CardInCellPresenter */
     private $presenter;
-    
+
     function __construct(Cardwall_CardInCellPresenter $presenter) {
         parent::__construct(null, $presenter->getId());
         $this->presenter = $presenter;
     }
-    
+
     public function getCardInCellPresenter() {
         return $this->presenter;
     }
-    
+
     public function getArtifact() {
         return $this->presenter->getArtifact();
     }

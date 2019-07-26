@@ -91,7 +91,6 @@ class BackendMailingList extends Backend {
         if ($row = $dar->getRow()) {
             $list = new MailingList($row);
 
-
             $list_admin=UserManager::instance()->getUserById($list->getListAdmin());
             $list_admin_email = $list_admin->getEmail();
 

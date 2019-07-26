@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -29,7 +29,7 @@ class Docman_View_Admin_MetadataImport
 extends Docman_View_Extra {
     var $srcGo;
     var $dstGo;
-    
+
     function _title($params) {
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($params['sSrcGroupId']);

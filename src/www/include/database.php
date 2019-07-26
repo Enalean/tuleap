@@ -119,8 +119,8 @@ function db_insertid($qhandle) {
  * Display real error only if we are in Debug mode
  *
  * @deprecated
- * 
- * @return String 
+ *
+ * @return String
  */
 function db_error() {
     return CodendiDataAccess::instance()->isError();

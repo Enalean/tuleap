@@ -25,7 +25,7 @@ class BackendLoggerTest extends TuleapTestCase {
     private $log_file;
     /** @var BackendLogger */
     private $logger;
-    
+
     public function setUp() {
         parent::setUp();
         ForgeConfig::set('codendi_log', '/tmp');
@@ -49,7 +49,7 @@ class BackendLoggerTest extends TuleapTestCase {
         $this->logger->error('arrete!');
         $this->assertPattern('/\[error\] arrete!/', file_get_contents($this->log_file));
     }
-    
+
     public function testErrorAppendsStackTraceIfGivenAnError() {
         $message = 'an error occured';
         $exception = new Exception('some error');

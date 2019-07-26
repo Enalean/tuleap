@@ -38,6 +38,5 @@ class b201603161523_create_plugin_svn_immutable_tag extends ForgeUpgrade_Bucket 
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while creating the plugin_svn_immutable_tag table for SVN plugin.');
         }
 
-
     }
 }

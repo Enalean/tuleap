@@ -130,7 +130,6 @@ class EmailNotificationTaskTest extends TestCase
         $mail_sender = \Mockery::mock(MailSender::class);
         $mail_sender->shouldReceive('send')->never();
 
-
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,
             $this->user_helper,
@@ -148,7 +147,6 @@ class EmailNotificationTaskTest extends TestCase
     {
         $user_language = \Mockery::mock(\BaseLanguage::class);
         $user_language->shouldReceive('getText')->atLeast(1);
-
 
         $mail_notification_task = new EmailNotificationTask(
             $this->logger,

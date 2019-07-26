@@ -35,7 +35,6 @@ class ExternalLinkParametersExtractorTest extends TestCase
         $request         = Mockery::mock(HTTPRequest::class);
         $request->params = [];
 
-
         $extractor = new ExternalLinkParametersExtractor();
         $this->assertEquals(
             $extractor->extractFolderIdFromParams($request),

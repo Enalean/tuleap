@@ -21,7 +21,7 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for ArtifactField 
+ *  Data Access Object for ArtifactField
  */
 class ArtifactFieldDao extends DataAccessObject {
     /**
@@ -32,7 +32,7 @@ class ArtifactFieldDao extends DataAccessObject {
         $sql = "SELECT * FROM artifact_field";
         return $this->retrieve($sql);
     }
-    
+
     /**
     * Searches field_id for (multi_)assigned_to By artifactTypeId
     * @return DataAccessResult

@@ -486,7 +486,6 @@ class MediawikiDao extends DataAccessObject {
         $dbname_with_id   = $this->da->quoteSmart($dbname_with_id);
         $dbname_with_name = $this->da->quoteSmart($dbname_with_name);
 
-
         $sql  = "SELECT SCHEMA_NAME AS 'name' FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = $dbname_with_id";
         $row = $this->retrieveFirstRow($sql);
         if ($row) {

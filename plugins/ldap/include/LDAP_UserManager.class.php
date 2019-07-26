@@ -31,7 +31,7 @@ class LDAP_UserManager {
 
 
     public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
-    
+
     /**
      * @type LDAP
      */
@@ -98,7 +98,7 @@ class LDAP_UserManager {
 
     /**
      * Get LDAPResult object corresponding to a User object
-     * 
+     *
      * @param  PFUser $user
      * @return LDAPResult|false
      */
@@ -195,7 +195,7 @@ class LDAP_UserManager {
 
     /**
      * Return LDAP logins stored in DB corresponding to given userIds.
-     * 
+     *
      * @param array $userIds Array of user ids
      * @return DataAccessResult ldap logins
      */
@@ -372,26 +372,26 @@ class LDAP_UserManager {
 
         // Perform DB update
         $userUpdated = $this->getUserManager()->updateDb($user);
-        
+
         $ldapUpdated = true;
         $user_id    = $this->getLdapLoginFromUserIds(array($user->getId()))->getRow();
         if ($user_id['ldap_uid'] != $lr->getLogin()) {
             $ldapUpdated = $this->updateLdapUid($user, $lr->getLogin());
             $this->triggerRenameOfUsers();
         }
-        
+
         return ($userUpdated || $ldapUpdated);
     }
 
     /**
      * Store new LDAP login in database
-     * 
-     * Force update of SVNAccessFile in project the user belongs to as 
+     *
+     * Force update of SVNAccessFile in project the user belongs to as
      * project member or user group member
-     * 
-     * @param PFUser    $user    The user to update 
+     *
+     * @param PFUser    $user    The user to update
      * @param String  $ldapUid New LDAP login
-     * 
+     *
      * @return bool
      */
     function updateLdapUid(PFUser $user, $ldapUid) {
@@ -404,7 +404,7 @@ class LDAP_UserManager {
 
     /**
      * Get the list of users whom LDAP uid changed
-     * 
+     *
      * @return Array of User
      */
     public function getUsersToRename() {
@@ -413,7 +413,7 @@ class LDAP_UserManager {
 
     /**
      * Add a user whom login changed to the rename pipe
-     * 
+     *
      * @param PFUser $user A user to rename
      */
     public function addUserToRename(PFUser $user) {
@@ -563,7 +563,7 @@ class LDAP_UserManager {
     {
         return UserManager::instance();
     }
-    
+
     /**
      * Wrapper for SystemEventManager object
      *

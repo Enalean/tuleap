@@ -146,7 +146,6 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
             new Cardwall_Column(113, "On going", "rgb(255,255,255)")
         )));
 
-
         stub($this->cardwall_config)->getMappings()->returns(array());
 
         $this->xml_exporter->export($this->root);

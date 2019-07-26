@@ -18,12 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -38,7 +38,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      * @see BackendSystem::dumpSSHKeysForUser()
      * @see UserManager::updateUserSSHKeys()
      * @see SystemEventManager::addSystemEvent()
-     * 
+     *
      * @return bool
      */
     public function process() {

@@ -47,7 +47,7 @@ $checked  = $project->isPublic() && !$cvs_is_private ? '' : 'checked="true"';
 $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 
 echo "<h2>".$GLOBALS['Language']->getText('cvs_admin_commit', 'title')."</h2>";
-  
+
 echo '<FORM ACTION="?" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">

@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/bui
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
 
 class Tracker_TreeNode_CardPresenterNodeTest extends NodeDuplicatorContractTest {
-    
+
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('Tracker_CardPresenter');
         $presenter_node = new Tracker_TreeNode_CardPresenterNode(new TreeNode(), $presenter);

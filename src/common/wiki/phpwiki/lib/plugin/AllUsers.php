@@ -26,9 +26,9 @@ require_once('lib/PageList.php');
 /**
  * Based on AllPages and WikiGroup.
  *
- * We list all users, 
- * either homepage users (prefs stored in a page), 
- * users with db prefs and 
+ * We list all users,
+ * either homepage users (prefs stored in a page),
+ * users with db prefs and
  * externally authenticated users with a db users table, if auth_user_exists is defined.
  */
 class WikiPlugin_AllUsers

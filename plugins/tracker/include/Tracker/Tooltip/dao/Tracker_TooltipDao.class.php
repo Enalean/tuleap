@@ -26,7 +26,7 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
         parent::__construct();
         $this->table_name = 'tracker_tooltip';
     }
-    
+
     public function searchByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -35,7 +35,7 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function add($tracker_id, $field_id, $rank) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
@@ -44,7 +44,7 @@ class Tracker_TooltipDao extends DataAccessObject implements Tracker_Semantic_IR
                 VALUES ($tracker_id, $field_id, $rank)";
         return $this->update($sql);
     }
-    
+
     public function remove($tracker_id, $field_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);

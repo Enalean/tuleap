@@ -157,7 +157,7 @@ if ($set == 'my') {
         Closed commits - backwards compat can be removed 9/10
     */
     // Do nothing > Done with default values;
-} 
+}
 
 /*
     Display commits based on the form post - by user or status or both
@@ -199,7 +199,7 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         '</TD><TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.
         '></TD>'.
        '</TR></TABLE>'.
-    
+
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('global', 'btn_browse').'">'.
 ' <input CLASS="input-mini" TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
 'VALUE="'.$chunksz.'">'.$GLOBALS['Language']->getText('cvs_browse_commit', 'nb_at_once').'.'.

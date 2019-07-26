@@ -22,11 +22,11 @@
 require_once('CollectionTestCase.class.php');
 
 class LinkedListTestCase extends CollectionTestCase {
-    
+
     function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname') {
         parent::__construct($name, $collection_class_name);
     }
-    
+
     function testOrder() {
         $a = new StdClass();
         $b = new StdClass();
@@ -45,7 +45,7 @@ class LinkedListTestCase extends CollectionTestCase {
         $element = $it->current();
         $this->assertReference($element, $a);
     }
-    
+
     function testEqualsDifferentOrder() {
         $a = new StdClass();
         $b = new StdClass();

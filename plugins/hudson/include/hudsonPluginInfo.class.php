@@ -23,7 +23,7 @@ require_once('common/plugin/PluginInfo.class.php');
 require_once('hudsonPluginDescriptor.class.php');
 
 class hudsonPluginInfo extends PluginInfo {
-    
+
     public function __construct($plugin) {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new hudsonPluginDescriptor());

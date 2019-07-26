@@ -29,26 +29,26 @@ require_once('ArtifactRuleValue.class.php');
 * Base class to create, retrieve, update or delete rules
 */
 class ArtifactRuleFactory {
-    
+
     var $rules_dao;
     var $rules;
-    
+
     var $RULETYPE_HIDDEN;
     var $RULETYPE_DISABLED;
     var $RULETYPE_MANDATORY;
     var $RULETYPE_VALUE;
-    
+
     function __construct(ArtifactRuleDao $rules_dao)
     {
         $this->rules_dao = $rules_dao;
         $this->rules = array();
-        
+
         $this->RULETYPE_HIDDEN    = 1;
         $this->RULETYPE_DISABLED  = 2;
         $this->RULETYPE_MANDATORY = 3;
         $this->RULETYPE_VALUE     = 4;
     }
-    
+
     /**
     * ArtifactRuleFactory is a singleton
     */
@@ -74,7 +74,7 @@ class ArtifactRuleFactory {
         }
         return $this->rules[$id];
     }
-    
+
     function getAllRulesByArtifactTypeWithOrder($artifact_type) {
         $dar = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
         $rules = array();
@@ -87,7 +87,7 @@ class ArtifactRuleFactory {
         }
         return $rules;
     }
-    
+
     /**
     * @return ArtifactRule
     */
@@ -109,11 +109,11 @@ class ArtifactRuleFactory {
         }
         return $rule;
     }
-    
+
     function saveRuleValue($group_artifact_id, $source, $source_value, $target, $target_value) {
         $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_VALUE, $target_value);
     }
-    
+
     function _saveRuleState($group_artifact_id, $source, $source_value, $target, $rule_type) {
         $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, array($this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY));
         $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $rule_type);
@@ -121,15 +121,15 @@ class ArtifactRuleFactory {
     function saveRuleHidden($group_artifact_id, $source, $source_value, $target) {
         $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
     }
-    
+
     function saveRuleDisabled($group_artifact_id, $source, $source_value, $target) {
         $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_DISABLED);
     }
-    
+
     function saveRuleMandatory($group_artifact_id, $source, $source_value, $target) {
         $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_MANDATORY);
     }
-    
+
     function deleteRule($rule_id) {
         $deleted = $this->rules_dao->deleteByRuleId($rule_id);
         return $deleted;
@@ -143,7 +143,7 @@ class ArtifactRuleFactory {
         $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $this->RULETYPE_VALUE);
         return $deleted;
     }
-    
+
     /**
     * Delete all rules for a tracker
     */

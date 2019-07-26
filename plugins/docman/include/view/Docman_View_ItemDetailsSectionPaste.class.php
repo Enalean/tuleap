@@ -28,7 +28,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
     var $srcGo;
     var $dstGo;
     private $mode;
-    
+
     public function __construct(
         $item,
         $url,
@@ -78,7 +78,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
     function getContent($params = []) {
         return $this->item->accept($this);
     }
-    
+
     function visitFolder($item, $params = array()) {
         $content = '';
 
@@ -87,13 +87,13 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         if ($this->mode == 'copy') {
             $content = $this->checkMdDifferences($mdDiffers);
         }
-        
+
         $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
-        
+
         $content .= '<p>';
         $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_'.$this->mode);
         $content .= '</p>';
-        
+
         $content .= '<form name="select_paste_location" method="POST" action="?">';
         $content .= '<input type="hidden" name="action" value="paste" />';
         $content .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';

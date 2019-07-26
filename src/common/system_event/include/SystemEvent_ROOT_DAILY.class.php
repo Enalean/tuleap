@@ -56,7 +56,6 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         assert($backend_system instanceof BackendSystem);
         $backend_system->dumpSSHKeys();
 
-
         // User home sanity check should be done only once a day as
         // it is slooow (due to libnss-mysql)
         $this->userHomeSanityCheck($backend_system);

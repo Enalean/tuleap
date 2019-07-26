@@ -62,17 +62,17 @@ extends WikiPlugin
     }
 
     /**
-     * return links (static only as of action=edit) 
+     * return links (static only as of action=edit)
      *
      * @param string $argstr The plugin argument string.
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
     function getWikiPageLinks ($argstr, $basepage) {
-        if (isset($this->_links)) 
+        if (isset($this->_links))
             return $this->_links;
         else {
-            global $request;    
+            global $request;
             $this->run($request->_dbi, $argstr, $request, $basepage);
             return $this->_links;
         }
@@ -97,7 +97,6 @@ extends WikiPlugin
                               'class' => 'cal-arrow',
                               'title' => _("Next Month")),
                         '>');
-
 
         $row = HTML::tr(HTML::td(array('align' => 'left'), $prev),
                         HTML::td(array('align' => 'center'),

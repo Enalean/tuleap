@@ -69,7 +69,7 @@ class Feedback {
     function fetchAsPlainText() {
            $txt = '';
         foreach($this->logs as $log) {
-            $txt .= $log['level'] .': '. $log['msg'] ."\n"; 
+            $txt .= $log['level'] .': '. $log['msg'] ."\n";
         }
         return $txt;
     }
@@ -87,7 +87,7 @@ class Feedback {
 
         return $errors;
     }
-    
+
     function display() {
         echo $this->htmlContent();
     }
@@ -105,7 +105,7 @@ class Feedback {
         }
         return false;
     }
-    
+
     public function hasErrors()
     {
         foreach ($this->logs as $log) {

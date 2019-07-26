@@ -20,14 +20,14 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for UserPreferences 
+ *  Data Access Object for UserPreferences
  */
 class UserPreferencesDao extends DataAccessObject {
-    
+
     function __construct($da = null) {
         parent::__construct($da);
     }
-    
+
     /**
      * Search user preferences by user id and preference name
      * @param int $user_id
@@ -58,17 +58,17 @@ class UserPreferencesDao extends DataAccessObject {
             $this->da->quoteSmart($preference_value));
         return $this->update($sql);
     }
-    
+
     /**
      * Delete a preference
      */
     function delete($user_id, $preference_name) {
         $sql = sprintf("DELETE FROM user_preferences WHERE user_id = %d AND preference_name = %s",
             $this->da->escapeInt($user_id),
-            $this->da->quoteSmart($preference_name));        
+            $this->da->quoteSmart($preference_name));
         return $this->update($sql);
     }
-    
+
     function deleteByPreferenceNameAndValue($preference_name, $preference_value) {
         $preference_name  = $this->da->quoteSmart($preference_name);
         $preference_value = $this->da->quoteSmart($preference_value);

@@ -96,7 +96,7 @@ class Tracker_Action_CreateArtifact {
         $redirect = $this->getRedirect($request, $current_user, $artifact);
         $this->executeRedirect($request, $artifact, $redirect);
     }
-    
+
     private function getRedirect(Codendi_Request $request, PFUser $current_user, Tracker_Artifact $artifact) {
         $redirect = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
         $this->redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
@@ -162,7 +162,7 @@ class Tracker_Action_CreateArtifact {
     protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
-        
+
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
         if ($stay || $continue) {

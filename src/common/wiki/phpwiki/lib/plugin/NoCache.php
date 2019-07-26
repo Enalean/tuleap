@@ -22,11 +22,11 @@ rcs_id('$Id: NoCache.php,v 1.3 2004/06/18 14:42:17 rurban Exp $');
  */
 
 /**
- * Don't cache the following page. Mostly used for plugins, which 
+ * Don't cache the following page. Mostly used for plugins, which
  * display dynamic content.
  *
  * Usage:
- *   <?plugin NoCache ?> 
+ *   <?plugin NoCache ?>
  * or to delete the whole cache for this page:
  *   <?plugin NoCache nocache||=purge ?>
  *

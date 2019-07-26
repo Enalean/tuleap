@@ -43,7 +43,7 @@
         $this->hp = Codendi_HTMLPurifier::instance();
         $this->javascript = "";
     }
-    
+
     function display($params = array()) {
         $this->_header($params);
         $this->_scripts($params);
@@ -83,8 +83,8 @@
     }
     /* protected */ function _footer($params) {
     }
-    
-    
+
+
     function &_getVersionFactory($params) {
         $vf = new Docman_VersionFactory();
         return $vf;
@@ -117,7 +117,7 @@
                     $fi->rewind();
                     while($fi->valid()) {
                         $f = $fi->current();
-                        
+
                         if($f !== null) {
                             $this->dfltSearchParams = array_merge($this->dfltSearchParams,
                                                                   $f->getUrlParameters());
@@ -153,7 +153,7 @@
         $this->_initSearchAndSortParams($params);
         return $this->dfltSearchParams;
     }
-    
+
     function getSortParams($params) {
         $this->_initSearchAndSortParams($params);
         return $this->dfltSortParams;
@@ -161,7 +161,7 @@
 
     /**
      * Get the JS action for the item/user couple
-     * 
+     *
      * @param Docman_Item $item
      */
     public function getActionForItem(Docman_Item $item)

@@ -35,6 +35,8 @@
         </properties>
     </rule>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <!-- Forbid superfluous whitespaces -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
     <!-- Forbid use of short open tags <? -->
     <rule ref="Generic.PHP.DisallowShortOpenTag" />

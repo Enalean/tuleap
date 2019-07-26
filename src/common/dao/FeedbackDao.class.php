@@ -21,12 +21,12 @@
 
 
 /**
- *  Data Access Object for Feedback 
+ *  Data Access Object for Feedback
  */
 class FeedbackDao extends DataAccessObject
 {
     /**
-    * Searches Feedback 
+    * Searches Feedback
     * @return DataAccessResult
     */
     public function search($session_id)
@@ -47,9 +47,9 @@ class FeedbackDao extends DataAccessObject
 
         return $this->update($sql);
     }
-    
+
     /**
-    * delete a row in the table Feedback 
+    * delete a row in the table Feedback
     * @return true if there is no error
     */
     public function delete($session_id)

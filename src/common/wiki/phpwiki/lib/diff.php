@@ -68,7 +68,6 @@ class WordLevelDiff extends MappedDiff
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($final_words, $final_stripped) = $this->_split($final_lines);
 
-
         parent::__construct($orig_words, $final_words,
                           $orig_stripped, $final_stripped);
     }
@@ -276,7 +275,7 @@ function showDiff (&$request) {
         $version = $request->getArg('version');
         $previous = $request->getArg('previous');
     }
- 
+
     // abort if page doesn't exist
     $dbi = $request->getDbh();
     $page = $request->getPage();
@@ -359,7 +358,6 @@ function showDiff (&$request) {
         $otherdiffs->pushContent(Button($args, $label[$other]));
     }
     $html->pushContent($otherdiffs);
-
 
     if ($old and $old->getVersion() == 0)
         $old = false;

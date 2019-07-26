@@ -1,8 +1,8 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_PermissionsForItem
 */
@@ -10,11 +10,11 @@
 require_once('Docman_View_View.class.php');
 
 class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Visitor*/ {
-    
+
     /* protected */ function _content($params) {
         echo $this->fetch($params['item']->getId(), $params);
     }
-    
+
     function fetch($id, $params) {
         $html = '';
         if ($params['user_can_manage']) {

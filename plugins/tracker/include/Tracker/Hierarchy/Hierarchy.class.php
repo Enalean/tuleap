@@ -21,13 +21,13 @@
 
 /**
  * Store relationship between tracker based on their ids.
- * 
- * This allows to compute the level of a tracker in a given hierarchy. 
+ *
+ * This allows to compute the level of a tracker in a given hierarchy.
  */
 class Tracker_Hierarchy {
-    
+
     private $parents = array();
-    
+
     /**
      * @param int $parent_id The id of the parent in the relatonship
      * @param int $child_id  The id of the parent in the relatonship
@@ -38,7 +38,7 @@ class Tracker_Hierarchy {
         }
         $this->parents[$child_id] = $parent_id;
     }
-    
+
     /**
      * Return the internal hierarchy flattened
      *
@@ -50,9 +50,9 @@ class Tracker_Hierarchy {
 
     /**
      * Returns true if $tracker_id belongs to the hierarchy
-     * 
+     *
      * @param int $tracker_id
-     * 
+     *
      * @return bool
      */
     public function exists($tracker_id) {
@@ -99,14 +99,14 @@ class Tracker_Hierarchy {
         $callstack = array();
         return $this->getLevelRecursive($tracker_id, $callstack);
     }
-    
+
     /**
      * @return bool
      */
     public function isChild($parent_id, $child_id) {
         return isset($this->parents[$child_id]) && $this->parents[$child_id] == $parent_id;
     }
-    
+
     private function getLevelRecursive($tracker_id, array &$callstack) {
         if (array_key_exists($tracker_id, $this->parents)) {
             return $this->computeLevel($this->parents[$tracker_id], $callstack);
@@ -114,7 +114,7 @@ class Tracker_Hierarchy {
             throw new Tracker_Hierarchy_NotInHierarchyException();
         }
     }
-    
+
     private function computeLevel($tracker_id, array &$callstack) {
         if (is_null($tracker_id)) {
             return 0;
@@ -122,7 +122,7 @@ class Tracker_Hierarchy {
         $this->assertHierarchyIsNotCyclic($tracker_id, $callstack);
         return $this->getLevelRecursive($tracker_id, $callstack) + 1;
     }
-    
+
     private function assertHierarchyIsNotCyclic($tracker_id, array &$callstack) {
         if (in_array($tracker_id, $callstack)) {
             throw new Tracker_Hierarchy_CyclicHierarchyException();
@@ -159,7 +159,7 @@ class Tracker_Hierarchy {
 
         return $tracker_ids;
     }
-    
+
     protected function sortByLevel($tracker1_id, $tracker2_id) {
         try {
             $level1 = $this->getLevel($tracker1_id);

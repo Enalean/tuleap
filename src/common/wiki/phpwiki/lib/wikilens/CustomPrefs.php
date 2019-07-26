@@ -5,7 +5,7 @@ rcs_id('$Id: CustomPrefs.php,v 1.1 2004/06/18 14:42:17 rurban Exp $');
 /**
  * Custom UserPreferences:
  * A list of name => _UserPreference class pairs.
- * Rationale: Certain themes should be able to extend the predefined list 
+ * Rationale: Certain themes should be able to extend the predefined list
  * of preferences. Display/editing is done in the theme specific userprefs.tmpl
  * but storage/sanification/update/... must be extended to the Get/SetPreferences methods.
  *
@@ -30,7 +30,7 @@ extends _UserPreference
     var $valid_values = array
         (
          'itemCos',  // Item-based Top-N recommendation algorithm with cosine-based similarity function
-         'itemProb', // Item-based Top-N recommendation algorithm with probability-based similarity function. 
+         'itemProb', // Item-based Top-N recommendation algorithm with probability-based similarity function.
                      // This algorithms tends to outperform the rest.
          'userCos',  // User-based Top-N recommendation algorithm with cosine-based similarity function.
          'bayes');   // Naïve Bayesian Classifier

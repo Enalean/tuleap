@@ -25,7 +25,7 @@ require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ParentsTree.class.php');
 
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions {
-    
+
     var $token;
     function __construct($item, $url, $controller, $params, $token) {
         parent::__construct($item, $url, false, true, $controller);
@@ -36,7 +36,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
-        
+
         $parents_tree = new Docman_View_ParentsTree($this->_controller);
         $content .= $parents_tree->fetch(array(
             'docman_icons' => $this->params['docman_icons'],
@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         ));
         $content .= '<script type="text/javascript">docman.options.move.item_id = '. $this->item->getId() .';</script>';
         $content .=  '<br />';
-        
+
         //submit
         $content .= '<div>';
         if ($this->token) {

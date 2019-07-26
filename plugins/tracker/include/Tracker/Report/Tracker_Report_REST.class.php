@@ -118,7 +118,7 @@ class Tracker_Report_REST extends Tracker_Report {
         if (! is_array($criteria)) {
             $criteria = array();
         }
- 
+
         foreach ($criteria as $field => $criterion) {
             if ($this->isCriterionBasic($criterion)) {
                 $criterion = $criteria[$field] = array(

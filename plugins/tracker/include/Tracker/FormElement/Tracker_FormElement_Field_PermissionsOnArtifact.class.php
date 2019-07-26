@@ -878,7 +878,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $empty_value_class = 'empty_value';
         }
 
-
         $html = '<p class="tracker_field_permissionsonartifact ' . $empty_value_class . '">';
         if ($this->isRequired() == false) {
             if (! $disabled) {

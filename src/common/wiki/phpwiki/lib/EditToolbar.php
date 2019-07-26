@@ -3,7 +3,7 @@
  * EDIT Toolbar Initialization.
  * The default/themes/toolbar.js is from mediawiki, this php is written from scratch.
  *
- * Features: 
+ * Features:
  * - save-preview and formatting buttons from mediawiki
  * - Search&Replace from walterzorn.de
  * - pageinsert popup by Reini Urban (TODO: should be a pulldown, use acdropdown))
@@ -20,8 +20,8 @@ class EditToolbar {
         //FIXME: enable Undo button for all other buttons also, not only the search/replace button
         if (JS_SEARCHREPLACE) {
             $this->tokens['JS_SEARCHREPLACE'] = 1;
-            $undo_btn = $WikiTheme->getImageURL("ed_undo.png"); 
-            $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png"); 
+            $undo_btn = $WikiTheme->getImageURL("ed_undo.png");
+            $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png");
             // JS_SEARCHREPLACE from walterzorn.de
             $WikiTheme->addMoreHeaders(Javascript("
 var f, sr_undo, replacewin, undo_buffer=new Array(), undo_buffer_index=0;
@@ -117,7 +117,7 @@ function undo_save() {
         } else {
             $WikiTheme->addMoreAttr('body', "editfocus", "document.getElementById('edit[content]').editarea.focus()");
         }
-    
+
         if (ENABLE_EDIT_TOOLBAR) {
             $WikiTheme->addMoreHeaders(JavaScript('',array('src' => $WikiTheme->_findData("toolbar.js"))));
         }
@@ -183,15 +183,15 @@ function undo_save() {
                                  "sample"=>"",
                                  "tip"=>_("Horizontal line"))
                            );
-            $btn = new SubmitImageButton(_("Save"), "edit[save]", 'toolbar', 
+            $btn = new SubmitImageButton(_("Save"), "edit[save]", 'toolbar',
                                          $WikiTheme->getImageURL("ed_save.png"));
             $btn->addTooltip(_("Save"));
             $toolbar .= ('document.writeln("'.addslashes($btn->asXml()).'");'."\n");
-            $btn = new SubmitImageButton(_("Preview"), "edit[preview]", 'toolbar', 
+            $btn = new SubmitImageButton(_("Preview"), "edit[preview]", 'toolbar',
                                          $WikiTheme->getImageURL("ed_preview.png"));
             $btn->addTooltip(_("Preview"));
             $toolbar .= ('document.writeln("'.addslashes($btn->asXml()).'");'."\n");
-    
+
             foreach ($toolarray as $tool) {
                 $image = $WikiTheme->getImageURL($tool["image"]);
                 $open  = $tool["open"];
@@ -204,13 +204,13 @@ function undo_save() {
                 $tip = addslashes( $tool["tip"] );
                 $toolbar .= ("addTagButton('$image','$tip','$open','$close','$sample');\n");
             }
-            $toolbar .= ("addInfobox('" 
-                         . addslashes( _("Click a button to get an example text") ) 
+            $toolbar .= ("addInfobox('"
+                         . addslashes( _("Click a button to get an example text") )
                          . "');\n");
         }
 
         if (JS_SEARCHREPLACE) {
-            $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png"); 
+            $undo_d_btn = $WikiTheme->getImageURL("ed_undo_d.png");
             //$redo_btn = $WikiTheme->getImageURL("ed_redo.png");
             $sr_btn   = $WikiTheme->getImageURL("ed_replace.png");
             //TODO: generalize the UNDO button and fix it for Search & Replace
@@ -368,7 +368,7 @@ function undo_save() {
             while ($p = $page_iter->next()) {
                 $rev = $p->getCurrentRevision();
                 $src = array("\n",'"');
-                $replace = array('_nl','_quot'); 
+                $replace = array('_nl','_quot');
                 $toinsert = str_replace($src, $replace, $rev->_get_content());
                 //$toinsert = str_replace("\n",'\n',addslashes($rev->_get_content()));
                 $pages_js .= ",['".$p->getName()."','_nl$toinsert']";
@@ -404,7 +404,7 @@ function undo_save() {
 
  Revision 1.3  2005/09/22 13:40:00 tharding
  add modules arguments
- 
+
  Revision 1.2  2005/05/06 18:43:41  rurban
  add AddTemplate EditToolbar icon
 

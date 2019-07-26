@@ -24,14 +24,14 @@ if (!class_exists("FakeValue")) {
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  */
 class CollectionTestCase extends TuleapTestCase {
-    
+
     var $collection_class_name;
-    
+
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
@@ -64,14 +64,14 @@ class CollectionTestCase extends TuleapTestCase {
         $this->assertTrue($col->contains($b));
         $this->assertTrue($col->contains($c));
         $this->assertFalse($col->contains($d));
-        
+
         $key1 = 'key';
         $key2 = 'key';
         $col = new $this->collection_class_name();
         $this->assertFalse($col->contains($key2));
         $col->add($key1);
         $this->assertTrue($col->contains($key2));
-        
+
         $key3_val = 'key';
         $key3 = $key3_val;
         $col = new $this->collection_class_name();
@@ -99,19 +99,19 @@ class CollectionTestCase extends TuleapTestCase {
         $col->add($b);
         $this->assertEqual($col->size(), 3);
     }
-    
+
     function testNotEqualsNotCollection() {
         $a = 'a';
         $col1 = new $this->collection_class_name();
         $this->assertFalse($col1->equals($a));
     }
-    
+
     function testEqualsNoElements() {
         $col1 = new $this->collection_class_name();
         $col2 = new $this->collection_class_name();
         $this->assertTrue($col1->equals($col2));
     }
-    
+
     function testNotEqualsOneElement() {
         $a = new StdClass();
         $col1 = new $this->collection_class_name();
@@ -119,7 +119,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col1->add($a);
         $this->assertFalse($col1->equals($col2));
     }
-    
+
     function testEqualsOneElement() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -129,7 +129,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
     }
-    
+
     function testNotEqualsTwoElements() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -151,7 +151,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($b);
         $this->assertTrue($col1->equals($col2));
     }
-    
+
     function testEqualsDifferentOrder() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -163,7 +163,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
     }
-    
+
     function testEqualsDifferentSizes() {
         $a = new StdClass();
         $col1 = new $this->collection_class_name();
@@ -173,7 +173,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($a);
         $this->assertFalse($col1->equals($col2));
     }
-    
+
     function testEqualsSameAndDifferentElements() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -186,7 +186,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($c);
         $this->assertFalse($col1->equals($col2));
     }
-    
+
     function testEqualsUniqueAndNonUniqueElements() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -198,7 +198,7 @@ class CollectionTestCase extends TuleapTestCase {
         $col2->add($b);
         $this->assertFalse($col1->equals($col2));
     }
-    
+
     function testInitialArray() {
         $a = new StdClass();$a->toto = 1;
         $b = new StdClass();$b->toto = 2;
@@ -209,7 +209,7 @@ class CollectionTestCase extends TuleapTestCase {
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->contains($b));
     }
-    
+
     function testRemove() {
         $a = new StdClass();
         $col = new $this->collection_class_name();

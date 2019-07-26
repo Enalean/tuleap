@@ -271,7 +271,6 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
             )
         );
 
-
         $project = stub('Project')->getUnixName()->returns('mozilla');
         $this->ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $this->ugroup->setProject($project);
@@ -550,7 +549,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', 'w3c/project_admins')->once();
         stub($this->driver)->createGroup()->returns('w3c/coders');
 
-
         $mary = aUser()->withId(12)->build();
         $bob  = aUser()->withId(25)->build();
         stub($this->ugroup)->getMembers()->returns(array($mary, $bob));
@@ -601,7 +599,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
-
 
         expect($this->driver)->createGroup()->count(2);
         expect($this->driver)->createGroup($remote_server1, 'w3c/coders', 'w3c/project_admins')->at(0);

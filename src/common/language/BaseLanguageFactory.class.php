@@ -17,27 +17,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Factory for BaseLanguage objects
  */
 class BaseLanguageFactory {
-    
+
     /**
      * @var array of BaseLanguage
      */
     protected $languages;
-    
+
     /**
     * @var string The supported languages eg: 'en_US,fr_FR'
      */
     protected $supported_languages;
-    
+
     /**
     * @var string The default language eg: 'en_US'
     */
     protected $default_language;
-    
+
     /**
      * Constructor
      */
@@ -46,7 +46,7 @@ class BaseLanguageFactory {
         $this->supported_languages = ForgeConfig::get('sys_supported_languages');
         $this->default_language    = ForgeConfig::get('sys_lang');
     }
-    
+
     /**
      * Cache the BaseLanguage instance
      *
@@ -57,7 +57,7 @@ class BaseLanguageFactory {
     public function cacheBaseLanguage(BaseLanguage $language) {
         $this->languages[$language->defaultLanguage] = $language;
     }
-    
+
     /**
      * Get an instance of a BaseLanguage according to a given locale
      *
@@ -74,7 +74,7 @@ class BaseLanguageFactory {
         }
         return $this->languages[$locale];
     }
-    
+
     /**
      * Instantiate and load a new BaseLanguage
      *

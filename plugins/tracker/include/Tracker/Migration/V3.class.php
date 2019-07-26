@@ -63,7 +63,7 @@ class Tracker_Migration_V3 {
             $logger->info("$log_prefix 060 RenderersTable");
             $renderers_table_dao = new Tracker_Migration_V3_RenderersTableDao();
             $renderers_table_dao->create($tv3->getID(), $id);
-            
+
             $logger->info("$log_prefix 070 RenderersGraph");
             $renderers_graph_dao = new Tracker_Migration_V3_RenderersGraphDao();
             $renderers_graph_dao->create($tv3->getID(), $id);

@@ -98,7 +98,7 @@ if (defined('NUSOAP')) {
     );
 
 } else {
-    
+
 /**
  * login : login the Codendi server
  *
@@ -110,7 +110,7 @@ if (defined('NUSOAP')) {
  */
     function login($loginname, $passwd) {
         global $Language;
-    
+
         $user = UserManager::instance()->login($loginname, $passwd);
         if ($user->isLoggedIn()) {
             $return = array(
@@ -130,8 +130,8 @@ if (defined('NUSOAP')) {
  *
  * @param string $admin_session_hash
  * @param string $username the user name (login)
- * 
- * @return string the user session_hash 
+ *
+ * @return string the user session_hash
  */
     function loginAs($admin_session_hash, $username) {
         $server = new User_SOAPServer(UserManager::instance());
@@ -163,8 +163,8 @@ if (defined('NUSOAP')) {
 /**
  * getAPIVersion
  *
- * Returns the current version of this API (to enable clients to check compatibility with). 
- * 
+ * Returns the current version of this API (to enable clients to check compatibility with).
+ *
  * @return string the version of this Codendi WS API
  */
     function getAPIVersion() {
@@ -173,7 +173,7 @@ if (defined('NUSOAP')) {
 
 /**
  * logout : logout the Codendi server
- * 
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  */
     function logout($sessionKey) {

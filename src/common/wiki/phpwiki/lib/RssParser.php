@@ -31,9 +31,9 @@ rcs_id('$Id: RssParser.php,v 1.11 2005/04/10 10:24:58 rurban Exp $');
  */
 
 /**
- * 2004-04-09 16:30:50 rurban: 
+ * 2004-04-09 16:30:50 rurban:
  *   added fsockopen allow_url_fopen = Off workaround
- * 2004-04-12 20:04:12 rurban: 
+ * 2004-04-12 20:04:12 rurban:
  *   fixes for IMAGE element (sf.net)
  * 2005-04-10 11:17:35 rurban
  *   certain RSS dont contain <item> tags to describe the list of <items>
@@ -42,7 +42,7 @@ rcs_id('$Id: RssParser.php,v 1.11 2005/04/10 10:24:58 rurban Exp $');
 
 require_once('lib/XmlParser.php');
 
-class RSSParser 
+class RSSParser
 extends XmlParser {
 
     var $title = "";
@@ -74,7 +74,7 @@ extends XmlParser {
 
         if ($tagName == "ITEM") {
             if (empty($this->items)) {
-                $this->items = array();    
+                $this->items = array();
                 $GLOBALS['rss_parser_items'] = $this->items;
             } elseif (!empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
                 // override the initial <items> list with detailed <item>'s
@@ -157,11 +157,11 @@ extends XmlParser {
             }
         }
     }
-    
+
     function parse($content, $is_final = true) {
-        xml_parse($this->_parser, $content, $is_final) or 
-            trigger_error(sprintf("XML error: %s at line %d", 
-                                  xml_error_string(xml_get_error_code($this->_parser)), 
+        xml_parse($this->_parser, $content, $is_final) or
+            trigger_error(sprintf("XML error: %s at line %d",
+                                  xml_error_string(xml_get_error_code($this->_parser)),
                                   xml_get_current_line_number($this->_parser)),
                           E_USER_WARNING);
         //OO workaround: parser object looses its params. we have to store them in globals

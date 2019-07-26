@@ -3,7 +3,7 @@
 rcs_id('$Id: AddComment.php,v 1.8 2004/06/13 09:45:23 rurban Exp $');
 /*
  Copyright (C) 2004 $ThePhpWikiProgrammingTeam
- 
+
  This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@ extends WikiPlugin_WikiBlog
     //         'add'      - only show entry box for new comment
     //         'show,add' - show old comments then entry box
     //         'add,show' - show entry box followed by list of comments
-    //  jshide - boolean  - quick javascript expansion of the comments 
+    //  jshide - boolean  - quick javascript expansion of the comments
     //                      and addcomment box
 
     function getDefaultArguments() {
@@ -81,7 +81,7 @@ extends WikiPlugin_WikiBlog
         // Get our form args.
         $comment = $request->getArg("comment");
         $request->setArg('comment', false);
-            
+
         if ($request->isPost() and !empty($comment['addcomment'])) {
             $this->add($request, $comment, 'comment'); // noreturn
         }
@@ -137,7 +137,7 @@ function togglecomments(a) {
         $html->pushContent($div);
         return $html;
     }
-   
+
 };
 
 // $Log: AddComment.php,v $

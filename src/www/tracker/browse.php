@@ -26,14 +26,14 @@
 //require_once('common/tracker/ArtifactFactory.class.php');
 
 // HTTP GET arguments
-// 
-// $group_id = The group ID 
+//
+// $group_id = The group ID
 // $atid = The group artifact ID (artifact type id)
 // $set = <custom|my|open> : different types of display
 // $advsrch = <0|1> : advanced search or simple simple
 // $msort = <0|1> : multi column sort activated
 // $report_id = the report ID
-// <field_name>[] = <default value> : list of each field and its default values associed 
+// <field_name>[] = <default value> : list of each field and its default values associed
 // $chunksz = default 50 : number of artifact displayed in the page
 // $morder = comma separated list of sort criteria followed by < for DESC and > for ASC order
 // $order = last sort criteria selected in the UI
@@ -137,7 +137,7 @@ if (!$art_report_html) {
 /* ==================================================
    Make sure all URL arguments are captured as array. For simple
    search they'll be arrays with only one element at index 0 (this
-   will avoid to deal with scalar in simple search and array in 
+   will avoid to deal with scalar in simple search and array in
    advanced which would greatly complexifies the code)
  ================================================== */
 $all_prefs = array();
@@ -175,7 +175,7 @@ foreach ($prefs as $field => $value_id) {
 $prefs = $all_prefs;
 /* ==================================================
    Memorize order by field as a user preference if explicitly specified.
-   
+
    $morder = comma separated list of sort criteria followed by - for
      DESC and + for ASC order
    $order = last sort criteria selected in the UI
@@ -218,8 +218,8 @@ if (isset($morder)) {
 
 
 /* ==================================================
-  Now see what type of artifact set is requested (set is one of none, 
-  'my', 'open', 'custom'). 
+  Now see what type of artifact set is requested (set is one of none,
+  'my', 'open', 'custom').
     - if no set is passed in, see if a preference was set ('custom' set).
     - if no preference and logged in then use 'all' set (see all artifacts)
     - if no preference and not logged in the use 'open' set
@@ -230,7 +230,7 @@ if (!$request->exist('set')) {
     if (user_isloggedin()) {
 
         $custom_pref=user_get_preference('artifact_brow_cust'.$atid);
-    
+
         if ($custom_pref) {
             $pref_arr = explode('&',substr($custom_pref,1));
             foreach ($pref_arr as $expr) {
@@ -238,7 +238,7 @@ if (!$request->exist('set')) {
           // and remove the '[]' array symbol from the left part
                 list($field,$value_id) = explode('=',$expr);
                 $field = str_replace('[]','',$field);
-                if ($field == 'advsrch') 
+                if ($field == 'advsrch')
                 $advsrch = ($value_id ? 1 : 0);
                 else if ($field == 'msort')
                 $msort = ($value_id ? 1 : 0);
@@ -248,11 +248,11 @@ if (!$request->exist('set')) {
                 $report_id = $value_id;
                 else
                 $prefs[$field][] = urldecode($value_id);
-        
+
           //echo '<br>DBG restoring prefs : $prefs['.$field.'] []='.$value_id;
             }
             $set='custom';
-    
+
         } else {
             $set = 'all';
         }
@@ -282,10 +282,10 @@ if ($set=='my') {
       // Any value
         $prefs['assigned_to'][]=0;
         $prefs['multi_assigned_to'][]=0;
-    }        
+    }
 
 } else if ($set=='custom') {
-    
+
     // Get the list of artifact fields used in the form (they are in the URL - GET method)
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
@@ -304,7 +304,7 @@ if ($set=='my') {
                 $pref_stg .= '&'.$field.'[]='.$value_id;
             }
         }
-    
+
         // build part of the HTML title of this page for more friendly bookmarking
         // Do not add the criteria in the header if value is "Any"
         if ($value_id != 0) {
@@ -316,7 +316,7 @@ if ($set=='my') {
     $pref_stg .= '&msort='.($msort ? 1 : 0);
     $pref_stg .= '&chunksz='.(int)$chunksz;
     $pref_stg .= '&report_id='.(int)$report_id;
-    
+
     if ($pref_stg != user_get_preference('artifact_brow_cust'.$atid)) {
         //echo "<br> DBG setting pref = $pref_stg";
         user_set_preference('artifact_brow_cust'.$atid,$pref_stg);

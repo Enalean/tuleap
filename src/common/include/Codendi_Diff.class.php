@@ -224,7 +224,7 @@ class Codendi_DiffEngine
      */
     function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
         $flip = false;
-        
+
         if ($xlim - $xoff > $ylim - $yoff) {
             // Things seems faster (I'm not sure I understand why)
             // when the shortest sequence in X.
@@ -309,7 +309,6 @@ class Codendi_DiffEngine
             else
                 $end = $mid;
         }
-
 
         $this->in_seq[$this->seq[$end]] = false;
         $this->seq[$end] = $ypos;
@@ -406,7 +405,7 @@ class Codendi_DiffEngine
              */
             while ($j < $other_len && $other_changed[$j])
                 $j++;
-        
+
             while ($i < $len && ! $changed[$i]) {
                 $i++; $j++;
                 while ($j < $other_len && $other_changed[$j])
@@ -607,7 +606,6 @@ class Codendi_Diff
             trigger_error("Reversed original doesn't match", E_USER_ERROR);
         if (serialize($from_lines) != serialize($rev->_fin()))
             trigger_error("Reversed fin doesn't match", E_USER_ERROR);
-
 
         $prevtype = 'none';
         foreach ($this->edits as $edit) {
@@ -945,7 +943,7 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
         }
         return "";
     }
-    
+
     function _start_diff() {
         $this->_html .= '';
     }
@@ -1005,7 +1003,6 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
     function __construct($orig_lines, $fin_lines) {
         list ($orig_words, $orig_stripped) = $this->_split($orig_lines);
         list ($fin_words, $fin_stripped) = $this->_split($fin_lines);
-
 
         parent::__construct($orig_words, $fin_words,
                           $orig_stripped, $fin_stripped);

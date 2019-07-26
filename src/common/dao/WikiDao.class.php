@@ -27,13 +27,13 @@ use Tuleap\PHPWiki\WikiPage;
  *  Data Access Object for wiki db access from other codendi components
  */
 class WikiDao extends DataAccessObject {
-    /** 
-    * This function retreives an id from wiki_page table using the pagename attribute   
-    *   
-    * @param string $pagename   
-    * @param int $group_id   
-    * @return int $id id in wiki of a wiki page.   
-    */   
+    /**
+    * This function retreives an id from wiki_page table using the pagename attribute
+    *
+    * @param string $pagename
+    * @param int $group_id
+    * @return int $id id in wiki of a wiki page.
+    */
     function retrieveWikiPageId($pagename, $group_id){
         $sql = sprintf('SELECT id'.
             ' FROM wiki_page'.
@@ -140,7 +140,7 @@ class WikiDao extends DataAccessObject {
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
-    
+
     /**
      * Update wiki page
      * @param PFUser   $user
@@ -148,7 +148,7 @@ class WikiDao extends DataAccessObject {
      * @return bool
      */
     function updatePageName($user, $new_name) {
-        $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name). 
+        $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name).
                ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());
         return $this->update($sql);
     }

@@ -32,7 +32,7 @@ class PrioritizedList extends LinkedList{
             $this->priorities[] = array_keys(array_fill(0, count($this->elements), 0));
         }
     }
-    
+
     /**
      * add the element add the end of the PrioritizedList
      */
@@ -40,7 +40,7 @@ class PrioritizedList extends LinkedList{
         $this->elements[] = $element;
         $this->priorities[$priority][] = count($this->elements) - 1;
     }
-    
+
     function iterator() {
         $tab = array();
         krsort($this->priorities);

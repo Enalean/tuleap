@@ -124,7 +124,6 @@ class PullRequestUpdater
                 $pr->getMergeStatus()
             );
 
-
             $executor_repository_source = $this->git_exec_factory->getGitExec($repository);
             $this->git_pull_request_reference_updater->updatePullRequestReference(
                 $updated_pr,

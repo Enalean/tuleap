@@ -88,7 +88,6 @@ class RecipientsManager
         $recipients = array_merge($recipients, $changeset->getArtifact()->getCommentators());
         $recipients = array_values(array_unique($recipients));
 
-
         //now force check perms for all this people
         $tablo = array();
         foreach ($recipients as $r) {

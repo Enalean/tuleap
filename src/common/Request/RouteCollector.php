@@ -504,7 +504,6 @@ class RouteCollector
             $r->post('/disable_legacy_browser_warning', [self::class, 'postDisableLegacyBrowsersWarningMessage']);
         });
 
-
         $r->addGroup('/users', function (FastRoute\RouteCollector $r) {
             $r->get('/{name}[/]', [self::class, 'getUsersName']);
             $r->get('/{name}/avatar.png', [self::class, 'getUsersNameAvatar']);

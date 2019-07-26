@@ -79,7 +79,7 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
             'user' => $this->user,
             'html' => '',
         );
-        
+
         $this->user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
 
         expect($this->logger)->error()->once();

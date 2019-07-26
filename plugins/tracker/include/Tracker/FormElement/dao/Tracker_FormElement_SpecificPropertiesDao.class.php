@@ -22,7 +22,7 @@
  *  Data Access Object for specific properties of fields
  */
 abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObject {
-    
+
     public function searchByFieldId($field_id) {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
@@ -30,16 +30,16 @@ abstract class Tracker_FormElement_SpecificPropertiesDao extends DataAccessObjec
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    
+
     public function delete($field_id) {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
-    
+
     public abstract function save($field_id, $row);
-    
+
     /**
      * Duplicate specific properties of field
      *

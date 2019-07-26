@@ -23,12 +23,12 @@
  * Data Acces object which deals with tracker_workflow_transition_postactions_field_int table
  */
 class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_workflow_transition_postactions_field_int';
     }
-    
+
     /**
      * @see Transition_PostAction_FieldDao
      */

@@ -133,7 +133,6 @@ class KanbanRepresentation {
     ) {
         $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
 
-
         foreach ($columns as $column) {
             try {
                 $kanban_actions_checker->checkUserCanDeleteColumn($user, $kanban, $column);

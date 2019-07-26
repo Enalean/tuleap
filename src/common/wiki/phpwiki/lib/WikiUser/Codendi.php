@@ -4,7 +4,7 @@
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006
  *
- * Originally written by Manuel Vacelet, STMicroelectronics, 2006. 
+ * Originally written by Manuel Vacelet, STMicroelectronics, 2006.
  *
  * This file is a part of Tuleap.
  *
@@ -53,7 +53,7 @@ extends _PassUser
             default:
                 $this->_level = WIKIAUTH_USER;
         }
-     
+
         if(user_ismember(GROUP_ID, 'W2'))
             $this->_level = WIKIAUTH_ADMIN; //admin wiki
 

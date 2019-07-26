@@ -151,7 +151,6 @@ class PiePlot {
             $a -= 2*M_PI;
         }
 
-
         while ($a < $sa) {
             $xp = floor($radius*cos($a)+$xc);
             $yp = floor($yc-$radius*sin($a));
@@ -1178,7 +1177,6 @@ class PiePlotC extends PiePlot {
 
         $radius = floor($this->radius * min($img->width,$img->height)) ;
 
-
         if( $this->imidsize > 0 && $aaoption !== 2 ) {
 
             if( $this->ishadowcolor != "" ) {
@@ -1309,7 +1307,7 @@ class PieGraph extends Graph {
         foreach($this->plots as $p ) {
             $csim .= $p->GetCSIMareas();
         }
-        
+
         $csim.= $this->legend->GetCSIMareas();
         if (preg_match_all("/area shape=\"(\w+)\" coords=\"([0-9\, ]+)\"/", $csim, $coords)) {
             $this->img->SetColor($this->csimcolor);
@@ -1372,7 +1370,6 @@ class PieGraph extends Graph {
                     $this->StrokeBackgroundGrad();
                 }
             }
-
 
             $w = $this->img->width;
             $h = $this->img->height;
@@ -1476,7 +1473,6 @@ class PieGraph extends Graph {
                 $this->iImgTransMinSize,$this->iImgTransFillColor,
                 $this->iImgTransBorder);
             }
-
 
             // If the filename is given as the special "__handle"
             // then the image handler is returned and the image is NOT

@@ -40,9 +40,9 @@ class HTML_Element_Input_Radio extends HTML_Element_Input {
         $html .= '</label>';
         return $html;
     }
-    
+
     protected function getInputType() { return 'radio'; }
-    
+
 }
 
 ?>

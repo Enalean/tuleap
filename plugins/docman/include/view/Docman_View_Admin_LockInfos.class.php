@@ -2,9 +2,9 @@
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  * Copyright STMicroelectronics, 2009. All Rights Reserved.
- * 
+ *
  * Originally written by Sabri LABBENE 2009.
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -62,7 +62,6 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
 
         require_once(dirname(__FILE__) . '/../Docman_ItemFactory.class.php');
         $dIF = new Docman_ItemFactory($params['group_id']);
-
 
         $altRowClass = 0;
         if ($lockInfos !== false) {

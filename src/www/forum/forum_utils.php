@@ -37,7 +37,7 @@ function forum_header($params) {
     \Tuleap\Project\ServiceInstrumentation::increment('forums');
     $hp = Codendi_HTMLPurifier::instance();
     $uh = new UserHelper();
-  
+
     $params['group']=$group_id;
     $params['toptab']='forum';
     $params['help'] = 'communication.html#web-forums';
@@ -58,7 +58,6 @@ function forum_header($params) {
             $sql="SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
             $result=db_query($sql);
 
-
          //backwards shim for all "generic news" that used to be submitted
          //as of may, "generic news" is not permitted - only project-specific news
             if (db_result($result,0,'group_id') != $GLOBALS['sys_news_group']) {
@@ -71,7 +70,6 @@ function forum_header($params) {
                 echo '
 					<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('forum_forum_utils','news').'</A></H2><P>';
             }
-
 
             echo '<TABLE><TR><TD VALIGN="TOP">';
             if (!$result || db_numrows($result) < 1) {
@@ -88,14 +86,14 @@ function forum_header($params) {
 				'. $hp->purify(db_result($result,0,'details', $group_id), CODENDI_PURIFIER_BASIC);
 
                 echo '<P>';
-                
+
                 $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
                 $crossref_fact->fetchDatas();
                 if ($crossref_fact->getNbReferences() > 0) {
                     echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
                     $crossref_fact->DisplayCrossRefs();
                 }
-                
+
             }
             echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
             echo $HTML->box1_top($Language->getText('forum_forum_utils','proj_latest_news'),0);
@@ -127,9 +125,9 @@ function forum_header($params) {
             }
             echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
             echo html_image("ic/monitor_forum.png",array()).' '.$msg.'</A> | ';
-                
+
             echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
-                    
+
             echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
             echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
             print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
@@ -148,7 +146,7 @@ function forum_header($params) {
                 echo ' | ';
             }
         }
-        
+
         if (isset($params['help']) && $params['help']) {
             echo help_button($params['help'],false,$Language->getText('global','help'));
         }
@@ -173,12 +171,12 @@ function forum_footer($params) {
 }
 
 function user_monitor_forum ($forum_id, $user_id) {
-    
+
     $sql = sprintf('SELECT NULL'.
                     ' FROM forum_monitored_forums'.
                     ' WHERE user_id = %d'.
                     ' AND forum_id = %d',
-                    db_ei($user_id),db_ei($forum_id));    
+                    db_ei($user_id),db_ei($forum_id));
     $result = db_query($sql);
     return ($result && db_numrows($result) >= 1);
 }
@@ -189,7 +187,7 @@ function forum_is_monitored($forum_id) {
                     ' WHERE forum_id = %d',
                     db_ei($forum_id));
     $res = db_query($sql);
-    return ($res && db_numrows($res) >= 1);                 
+    return ($res && db_numrows($res) >= 1);
 }
 
 function forum_add_monitor ($forum_id, $user_id) {
@@ -198,7 +196,7 @@ function forum_add_monitor ($forum_id, $user_id) {
     if (user_monitor_forum($forum_id, $user_id)) {
         $feedback .= $Language->getText('forum_forum_utils','forum_monitored');
     } else {
-        // Not already monitoring so add it.         
+        // Not already monitoring so add it.
         $sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES (".db_ei($forum_id).",".db_ei($user_id).")";
         $result = db_query($sql);
 
@@ -206,7 +204,7 @@ function forum_add_monitor ($forum_id, $user_id) {
             $feedback .= $Language->getText('forum_forum_utils','insert_err');
             return false;
         }
-    } 
+    }
     return true;
 }
 
@@ -238,9 +236,9 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
         if ($need_feedback) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('forum_forum_utils','forum_added', array($forum_name)));
         }
-    
+
         $forum_id=db_insertid($result);
-      
+
         if ($create_default_message) {
          //Get the name of the group
             $group_name = "";
@@ -249,7 +247,7 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
             if ($group_obj && is_object($group_obj)) {
                   $group_name = $group_obj->getPublicName();
             }
-        
+
          //set up a cheap default message
             $result2=db_query("INSERT INTO forum ".
              "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
@@ -276,7 +274,7 @@ function get_forum_name($id) {
 }
 
 function get_forum_group_id($id) {
-    /* 
+    /*
         Takes an ID and returns the corresponding forum group_id
     */
     $sql="SELECT group_id FROM forum_group_list WHERE group_forum_id=".db_ei($id);
@@ -297,7 +295,7 @@ function show_thread($thread_id,$et=0) {
         $et is whether or not the forum is "expanded" or in flat mode
     */
     global $total_rows,$is_followup_to,$subject,$forum_id,$current_message;
-    
+
     $ret_val = '';
     $sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
     "FROM forum,user WHERE forum.thread_id='".db_ei($thread_id)."' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
@@ -330,7 +328,7 @@ function show_thread($thread_id,$et=0) {
    */
         for ($i=0; $i<$rows; $i++) {
             $total_rows++;
-            $ret_val .= '<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>'. 
+            $ret_val .= '<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>'.
             (($current_message != db_result($result, $i, 'msg_id'))?'<A HREF="/forum/message.php?msg_id='.db_result($result, $i, 'msg_id').'">':'').
             '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
          /*
@@ -362,8 +360,8 @@ function show_thread($thread_id,$et=0) {
 
 function show_submessages($thread_id, $msg_id, $level,$et=0) {
     /*
-        Recursive. Selects this message's id in this thread, 
-        then checks if any messages are nested underneath it. 
+        Recursive. Selects this message's id in this thread,
+        then checks if any messages are nested underneath it.
         If there are, it calls itself, incrementing $level
         $level is used for indentation of the threads.
     */
@@ -470,7 +468,7 @@ function get_forum_saved_date($forum_id) {
 function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum_id) {
     global $feedback,$Language;
     if (user_isloggedin()) {
-        
+
         $request = HTTPRequest::instance();
         if (!$group_forum_id) {
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','post_without_id'));
@@ -533,13 +531,13 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
         }
 
         $msg_id=db_insertid($result);
-        
+
         // extract cross reference in the message
         $reference_manager = ReferenceManager::instance();
         $g_id = get_forum_group_id($group_forum_id);
         $reference_manager->extractCrossRef($subject,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
         $reference_manager->extractCrossRef($body,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
-        
+
         if ($request->isPost() && $request->existAndNonEmpty('enable_monitoring')) {
             forum_thread_add_monitor($group_forum_id, $thread_id, $user_id);
         } else {
@@ -598,7 +596,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
             $disabled = "";
             if ($thread_id == 0) {
                 $checked = "checked";
-            } else {              
+            } else {
                 if (user_monitor_forum_thread($thread_id, $user_id)) {
                     $checked = "checked";
                 } else {
@@ -609,7 +607,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
           echo '
 	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" VALUE="1" '.$disabled.' '.$checked.'></TD>
 	           <TD> '.$GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread').'</TD>
-	           </TR>'; 
+	           </TR>';
         ?>
           <TR><td>&nbsp;</td><TD ALIGN="left"> </TR>
           <TR><TD COLSPAN="2" ALIGN="center">
@@ -638,7 +636,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
     */
 
     $res=news_read_permissions($forum_id);
-    if ((db_numrows($res) < 1)) {        
+    if ((db_numrows($res) < 1)) {
         //check if there are users monitoring specific threads
         $sql = sprintf('(SELECT user.email FROM forum_monitored_forums,user'
           .' WHERE forum_monitored_forums.user_id=user.user_id'
@@ -655,11 +653,11 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
         $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($forum_id);
         $res1 = db_query($qry1);
         $gr_id = db_result($res1,0,'group_id');
-        $sql = "SELECT user.email from forum_monitored_forums,user_group,user". 
+        $sql = "SELECT user.email from forum_monitored_forums,user_group,user".
          " WHERE forum_monitored_forums.forum_id=".db_ei($forum_id)." AND user_group.group_id=".db_ei($gr_id).
-         " AND forum_monitored_forums.user_id=user_group.user_id AND user_group.user_id=user.user_id";                        
+         " AND forum_monitored_forums.user_id=user_group.user_id AND user_group.user_id=user.user_id";
     }
-        
+
     $result=db_query($sql);
     $rows=db_numrows($result);
 
@@ -693,17 +691,17 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
              "\n\n______________________________________________________________________".
              "\n".$Language->getText('forum_forum_utils','stop_monitor_explain',array($url1,$url2));
                 $mail->setBodyText($body);
-            
+
             if ($mail->send()) {
-                $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');        
+                $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');
             } else {//ERROR
-                $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])); 
+                $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
             }
-        
+
             if (forum_is_monitored($forum_id) || forum_thread_is_monitored($thread_id)) {
-                $feedback .= ' - '.$Language->getText('forum_forum_utils','people_monitoring');                
+                $feedback .= ' - '.$Language->getText('forum_forum_utils','people_monitoring');
             }
-            
+
         } else {
             $feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' ';
             echo db_error();
@@ -753,21 +751,20 @@ function forum_utils_access_allowed($forum_id) {
 
 function forum_utils_news_access($forum_id) {
     /*
-    Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum        
+    Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum
          */
-    
 
     $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($forum_id);
     $res1 = db_query($qry1);
-    
+
     if ($res1 && db_numrows($res1) > 0) {
-    
-        //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
-        $g_id = db_result($res1,0,'group_id');    
-        
+
+        //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set
+        $g_id = db_result($res1,0,'group_id');
+
         return permission_is_authorized('NEWS_READ',intval($forum_id), UserManager::instance()->getCurrentUser()->getId(), $g_id);
     }
-    
+
     return true;
 }
 
@@ -777,15 +774,15 @@ function forum_utils_get_styles() {
 
 function forum_thread_monitor($mthread, $user_id, $forum_id) {
     /*
-    Set user-specific thread monitoring settings    
+    Set user-specific thread monitoring settings
          */
-     
+
     if ($mthread == NULL) {
-    //no thread is monitored    
+    //no thread is monitored
         $del = sprintf('DELETE FROM forum_monitored_threads'
         .' WHERE user_id=%d'
         .' AND forum_id=%d',
-        db_ei($user_id),db_ei($forum_id));    
+        db_ei($user_id),db_ei($forum_id));
         $res = db_query($del);
     } else {
         $sql = sprintf('SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to,forum_group_list.group_id'
@@ -814,12 +811,12 @@ function forum_thread_monitor($mthread, $user_id, $forum_id) {
                     .' AND thread_id=%d'
                     .' AND user_id=%d',
                     db_ei($forum_id),db_ei($thread_id),db_ei($user_id));
-                    $res2 = db_query($qry2);  
+                    $res2 = db_query($qry2);
                 }
-            }    
+            }
         }
     }
-    
+
     return true;
 
 }
@@ -828,7 +825,7 @@ function user_monitor_forum_thread($thread_id, $user_id) {
     /*
         Check if thread (thread_id) is monitored by user (user_id)
          */
-     
+
     $sql = sprintf('SELECT NULL FROM forum_monitored_threads'
             .' WHERE user_id = %d'
             .' AND thread_id = %d',
@@ -839,20 +836,20 @@ function user_monitor_forum_thread($thread_id, $user_id) {
 }
 
 function forum_thread_is_monitored($thread_id) {
-    
+
     $sql = sprintf('SELECT NULL'.
                     ' FROM forum_monitored_threads'.
                     ' WHERE thread_id = %d',
                     db_ei($thread_id));
     $res = db_query($sql);
-    return ($res && db_numrows($res) >= 1);                
+    return ($res && db_numrows($res) >= 1);
 }
 
 function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
     /*
         Add thread monitor settings for user (user_id)
          */
-    
+
     if (! user_monitor_forum_thread($thread_id,$user_id)) {
         $sql = sprintf('INSERT INTO forum_monitored_threads'
         .' (forum_id, thread_id, user_id)'
@@ -860,23 +857,23 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
         db_ei($forum_id),db_ei($thread_id),db_ei($user_id));
         $res = db_query($sql);
         if (! $res) {
-            return false; 
+            return false;
         }
     }
-    return true;    
-        
+    return true;
+
 }
 
 function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
     /*
     Delete thread monitor settings for user (user_id)
         */
-    
+
     $sql = sprintf('SELECT * FROM forum'
      .' WHERE group_forum_id=%d'
      .' AND msg_id=%d',
      db_ei($forum_id),db_ei($msg_id));
-    $res = db_query($sql);    
+    $res = db_query($sql);
     $thread_id = db_result($res,0,'thread_id');
     $qry = sprintf('DELETE FROM forum_monitored_threads'
           .' WHERE forum_id=%d'
@@ -904,7 +901,7 @@ function forum_thread_delete_monitor($forum_id,$msg_id) {
          $result= db_query($qry);
          return true;
 }
-          
+
 function forum_can_be_public(Project $project)
 {
     return $project->getAccess() == Project::ACCESS_PUBLIC ||

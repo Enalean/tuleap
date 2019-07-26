@@ -25,12 +25,12 @@ require_once('common/plugin/PluginFileInfo.class.php');
  * GitPluginInfo
  */
 class GitPluginInfo extends PluginFileInfo {
-    
+
     public function __construct( $plugin ) {
-        parent::__construct($plugin, 'config');      
+        parent::__construct($plugin, 'config');
         $this->setPluginDescriptor( new GitPluginDescriptor() );
 
     }
-    
+
 }
 ?>

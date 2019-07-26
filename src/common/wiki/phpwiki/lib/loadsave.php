@@ -38,7 +38,7 @@ function _dump_error_handler(&$error) {
         return true;
     */
     // let the message come through: call the remaining handlers:
-    // return false; 
+    // return false;
 }
 
 function StartLoadDump(&$request, $title, $html = '')
@@ -55,7 +55,7 @@ function StartLoadDump(&$request, $title, $html = '')
                                    'CONTENT' => $html ? $html : '%BODY%'));
     echo preg_replace('/%BODY%.*/D', '', $tmpl->getExpansion($html));
     $request->chunkOutput();
-    
+
     // set marker for sendPageChangeNotification()
     $request->_deferredPageChangeNotification = array();
 }
@@ -74,7 +74,7 @@ function EndLoadDump(&$request)
         case 'ziphtml':    $label = _("Dump pages as XHTML"); break;
     }
     if ($label) $label = str_replace(" ","_",$label);
-    if ($action == 'browse') // loading virgin 
+    if ($action == 'browse') // loading virgin
         $pagelink = WikiLink(HOME_PAGE);
     else
         $pagelink = WikiLink(new WikiPageName(_("PhpWikiAdministration"),false,$label));
@@ -90,7 +90,7 @@ function EndLoadDump(&$request)
         }
         $editedby = sprintf(_("Edited by: %s"), $request->_user->getId());
         $content = "Loaded the following pages:\n" . join("\n", $pages);
-        if (mail(join(',',$all_emails),"[".WIKI_NAME."] "._("LoadDump"), 
+        if (mail(join(',',$all_emails),"[".WIKI_NAME."] "._("LoadDump"),
                  _("LoadDump")."\n".
                  $editedby."\n\n".
                  $content))
@@ -200,7 +200,6 @@ function MakeWikiZip (&$request)
         $include_archive = false;
     }
 
-
     $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $zipname);
 
     /* ignore fatals in plugins */
@@ -210,7 +209,7 @@ function MakeWikiZip (&$request)
     $dbi = $request->_dbi;
     $thispage = $request->getArg('pagename'); // for "Return to ..."
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
-        $excludeList = explodePageList($exclude); 
+        $excludeList = explodePageList($exclude);
     } else {
         $excludeList = array();
     }
@@ -223,7 +222,7 @@ function MakeWikiZip (&$request)
     }
     $request_args = $request->args;
     $timeout = (! $request->getArg('start_debug')) ? 30 : 240;
-    
+
     while ($page = $page_iter->next()) {
         $request->args = $request_args; // some plugins might change them (esp. on POST)
         longer_timeout($timeout);     // Reset watchdog
@@ -285,7 +284,7 @@ function MakeWikiZipHtml (&$request)
     $dbi = $request->_dbi;
     $thispage = $request->getArg('pagename'); // for "Return to ..."
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
-        $excludeList = explodePageList($exclude); 
+        $excludeList = explodePageList($exclude);
     } else {
         $excludeList = array();
     }
@@ -310,7 +309,7 @@ function MakeWikiZipHtml (&$request)
 
     $request_args = $request->args;
     $timeout = (! $request->getArg('start_debug')) ? 20 : 240;
-    
+
     while ($page = $page_iter->next()) {
         $request->args = $request_args; // some plugins might change them (esp. on POST)
         longer_timeout($timeout);     // Reset watchdog
@@ -341,7 +340,7 @@ function MakeWikiZipHtml (&$request)
         $data = GeneratePageasXML($template, $pagename);
 
         $zip->addRegularFile( $filename, $data, $attrib );
-        
+
         if (USECACHE) {
             $request->_dbi->_cache->invalidate_cache($pagename);
             unset ($request->_dbi->_cache->_pagedata_cache);
@@ -467,7 +466,6 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
     $skip = false;
     if ($source)
         $mesg->pushContent(' ', fmt("from %s", $source));
-
 
     if (!$current) {
         //FIXME: This should not happen! (empty vdata, corrupt cache or db)
@@ -926,7 +924,7 @@ function RakeSandboxAtUserRequest (&$request)
  * - import all pgsrc pages.
  * - Todo: installer interface to edit config/config.ini settings
  * - Todo: ask for existing old index.php to convert to config/config.ini
- * - Todo: theme-specific pages: 
+ * - Todo: theme-specific pages:
  *   blog - HomePage, ADMIN_USER/Blogs
  */
 function SetupWiki (&$request)
@@ -950,7 +948,7 @@ function SetupWiki (&$request)
                                        WIKIAUTH_BOGO);
     // Get the localised wiki loading message
     $message = _("Loading up virgin wiki. Please wait until the end of the process, this will take few minutes.");
-    
+
     StartLoadDump($request, $message);
     echo "<dl>\n";
 
@@ -972,11 +970,11 @@ function SetupWiki (&$request)
     $finder = new FileFinder;
     foreach (array_merge(explode(':','OldTextFormattingRules:TextFormattingRules:PhpWikiAdministration'),
                          $GLOBALS['AllActionPages'],
-                         array(constant('HOME_PAGE'))) as $f) 
+                         array(constant('HOME_PAGE'))) as $f)
     {
         $page = gettext($f);
         $epage = urlencode($page);
-        
+
         if (! $dbi->isWikiPage($page) ) {
             // translated version provided?
             if ($lf = FindLocalizedFile($pgsrc . $finder->_pathsep . $epage, 1)) {
@@ -990,30 +988,29 @@ function SetupWiki (&$request)
             trigger_error(sprintf("Mandatory file %s couldn't be loaded!", $page),
                           E_USER_WARNING);
         }
- 
-           
+
        //WARNING  CODENDI CODE : give permissions to the administration pages of the wiki
-        $pages = array("AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer", 
+        $pages = array("AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer",
            "AdministrationDePhpWiki/Renommer", "PhpWikiAdministration", "PhpWikiAdministration/Replace",
            "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename");
-        
+
         if (in_array($page, $pages)) {
-            
+
             $group_id = $request->getArg ('group_id');
-            
+
             $wikiPage = new WikiPage($group_id, $page);
             $id = $wikiPage->getId();
-            
+
             $pm = PermissionsManager::instance();
             $pm->addPermission('WIKIPAGE_READ', $id, $GLOBALS['UGROUP_PROJECT_ADMIN']);
             $pm->addPermission('WIKIPAGE_READ', $id, $GLOBALS['UGROUP_WIKI_ADMIN']);
         }
         //END WARNING
-        
+
     }
 
     echo "</dl>\n";
-    
+
     EndLoadDump($request);
 }
 
@@ -1023,7 +1020,6 @@ function LoadPostFile (&$request)
 
     if (!$upload)
         $request->finish(_("No uploaded file to upload?")); // FIXME: more concise message
-
 
     // Dump http headers.
     StartLoadDump($request, sprintf(_("Uploading %s"), $upload->getName()));

@@ -70,7 +70,7 @@ class ArtifactTest extends TuleapTestCase {
         $changes = null;
         $this->assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
-    
+
     public function testFormatFollowUp() {
         $art = new ArtifactTestVersion($this);
 
@@ -79,11 +79,11 @@ class ArtifactTest extends TuleapTestCase {
         //the output will be delivered in a mail
         $this->assertEqual('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ' , $art->formatFollowUp(102, 1,$htmlContent, 2));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 2));
-        
+
         //the output is destinated to be exported
         $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent,1));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 1));
-        
+
         //The output will be displayed on browser
         $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent, 0));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 0));

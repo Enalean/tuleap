@@ -97,7 +97,6 @@ class VersionUploadFinisherTest extends TestCase
             $this->approval_table_update_checker
         );
 
-
         $item_id_being_created    = 12;
         $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
@@ -203,7 +202,6 @@ class VersionUploadFinisherTest extends TestCase
             $this->approval_table_update_checker
         );
 
-
         $item_id_being_created    = 12;
         $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
@@ -308,7 +306,6 @@ class VersionUploadFinisherTest extends TestCase
             $this->approval_table_retriever,
             $this->approval_table_update_checker
         );
-
 
         $item_id_being_created    = 12;
         $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);

@@ -664,7 +664,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
         ksort($order_artifacts);
 
-
         foreach ($order_artifacts as $artifact) {
             $sort_collection->push($artifact);
         }

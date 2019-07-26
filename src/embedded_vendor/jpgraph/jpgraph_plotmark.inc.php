@@ -162,7 +162,7 @@ class PlotMark {
             $this->csimareas .= " />\n";
         }
     }
-     
+
     function Stroke($img,$x,$y) {
         if( !$this->show ) return;
 
@@ -282,7 +282,7 @@ class PlotMark {
 
             $w = $img->GetWidth($this->markimg);
             $h = $img->GetHeight($this->markimg);
-             
+
             $dw = round($imgscale * $w );
             $dh = round($imgscale * $h );
 
@@ -291,9 +291,9 @@ class PlotMark {
 
             $dx = round($x-$dw*$anchor_x);
             $dy = round($y-$dh*$anchor_y);
-             
+
             $this->width = max($dx,$dy);
-             
+
             $img->Copy($this->markimg,$dx,$dy,0,0,$dw,$dh,$w,$h);
             if( !empty($this->csimtarget) ) {
                 $this->csimareas = "<area shape=\"rect\" coords=\"".
@@ -310,7 +310,7 @@ class PlotMark {
                 }
                 $this->csimareas .= " />\n";
             }
-             
+
             // Stroke title
             $this->title->Align("center","top");
             $this->title->Stroke($img,$x,$y+round($dh/2));
@@ -450,11 +450,11 @@ class ImgData {
     protected $index  = array(); // Index for colors
     protected $maxidx = 0 ;  // Max color index
     protected $anchor_x=0.5, $anchor_y=0.5 ;    // Where is the center of the image
-    
+
     function __construct() {
         // Empty
     }
-    
+
     // Create a GD image from the data and return a GD handle
     function GetImg($aMark,$aIdx) {
         $n = $this->an[$aMark];
@@ -472,7 +472,7 @@ class ImgData {
         $idx = $aIdx ;
         return Image::CreateFromString(base64_decode($this->{$n}[$idx][1]));
     }
-    
+
     function GetAnchor() {
         return array($this->anchor_x,$this->anchor_y);
     }
@@ -488,7 +488,7 @@ $_gFlagCache=array(
 );
 // Only supposed to b called as statics
 class FlagCache {
-    
+
     static function GetFlagImgByName($aSize,$aName) {
         global $_gFlagCache;
         require_once('jpgraph_flags.php');

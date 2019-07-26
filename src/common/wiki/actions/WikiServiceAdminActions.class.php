@@ -33,9 +33,9 @@ require_once(dirname(__FILE__).'/../lib/Wiki.class.php');
 class WikiServiceAdminActions extends WikiActions
 {
   /**
-   * @access private 
-   * @var int 
-   */ 
+   * @access private
+   * @var int
+   */
     var $gid;
 
     public function __construct($controler)
@@ -54,12 +54,12 @@ class WikiServiceAdminActions extends WikiActions
             $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
             return false;
         }
-    
+
       /**
        * Check if the page is a valid page.
        */
         $wp = new WikiPage($this->gid, $page);
-        if(! $wp->exist()) {     
+        if(! $wp->exist()) {
             $wpw = new WikiPageWrapper($this->gid);
             $wpw->addNewProjectPage($page);
         }
@@ -68,7 +68,7 @@ class WikiServiceAdminActions extends WikiActions
     }
 
 
-    function create() {    
+    function create() {
         $page=$_POST['page'];
         if(!empty($_POST['upage'])) {
             $page=$_POST['upage'];
@@ -83,7 +83,7 @@ class WikiServiceAdminActions extends WikiActions
             $we->setDesc($_POST['desc']);
             $we->setRank($_POST['rank']);
             $we->setLanguage_id($_POST['language_id']);
-      
+
             $we->add();
         }
     }
@@ -146,7 +146,7 @@ class WikiServiceAdminActions extends WikiActions
             $we->setDesc($_POST['desc']);
             $we->setRank($_POST['rank']);
             $we->setLanguage_id($_POST['language_id']);
-   
+
             $we->update();
         }
     }
@@ -215,7 +215,7 @@ class WikiServiceAdminActions extends WikiActions
      */
     function setWikiAttachmentPerms() {
         global $feedback;
- 
+
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($_POST['object_id']);
         if ($_POST['reset']) {

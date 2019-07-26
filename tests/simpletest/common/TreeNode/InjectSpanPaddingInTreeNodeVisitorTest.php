@@ -22,7 +22,7 @@ require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
 class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
-    
+
     /**
     * Return the Tree
      *
@@ -36,25 +36,25 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
     protected function given_AParentWithOneChildTreeNode() {
         return $this->buildBaseTree();
     }
-    
+
     public function itShouldSetDataToFirstChildThatMatches_IndentLast_leftTreeIndentMinus_treeAndChild() {
         $given = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
-        
+
         $pattern = $this->getPatternSuite(" indent last-left tree indent minus-tree");
         $givenChild = $given->getChild(0);
-        
+
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
         $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
-    
+
     public function itShouldSetDataToSecondChildThatMatches_BlankBlankLast_LeftLast_Right() {
         $given      = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
-        
+
         $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
         $givenChild = $given->getChild(0)->getChild(0);
-        
+
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 }

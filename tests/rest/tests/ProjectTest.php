@@ -878,7 +878,6 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals($response_patch->getStatusCode(), 200);
 
-
         // assert that the two items are in a different order
         $modified_backlog_items = $this->getResponse($this->client->get($uri))->json();
 

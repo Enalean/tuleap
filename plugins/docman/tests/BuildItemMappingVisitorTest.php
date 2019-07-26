@@ -207,7 +207,6 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $mockDPM->shouldReceive('userCanRead')->andReturns(true);
         $mockUser = \Mockery::spy(PFUser::class);
 
-
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;

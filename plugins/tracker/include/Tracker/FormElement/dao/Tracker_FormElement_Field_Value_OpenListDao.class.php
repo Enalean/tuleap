@@ -19,12 +19,12 @@
  */
 
 class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Field_Value_ListDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_openlist';
     }
-    
+
     function searchById($changeset_value_id) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $sql = "SELECT *
@@ -33,7 +33,7 @@ class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Fi
                 ORDER BY insertion_order ASC";
         return $this->retrieve($sql);
     }
-    
+
     public function create($changeset_value_id, $value_ids) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();

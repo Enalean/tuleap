@@ -24,11 +24,11 @@ require_once('trackerPluginDescriptor.class.php');
  * trackerPluginInfo
  */
 class trackerPluginInfo extends PluginInfo {
-    
+
     function __construct($plugin) {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new trackerPluginDescriptor());
     }
-    
+
 }
 ?>

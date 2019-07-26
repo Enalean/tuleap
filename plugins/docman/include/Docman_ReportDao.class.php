@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -87,37 +87,36 @@ extends DataAccessObject {
                        $this->da->quoteSmart($description),
                        $image);
         return $this->createAndReturnId($sql);
-          
-     
+
     }
     /**
      * To avoid inserting two similar:
      *  - personnel report for the same user
-     *  - project report for all users 
-     *  Allow project report and personnel report having same name 
+     *  - project report for all users
+     *  Allow project report and personnel report having same name
      * @param $name Query name
-     * @param $groupId group id 
+     * @param $groupId group id
      * @param $userId user id
-     * @param $itemId item id 
+     * @param $itemId item id
      * @param $scope (I/P) (personnel/project)
      * @return bool
      */
     function verifyQueryUnicity($name, $groupId, $userId, $scope){
-        
+
         $stm = 'SELECT NULL FROM plugin_docman_report WHERE 
              name = '.$this->da->quoteSmart($name). ' AND  group_id = '.$this->da->escapeInt($groupId).' AND ';
         if ($scope =='P') {
-            // Retrieve project report having same name for all users belonging to this project 
-            $clause = ' scope = "P" '; 
+            // Retrieve project report having same name for all users belonging to this project
+            $clause = ' scope = "P" ';
         }else{
-            // Retrieve personnel report having same name for specific user belonging to this project 
-            $clause = ' scope = "I" AND user_id = '.$this->da->escapeInt($userId);  
+            // Retrieve personnel report having same name for specific user belonging to this project
+            $clause = ' scope = "I" AND user_id = '.$this->da->escapeInt($userId);
         }
         $sql = $stm.$clause;
         $dar = $this->retrieve($sql);
         return ($dar->rowCount() == 0);
     }
-    
+
     function addFieldToReport($reportId, $mdLabel, $type, $value) {
         $sql = sprintf('INSERT INTO plugin_docman_report_metadata'.
                        '(report_id, label)'.
@@ -167,7 +166,7 @@ extends DataAccessObject {
                        $id);
         return $this->update($sql);
     }
-    
+
     function getMinLengthForPattern() {
         $sql = 'show variables like "ft_min_word_len"';
         $dar = $this->retrieve($sql);
@@ -178,7 +177,7 @@ extends DataAccessObject {
             return false;
         }
     }
-     
+
 }
 
 ?>

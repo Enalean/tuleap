@@ -158,7 +158,7 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
- 
+
         stub($this->backlog_1)->getArtifacts($this->user)->returns(
             $backlog_items
         );

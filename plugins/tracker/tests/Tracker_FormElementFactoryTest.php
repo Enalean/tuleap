@@ -329,7 +329,6 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
 
         $originalField = aTextField()->withId(999)->build();
 
-
         $tracker = aTracker()->withId(66)->build();
         $exportedField = aTextField()->withId(123)->build();
         $this->assertEqual($factory->getFieldFromTrackerAndSharedField($tracker, $exportedField), $originalField);

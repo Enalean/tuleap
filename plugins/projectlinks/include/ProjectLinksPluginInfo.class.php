@@ -26,7 +26,7 @@ require_once('common/plugin/PluginInfo.class.php');
 require_once('ProjectLinksPluginDescriptor.class.php');
 
 class ProjectLinksPluginInfo extends PluginInfo {
-    
+
     public function __construct($plugin) {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new ProjectLinksPluginDescriptor());

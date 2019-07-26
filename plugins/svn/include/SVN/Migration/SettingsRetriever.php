@@ -97,7 +97,6 @@ class SettingsRetriever
             $core_paths = $paths['paths'];
         }
 
-
         $whitelists     = $this->tags_dao->getImmutableTagsWhitelistForProject($project_id)->getRow();
         $core_whitelist = "";
         if (isset($whitelists['whitelist'])) {

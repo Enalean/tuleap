@@ -26,16 +26,16 @@
 class Docman_Link extends Docman_Document {
 
     private $current_version;
-    
+
     function __construct($data = null) {
         parent::__construct($data);
     }
 
     var $url;
-    function getUrl() { 
-        return $this->url; 
+    function getUrl() {
+        return $this->url;
     }
-    function setUrl($url) { 
+    function setUrl($url) {
         $this->url = $url;
     }
 

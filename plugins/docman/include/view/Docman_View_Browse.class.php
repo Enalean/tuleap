@@ -22,7 +22,7 @@
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 /* abstract */ class Docman_View_Browse extends Docman_View_Display {
-    
+
     /**
      * @access: protected
      */
@@ -115,7 +115,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
         return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);
     }
-        
+
     /**
      * @access: protected
      */
@@ -144,7 +144,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     function getClassForFolderLink() {
         return '';
     }
-    
+
     /* static */ function getItemClasses($params) {
         $li_classes = 'docman_item';
         if (isset($params['is_last']) && $params['is_last']) {
@@ -166,7 +166,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
             $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
             if (!$pref) {
                 $sBo = Docman_SettingsBo::instance($group_id);
-                $pref = $sBo->getView();            
+                $pref = $sBo->getView();
             }
         }
         if (!$pref || !Docman_View_Browse::isViewAllowed($pref)) {

@@ -25,7 +25,7 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
 
     /**
      * Retrieves the semantic status field of the given artifact
-     * 
+     *
      * @return Tracker_FormElement_Field_Selectbox
      */
     public function getField(Tracker $tracker) {

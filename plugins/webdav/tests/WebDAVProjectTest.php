@@ -31,12 +31,12 @@ class WebDAVProjectTest extends TuleapTestCase {
      */
     function testGetChildrenNoServices() {
         $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        
+
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
         $em = \Mockery::spy(\EventManager::class);
         $utils->shouldReceive('getEventManager')->andReturns($em);
-        
+
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->assertEqual($webDAVProject->getChildren(), array());
 
@@ -57,12 +57,12 @@ class WebDAVProjectTest extends TuleapTestCase {
      */
     function testGetChildFailWithNotExist() {
         $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        
+
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
         $em = \Mockery::spy(\EventManager::class);
         $utils->shouldReceive('getEventManager')->andReturns($em);
-        
+
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVProject->getChild('Files');
@@ -86,7 +86,6 @@ class WebDAVProjectTest extends TuleapTestCase {
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
-
         $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->once();
 
         $this->assertTrue($webDAVProject->userCanRead());
@@ -108,7 +107,6 @@ class WebDAVProjectTest extends TuleapTestCase {
                 $access_checker
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
-
 
         $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->andThrow(new Project_AccessPrivateException());
 

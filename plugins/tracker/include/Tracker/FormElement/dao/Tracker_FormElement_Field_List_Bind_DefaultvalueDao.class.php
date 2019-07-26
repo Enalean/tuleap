@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
                 FROM $this->table_name
                 WHERE field_id = $from_field_id";
         $this->update($sql);
-        
+
         foreach($value_mapping as $from => $to) {
             $from  = $this->da->escapeInt($from);
             $to    = $this->da->escapeInt($to);
@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
             $this->update($sql);
         }
     }
-    
+
     public function save($field_id, $default_values) {
         $field_id = $this->da->escapeInt($field_id);
         if (!is_array($default_values)) {
@@ -62,12 +62,12 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
                 $values[] = '('. $field_id .', '. $v .')';
             }
         }
-        
+
         //clean-up the table
         $sql = "DELETE FROM $this->table_name
                 WHERE field_id = $field_id";
         $this->update($sql);
-        
+
         //fill with new default values
         if (count($values)) {
             $sql = "INSERT INTO $this->table_name (field_id, value_id)
@@ -76,6 +76,6 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
         }
         return true;
     }
-    
+
 }
 ?>

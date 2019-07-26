@@ -186,7 +186,6 @@ class PreCommitBaseTest extends TuleapTestCase {
         $this->assertCommitIsDenied('U   moduleA/tags/v1/toto');
         $this->assertCommitIsDenied('D   moduleA/tags/v1/toto');
 
-
         $this->assertCommitIsAllowed('A   trunk/toto');
         $this->assertCommitIsAllowed('U   trunk/toto');
         $this->assertCommitIsAllowed('D   trunk/toto');

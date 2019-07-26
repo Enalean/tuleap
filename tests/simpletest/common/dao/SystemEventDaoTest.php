@@ -21,7 +21,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
-    
+
     private $da;
 
     private $search_term = 'abc';

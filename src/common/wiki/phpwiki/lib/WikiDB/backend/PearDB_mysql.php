@@ -15,10 +15,10 @@ extends WikiDB_backend_PearDB
     function set_versiondata($pagename, $version, $data) {
         $dbh = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
-        
+
         $minor_edit = (int) !empty($data['is_minor_edit']);
         unset($data['is_minor_edit']);
-        
+
         $mtime = (int)$data['mtime'];
         unset($data['mtime']);
         assert(!empty($mtime));
@@ -26,7 +26,7 @@ extends WikiDB_backend_PearDB
         @$content = (string) $data['%content'];
         unset($data['%content']);
         unset($data['%pagedata']);
-        
+
         $this->lock();
         $id = $this->_get_pageid($pagename, true);
         // requires PRIMARY KEY (id,version)!
@@ -82,7 +82,7 @@ extends WikiDB_backend_PearDB
         $sql = "SELECT $page_tbl.pagename,linked.pagename as wantedfrom"
             . " FROM $page_tbl as linked, $link_tbl "
             . " LEFT JOIN $page_tbl ON ($link_tbl.linkto=$page_tbl.id)"
-            . " LEFT JOIN $nonempty_tbl ON ($link_tbl.linkto=$nonempty_tbl.id)" 
+            . " LEFT JOIN $nonempty_tbl ON ($link_tbl.linkto=$nonempty_tbl.id)"
             . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom AND linked.group_id=".GROUP_ID
             . $exclude_from
             . $exclude
@@ -154,13 +154,13 @@ extends WikiDB_backend_PearDB
 class WikiDB_backend_PearDB_mysql_search
 extends WikiDB_backend_PearDB_search
 {
-    function _pagename_match_clause($node) { 
+    function _pagename_match_clause($node) {
         $word = $node->sql();
         if ($node->op == 'REGEX') { // posix regex extensions
             return "pagename REGEXP '$word'";
         } else {
-            return ($this->_case_exact 
-                    ? "pagename LIKE '$word'" 
+            return ($this->_case_exact
+                    ? "pagename LIKE '$word'"
                     : "LOWER(pagename) LIKE '$word'");
         }
     }
@@ -173,5 +173,5 @@ extends WikiDB_backend_PearDB_search
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright 2005, STMicroelectronics
  * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
  *
@@ -411,7 +411,6 @@ class WikiPage {
             $default_pages_db_escaped[] = '"' . db_es($default_page) . '"';
         }
 
-
         $allPages = array();
 
         $res = db_query(' SELECT pagename'
@@ -491,7 +490,7 @@ class WikiPage {
    * Following list include all pages (excepted Admin pages) created by PhpWiki
    * out-of-the-box during initialisation.
    *
-   * @return string[] List of pagename 
+   * @return string[] List of pagename
    */
     public static function getDefaultPages() {
         return array
@@ -505,7 +504,7 @@ class WikiPage {
              ,"SyntaxHighlighterPlugin","TemplateExample","TemplatePlugin"
              ,"TranscludePlugin","UnfoldSubpagesPlugin","WikiBlogPlugin"
              ,"CalendarPlugin"
-             
+
              // Wiki doc page
              ,"WikiPlugin","OldStyleTablePlugin","OldTextFormattingRules"
              ,"PhpWikiDocumentation","TextFormattingRules"
@@ -527,32 +526,32 @@ class WikiPage {
              ,"AjouterDesCommentaires" ,"AjouterDesPages" ,"AliasAccueil"
              ,"AnciennesRèglesDeFormatage" ,"ÉditerLeContenu" ,"ÉditionsRécentes"
              ,"CarteInterWiki" ,"CatégorieCatégorie " ,"CatégoriePagesAccueil"
-             ,"ChangementsLiés" ,"ChercherUnePage" ,"ClassezLa" ,"CommentairesRécents" 
-             ,"CommentUtiliserUnWiki" ,"DerniersVisiteurs" ,"DocumentationDePhpWiki" 
-             ,"EditerLesMetaDonnées" ,"GestionDesPlugins" ,"HistoriqueDeLaPage" 
+             ,"ChangementsLiés" ,"ChercherUnePage" ,"ClassezLa" ,"CommentairesRécents"
+             ,"CommentUtiliserUnWiki" ,"DerniersVisiteurs" ,"DocumentationDePhpWiki"
+             ,"EditerLesMetaDonnées" ,"GestionDesPlugins" ,"HistoriqueDeLaPage"
              ,"IcônesDeLien" ,"InfosAuthentification" ,"InfosDeDéboguage" ,"InfosSurLaPage"
-             ,"InterWiki" ,"JoindreUnFichier" ,"LesPlusVisitées" ,"LienGoogle" 
-             ,"ListeDePages" ,"ModifsRécentesPhpWiki" ,"NotesDeVersion" ,"PageAléatoire" 
+             ,"InterWiki" ,"JoindreUnFichier" ,"LesPlusVisitées" ,"LienGoogle"
+             ,"ListeDePages" ,"ModifsRécentesPhpWiki" ,"NotesDeVersion" ,"PageAléatoire"
              ,"PagesRecherchées" ,"PagesSemblables" ,"PhpWiki" ,"PierrickMeignen" ,"PluginAlbumPhotos"
-             ,"PluginBeauTableau" ,"PluginBonjourLeMonde" ,"PluginÉditerMetaData" 
-             ,"PluginCalendrier" ,"PluginColorationPhp" ,"PluginCréerUnePage" 
-             ,"PluginCréerUneTdm" ,"PluginHistoriqueAuteur" ,"PluginHtmlPur" 
-             ,"PluginInclureUnCadre" ,"PluginInclureUnePage" ,"PluginListeDesSousPages" 
+             ,"PluginBeauTableau" ,"PluginBonjourLeMonde" ,"PluginÉditerMetaData"
+             ,"PluginCalendrier" ,"PluginColorationPhp" ,"PluginCréerUnePage"
+             ,"PluginCréerUneTdm" ,"PluginHistoriqueAuteur" ,"PluginHtmlPur"
+             ,"PluginInclureUnCadre" ,"PluginInclureUnePage" ,"PluginListeDesSousPages"
              ,"PluginListeDuCalendrier" ,"PluginMétéoPhp" ,"PluginRechercheExterne"
-             ,"PluginRedirection" ,"PluginRessourcesRss" ,"PluginTableauAncienStyle" 
+             ,"PluginRedirection" ,"PluginRessourcesRss" ,"PluginTableauAncienStyle"
              ,"PluginWiki" ,"PluginWikiBlog" ,"PréférencesUtilisateurs"
              ,"QuiEstEnLigne" ,"RèglesDeFormatageDesTextes" ,"RécupérationDeLaPage"
              ,"RétroLiens" ,"RechercheEnTexteIntégral" ,"RechercheInterWiki"
              ,"RechercheParTitre" ,"SommaireDuProjet" ,"TestDeCache" ,"TestGroupeDePages"
-             ,"TestGroupeDePages/Deux" ,"TestGroupeDePages/Trois" ,"TestGroupeDePages/Un" 
-             ,"TousLesUtilisateurs" ,"ToutesLesPages" ,"TraduireUnTexte" 
+             ,"TestGroupeDePages/Deux" ,"TestGroupeDePages/Trois" ,"TestGroupeDePages/Un"
+             ,"TousLesUtilisateurs" ,"ToutesLesPages" ,"TraduireUnTexte"
              ,"URLMagiquesPhpWiki" ,"VersionsRécentes" ,"VisiteursRécents"
-             ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes" 
-             ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
+             ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes"
+             ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques"
              ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines"
-             
+
              // Old projects initialised their wiki with the old set of internal pages (pgsrc folder)
-             // In the current version of PHPWiki, we initialise wiki with a different folder. 
+             // In the current version of PHPWiki, we initialise wiki with a different folder.
              // The following pages are added in order not to consider them as user pages.
              ,"AddingPages", "AllUsers","TranslateText"
              ,"_AuthInfo","CategoryHomePages","EditText","ExternalSearchPlugin"
@@ -563,15 +562,15 @@ class WikiPage {
              ,"PgsrcRefactoring","PgsrcTranslation","PhpWikiRecentChanges"
              ,"ProjectSummary","RecentVisitors","ReleaseNotes","SystemInfoPlugin"
              ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin"
-             
+
              );
     }
 
   /**
-   * List all PhpWiki Admin pages 
+   * List all PhpWiki Admin pages
    *
    * @see getDefaultPages
-   * @return string[] List of pagename 
+   * @return string[] List of pagename
    */
     public static function getAdminPages() {
         return array(

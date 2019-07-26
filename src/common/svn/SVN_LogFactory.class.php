@@ -24,52 +24,52 @@ require_once 'www/svn/svn_utils.php';
  * The SVN log of a project.
  */
 class SVN_LogFactory {
-    
+
     /**
      * @var Project
      */
     private $project;
-    
+
     /**
      * Builds a new SVN_Log object representing the SVN log of the given
      * project.
-     * 
-     * @param Project $project 
+     *
+     * @param Project $project
      */
     public function __construct(Project $project) {
         $this->project = $project;
     }
-    
+
     /**
      * Retrieves latests SVN revisions.
-     * 
+     *
      * @param string $limit  Limit results count (e.g. 50)
      * @param PFUser   $author Author to filter on (provide a user without name if you want no filtering)
-     * 
+     *
      * @return array
      */
     public function getRevisions($limit, PFUser $author) {
         $raw_revisions = $this->getRawRevisions($limit, $author);
         $revisions     = array();
-        
+
         while($raw_revision = db_fetch_array($raw_revisions)) {
             list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
-            
+
             $revisions[] = array('revision' => $revision,
                                  'author'   => $whoid,
                                  'date'     => $date,
                                  'message'  => trim($description));
         }
-        
+
         return $revisions;
     }
-    
+
     /**
      * Returns the commiters on given period with their commit count
-     * 
+     *
      * @param int $start_date
      * @param int $end_date
-     * 
+     *
      * @return Array
      */
     public function getCommiters(TimeInterval $interval) {
@@ -81,10 +81,10 @@ class SVN_LogFactory {
         }
         return $stats;
     }
-    
+
     public function getTopModifiedFiles(PFUser $user, TimeInterval $interval, $limit) {
         $where_forbidden = $this->getForbiddenPaths($user);
-        
+
         $stats = array();
         $dao   = $this->getDao();
         $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $interval, $limit, $where_forbidden);
@@ -93,13 +93,13 @@ class SVN_LogFactory {
         }
         return $stats;
     }
-    
+
     /**
      * Return SVN path the user is not allowed to see
-     * 
+     *
      * @param PFUser $user
-     * 
-     * @return string 
+     *
+     * @return string
      */
     protected function getForbiddenPaths(PFUser $user) {
         $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getSVNRootPath());
@@ -109,7 +109,7 @@ class SVN_LogFactory {
         }
         return $where_forbidden;
     }
-    
+
     /**
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
@@ -118,10 +118,10 @@ class SVN_LogFactory {
         list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author);
         return $raw_revisions;
     }
-    
+
     /**
      * XXX: USE IN TESTS ONLY !!!
-     * 
+     *
      * Wraps svn_get_revisions for testing purpose.
      */
     public function getRawRevisionsAndCount($limit, PFUser $author) {
@@ -135,7 +135,7 @@ class SVN_LogFactory {
                                  0,
                                  false);
     }
-    
+
     protected function getDao() {
         return new SVN_LogDao();
     }

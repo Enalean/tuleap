@@ -1,20 +1,20 @@
 <?php
-//apd_set_pprof_trace(); 
+//apd_set_pprof_trace();
 define('PHPWIKI_NOMAIN', true);
 
 /**
  * Say if we can display the remove button on a wiki page
- * 
+ *
  * The wiki page may be driven by another item in the forge (eg a docman document),
  * therefore wiki administrator shouldn't be able to remove the page.
- * 
+ *
  * @return bool
  */
 function display_remove_button($pagename) {
     $display_remove_button = true;
     $em = EventManager::instance();
     $em->processEvent(
-        Event::WIKI_DISPLAY_REMOVE_BUTTON, 
+        Event::WIKI_DISPLAY_REMOVE_BUTTON,
         array(
             'display_remove_button' => &$display_remove_button,
             'group_id'              => GROUP_ID,
@@ -51,14 +51,14 @@ function codendi_main () {
         else
             define('WIKIDB_NOCACHE_MARKUP', false); // redundant, but explicit
     }
-    
+
     // Initialize with system defaults in case user not logged in.
     // Should this go into constructor?
     $request->initializeTheme();
 
     $request->updateAuthAndPrefs();
     $request->initializeLang();
-    
+
     //FIXME:
     //if ($user->is_authenticated())
     //  $LogEntry->user = $user->getId();
@@ -91,7 +91,7 @@ function codendi_main () {
     /* $html_params = array(//'stylesheet' => '/wiki/themes/Codendi/phpwiki-codendi.css',
                          'group' => 1,
                          'toptab' => 'wiki',
-                         'title' => 'yeah');        
+                         'title' => 'yeah');
 
     site_project_header($html_params);*/
 

@@ -30,9 +30,9 @@ class Template
             trigger_error("no template for $name found.", E_USER_WARNING);
             return;
         }
-        if (isset($oldname)) { 
-            $WikiTheme->_name = $oldname; 
-            $WikiTheme->_theme = $oldtheme; 
+        if (isset($oldname)) {
+            $WikiTheme->_name = $oldname;
+            $WikiTheme->_theme = $oldtheme;
         }
         $fp = fopen($file, "rb");
         if (!$fp) {
@@ -63,21 +63,21 @@ class Template
                 );
             },
             $template);
-        
+
         // Convert < ?= expr ? > to < ?php $this->_print(expr); ? >
         return preg_replace('/<\?=(.*?)\?>/s', '<?php $this->_print(\1);?>', $template);
     }
-    
+
     function _printPlugin ($pi) {
         include_once("lib/WikiPlugin.php");
         static $loader;
 
         if (empty($loader))
             $loader = new WikiPluginLoader;
-        
+
         $this->_print($loader->expandPI($pi, $this->_request, $this, $this->_basepage));
     }
-    
+
     function _print ($val) {
         if (isa($val, 'Template')) {
             $this->_expandSubtemplate($val);
@@ -87,7 +87,7 @@ class Template
     }
 
     function _expandSubtemplate (&$template) {
-        // FIXME: big hack!        
+        // FIXME: big hack!
         //if (!$template->_request)
         //    $template->_request = &$this->_request;
         if (DEBUG) {
@@ -99,9 +99,9 @@ class Template
             echo "<!-- End $template->_name -->\n";
         }
     }
-        
+
     /**
-     * Substitute HTML replacement text for tokens in template. 
+     * Substitute HTML replacement text for tokens in template.
      *
      * Constructs a new WikiTemplate based upon the named template.
      *
@@ -115,7 +115,7 @@ class Template
         $this->_locals[$varname] = $value;
     }
 
-    
+
     function printExpansion ($defaults = false) {
         if (!is_array($defaults)) // HTML object or template object
             $defaults = array('CONTENT' => $defaults);
@@ -128,7 +128,7 @@ class Template
         if (!isset($page))
             $page = $request->getPage();
 
-        global $WikiTheme, $RCS_IDS, $charset; 
+        global $WikiTheme, $RCS_IDS, $charset;
         //$this->_dump_template();
         $SEP = $WikiTheme->getButtonSeparator();
 
@@ -159,8 +159,8 @@ class Template
     function asXML () {
         return $this->getExpansion();
     }
-    
-            
+
+
     // Debugging:
     function _dump_template () {
         $lines = explode("\n", $this->_munge_input($this->_tmpl));
@@ -221,7 +221,7 @@ function alreadyTemplateProcessed($name) {
     return !empty($request->_TemplatesProcessed[$name]) ? true : false;
 }
 /**
- * Make and expand the top-level template. 
+ * Make and expand the top-level template.
  *
  *
  * @param $content mixed html content to put into the page
@@ -233,17 +233,17 @@ function alreadyTemplateProcessed($name) {
  */
 function GeneratePage($content, $title, $page_revision = false, $args = false) {
     global $request;
-    
+
     if (!is_array($args))
         $args = array();
 
     $args['CONTENT'] = $content;
     $args['TITLE'] = $title;
     $args['revision'] = $page_revision;
-    
+
     if (!isset($args['HEADER']))
         $args['HEADER'] = $title;
-    
+
     printXML(new Template('html', $request, $args));
 }
 
@@ -253,7 +253,7 @@ function GeneratePage($content, $title, $page_revision = false, $args = false) {
  */
 function GeneratePageasXML($content, $title, $page_revision = false, $args = false) {
     global $request;
-    
+
     if (!is_array($args))
         $args = array();
 
@@ -261,16 +261,16 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
     $args['CONTENT'] = $content;
     $args['TITLE'] = SplitPagename($title);
     $args['revision'] = $page_revision;
-    
+
     if (!isset($args['HEADER']))
         $args['HEADER'] = SplitPagename($title);
-    
+
     global $HIDE_TOOLBARS, $NO_BASEHREF, $HTML_DUMP;
     $HIDE_TOOLBARS = true;
     $HTML_DUMP = true;
 
     $html = asXML(new Template('htmldump', $request, $args));
-    
+
     $HIDE_TOOLBARS = false;
     $HTML_DUMP = false;
     return $html;
@@ -387,5 +387,5 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

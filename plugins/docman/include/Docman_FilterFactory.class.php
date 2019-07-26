@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -34,11 +34,11 @@ class Docman_FilterFactory {
         $gsMd = $this->getGlobalSearchMetadata();
         $globalSearch = false;
         $gsRow = null;
-        
+
         $itsMd = $this->getItemTypeSearchMetadata();
         $itemTypeSearchSearch = false;
         $itsRows = array();
-        
+
         $filtersArray = array();
 
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
@@ -69,7 +69,7 @@ class Docman_FilterFactory {
 
                 $dar->next();
             }
-        }        
+        }
         // Build the report.
         // In order to build the report in the same order than build from
         // url, we have to use the MD order returned by getMetadataForGroup
@@ -86,7 +86,7 @@ class Docman_FilterFactory {
             $report->addFilter($f);
             unset($f);
         }
-        
+
         // Add global search always at the end
         if($globalSearch) {
             $f = new Docman_FilterGlobalText($gsMd, $this->dynTextFields);
@@ -94,14 +94,14 @@ class Docman_FilterFactory {
             $report->addFilter($f);
             unset($f);
         }
-        
+
         if($itemTypeSearchSearch) {
             $f = $this->createItemTypeFilter($itsMd, $report->getAdvancedSearch());
-            
+
             foreach ($itsRows as $itsRow) {
                 $f->initFromRow($itsRow);
             }
-            
+
             $report->addFilter($f);
             unset($f);
         }
@@ -117,7 +117,7 @@ class Docman_FilterFactory {
         $md->setLabel('global_txt');
         return $md;
     }
-    
+
     function getItemTypeSearchMetadata() {
         // Special case for a fake metadata: item type search
         $md = new Docman_ListMetadata();
@@ -127,7 +127,7 @@ class Docman_FilterFactory {
         $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
         $md->setLabel('item_type');
         $md->setIsMultipleValuesAllowed(true);
-        
+
         $row = array();
         $values = array();
         foreach (array('file', 'wiki', 'embeddedfile', 'empty', 'link', 'folder') as $type) {
@@ -138,12 +138,12 @@ class Docman_FilterFactory {
             $love->initFromRow($row);
             $values[] = $love;
         }
-        
+
         $md->setListOfValueElements($values);
 
         return $md;
     }
-    
+
     /**
      * Fake filter only used to display the global text search as a default
      * option when no filter selected.
@@ -156,25 +156,25 @@ class Docman_FilterFactory {
 
     function getGlobalSearchFilter($request) {
         $md = $this->getGlobalSearchMetadata();
-        
+
         // set-up Filter
         $filter = new Docman_FilterGlobalText($md, $this->dynTextFields);
         return $this->_initFilter($filter, $request);
     }
-    
+
     function getItemTypeSearchFilter($request, $advSearch) {
         $md = $this->getItemTypeSearchMetadata();
-        
+
         // set-up Filter
         if ($advSearch) {
             $filter = new Docman_FilterItemTypeAdvanced($md);
         } else {
             $filter = new Docman_FilterItemType($md);
         }
-        
+
         return $this->_initFilter($filter, $request);
     }
-    
+
     function createFilterOnMatch($md, $request, $advSearch) {
         $f = $this->createFromMetadata($md, $advSearch);
         return $this->_initFilter($f, $request);
@@ -182,7 +182,7 @@ class Docman_FilterFactory {
 
     function createFromMetadata($md, $advSearch) {
         $filter = null;
-        
+
         if($md->getLabel() == 'owner') {
             $filter = new Docman_FilterOwner($md);
         }
@@ -214,14 +214,14 @@ class Docman_FilterFactory {
 
         return $filter;
     }
-    
+
     function createItemTypeFilter($md, $advSearch) {
         if ($advSearch) {
             $f = new Docman_FilterItemTypeAdvanced($md);
         } else {
             $f = new Docman_FilterItemType($md);
         }
-        
+
         return $f;
     }
 
@@ -233,7 +233,7 @@ class Docman_FilterFactory {
         }
         return null;
     }
-    
+
     function createFiltersFromReport($report) {
         $fi = $report->getFilterIterator();
         while($fi->valid()) {
@@ -245,7 +245,7 @@ class Docman_FilterFactory {
 
     function createFilter($reportId, $filter) {
         $dao = $this->getDao();
-        
+
         if(is_a($filter, 'Docman_FilterDateAdvanced')) {
             $dao->createFilterDateAdvanced($reportId, $filter->md->getLabel(), $filter->getValueStart(), $filter->getValueEnd());
         }
@@ -326,7 +326,7 @@ class Docman_FilterFactory {
             // Check in use
             $newLabel = $srcFilter->md->getLabel();
         }
-        
+
         if($newLabel !== null) {
             $dstFilterFactory = $this->getFilterFactory($dstReport->getGroupId());
 
@@ -345,16 +345,16 @@ class Docman_FilterFactory {
             if($newMd->isUsed()) {
                 // Create new filter
                 $dstFilter = $dstFilterFactory->createFromMetadata($newMd, $dstReport->getAdvancedSearch());
-                
+
                 // Append values
                 $this->cloneFilterValues($srcFilter, $dstFilter, $metadataMapping);
-                
+
                 // Save filter
                 $dstFilterFactory->createFilter($dstReport->getId(), $dstFilter);
             }
         }
     }
-    
+
     function cloneFilterValues($srcFilter, &$dstFilter, $metadataMapping) {
         $dstVal = null;
 
@@ -386,13 +386,13 @@ class Docman_FilterFactory {
             $dstFilter->setValue($dstVal);
         }
     }
-        
+
     function getLoveClonedValue($srcFilter, $value, $metadataMapping) {
         $dstVal = null;
 
         if($srcFilter->md->getLabel() == 'status' || $srcFilter->md->getLabel() == 'item_type') {
             $dstVal = $value;
-        } 
+        }
         elseif(isset($metadataMapping['love'][$value])) {
             $dstVal = $metadataMapping['love'][$value];
         }

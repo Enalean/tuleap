@@ -172,7 +172,6 @@ EOS;
 
         stub($this->guzzle_client)->get($url_list_keys, '*')->returns($this->getGuzzleRequestWithTextResponse($existing_keys));
 
-
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
             .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys/2';

@@ -70,7 +70,7 @@ class ArtifactFieldSetFactory {
             $this->ArtifactFieldSets = array();
             $this->fetchData($this->ArtifactType->getID());
         }
-        
+
         return true;
     }
 
@@ -82,7 +82,7 @@ class ArtifactFieldSetFactory {
     function getArtifactType() {
         return $this->ArtifactType;
     }
-    
+
     /**
      *  Retrieve the fieldsets associated with an artifact type
      *
@@ -90,7 +90,7 @@ class ArtifactFieldSetFactory {
      *    @return bool success
      */
     function fetchData($group_artifact_id) {
-        
+
         $sql = "SELECT * 
                 FROM artifact_field_set 
                 WHERE group_artifact_id=". db_ei($group_artifact_id) ." 
@@ -109,7 +109,7 @@ class ArtifactFieldSetFactory {
             $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);
             $fields = $art_field_fact->getFieldsContainedInFieldSet($fieldset_array['field_set_id']);
             $fieldset->setArtifactFields($fields);
-            
+
             $this->ArtifactFieldSets[] = $fieldset;
         }
 
@@ -132,7 +132,7 @@ class ArtifactFieldSetFactory {
         $result = db_query ($sql);
         $rows = db_numrows($result);
         $myArtifactFieldSets = array();
-        
+
         if (!$result || $rows < 1) {
             $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
             return false;
@@ -167,7 +167,7 @@ class ArtifactFieldSetFactory {
         }
         return $searched_fieldset;
     }
-    
+
     /**
      * getAllFieldSets - returns all the field sets of the tracker
      *
@@ -207,8 +207,8 @@ class ArtifactFieldSetFactory {
         uasort($used_fieldsets,"art_fieldset_factory_cmp_place");
         return $used_fieldsets;
     }
-    
-    
+
+
     /**
      * getAllFieldSetsContainingUnusedFields - returns an array of fieldsets that contain unused fields in the tracker
      * unused for a field means that the 'use this field' checkbox has not been checked,
@@ -250,7 +250,7 @@ class ArtifactFieldSetFactory {
      *  @return bool - succeed or failed
      */
     function createFieldSet($fieldset_name, $description, $rank) {
-    
+
         global $Language;
 
         // Check arguments
@@ -262,7 +262,7 @@ class ArtifactFieldSetFactory {
         // Default values
         $description = ($description?$description:"");
         $rank = ($rank?$rank:0);
-        
+
         // create the artifact_field_set
         $sql = "INSERT INTO artifact_field_set (group_artifact_id, name, description, rank)
                 VALUES (". db_ei($this->ArtifactType->getID()) .",'". db_es($fieldset_name) ."','". db_es($description) ."',". db_ei($rank) .")";
@@ -272,7 +272,7 @@ class ArtifactFieldSetFactory {
             $this->setError($Language->getText('tracker_common_fieldset_factory','ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
             return false;
         }
-        
+
         // Reload the fieldset
         $this->fetchData($this->ArtifactType->getID());
 
@@ -289,7 +289,7 @@ class ArtifactFieldSetFactory {
     function deleteFieldSet($field_set_id) {
 
         global $Language;
-        
+
         // Check if the field set contains no field
         $sql = "SELECT field_id, label 
                 FROM artifact_field 
@@ -323,19 +323,19 @@ class ArtifactFieldSetFactory {
      // Delete artifact_field_set records
         $artifact_type = $this->getArtifactType();
         $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id='. db_ei($artifact_type->getID()) ;
-        
+
      //echo $sql;
-        
+
         $res = db_query($sql);
         if (!$res) {
             return false;
         }
         return true;
     }
-    
-    
+
+
     /**
-     * 
+     *
      *  Copy all the fieldsets informations from a tracker to another.
      *
      *  @param atid_source: source tracker
@@ -364,7 +364,7 @@ class ArtifactFieldSetFactory {
                 return false;
             }
             $dest_fieldset_id = db_insertid($res_insert_fieldset);
-            
+
             // remember the association source_fieldset_id <=> dest_fieldset_id
             $fieldset_id_source_dest_array[$fieldset_source_array['field_set_id']] = $dest_fieldset_id;
         }

@@ -34,7 +34,7 @@ class Git_Hook_LogAnalyzer {
 
     /** @var Logger */
     private $logger;
-    
+
     public function __construct(Git_Exec $git_exec, Logger $logger) {
         $this->exec_repo = $git_exec;
         $this->logger    = $logger;

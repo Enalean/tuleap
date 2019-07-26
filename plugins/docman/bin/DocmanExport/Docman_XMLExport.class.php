@@ -102,7 +102,7 @@ class Docman_XMLExport {
 
         $xmlExport = new Docman_XMLExportVisitor($doc, $this->logger);
         $xmlExport->setDataPath($this->dataPath);
-        
+
         return $xmlExport->getXML($tree);
     }
 }

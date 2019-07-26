@@ -3,7 +3,7 @@
  * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  *
  * Based on cody by Mahmoud MAALEJ, 2006. STMicroelectronics.
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@ class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_El
 
     public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="") {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
-        
+
         require_once(TRACKER_BASE_DIR. '/Tracker/FormElement/Tracker_FormElementFactory.class.php');
         $aff = Tracker_FormElementFactory::instance();
 

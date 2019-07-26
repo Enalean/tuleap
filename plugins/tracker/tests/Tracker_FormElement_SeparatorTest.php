@@ -21,7 +21,7 @@
 require_once('bootstrap.php');
 
 class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
-    
+
     public function testFetchDescription() {
         $expected_message = '';
         $id = 2;

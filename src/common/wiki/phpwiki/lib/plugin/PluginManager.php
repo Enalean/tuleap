@@ -144,17 +144,17 @@ extends WikiPlugin
                     $localizedPluginName = _($pluginName);
                 if($localizedPluginName && $dbi->isWikiPage($localizedPluginName))
                     $pluginDocPageNamelink = WikiLink($localizedPluginName,'if_known');
-                
+
                 if (_($pluginDocPageName) != $pluginDocPageName)
                     $localizedPluginDocPageName = _($pluginDocPageName);
-                if($localizedPluginDocPageName && 
+                if($localizedPluginDocPageName &&
                    $dbi->isWikiPage($localizedPluginDocPageName))
-                    $pluginDocPageNamelink = 
+                    $pluginDocPageNamelink =
                 WikiLink($localizedPluginDocPageName, 'if_known');
             }
             else {
                 $pluginNamelink = WikiLink($pluginName, 'if_known');
-                
+
                 if ($dbi->isWikiPage($pluginDocPageName))
                     $pluginDocPageNamelink = WikiLink($pluginDocPageName,'if_known');
             }

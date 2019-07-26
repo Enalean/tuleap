@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once('include/DataAccessObject.class.php');
 
 class ArtifactGroupListDao extends DataAccessObject {
@@ -35,7 +35,7 @@ class ArtifactGroupListDao extends DataAccessObject {
         $submit_instructions= $this->da->quoteSmart($submit_instructions);
         $browse_instructions= $this->da->quoteSmart($browse_instructions);
         $instantiate_for_new_projects= $this->da->quoteSmart($instantiate_for_new_projects);
-        
+
         $sql = "UPDATE $this->table_name SET 
 			name=$name, 
             description=$description, 
@@ -45,11 +45,11 @@ class ArtifactGroupListDao extends DataAccessObject {
 			browse_instructions=$browse_instructions, 
             instantiate_for_new_projects=$instantiate_for_new_projects
 			WHERE group_artifact_id=$artifact_id AND group_id=$group_id";
-        
+
         return $this->update($sql);
-       
+
     }
-    
+
     public function updateItemName ($group_id, $oldItemname, $itemname) {
         $group_id = $this->da->quoteSmart($group_id);
         $itemname= $this->da->quoteSmart($itemname);
@@ -57,15 +57,15 @@ class ArtifactGroupListDao extends DataAccessObject {
         $sql = "UPDATE $this->table_name SET 
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
-            
+
         return $this->update($sql);
     }
-    
+
     public function searchNameByGroupId($group_id) {
         $group_id = $this->da->quoteSmart($group_id);
         $sql = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
         return $this->retrieve($sql);
     }
-    
+
 }
 ?>

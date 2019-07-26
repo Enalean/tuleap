@@ -125,10 +125,10 @@ class Rule_UserNameTest extends TuleapTestCase {
         // Punctuation
         $this->assertTrue($r->containsIllegalChars("user a"));
         $this->assertTrue($r->containsIllegalChars("user;a"));
-        
+
         // Since rev #12892, this char is allowed
         $this->assertFalse($r->containsIllegalChars("user.a"));
-        
+
         $this->assertTrue($r->containsIllegalChars("user,a"));
         $this->assertTrue($r->containsIllegalChars("user:a"));
         $this->assertTrue($r->containsIllegalChars("user'a"));
@@ -164,7 +164,7 @@ class Rule_UserNameTest extends TuleapTestCase {
         $this->assertTrue($r->containsIllegalChars("useré"));
         $this->assertTrue($r->containsIllegalChars("userç"));
     }
-    
+
     function testBeginnigByAChar() {
         $r = new Rule_UserName();
 
@@ -226,7 +226,7 @@ class Rule_UserNameTest extends TuleapTestCase {
 
         $this->assertTrue($r->isAlreadyProjectName("usertest"));
     }
-    
+
     function testUnixUserExists() {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', true);
@@ -237,7 +237,7 @@ class Rule_UserNameTest extends TuleapTestCase {
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
-    
+
     function testUnixGroupExists() {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
@@ -248,7 +248,7 @@ class Rule_UserNameTest extends TuleapTestCase {
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
-    
+
     function testUnixUserAndGroupExists() {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', true);
@@ -259,7 +259,7 @@ class Rule_UserNameTest extends TuleapTestCase {
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
-    
+
     function testNoUnixUserOrGroupExists() {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);

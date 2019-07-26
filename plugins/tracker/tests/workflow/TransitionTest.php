@@ -54,7 +54,6 @@ class Transition_equalsTest extends Transition_baseTest {
         //'description' => 'The bug has been submitted',
         //'rank' => '10');
 
-
         $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
         $field_value_analyzed->setReturnValue('getId', 2067);
         //'old_id' => null,

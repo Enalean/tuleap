@@ -46,16 +46,16 @@ class PageEditor
 
         // HACKish short circuit to browse on action=create
         if ($request->getArg('action') == 'create') {
-            if (! $this->current->hasDefaultContents()) 
+            if (! $this->current->hasDefaultContents())
                 $request->redirect(WikiURL($this->page->getName())); // noreturn
         }
-        
+
         $this->meta = array('author' => $this->user->getId(),
                             'author_id' => $this->user->getAuthenticatedId(),
                             'mtime' => time());
-        
+
         $this->tokens = array();
-        
+
         $version = $request->getArg('version');
         if ($version !== false) {
             $this->selected = $this->page->getRevision($version);
@@ -73,9 +73,9 @@ class PageEditor
             $this->_initializeState();
             $this->_initialEdit = true;
 
-            // The edit request has specified some initial content from a template 
+            // The edit request has specified some initial content from a template
             if (  ($template = $request->getArg('template'))
-                   and $request->_dbi->isWikiPage($template)) 
+                   and $request->_dbi->isWikiPage($template))
             {
                 $page = $request->_dbi->getPage($template);
                 $current = $page->getCurrentRevision();
@@ -148,10 +148,10 @@ class PageEditor
             $this->_currentVersion = $this->current->getVersion();
             $this->version = $this->_currentVersion;
             $unresolved = $diff->ConflictingBlocks;
-            $tokens['CONCURRENT_UPDATE_MESSAGE'] 
+            $tokens['CONCURRENT_UPDATE_MESSAGE']
                 = $this->getConflictMessage($unresolved);
         } elseif ($saveFailed) {
-            $tokens['CONCURRENT_UPDATE_MESSAGE'] = 
+            $tokens['CONCURRENT_UPDATE_MESSAGE'] =
                 HTML(HTML::h2(_("Some internal editing error")),
                      HTML::p(_("Your are probably trying to edit/create an invalid version of this page.")),
                      HTML::p(HTML::em(_("&version=-1 might help."))));
@@ -253,13 +253,13 @@ class PageEditor
         $meta = $this->selected->getMetaData();
         unset($meta['pgsrc_version']);
         $meta = array_merge($meta, $this->meta);
-        
+
         // Save new revision
         $this->_content = $this->getContent();
-        $newrevision = $page->save($this->_content, 
-                       $this->version == -1 
-                                     ? -1 
-                                     : $this->_currentVersion + 1, 
+        $newrevision = $page->save($this->_content,
+                       $this->version == -1
+                                     ? -1
+                                     : $this->_currentVersion + 1,
                                    // force new?
                        $meta);
         if (!isa($newrevision, 'WikiDB_PageRevision')) {
@@ -267,12 +267,12 @@ class PageEditor
             return false;
         }
         else {
-            // Save succeded. We store cross references (if there are).           
+            // Save succeded. We store cross references (if there are).
             $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($this->_content, $page->getName(), ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
-                        
+
             // Save succeded. We raise an event.
-            $new = $this->version + 1; 
+            $new = $this->version + 1;
             $difflink = WikiURL($page->getName(), array('action'=>'diff'), true);
             $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
             $eM = EventManager::instance();
@@ -291,7 +291,7 @@ class PageEditor
                 )
             );
         }
-        
+
         // New contents successfully saved...
         $this->updateLock();
 
@@ -300,17 +300,17 @@ class PageEditor
         $cleaner = new ArchiveCleaner($GLOBALS['ExpireParams']);
         $cleaner->cleanPageRevisions($page);
 
-        /* generate notification emails done in WikiDB::save to catch 
+        /* generate notification emails done in WikiDB::save to catch
          all direct calls (admin plugins) */
 
         // look at the errorstack
         $errors   = $GLOBALS['ErrorManager']->_postponed_errors;
-        $warnings = $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML(); 
+        $warnings = $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML();
         $GLOBALS['ErrorManager']->_postponed_errors = $errors;
 
         $dbi = $request->getDbh();
         $dbi->touch();
-        
+
         global $WikiTheme;
         if (empty($warnings->_content) && ! $WikiTheme->getImageURL('signature')) {
             // Do redirect to browse page if no signature has
@@ -402,8 +402,6 @@ class PageEditor
         else
             $message = HTML::p(_("Please check it through before saving."));
 
-
-
         /*$steps = HTML::ol(HTML::li(_("Copy your changes to the clipboard or to another temporary place (e.g. text editor).")),
           HTML::li(fmt("%s of the page. You should now see the most current version of the page. Your changes are no longer there.",
                        $re_edit_link)),
@@ -474,7 +472,7 @@ class PageEditor
                                 'checked' => $this->meta['markup'] < 2.0,
                                 'id' => 'useOldMarkup',
                                 'onclick' => 'showOldMarkupRules(this.checked)'));
-        $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0) 
+        $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0)
             ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
         $el['LOCKED_CB']
             = HTML::input(array('type' => 'checkbox',
@@ -509,7 +507,7 @@ class PageEditor
                                      'onchange' => 'this.form.submit();'));
         $el['SEP'] = $WikiTheme->getButtonSeparator();
         $el['AUTHOR_MESSAGE'] = fmt("Author will be logged as %s.", HTML::em($this->user->getId()));
-        
+
         return $el;
     }
 

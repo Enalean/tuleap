@@ -127,7 +127,7 @@ class JpGraphError {
     }
     public static function GetTitle() {
         return self::$__iTitle;
-    }    
+    }
 }
 
 class JpGraphException extends Exception {
@@ -146,9 +146,9 @@ class JpGraphException extends Exception {
             $errobj = new JpGraphErrObjectImg();
             $errobj->SetTitle(JpGraphError::GetTitle());
         }
-        else {            
+        else {
             $errobj = new JpGraphErrObject();
-            $errobj->SetTitle(JpGraphError::GetTitle());            
+            $errobj->SetTitle(JpGraphError::GetTitle());
             $errobj->SetStrokeDest(JpGraphError::GetLogFile());
         }
         $errobj->Raise($this->getMessage());
@@ -208,19 +208,19 @@ class JpGraphErrObject {
     function Raise($aMsg,$aHalt=false) {
         if( $this->iDest != '' ) {
             if( $this->iDest == 'syslog' ) {
-                error_log($this->iTitle.$aMsg);    
-            } 
+                error_log($this->iTitle.$aMsg);
+            }
             else {
                 $str = '['.date('r').'] '.$this->iTitle.$aMsg."\n";
                 $f = @fopen($this->iDest,'a');
-                if( $f ) {                
+                if( $f ) {
                     @fwrite($f,$str);
                     @fclose($f);
                 }
             }
         }
         else {
-            $aMsg = $this->iTitle.$aMsg;            
+            $aMsg = $this->iTitle.$aMsg;
             // Check SAPI and if we are called from the command line
             // send the error to STDERR instead
             if( PHP_SAPI == 'cli' ) {
@@ -239,7 +239,7 @@ class JpGraphErrObject {
 // An image based error handler
 //==============================================================
 class JpGraphErrObjectImg extends JpGraphErrObject {
-    
+
     function __construct() {
         parent::__construct();
         // Empty. Reserved for future use
@@ -263,7 +263,6 @@ class JpGraphErrObjectImg extends JpGraphErrObject {
         'vd69OLMddVOPCGVnmrFD8bVYd3JXfxXPtLR/+mtv59/ALWiiMx'.
         'qL72fwAAAABJRU5ErkJggg==' ;
 
-        
         if( function_exists("imagetypes") ) {
             $supported = imagetypes();
         } else {
@@ -273,7 +272,7 @@ class JpGraphErrObjectImg extends JpGraphErrObject {
         if( !function_exists('imagecreatefromstring') ) {
             $supported = 0;
         }
-        
+
         if( ob_get_length() || headers_sent() || !($supported & IMG_PNG) ) {
             // Special case for headers already sent or that the installation doesn't support
             // the PNG format (which the error icon is encoded in).
@@ -292,7 +291,6 @@ class JpGraphErrObjectImg extends JpGraphErrObject {
         $h=100 + 15*max(0,$lines-3);
 
         $img = new Image($w,$h);
-
 
         // Drop shadow
         $img->SetColor("gray");

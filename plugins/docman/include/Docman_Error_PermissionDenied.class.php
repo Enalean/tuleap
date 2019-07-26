@@ -3,7 +3,7 @@
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@ require_once('Docman_ItemFactory.class.php');
 
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied {
-    
+
         /**
      * Constructor of the class
      *
@@ -37,11 +37,11 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     function getType() {
         return 'docman_permission_denied';
     }
-    
+
     function getTextBase() {
         return 'plugin_docman';
     }
-    
+
 
     /**
      * Returns the parameters needed to build interface
@@ -168,7 +168,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     function _getPermissionManagerInstance($groupId) {
         return Docman_PermissionsManager::instance($groupId);
     }
-    
+
     /**
      * Wrapper for Docman_ItemFactory
      *
@@ -177,6 +177,6 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     function _getItemFactoryInstance($groupId) {
         return Docman_ItemFactory::instance($groupId);
     }
-    
+
 }
 ?>

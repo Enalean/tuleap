@@ -36,7 +36,7 @@ abstract class HTML_Element_Input extends HTML_Element {
         $html .= ' />';
         return $html;
     }
-    
+
     abstract protected function getInputType();
 }
 

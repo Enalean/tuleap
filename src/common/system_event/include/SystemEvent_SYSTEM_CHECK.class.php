@@ -25,12 +25,12 @@
 *
 */
 class SystemEvent_SYSTEM_CHECK extends SystemEvent {
-    
+
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -38,8 +38,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
     public function verbalizeParameters($with_link) {
         return '-';
     }
-    
-    /** 
+
+    /**
      * Process stored event
      */
     function process() {
@@ -49,19 +49,19 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         $backendSVN         = Backend::instance('SVN');
         $backendCVS         = Backend::instance('CVS');
         $backendMailingList = Backend::instance('MailingList');
-        
-        //TODO: 
+
+        //TODO:
         // User: unix_status vs status??
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), CVS, Web...
         // CVS Watch?
         // TODO: log event in syslog?
         // TODO: check that there is no pending event??? What about lower priority events??
-        
+
         // First, force NSCD refresh to be sure that uid/gid will exist on next
         // actions
-        
+
         $backendSystem->flushNscdAndFsCache();
-        
+
         // Force global updates: aliases, CVS roots, SVN roots
         $backendAliases->setNeedUpdateMailAliases();
 
@@ -82,13 +82,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
 
         $project_manager = ProjectManager::instance();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-            
+
             // Recreate project directories if they were deleted
             if (!$backendSystem->createProjectHome($project->getId())) {
                 $this->error("Could not create project home");
                 return false;
             }
-            
+
             if ($project->usesCVS()) {
                 $backendCVS->setCVSRootListNeedUpdate();
 
@@ -105,13 +105,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     return false;
                 }
                 $backendCVS->updateCVSwriters($project->getID());
-                
+
                 $backendCVS->updateCVSWatchMode($project->getID());
-                 
+
                 // Check ownership/mode/access rights
                 $backendCVS->checkCVSMode($project);
             }
-            
+
             if ($project->usesSVN()) {
                 if (!$backendSVN->repositoryExists($project)) {
                     if (!$backendSVN->createProjectSVN($project->getId())) {

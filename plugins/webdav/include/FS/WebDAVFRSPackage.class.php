@@ -116,7 +116,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     function getName() {
 
         /* To keep the Url correct the slashes "/" in the name
-         *  of the package were replaced by its ascii code "%2F" 
+         *  of the package were replaced by its ascii code "%2F"
          *  same for the "%" replaced by "%25"  */
         $utils = $this->getUtils();
         return $utils->unconvertHTMLSpecialChars($this->getPackage()->getName());

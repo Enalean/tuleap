@@ -116,7 +116,6 @@ class BackendSVNTest extends TestCase
         $project_access_checker
             ->shouldReceive('checkUserCanAccessProject')->with($user2, $project)->once();
 
-
         $this->backend->shouldReceive('getUGroupDao')->andReturn($dao);
         $this->backend->shouldReceive('getUGroupFromRow')->andReturn($ugroup);
         $this->backend->shouldReceive('getProjectAccessChecker')->andReturn($project_access_checker);

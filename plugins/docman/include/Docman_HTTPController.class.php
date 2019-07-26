@@ -103,7 +103,7 @@ class Docman_HTTPController extends Docman_Controller {
 
             // Project
             $group = $pm->getProject($item->getGroupId());
-            
+
             // Date
             $obsoDate = DateHelper::formatForLanguage($GLOBALS['Language'], $item->getObsolescenceDate(), true);
 
@@ -111,7 +111,7 @@ class Docman_HTTPController extends Docman_Controller {
             $baseUrl = HTTPRequest::instance()->getServerUrl().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
             $directUrl = $baseUrl .'&action=show';
             $detailUrl = $baseUrl .'&action=details';
-            
+
             $subj = $this->txt('obso_warn_email_subject', array($GLOBALS['sys_name'],
                                                                 $item->getTitle()));
             $body = $this->txt('obso_warn_email_body', array($item->getTitle(),

@@ -47,18 +47,18 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertFalse($v->validate('0.5'));
         $this->assertFalse($v->validate('toto'));
     }
-    
+
     function testValidFactory() {
         $v = new Valid_For_Inheritance($this);
-        
+
         //Does not work in php4 :(
         //$this->assertReference(ValidFactory::getInstance($v), $v);
         $this->assertIsA(ValidFactory::getInstance($v), 'Valid_For_Inheritance');
-        
+
         $this->assertIsA(ValidFactory::getInstance('string'), 'Valid_String');
         $this->assertIsA(ValidFactory::getInstance('uint'), 'Valid_UInt');
         $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
-        
+
         $key = md5(uniqid(rand(), true));
         $w = ValidFactory::getInstance('string', $key);
         $this->assertEqual($w->getKey(), $key);

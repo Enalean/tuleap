@@ -93,7 +93,6 @@ class FieldDataFromRESTBuilderTest extends TestCase
             $this->tus_uploaded_file_provider
         );
 
-
         $this->tracker  = Mockery::mock(Tracker::class);
         $this->artifact = Mockery::mock(Tracker_Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);

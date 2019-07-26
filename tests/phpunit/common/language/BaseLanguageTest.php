@@ -138,7 +138,6 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             'Comments are ignored'
         );
 
-
         $result = [];
         $l->parseLanguageFile($GLOBALS['sys_incdir'] . '/en_US/empty-lines.tab', $result);
         $this->assertEquals(
@@ -147,7 +146,6 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
             $result,
             'Empty lines are ignored'
         );
-
 
         $result = [
             'file' => ['key1' => 'old-value']

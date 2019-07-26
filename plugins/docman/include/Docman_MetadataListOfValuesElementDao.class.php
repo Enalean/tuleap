@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
     }
 
     function serachByFieldId($id, $onlyActive) {
-        
+
         $where_clause = '';
         if($onlyActive === true) {
             $where_clause .= ' AND love.status IN ("A", "P")';
@@ -234,7 +234,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         if(!isset($row['value_id'])) {
             return false;
         }
-        $id = (int) $row['value_id'];        
+        $id = (int) $row['value_id'];
         if ($id) {
             $dar = $this->serachByValueId($id);
             if (!$dar->isError() && $dar->valid()) {
@@ -253,7 +253,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
                 }
             }
         }
-        return $updated;     
+        return $updated;
     }
 
     function delete($id) {

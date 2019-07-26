@@ -19,29 +19,29 @@
  */
 
 /**
- *  Data Access Object for Tracker_FormElement_StaticRichText 
+ *  Data Access Object for Tracker_FormElement_StaticRichText
  */
 class Tracker_FormElement_StaticField_RichTextDao extends Tracker_FormElement_SpecificPropertiesDao {
-    
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_staticfield_richtext';
     }
-    
+
     public function save($field_id, $row) {
         $field_id  = $this->da->escapeInt($field_id);
-        
+
         if (isset($row['static_value'])) {
             $static_value = $this->da->quoteSmart($row['static_value']);
         } else {
             return false;
         }
-        
+
         $sql = "REPLACE INTO $this->table_name (field_id, static_value)
                 VALUES ($field_id, $static_value)";
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Duplicate specific properties of field
      *
@@ -53,7 +53,7 @@ class Tracker_FormElement_StaticField_RichTextDao extends Tracker_FormElement_Sp
     public function duplicate($from_field_id, $to_field_id) {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id  = $this->da->escapeInt($to_field_id);
-        
+
         $sql = "REPLACE INTO $this->table_name (field_id, static_value)
                 SELECT $to_field_id, static_value 
                 FROM $this->table_name 

@@ -21,7 +21,7 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for Reference 
+ *  Data Access Object for Reference
  */
 class ReferenceDao extends DataAccessObject {
     /**
@@ -63,9 +63,9 @@ class ReferenceDao extends DataAccessObject {
         $sql = "SELECT * FROM reference";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches Reference by reference Id 
+    * Searches Reference by reference Id
     * @return DataAccessResult
     */
     function searchById($id) {
@@ -90,7 +90,7 @@ class ReferenceDao extends DataAccessObject {
     }
 
     /**
-    * Searches Reference by scope 
+    * Searches Reference by scope
     * @return DataAccessResult
     */
     function searchByScope($scope) {
@@ -148,7 +148,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * Searches Reference by service short name 
+    * Searches Reference by service short name
     * @return DataAccessResult
     */
     function searchByServiceShortName($service) {
@@ -159,7 +159,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * Searches Reference by scope and service short name 
+    * Searches Reference by scope and service short name
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
@@ -172,7 +172,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * Searches Reference by scope and service short name 
+    * Searches Reference by scope and service short name
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
@@ -186,7 +186,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * Searches Reference by keyword and group_id 
+    * Searches Reference by keyword and group_id
     * @return DataAccessResult with one field ('reference_id')
     */
     function searchByKeywordAndGroupId($keyword,$group_id) {
@@ -201,7 +201,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * Searches Reference by keyword and group_id 
+    * Searches Reference by keyword and group_id
     * @return DataAccessResult with one field ('reference_id')
     */
     function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword,$group_id,$description,$link,$scope) {
@@ -227,7 +227,7 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
-    * create a row in the table reference 
+    * create a row in the table reference
     * @return true or id(auto_increment) if there is no error
     */
     function create($keyword,$desc,$link,$scope,$service_short_name, $nature) {
@@ -248,9 +248,9 @@ class ReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($group_id));
         return $this->updateAndGetLastId($sql);
     }
-    
+
     /**
-    * update a row in the table reference 
+    * update a row in the table reference
     * @return true or id(auto_increment) if there is no error
     */
     function update_ref($id,$keyword,$desc,$link,$scope,$service_short_name,$nature) {
@@ -271,14 +271,14 @@ class ReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($refid),
                        $this->da->quoteSmart($group_id));
         return $this->update($sql);
-    }    
+    }
 
     function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) {
-        
-        $group_id       = $this->da->escapeInt($group_id);     
+
+        $group_id       = $this->da->escapeInt($group_id);
         $old_short_name = $this->da->quoteSmart($old_short_name);
         $new_short_name = $this->da->quoteSmart($new_short_name);
-                 
+
         $sql = "UPDATE  reference r
                       INNER JOIN reference_group rg ON (r.id=rg.reference_id)
                 SET r.keyword=$new_short_name
@@ -290,10 +290,10 @@ class ReferenceDao extends DataAccessObject {
         $sql = sprintf("UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($old_keyword),
-                       $this->da->quoteSmart($group_id));        
+                       $this->da->quoteSmart($group_id));
         return $this->update($sql);
     }
-    
+
     function removeById($id) {
         $sql = sprintf("DELETE FROM reference WHERE id = %s",
                 $this->da->quoteSmart($id));

@@ -117,7 +117,6 @@ class WidgetKanbanXMLImporterTest extends TestCase
 
         $importer = new WidgetKanbanXMLImporter();
 
-
         $this->expectException(\RuntimeException::class);
         $importer->configureWidget($event);
     }

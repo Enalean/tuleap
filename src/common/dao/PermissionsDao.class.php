@@ -20,14 +20,14 @@
  */
 
 /**
- *  Data Access Object for Permissions 
+ *  Data Access Object for Permissions
  */
 class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
-    
+
     public const DUPLICATE_NEW_PROJECT   = 1;
     public const DUPLICATE_SAME_PROJECT  = 2;
     public const DUPLICATE_OTHER_PROJECT = 3;
-    
+
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -43,7 +43,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      * @param String  $objectId       Id of object
      * @param String  $permissionType Permission type
      * @param bool $withName Whether to include the group name or not
-     * 
+     *
      * @return DataAccessResult
      */
     function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName=true){
@@ -135,12 +135,12 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
 
    /**
     * Clone docman permissions
-    * 
-    * @param int $source 
+    *
+    * @param int $source
     * @param int $target
     * @param $perms
     * @param $toGroupId
-    * 
+    *
     * @return bool
     */
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
@@ -163,18 +163,18 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
         );
         return $this->update($sql);
     }
-    
+
    /**
     * Duplicate permissions
-    * 
+    *
     * Manage the 3 types of duplications:
     * - On project creation: there is a ugroup_mapping so we should a straight copy the dynamics groups and a translated copy of the static groups
     * - On copy within the same project: no need to translate, we just do a straight copy of the existing permissions (both static and dynamic groups)
     * - On copy from another project: there is no ugroup_mapping so we can only straight copy dynamic groups. Static groups are left).
-    * 
+    *
     * @param int    $from
     * @param int    $to
-    * @param Array $permission_type    
+    * @param Array $permission_type
     * @param int    $duplicate_type
     * @param Array  $ugroup_mapping, an array of static ugroups
     *
@@ -182,7 +182,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     */
     public function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false)
     {
-        
+
         $from            = $this->da->quoteSmart($from, array('force_string' => true));
         $to              = $this->da->quoteSmart($to, array('force_string' => true));
         $permission_type = '(' . $this->da->quoteSmartImplode(',', $permission_type) . ')';
@@ -201,7 +201,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
                 $this->update($sql);
             }
         }
-        
+
         $and = '';
         if ($duplicate_type == self::DUPLICATE_NEW_PROJECT || $duplicate_type == self::DUPLICATE_OTHER_PROJECT) {
             $and = ' AND ugroup_id <= 100';
@@ -215,7 +215,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
                         .$and;
         return $this->update($sql);
     }
-    
+
     public function addPermission($permission_type, $object_id, $ugroup_id)
     {
         $permission_type = $this->da->quoteSmart($permission_type);
@@ -243,7 +243,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      *
      * @param String $permissionType Permission
      * @param String $objectId       Affected object's id
-     * 
+     *
      * @return bool
      */
     function clearPermission($permissionType, $objectId) {

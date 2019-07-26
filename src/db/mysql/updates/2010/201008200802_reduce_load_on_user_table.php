@@ -69,7 +69,6 @@ EOT;
             }
         }
 
-
         $sql = 'ALTER TABLE user DROP COLUMN last_auth_success';
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_success')) {
             $res = $this->db->dbh->exec($sql);
@@ -77,7 +76,6 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_auth_success column from user table');
             }
         }
-
 
         $sql = 'ALTER TABLE user DROP COLUMN last_auth_failure';
         if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_failure')) {

@@ -131,7 +131,6 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
         $urlimg = $this->getStrokeUrl($store_in_session);
 
-
         $html .= '<img  src="'. $urlimg .'"  ismap usemap="#map'. $this->getId() .'"  ';
         if ($this->width) {
             $html .= ' width="'. $this->width .'" ';
@@ -455,7 +454,6 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         if (isset($row['height'])) {
                 $session->set("$this->id.height", $row['height']);
         }
-
 
         $this->setRank($row['rank']);
         $this->setTitle($row['title']);

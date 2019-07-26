@@ -59,7 +59,6 @@ class Tracker_RuleDao extends DataAccessObject {
     */
     function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id) {
 
-
         $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
                             VALUES (%s, %s)",
                             $this->da->quoteSmart($tracker_id),

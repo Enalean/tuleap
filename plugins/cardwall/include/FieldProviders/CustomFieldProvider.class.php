@@ -20,7 +20,7 @@
 
 /**
  * Returns the field fixed in the constructor no matter what artifact is given
- * 
+ *
  * @see Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
  */
 class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {

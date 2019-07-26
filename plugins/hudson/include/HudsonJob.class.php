@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 class HudsonJob
 {
     /**
@@ -73,11 +73,11 @@ class HudsonJob
                 break;
             case "yellow":
                 // The last build was successful but unstable. This is primarily used to represent test failures.
-                return $GLOBALS['Language']->getText('plugin_hudson','status_yellow'); 
+                return $GLOBALS['Language']->getText('plugin_hudson','status_yellow');
                 break;
             case "yellow_anime":
                 // The last build was successful but unstable. This is primarily used to represent test failures. A new build is in progress.
-                return $GLOBALS['Language']->getText('plugin_hudson','status_yellow_anime'); 
+                return $GLOBALS['Language']->getText('plugin_hudson','status_yellow_anime');
                 break;
             case "red":
                 // The last build fatally failed.
@@ -143,12 +143,12 @@ class HudsonJob
                 break;
         }
     }
-    
+
     public function hasBuilds()
     {
         return $this->getLastBuildNumber() !== 0;
     }
-    
+
     public function getLastBuildNumber()
     {
         if ($this->xml_content->lastBuild->number) {
@@ -156,7 +156,7 @@ class HudsonJob
         }
         return 0;
     }
-    
+
     public function getLastSuccessfulBuildNumber()
     {
         if (isset($this->xml_content->lastSuccessfulBuild->number)) {
@@ -172,7 +172,7 @@ class HudsonJob
         }
         return '';
     }
-    
+
     public function getLastFailedBuildNumber()
     {
         if ($this->xml_content !== null) {
@@ -188,7 +188,7 @@ class HudsonJob
         }
         return '';
     }
-    
+
     private function getHealthScores()
     {
         if (! isset($this->xml_content->healthReport)) {
@@ -211,7 +211,7 @@ class HudsonJob
         }
         return floor(array_sum($health_scores)/count($health_scores));
     }
-    
+
     public function getWeatherReportIcon()
     {
         $score = $this->getHealthAverageScore();

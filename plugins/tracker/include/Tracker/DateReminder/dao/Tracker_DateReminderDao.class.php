@@ -219,9 +219,9 @@ class Tracker_DateReminderDao extends DataAccessObject
 
     /**
      * Delete a date reminder given its id
-     * 
+     *
      * @param Array $reminderId Id of the reminder
-     * 
+     *
      * @return bool
      */
     public function deleteReminder($reminderId) {

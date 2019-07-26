@@ -70,7 +70,6 @@ class PluginManagerTest extends TuleapTestCase {
         $plugin_factory->setReturnValueAt(0, 'isPluginAvailable', true);
         $plugin_factory->setReturnValueAt(1, 'isPluginAvailable', false);
 
-
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,

@@ -115,7 +115,6 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $file->chown(vfsStream::OWNER_ROOT);
         $file->chgrp(vfsStream::GROUP_ROOT);
 
-
         $conf_dir = $this->root->getChild('etc/httpd/conf');
         $conf_dir->addChild($file);
 
@@ -124,7 +123,6 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $command_tester->execute([
             'module'  => 'apache',
         ]);
-
 
         $this->assertEquals(1, $command_tester->getStatusCode());
 
@@ -145,7 +143,6 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $file->chown(vfsStream::OWNER_ROOT);
         $file->chgrp(vfsStream::GROUP_ROOT);
 
-
         $conf_dir = $this->root->getChild('etc/httpd/conf.d');
         $conf_dir->addChild($file);
 
@@ -154,7 +151,6 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         $command_tester->execute([
             'module'  => 'apache',
         ]);
-
 
         $this->assertEquals(1, $command_tester->getStatusCode());
 

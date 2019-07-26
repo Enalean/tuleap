@@ -322,7 +322,6 @@ class MGraph {
                             -1,-1, /* Full from width and height */
                             $this->iGraphs[$i][7]);
 
-
         }
 
         $this->StrokeTitle($image,$w,$h);

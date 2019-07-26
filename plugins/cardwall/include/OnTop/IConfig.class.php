@@ -19,10 +19,10 @@
  */
 
 /**
- * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
+ * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */
 interface Cardwall_OnTop_IConfig {
-    
+
     public function getTracker();
 
     public function isEnabled();
@@ -36,19 +36,19 @@ interface Cardwall_OnTop_IConfig {
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field);
 
     public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter);
-    
+
     public function getMappings();
 
     public function getTrackers();
 
     public function getMappingFor(Tracker $mapping_tracker);
 
-    public function isInColumn(Tracker_Artifact                                     $artifact, 
-                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
+    public function isInColumn(Tracker_Artifact                                     $artifact,
+                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
                                Cardwall_Column                                      $column);
 
     public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns);
 
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings,
                                                   Cardwall_OnTop_Config_ColumnCollection $columns);
 }

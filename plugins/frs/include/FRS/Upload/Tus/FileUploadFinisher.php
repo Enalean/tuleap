@@ -125,7 +125,6 @@ class FileUploadFinisher implements TusFinisherDataStore
                     return;
                 }
 
-
                 $release = $this->release_factory->getFRSReleaseFromDb($row['release_id']);
                 if ($release === null) {
                     $this->logger->error("Release #{$row['release_id']} to upload file cannot be found");

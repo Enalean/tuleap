@@ -35,28 +35,28 @@ if($request->valid($validGroupId)) {
 if (user_isloggedin()) {
 
     if (user_ismember($group_id,'A') || user_ismember($group_id,'N1') || user_ismember($group_id,'N2')) {
-        
+
         if ($request->get('post_changes')) {
-            
+
             $validSummary = new Valid_String('summary');
             $validSummary->setErrorMessage('Summary is required');
             $validSummary->required();
-            
+
             $validDetails = new Valid_Text('details');
-            
+
             $validPrivateNews = new Valid_WhiteList('private_news', array('0', '1'));
             $validSummary->required();
-            
+
             $validPromoteNews = new Valid_WhiteList('promote_news', array('0', '3'));
             $validSummary->required();
-            
+
             if ($request->valid($validSummary)
                 && $request->valid($validDetails)
                 && $request->valid($validPrivateNews)
                 && $request->valid($validPromoteNews)
-                ) 
+                )
             {
-                
+
                 /*
                  Insert the row into the db if it's a generic message
                  OR this person is an admin for the group involved
@@ -65,17 +65,17 @@ if (user_isloggedin()) {
                  create a new discussion forum without a default msg
                  if one isn't already there
                 */
-                
+
                 //if news is declared as private, force the $promote_news to '0' value (not to be promoted)
                 $promote_news = $request->get('promote_news');
                 if ($promote_news == '3' && $request->get('private_news')) {
                     $promote_news = "0";
                 }
-                
+
                 news_submit($group_id, $request->get('summary'), $request->get('details'), $request->get('private_news'), $request->get('send_news_to'), $promote_news);
             }
         }
-        
+
         /*
              Show the submit form
         */

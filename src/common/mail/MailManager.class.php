@@ -27,11 +27,11 @@ class MailManager
     /**
      * Return users corresponding to email addresses mapped according to their
      * preferences.
-     * 
+     *
      * @deprecated
-     * 
+     *
      * @param Array $addresses A set of addresses
-     * 
+     *
      * @return Array of Array of User
      */
     public function getMailPreferencesByEmail($addresses) {
@@ -58,12 +58,12 @@ class MailManager
         }
         return $res;
     }
-    
+
     /**
      * Returns whether the user wants an HTML or a Text notification
-     * 
+     *
      * @param PFUser $user
-     * 
+     *
      * @return String
      */
     public function getMailPreferencesByUser(PFUser $user) {
@@ -72,10 +72,10 @@ class MailManager
         }
         return Codendi_Mail_Interface::FORMAT_HTML;
     }
-    
+
     /**
      * Returns all possible mail formats
-     * 
+     *
      * @return Array
      */
     public function getAllMailFormats() {
@@ -84,19 +84,19 @@ class MailManager
 
     /**
      * Wrapper for configuration access
-     * 
+     *
      * @param String $var
-     * 
-     * @return String 
+     *
+     * @return String
      */
     protected function getConfig($var) {
         return ForgeConfig::get($var);
     }
-    
+
     /**
      * Wrapper for UserManager
-     * 
-     * @return UserManager 
+     *
+     * @return UserManager
      */
     protected function getUserManager() {
         return UserManager::instance();

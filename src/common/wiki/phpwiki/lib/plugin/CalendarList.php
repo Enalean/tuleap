@@ -23,19 +23,19 @@ rcs_id('$Id: CalendarList.php,v 1.9 2006/05/14 17:40:31 rurban Exp $');
  */
 
 // if not defined in config.ini
-if (!defined('PLUGIN_CALENDARLIST_ORDER'))    
+if (!defined('PLUGIN_CALENDARLIST_ORDER'))
   define('PLUGIN_CALENDARLIST_ORDER',    'normal');
 if (!defined('PLUGIN_CALENDARLIST_NEXT_N_DAYS'))
   define('PLUGIN_CALENDARLIST_NEXT_N_DAYS','');
-if (!defined('PLUGIN_CALENDARLIST_NEXT_N'))    
+if (!defined('PLUGIN_CALENDARLIST_NEXT_N'))
   define('PLUGIN_CALENDARLIST_NEXT_N',     '');
 if (!defined('PLUGIN_CALENDARLIST_LAST_N_DAYS'))
   define('PLUGIN_CALENDARLIST_LAST_N_DAYS','');
-if (!defined('PLUGIN_CALENDARLIST_LAST_N'))    
+if (!defined('PLUGIN_CALENDARLIST_LAST_N'))
   define('PLUGIN_CALENDARLIST_LAST_N',     '');
 
 /**
- * This is a list of calendar appointments. 
+ * This is a list of calendar appointments.
  * Same arguments as Calendar, so no one is confused
  * Uses <dl><dd>DATE<dt>page contents...
  * Derived from Calendar.php by Martin Norbäck <martin@safelogic.se>
@@ -76,17 +76,17 @@ extends WikiPlugin
     }
 
     /**
-     * return links (static only as of action=edit) 
+     * return links (static only as of action=edit)
      *
      * @param string $argstr The plugin argument string.
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
     function getWikiPageLinks ($argstr, $basepage) {
-        if (isset($this->_links)) 
+        if (isset($this->_links))
             return $this->_links;
         else {
-            global $request;    
+            global $request;
             $this->run($request->_dbi, $argstr, $request, $basepage);
             return $this->_links;
         }
@@ -99,7 +99,7 @@ extends WikiPlugin
         $args = &$this->args;                // gather the args array
         $timeTMP = time();                // start with today's date
         $t = $timeTMP;                    // init the control date variable to now
-        
+
         for ($i=0; $i<=180; $i++) {            // loop thru 180 days, past or future
             $date_string = strftime($args['date_format'], $t);
             $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
@@ -109,7 +109,7 @@ extends WikiPlugin
             }
             $t += 24 * 3600 * $direction;        // advance one day back or forward
         }
-        
+
         // return the date of the N-th or last, most past/future event in the range
         return $timeTMP;
     }

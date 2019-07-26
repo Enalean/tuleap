@@ -8,11 +8,11 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 */
-  
+
 /**
 * Utility function to do linear mesh interpolation
 * @param $aDat Matrix to interpolate
-* @param $aFactor Interpolation factor  
+* @param $aFactor Interpolation factor
 */
 function doMeshInterpolate( &$aData, $aFactor ) {
     $m = new MeshInterpolate();
@@ -101,5 +101,5 @@ class MeshInterpolate {
         return $this->data;
     }
 }
-  
+
 ?>

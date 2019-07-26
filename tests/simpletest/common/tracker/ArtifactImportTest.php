@@ -87,7 +87,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText','none',array('global','none'));
         $GLOBALS['Language']->setReturnValue('getText','date',array('tracker_import_utils','date'));
 
-
       /***************** var setup ***********************
        */
 
@@ -133,7 +132,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $artifact_id->setReturnValue('isSelectBox',false);
         $artifact_id->setReturnValue('isMultiSelectBox',false);
 
-
         $comment_type_id = new ArtifactFieldImportVersion($this);
         $comment_type_id->setReturnValue('getLabel','Comment Type');
         $comment_type_id->setReturnValue('getName','comment_type_id');
@@ -161,7 +159,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $orig_subm->setReturnValue('isSelectBox',false);
         $orig_subm->setReturnValue('isMultiSelectBox',false);
 
-
         $atf = new MockArtifactFieldFactory($at);
         $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
         $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
@@ -171,7 +168,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
         $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
         $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
-
 
       /**************** test parseFieldNames ************
        */
@@ -185,7 +181,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $test->parseFieldNames(array('Submitted By'));
         $this->assertTrue($test->isError());
 
-
       //comment type is not taken into account
         $test = new ArtifactImport($at,$atf,'group');
         $test->parseFieldNames(array('Comment Type','Assigned To','Original Submission'));
@@ -198,8 +193,6 @@ class ArtifactImportTest extends TuleapTestCase {
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission'));
         $this->assertFalse($test->isError());
-
-
 
       /***************** test checkValues *****************
        */
@@ -242,7 +235,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $sbox_field->setReturnValue('isSelectBox',true);
         $sbox_field->setReturnValue('isMultiSelectBox',false);
 
-
         $atf = new MockArtifactFieldFactory($this);
         $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
         $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
@@ -254,7 +246,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
         $atf->setReturnValue('getFieldFromName',$mbox_field,array('mbox_field'));
         $atf->setReturnValue('getFieldFromName',$sbox_field,array('sbox_field'));
-
 
         $test = new ArtifactImport($at,$atf,'group');
         $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
@@ -271,7 +262,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $test->checkValues('1',$data,false);
         $this->assertFalse($test->isError());
 
-
         $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow');
         $test->checkValues('1',$data,false);
         $this->assertTrue($test->isError());
@@ -287,7 +277,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $test->checkValues('1',$data,false);
         $this->assertTrue($test->isError());
         $test->clearError();
-
 
       //test date format
       //submitted on is allowed to be void, we set it to current date on insert into DB
@@ -321,10 +310,8 @@ class ArtifactImportTest extends TuleapTestCase {
         $test->checkValues('1',$data,false);
         $this->assertFalse($test->isError());
 
-
       /***************** test parseFollowUpComments *****************
        */
-
 
         $aff = new MockArtifactFieldFactory($this);
         $aff->setReturnValue('getAllUsedFields',array());
@@ -363,7 +350,6 @@ class ArtifactImportTest extends TuleapTestCase {
         $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
         $this->assertEqual($parsed_comments[0]['by'],'doswald');
 
-
         $parsed_comments = array();
         $followup_comments= "Follow-ups
 **********
@@ -386,7 +372,6 @@ Excel issue, reassigned to Gene, reduced to Ordinary
         $this->assertEqual($parsed_comments[1]['date'],'2005-09-02 16:51');
         $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
         $this->assertEqual($parsed_comments[1]['by'],'doswald');
-
 
         $parsed_comments = array();
 
@@ -436,8 +421,6 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertEqual($parsed_comments[2]['date'],'2000-12-08 22:30');
         $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
         $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
-
-
 
       /**
       check by hand:

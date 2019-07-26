@@ -30,7 +30,6 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
             Sprint ---'      Task
         */
 
-
         $this->user                    = aUser()->build();
         $this->release_tracker_id      = 101;
         $this->sprint_tracker_id       = 1001;
@@ -48,7 +47,6 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         $this->sprint_artifact_1231 = mockery_stub(\Tracker_Artifact::class)->getId()->returns(1231);
         $this->sprint_artifact_1232 = mockery_stub(\Tracker_Artifact::class)->getId()->returns(1232);
         $this->sprint_artifact_1241 = mockery_stub(\Tracker_Artifact::class)->getId()->returns(1241);
-
 
         $release_planning = mockery_stub(\Planning::class)->getPlanningTracker()->returns($this->release_tracker);
         $sprint_planning  = mockery_stub(\Planning::class)->getPlanningTracker()->returns($this->sprint_tracker);
@@ -78,7 +76,6 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
         stub($this->artifact_factory)->getArtifactById(1231)->returns($this->sprint_artifact_1231);
         stub($this->artifact_factory)->getArtifactById(1232)->returns($this->sprint_artifact_1232);
         stub($this->artifact_factory)->getArtifactById(1241)->returns($this->sprint_artifact_1241);
-
 
         $this->dao = \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class);
         $this->dar_01 = array(

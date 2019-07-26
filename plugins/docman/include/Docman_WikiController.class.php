@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2008
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -71,12 +71,12 @@ class Docman_WikiController extends Docman_Controller {
         $group_id  = $this->request->get('group_id');
         $item_dao  = $this->_getItemDao();
         if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
-            // TODO: find another way to return a value. 
+            // TODO: find another way to return a value.
             // Codendi_Request->params should not be public
             $this->request->params['referenced'] = true;
         }
         else {
-            // TODO: find another way to return a value. 
+            // TODO: find another way to return a value.
             // Codendi_Request->params should not be public
             $this->request->params['referenced'] = false;
         }
@@ -100,7 +100,7 @@ class Docman_WikiController extends Docman_Controller {
                 break; //No need to continue the loop as we found at least one non-accessible reference
             }
         }
-        // TODO: find another way to return a value. 
+        // TODO: find another way to return a value.
         // Codendi_Request->params should not be public
         $this->request->params['canAccess'] = $can_access;
     }
@@ -119,7 +119,7 @@ class Docman_WikiController extends Docman_Controller {
 
         foreach($documents as $document) {
             // Update the item's update date attribute.
-            $item_dao->updateById($document->getId(), null, null, null, null, null, $update_date=time(), 
+            $item_dao->updateById($document->getId(), null, null, null, null, null, $update_date=time(),
                         null, null, null, null, null, null);
 
             $event_manager->processEvent('plugin_docman_event_wikipage_update', array(
@@ -141,16 +141,16 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     /**
-    *  This checks whether a wiki page is editable by checking if the user have write permission on it (including items lock check ) 
+    *  This checks whether a wiki page is editable by checking if the user have write permission on it (including items lock check )
     *
     */
     function isWikiPageEditable() {
         $item_factory = $this->getItemFactory();
         $wiki_page    = $this->request->get('wiki_page');
         $group_id     = $this->request->get('group_id');
-        
+
         $referers = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
-        
+
         $uM = UserManager::instance();
         $user = $uM->getCurrentUser();
         $dPM = Docman_PermissionsManager::instance($group_id);
@@ -179,7 +179,7 @@ class Docman_WikiController extends Docman_Controller {
             $canWrite = true;
         }
 
-        // TODO: find another way to return a value. 
+        // TODO: find another way to return a value.
         // Codendi_Request->params should not be public
         if($canWrite) { // User can edit the wiki page.
             $this->request->params['response'] = true;
@@ -247,7 +247,7 @@ class Docman_WikiController extends Docman_Controller {
                 if(is_array($docman_item_id)) {
                     $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
-                    
+
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
                         $title = "";
@@ -264,11 +264,11 @@ class Docman_WikiController extends Docman_Controller {
                     else {
                         $title = "";
                     }
-                    
+
                     //create Full legend of the section
-                    $legend = HTML::legend(array('class' => 'docman_md_frame'), 
-                            count($docman_item_id) > 1 ? $linked_icon : "", 
-                            $title, 
+                    $legend = HTML::legend(array('class' => 'docman_md_frame'),
+                            count($docman_item_id) > 1 ? $linked_icon : "",
+                            $title,
                             isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : "");
                     $details = HTML();
 
@@ -298,7 +298,7 @@ class Docman_WikiController extends Docman_Controller {
                         $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
                     }
                 }
-                else { 
+                else {
                     if($dpm->userCanAccess($user, $docman_item_id)) {
                         $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
@@ -309,7 +309,7 @@ class Docman_WikiController extends Docman_Controller {
         }
 
         // Write documents paths on wiki view.
-        // TODO: find another way to return a value. 
+        // TODO: find another way to return a value.
         // Codendi_Request->params should not be public
         $this->request->params['html'] = $docman_references;
     }
@@ -357,7 +357,7 @@ class Docman_WikiController extends Docman_Controller {
         $item_factory = $this->getItemFactory();
         $item         = $item_factory->getItemFromDb($referrer_id);
         $reference    = $item;
-    
+
         while ($item->getParentId() != 0) {
             $item = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = array(

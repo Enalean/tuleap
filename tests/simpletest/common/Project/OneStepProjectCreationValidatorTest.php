@@ -70,7 +70,7 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
             new DefaultProjectVisibilityRetriever()
         );
         $validator        = new Project_OneStepCreation_OneStepCreationValidator(
-            $creation_request, 
+            $creation_request,
             $required_custom_descriptions,
             $trove_cats
         );

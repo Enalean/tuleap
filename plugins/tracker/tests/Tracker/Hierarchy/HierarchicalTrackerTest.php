@@ -30,31 +30,31 @@ class Tracker_Hierarchy_HierarchicalTrackerTest extends TuleapTestCase {
         $this->tracker  = aTracker()->withId(1)->withProject($project)->build();
         $this->child    = aTracker()->withId(2)->build();
         $this->children = array($this->child);
-        
+
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, $this->children);
     }
-    
+
     function testDelegatesGetGroupIdToTracker() {
         $this->assertEqual($this->hierarchical_tracker->getProject()->getId(), 110);
     }
-    
+
     function testDelegatesGetIdToTracker() {
         $this->assertEqual($this->hierarchical_tracker->getId(), 1);
     }
-    
+
     function testHasChild() {
         $this->assertTrue($this->hierarchical_tracker->hasChild($this->child));
     }
-    
+
     function testNotHasChild() {
         $not_child = aTracker()->withId(3)->build();
         $this->assertFalse($this->hierarchical_tracker->hasChild($not_child));
     }
-    
+
     function testIsNotItsOwnChild() {
         $this->assertFalse($this->hierarchical_tracker->hasChild($this->tracker));
     }
-    
+
     function testGetChildren() {
         $children = $this->hierarchical_tracker->getChildren();
         $this->assertEqual(count($children), 1);

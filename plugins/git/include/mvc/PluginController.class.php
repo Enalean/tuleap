@@ -55,7 +55,7 @@ abstract class PluginController
      * @var bool
      */
     protected $default_page_rendering = true;
-    
+
     public function __construct(UserManager $user_manager, Codendi_Request $request) {
         $this->user             = $user_manager->getCurrentUser();
         $this->request          = $request;
@@ -104,7 +104,7 @@ abstract class PluginController
      */
     public function addInfo($msg) {
         $GLOBALS['Response']->addFeedback('info', $msg);
-    }   
+    }
 
     /**
      * This function allows one to add action to control their execution
@@ -124,7 +124,7 @@ abstract class PluginController
     }
     /**
      *
-     * @param <type> $action 
+     * @param <type> $action
      */
     public function addPermittedAction($action) {
         $this->permittedActions[] = $action;
@@ -156,7 +156,7 @@ abstract class PluginController
      */
     public function getData() {
         return $this->actionResultData;
-    }    
+    }
 
     public function addView($viewName, $params=array()) {
         $this->views[$viewName] = $params;
@@ -165,7 +165,7 @@ abstract class PluginController
     public function addAction($actionName, $params=array()) {
         $this->actions[$actionName] = $params;
     }
-    
+
     /**
      * This functions execute all views added to the actions class array ($this->views)
      * An action is a method of PluginViews class child, several can be added for one request
@@ -208,7 +208,7 @@ abstract class PluginController
             $wa->process($name, $params);
         }
     }
-    
+
     /**
      * Instantiate an action based on a given name.
      *
@@ -233,7 +233,7 @@ abstract class PluginController
 
     /**
      * Sets whether the default page header and footer are added to the response
-     * 
+     *
      * @param bool $bool
      */
     protected function setDefaultPageRendering($bool) {

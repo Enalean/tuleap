@@ -30,7 +30,7 @@
  * </pre>
  */
 class Tuleap_Template {
-    
+
     /**
      * @var The variables to pass to the template
      */
@@ -61,7 +61,7 @@ class Tuleap_Template {
     /**
      * Open, parse, and return the template file.
      *
-     * @param $file string the template file name, by default use the 
+     * @param $file string the template file name, by default use the
      *
      * @throws Exception if there is no file to load
      *
@@ -74,7 +74,7 @@ class Tuleap_Template {
         if (!$file) {
             throw new Exception('A template file name is required');
         }
-            
+
         extract($this->vars);          // Extract the vars to local namespace
         ob_start();                    // Start output buffering
         include($file);                // Include the file

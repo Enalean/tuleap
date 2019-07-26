@@ -21,7 +21,7 @@
 //
 // $Id: Pager.php,v 1.2 2004/04/26 20:44:37 rurban Exp $
 ///
-// Based on DB_Pager 0.7 from the pear.php.net repository. 
+// Based on DB_Pager 0.7 from the pear.php.net repository.
 // The only modifications made have been modification of the include paths.
 rcs_id('$Id: Pager.php,v 1.2 2004/04/26 20:44:37 rurban Exp $');
 rcs_id('From Pear CVS: Id: Pager.php,v 1.3 2002/05/12 13:59:40 cox Exp');

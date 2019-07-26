@@ -32,7 +32,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename');
     }
-    
+
     function getField() {
         $hp = Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
@@ -57,7 +57,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url');
     }
-    
+
     function getField() {
         $hp = Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
@@ -72,16 +72,16 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
 }
 
 class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
-   
+
     function __construct() {
-        
+
     }
 
     public function getLabel($show_mandatory_information = true)
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
     }
-    
+
     function getField() {
         $html = '<input type="file" name="file" />';
         $html .= '<br /><em>'. $GLOBALS['Language']->getText(
@@ -114,7 +114,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
     }
-    
+
     function getField() {
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
@@ -138,7 +138,7 @@ class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_empty');
     }
-    
+
     function getField() {
         return '';
     }
@@ -151,7 +151,7 @@ class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
 
 class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
 {
-    
+
     function visitFolder(Docman_Folder $item, $params = array()) {
         return array();
     }
@@ -167,7 +167,7 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
         }
         return array(new Docman_MetadataHtmlWiki($pagename));
     }
-    
+
     function visitLink(Docman_Link $item, $params = array()) {
         $link_url = '';
         if(isset($params['force_item'])) {
@@ -180,11 +180,11 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
         }
         return array(new Docman_MetadataHtmlLink($link_url));
     }
-    
+
     function visitFile(Docman_File $item, $params = array()) {
         return array(new Docman_MetadataHtmlFile($params['request']));
     }
-    
+
     function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         $content = '';
         $version = $item->getCurrentVersion();
@@ -193,7 +193,7 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
         }
         return array(new Docman_MetadataHtmlEmbeddedFile($content));
     }
-    
+
     function visitEmpty(Docman_Empty $item, $params = array()) {
         return array(new Docman_MetadataHtmlEmpty());
     }

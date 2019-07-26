@@ -11,7 +11,7 @@
  * <dt> wiki word or page
  *   <dd> Match strings containing the substring 'wiki' AND either the substring
  *        'word' OR the substring 'page'.
- * <dt> auto-detect regex hints, glob-style or regex-style, and converts them 
+ * <dt> auto-detect regex hints, glob-style or regex-style, and converts them
  *      to PCRE and SQL matchers:
  *   <dd> "^word$" => EXACT(word)
  *   <dd> "^word"  => STARTS_WITH(word)
@@ -42,11 +42,11 @@
  * double-up on the quote character: 'I''m hungry' is equivalent to
  * "I'm hungry".
  *
- * Force regex on "re:word" => posix-style, "/word/" => pcre-style 
+ * Force regex on "re:word" => posix-style, "/word/" => pcre-style
  * or use regex='glob' to use file wildcard-like matching. (not yet)
  *
- * The parsed tree is then converted to the needed PCRE (highlight, 
- * simple backends) or SQL functions. 
+ * The parsed tree is then converted to the needed PCRE (highlight,
+ * simple backends) or SQL functions.
  *
  * @author: Jeff Dairiki
  * @author: Reini Urban (case and regex detection, enhanced sql callbacks)
@@ -71,7 +71,7 @@ class TextSearchQuery {
      * @see TextSearchQuery
      */
     function __construct($search_query, $case_exact=false, $regex='auto') {
-        if ($regex == 'none' or !$regex) 
+        if ($regex == 'none' or !$regex)
             $this->_regex = 0;
         elseif (defined("TSQ_REGEX_".strtoupper($regex)))
             $this->_regex = constant("TSQ_REGEX_".strtoupper($regex));
@@ -106,14 +106,14 @@ class TextSearchQuery {
     /**
      * Match query against string.
      *
-     * @param $string string The string to match. 
+     * @param $string string The string to match.
      * @return bool True if the string matches the query.
      */
     function match($string) {
         return preg_match($this->asRegexp(), $string);
     }
 
-    
+
     /**
      * Get a regular expression suitable for highlighting matched words.
      *
@@ -312,7 +312,7 @@ class TextSearchQuery_node_word
 extends TextSearchQuery_node
 {
     var $op = "WORD";
-    
+
     function __construct($word) {
         $this->word = $word;
     }
@@ -389,7 +389,7 @@ class TextSearchQuery_node_not
 extends TextSearchQuery_node
 {
     var $op = "NOT";
-    
+
     function __construct($leaf) {
         $this->leaves = array($leaf);
     }
@@ -401,7 +401,7 @@ extends TextSearchQuery_node
             return $leaf->leaves[0]; // ( NOT ( NOT x ) ) -> x
         return $this;
     }
-    
+
     function regexp() {
         $leaf = &$this->leaves[0];
         return '(?!' . $leaf->regexp() . ')';
@@ -460,7 +460,7 @@ class TextSearchQuery_node_and
 extends TextSearchQuery_node_binop
 {
     var $op = "AND";
-    
+
     function optimize() {
         $this->_flatten();
 
@@ -483,7 +483,7 @@ extends TextSearchQuery_node_binop
                       (new TextSearchQuery_node_or($nots)) );
             array_unshift($this->leaves, $node->optimize());
         }
-        
+
         assert(!empty($this->leaves));
         if (count($this->leaves) == 1)
             return $this->leaves[0];  // (AND x) -> x
@@ -514,7 +514,7 @@ extends TextSearchQuery_node_binop
     function regexp() {
         // We will combine any of our direct descendents which are WORDs
         // into a single (?=.*(?:word1|word2|...)) regexp.
-        
+
         $regexps = array();
         $words = array();
 
@@ -565,7 +565,7 @@ define ('TSQ_TOK_ALL', 4096);
 // all bits from word to the last.
 define ('TSQ_ALLWORDS', (4096*2)-1 - (16-1));
 
-class TextSearchQuery_Parser 
+class TextSearchQuery_Parser
 {
     /*
      * This is a simple recursive descent parser, based on the following grammar:
@@ -614,7 +614,7 @@ class TextSearchQuery_Parser
         unset($this->lexer);
         return $tree;
     }
-    
+
     function get_list ($is_toplevel = false) {
         $list = array();
 
@@ -623,7 +623,7 @@ class TextSearchQuery_Parser
         $accept_as_words = TSQ_TOK_NOT | TSQ_TOK_BINOP;
         if ($is_toplevel)
             $accept_as_words |= TSQ_TOK_LPAREN | TSQ_TOK_RPAREN;
-        
+
         while ( ($expr = $this->get_expr())
                 || ($expr = $this->get_word($accept_as_words)) ) {
             $list[] = $expr;
@@ -641,13 +641,13 @@ class TextSearchQuery_Parser
     function get_expr () {
         if ( !($expr = $this->get_atom()) )
             return false;
-        
+
         $savedpos = $this->lexer->tell();
         while ( ($op = $this->lexer->get(TSQ_TOK_BINOP)) ) {
             if ( ! ($right = $this->get_atom()) ) {
                 break;
             }
-            
+
             if ($op == 'and')
                 $expr = new TextSearchQuery_node_and(array($expr, $right));
             else {
@@ -661,7 +661,7 @@ class TextSearchQuery_Parser
 
         return $expr;
     }
-    
+
 
     function get_atom() {
         if ($word = $this->get_word(TSQ_ALLWORDS))
@@ -710,7 +710,7 @@ class TextSearchQuery_Lexer {
     function eof() {
         return $this->pos == count($this->tokens);
     }
-    
+
     /**
      * TODO: support more regex styles, esp. prefer the forced ones over auto
      * re: and // stuff
@@ -731,7 +731,7 @@ class TextSearchQuery_Lexer {
                 $val = $m[1];
                 $type = $m[1] == '(' ? TSQ_TOK_LPAREN : TSQ_TOK_RPAREN;
             }
-            
+
             // * => ALL
             elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_GLOB)
                     and preg_match('/^\*\s*/', $buf, $m)) {
@@ -750,7 +750,7 @@ class TextSearchQuery_Lexer {
                 $val = "%";
                 $type = TSQ_TOK_ALL;
             }
-            
+
             // ^word
             elseif ($regex & (TSQ_REGEX_AUTO|TSQ_REGEX_POSIX|TSQ_REGEX_PCRE)
                     and preg_match('/^\^([^-()][^()\s]*)\s*/', $buf, $m)) {
@@ -781,7 +781,7 @@ class TextSearchQuery_Lexer {
                 $val = $m[1];
                 $type = TSQ_TOK_EXACT;
             }
-            
+
             // "words "
             elseif (preg_match('/^ " ( (?: [^"]+ | "" )* ) " \s*/x', $buf, $m)) {
                 $val = str_replace('""', '"', $m[1]);
@@ -817,15 +817,15 @@ class TextSearchQuery_Lexer {
         }
         return $tokens;
     }
-    
+
     function get($accept) {
         if ($this->pos >= count($this->tokens))
             return false;
-        
+
         list ($type, $val) = $this->tokens[$this->pos];
         if (($type & $accept) == 0)
             return false;
-        
+
         $this->pos++;
         return $val;
     }
@@ -837,5 +837,5 @@ class TextSearchQuery_Lexer {
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

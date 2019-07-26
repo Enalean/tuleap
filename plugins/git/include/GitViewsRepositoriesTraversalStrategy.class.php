@@ -22,10 +22,10 @@
  * Base class to traverse a list of repositories
  */
 abstract class GitViewsRepositoriesTraversalStrategy {
-    
+
     public function __construct() {
     }
-    
+
     /**
      * Display the list of repositories
      *
@@ -40,7 +40,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
         }
         return $this->getMainWrapper($this->_makeRepositoryList($repositories, $user));
     }
-    
+
     /**
      * @return string
      */
@@ -58,7 +58,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
             if ( $delDate != '0000-00-00 00:00:00' ) {
                 continue;
             }
-            
+
             $html .= $this->getItemWrapper($r, $repoName);
         }
         return $html;
@@ -77,7 +77,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
         $r->load();
         return $r;
     }
-    
+
     /**
      * Get the main wrapper of the whole representation
      *
@@ -86,7 +86,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      * @return string the $inner encapsuled in the wrapper
      */
     protected abstract function getMainWrapper($inner);
-    
+
     /**
      * Get Item wrapper
      *
@@ -96,6 +96,6 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      * @return string the $inner encapsulated in its own wrapper
      */
     protected abstract function getItemWrapper(GitRepository $repo, $inner);
-    
+
 }
 ?>

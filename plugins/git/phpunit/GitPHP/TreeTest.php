@@ -47,7 +47,6 @@ class TreeTest extends TestCase
         $project->shouldReceive('GetTree')->with('0543c7a05785554d8f80b7a4b40bc64add26b7d2')
             ->andReturns(\Mockery::spy(Tree::class))->once();
 
-
         $tree = new Tree($project, 'f3bee1d2acaeed2c516f262a57928cde54fc4423');
 
         $content = $tree->GetContents();

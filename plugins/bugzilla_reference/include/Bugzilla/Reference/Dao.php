@@ -86,7 +86,6 @@ class Dao extends \DataAccessObject
 
         $this->update($sql);
 
-
         $sql = "UPDATE reference AS ref
                     INNER JOIN plugin_bugzilla_reference AS bz ON (
                         bz.keyword = ref.keyword

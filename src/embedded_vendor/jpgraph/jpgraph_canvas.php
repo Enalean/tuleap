@@ -75,7 +75,6 @@ class CanvasGraph extends Graph {
                 $this->iImgTransBorder);
             }
 
-
             // If the filename is given as the special _IMG_HANDLER
             // then the image handler is returned and the image is NOT
             // streamed back

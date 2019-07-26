@@ -84,7 +84,6 @@ class Tracker_Workflow_Trigger_RulesManager {
                 $trigger_xml->addChild('field_value_id')->addAttribute('REF', $trigger->getValue()->getXMLId());
             }
 
-
             $trigger_rule_xml->addChild('condition', $trigger_rule->getCondition());
 
             $target = $trigger_rule->getTarget();

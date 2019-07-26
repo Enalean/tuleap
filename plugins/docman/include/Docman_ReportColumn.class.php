@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ class Docman_ReportColumn {
         }
         return $html;
     }
-    
+
 
     function getTitle($view, $viewParams) {
         $sort = $this->getSort();
@@ -68,17 +68,17 @@ class Docman_ReportColumn {
             $toggleValue = '1';
             $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
         }
-        
+
         // URL
         $toggleParam = array();
         $sortParam = $this->getSortParameter();
         if($sortParam !== null) {
             $toggleParam[$sortParam] = $toggleValue;
         }
-        
+
         $url = $view->_buildSearchUrl($viewParams, array($sortParam => $toggleValue));
         $title = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle');
-        
+
         $purifier = Codendi_HTMLPurifier::instance();
         $link = $purifier->purify($this->md->getName());
 
@@ -87,7 +87,7 @@ class Docman_ReportColumn {
         }
 
         $href = '<a href="'.$url.'" title="'.$title.'">'.$link.'</a>';
-        
+
         return $href;
     }
 
@@ -114,13 +114,13 @@ class Docman_ReportColumn {
         }
         return '';
     }
-    
+
     function getJavascript($item, $view) {
         return '';
     }
 }
 
-class Docman_ReportColumnLocation 
+class Docman_ReportColumnLocation
 extends Docman_ReportColumn {
     function __construct() {
         $this->sort = null;
@@ -151,7 +151,7 @@ extends Docman_ReportColumn {
         $pathUrl   = array();
         foreach($pathTitle as $key => $title) {
             $id  = $pathId[$key];
-            
+
             // Replace in the current url the id of the root item.
             $dfltParams = $view->_getDefaultUrlParams($params);
             $dfltParams['id'] = $id;
@@ -192,7 +192,7 @@ extends Docman_ReportColumn {
         $html .= '</span>';
         return $html;
     }
-    
+
     function getJavascript($item, $view) {
         return $view->getActionForItem($item);
     }

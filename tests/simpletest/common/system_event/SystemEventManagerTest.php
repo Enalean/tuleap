@@ -28,7 +28,7 @@ Mock::generate('PFUser');
 Mock::generate('DataAccessResult');
 
 class SystemEventManagerTest extends TuleapTestCase {
-    
+
     public function testConcatParameters() {
         $sem = new SystemEventManagerTestVersion($this);
         $params = array(
@@ -51,7 +51,7 @@ class SystemEventManagerTest extends TuleapTestCase {
         $user->setReturnValue('getId', 102);
 
         $seDao = new MockSystemEventDao($this);
-        
+
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('rowCount', 0);
         $seDao->setReturnValue('searchWithParam', $dar);

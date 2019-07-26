@@ -28,7 +28,7 @@ class HTML_Element_Input_Text extends HTML_Element_Input {
         parent::__construct($label, $name, $value, $desc);
         $this->params['size'] = $size;
     }
-    
+
     protected function getInputType() { return 'text'; }
 }
 

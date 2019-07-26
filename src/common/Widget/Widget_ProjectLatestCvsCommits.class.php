@@ -24,7 +24,7 @@ require_once('www/cvs/commit_utils.php');
 
 /**
 * Widget_ProjectLatestCvsCommits
-* 
+*
 */
 class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
 

@@ -24,44 +24,44 @@ function aFloatFieldPostAction() {
 }
 
 class Test_Transition_PostAction_Field_Float_Builder {
-    
+
     private $id;
-    
+
     public function __construct() {
         $this->transition = aTransition()->build();
         $this->field      = aFloatField()->build();
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTransition(Transition $transition) {
         $this->transition = $transition;
         return $this;
     }
-    
+
     public function withTransitionId($transition_id) {
         $this->transition = aTransition()->withId($transition_id)->build();
         return $this;
     }
-    
+
     public function withField(Tracker_FormElement_Field_Float $field) {
         $this->field = $field;
         return $this;
     }
-    
+
     public function withFieldId($field_id) {
         $this->field = aFloatField()->withId($field_id)->build();
         return $this;
     }
-    
+
     public function withValue($value) {
         $this->value = $value;
         return $this;
     }
-    
+
     public function build() {
         return new Transition_PostAction_Field_Float($this->transition,
                                                      $this->id,

@@ -24,7 +24,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset';
-    }   
+    }
 
     public function searchByArtifactId($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
@@ -33,7 +33,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                 ORDER BY id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByArtifactIdAndChangesetId($artifact_id, $changeset_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $changeset_id = $this->da->escapeInt($changeset_id);
@@ -100,7 +100,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         }
         return $changeset_id;
     }
-    
+
     public function delete($changeset_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE

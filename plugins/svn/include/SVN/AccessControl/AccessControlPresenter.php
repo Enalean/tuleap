@@ -85,7 +85,6 @@ class AccessControlPresenter extends BaseAdminPresenter
 
         $this->sections = new SectionsPresenter($repository);
 
-
         $this->current_version_title = $GLOBALS['Language']->getText(
             'plugin_svn_admin',
             'last_version',

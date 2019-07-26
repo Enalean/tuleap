@@ -181,7 +181,6 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
-
         $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
             []

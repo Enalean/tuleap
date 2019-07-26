@@ -19,7 +19,7 @@
  */
 require_once('bootstrap.php');
 class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase {
-    
+
     public function testGetLabel() {
         $id          = 123;
         $label       = 'Reopen';
@@ -29,6 +29,6 @@ class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase
         $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
         $this->assertEqual($bv->getLabel(), $label);
     }
-    
+
 }
 ?>

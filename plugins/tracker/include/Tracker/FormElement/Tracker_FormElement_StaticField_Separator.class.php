@@ -20,13 +20,13 @@
 
 
 class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_StaticField {
-    
+
     protected function fetchReadOnly() {
         $html = '';
         $html .= '<hr class="tracker-field-separator" id="tracker-admin-formElements_'. $this->id .'" size="1" />';
         return $html;
     }
-    
+
     public function fetchAdmin($tracker) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
@@ -46,7 +46,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         $html .= '</div>';
         return $html;
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -55,7 +55,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         $html = '<hr class="tracker-admin-separator" id="tracker-admin-formElements_'. $this->id .'" size="1" />';
         return $html;
     }
-    
+
     /**
      * getLabel - the label of this Tracker_FormElement_Staticfield_Separator
      * The staticfield label can be internationalized.
@@ -72,33 +72,33 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
             return $label;
         }
     }
-    
+
     function getDescription() {
         // no description for Separator
         return '';
     }
-    
+
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label');
     }
-    
+
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_description');
     }
-    
+
     /**
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal.png');
     }
-    
+
     /**
      * @return the path to the icon to create an element
      */

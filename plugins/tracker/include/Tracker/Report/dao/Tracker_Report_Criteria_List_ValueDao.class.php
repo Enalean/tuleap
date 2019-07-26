@@ -23,20 +23,20 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
         parent::__construct();
         $this->table_name = 'tracker_report_criteria_list_value';
     }
-    
-    public function save($id, $values) {               
+
+    public function save($id, $values) {
         if ( is_array($values) ) {
             $id = $this->da->escapeInt($id);
             //First clear the list
             $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
             $this->update($sql);
-            
+
             //Then fill it with new values
             $new_values = array();
             if (is_array($values)) {
                 foreach($values as $val) {
                     if ($v = $this->da->escapeInt($val)) {
-                        $new_values[] = "($id, $v)";                        
+                        $new_values[] = "($id, $v)";
                     }
                 }
             }
@@ -52,6 +52,6 @@ class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_Valu
         }
         return false;
     }
-    
+
 }
 ?>

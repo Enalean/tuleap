@@ -86,7 +86,7 @@ extends WikiPlugin
             $html = HTML::tt(WikiLink($Pages[$numberlinks-1], 'auto'));
             for ($i = $numberlinks - 2; $i >= 0; $i--) {
                 if (!empty($Pages[$i]))
-                    $html->pushContent(PAGETRAIL_ARROW, 
+                    $html->pushContent(PAGETRAIL_ARROW,
                                        WikiLink($Pages[$i], 'auto'));
             }
             return $html;

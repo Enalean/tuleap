@@ -26,7 +26,7 @@ $request = HTTPRequest::instance();
 
 if (user_isloggedin()) {
     /*
-        User obviously has to be logged in to save place 
+        User obviously has to be logged in to save place
     */
     $vForumId = new Valid_UInt('forum_id');
     $vForumId->required();
@@ -34,20 +34,20 @@ if (user_isloggedin()) {
         $forum_id = $request->get('forum_id');
                 // Check permissions
         if (!forum_utils_access_allowed($forum_id)) {
-            exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+            exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));
         }
 
      //If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
         $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
-            if (!forum_utils_news_access($forum_id)) {        
+            if (!forum_utils_news_access($forum_id)) {
                 exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
             }
         }
-    
+
      /*
-      First check to see if they already saved their place 
+      First check to see if they already saved their place
       If they have NOT, then insert a row into the db
 
       ELSE update the time()
@@ -75,7 +75,7 @@ if (user_isloggedin()) {
 
         if (!$result || db_numrows($result) < 1) {
          /*
-          User is not already monitoring thread, so 
+          User is not already monitoring thread, so
           insert a row so monitoring can begin
          */
             $sql="INSERT INTO forum_saved_place (forum_id,user_id,save_date) VALUES (".db_ei($forum_id).",'".$db_escaped_user_id."','".time()."')";
@@ -101,14 +101,14 @@ if (user_isloggedin()) {
                 echo "<span class=\"highlight\"><H3>".$Language->getText('forum_save','place_saved')."</H3></span>";
                 echo "<P>".$Language->getText('forum_save','msg_highlighted');
             }
-        } 
+        }
         forum_footer(array());
     } else {
         forum_header(array('title'=>$Language->getText('forum_monitor','choose_forum_first')));
         echo '
 			<H1>'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
         forum_footer(array());
-    } 
+    }
 
 } else {
     exit_not_logged_in();

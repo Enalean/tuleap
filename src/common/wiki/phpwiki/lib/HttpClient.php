@@ -2,7 +2,7 @@
 // -*-php-*-
 rcs_id('$Id: HttpClient.php,v 1.6 2004/11/01 10:43:55 rurban Exp $');
 
-/** 
+/**
    Version 0.9, 6th April 2003 - Simon Willison ( http://simon.incutio.com/ )
    Manual: http://scripts.incutio.com/httpclient/
 
@@ -27,7 +27,7 @@ class HttpClient {
     var $timeout = 10;
     var $use_gzip = true;
     var $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
-                                  // Note: This currently ignores the cookie path (and time) completely. Time is not important, 
+                                  // Note: This currently ignores the cookie path (and time) completely. Time is not important,
                                   //       but path could possibly lead to security problems.
     var $persist_referers = true; // For each request, sends path of last request as referer
     var $debug = false;
@@ -265,7 +265,7 @@ class HttpClient {
         $url = 'http://'.$this->host;
         if ($this->port != 80) {
             $url .= ':'.$this->port;
-        }            
+        }
         $url .= $this->path;
         return $url;
     }
@@ -342,7 +342,7 @@ class HttpClient {
             }
             print '</div>';
         }
-    }   
+    }
 }
 
 // $Log: HttpClient.php,v $

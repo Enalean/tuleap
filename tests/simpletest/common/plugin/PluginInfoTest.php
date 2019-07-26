@@ -34,8 +34,8 @@ class TestPluginInfo extends PluginInfo {
 }
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Tests the class PluginInfo
  */
@@ -50,14 +50,14 @@ class PluginInfoTest extends TuleapTestCase {
         $this->assertEqual($pd->getVersion(), '');
         $this->assertEqual($pd->getDescription(), '');
         $pi->setPluginDescriptor(new PluginDescriptor('TestPlugin', 'v1.0', 'A simple plugin, just for unit testing'));
-        
+
         $pd = $pi->getPluginDescriptor();
         $this->assertEqual($pd->getFullName(), 'TestPlugin');
         $this->assertEqual($pd->getVersion(), 'v1.0');
         $this->assertEqual($pd->getDescription(), 'A simple plugin, just for unit testing');
-        
+
     }
-    
+
     function testPropertyDescriptor() {
         $name_d1 = 'd1';
         $name_d2 = 'd2';
@@ -77,7 +77,7 @@ class PluginInfoTest extends TuleapTestCase {
         $expected->put($name_d1, $d3);
         $descriptors = $pi->getpropertyDescriptors();
         $this->assertTrue($expected->equals($descriptors));
-        
+
         $pi->removePropertyDescriptor($d3);
         $descriptors = $pi->getpropertyDescriptors();
         $this->assertFalse($expected->equals($descriptors));

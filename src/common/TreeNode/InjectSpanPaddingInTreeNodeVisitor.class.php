@@ -20,7 +20,7 @@
 
 require_once 'GetStateVisitor.class.php';
 /**
- * Extends GetStateVisitor to display a table as a tree 
+ * Extends GetStateVisitor to display a table as a tree
  * with expand/collapse and indentation.
  *
  */
@@ -30,7 +30,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
      * @var bool
      */
     protected $collapsable;
-    
+
     protected $showTreeTpl = array(
         self::STATE_NODE=> '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
@@ -45,7 +45,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>'
     );
-    
+
     protected $showNormalTpl = array(
         self::STATE_NODE=> '
         	<span class="node-indent node-pipe">&nbsp;</span>
@@ -64,13 +64,13 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     public function __construct($collapsable = false) {
         $this->collapsable = $collapsable;
     }
-    
+
     /**
      * Set states of a TreeNodein it's data
-     * 
+     *
      * @var TreeNode $child the TreeNode to set
      * @var array    $state states of spaces
-     * 
+     *
      * @see TreeNode_GetStateVisitor::setChildState()
      */
     protected function setChildState(TreeNode $child, $state) {
@@ -78,10 +78,10 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $data = $child->getData();
         $data['tree-padding']      = $this->getHtmlPaddingFromStates($child, $state);
         $data['content-template']  = '<div class="node-content">%s';
-        $data['content-template'] .= $child->hasChildren() ? '<span class="node-child">&nbsp;</span></div>' : '</div>'; 
+        $data['content-template'] .= $child->hasChildren() ? '<span class="node-child">&nbsp;</span></div>' : '</div>';
         $child->setData($data);
     }
-    
+
     protected function getHtmlPaddingFromStates($child, $states) {
         $showTree  = $this->collapsable && $child->hasChildren();
         $html      = '';
@@ -94,7 +94,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         }
         return $html;
     }
-    
+
     protected function getPaddingForAState($state, $showTree) {
         if ($showTree) {
             return $this->showTreeTpl[$state];

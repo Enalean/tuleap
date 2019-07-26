@@ -5,8 +5,8 @@ rcs_id('$Id: Forbidden.php,v 1.2 2004/12/26 17:11:16 rurban Exp $');
  * This file is part of PhpWiki. Terms and Conditions see LICENSE. (GPL2)
  */
 
-/** 
- * The PassUser name gets created automatically. 
+/**
+ * The PassUser name gets created automatically.
  * That's why this class is empty, but must exist.
  */
 class _ForbiddenPassUser

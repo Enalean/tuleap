@@ -1,17 +1,17 @@
 <?php
 /**
  * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
- * 
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -21,26 +21,26 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 
 /**
  * Manage display of FormElement administration (creation / update).
- * 
+ *
  * This is the top most element of the hierarchy and correspond to Tracker_FormElement
  */
 class Tracker_FormElement_View_Admin {
-    
+
     /**
      * @var Tracker_FormElement
      */
     protected $formElement;
-    
+
     /**
-     * @var 
+     * @var
      */
     protected $allUsedElements;
-    
+
     public function __construct(Tracker_FormElement $formElement, $allUsedElements) {
         $this->formElement     = $formElement;
         $this->allUsedElements = $allUsedElements;
     }
-    
+
     public function fetchTypeNotModifiable() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
@@ -49,7 +49,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '<p>'.$this->formElement->getFactoryDescription().'</p>';
         return $html;
     }
-    
+
     public function fetchTypeForUpdate() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label>';
@@ -58,7 +58,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-    
+
     public function fetchNameForUpdate() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -70,7 +70,7 @@ class Tracker_FormElement_View_Admin {
     }
 
     /**
-     * html form for the label 
+     * html form for the label
      *
      * @return string html
      */
@@ -85,9 +85,9 @@ class Tracker_FormElement_View_Admin {
         $html    .= $this->fetchCustomHelp();
         return $html;
     }
-    
+
     /**
-     * html form for the description 
+     * html form for the description
      *
      * @return string html
      */
@@ -95,14 +95,14 @@ class Tracker_FormElement_View_Admin {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        
+
         $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').':</label>';
         $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">'.  $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
 
         $html .= '</p>';
         return $html;
     }
-        
+
     public function fetchNameForShared() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -112,9 +112,9 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-    
+
     /**
-     * html form for the label 
+     * html form for the label
      *
      * @return string html
      */
@@ -129,9 +129,9 @@ class Tracker_FormElement_View_Admin {
         $html    .= $this->fetchCustomHelp();
         return $html;
     }
-    
+
     /**
-     * html form for the description 
+     * html form for the description
      *
      * @return string html
      */
@@ -144,11 +144,11 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-        
+
     protected function fetchCustomHelp() {
         return '';
     }
-  
+
     public function fetchCustomHelpForShared() {
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
@@ -160,7 +160,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '</span>';
         return $html;
     }
-    
+
     public function fetchRanking() {
         $html = '';
         $html .= '<p>';
@@ -170,9 +170,9 @@ class Tracker_FormElement_View_Admin {
             $items[] = $field->getRankSelectboxDefinition();
         }
         $html .= $GLOBALS['HTML']->selectRank(
-            $this->formElement->id, 
-            $this->formElement->rank, 
-            $items, 
+            $this->formElement->id,
+            $this->formElement->rank,
+            $items,
             array(
                 'id'   => 'formElement_rank',
                 'name' => 'formElement_data[rank]'
@@ -181,19 +181,19 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-    
+
     /**
-     * If the formElement has specific properties then this method 
+     * If the formElement has specific properties then this method
      * should return the html needed to update those properties
-     * 
-     * The html must be a (or many) html row(s) table (one column for the label, 
+     *
+     * The html must be a (or many) html row(s) table (one column for the label,
      * another one for the property)
-     * 
+     *
      * <code>
      * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
      * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
      * </code>
-     * 
+     *
      * @return string html
      */
     public function fetchAdminSpecificProperties() {
@@ -205,10 +205,10 @@ class Tracker_FormElement_View_Admin {
         }
         return $html;
     }
-    
+
     /**
      * Fetch a unique property edit form
-     * 
+     *
      * @param string $key      The key of the property
      * @param array  $property The property to display
      *
@@ -287,7 +287,7 @@ class Tracker_FormElement_View_Admin {
         }
         return $html;
     }
-    
+
     /**
      * Fetch additionnal stuff to display below the edit form
      *
@@ -296,7 +296,7 @@ class Tracker_FormElement_View_Admin {
     public function fetchAfterAdminEditForm() {
         return '';
     }
-    
+
     /**
      * Fetch additionnal stuff to display below the create form
      * Result if not empty must be enclosed in a <tr>
@@ -306,7 +306,7 @@ class Tracker_FormElement_View_Admin {
     public function fetchAfterAdminCreateForm() {
         return '';
     }
-    
+
     public function fetchAdminButton($name) {
         $html  = '';
         $html .= '<p>';
@@ -314,7 +314,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-    
+
     /**
      * fetch permission link on admin form
      *
@@ -336,7 +336,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
-    
+
     public function fetchSharedUsage() {
         $html = '';
         $fields = $this->formElement->getSharedTargets();

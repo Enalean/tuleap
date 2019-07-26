@@ -31,7 +31,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
     function getContent($params = []) {
         $content  = '';
         $content .= '<form action="'. $this->url .'" method="post">';
-        
+
         //{{{ Explanations
         /* => in the doc
         $content .= '<div>';
@@ -52,7 +52,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
         $content .= '</div>';
         */
         //}}}
-        
+
         //{{{ Permissions
         $content .= '<div>';
         $titles = array();
@@ -90,7 +90,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
         $content .= '</div>';
         $content .= '</div>';
         //}}}
-        
+
         $content .= '</form>';
         return $content;
     }

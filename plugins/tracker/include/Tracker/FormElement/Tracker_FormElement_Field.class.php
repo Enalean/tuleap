@@ -688,7 +688,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $data_field_type = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
         }
 
-
         $html = '<tr>
                     <td>'. $purifier->purify($this->getLabel()) .':
                     </td>
@@ -1126,7 +1125,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                     (!$this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue()!= null);
             }
         }
-
 
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {

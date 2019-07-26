@@ -133,7 +133,6 @@ XML;
         $fieldset_01 = Mockery::mock(\Tracker_FormElement_Container_Fieldset::class);
         $fieldset_01->shouldReceive('getID')->andReturn(0);
 
-
         $mapping = [
             'F1' => $fieldset_01,
         ];

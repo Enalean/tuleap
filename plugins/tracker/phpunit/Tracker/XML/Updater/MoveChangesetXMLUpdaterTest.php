@@ -178,7 +178,6 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $target_tracker = Mockery::mock(Tracker::class);
         $target_tracker->shouldReceive('getId')->andReturn(201);
 
-
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<artifact>'
             . '  <changeset>'

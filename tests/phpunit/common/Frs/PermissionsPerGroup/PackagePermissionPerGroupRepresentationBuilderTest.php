@@ -335,7 +335,6 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
     {
         $this->package_factory->method('getFRSPackagesFromDb')->willReturn([$this->package]);
 
-
         $this->permission_ugroup_retriever->method('getAllUGroupForObject')->withConsecutive(
             [$this->equalTo($this->project), $this->equalTo($this->package_id), FRSPackage::PERM_READ]
         )->willReturnOnConsecutiveCalls([ProjectUGroup::PROJECT_MEMBERS]);

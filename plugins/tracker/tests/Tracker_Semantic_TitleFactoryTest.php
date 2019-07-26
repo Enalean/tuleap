@@ -41,18 +41,18 @@ class Tracker_Semantic_TitleFactoryTest extends TuleapTestCase {
     public function testImport() {
         $xml     = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
         $tracker = mock('Tracker');
-        
+
         $f1 = stub('Tracker_FormElement_Field_Text')->getId()->returns(111);
         $f2 = stub('Tracker_FormElement_Field_Text')->getId()->returns(112);
         $f3 = stub('Tracker_FormElement_Field_Text')->getId()->returns(113);
-        
+
         $mapping = array(
             'F9'  => $f1,
             'F13' => $f2,
             'F16' => $f3
         );
         $semantic_title = Tracker_Semantic_TitleFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
-        
+
         $this->assertEqual($semantic_title->getShortName(), 'title');
         $this->assertEqual($semantic_title->getFieldId(), 112);
     }

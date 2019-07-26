@@ -127,7 +127,7 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
 
         $this->assertEqual($ugroups, $expected_ugroups);
     }
-    
+
     public function itDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returnsEmptyDar();
 

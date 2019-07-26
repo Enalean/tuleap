@@ -1,15 +1,15 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_ToolbarNewDocumentVisitor
 */
 
 
 class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/ {
-    
+
     function visitFolder(&$item, $params = array()) {
         return $item->getId();
     }

@@ -29,7 +29,7 @@
  * target of this class is to handle the fields (at project level) and not the
  * fields values.
  *
- * There is 2 kind of metadata: 
+ * There is 2 kind of metadata:
  * * HardCoded metadata: stored as columns of docman tables.
  * * Real metadata: stored as entry of docman_field table.
  */
@@ -49,10 +49,10 @@ class Docman_MetadataFactory
 
     var $modifiableMetadata;
     var $groupId;
-    
+
     function __construct($groupId) {
         // Metadata hard coded as table columns but with some user-defined
-        // states such as 'useIt' in a dedicated table       
+        // states such as 'useIt' in a dedicated table
         $this->modifiableMetadata = array('obsolescence_date', 'status');
 
         $this->scalarMetadata     = array(PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
@@ -61,7 +61,7 @@ class Docman_MetadataFactory
 
         $this->groupId = $groupId;
     }
-    
+
     /**
      * Return Docman_MetadataDao object
      *
@@ -90,7 +90,7 @@ class Docman_MetadataFactory
             case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                 $md = new Docman_ListMetadata();
             break;
-            
+
             default:
                 $md = new Docman_Metadata();
         }
@@ -107,9 +107,9 @@ class Docman_MetadataFactory
 
         $dao = $this->getDao();
         $dar = $dao->searchById($id);
-        if($dar->rowCount() === 1) {            
+        if($dar->rowCount() === 1) {
             $md = $this->_createFromRow($dar->current());
-        
+
             $md->setCanChangeName(true);
             $md->setCanChangeIsEmptyAllowed(true);
             $md->setCanChangeIsMultipleValuesAllowed(true);
@@ -173,7 +173,7 @@ class Docman_MetadataFactory
                 if($md->isUsed()) {
                     $mda[] = $md;
                 }
-            } else {            
+            } else {
                 $mda[] = $md;
             }
         }
@@ -243,11 +243,11 @@ class Docman_MetadataFactory
         $mdIter->rewind();
         while($mdIter->valid()) {
             $md = $mdIter->current();
-            
+
             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $this->appendMetadataValueList($md, true);
             }
-            
+
             $mdIter->next();
         }
     }
@@ -423,7 +423,7 @@ class Docman_MetadataFactory
     }
 
     // Today only usage configuration supported
-    function updateHardCodedMetadata($md) {        
+    function updateHardCodedMetadata($md) {
         if(in_array($md->getLabel(), $this->modifiableMetadata)) {
             $sBo = Docman_SettingsBo::instance($this->groupId);
             return $sBo->updateMetadataUsage($md->getLabel(), $md->getUseIt());
@@ -446,7 +446,7 @@ class Docman_MetadataFactory
         $md->setGroupId($this->groupId);
 
         $dao  = $this->getDao();
-        $mdId = $dao->create($this->groupId, 
+        $mdId = $dao->create($this->groupId,
                              $md->getName(),
                              $md->getType(),
                              $md->getDescription(),
@@ -465,7 +465,7 @@ class Docman_MetadataFactory
                     $mdId = false;
                 }
             }
-            
+
             if($mdId !== false) {
                 // Update existing items, and give them the default
                 // value of the metadata.
@@ -487,7 +487,7 @@ class Docman_MetadataFactory
         $dao   = $this->getDao();
         $delMd = $dao->delete($md->getId());
 
-        if($delMd) {            
+        if($delMd) {
             // Delete LoveElements if needed
             $delLove = false;
             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
@@ -497,7 +497,7 @@ class Docman_MetadataFactory
             else {
                 $delLove = true;
             }
-            
+
             if($delLove) {
                 $deleted = true;
                 // Delete corresponding values
@@ -578,7 +578,7 @@ class Docman_MetadataFactory
                 $md->setCanChangeValue(false);
             break;
 
-            case 'status': 
+            case 'status':
                 $md = new Docman_ListMetadata();
                 $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_status_name'));
                 $md->setLabel('status');
@@ -621,7 +621,7 @@ class Docman_MetadataFactory
      * Create a new metadata based on an existing one in another project.
      *
      * @see cloneMetadata
-     * 
+     *
      * @param int $dstGroupId Project where the md is created
      * @param Docman_Metadata $md              Metadata to clone
      * @param Array           $metadataMapping Map between src and dst metadata id
@@ -666,7 +666,7 @@ class Docman_MetadataFactory
      * This method will create the same metadata (definitions and values if
      * needed) in the target project. A maps keeps the link between the id in
      * the source and the destination project.
-     * 
+     *
      * @param int $dstGroupId Project where to copy the metadata
      * @param Array   $metadataMapping  Map between source and target metadata definitions
      */
@@ -678,7 +678,7 @@ class Docman_MetadataFactory
         // Clone metadata
         $this->_cloneRealMetadata($dstGroupId, $metadataMapping);
     }
-    
+
     /**
      * Try to find the matching metadata between 2 projects
      * The matching is made on the name and type
@@ -753,7 +753,7 @@ class Docman_MetadataFactory
         $ai = new ArrayIterator($mda);
         return $ai;
     }
-    
+
     /**
      * Export metadata settings of current project into $dstGroupId
      *
@@ -780,14 +780,14 @@ class Docman_MetadataFactory
         // Import metadata
         $this->_exportMetadata($dstGroupId);
     }
-    
+
     function _exportMetadata($dstGroupId) {
         // Get the properties mapping between the 2 projects
         $mdMap = array();
         $this->getMetadataMapping($dstGroupId, $mdMap);
-        
+
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
-        
+
         // Get used metadata in source project
         foreach($this->getRealMetadataList(true) as $srcMd) {
             // Get corresponding metadata in current project (if any)
@@ -805,7 +805,7 @@ class Docman_MetadataFactory
             }
         }
     }
-    
+
     // Accessors for mock
     function &_getMetadataFactory($groupId) {
         $mdf = new Docman_MetadataFactory($groupId);

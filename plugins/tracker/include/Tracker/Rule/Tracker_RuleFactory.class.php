@@ -28,31 +28,31 @@ class Tracker_RuleFactory {
 
     /**
      *
-     * @var Tracker_RuleDao 
+     * @var Tracker_RuleDao
      */
     private $rules_dao;
 
 
     private $rules;
-    
+
     /**
      *
-     * @var Tracker_Rule_List_Factory 
+     * @var Tracker_Rule_List_Factory
      */
     private $list_factory;
-    
+
     /**
      *
-     * @var Tracker_Rule_Date_Factory 
+     * @var Tracker_Rule_Date_Factory
      */
     private $date_factory;
-    
+
     /**
      *
-     * @var Tracker_Rule_Date_Dao 
+     * @var Tracker_Rule_Date_Dao
      */
     private $date_dao;
-    
+
     /**
      *
      * @var Tracker_Rule_List_Dao
@@ -120,7 +120,7 @@ class Tracker_RuleFactory {
      * @param Tracker $trackerDB
      */
     public function saveObject(array $rules, Tracker $trackerDB) {
-        
+
         if(isset($rules['list_rules'])) {
             foreach ($rules['list_rules'] as $list_rule) {
                 /** @var Tracker_Rule_List $list_rule */
@@ -128,7 +128,7 @@ class Tracker_RuleFactory {
                 $this->getListFactory()->insert($list_rule);
             }
         }
-        
+
         if(isset($rules['date_rules'])) {
             foreach ($rules['date_rules'] as $date_rule) {
                 /** @var Tracker_Rule_Date $list_rule */
@@ -168,7 +168,7 @@ class Tracker_RuleFactory {
 
     /**
      * Creates a Tracker_Semantic Object
-     * 
+     *
      * Called by TrackerFactory::getInstanceFromXML()
      *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
@@ -184,7 +184,7 @@ class Tracker_RuleFactory {
             $list_rules = $xml->list_rules;
             $rules['list_rules'] = $this->generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker);
         }
-        
+
         if(property_exists($xml, 'date_rules')) {
             $date_rules = $xml->date_rules;
             $rules['date_rules'] = $this->generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker);
@@ -225,9 +225,9 @@ class Tracker_RuleFactory {
 
         return $rule_list;
     }
-    
+
     /**
-     * 
+     *
      * @return Tracker_Rule_List_Factory
      */
     public function getListFactory() {
@@ -235,12 +235,12 @@ class Tracker_RuleFactory {
             $listDao = $this->getListDao();
             $this->list_factory =  new Tracker_Rule_List_Factory($listDao);
         }
-        
+
         return $this->list_factory;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_List_Factory $factory
      * @return Tracker_RuleFactory
      */
@@ -250,7 +250,7 @@ class Tracker_RuleFactory {
     }
 
     /**
-     * 
+     *
      * @return Tracker_Rule_Date_Factory
      */
     public function getDateFactory() {
@@ -259,12 +259,12 @@ class Tracker_RuleFactory {
             $form_element_factory = Tracker_FormElementFactory::instance();
             $this->date_factory =  new Tracker_Rule_Date_Factory($dateDao, $form_element_factory);
         }
-        
+
         return $this->date_factory;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_Date_Factory $factory
      * @return Tracker_RuleFactory
      */
@@ -272,21 +272,21 @@ class Tracker_RuleFactory {
         $this->date_factory = $factory;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return Tracker_Rule_List_Dao
      */
     public function getListDao() {
         if(! $this->list_dao){
             $this->list_dao =  new Tracker_Rule_List_Dao();
         }
-        
+
         return $this->list_dao;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_List_Dao $dao
      * @return \Tracker_RuleFactory
      */
@@ -294,21 +294,21 @@ class Tracker_RuleFactory {
         $this->list_dao = $dao;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return Tracker_Rule_date_Dao
      */
     public function getDateDao() {
         if(! $this->date_dao){
             $this->date_dao =  new Tracker_Rule_Date_Dao();
         }
-        
+
         return $this->date_dao;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_Date_Dao $dao
      * @return \Tracker_RuleFactory
      */
@@ -316,9 +316,9 @@ class Tracker_RuleFactory {
         $this->date_dao = $dao;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
      * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
@@ -326,7 +326,7 @@ class Tracker_RuleFactory {
      */
     private function generateDateRulesArrayFromXml($date_rules, &$xmlMapping, $tracker) {
         $rules = array();
-        
+
         foreach ($date_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
             $source_field = $xmlMapping[(string) $xml_source_field_attributes['REF']];
@@ -345,12 +345,12 @@ class Tracker_RuleFactory {
 
             $rules[] = $rule_list;
         }
-        
+
         return $rules;
     }
-    
+
     /**
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
      * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
@@ -358,7 +358,7 @@ class Tracker_RuleFactory {
      */
     private function generateListRulesArrayFromXml($list_rules, &$xmlMapping, $tracker) {
         $rules = array();
-        
+
         foreach ($list_rules->rule as $xml_rule) {
 
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
@@ -389,7 +389,7 @@ class Tracker_RuleFactory {
                     ->setTargetField($target_field);
             $rules[] = $rule_list;
         }
-        
+
         return $rules;
     }
 }

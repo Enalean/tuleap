@@ -155,7 +155,6 @@ final class JenkinsClientTest extends TestCase
             $this->jenkins_csrf_crumb_retriever
         );
 
-
         $job_url = 'https://ci.example.com/job/dylanJob/buildWithParameters?stuff=bla';
 
         $jenkins_client->launchJobBuild($job_url);
@@ -178,7 +177,6 @@ final class JenkinsClientTest extends TestCase
             HTTPFactoryBuilder::streamFactory(),
             $this->jenkins_csrf_crumb_retriever
         );
-
 
         $job_url = 'https://ci.example.com/job/dylanJob/buildWithParameters?stuff=bla';
 

@@ -58,9 +58,9 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
                 WHERE tracker_rule.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
-    
+
     /**
-     * 
+     *
      * @param int $tracker_id
      * @param int $source_field_id
      * @param int $target_field_id

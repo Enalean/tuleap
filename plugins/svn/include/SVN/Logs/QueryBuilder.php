@@ -39,7 +39,6 @@ class QueryBuilder extends DataAccessObject
         $browse_label = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_svn', 'log_browse_label'));
         $na_label     = $this->da->quoteSmart(self::NA_LABEL);
 
-
         $query = "SELECT
                     user.user_name AS user_name,
                     user.realname AS realname,

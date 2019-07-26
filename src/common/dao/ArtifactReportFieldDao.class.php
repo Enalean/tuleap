@@ -22,15 +22,15 @@ class ArtifactReportFieldDao extends DataAccessObject {
         parent::__construct($da);
         $this->table_name = 'artifact_report_field';
     }
-    
+
     function prepareResultRanking($field_name, $report_id, $rank) {
         return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_result');
     }
-    
+
     function prepareQueryRanking($field_name, $report_id, $rank) {
         return $this->prepareRanking($field_name, $report_id, $rank, 'field_name', 'report_id', 'place_query');
     }
-    
+
     function searchByReportIdAndFieldName($report_id, $field_name) {
         $sql = "SELECT *
                 FROM ". $this->table_name ."
@@ -38,7 +38,7 @@ class ArtifactReportFieldDao extends DataAccessObject {
                   AND report_id  = ". $this->da->escapeInt($report_id);
         return $this->retrieve($sql);
     }
-    
+
     function updateResultRanking($field_name, $report_id, $rank) {
         $rank = $this->prepareResultRanking($field_name, $report_id, $rank);
         $sql = "UPDATE ". $this->table_name ."
@@ -48,7 +48,7 @@ class ArtifactReportFieldDao extends DataAccessObject {
         echo $sql . PHP_EOL;
         return $this->update($sql);
     }
-    
+
     function resizeColumns($report_id, $new_sizes) {
         if (is_array($new_sizes) && count($new_sizes)) {
             $sql = '';
@@ -62,14 +62,14 @@ class ArtifactReportFieldDao extends DataAccessObject {
                     $sql .= ", ";
                 }
                 $sql .= $this->table_name ." AS R_$i ";
-                
+
                 if (!$set) {
                     $set .= " SET ";
                 } else {
                     $set .= ", ";
                 }
                 $set .= " R_$i.col_width = ". $this->da->escapeInt($col_width);
-                
+
                 if (!$where) {
                     $where .= " WHERE ";
                 } else {

@@ -84,7 +84,6 @@ class EditController
         $new_color        = $request->get('color');
         $new_is_outline   = $request->get('is_outline');
 
-
         $this->dao->startTransaction();
         try {
             $this->checkColor($new_color);

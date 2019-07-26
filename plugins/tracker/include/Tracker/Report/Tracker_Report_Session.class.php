@@ -25,7 +25,7 @@ class Tracker_Report_Session extends Codendi_Session {
     protected $report_id;
     protected $report_namespace;
 
-    
+
     public function __construct($report_id) {
         parent::__construct();
         $this->report_id         = $report_id;
@@ -39,12 +39,12 @@ class Tracker_Report_Session extends Codendi_Session {
         $this->session_namespace = &$this->session['trackers']['reports'][$this->report_namespace];
         $this->session_namespace_path = ".trackers.reports.$this->report_namespace";
     }
-    
+
     public function hasChanged() {
         //return $this->get('has_changed');
         return $this->session['trackers']['reports'][$this->report_namespace]['has_changed'];
     }
-    
+
     public function setHasChanged($has_changed = true) {
         //$this->set('has_changed', $has_changed);
         $this->session['trackers']['reports'][$this->report_namespace]['has_changed'] = $has_changed;
@@ -67,9 +67,9 @@ class Tracker_Report_Session extends Codendi_Session {
         $report_copy['renderers'] = ($report_copy['renderers']) ? $report_copy['renderers'] : array();
         foreach ($report_copy['renderers'] as $renderer_id => $renderer) {
             $i = $i - 1;
-            //set new id for previously existing renderers (before adding new renderers in session)           
+            //set new id for previously existing renderers (before adding new renderers in session)
             $report_copy['renderers'][$i] = $report_copy['renderers'][$renderer_id];
-            $report_copy['renderers'][$i]['id'] = $i;            
+            $report_copy['renderers'][$i]['id'] = $i;
             //removing old id
             if ( $renderer_id >= 0 ) {
                 unset($report_copy['renderers'][$renderer_id]);
@@ -85,7 +85,7 @@ class Tracker_Report_Session extends Codendi_Session {
                     }
                 }
             }
-        }        
+        }
         $this->set("trackers.reports.$new_id", $report_copy);
         $this->set("trackers.reports.$id.has_changed", false);
         $this->set("trackers.reports.$new_id.has_changed", false);
@@ -94,7 +94,7 @@ class Tracker_Report_Session extends Codendi_Session {
     }
 
 
-    
+
     //                  CRITERIA SESSION METHODS
     /**
      * remove a criterion (field) from session
@@ -103,7 +103,7 @@ class Tracker_Report_Session extends Codendi_Session {
     public function removeCriterion($field_id) {
         $this->set("criteria.$field_id.is_removed", 1);
     }
-    
+
     /**
      * Store value and options (is_advanced) for a given criterion (field)
      * NOTICE : value is overwritten
@@ -117,7 +117,7 @@ class Tracker_Report_Session extends Codendi_Session {
         $this->set("criteria.{$field_id}.value", $value);
         if ( isset($opts['is_advanced']) ) {
             $this->set("criteria.{$field_id}.is_advanced", $opts['is_advanced']);
-        }        
+        }
         if ( !$this->get("criteria.$field_id.is_removed") ) {
             $this->set("criteria.$field_id.is_removed", 0);
         }
@@ -163,7 +163,7 @@ class Tracker_Report_Session extends Codendi_Session {
         $criterion = &$this->get("criteria.{$field_id}");
         return $criterion;
     }
-    
+
    /**
     * remove a renderer from session
     * @param int $renderer_id
@@ -174,7 +174,7 @@ class Tracker_Report_Session extends Codendi_Session {
             unset($renderers[$renderer_id]);
         }
     }
-    
+
    /**
     * rename a renderer in session
     * @param int $renderer_id
@@ -186,7 +186,7 @@ class Tracker_Report_Session extends Codendi_Session {
             $renderers['description'] = $description;
         }
     }
-    
+
    /**
     * move a renderer in session
     * @param int $renderer_id
@@ -199,7 +199,7 @@ class Tracker_Report_Session extends Codendi_Session {
 
     public function storeRenderer($renderer_id, $data, $opts=array() ) {
         $this->set("renderers.{$renderer_id}", $data);
-        
+
     }
 
     public function storeExpertMode()

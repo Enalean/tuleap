@@ -145,7 +145,7 @@ extends WikiPlugin
                                    HTML::input(array('type' => 'submit',
                                                      'name' => 'WikiAdminSelect',
                                                      'value' => _("Go")))));
-        if ($request->isPost() 
+        if ($request->isPost()
             && ! $request->getArg('wikiadmin')
             && !empty($p)) {
             $this->_list = array();

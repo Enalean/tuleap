@@ -108,7 +108,7 @@ class WikiEntry {
         $this->setFromRow($row);
     }
 
-  
+
   /**
    * Get
    */
@@ -156,7 +156,7 @@ class WikiEntry {
         $qry = ' SELECT * FROM wiki_group_list'
             .' WHERE group_id='.db_ei($gid)
             .' ORDER BY rank';
-        
+
         $res = db_query($qry);
 
         $weArray = array();
@@ -181,11 +181,11 @@ class WikiEntry {
         ' wiki_name="'.db_es($this->name).'",'.
         ' wiki_link="'.db_es($this->page).'",'.
         ' description="'.db_es($this->desc).'"');
-    
+
         if($res === false) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
                'insert_err',
-               db_error()), 
+               db_error()),
             E_USER_ERROR);
             return false;
         }
@@ -201,8 +201,8 @@ class WikiEntry {
 
         if($res === false) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
-               'delete_err', 
-               db_error()), 
+               'delete_err',
+               db_error()),
             E_USER_ERROR);
               return false;
         }
@@ -221,10 +221,10 @@ class WikiEntry {
           . ' wiki_link="'.db_es($this->page).'",'
           . ' description="'.db_es($this->desc).'"'
           . ' WHERE id='.db_ei($this->id);
-      
+
         $res = db_query($sql);
         $err = db_error();
-      
+
         if($res === false) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
             'update_err',

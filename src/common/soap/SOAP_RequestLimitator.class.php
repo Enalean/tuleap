@@ -32,14 +32,14 @@ class SOAP_RequestLimitator {
      * @var SOAP_RequestLimitatorDao
      */
     private $dao;
-    
+
     private $currentTime;
     private $nbCallToMethod;
     private $firstCallToMethod;
 
     /**
      * Constructor
-     * 
+     *
      * @param int $nbCall Maximum number of call allowed
      * @param int $timeframe Time during which $nbCall applies
      * @param SOAP_RequestLimitatorDao $dao       Data access object
@@ -48,16 +48,16 @@ class SOAP_RequestLimitator {
         $this->nbMaxCall = $nbCall;
         $this->timeframe = $timeframe;
         $this->dao       = $dao;
-        
+
         $this->nbCallToMethod    = array();
         $this->firstCallToMethod = array();
     }
-    
+
     /**
      * Save a call to a method name, throw an exception if quota is exceeded
-     * 
+     *
      * @param String $methodName
-     * @throws SOAP_NbRequestsExceedLimit_Exception 
+     * @throws SOAP_NbRequestsExceedLimit_Exception
      */
     public function logCallTo($methodName) {
         $this->currentTime = $_SERVER['REQUEST_TIME'];
@@ -65,11 +65,11 @@ class SOAP_RequestLimitator {
         $this->dao->saveCallToMethod($methodName, $this->currentTime);
         $this->checkIfMethodExceedsLimits($methodName);
     }
-    
+
     /**
      * Load data from the DB
-     * 
-     * @param String $methodName 
+     *
+     * @param String $methodName
      */
     private function loadDataFor($methodName) {
         $dar = $this->dao->searchFirstCallToMethod($methodName, ($this->currentTime - $this->timeframe));
@@ -79,12 +79,12 @@ class SOAP_RequestLimitator {
             $this->nbCallToMethod[$methodName] = 0;
         }
     }
-    
+
     /**
      * Verify if amount of method call respect limits
-     * 
+     *
      * @param String $methodName
-     * @throws SOAP_NbRequestsExceedLimit_Exception 
+     * @throws SOAP_NbRequestsExceedLimit_Exception
      */
     private function checkIfMethodExceedsLimits($methodName) {
         if ($this->nbCallToMethod[$methodName] >= $this->nbMaxCall) {

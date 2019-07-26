@@ -56,7 +56,6 @@ class SimilarFieldCollectionTest extends TestCase
             ['name' => 'Cassiepeia', 'tracker_id' => 85, 'type' => 'sb', 'bind_name' => 'static'],
         ]);
 
-
         $collection = new SimilarFieldCollection(...$candidates);
         $this->assertCount(0, $collection);
     }

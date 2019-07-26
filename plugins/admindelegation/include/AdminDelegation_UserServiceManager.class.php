@@ -57,7 +57,7 @@ class AdminDelegation_UserServiceManager
         $ret   = true;
         $darUserServices = $this->user_service_dao->searchUser($user->getId());
         $this->user_service_dao->removeUser($user->getId());
-        
+
         foreach ($darUserServices as $row) {
             $this->user_service_log_dao->addLog('revoke', $row['service_id'], $user->getId(), $time);
         }

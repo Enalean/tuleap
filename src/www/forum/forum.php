@@ -50,7 +50,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 					'. $purifier->purify(db_result($result,$row,'body'), CODENDI_PURIFIER_BASIC, $g_id) .'
 				</TD>
 			</TR>';
-    
+
     $crossref_fact= new CrossReferenceFactory(db_result($result, $row, 'msg_id'), ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
@@ -99,7 +99,7 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
 
          //    show the actual nested message
             $ret_val .= forum_show_a_nested_message ($result,$i).'<P>';
-            
+
             if (db_result($result,$i,'has_followups') > 0) {
           //    Call yourself if there are followups
                 $ret_val .= forum_show_nested_messages ( $thread_id, db_result($result,$i,'msg_id') );
@@ -122,11 +122,11 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+        exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));
     }
-    
+
     //If the forum is associated to a news, check permissions on this news
-    if (!forum_utils_news_access($forum_id)) {        
+    if (!forum_utils_news_access($forum_id)) {
         exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
     }
 
@@ -138,7 +138,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $vMonitor->required();
         $vThreadId = new Valid_UInt('thread_id');
         $vThreadId->required();
-        
+
         if($request->valid($vMonitor) && $request->valid($vThreadId)) {
             if(user_isloggedin()) {
                 $user_id = UserManager::instance()->getCurrentUser()->getId();
@@ -247,7 +247,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
                 $style=$_pref_arr[0];
                 $max_rows=$_pref_arr[1];
             } else {
-                //no saved pref and we're not setting 
+                //no saved pref and we're not setting
                 //one because this is all default settings
             }
         }
@@ -266,7 +266,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     if ($group_id == $GLOBALS['sys_news_group']) {    // test here because forum_header will change the value of $group_id
         $is_a_news = true;
     }
-    
+
         $pm = ProjectManager::instance();
         $params=array('title'=>$pm->getProject($group_id)->getPublicName().' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
@@ -463,14 +463,14 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
             } else {
                 $ret_val .= '&nbsp;';
             }
-                
+
             $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
             if (db_numrows($result) > $i) {
                 if (isset($pv)) {
                     $pv_param = "&pv=".$pv;
                 } else {
                     $pv_param = "";
-                }               
+                }
                  $ret_val .= '<B><span>
                      <A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
                      <B>'.$Language->getText('forum_forum','next_msg').
@@ -484,7 +484,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     }
 
     echo $ret_val;
-    
+
     $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
@@ -494,7 +494,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
     if (!isset($pv)||!$pv) {
         echo '<P>&nbsp;<P>';
-            
+
         echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';
         show_post_form($forum_id);
     }

@@ -43,16 +43,16 @@ class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
 
     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticStatusTest.xml');
-        
+
         $tracker = new MockTracker();
-        
+
         $f1 = new MockTracker_FormElement_Field_List();
         $f1->setReturnValue('getId', 111);
         $f2 = new MockTracker_FormElement_Field_List();
         $f2->setReturnValue('getId', 112);
         $f3 = new MockTracker_FormElement_Field_List();
         $f3->setReturnValue('getId', 113);
-        
+
         $mapping = array(
                     'F9'  => $f1,
                     'F14' => $f3,
@@ -68,7 +68,7 @@ class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
                     'F14-V69' => 809
                   );
         $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
-        
+
         $this->assertEqual($semantic_status->getShortName(), 'status');
         $this->assertEqual($semantic_status->getFieldId(), 113);
         $this->assertEqual(count($semantic_status->getOpenValues()), 4);
@@ -77,7 +77,7 @@ class Tracker_Semantic_StatusFactoryTest extends TuleapTestCase {
         $this->assertTrue(in_array(807, $semantic_status->getOpenValues()));
         $this->assertTrue(in_array(808, $semantic_status->getOpenValues()));
     }
-    
+
 }
 
 ?>

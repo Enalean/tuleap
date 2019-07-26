@@ -1,9 +1,9 @@
 <?php
-/* Download hyperapplet.jar (or hyperwiki.jar) and GraphXML.dtd from 
+/* Download hyperapplet.jar (or hyperwiki.jar) and GraphXML.dtd from
  *   http://hypergraph.sourceforge.net/download.html
  *   and place it into your theme directory.
  * Include this php file and adjust the width/height.
- * The static version requires a dumped "LinkDatabase.xml" via 
+ * The static version requires a dumped "LinkDatabase.xml" via
  *   cd themes/default; wget http://localhost/wiki/index.php/LinkDatabase?format=xml -O LinkDatabase.xml
  * into the same dir as hyperapplet.jar
  */

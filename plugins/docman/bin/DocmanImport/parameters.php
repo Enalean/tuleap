@@ -32,7 +32,7 @@
  * a single "-" (like in "-n")
  *
  * @param array    Array of parameters where we should look
- * @param mixed    A string that specifies the name of the parameter to look for, or an 
+ * @param mixed    A string that specifies the name of the parameter to look for, or an
  *     array of aliases (ej: array("name", "n"))
  * @param bool Indicate if the parameter MUST have a value associated to it, and that it is
  *    not just a flag. This can also be seen as "isn't a flag" value
@@ -52,10 +52,10 @@ function getParameter(&$parameter_array, $parameter, $require_value=false) {
                 $passed_parameter = $passed_string;
                 $has_value = false;
             }
-            
+
             if (!is_array($parameter)) $search_array = array($parameter);
             else $search_array = $parameter;
-            
+
             foreach ($search_array as $alias) {
                 if ($alias == $passed_parameter) {        // Match
                     if ($has_value) return $passed_value;
@@ -63,7 +63,7 @@ function getParameter(&$parameter_array, $parameter, $require_value=false) {
                     else return true;        // notify parameter was passed
                 }
             }
-            
+
         } else if (preg_match("/^\\-(.+)/s",$parameter_array[$i],$res)) {    // Single character parameter? (IE "-z") or a group of flags (IE "-zxvf")
             $passed_parameter = $res[1];
             if (strlen($passed_parameter) == 1) {        // Some flag like "-x" or parameter "-U username"
@@ -79,10 +79,10 @@ function getParameter(&$parameter_array, $parameter, $require_value=false) {
             } else {        // Several flags grouped into one string like "-zxvf"
                 $has_value = false;
             }
-            
+
             if (!is_array($parameter)) $search_array = array($parameter);
             else $search_array = $parameter;
-            
+
             foreach ($search_array as $alias) {
                 if (strlen($alias) == 1) {
                     if (strpos($passed_parameter, $alias) !== false) {    // Found a match
@@ -94,7 +94,7 @@ function getParameter(&$parameter_array, $parameter, $require_value=false) {
             }
         }
     }
-    
+
     return null;
 }
 ?>

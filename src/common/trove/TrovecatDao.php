@@ -116,7 +116,6 @@ class TroveCatDao extends DataAccessObject
                 WHERE parent = $trove_cat_id
                 AND display_during_project_creation = 1";
 
-
         return $this->retrieve($sql);
     }
 

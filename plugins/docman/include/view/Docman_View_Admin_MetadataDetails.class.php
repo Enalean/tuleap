@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright © STMicroelectronics, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Manuel VACELET, 2006.
  *
  * This file is a part of Tuleap.
@@ -24,7 +24,7 @@
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
-    
+
     function _title($params) {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_title', array($this->hp->purify($params['md']->getName()))) .'</h2>';
     }
@@ -33,14 +33,14 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $md = $params['md'];
 
         $sthCanChange = false;
-        $mdContent = '';        
+        $mdContent = '';
 
         $mdContent .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_title').'</h3>';
 
         $mdContent .= '<table>';
 
         $metaMdHtml = new Docman_MetaMetadataHtml($md);
-        
+
         $mdContent .= $metaMdHtml->getName($sthCanChange);
         $mdContent .= $metaMdHtml->getDescription($sthCanChange);
         $mdContent .= $metaMdHtml->getType($sthCanChange);
@@ -50,7 +50,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         }
         $mdContent .= $metaMdHtml->getUseIt($sthCanChange);
         $mdContent .= $metaMdHtml->getKeepHistory($sthCanChange);
-              
+
         $mdContent .= '</table>';
 
         if($sthCanChange) {
@@ -100,7 +100,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                     default:
                         $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_inactive');
                 }
-                
+
                 if($displayed) {
 
                     $class = ' class="'.html_get_alt_row_color($rowColorIdx++).'"';
@@ -118,10 +118,10 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                         $href = $name;
                     }
                     echo '<td>'.$href.'</td>';
-                    
+
                     // Description
                     echo '<td>'.Docman_MetadataHtmlList::_getElementDescription($e).'</td>';
-                    
+
                     // Status
                     echo '<td>'.$status.'</td>';
 
@@ -138,15 +138,15 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                     echo '</tr>';
                 }
                 $vIter->next();
-            }            
+            }
             echo '</table>';
             echo '</div><!--  docman_admin_list_values -->'."\n";
 
             if($md->getLabel() != 'status') {
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_title').'</h3>';
-                
+
                 $loveDetailsHtml = new Docman_View_LoveDetails($md);
-                
+
                 echo '<form name="md_create_love" method="POST" action="?group_id='.$params['group_id'].'&action=admin_create_love" class="docman_form">';
                 echo $loveDetailsHtml->getHiddenFields();
 
@@ -157,9 +157,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 echo $loveDetailsHtml->getRankField();
 
                 echo '</table>';
-                
+
                 echo '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_submit').'" />';
-                
+
                 echo '</form>';
             }
         }

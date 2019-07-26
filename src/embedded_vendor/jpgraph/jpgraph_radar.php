@@ -784,7 +784,6 @@ class RadarGraph extends Graph {
                 $this->StrokeIcons();
             }
 
-
             // Prepare legends
             for($i=0; $i < $n; ++$i) {
                 $this->plots[$i]->Legend($this);

@@ -87,7 +87,6 @@ class Search_SearchTrackerV3 {
 
             echo "\n";
 
-
             $rows = 0;
             foreach ($results as $arr) {
                 $rows++;

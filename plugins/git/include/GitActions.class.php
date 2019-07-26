@@ -1059,7 +1059,6 @@ class GitActions extends PluginActions
             unset($r);
         }
 
-
     }
 
     /**

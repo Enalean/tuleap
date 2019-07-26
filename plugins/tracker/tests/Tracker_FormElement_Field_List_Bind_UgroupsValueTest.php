@@ -20,7 +20,7 @@
 require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCase {
-    
+
     public function testJSonReturnsBothNameAndShortName() {
         $id         = 123;
         $name       = 'The smurfs';
@@ -35,5 +35,5 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCas
         $value->setId($id);
         $this->assertEqual(json_encode($value->fetchForOpenListJson()), '{"id":123,"value":"b123","caption":"The smurfs","rest_value":"blueThings"}');
     }
-    
+
 }

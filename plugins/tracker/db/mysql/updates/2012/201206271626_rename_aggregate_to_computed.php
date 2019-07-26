@@ -35,7 +35,7 @@ class b201206271626_rename_aggregate_to_computed extends ForgeUpgrade_Bucket {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
-        
+
         $sql = 'UPDATE tracker_field SET formElement_type = "computed" WHERE formElement_type = "aggregate"';
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {

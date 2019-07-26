@@ -39,11 +39,11 @@ class Actions {
     {
         $this->_controler = $controler;
     }
-    
+
     function getControler() {
         return $this->_controler;
     }
-    
+
     function check() {
         return true;
     }

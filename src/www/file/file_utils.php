@@ -505,7 +505,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 <TD>
                     <?php
 
-
                     print frs_show_status_popup($name = 'release[status_id]', $release->getStatusID()) . "<br>";
                     ?>
                 </TD>
@@ -728,7 +727,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 </TD>
             </TR>
             <?php
-
 
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
                 echo '
@@ -1136,7 +1134,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-
             if ($is_update) {
                 $files = $rel->getFiles();
 
@@ -1393,7 +1390,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     foreach($info as $info_message) {
         $GLOBALS['Response']->addFeedback('info', $info_message);
     }
-
 
     if (count($error) === 0) {
         $GLOBALS['Response']->addFeedback('info', $info_success);

@@ -46,7 +46,7 @@ class Docman_View_GetShowViewVisitor implements ItemVisitor
     {
         return 'Embedded';
     }
-    
+
     public function visitEmpty(Docman_Empty $item, $params = array())
     {
         return 'Empty';

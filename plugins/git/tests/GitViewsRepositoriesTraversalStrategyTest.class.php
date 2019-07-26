@@ -25,12 +25,12 @@ Mock::generate('PFUser');
 Mock::generate('Git_Backend_Gitolite');
 
 abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {
-    
+
     public function __construct($classname) {
         parent::__construct();
         $this->classname = $classname;
     }
-    
+
     public function testEmptyListShouldReturnEmptyString() {
         $view = new MockGitViews();
         $user = mock('PFUser');
@@ -38,24 +38,24 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
         $strategy = new $this->classname($view);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
     }
-    
+
     public function testFlatTreeShouldReturnRepresentation() {
         $view = new MockGitViews();
         $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        
+
         $repositories    = $this->getFlatTree($strategy);
         $expectedPattern = $this->getExpectedPattern($repositories);
-        
+
         $strategy->__construct($view);
         $this->assertPattern('`'. $expectedPattern .'`', $strategy->fetch($repositories, $user));
     }
-    
+
     public abstract function getExpectedPattern($repositories);
-    
+
     protected function getFlatTree($strategy) {
         //go find the variable $repositories
-        include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php'; 
+        include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php';
         foreach ($repositories as $row) {
             /** @var GitRepository $repository */
             $repository = partial_mock('GitRepository', array('userCanRead'));

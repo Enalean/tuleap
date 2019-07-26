@@ -24,9 +24,9 @@ rcs_id('$Id: CreateToc.php,v 1.20 2004/05/11 13:57:46 rurban Exp $');
 /**
  * CreateBib:  Automatically create a BibTex file from page
  *
- * Usage:   
+ * Usage:
  *  <?plugin CreateBib pagename||=whatever ?>
- *                     
+ *
  * @author:  Lea Viljanen
  */
 
@@ -55,16 +55,16 @@ extends WikiPlugin
         return str_replace(array("/",".","?","*"),
                        array('\/','\.','\?','\*'), $heading);
     }
-    
+
 
     // Have to include the $starttag and $endtag to the regexps...
-    function extractBibTeX (&$content, $starttag, $endtag) 
+    function extractBibTeX (&$content, $starttag, $endtag)
     {
         $bib = array();
 
         $start = false;
         $stop = false;
-        for ($i=0; $i<count($content); $i++) 
+        for ($i=0; $i<count($content); $i++)
         {
             // $starttag shows when to start
             if (preg_match('/^@/',$content[$i],$match)) {
@@ -88,7 +88,7 @@ extends WikiPlugin
         $articles = array();
         for ($i=0; $i<count($content); $i++) {
             // Should match "* [WikiPageName] whatever"
-            //if (preg_match('/^\s*\*\s+(\[.+\])/',$content[$i],$match)) 
+            //if (preg_match('/^\s*\*\s+(\[.+\])/',$content[$i],$match))
             if (preg_match('/^\s*\*\s+\[(.+)\]/',$content[$i],$match))
             {
                 $articles[] = $match[1];
@@ -96,7 +96,7 @@ extends WikiPlugin
         }
         return $articles;
     }
-                
+
 
     function dumpFile(&$thispage, $filename) {
         include_once("lib/loadsave.php");
@@ -130,7 +130,7 @@ extends WikiPlugin
     // Prepare the button to trigger dumping
         $dump_url = $request->getURLtoSelf(array("file" => "tube.bib"));
         global $WikiTheme;
-        $dump_button = $WikiTheme->makeButton("To File", 
+        $dump_button = $WikiTheme->makeButton("To File",
         $dump_url , 'foo');
 
         $html = HTML::div(array('class' => 'bib','align' => 'left'));

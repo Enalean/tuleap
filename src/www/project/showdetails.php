@@ -27,7 +27,7 @@ $hp = Codendi_HTMLPurifier::instance();
 
 function getReferenceRow($ref, $row_num) {
     $html = '';
-    
+
     if ($ref->isActive() && $ref->getId() != 100) {
         $purifier = Codendi_HTMLPurifier::instance();
         $html .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
@@ -36,19 +36,19 @@ function getReferenceRow($ref, $row_num) {
         $html .= '<TD>'. $purifier->purify($ref->getLink()) .'</TD>';
         $html .= '</TR>';
     }
-    
+
     return $html;
 }
-    
+
 function getReferencesTable($groupId) {
     $html = '';
     $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails','references').'</h3>';
-    
+
     $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_keyword');
     $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_desc');
     $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_link');
     $html .= html_build_list_table_top($title_arr, false, false, true);
-    
+
     $referenceManager = ReferenceManager::instance();
     $references = $referenceManager->getReferencesByGroupId($groupId); // References are sorted by scope first
     $row_num = 0;
@@ -56,7 +56,7 @@ function getReferencesTable($groupId) {
         $html .= getReferenceRow($ref, $row_num);
         $row_num++;
     }
-        
+
     $html .= '</table>';
     return $html;
 }
@@ -78,7 +78,7 @@ print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>'
 
 // Now fetch the project details
 
-$currentproject->displayProjectsDescFieldsValue();    
+$currentproject->displayProjectsDescFieldsValue();
 
 echo getReferencesTable($group_id);
 

@@ -22,10 +22,10 @@ require_once('include/DataAccessObject.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 
 /**
- *  Data Access Object for SystemEvent 
+ *  Data Access Object for SystemEvent
  */
 class SystemEventDao extends DataAccessObject {
-    /** 
+    /**
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error
      */
@@ -37,11 +37,11 @@ class SystemEventDao extends DataAccessObject {
                        $this->da->quoteSmart($status),
                        $this->da->escapeInt($create_date),
                        $this->da->quoteSmart($owner));
-        
+
         return $this->updateAndGetLastId($sql);
     }
 
-     /** 
+     /**
      * Close SystemEvent: update status, log and end_date.
      * @param $sysevent : SystemEvent object
      * @return true if there is no error
@@ -60,7 +60,7 @@ class SystemEventDao extends DataAccessObject {
     }
 
     /**
-     * Return next system event    
+     * Return next system event
      * criteria: higer priority first, then most recent first
      * And set the event status to 'RUNNING'
      * @return DataAccessResult
@@ -133,12 +133,12 @@ class SystemEventDao extends DataAccessObject {
     }
 
     /**
-     * 
+     *
      * The searched parameter may be at one of these positions:
      * $val::someThing (position == head)
      * someThing::$val (position == tail)
      * someThing::$val::someThing (position == middle)
-     * 
+     *
      * @param String $position
      * @param String $val
      * @param Array $type
@@ -156,10 +156,10 @@ class SystemEventDao extends DataAccessObject {
         } else {
             $stm = $this->da->quoteLikeValueSurround($separator.$val.$separator);
         }
-        
+
         $type   = $this->da->quoteSmartImplode(", ", $type);
         $status = $this->da->quoteSmartImplode(", ", $status);
-        
+
         $sql = 'SELECT  * FROM system_event
                 WHERE type   IN ('.$type.')
                 AND status IN ('.$status.')

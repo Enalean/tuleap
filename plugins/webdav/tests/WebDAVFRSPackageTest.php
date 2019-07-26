@@ -558,7 +558,6 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $refPackage = $refPackageToCreate;
         $refPackage['release_id'] = 15;
 
-
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
         $webDAVFRSPackage->setReturnValue('getPackageId', 42);
 

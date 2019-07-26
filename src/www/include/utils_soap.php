@@ -27,7 +27,7 @@ function groups_to_soap($groups) {
         if (!$group || $group->isError()) {
             //skip if error
         } else {
-            $return[] = group_to_soap($group);    
+            $return[] = group_to_soap($group);
         }
     }
     return $return;
@@ -79,7 +79,7 @@ function checkGroupMemberAccess($group) {
 
 function ugroups_to_soap($ugroups) {
     $return = array();
-    
+
     foreach ($ugroups as $ugroup) {
         $ugroup_id = $ugroup['ugroup_id'];
         if (!isset($return[$ugroup_id])) {
@@ -87,13 +87,13 @@ function ugroups_to_soap($ugroups) {
             $return[$ugroup_id]['name'] = $ugroup['name'];
             $return[$ugroup_id]['members'] = array();
         }
-        
+
         if ($ugroup['user_id']) {
             $return[$ugroup_id]['members'][] = array('user_id' => $ugroup['user_id'],
                                                      'user_name' => $ugroup['user_name']);
         }
     }
-    
+
     return $return;
 }
 

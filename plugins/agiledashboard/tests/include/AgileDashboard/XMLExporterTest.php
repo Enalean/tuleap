@@ -114,10 +114,10 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
             $this->assertEqual( (string) $attributes[PlanningParameters::NAME], 'abcd');
             $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TITLE], 'efgh');
             $this->assertEqual( (string) $attributes[PlanningParameters::BACKLOG_TITLE], 'p q r');
-            
+
             $expected_planning_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'ijklmon';
             $expected_backlog_tracker_id  = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'stu vw x y   z';
-            
+
             $this->assertEqual( (string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_planning_tracker_id);
             foreach ($planning->{AgileDashboard_XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
                 $this->assertEqual( (string) $backlog, $expected_backlog_tracker_id);

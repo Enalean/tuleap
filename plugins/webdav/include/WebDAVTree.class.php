@@ -79,7 +79,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      */
     public function copy($sourcePath, $destinationPath) {
         throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
-        
+
         // Check that write access is enabled for WebDAV
         /*if ($this->getUtils()->isWriteEnabled()) {
             list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
@@ -147,7 +147,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             /*} else if ($destination instanceof WebDAVDocmanFolder
             && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
-                
+
                 $sourceItem = $source->getItem();
                 $destinationItem = $destination->getItem();
                 $user = $source->getUser();

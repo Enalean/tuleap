@@ -217,7 +217,6 @@ class UserGroupResource extends AuthenticatedResource
             $this->sendPaginationHeaders($limit, $offset, $nb_member);
         }
 
-
         $this->sendAllowHeadersForUserGroupId();
 
         return $member_representations;

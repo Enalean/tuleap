@@ -22,7 +22,7 @@ extends WikiPlugin
     function getDescription () {
         return _("Go to or create page.");
     }
-    
+
     function getDefaultArguments() {
         return array('size' => 32);
     }
@@ -44,13 +44,13 @@ extends WikiPlugin
             $request->redirect($url);
             // User should see nothing after redirect
             return '';
-        } 
+        }
 
         $action = $request->getURLtoSelf();
         $form = HTML::form(array('action'=>$action,
                                  'method'=>'post'
                           ));
- 
+
         $form->pushContent(HiddenInputs($request->getArgs()));
 
         $textfield = HTML::input(array('type' => 'text',
@@ -84,5 +84,5 @@ extends WikiPlugin
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

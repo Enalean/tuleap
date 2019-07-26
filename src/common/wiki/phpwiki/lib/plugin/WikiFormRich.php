@@ -35,26 +35,26 @@ rcs_id('$Id: WikiFormRich.php,v 1.15 2004/11/26 18:25:33 rurban Exp $');
  * - submit[]
  * - action, submit buttontext, optional cancel button (bool)
  * - method=get or post, Default: post.
- 
+
  * @Author: Reini Urban
 
  * Values which are constants are evaluated.
- * The cancel button must be supported by the action. 
+ * The cancel button must be supported by the action.
  *   (just some wikiadmin actions so far)
  * improve layout by: nobr=1
  * some allow values as list from from <!plugin-list !>
 
  Samples:
-   <?plugin WikiFormRich action=dumpserial method=get 
-            checkbox[] name=include value="all" 
+   <?plugin WikiFormRich action=dumpserial method=get
+            checkbox[] name=include value="all"
             editbox[] name=directory value=DEFAULT_DUMP_DIR
             editbox[] name=pages value=*
             editbox[] name=exclude value="" ?>
-   <?plugin WikiFormRich action=dumphtml method=get 
+   <?plugin WikiFormRich action=dumphtml method=get
             editbox[] name=directory value=HTML_DUMP_DIR
             editbox[] name=pages value="*"
             editbox[] name=exclude value="" ?>
-   <?plugin WikiFormRich action=loadfile method=get 
+   <?plugin WikiFormRich action=loadfile method=get
             editbox[]  name=source value=DEFAULT_WIKI_PGSRC
             checkbox[] name=overwrite value=1
             editbox[]  name=exclude value="" ?>
@@ -122,7 +122,7 @@ extends WikiPlugin
                 $this->inputbox[][$name] = array(); $j = count($this->inputbox) - 1;
                 $curargs = trim($m[2]);
                 // must match name=NAME and also value=<!plugin-list name !>
-                while (preg_match("/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/", 
+                while (preg_match("/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/",
                                   $curargs, $m)) {
                        $attr = $m[1]; $value = $m[2];
                        $curargs = substr($curargs, strlen($m[0]));
@@ -138,10 +138,10 @@ extends WikiPlugin
                         $plugin_str = preg_replace(array("/^<!/","/!>$/"),array("<?","?>"), $value);
                  // will return a pagelist object! pulldown,checkbox,radiobutton
                         $value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
-                        if (isa($value, 'PageList')) 
+                        if (isa($value, 'PageList'))
                         $value = $value->_pages;
                         elseif (!is_array($value))
-                        trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
+                        trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])),
                                        E_USER_WARNING);
                     }
                         elseif (defined($value))
@@ -151,7 +151,7 @@ extends WikiPlugin
              //trigger_error("not yet finished");
                 //eval('$this->inputbox[]["'.$m[1].'"]='.$m[2].';');
             } else {
-                trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])), 
+                trigger_error(sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])),
                   E_USER_WARNING);
             }
         }
@@ -197,7 +197,7 @@ extends WikiPlugin
                                 if ($request->getArg($name)) {
                                     if ($request->getArg($name) == $val)
                                     $input['checked'] = 'checked';
-                                    else 
+                                    else
                                     unset($input['checked']);
                                 }
                                 $div->pushContent(HTML::input($input), $nbsp, $val, $nbsp, "\n");
@@ -314,7 +314,7 @@ extends WikiPlugin
             if ($cancel) {
                 $form->pushContent(HTML::span
                                    (array('class' => $class),
-                                    $submit, 
+                                    $submit,
                                     Button('submit:cancel', _("Cancel"), $class)));
             } else {
                 $form->pushContent(HTML::span(array('class' => $class),

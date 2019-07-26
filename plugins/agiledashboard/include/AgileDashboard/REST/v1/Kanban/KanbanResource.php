@@ -868,7 +868,6 @@ class KanbanResource extends AuthenticatedResource
             }
         }
 
-
         if ($order) {
             $order->checkFormat();
             $kanban_archive_items = $this->getKanbanArchiveItemIds($kanban->getTrackerId());
@@ -1071,7 +1070,6 @@ class KanbanResource extends AuthenticatedResource
                 throw new RestException(500, $exception->getMessage());
             }
         }
-
 
         if ($order) {
             $order->checkFormat();

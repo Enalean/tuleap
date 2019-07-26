@@ -460,8 +460,6 @@ class DateScale extends LinearScale {
             }
         }
 
-
-
         if( $this->iStartAlign !== false ) {
             if( $this->iStartAlign >= 30 ) {
                 $adjstart = $this->AdjStartDate($aStartTime,$this->iStartAlign-30);

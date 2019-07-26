@@ -50,7 +50,6 @@ class FileURLSubstitutor
             return $html;
         }
 
-
         $has_document_been_modified = $this->replaceOldURLsByNewOnes($url_mapping, $document);
         if (! $has_document_been_modified) {
             return $html;

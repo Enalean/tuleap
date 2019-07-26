@@ -52,10 +52,10 @@ EOT;
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating the column repository_scope to the table plugin_git');
         }
-        
+
         $sql = 'ALTER TABLE plugin_git 
                     DROP user_id';
-        
+
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing the column user_id to the table plugin_git');

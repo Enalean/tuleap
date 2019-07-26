@@ -297,7 +297,6 @@ class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertCount($this->xml->artifact->changeset, 2);
         $this->assertCount($this->xml->artifact->changeset[1]->comments->comment, 3);
 
-
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234568000));
 
         $comments = $this->xml->artifact->changeset[1]->comments;
@@ -780,7 +779,6 @@ class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
 
         $change = $this->xml->artifact->changeset[0]->field_change;
         $this->assertCount($change, 6);
-
 
         $string = $this->findValue($change, 'field_14');
         $this->assertEqual((string)$string->value, 'The error code is 23232');

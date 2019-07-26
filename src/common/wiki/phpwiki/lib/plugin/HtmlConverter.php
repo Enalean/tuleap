@@ -52,7 +52,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         */
-        
+
         $form = HTML::form(array('action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
                                  'method' => 'post'));
@@ -96,23 +96,23 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
         $file = preg_replace(
         "!<a([[:space:]]+)href([[:space:]]*)=([[:space:]]*)\"([-/.a-zA-Z0-9_~#@%$?&=:\200-\377\(\)[:space:]]+)\"([^>]*)>!Di", "{{\\4}}", $file);
-    
+
         $file = preg_replace("!{{([-/a-zA-Z0-9._~#@%$?&=:\200-\377\(\)[:space:]]+)}}([^<]+)</a>!Di", "[ \\2 | \\1 ]", $file);
     }
 
     function _processIMG(&$file) {
-    
+
         $img_regexp = "_<img\s+src\s*=\s*\"([-/.a-zA-Z0-9\_~#@%$?&=:\200-\377\(\)\s]+)\"[^>]*>_";
-    
+
         $file = preg_replace( $img_regexp, "\n\n[Upload:\\1]", $file);
     }
-    
+
     function _processUL( &$file) {
-    
+
      // put any <li>-Tag in a new line to indent correctly and strip trailing white space (including new-lines)
         $file = str_replace( "<li", "\n<li", $file);
         $file = preg_replace( "/<li>\s*/", "<li>", $file);
-        
+
         $enclosing_regexp = "_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is";
         $indent_tag = "<li";
         $embedded_fragment_array = array();
@@ -128,48 +128,48 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
     function _process( $file_name) {
         $result = HTML();
-        $file = file_get_contents( $file_name); 
+        $file = file_get_contents( $file_name);
         $file = html_entity_decode( $file);
-        
-        $ascii  =  '[\x00-\x7F]';  
-        $euc  =  '[\xA1-\xFE][\xA1-\xFE]';  
-        $character  =  "$ascii|$euc";  
-    
+
+        $ascii  =  '[\x00-\x7F]';
+        $euc  =  '[\xA1-\xFE][\xA1-\xFE]';
+        $character  =  "$ascii|$euc";
+
         $this->_processA( $file);
         $this->_processIMG( $file);
         $this->_processUL( $file);
-        
+
         $file = str_replace ("\r\n", "\n", $file);
-        
+
         $file = preg_replace ("/<h1[[:space:]]?[^>]*>/Di", "\n\n!!!!", $file);
-        
+
         $file = preg_replace ("/<h2[[:space:]]?[^>]*>/Di", "\n\n!!!", $file);
-        
+
         $file = preg_replace ("/<h3[[:space:]]?[^>]*>/Di", "\n\n!!", $file);
-        
+
         $file = preg_replace ("/<h4[[:space:]]?[^>]*>/Di", "\n\n!", $file);
-        
+
         $file = preg_replace ("/<h5[[:space:]]?[^>]*>/Di", "\n\n__", $file);
-        
+
         $file = preg_replace ("#</h1>#Di", "\n\n", $file);
-        
+
         $file = preg_replace ("#</h2>#Di", "\n\n", $file);
-        
+
         $file = preg_replace ("#</h3>#Di", "\n\n", $file);
-        
+
         $file = preg_replace ("#</h4>#Di", "\n\n", $file);
-        
+
         $file = preg_replace ("#</h5>#Di", "__\n\n", $file);
-        
+
         $file = preg_replace ("/<hr[[:space:]]?[^>]*>/Di", "\n----\n", $file);
-    
+
         $file = preg_replace ("/<li[[:space:]]?[^>]*>/Di", "* ", $file);
 
      // strip all tags, except for <pre>, which is supported by wiki
-     // and <p>'s which will be converted after compression.        
+     // and <p>'s which will be converted after compression.
         $file = strip_tags($file, "<pre><p>");
      // strip </p> end tags with trailing white space
-        $file = preg_replace ("_</p>\s*_i", "", $file);    
+        $file = preg_replace ("_</p>\s*_i", "", $file);
 
      // get rid of all blank lines
         $file = preg_replace( "/\n\s*\n/", "\n", $file);
@@ -178,17 +178,17 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
      // be sure to only catch <p> or <p[space]...> and not <pre>!
      // Actually <p> tags with all white space and one new-line before
      // and after around are replaced
-        $file = preg_replace ("_\n?[^\S\n]*<p(\s[^>]*|)>[^\S\n]*\n?_i", "\n\n", $file);    
-    
+        $file = preg_replace ("_\n?[^\S\n]*<p(\s[^>]*|)>[^\S\n]*\n?_i", "\n\n", $file);
+
      // strip attributes from <pre>-Tags and add a new-line before
-        $file = preg_replace ("_<pre(\s[^>]*|)>_iU", "\n<pre>", $file);    
+        $file = preg_replace ("_<pre(\s[^>]*|)>_iU", "\n<pre>", $file);
 
         $outputArea = HTML::textarea( array(
             'rows' => '30',
         'cols' => '80',
         'wrap' => 'virtual')
         );
-        
+
         $outputArea->pushContent( _($file));
         $result->pushContent( $outputArea);
         return $result;

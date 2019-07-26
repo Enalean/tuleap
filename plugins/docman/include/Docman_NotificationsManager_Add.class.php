@@ -22,10 +22,10 @@
 require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_Path.class.php');
 
-class Docman_NotificationsManager_Add extends Docman_NotificationsManager { 
+class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
 
     public const MESSAGE_ADDED = 'added'; // X has been added
-    
+
     function _getListeningUsersItemId($params) {
         return $params['parent']->getId();
     }
@@ -53,7 +53,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         switch($message_type) {
             case self::MESSAGE_ADDED:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
-                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']), 
+                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']),
                                                               $user->getRealName(),
                                                               $this->_url,
                                                               $params['parent']->getId(),

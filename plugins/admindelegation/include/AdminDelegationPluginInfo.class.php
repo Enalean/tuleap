@@ -29,11 +29,11 @@ require_once 'AdminDelegationPluginDescriptor.class.php';
  * AdminDelegationPluginInfo
  */
 class AdminDelegationPluginInfo extends PluginInfo {
-    
+
     public function __construct(Plugin $plugin) {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new AdminDelegationPluginDescriptor());
     }
-    
+
 }
 ?>

@@ -26,7 +26,7 @@ use Tuleap\Docman\Version\Version;
  * Model/Controler and View layer of the application
  */
 class Docman_Version implements Version {
-    
+
     function __construct($data = null) {
         $this->id        = null;
         $this->authorId  = null;
@@ -46,58 +46,58 @@ class Docman_Version implements Version {
     }
 
     var $id;
-    function getId() { 
-        return $this->id; 
+    function getId() {
+        return $this->id;
     }
-    function setId($id) { 
+    function setId($id) {
         $this->id = $id;
     }
-    
+
     var $authorId;
-    function getAuthorId() { 
-        return $this->authorId; 
+    function getAuthorId() {
+        return $this->authorId;
     }
-    function setAuthorId($authorId) { 
+    function setAuthorId($authorId) {
         $this->authorId = $authorId;
     }
-    
+
     var $itemId;
-    function getItemId() { 
-        return $this->itemId; 
+    function getItemId() {
+        return $this->itemId;
     }
-    function setItemId($itemId) { 
+    function setItemId($itemId) {
         $this->itemId = $itemId;
     }
-    
+
     var $number;
-    function getNumber() { 
-        return $this->number; 
+    function getNumber() {
+        return $this->number;
     }
-    function setNumber($number) { 
+    function setNumber($number) {
         $this->number = $number;
     }
-    
+
     var $label;
-    function getLabel() { 
-        return $this->label; 
+    function getLabel() {
+        return $this->label;
     }
-    function setLabel($label) { 
+    function setLabel($label) {
         $this->label = $label;
     }
-    
+
     var $changelog;
-    function getChangelog() { 
-        return $this->changelog; 
+    function getChangelog() {
+        return $this->changelog;
     }
-    function setChangelog($changelog) { 
+    function setChangelog($changelog) {
         $this->changelog = $changelog;
     }
-    
+
     var $date;
-    function getDate() { 
-        return $this->date; 
+    function getDate() {
+        return $this->date;
     }
-    function setDate($date) { 
+    function setDate($date) {
         $this->date = $date;
     }
 
@@ -117,12 +117,12 @@ class Docman_Version implements Version {
     {
         $this->filename = $filename;
     }
-    
+
     var $filesize;
-    function getFilesize() { 
-        return $this->filesize; 
+    function getFilesize() {
+        return $this->filesize;
     }
-    function setFilesize($filesize) { 
+    function setFilesize($filesize) {
         $this->filesize = $filesize;
     }
 

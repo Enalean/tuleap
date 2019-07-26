@@ -57,7 +57,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 
         $altRowClass = 0;
         $itemIterator->rewind();
-        while($itemIterator->valid()) {            
+        while($itemIterator->valid()) {
             $item = $itemIterator->current();
             $type = $itemFactory->getItemTypeForItem($item);
             if($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {

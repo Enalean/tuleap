@@ -43,7 +43,7 @@ $vMthr = new Valid_UInt('mthread');
 $vMthr->required();
 
 if ($request->isPost() && $request->exist('submit')) {
-      
+
     if ($request->valid($vUid)) {
         $uid = $request->get('user_id');
     }
@@ -53,23 +53,23 @@ if ($request->isPost() && $request->exist('submit')) {
     if ($request->valid($vFrm)) {
         $forum_id = $request->get('forum_id');
     }
-    
+
     //set user-specific thread monitoring preferences
     if (forum_thread_monitor($mthread, $uid, $forum_id)) {
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_success'); 
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_success');
     } else {
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_fail'); 
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_fail');
     }
 }
 
 if ($request->valid($vFrm)) {
-    
+
     //Cast forum_id in order to prevent from XSS attacks
     $forum_id = $request->get('forum_id');
-    
+
     // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {
-        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_forum','forum_restricted'));            
+        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_forum','forum_restricted'));
     }
 
     $qry = sprintf('SELECT group_id,forum_name,is_public'
@@ -79,12 +79,12 @@ if ($request->valid($vFrm)) {
     $result=db_query($qry);
     $group_id=db_result($result,0,'group_id');
     $forum_name=db_result($result,0,'forum_name');
-    
+
     $pm = ProjectManager::instance();
     $params=array('title'=>$pm->getProject($group_id)->getPublicName().' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
     forum_header($params);
-    
+
     $sql = sprintf('SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id'
             .' FROM forum,user,forum_group_list'
             .' WHERE forum.group_forum_id=%d'
@@ -93,7 +93,7 @@ if ($request->valid($vFrm)) {
             .' AND forum_group_list.group_forum_id = forum.group_forum_id',
             db_ei($forum_id));
     $result=db_query($sql);
-    $rows=db_numrows($result);    
+    $rows=db_numrows($result);
 
     if (!$result || $rows < 1) {
         //empty forum
@@ -108,13 +108,13 @@ if ($request->valid($vFrm)) {
         $ret_val = html_build_list_table_top ($title_arr);
 
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-    
+
         if (user_monitor_forum ($forum_id, $user_id)) {
             $disabled = "disabled";
         } else {
             $disabled = "";
         }
-        
+
         $i=0;
         while ($i < $rows) {
             $thr_id = db_result($result, $i, 'thread_id');
@@ -123,7 +123,7 @@ if ($request->valid($vFrm)) {
             } else {
                 $monitored = "";
             }
-        
+
             $ret_val .= '<script language="JavaScript">
 		    	<!--
 				function checkAll(val) {
@@ -150,20 +150,20 @@ if ($request->valid($vFrm)) {
             $monitorer = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
             $ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
             '<TD>'.UserHelper::instance()->getLinkOnUser($monitorer).'</TD>'.
-            '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';    
+            '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
             $i++;
         }
         $ret_val .= '</TABLE><a href="javascript:checkAll(1)">'.$GLOBALS['Language']->getText('tracker_include_report','check_all_items').'</a>'.
                        ' - <a href="javascript:checkAll(0)">'.$GLOBALS['Language']->getText('tracker_include_report','clear_all_items').' </a>'.
                     '<P><INPUT TYPE="submit" '.$disabled.' NAME="submit"></FORM>';
     }
-    
+
     echo $ret_val;
-    
+
     if (user_monitor_forum ($forum_id, $user_id)) {
         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','notice');
     }
-    
+
     forum_footer($params);
 
 } else {
@@ -173,5 +173,5 @@ if ($request->valid($vFrm)) {
     forum_footer(array());
 
 }
-  
+
 ?>

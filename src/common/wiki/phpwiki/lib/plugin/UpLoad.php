@@ -53,9 +53,9 @@ extends WikiPlugin
 
     function getDefaultArguments() {
         return array('logfile'  => false,
-                 // add a link of the fresh file automatically to the 
+                 // add a link of the fresh file automatically to the
                  // end of the page (or current page)
-                 'autolink' => false, 
+                 'autolink' => false,
                  'page'     => '[pagename]',
                  );
     }
@@ -104,7 +104,7 @@ ws[cfh]");
         extract($args);
 
         $file_dir = getUploadFilePath();
-        //$url_prefix = SERVER_NAME . DATA_PATH; 
+        //$url_prefix = SERVER_NAME . DATA_PATH;
 
         $form = HTML::form(array('action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
@@ -141,7 +141,7 @@ ws[cfh]");
                 return $result;
             }
         }
-        
+
         $userfile = $request->getUploadedFile('userfile');
         if ($userfile) {
             $userfile_name = $userfile->getName();
@@ -152,7 +152,7 @@ ws[cfh]");
             /// MV add
             /// Wiki attachments
             $wa  = new WikiAttachment(GROUP_ID);
-            $rev = $wa->createRevision($userfile_name, $userfile->getSize(), 
+            $rev = $wa->createRevision($userfile_name, $userfile->getSize(),
                                        $userfile->getType(), $userfile->getTmpName());
             if($rev >= 0) {
                 $prev = $rev+1;
@@ -160,9 +160,9 @@ ws[cfh]");
                 $link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
-                
+
                 // the upload was a success and we need to mark this event in the "upload log"
-                if ($logfile) { 
+                if ($logfile) {
                     $upload_log = $file_dir . basename($logfile);
                     $this->log($userfile, $upload_log, $message);
                 }
@@ -189,7 +189,7 @@ ws[cfh]");
             $message->pushContent(HTML::br(),HTML::br());
         }
 
-        /// {{{ Codendi Specific        
+        /// {{{ Codendi Specific
 
         // URL arguments
         if(array_key_exists('offset', $_REQUEST))
@@ -201,7 +201,7 @@ ws[cfh]");
             $limit = $_REQUEST['limit'];
         else
             $limit = 10;
-                
+
         $attchTab = HTML::table(array('border' => '1',
                                       'width'  => '100%'));
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
@@ -213,23 +213,23 @@ ws[cfh]");
         $wai->rewind();
         while($wai->valid()) {
             $wa = $wai->current();
-            
+
             $filename = basename($wa->getFilename());
             $url = getUploadDataPath().urlencode($filename);
 
-            $line = HTML::tr();            
+            $line = HTML::tr();
             $line->pushContent(HTML::td(HTML::a(array('href' => $url),
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
-            $attchTab->pushContent($line);                
-            
+            $attchTab->pushContent($line);
+
             $wai->next();
         }
         $attchList = HTML();
         $attchList->pushContent(HTML::hr(),
                                 HTML::h2(_("Attached files")));
         $attchList->pushContent($attchTab);
-        
+
         $url = WikiURL("UpLoad");
         if(!empty($_REQUEST['pv'])) {
             $url .= '&pv='.$_REQUEST['pv'];
@@ -240,7 +240,6 @@ ws[cfh]");
         $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset+$limit)),
                                         "Next ->"));
         /// }}}
-
 
         //$result = HTML::div( array( 'class' => 'wikiaction' ) );
         $result = HTML();

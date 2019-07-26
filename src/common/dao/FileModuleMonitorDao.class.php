@@ -24,10 +24,10 @@ class FileModuleMonitorDao extends DataAccessObject {
     function whoIsMonitoringPackageByID($group_id, $package_id) {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
-        
+
         $sql = sprintf("SELECT u.email,u.user_id,p.name "
               ."FROM user AS u,filemodule_monitor AS fm, frs_package AS p "
-              ."WHERE u.user_id = fm.user_id " 
+              ."WHERE u.user_id = fm.user_id "
               ."AND fm.filemodule_id = p.package_id "
               ."AND fm.filemodule_id = %s "
               ."AND p.group_id = %s "
@@ -61,7 +61,7 @@ class FileModuleMonitorDao extends DataAccessObject {
         $_id = (int) $id;
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
     }
-    
+
 
     /**
      * Check user's monitoring of the given package.
@@ -79,20 +79,20 @@ class FileModuleMonitorDao extends DataAccessObject {
         }
         $_package_id = (int) $package_id;
         $_user_id = $user->getID();
-        
+
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id).' '.$option, '', ' ORDER BY filemodule_id DESC');
     }
-    
+
     function _search($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT fm.* '
             .' FROM filemodule_monitor AS fm '
-            .(count($from) > 0 ? ', '.implode(', ', $from) : '') 
-            .(trim($where) != '' ? ' WHERE '.$where.' ' : '') 
+            .(count($from) > 0 ? ', '.implode(', ', $from) : '')
+            .(trim($where) != '' ? ' WHERE '.$where.' ' : '')
             .$group
             .$order;
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Create a row in the table filemodule_monitor
      *
@@ -122,7 +122,7 @@ class FileModuleMonitorDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    
+
      /**
      * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor
      *

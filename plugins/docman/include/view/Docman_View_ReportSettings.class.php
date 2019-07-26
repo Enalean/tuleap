@@ -53,16 +53,16 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
             $r = $reportIter->current();
             $trclass = html_get_alt_row_color($altRowClass++);
             $html .=  '<tr class="'.$trclass.'">';
-            
+
             // Name
             $rUrl  = $this->defaultUrl.'&action=report_settings&report_id='.$r->getId();
             $rName = '<a href="'.$rUrl.'">'. $hp->purify($r->getName(), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
             $html .= '<td align="left">'.$rName.'</td>';
-            
+
             // Scope
             $scopeName = $GLOBALS['Language']->getText('plugin_docman', 'report_scope_'.$r->getScope());
             $html .= '<td align="center">'.$scopeName.'</td>';
-            
+
             // Delete
             $trashLink = $this->defaultUrl.'&action=report_del&report_id='.$r->getId();
             $trashWarn = $GLOBALS['Language']->getText('plugin_docman', 'report_settings_delete',  $hp->purify(addslashes($r->getName()), CODENDI_PURIFIER_CONVERT_HTML) );
@@ -79,7 +79,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
 
     function _getReportTable() {
         $html = '';
-        
+
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         $dpm  = Docman_PermissionsManager::instance($this->groupId);
@@ -96,17 +96,17 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
             $reportIter = $reportFactory->getProjectReportsForGroup();
             $html .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
         }
-        
+
         $reportIter = $reportFactory->getPersonalReportsForUser($user);
         $html .= $this->_getReportTableContent($reportIter, $isAdmin, $altRowClass);
-        
+
         $html .= "</table>\n";
         return $html;
     }
 
     function _getReportSettings($reportId) {
         $html = '';
-        
+
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         $dpm  = Docman_PermissionsManager::instance($this->groupId);
@@ -115,7 +115,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         $reportFactory = new Docman_ReportFactory($this->groupId);
         $r = $reportFactory->getReportById($reportId);
 
-        if($r != null 
+        if($r != null
            && $r->getGroupId() == $this->groupId) {
             $txts = array($GLOBALS['Language']->getText('plugin_docman', 'report_scope_I'),
                           $GLOBALS['Language']->getText('plugin_docman', 'report_scope_P'));
@@ -147,7 +147,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
             $html .= '<textarea name="description">'.$r->getDescription().'</textarea>';
             $html .= '</td>';
             $html .= '</tr>';
-            
+
             // Title
             $title = "";
             if($r->getTitle() !== null) {
@@ -209,7 +209,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         $html .= '<input type="hidden" name="action" value="report_import">';
 
         $html .= '<table border="0">';
-        
+
         // Select project
         $html .= '<tr>';
         $html .= '<td valign="top">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj').'</td>';
@@ -226,7 +226,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         $html .= '<td valign="top">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt').'('.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt_id').')'.'</td>';
         $html .= '<td>';
         $html .= '<input type="text" name="import_report_id" value="" />';
-        $html .= '</td>';       
+        $html .= '</td>';
         $html .= '</tr>';
 
         $html .= '</table>';
@@ -235,16 +235,14 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         $html .= '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_create').'">';
         $html .= '</form>';
 
-
-
         return $html;
     }
 
     function _content($params) {
         $html = '';
-        
+
         $this->init($params);
-        
+
         $request = HTTPRequest::instance();
         if($request->exist('report_id')) {
             $reportId = (int) $request->get('report_id');

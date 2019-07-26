@@ -19,7 +19,7 @@
 require_once 'common/date/TimeInterval.class.php';
 
 class TimeIntervalTest extends TuleapTestCase {
-        
+
     public function itRefusesNegativeTimeStamps() {
         $this->assertInvalidIntervalTimestamps(-1, 1);
         $this->assertInvalidIntervalTimestamps(1, -1);
@@ -29,13 +29,13 @@ class TimeIntervalTest extends TuleapTestCase {
         $this->assertInvalidIntervalTimestamps(2, 1);
         $this->assertInvalidIntervalTimestamps(2, 2);
     }
-    
+
     public function itHasAStartAndAnEnd() {
         $start = 1;
         $end   = 2;
-        
+
         $interval = TimeInterval::fromUnixTimestamps($start, $end);
-        
+
         $this->assertEqual($start, $interval->getStartTimestamp());
         $this->assertEqual($end, $interval->getEndTimestamp());
     }

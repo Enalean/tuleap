@@ -20,7 +20,7 @@
 
 
 class Tracker_Report_CriteriaFactory {
-    
+
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -31,7 +31,7 @@ class Tracker_Report_CriteriaFactory {
      * Hold an instance of the class
      */
     protected static $_instance;
-    
+
     /**
      * The singleton method
      */
@@ -42,7 +42,7 @@ class Tracker_Report_CriteriaFactory {
         }
         return self::$_instance;
     }
-    
+
     /**
      * @param array the row allowing the construction of a criteria
      * @return Criteria Object
@@ -55,14 +55,14 @@ class Tracker_Report_CriteriaFactory {
             $row['rank'],
             $row['is_advanced']);
     }
-    
+
     /**
      * Creates a Tracker_Report_Criteria Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported criteria
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * 
-     * @return Tracker_Report_Criteria Object 
+     *
+     * @return Tracker_Report_Criteria Object
      */
     public function getInstanceFromXML($xml, &$xmlMapping) {
         $att = $xml->attributes();
@@ -81,15 +81,15 @@ class Tracker_Report_CriteriaFactory {
         }
         return $this->getInstanceFromRow($row);
     }
-    
+
     public function duplicate($from_report, $to_report, $fields_mapping) {
         $this->getDao()->duplicate($from_report->id, $to_report->id, $fields_mapping);
     }
-    
+
     public function saveObject($criteria) {
-        
+
     }
-    
+
     protected function getDao() {
         return new Tracker_Report_CriteriaDao();
     }

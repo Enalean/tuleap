@@ -86,7 +86,6 @@ class WorkflowTest extends TuleapTestCase {
         //'description' => 'The bug has been submitted',
         //'rank' => '10');
 
-
         $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
         $field_value_analyzed->setReturnValue('getId', 2067);
         //'old_id' => null,
@@ -156,7 +155,6 @@ class WorkflowTest extends TuleapTestCase {
         //'value' => 'Deployed',
         //'description' => 'The bug is deployed',
         //'rank' => '70');
-
 
         $t_new_analyzed      = new Transition (1, 2, $field_value_new, $field_value_analyzed);
         $t_analyzed_accepted = new Transition (1, 2, $field_value_analyzed, $field_value_accepted);

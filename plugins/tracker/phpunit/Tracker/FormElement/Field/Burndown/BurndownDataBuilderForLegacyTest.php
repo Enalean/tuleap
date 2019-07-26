@@ -114,7 +114,6 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $duration    = 5;
         $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
 
-
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
         $shifted_start_date = 1541026800;

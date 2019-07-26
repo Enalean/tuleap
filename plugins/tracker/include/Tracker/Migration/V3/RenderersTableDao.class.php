@@ -21,16 +21,16 @@
 class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
     public function create($tv3_id, $tv5_id) {
         $this->insertRendererTable($tv3_id, $tv5_id);
-        
+
     }
-    
+
     private function insertRendererTable($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_report_renderer(report_id, renderer_type, name, description, rank)
                 SELECT id, 'table', 'Results', '', 1
                 FROM tracker_report
                 WHERE tracker_id = $tv5_id";
         $this->update($sql);
-        
+
         //TODO : check it is useful (added by SE)
         $sql = "INSERT INTO tracker_report_renderer_table(renderer_id, chunksz, multisort)
                 SELECT RR.id, 15, 0
@@ -48,10 +48,10 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
                 WHERE ARF.show_on_result = 1
                 ORDER BY TRR.id, ARF.place_result";
         $this->update($sql);
-        
+
         $this->update("SET @counter = 0");
         $this->update("SET @previous = NULL");
-    
+
         $sql = "UPDATE tracker_report_renderer_table_columns 
                 INNER JOIN (SELECT @counter := IF(@previous = renderer_id, @counter + 1, 1) AS new_rank, 
                                    @previous := renderer_id, 

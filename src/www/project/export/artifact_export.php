@@ -39,7 +39,7 @@ if ( $atid ) {
         exit_error($Language->getText('global','error'),$at->getErrorMessage());
     }
 
-        //      Create the ArtifactTypeHtml object - needed in ArtifactField.getFieldPredefinedValues() 
+        //      Create the ArtifactTypeHtml object - needed in ArtifactField.getFieldPredefinedValues()
         $ath = new ArtifactTypeHtml($group,$atid);
     if (!$ath || !is_object($ath)) {
         exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_export','ath_not_created'));
@@ -57,12 +57,12 @@ if ( $atid ) {
     if ($art_fieldset_fact->isError()) {
         exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
     }
-    
+
     $sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where,$multiple_queries,$all_queries);
 
     // Normally these two fields should be part of the artifact_fields.
     // For now big hack:
-    // As we don't know the projects language, we export it according to user language preferences 
+    // As we don't know the projects language, we export it according to user language preferences
     $lbl_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'follow_up_comments');
     $lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
 
@@ -82,7 +82,7 @@ $col_list[] = 'is_dependent_on';
 
 
 $eol = "\n";
-    
+
 //echo "DBG -- $sql<br>";
 
 if (isset($multiple_queries) && $multiple_queries) {
@@ -90,44 +90,44 @@ if (isset($multiple_queries) && $multiple_queries) {
     foreach($all_queries as $q) {
         $result = db_query($q);
         $all_results[] = $result;
-        $rows = db_numrows($result);    
+        $rows = db_numrows($result);
     }
 } else {
     $result=db_query($sql);
-    $rows = db_numrows($result);    
+    $rows = db_numrows($result);
 }
 
 if ($export == 'artifact') {
 
     // Send the result in CSV format
     if ($result && $rows > 0) {
-    
+
             $tbl_name = str_replace(' ','_','artifact_'.$at->getItemName());
         header ('Content-Type: text/csv');
         header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
-    
+
         foreach($lbl_list as $k => $v) {
             $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
         }
         echo build_csv_header($col_list, $lbl_list).$eol;
-        
+
         if ($multiple_queries) {
             $multiarr = array();
             for ($i = 0; $i < $rows; $i++) {
                 foreach ($all_results as $result) {
                       $multiarr = array_merge($multiarr,db_fetch_array($result));
                 }
-            
+
                 prepare_artifact_record($ath,$fields,$atid,$multiarr, 'csv');
                 echo build_csv_record($col_list, $multiarr).$eol;
             }
         } else {
-            while ($arr = db_fetch_array($result)) {        
+            while ($arr = db_fetch_array($result)) {
                 prepare_artifact_record($at,$fields,$atid,$arr, 'csv');
                 echo build_csv_record($col_list, $arr).$eol;
             }
         }
-    
+
     } else {
 
         project_admin_header(array('title'=>$pg_title), 'data');

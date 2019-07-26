@@ -28,20 +28,20 @@ class TestPlanningFactoryBuilder
     public $dao;
     public $tracker_factory;
     public $planning_permissions_manager;
-    
+
     public function __construct()
     {
         $this->dao                          = Mockery::mock(PlanningDao::class);
         $this->tracker_factory              = Mockery::mock(TrackerFactory::class);
         $this->planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
     }
-    
+
     public function withDao(DataAccessObject $dao)
     {
         $this->dao = $dao;
         return $this;
     }
-    
+
     public function withTrackerFactory(TrackerFactory $tracker_factory)
     {
         $this->tracker_factory = $tracker_factory;

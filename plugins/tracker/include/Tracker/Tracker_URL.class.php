@@ -22,13 +22,13 @@
 require_once 'common/include/URL.class.php';
 
 class Tracker_URL extends URL {
-    
+
     /**
      * Return the Tracker object that correspond to the given request
      *
      * @param Codendi_Request $request The request
      * @param PFUser            $user    Who access the request
-     * 
+     *
      * @return Tracker_Dispatchable_Interface
      */
     function getDispatchableFromRequest(Codendi_Request $request, PFUser $user) {
@@ -80,11 +80,11 @@ class Tracker_URL extends URL {
 
     /**
      * Return the project ID of the ressource of the current request
-     * 
+     *
      * @see src/common/include/URL::getGroupIdFromUrl()
-     * 
+     *
      * @param Array $requestUri $SERVER['REQUEST_URI']
-     * 
+     *
      * @return int
      */
     function getGroupIdFromUrl($requestUri) {
@@ -116,15 +116,15 @@ class Tracker_URL extends URL {
     protected function getTrackerFactory() {
         return TrackerFactory::instance();
     }
-    
+
     protected function getTracker_FormElementFactory() {
         return Tracker_FormElementFactory::instance();
     }
-    
+
     protected function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
-    
+
     protected function getArtifactReportFactory() {
         return Tracker_ReportFactory::instance();
     }

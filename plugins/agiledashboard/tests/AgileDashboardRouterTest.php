@@ -38,7 +38,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
                                                    'buildPlanningController',
                                                    'getArtifactFactory',));
 
-
         $this->router->__construct(
             mock('Plugin'),
             mock('Planning_MilestoneFactory'),

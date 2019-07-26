@@ -325,7 +325,6 @@ class BarPlot extends Plot {
             $exist_x = false;
         }
 
-
         $numbars=count($this->coords[0]);
 
         // Use GetMinVal() instead of scale[0] directly since in the case
@@ -677,7 +676,7 @@ class BarPlot extends Plot {
 // Description: Produce grouped bar plots
 //===================================================
 class GroupBarPlot extends BarPlot {
-    public $plots; 
+    public $plots;
     private $nbrplots=0;
     //---------------
     // CONSTRUCTOR
@@ -973,7 +972,6 @@ class AccBarPlot extends BarPlot {
                     }
                 }
 
-
                 // If value is NULL or 0, then don't draw a bar at all
                 if ($this->plots[$j]->coords[0][$i] == 0 ) continue;
 
@@ -1061,7 +1059,6 @@ class AccBarPlot extends BarPlot {
                     $prect->SetPos(new Rectangle($rx,$ry,$width,$height));
                     $prect->Stroke($img);
                 }
-
 
                 // CSIM array
 

@@ -27,16 +27,16 @@ class TreeNodeMapper {
 
     /** @var TreeNodeCallback */
     private $function;
-    
+
     public function __construct(TreeNodeCallback $function) {
         $this->function = $function;
     }
-    
+
     /**
      * Create a new node by applying the function to the node and recursively over its children
      *
      * @param TreeNode $node
-     * 
+     *
      * @return TreeNode
      */
     public function map(TreeNode $node) {

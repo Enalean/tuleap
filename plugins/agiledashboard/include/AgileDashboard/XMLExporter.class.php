@@ -61,11 +61,11 @@ class AgileDashboard_XMLExporter {
             $planning_title                 = $planning->getPlanTitle();
             $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());
             $planning_backlog_title         = $planning->getBacklogTitle();
-            
+
             $this->checkString($planning_name, PlanningParameters::NAME);
             $this->checkString($planning_title, PlanningParameters::PLANNING_TITLE);
             $this->checkString($planning_backlog_title, PlanningParameters::BACKLOG_TITLE);
-            
+
             $this->checkId($planning_tracker_id, PlanningParameters::PLANNING_TRACKER_ID);
 
             $planning_node = $plannings_node->addChild(self::NODE_PLANNING);

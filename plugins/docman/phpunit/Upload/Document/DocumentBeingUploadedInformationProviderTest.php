@@ -121,7 +121,6 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $server_request = (new NullServerRequest())->withAttribute('id', '12')
             ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
 
-
         $this->assertNull($data_store->getFileInformation($server_request));
     }
 }

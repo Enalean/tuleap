@@ -23,7 +23,7 @@ class Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao extends Tracker_Rep
         parent::__construct();
         $this->table_name = 'tracker_report_criteria_permissionsonartifact_value';
     }
-    
+
     public function save($id, $value) {
         $values = isset($value['values']) ? $value['values'] : null;
         if ($values) {
@@ -31,7 +31,7 @@ class Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao extends Tracker_Rep
             //First clear the list
             $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
             $this->update($sql);
-            
+
             //Then fill it with new values
             $new_values = array();
             if (is_array($values)) {

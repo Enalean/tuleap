@@ -22,8 +22,8 @@
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 class Tracker_Report_RendererFactory {
-    
-    
+
+
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -44,7 +44,7 @@ class Tracker_Report_RendererFactory {
      * Hold an instance of the class
      */
     protected static $_instance;
-    
+
     /**
      * @return Tracker_Report_RendererFactory
      */
@@ -55,9 +55,9 @@ class Tracker_Report_RendererFactory {
         return self::$_instance;
     }
 
-    
+
     // {{{ Public
-    
+
     /**
      * @param int $id the id of the report renderer to retrieve
      * @param Report $report the report of the renderer
@@ -79,7 +79,7 @@ class Tracker_Report_RendererFactory {
         }
         return null;
     }
-    
+
     /**
      * Get all renderers belonging to a report
      *
@@ -104,7 +104,7 @@ class Tracker_Report_RendererFactory {
         }
         return $renderers;
     }
-    
+
     /**
      * Get all renderers belonging to a report saved in db
      *
@@ -121,7 +121,7 @@ class Tracker_Report_RendererFactory {
         }
         return $renderers;
     }
-    
+
     /**
      * @param Report $report the id of the report
      * @param array
@@ -142,7 +142,7 @@ class Tracker_Report_RendererFactory {
         }
         return $renderer;
     }
-    
+
     /**
      * Delete a renderer
      * @param int $id the id of the renderer to delete
@@ -150,7 +150,7 @@ class Tracker_Report_RendererFactory {
     public function delete($id) {
         return $this->getDao()->delete($id);
     }
-    
+
     /**
      * Rename renderer
      * @param int $id
@@ -160,7 +160,7 @@ class Tracker_Report_RendererFactory {
     public function rename($id, $new_name, $new_description) {
         return $this->getDao()->rename($id, $new_name, $new_description);
     }
-    
+
     /**
      * Move a renderer
      *
@@ -229,7 +229,7 @@ class Tracker_Report_RendererFactory {
             }
         }
     }
-    
+
     /**
      * Add a new renderer in session
      * @param Report $report the id of the report
@@ -247,7 +247,7 @@ class Tracker_Report_RendererFactory {
             $nb_renderers = count($report->getRenderers());
             $renderer_id = -$nb_renderers-1;
             $session->set(
-                $renderer_id, 
+                $renderer_id,
                 array(
                     'id'            => $renderer_id,
                     'name'          => $name,
@@ -279,10 +279,10 @@ class Tracker_Report_RendererFactory {
         }
         return $renderer_id;
     }
-    
+
     public function saveRenderer($report, $name, $description, $type) {
         $renderer_id = false;
-    
+
         $types = $this->getTypes();
         if (isset($types[$type])) {
             $renderer_id = $this->getDao()->create($report->id, $type, $name, $description, 'end');
@@ -290,7 +290,7 @@ class Tracker_Report_RendererFactory {
         return $renderer_id;
 
     }
-    
+
     /**
      * Save a renderer
      *
@@ -306,12 +306,12 @@ class Tracker_Report_RendererFactory {
             $renderer->rank
         );
     }
-    
-    
+
+
     public function getTypes() {
         $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report','table'));
         $this->getEventManager()
-                    ->processEvent('tracker_report_renderer_types', 
+                    ->processEvent('tracker_report_renderer_types',
                                    array('types' => &$types));
         return $types;
     }
@@ -338,7 +338,7 @@ class Tracker_Report_RendererFactory {
         }
         return $this->dao;
     }
-    
+
     protected $table_dao;
     /**
      * @return Tracker_Report_RendererTableDao
@@ -349,12 +349,12 @@ class Tracker_Report_RendererFactory {
         }
         return $this->table_dao;
     }
-    
+
     protected $renderers;
     /**
-     * Build an instance of a renderer from a row data. 
+     * Build an instance of a renderer from a row data.
      *
-     * This row data comes from the session, the db, xml, ... and contains all 
+     * This row data comes from the session, the db, xml, ... and contains all
      * data describing the renderer.
      *
      * @param array          $row    the row identifing a report
@@ -380,7 +380,7 @@ class Tracker_Report_RendererFactory {
                                     ->searchByRendererId($row['id'])
                                     ->getRow();
                         if ($table_row) {
-                            $row['chunksz']   = $table_row['chunksz']; 
+                            $row['chunksz']   = $table_row['chunksz'];
                             $row['multisort'] = $table_row['multisort'];
                         }
                     }
@@ -394,11 +394,11 @@ class Tracker_Report_RendererFactory {
                         $row['chunksz'],
                         $row['multisort']
                     );
-                    
+
                     if ($store_in_session) {
                         $instance->initiateSession();
                     }
-                    
+
                     //Add the columns info to the table if any
                     if (empty($row['columns'])) {
                         $instance->getColumns();
@@ -408,7 +408,7 @@ class Tracker_Report_RendererFactory {
                     if ($store_in_session) {
                         $instance->storeColumnsInSession();
                     }
-                    
+
                     //Add the sort info to the table if any
                     if (isset($row['sort'])) {
                         $instance->setSort($row['sort']);
@@ -417,14 +417,14 @@ class Tracker_Report_RendererFactory {
                         }
                     }
                     break;
-                    
+
                 case Tracker_Report_Renderer::BOARD:
                     //Not yet implemented
                     break;
-                    
+
                 default:
                     $this->getEventManager()->processEvent(
-                        'tracker_report_renderer_instance', 
+                        'tracker_report_renderer_instance',
                         array(
                             'instance'         => &$instance,
                             'type'             => $row['renderer_type'],
@@ -436,7 +436,7 @@ class Tracker_Report_RendererFactory {
                     break;
             }
             $this->renderers[$row['id']] = $instance;
-            
+
             if ($instance) {
                 if ($store_in_session) {
                     //override the row in the current session
@@ -453,7 +453,7 @@ class Tracker_Report_RendererFactory {
         }
         return $this->renderers[$row['id']];
     }
-    
+
     /**
      * Creates a Tracker_Report_Renderer Object
      *

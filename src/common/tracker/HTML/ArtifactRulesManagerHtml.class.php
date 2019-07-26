@@ -30,7 +30,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 
     var $artifact_type;
     var $href;
-    
+
     /**
      *  ArtifactRulesManagerHtml() - constructor
      *
@@ -41,11 +41,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->artifact_type = $artifact_type_html;
         $this->href          = $href;
     }
-    
+
     function saveRule($source, $source_value, $target, $target_values) {
         parent::saveRule($this->artifact_type->getId(), $source, $source_value, $target, $target_values);
     }
-    
+
     function displayFieldsAndValuesAsJavascript() {
         $hp = Codendi_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
@@ -68,7 +68,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         echo "\n//------------------------------------------------------\n";
     }
-    
+
     function displayRulesAsJavascript() {
         echo "\n//------------------------------------------------------\n";
         $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
@@ -82,7 +82,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         echo "\n//------------------------------------------------------\n";
     }
-    
+
     function getAllSourceFields($target_id) {
         $sources = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
@@ -98,7 +98,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         return $sources;
     }
-    
+
     function getAllTargetFields($source_id) {
         $targets = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
@@ -114,25 +114,25 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         return $targets;
     }
-    
-    
-    
+
+
+
     function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
         $hp = Codendi_HTMLPurifier::instance();
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
         echo '<table border=0><thead><tr><td>';
         echo $GLOBALS['Language']->getText('tracker_field_dependencies','source');
-        
+
         $onchange = '$(\'source_field_hidden\').value = $(\'source_field\').value;'.
                     '$(\'target_field_hidden\').value = $(\'target_field\').value;'.
                     'Form.Element.disable(\'source_field\');'.
                     'Form.Element.disable(\'target_field\');'.
-                    'this.up(\'table\').down(\'tbody\').update(\'<tr><td align=\\\'center\\\' colspan=\\\'2\\\'>'. 
+                    'this.up(\'table\').down(\'tbody\').update(\'<tr><td align=\\\'center\\\' colspan=\\\'2\\\'>'.
                     addslashes(str_replace('"', "'", $GLOBALS['HTML']->getImage('ic/spinner.gif'))) .
                     '</td></tr>\');'.
                     'this.form.submit();';
-        
+
         echo PHP_EOL.'<select id="source_field" name="source_field" onchange="'. $onchange .'">'.PHP_EOL;
         echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
         $sources = $this->getAllSourceFields($target_field);
@@ -226,7 +226,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '</tbody>';
         echo '</table>';
         echo '</div>';
-        
+
         echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="source_field_hidden" name="source_field" value="" />';
         echo '<input type="hidden" id="target_field_hidden" name="target_field" value="" />';
@@ -235,11 +235,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '</form>';
         echo '<script type="text/javascript">'."\n";
         echo "//<![CDATA[\n";
-        
+
         $this->displayFieldsAndValuesAsJavascript();
-        
+
         $this->displayRulesAsJavascript();
-        
+
         echo "var messages = {\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
             echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."'\n";
@@ -249,7 +249,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n".'//]]></script>';
 
     }
-    
+
     function displayRules($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
         $this->_header();
         echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</div>';
@@ -258,7 +258,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '<br />';
         $this->_footer();
     }
-    
+
     function saveFromRequest(&$request) {
         //TODO: Valid the request
         switch ($request->get('direction_type')) {
@@ -295,7 +295,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 break;
         }
     }
-    
+
     function badRequest() {
         header("HTTP/1.1 400 Bad Request");
         $GLOBALS['Response']->addFeedback('info', 'Bad Request');
@@ -311,7 +311,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->artifact_type->adminHeader($params);
         $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies_title'));
     }
-    
+
     function _footer() {
         $this->artifact_type->footer(array());
     }

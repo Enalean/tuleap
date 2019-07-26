@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
                 WHERE field_id = $field_id";
         return $this->retrieve($sql);
     }
-    
+
     public function save($id, $field_id, $label) {
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);
@@ -53,7 +53,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
                   AND id = $id";
         return $this->update($sql);
     }
-    
+
     public function create($field_id, $label) {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);
@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
                 VALUES ($field_id, $label)";
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function searchByKeyword($field_id, $keyword, $limit = 10) {
         $field_id = $this->da->escapeInt($field_id);
         $limit = $this->da->escapeInt($limit);
@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_List_OpenValueDao extends DataAccessObject {
                 LIMIT $limit";
         return $this->retrieve($sql);
     }
-    
+
     public function searchByExactLabel($field_id, $label) {
         $field_id = $this->da->escapeInt($field_id);
         $label    = $this->da->quoteSmart($label);

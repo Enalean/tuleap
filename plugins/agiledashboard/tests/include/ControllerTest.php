@@ -72,7 +72,6 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             Mockery::mock(TimeframeChecker::class)
         );
 
-
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
         $this->event_manager   = \Mockery::spy(\EventManager::class);
 

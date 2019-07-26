@@ -20,14 +20,14 @@
 
 /**
  * A tracker field that can be shared with other trackers.
- * 
- * For now, only select boxes and multi-select boxes can be shared. 
+ *
+ * For now, only select boxes and multi-select boxes can be shared.
  */
 interface Tracker_FormElement_Field_Shareable {
-    
+
     /**
      * Fixes original value ids after field duplication.
-     * 
+     *
      * @param array $value_mapping An array associating old value ids to new value ids.
      */
     public function fixOriginalValueIds(array $value_mapping);

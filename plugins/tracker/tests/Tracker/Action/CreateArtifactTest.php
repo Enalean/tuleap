@@ -45,7 +45,7 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
 
         $this->event_manager = \Mockery::spy(\EventManager::class);
         EventManager::setInstance($this->event_manager);
-        
+
         $this->tracker             = \Mockery::spy(\Tracker::class);
         $this->artifact_factory    = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->tracker_factory     = \Mockery::spy(\TrackerFactory::class);

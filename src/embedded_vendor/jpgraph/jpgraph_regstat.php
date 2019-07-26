@@ -97,7 +97,6 @@ class Spline {
             //('Invalid input data for spline. Two or more consecutive input X-values are equal. Each input X-value must differ since from a mathematical point of view it must be a one-to-one mapping, i.e. each X-value must correspond to exactly one Y-value.');
         }
 
-
         $a = ($this->xdata[$max]-$xpoint)/$h;
         $b = ($xpoint-$this->xdata[$min])/$h;
         return $a*$this->ydata[$min]+$b*$this->ydata[$max]+
@@ -154,10 +153,10 @@ class Bezier {
             $datax[$i] = $datumx;
             $datay[$i] = $datumy;
         }
-         
+
         $datax[] = end($this->datax);
         $datay[] = end($this->datay);
-         
+
         return array($datax, $datay);
     }
 
@@ -165,7 +164,7 @@ class Bezier {
      * Return one point on the bezier curve. $mu is the position on the curve where $mu is in the
      * range 0 $mu < 1 where 0 is tha start point and 1 is the end point. Note that every newly computed
      * point depends on all the existing points
-     * 
+     *
      * @param $mu Position on the bezier curve
      * @return array($x, $y)
      */

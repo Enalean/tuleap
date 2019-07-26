@@ -20,8 +20,8 @@
  */
  require_once('bootstrap.php');
 Mock::generatePartial(
-    'Tracker_FormElement_Field_List_Bind_UsersValue', 
-    'Tracker_FormElement_Field_List_Bind_UsersValueTestVersion', 
+    'Tracker_FormElement_Field_List_Bind_UsersValue',
+    'Tracker_FormElement_Field_List_Bind_UsersValueTestVersion',
     array('getUserHelper', 'getUserManager', 'getId')
 );
 
@@ -32,31 +32,31 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase {
-    
+
     public function testGetLabel() {
         $uh = new MockUserHelper();
         $uh->setReturnValue('getDisplayNameFromUserId', 'John Smith', array(123));
-        
+
         $bv = new Tracker_FormElement_Field_List_Bind_UsersValueTestVersion();
         $bv->setReturnValue('getId', 123);
         $bv->setReturnReference('getUserHelper', $uh);
-        
+
         $this->assertEqual($bv->getLabel(), 'John Smith');
     }
-    
+
     public function testGetUser() {
         $u = mock('PFUser');
-        
+
         $uh = new MockUserManager();
         $uh->setReturnValue('getUserById', $u, array(123));
-        
+
         $bv = new Tracker_FormElement_Field_List_Bind_UsersValueTestVersion();
         $bv->setReturnValue('getId', 123);
         $bv->setReturnReference('getUserManager', $uh);
 
         $this->assertEqual($bv->getUser(), $u);
     }
-    
+
 }
 
 class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends TuleapTestCase {

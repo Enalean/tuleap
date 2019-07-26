@@ -157,7 +157,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         expect($this->date_rule_dao)->deleteById($this->tracker_id, $rule_id)->once();
         $this->date_rule_factory->deleteById($this->tracker_id, $rule_id);
     }
-    
+
     public function testDuplicateDoesNotInsertWhenNoRulesExist() {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
@@ -171,22 +171,22 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
                 'to'    => 999
             ),
         );
-        
+
         $db_data = false;
-        
+
         $dao = mock('Tracker_Rule_Date_Dao');
         stub($dao)->searchByTrackerId()->returnsDar($db_data);
         stub($dao)->insert()->never();
         $form_factory = mock('Tracker_FormElementFactory');
-        
+
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
-        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
-    
+
     public function testDuplicateInsertsANewRule() {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
-        
+
         $field_mapping   = array(
             array(
                 'from'  => 123,
@@ -197,26 +197,26 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
                 'to'    => 999
             ),
         );
-        
+
         $db_data = array(
             'source_field_id' => 123,
             'target_field_id' => 456,
             'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
         );
-        
+
         $dao = mock('Tracker_Rule_Date_Dao');
         stub($dao)->searchByTrackerId()->returnsDar($db_data);
         stub($dao)->insert($to_tracker_id, 888, 999, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->once();
         $form_factory = mock('Tracker_FormElementFactory');
-        
+
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
-        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
-    
+
     public function testDuplicateInsertsMultipleRules() {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
-        
+
         $field_mapping   = array(
             array(
                 'from'  => 111,
@@ -235,7 +235,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
                 'to'    => 888
             ),
         );
-        
+
         $db_data1 = array(
             'source_field_id' => 111,
             'target_field_id' => 222,
@@ -246,17 +246,17 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
             'target_field_id' => 444,
             'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
         );
-        
+
         $dao = mock('Tracker_Rule_Date_Dao');
         stub($dao)->searchByTrackerId()->returnsDar($db_data1, $db_data2);
         stub($dao)->insert($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(0);
         stub($dao)->insert($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(1);
         $form_factory = mock('Tracker_FormElementFactory');
-        
+
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
-        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
-    
+
     public function itDelegatesUsedDateFieldsRetrievalToElementFactory() {
         $tracker          = mock('Tracker');
         $used_date_fields = array('of', 'fields');
@@ -270,7 +270,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
 
     }
-    
+
     function testExport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
 
@@ -285,14 +285,14 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
                 ->setSourceFieldId(102)
                 ->setTargetFieldId(801);
-        
+
         $r2 = new Tracker_Rule_Date();
         $r2->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS)
                 ->setSourceFieldId(103)
                 ->setTargetFieldId(806);
-         
-        $trm = partial_mock('Tracker_Rule_Date_Factory', 
-                array('searchByTrackerId'), 
+
+        $trm = partial_mock('Tracker_Rule_Date_Factory',
+                array('searchByTrackerId'),
                 array(mock('Tracker_Rule_Date_Dao'), mock('Tracker_FormElementFactory'))
                 );
         $trm->setReturnValue('searchByTrackerId', array($r1, $r2));

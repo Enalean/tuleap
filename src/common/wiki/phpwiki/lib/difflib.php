@@ -210,7 +210,7 @@ class _DiffEngine
      */
     function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
         $flip = false;
-    
+
         if ($xlim - $xoff > $ylim - $yoff) {
             // Things seems faster (I'm not sure I understand why)
             // when the shortest sequence in X.
@@ -397,7 +397,7 @@ class _DiffEngine
              */
             while ($j < $other_len && $other_changed[$j])
             $j++;
-    
+
             while ($i < $len && ! $changed[$i]) {
                 USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
                 $i++; $j++;
@@ -596,7 +596,6 @@ class Diff
             trigger_error("Reversed original doesn't match", E_USER_ERROR);
         if (serialize($from_lines) != serialize($rev->_final()))
             trigger_error("Reversed final doesn't match", E_USER_ERROR);
-
 
         $prevtype = 'none';
         foreach ($this->edits as $edit) {

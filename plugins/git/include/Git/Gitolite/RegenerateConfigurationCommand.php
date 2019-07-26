@@ -110,7 +110,6 @@ class RegenerateConfigurationCommand extends Command
             }
         }
 
-
         if (count($verified_project_ids) === 0) {
             $output->writeln([
                 '<comment>No active project ID has been specified to re-generate Gitolite configuration</comment>',

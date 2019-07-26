@@ -23,7 +23,7 @@ class Tracker_CannedResponseManager {
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
-    
+
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         if ($request->get('create')) {
             if ($request->existAndNonEmpty('title') && $request->existAndNonEmpty('body')) {
@@ -53,16 +53,16 @@ class Tracker_CannedResponseManager {
         }
         $this->displayAdminAllResponses($tracker_manager, $request, $current_user);
     }
-    
+
     protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned');
-        
+
         //Display existing responses
         $responses = Tracker_CannedResponseFactory::instance()->getCannedResponses($this->tracker);
         if(count($responses)) {
             echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned','existing_responses') .'</h3>';
-            
+
             echo '<table cellspacing="0" cellpadding="4" border="0">';
             $i = 0;
             foreach($responses as $response) {
@@ -77,9 +77,9 @@ class Tracker_CannedResponseManager {
                 echo '<pre>'. $hp->purify(substr($response->body, 0, 160), CODENDI_PURIFIER_CONVERT_HTML);
                 echo strlen($response->body) > 160 ? '<b>...</b>' : '';
                 echo '</pre>';
-                
+
                 echo '</td>';
-                
+
                 //delete
                 echo '<td><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
@@ -90,11 +90,11 @@ class Tracker_CannedResponseManager {
                 echo '</a></td></tr>';
             }
             echo '</table>';
-        
+
         } else {
             echo '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_include_canned','no_canned_response') .'</h3>';
         }
-        
+
         //Display creation form
         echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_canned','create_response').'</h3>';
         echo '<p>';
@@ -115,7 +115,7 @@ class Tracker_CannedResponseManager {
 
         $this->tracker->displayFooter($tracker_manager);
     }
-    
+
     protected function displayAdminResponse(TrackerManager $tracker_manager, $request, $current_user) {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int)$request->get('edit'))) {
             $hp = Codendi_HTMLPurifier::instance();

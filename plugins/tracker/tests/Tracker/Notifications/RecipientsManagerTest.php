@@ -520,7 +520,6 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($tracker)->getNotificationsLevel()->returns($tracker_notification_level);
         stub($changeset)->getTracker()->returns($tracker);
 
-
         stub($changeset)->getComment()->returns(
             stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns($has_empty_body)
         );

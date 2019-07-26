@@ -417,7 +417,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $computed_value = $this->getFieldEmptyMessage();
         }
 
-
         $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
@@ -864,7 +863,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return true;
         }
         $new_value = $this->getStorableValue($value);
-
 
         return $this->getValueDao()->create($changeset_value_id, $new_value);
     }

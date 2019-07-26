@@ -28,16 +28,16 @@ class Git_Hook_ParseLog {
 
     /** @var Git_Hook_LogPushes */
     private $log_pushes;
-    
+
     /** @var Logger */
     private $logger;
-    
+
     public function __construct(Git_Hook_LogPushes $log_pushes, Git_Hook_ExtractCrossReferences $extract_cross_ref, Logger $logger) {
         $this->log_pushes        = $log_pushes;
         $this->extract_cross_ref = $extract_cross_ref;
         $this->logger            = $logger;
     }
-    
+
     public function execute(Git_Hook_PushDetails $push_details) {
         $this->log_pushes->executeForRepository($push_details);
 

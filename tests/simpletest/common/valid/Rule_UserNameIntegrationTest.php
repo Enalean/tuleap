@@ -53,12 +53,10 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
-        
-        
+
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-        
-        
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
@@ -77,15 +75,14 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
 
         $pm = new MockProjectManager($this);
         $pm->setReturnValue('getProjectByUnixName', null);
-        
+
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
-        
+
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-       
-        
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
@@ -102,14 +99,14 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $p  = new MockProject($this);
         $pm = new MockProjectManager($this);
         stub($pm)->getProjectByUnixName('user')->returns($p);
-        
+
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
-        
+
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-       
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
@@ -124,14 +121,14 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
 
         $pm = new MockProjectManager($this);
         $pm->setReturnValue('getProjectByUnixName', null);
-        
+
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
 
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-       
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
@@ -152,10 +149,9 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $backend->setReturnValue('unixUserExists', true);
         $backend->setReturnValue('unixGroupExists', false);
 
-
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-       
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
@@ -164,7 +160,7 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
 
         $this->assertFalse($r->isValid("user"));
     }
-    
+
     function testUnixGroupExists() {
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', null);
@@ -175,11 +171,10 @@ class Rule_UserNameIntegrationTest extends TuleapTestCase {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', true);
-        
+
         $sm = new MockSystemEventManager($this);
         $sm->setReturnValue('isUserNameAvailable', true);
-       
-        
+
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);

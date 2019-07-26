@@ -25,11 +25,11 @@ require_once 'common/plugin/PluginFileInfo.class.php';
 require_once 'StatisticsPluginDescriptor.class.php';
 
 class StatisticsPluginInfo extends PluginFileInfo {
-    
+
     function __construct($plugin) {
         parent::__construct($plugin, 'statistics');
         $this->setPluginDescriptor(new StatisticsPluginDescriptor());
     }
-    
+
 }
 ?>

@@ -53,7 +53,7 @@ EOT;
                   )';
         $this->execDB($table, 'An error occured while adding plugin_git_remote_ugroups : ');
     }
-    
+
     protected function execDB($sql, $message) {
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

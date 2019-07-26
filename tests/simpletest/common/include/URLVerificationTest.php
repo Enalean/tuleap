@@ -311,7 +311,6 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
 

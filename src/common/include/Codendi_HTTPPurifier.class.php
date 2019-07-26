@@ -36,7 +36,7 @@ class Codendi_HTTPPurifier {
         }
         return $__Codendi_HTTPPurifier_instance;
     }
-    
+
     function purify($s) {
         $clean = preg_replace('/(\n|\r|\0).*/', '', $s);
         return $clean;

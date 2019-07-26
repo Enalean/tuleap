@@ -20,12 +20,12 @@
 
 
 class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field_Value_NumericDao {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset_value_float';
     }
-    
+
     public function create($changeset_value_id, $value) {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         if ($value === "") {

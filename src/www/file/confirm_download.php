@@ -32,7 +32,7 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
 } else {
     exit_missing_param();
 }
-    
+
   $frsff = new FRSFileFactory();
   $frspf = new FRSPackageFactory();
   // Must have a group_id and file_id otherwise

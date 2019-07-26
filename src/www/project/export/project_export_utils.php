@@ -30,7 +30,7 @@ function tocsv($string, $csv_separator) {
     // Escape the double quote character by doubling it
     $string = str_replace('"', '""', $string);
 
-    //Surround with double quotes if there is a comma; 
+    //Surround with double quotes if there is a comma;
     // a space or the user separator in the string
     if (strpos($string, ' ') !== false || strpos($string, ',') !== false || strpos($string, $csv_separator) !== false ||
         strpos($string, '"') !== false || strpos($string, "\n") !== false || strpos($string, "\t") !== false ||
@@ -121,7 +121,7 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
     $record = array();
 
     // If there is an item  available pick one at random
-    // and display Sample values. 
+    // and display Sample values.
     if ($result && $numrows > 0) {
         $pickone = ($numrows <= 1 ? 0:rand(0, $numrows-1));
     }
@@ -153,11 +153,11 @@ function prepare_textarea($textarea) {
 function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $export) {
 
     global $datetime_fmt,$sys_lf,$Language;
-    /* $record:          
+    /* $record:
        Input: a row from the artifact table (passed by reference.
        Output: the same row with values transformed for export
     */
-    
+
     $line = '';
     foreach ($fields as $field) {
 
@@ -170,11 +170,11 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
             }
             $label_values = $field->getLabelValues($group_artifact_id,$values);
             $record[$field->getName()] = SimpleSanitizer::unsanitize(join(",",$label_values));
-            
+
         } else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
             // all text fields converted from HTML to ASCII
             $record[$field->getName()] = prepare_textarea($record[$field->getName()]);
-         
+
         } else if ( $field->isDateField() ) {
 
             // replace the date fields (unix time) with human readable dates that
@@ -212,7 +212,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
         $dependent .= $dependent_on_artifact_id.",";
     }
     $record['is_dependent_on'] = (($dependent !== '')?substr($dependent,0,strlen($dependent)-1):$Language->getText('global','none'));
-    
+
     //CC
     $cc_list = $ah->getCCList();
     $rows = db_numrows($cc_list);
@@ -220,24 +220,24 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
     for ($i=0; $i < $rows; $i++) {
         $cc_email = db_result($cc_list, $i, 'email');
         $cc[] = $cc_email;
-    }   
+    }
     $record['cc'] = implode(',', $cc);
 }
 
 function prepare_artifact_history_record($at, $art_field_fact, &$record) {
-  
+
     global $datetime_fmt;
-  
+
   /*
            Prepare the column values in the bug history  record
            Input: a row from the bug_history database (passed by
                    reference.
           Output: the same row with values transformed for export
   */
-  
-  // replace the modification date field with human readable dates 
+
+  // replace the modification date field with human readable dates
     $record['date'] = format_date($datetime_fmt,$record['date']);
-  
+
     $field = $art_field_fact->getFieldFromName($record['field_name']);
     if ( $field ) {
         prepare_historic_value($record, $field, $at->getID(), 'old_value');
@@ -248,8 +248,7 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
             $record['label'] = "comment";
         }
     }
-  
-  
+
   // Decode the comment type value. If null make sure there is
   // a blank entry in the array
     if (isset($record['type'])) {
@@ -262,15 +261,15 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
     } else {
         $record['type']='';
     }
-  
+
 }
 
 function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
     if ( $field->isSelectBox() ) {
         $record[$name] = $field->getValue($group_artifact_id, $record[$name]);
-    
+
     } else if ( $field->isDateField() ) {
-    
+
       // replace the date fields (unix time) with human readable dates that
       // is also accepted as a valid format in future import
         if ($record[$name] == '')
@@ -280,15 +279,15 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name) {
         $record[$name] = '0';
         else
         $record[$name] = format_date($GLOBALS['datetime_fmt'],$record[$name]);
-    
+
     } else if ( $field->isFloat() ) {
         $record[$name] = number_format($record[$name],2);
-    
+
     } else {
       // all text fields converted from HTML to ASCII
         $record[$name] = prepare_textarea($record[$name]);
     }
-  
+
 }
 
 function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
@@ -296,7 +295,7 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
         case 12:
             $saltlen=8; $saltprefix='$1$'; $saltsuffix='$'; break;
         case 2:
-        default: 
+        default:
            // by default, fall back on Standard DES (should work everywhere)
             $saltlen=2; $saltprefix=''; $saltsuffix=''; break;
     }
@@ -309,7 +308,7 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
          *  Prepare the column values in the access logs  record
          *  @param: group_id: group id
          *  @param: record: a row from the access logs table (passed by  reference).
-         *      
+         *
          *  @return: the same row with values transformed for database export
          */
 

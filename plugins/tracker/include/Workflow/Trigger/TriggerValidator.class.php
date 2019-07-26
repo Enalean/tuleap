@@ -92,7 +92,7 @@ class Tracker_Workflow_Trigger_TriggerValidator {
 
     private function validateTriggeringFieldUniqueness($json) {
         $hash = $json->field_id . '###' . $json->field_value_id;
-        
+
         if (in_array($hash, $this->triggering_fields)) {
             throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('triggering fields must be unique');
         }

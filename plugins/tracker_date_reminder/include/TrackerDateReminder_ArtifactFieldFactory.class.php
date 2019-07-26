@@ -21,7 +21,7 @@
 class TrackerDateReminder_ArtifactFieldFactory {
     protected $fieldsWithNotification = array();
     function __construct() {
-        
+
     }
     /**
      * Return all date fields used
@@ -48,9 +48,9 @@ class TrackerDateReminder_ArtifactFieldFactory {
                 $this->fieldsWithNotification[$row['field_id']] = true;
             }
         }
-        
+
     }
-    
+
     function notificationEnabled($field_id) {
         return isset($this->fieldsWithNotification[$field_id]);
     }

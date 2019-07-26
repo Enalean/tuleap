@@ -131,7 +131,6 @@ class Tracker_Tooltip extends Tracker_Semantic {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
 
-
         $html   = '';
         $fields = $this->getFields();
         if (!count($fields)) {

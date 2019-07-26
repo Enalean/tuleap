@@ -24,7 +24,7 @@ rcs_id('$Id: Utils.php,v 1.2 2004/11/15 16:00:02 rurban Exp $');
 
 function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
     // This is largely lifted from the TranslateText plugin, which performs a
-    // similar set of functions (retrieves a user's homepage, modifies it 
+    // similar set of functions (retrieves a user's homepage, modifies it
     // progmatically, and saves the changes)
     $homepage = $user->_HomePagehandle;
     $transpagename = $homepage->getName();
@@ -53,9 +53,9 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
     // advance version counter, save
     $page->save($text, $version + 1, $meta);
 }
- 
+
 function getMembers($groupName, $dbi, $START_DELIM = false) {
-    if (!$START_DELIM) $START_DELIM = _("Members:");    
+    if (!$START_DELIM) $START_DELIM = _("Members:");
     return getPageTextData($groupName, $dbi, $START_DELIM);
 }
 
@@ -73,16 +73,16 @@ function getPageTextData($fromUser, $dbi, $START_DELIM) {
             if(!((strpos($pageArray[$i], $START_DELIM)) === FALSE)){
                 $p = $i;
                 break;
-            }    
+            }
         }
     }
     $retArray = array();
     if ($p >= 0){
         $singles = $pageArray[$p];
         $singles = substr($singles, strpos($singles, $START_DELIM) + strlen($START_DELIM));
-        
+
         $retArray = explode(',', $singles);
-    }    
+    }
     for ($i = 0; $i < count($retArray); $i++) {
         $retArray[$i] = trim($retArray[$i]);
     }

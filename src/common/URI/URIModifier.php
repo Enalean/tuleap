@@ -48,7 +48,6 @@ class URIModifier
             return $carry;
         }, array());
 
-
         $filtered_uri = implode(DIRECTORY_SEPARATOR, $filtered_buffer);
 
         $last_element_input_buffer = end($input_buffer);

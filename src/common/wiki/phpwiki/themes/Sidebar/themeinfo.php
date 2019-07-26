@@ -21,7 +21,7 @@
 /*
  * This file defines the Sidebar appearance ("theme") of PhpWiki,
  * which can be used as parent class for all sidebar themes. See blog.
- * This use the dynamic jscalendar, which doesn't need extra requests 
+ * This use the dynamic jscalendar, which doesn't need extra requests
  * per month/year change.
  */
 
@@ -48,7 +48,7 @@ class Theme_Sidebar extends Theme {
     }
 
     function calendarLink($date = false) {
-        return $this->calendarBase() . SUBPAGE_SEPARATOR . 
+        return $this->calendarBase() . SUBPAGE_SEPARATOR .
                strftime("%Y-%m-%d", $date ? $date : time());
     }
 
@@ -56,11 +56,11 @@ class Theme_Sidebar extends Theme {
         static $UserCalPageTitle = false;
         global $request;
 
-        if (!$UserCalPageTitle) 
-            $UserCalPageTitle = $request->_user->getId() . 
+        if (!$UserCalPageTitle)
+            $UserCalPageTitle = $request->_user->getId() .
                                 SUBPAGE_SEPARATOR . _("Calendar");
         if (!$UserCalPageTitle)
-            $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? '' 
+            $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? ''
                                  : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . "Blog";
         return $UserCalPageTitle;
     }
@@ -72,7 +72,7 @@ class Theme_Sidebar extends Theme {
             $jslang = @$GLOBALS['LANG'];
             $this->addMoreHeaders
                 (
-                 $this->_CSSlink(0, 
+                 $this->_CSSlink(0,
                                  $this->_findFile('jscalendar/calendar-phpwiki.css'), 'all'));
             $this->addMoreHeaders
                 (JavaScript('',
@@ -82,7 +82,7 @@ class Theme_Sidebar extends Theme {
             $this->addMoreHeaders(JavaScript('',array('src' => $langfile)));
             $this->addMoreHeaders
                 (JavaScript('',
-                            array('src' => 
+                            array('src' =>
                                   $this->_findData('jscalendar/calendar-setup'.(DEBUG?'':'_stripped').'.js'))));
 
             // Get existing date entries for the current user
@@ -173,9 +173,9 @@ $WikiTheme->setLinkIcon('*', 'url');
 $WikiTheme->setAutosplitWikiWords(true);
 
 /**
- * If true (default) show create '?' buttons on not existing pages, even if the 
+ * If true (default) show create '?' buttons on not existing pages, even if the
  * user is not signed in.
- * If false, anon users get no links and it looks cleaner, but then they 
+ * If false, anon users get no links and it looks cleaner, but then they
  * cannot easily fix missing pages.
  */
 $WikiTheme->setAnonEditUnknownLinks(false);
@@ -199,5 +199,5 @@ $WikiTheme->setAnonEditUnknownLinks(false);
 // c-basic-offset: 4
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
-// End:   
+// End:
 ?>

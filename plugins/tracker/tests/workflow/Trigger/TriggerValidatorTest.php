@@ -181,7 +181,7 @@ class Tracker_Workflow_Trigger_TriggerValidator_validateJsonFormat_Test extends 
         $condition = 'some_condition';
         $triggers = array();
         $rule = new Tracker_Workflow_Trigger_TriggerRule(7, $target, $condition, $triggers);
-        
+
         $collection = new Tracker_Workflow_Trigger_TriggerRuleCollection();
         $collection->push($rule);
 

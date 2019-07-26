@@ -36,7 +36,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Constructor
-     * 
+     *
      * @param Plugin $plugin The plugin
      */
     public function __construct(Plugin $plugin) {
@@ -44,10 +44,10 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         $this->pluginPath = $plugin->getPluginPath();
         $this->themePath  = $plugin->getThemePath();
     }
-    
+
     /**
      * Widget title
-     * 
+     *
      * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
@@ -62,7 +62,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Widget content
-     * 
+     *
      * @see src/common/Widget/Widget#getContent()
      * @return String
      */
@@ -79,7 +79,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Get HTML display of all links from and to given project.
-     * 
+     *
      * @param int $groupId Group id
      * @return String
      */
@@ -103,7 +103,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Build the top list of link for the 2 ways (links and back_links).
-     * 
+     *
      * @param  String $way Either 'links' or 'back_links'
      * @param  String $sql The SQL to get the links
      * @return String
@@ -131,10 +131,10 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Build the HTML for all the link with the same way (from or to the project)
-     * 
+     *
      * It build either the list of all "forward" links or the list of all
      * "back links"
-     * 
+     *
      * @param  String $way Either 'links' or 'back_links'
      * @param  String $res One row of link
      * @return String
@@ -153,7 +153,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
                 }
                 $spanId  = 'plugin_project_links_name_'.$way.'_'.$row['link_type_id'];
                 $cssClass = Toggler::getClassName($spanId);
-                
+
                 // Link name title
                 $html     .= "  <li class='project-link-list'><span id=\"" . $spanId . "\" class=\"" . $cssClass . "\">" . $row['link_name'] . "</span>\n";
                 $html     .= "    <ul class='project-link-list'>\n";
@@ -177,7 +177,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     /**
      * Build url for one link.
-     * 
+     *
      * @param  array $row One row for a link
      * @return String
      */
@@ -192,10 +192,10 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         $html = '<a href="'.$url.'">'.$ic.$row['group_name'].'</a>';
         return $html;
     }
-    
+
     /**
      * Return ProjectLinksDao
-     * 
+     *
      * @return ProjectLinksDao
      */
     function getProjectLinksDao() {

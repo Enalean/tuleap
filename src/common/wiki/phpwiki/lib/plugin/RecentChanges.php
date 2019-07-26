@@ -177,14 +177,14 @@ extends _RecentChanges_Formatter
         global $request, $WikiTheme;
 
         $rss_url = $request->getURLtoSelf(array('format' => 'rss'));
-        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'), 
+        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'),
                            $WikiTheme->makeButton("RSS", $rss_url, 'rssicon'));
     }
     function rss2_icon () {
         global $request, $WikiTheme;
 
         $rss_url = $request->getURLtoSelf(array('format' => 'rss2'));
-        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'), 
+        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'),
                            $WikiTheme->makeButton("RSS2", $rss_url, 'rssicon'));
     }
 
@@ -257,7 +257,7 @@ extends _RecentChanges_Formatter
                 $desc = fmt("All %s are listed below.", $edits);
         }
         return $desc;
-    }    
+    }
 
     function description() {
         return HTML::p(false, $this->pre_description());
@@ -275,10 +275,10 @@ extends _RecentChanges_Formatter
     function empty_message () {
         if (isset($this->_args['caption']) and $this->_args['caption'] == _("Recent Comments"))
             return _("No comments found");
-        else 
+        else
             return _("No changes found");
     }
-        
+
     function sidebar_link() {
         extract($this->_args);
         $pagetitle = $show_minor ? _("RecentEdits") : _("RecentChanges");
@@ -307,11 +307,11 @@ extends _RecentChanges_Formatter
 
     function format ($changes) {
         include_once('lib/InlineParser.php');
-        
+
         $html = HTML(HTML::h2(false, $this->title()));
         if (($desc = $this->description()))
             $html->pushContent($desc);
-        
+
         if ($this->_args['daylist'])
             $html->pushContent(new DayButtonBar($this->_args));
 
@@ -342,7 +342,7 @@ extends _RecentChanges_Formatter
         if ($first)
             $html->pushContent(HTML::p(array('class' => 'rc-empty'),
                                        $this->empty_message()));
-        
+
         return $html;
     }
 
@@ -356,7 +356,6 @@ extends _RecentChanges_Formatter
             $time = HTML::strong(array('class' => 'pageinfo-majoredit'), $time);
 
         $line = HTML::li(array('class' => $class));
-
 
         if ($args['difflinks'])
             $line->pushContent($this->diffLink($rev), ' ');
@@ -453,7 +452,7 @@ extends _RecentChanges_HtmlFormatter
         $html = HTML::div(array('class' => 'wikitext'), $html);
         global $request;
         $request->discardOutput();
-        
+
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", $GLOBALS['charset']);
         printf('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"');
         printf('  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
@@ -507,7 +506,7 @@ extends _RecentChanges_HtmlFormatter
         while ($rev = $changes->next()) {
             // enforce view permission
             if (mayAccessPage('view',$rev->_pagename)) {
-                if ($link = $this->pageLink($rev)) // some entries may be empty 
+                if ($link = $this->pageLink($rev)) // some entries may be empty
                                        // (/Blog/.. interim pages)
                     $html->pushContent($sp, $link, HTML::br());
                 if ($first)
@@ -536,7 +535,7 @@ extends _RecentChanges_Formatter
     }
 
     function format ($changes) {
-        
+
         include_once('lib/RssWriter.php');
         $rss = new RssWriter;
 
@@ -746,10 +745,10 @@ extends WikiPlugin
 
         // Nevertheless, for now, I leave this here, mostly as an
         // example for how to use appendValidators() and managesValidators().
-        
+
         return true;
     }
-            
+
     function getDefaultArguments() {
         return array('days'         => 2,
                      'show_minor'   => false,
@@ -846,7 +845,7 @@ extends WikiPlugin
         // HACKish: fix for SF bug #622784  (1000 years of RecentChanges ought
         // to be enough for anyone.)
         $args['days'] = min($args['days'], 365000);
-        
+
         // Hack alert: format() is a NORETURN for rss formatters.
         return $this->format($this->getChanges($dbi, $args), $args);
     }

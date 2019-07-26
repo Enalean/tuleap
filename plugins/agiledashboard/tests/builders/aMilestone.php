@@ -36,17 +36,17 @@ class Test_Planning_MilestoneBuilder {
      * @var Project
      */
     private $project;
-    
+
     /**
      * @var Planning
      */
     private $planning;
-    
+
     /**
      * @var Tracker_Artifact
      */
     private $artifact;
-    
+
     /**
      * @var array of Planning_Milestone
      */
@@ -60,31 +60,31 @@ class Test_Planning_MilestoneBuilder {
         $this->artifact                     = anArtifact()->build();
         $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
     }
-    
+
     public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {
         $this->project = $other_milestone->getProject();
         return $this;
     }
-    
+
     public function withArtifact(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
         return $this;
     }
-    
+
     public function withGroup($project) {
         $this->project = $project;
         return $this;
     }
-    
+
     public function withPlanningId($planning_id) {
         $this->withPlanning(aPlanning()->withId($planning_id)->build());
         return $this;
     }
-    
+
     public function withXRef($xref) {
         $this->artifact->withXRef($xref);
     }
-    
+
     public function withPlanning(Planning $planning) {
         $this->planning = $planning;
         return $this;

@@ -22,7 +22,7 @@ require_once('common/dao/MailingListDao.class.php');
 /**
  *
  * MailingList object
- * 
+ *
  */
 class MailingList {
 

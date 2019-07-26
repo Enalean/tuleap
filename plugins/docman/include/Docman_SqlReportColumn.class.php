@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ class Docman_SqlReportColumnFactory {
     }
 }
 
-class Docman_SqlReportColumn 
+class Docman_SqlReportColumn
 extends Docman_MetadataSqlQueryChunk {
     var $column;
 
@@ -48,7 +48,7 @@ extends Docman_MetadataSqlQueryChunk {
 
     function getOrderBy() {
         $sql = '';
-        
+
         $sort = $this->column->getSort();
         if($sort !== null) {
             if($sort == PLUGIN_DOCMAN_SORT_ASC) {

@@ -44,8 +44,6 @@ class PwnedPasswordChecker
         $sha1_password_prefix = substr($sha1_password, 0, self::PREFIX_SIZE);
         $sha1_password_suffix = substr($sha1_password, self::PREFIX_SIZE);
 
-
-
         $hash_suffixes = $this->pwned_password_range_retriever->getHashSuffixesMatchingPrefix($sha1_password_prefix);
         $has_match     = preg_match('/^' . preg_quote($sha1_password_suffix, '/') . '\:(\d+)/m', $hash_suffixes, $matches);
 

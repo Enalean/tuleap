@@ -132,7 +132,6 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
             )
         );
 
-
         stub($this->manager)->getForTargetTracker()->returns(
             array($rule_01, $rule_02)
         );

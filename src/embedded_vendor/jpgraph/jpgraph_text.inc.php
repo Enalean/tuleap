@@ -309,13 +309,13 @@ class Text {
             return $this->$variable_name;
         }
 
-        $variable_name = '_' . $name; 
+        $variable_name = '_' . $name;
 
         if (isset($this->$variable_name)) {
             return $this->$variable_name * SUPERSAMPLING_SCALE;
         } else {
             JpGraphError::RaiseL('25132', $name);
-        } 
+        }
     }
 
     function __set($name, $value) {

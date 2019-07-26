@@ -170,7 +170,6 @@ class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
         $this->event_manager  = \Mockery::spy(\EventManager::class);
         $this->ugroup_manager = partial_mock('UGroupManager', array('getById'), array($this->dao, $this->event_manager));
 
-
         $this->ugroup_12 = new ProjectUGroup(array('ugroup_id' => 12));
         $this->ugroup_24 = new ProjectUGroup(array('ugroup_id' => 24));
         stub($this->ugroup_manager)->getById(12)->returns($this->ugroup_12);

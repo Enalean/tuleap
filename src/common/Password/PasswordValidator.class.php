@@ -25,32 +25,32 @@
     var $description;
     /**
     * PasswordValidator
-    * 
-    * @param  description  
+    *
+    * @param  description
     */
     function __construct($description) {
         $this->description = $description;
     }
-    
+
     /**
     * validate
-    * 
+    *
     * @return bool true if the password is valid
     *
     */
     /* abstract */ function validate($pwd) {
         return false;
     }
-    
+
     /**
     * description
-    * 
+    *
     * @return string descrption of the validator
     *
     */
     function description() {
         return $this->description;
     }
-    
+
 }
 ?>

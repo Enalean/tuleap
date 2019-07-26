@@ -26,7 +26,6 @@ class ImgTrans {
     // --------------------------------------------------------------------
     function _TransVert3D($aGdImg,$aHorizon=100,$aSkewDist=120,$aDir=SKEW3D_DOWN,$aMinSize=true,$aFillColor='#FFFFFF',$aQuality=false,$aBorder=false,$aHorizonPos=0.5) {
 
-
         // Parameter check
         if( $aHorizonPos < 0 || $aHorizonPos > 1.0 ) {
             JpGraphError::RaiseL(9001);

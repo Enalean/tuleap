@@ -73,7 +73,6 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
             $include_assets->getFileURL('tuleap_synchro.js')
         );
 
-
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(

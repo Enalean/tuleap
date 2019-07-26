@@ -110,7 +110,6 @@ class XMLDocmanImport {
         $this->autoRetry = $autoRetry;
         $this->logger = $logger;
 
-
         $this->logger->info("Init Import process");
 
         try {
@@ -162,7 +161,7 @@ class XMLDocmanImport {
             } else {
                 $type = $this->metadataMap[$this->importMessageMetadata]['type'];
                 if ($type != PLUGIN_DOCMAN_METADATA_TYPE_TEXT && $type != PLUGIN_DOCMAN_METADATA_TYPE_STRING) {
-                    throw new Exception("The import message metadata type must be 'string' or 'text'");               
+                    throw new Exception("The import message metadata type must be 'string' or 'text'");
                 }
             }
         }

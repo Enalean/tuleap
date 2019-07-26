@@ -21,18 +21,18 @@
 require_once __DIR__.'/../bootstrap.php';
 
 class MockTrackerBuilder {
-    
+
     private $id;
-    
+
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withProjectId($id) {
         stub($this->tracker)->getGroupId()->returns($id);
         return $this;
@@ -47,12 +47,12 @@ class MockTrackerBuilder {
         stub($this->tracker)->getName()->returns($name);
         return $this;
     }
-    
+
     public function withItemName($item_name) {
         stub($this->tracker)->getItemName()->returns($item_name);
         return $this;
     }
-    
+
     public function withStatusField($field) {
         stub($this->tracker)->getStatusField()->returns($field);
         return $this;
@@ -63,17 +63,17 @@ class MockTrackerBuilder {
         stub($this->tracker)->getParent()->returns($tracker);
         return $this;
     }
-    
+
     public function havingFormElementWithNameAndType($name, $type_or_types) {
         stub($this->tracker)->hasFormElementWithNameAndType($name, $type_or_types)->returns(true);
         return $this;
     }
-    
+
     public function havingNoFormElement($name) {
         stub($this->tracker)->hasFormElementWithNameAndType($name, '*')->returns(false);
         return $this;
     }
-    
+
     public function build() {
         stub($this->tracker)->getId()->returns($this->id);
         stub($this->tracker)->__toString()->returns('Tracker #'.$this->id);

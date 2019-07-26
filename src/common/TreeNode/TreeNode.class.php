@@ -36,7 +36,7 @@ class TreeNode /*implements Visitable*/ {
      * @type mixed
      */
     var $data;
-    
+
     /**
      * @var mixed
      */
@@ -46,15 +46,15 @@ class TreeNode /*implements Visitable*/ {
      * @type array
      */
     var $children;
-    
+
     /**
      * @type TreeNode Reference
      */
     var $parentNode;
-    
+
     private $id;
-    
-    
+
+
     /**
      * Constructor
      */
@@ -67,11 +67,11 @@ class TreeNode /*implements Visitable*/ {
         $this->children   = array();
         $this->parentNode = null;
     }
-    
+
     public function getId() {
         return $this->id;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
     }
@@ -88,17 +88,17 @@ class TreeNode /*implements Visitable*/ {
 
     /**
      * Return a reference on data of current node.
-     * 
+     *
      * @return mixed (reference)
      */
     function &getData() {
         return $this->data;
     }
-    
+
 
     /**
      * Set current node parent.
-     * 
+     *
      * @access private
      * @return mixed (reference)
      */
@@ -114,7 +114,7 @@ class TreeNode /*implements Visitable*/ {
 
     /**
      * Return a reference on current node parent.
-     * 
+     *
      * @return mixed (reference)
      */
     function &getParentNode() {
@@ -155,7 +155,7 @@ class TreeNode /*implements Visitable*/ {
 
     /**
      * Remove a child.
-     * 
+     *
      * @param int $key Id of child to remove.
      */
     function removeChild($key, $object = null) {
@@ -185,11 +185,11 @@ class TreeNode /*implements Visitable*/ {
         else {
             trigger_error(static::class.'::getChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
         }
-    }      
+    }
 
 
     /**
-     * Get children 
+     * Get children
      *
      * @return array of TreeNode
      */
@@ -199,7 +199,7 @@ class TreeNode /*implements Visitable*/ {
 
 
     /**
-     * Set children. 
+     * Set children.
      *
      * @param $children array of TreeNode
      */
@@ -223,7 +223,7 @@ class TreeNode /*implements Visitable*/ {
     }
 
     /**
-     * Return true if Node has children. 
+     * Return true if Node has children.
      *
      * @return bool .
      */
@@ -248,14 +248,14 @@ class TreeNode /*implements Visitable*/ {
     }
 
     /**
-     * Visitor entry. 
+     * Visitor entry.
      *
      * @param Visitor
      */
     function accept(&$visitor, $params = null) {
         return $visitor->visit($this, $params);
     }
-    
+
     public function __toString() {
         $children_as_string = '';
         foreach ($this->getChildren() as $child) {
@@ -269,25 +269,25 @@ class TreeNode /*implements Visitable*/ {
      */
     public function flattenChildren() {
         $flatten_children = array();
-        
+
         foreach($this->getChildren() as $child) {
             $flatten_children = array_merge($flatten_children, $child->flatten());
         }
-        
+
         return $flatten_children;
     }
-    
+
     /**
      * @return array A flat list of this node and all its descendants (usefull for tests).
      */
     public function flatten() {
         return array_merge(array($this), $this->flattenChildren());
     }
-    
+
     public function getObject() {
         return $this->object;
     }
-    
+
     public function setObject($object) {
         $this->object = $object;
     }

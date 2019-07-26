@@ -473,7 +473,6 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(500, $e->getMessage());
         }
 
-
         return $this->get($repository->getId());
     }
 
@@ -621,7 +620,6 @@ class RepositoryResource extends AuthenticatedResource
         if ($disconnect_from_gerrit) {
             $this->disconnect($repository, $disconnect_from_gerrit);
         }
-
 
         $this->sendAllowHeaders();
     }

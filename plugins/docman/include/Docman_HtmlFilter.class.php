@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 class Docman_HtmlFilterFactory {
 
     function __construct() {
-        
+
     }
 
     function getFromFilter($filter) {
@@ -109,7 +109,7 @@ class Docman_HtmlFilterDate extends Docman_HtmlFilter {
     function __construct($filter) {
         parent::__construct($filter);
     }
-    
+
     function _valueSelectorHtml($formName) {
         $html = '';
         $html .= html_select_operator($this->filter->getFieldOperatorName(), $this->filter->getOperator());
@@ -124,7 +124,7 @@ class Docman_HtmlFilterDate extends Docman_HtmlFilter {
     }
 }
 
-class Docman_HtmlFilterDateAdvanced 
+class Docman_HtmlFilterDateAdvanced
 extends Docman_HtmlFilterDate {
 
     function __construct($filter) {
@@ -159,7 +159,7 @@ extends Docman_HtmlFilterDate {
 
 
 class Docman_HtmlFilterList extends Docman_HtmlFilter {
-    
+
     function __construct($filter) {
         parent::__construct($filter);
     }
@@ -175,24 +175,24 @@ class Docman_HtmlFilterList extends Docman_HtmlFilter {
         $vIter->rewind();
         while($vIter->valid()) {
             $e = $vIter->current();
-            
-            if($e->getStatus() == 'A' 
-               || $e->getStatus() == 'P') {                
+
+            if($e->getStatus() == 'A'
+               || $e->getStatus() == 'P') {
                 $vals[]  = $e->getId();
                 $txts[] = Docman_MetadataHtmlList::_getElementName($e);
             }
-            
+
             $vIter->next();
         }
-        
+
         $html = $this->buildSelectBox($vals, $txts);
         return $html;
     }
 }
 
-class Docman_HtmlFilterListAdvanced 
+class Docman_HtmlFilterListAdvanced
 extends Docman_HtmlFilterList {
-    
+
     function __construct($filter) {
         parent::__construct($filter);
     }

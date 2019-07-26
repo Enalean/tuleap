@@ -197,7 +197,6 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
             $presenter_builder->build($user, $project, $this)
         );
 
-
         $items = array('add_to_dashboard' => $html) + $items;
     }
 

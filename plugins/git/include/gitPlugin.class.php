@@ -271,7 +271,6 @@ class GitPlugin extends Plugin
         $this->addHook(Event::REST_PROJECT_GET_GIT);
         $this->addHook(Event::REST_PROJECT_OPTIONS_GIT);
 
-
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
 

@@ -22,7 +22,7 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for Docman_VersionDao 
+ *  Data Access Object for Docman_VersionDao
  */
 class Docman_VersionDao extends DataAccessObject {
     /**
@@ -33,9 +33,9 @@ class Docman_VersionDao extends DataAccessObject {
         $sql = "SELECT * FROM plugin_docman_version";
         return $this->retrieve($sql);
     }
-    
+
     /**
-    * Searches Docman_VersionDao by Id 
+    * Searches Docman_VersionDao by Id
     * @return DataAccessResult
     */
     function searchById($id, $table = 'plugin_docman_version') {
@@ -45,7 +45,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by ItemId 
+    * Searches Docman_VersionDao by ItemId
     * @return DataAccessResult
     */
     function searchByItemId($itemId) {
@@ -55,7 +55,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Number 
+    * Searches Docman_VersionDao by Number
     * @return DataAccessResult
     */
     function searchByNumber($item_id, $number) {
@@ -66,7 +66,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by UserId 
+    * Searches Docman_VersionDao by UserId
     * @return DataAccessResult
     */
     function searchByUserId($userId) {
@@ -76,7 +76,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Label 
+    * Searches Docman_VersionDao by Label
     * @return DataAccessResult
     */
     function searchByLabel($label) {
@@ -86,7 +86,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Changelog 
+    * Searches Docman_VersionDao by Changelog
     * @return DataAccessResult
     */
     function searchByChangelog($changelog) {
@@ -96,7 +96,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Date 
+    * Searches Docman_VersionDao by Date
     * @return DataAccessResult
     */
     function searchByDate($date) {
@@ -106,7 +106,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Filename 
+    * Searches Docman_VersionDao by Filename
     * @return DataAccessResult
     */
     function searchByFilename($filename) {
@@ -116,7 +116,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Filesize 
+    * Searches Docman_VersionDao by Filesize
     * @return DataAccessResult
     */
     function searchByFilesize($filesize) {
@@ -126,7 +126,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Filetype 
+    * Searches Docman_VersionDao by Filetype
     * @return DataAccessResult
     */
     function searchByFiletype($filetype) {
@@ -136,7 +136,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * Searches Docman_VersionDao by Path 
+    * Searches Docman_VersionDao by Path
     * @return DataAccessResult
     */
     function searchByPath($path) {
@@ -171,7 +171,7 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-    * create a row in the table plugin_docman_version 
+    * create a row in the table plugin_docman_version
     * @return true or id(auto_increment) if there is no error
     */
     function create($item_id, $number, $user_id, $label, $changelog, $date, $filename, $filesize, $filetype, $path) {
@@ -224,7 +224,7 @@ class Docman_VersionDao extends DataAccessObject {
         }
         return $inserted;
     }
-    
+
     /**
      * Update the path for stored files when a project is being renamed
      * @param  String  $docman_path
@@ -233,9 +233,9 @@ class Docman_VersionDao extends DataAccessObject {
      * @return bool
      */
     function renameProject($docman_path, $project, $new_name){
-    
+
         $sql_update = 'UPDATE plugin_docman_version '.
-                      'SET path = REPLACE (path,'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').' ,'.$this->da->quoteSmart($docman_path.strtolower($new_name).'/').') '. 
+                      'SET path = REPLACE (path,'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').' ,'.$this->da->quoteSmart($docman_path.strtolower($new_name).'/').') '.
                       'WHERE path LIKE '.$this->da->quoteLikeValueSurround($docman_path.$project->getUnixName(true).'/');
         return $this->update($sql_update);
     }
@@ -243,10 +243,10 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * Delete given version of document and save the entry on plugin_docman_version_deleted
      * in order to ease the restore later
-     * 
+     *
      * @param int $itemId
      * @param int $number
-     * 
+     *
      * @return bool
      */
     function deleteSpecificVersion($itemId, $number) {
@@ -266,10 +266,10 @@ class Docman_VersionDao extends DataAccessObject {
 
     /**
      * Restore one version of an item
-     * 
+     *
      * @param int $itemId
      * @param int $number
-     * 
+     *
      * @return bool
      */
     function restore($itemId, $number) {
@@ -303,10 +303,10 @@ class Docman_VersionDao extends DataAccessObject {
              '        plugin_docman_version_deleted.item_id as item_id '.
              ' FROM plugin_docman_item, plugin_docman_version_deleted '.
              ' WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
-             '        AND group_id='.db_ei($groupId). 
+             '        AND group_id='.db_ei($groupId).
              '        AND plugin_docman_version_deleted.delete_date <= '.$_SERVER['REQUEST_TIME'].
              '        AND plugin_docman_version_deleted.purge_date IS NULL '.
-             '        AND plugin_docman_item.delete_date IS NULL'. 
+             '        AND plugin_docman_item.delete_date IS NULL'.
              ' ORDER BY plugin_docman_version_deleted.delete_date DESC '.
              ' LIMIT '.db_ei($offset).', '.db_ei($limit);
 
@@ -363,10 +363,10 @@ class Docman_VersionDao extends DataAccessObject {
 
     /**
      * Search for a deleted version
-     * 
+     *
      * @param $itemId
      * @param $number
-     * 
+     *
      * @return DataAccessResult
      */
     function searchDeletedVersion($itemId, $number) {

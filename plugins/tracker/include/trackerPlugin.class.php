@@ -1248,7 +1248,6 @@ class trackerPlugin extends Plugin {
             $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
         }
 
-
     }
 
     public function system_event_get_types_for_default_queue($params) {

@@ -28,7 +28,7 @@ require_once("lib/PageList.php");
  * or our own fulltextsearch, the terms they search for are highlighted.
  * See http://wordpress.org/about/shots/1.2/plugins.png
  *
- * Could be hooked from lib/display.php (but then not possible for actionpages) 
+ * Could be hooked from lib/display.php (but then not possible for actionpages)
  * or at request->flush or on a template. (if google referrer, search)
  */
 class WikiPlugin_SearchHighlight

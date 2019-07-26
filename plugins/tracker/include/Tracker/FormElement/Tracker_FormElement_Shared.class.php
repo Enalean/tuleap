@@ -21,66 +21,66 @@
 
 class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryButtonInformation {
     /**
-     * @var Tracker 
+     * @var Tracker
      */
     private $tracker;
-    
+
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return 'Shared field';
     }
-    
+
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return 'Use a field defined in another tracker';
     }
-     
+
     /**
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/-shared-field.png');
     }
-    
+
     /**
      * @return the path to the icon to create an element
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-shared-field.png');
     }
-    
+
     /**
      * @return bool say if the field is a unique one
      */
     public static function getFactoryUniqueField() {
         return false;
     }
-    
+
     /**
      * @return Tracker
      */
     public function getTracker() {
         return $this->tracker;
     }
-    
+
     /**
-     * @param Tracker $tracker 
+     * @param Tracker $tracker
      */
     public function setTracker(Tracker $tracker) {
         $this->tracker = $tracker;
     }
-    
+
     /**
-     * @param Tracker_FormElement_Visitor $visitor 
+     * @param Tracker_FormElement_Visitor $visitor
      */
     public function accept(Tracker_FormElement_Visitor $visitor) {
         $visitor->visit($this);
     }
-    
+
     public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
         $this->id            = $id;
         $this->tracker_id    = $tracker_id;

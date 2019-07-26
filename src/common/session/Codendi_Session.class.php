@@ -34,7 +34,7 @@ class Codendi_Session extends PHP_Session {
         $this->session_namespace_path = '.';
         $this->session_namespace =& $this->session;
     }
-    
+
     public function __isset($key) {
         return isset($this->session_namespace[$key]);
     }
@@ -50,8 +50,8 @@ class Codendi_Session extends PHP_Session {
 
     public function __unset($key) {
         unset($this->session_namespace[$key]);
-    }   
-   
+    }
+
     /**
      * This function unset data a the specified namespace level
      * It differs from "set" method since it allows to unset
@@ -117,7 +117,7 @@ class Codendi_Session extends PHP_Session {
                 //last path element not reached yet <=> wrong path
             if ( !$create_path && $i < $count && ((is_array($session) && !isset($session[$path])) || !is_array($session) || !is_array($session[$path]) )) {
                 $r = null;
-                return $r; 
+                return $r;
             }
 
                 //only array can be iterated
@@ -128,15 +128,15 @@ class Codendi_Session extends PHP_Session {
                 if ($create_path) {
                     $session[$path] = array();
                 } else {
-               //path does not exist and we do not want to create it 
+               //path does not exist and we do not want to create it
                     $r = null;
                     return $r;
                 }
-            } 
+            }
             $session = &$session[$path];
         }
         return $session;
-    }   
+    }
 
     /**
      * clean a given namespace
@@ -153,18 +153,18 @@ class Codendi_Session extends PHP_Session {
     /**
      * !! WARNING !! : never use this in your code, it is only designed for unit testing
      * Set the current session namespace
-     * @param <type> $session_namespace 
+     * @param <type> $session_namespace
      */
     public function setSessionNamespace(&$session_namespace) {
         $this->session_namespace = &$session_namespace;
     }
-    
+
     /**
      * Change global session namespace (only goes down into the tree)
      * @param <type> $namespace
      */
     public function changeSessionNamespace($namespace) {
-        
+
         if ( strpos($namespace, '.') === 0 ) {
             //absolute path
             $this->session_namespace_path = $namespace;
@@ -194,7 +194,7 @@ class Codendi_Session extends PHP_Session {
      */
     public function setSessionNamespacePath($namespace) {
         $this->session_namespace_path = $namespace;
-    }  
+    }
 
 }
 

@@ -30,7 +30,7 @@ class PrioritizedListTest extends LinkedListTestCase {
     function __construct($name = 'PrioritizedList test') {
         parent::__construct($name, 'PrioritizedList');
     }
-    
+
     function testSimplePriority() {
         $a1 = new StdClass();
         $a2 = new StdClass();
@@ -54,7 +54,7 @@ class PrioritizedListTest extends LinkedListTestCase {
         $element = $it->current();
         $this->assertReference($element, $a1);
     }
-    
+
     function testComplexePriority() {
         $a1 = new StdClass();
         $a2 = new StdClass();
@@ -103,7 +103,7 @@ class PrioritizedListTest extends LinkedListTestCase {
         $element = $it->current();
         $this->assertReference($element, $a3);
     }
-    
+
     function testNegativeAndDefaultPriority() {
         $a = new StdClass();
         $b = new StdClass();
@@ -127,7 +127,7 @@ class PrioritizedListTest extends LinkedListTestCase {
         $element = $it->current();
         $this->assertReference($element, $b);
     }
-    
+
     function testNegativeAndDefaultPriority2() {
         $a = new StdClass(); //'#1 (10)';
         $b = new StdClass(); //'#2 (-5)';

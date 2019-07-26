@@ -27,14 +27,14 @@ use Tuleap\Hudson\HudsonJobBuilder;
  * hudsonActions
  */
 class hudsonActions extends Actions {
-    
+
     public function __construct($controler)
     {
         parent::__construct($controler);
 
         $this->svn_paths_updater = new SVNPathsUpdater();
     }
-    
+
     public function addJob()
     {
         $request = HTTPRequest::instance();

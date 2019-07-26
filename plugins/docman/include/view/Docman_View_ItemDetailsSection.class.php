@@ -22,7 +22,7 @@
  */
 
 /* abstract */class Docman_View_ItemDetailsSection {
-    
+
     var $id;
     var $title;
     var $item;
@@ -39,7 +39,7 @@
         $this->url    = $url;
         $this->hp     = Codendi_HTMLPurifier::instance();
     }
-    
+
     function getId() {
         return $this->id;
     }

@@ -148,7 +148,7 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
         $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
         $this->time_period = new TimePeriodWithoutWeekEnd($this->start_date, 2);
     }
-    
+
     public function itHasNoRemainingEffort() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
@@ -161,7 +161,7 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
         $burndown_data->addEffortAt(2, null);
         $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
     }
-    
+
     public function itHasNoIdealBurndown() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $this->assertIdentical($burndown_data->getIdealEffort(), array(0, 0, 0));

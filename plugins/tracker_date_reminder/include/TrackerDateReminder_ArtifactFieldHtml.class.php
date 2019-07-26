@@ -66,7 +66,7 @@ class TrackerDateReminder_ArtifactFieldHtml {
         $out = '';
 
         $baseActionUrl = '/tracker/admin/index.php?func=date_field_notification&group_id='.$at->Group->getID().'&atid='.$at->getID().'&field_id='.$field->getID();
-        
+
         if ($enabled) {
             $out .= '<H3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_title').'</H3>';
             $out .= '<FORM ACTION="'.$baseActionUrl.'&delete_reminder=true" METHOD="POST">';
@@ -81,7 +81,7 @@ class TrackerDateReminder_ArtifactFieldHtml {
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$at->getID().'">';
 
         $out .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notif_settings_field',array($field->getLabel())).'</h3>';
-         
+
         $out .= '<div class="row-fluid" id="tv3-mail-reminders">
             <div class="span12 tv3-mail-reminder">'
                 .$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part1',array($field->getLabel())).
@@ -115,7 +115,7 @@ class TrackerDateReminder_ArtifactFieldHtml {
             $groupNames[] = array('value' => 'g'.$rows['ugroup_id'], 'text' => util_translate_name_ugroup($rows['name']));
         }
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
-        
+
         $out .= '</SELECT>'.
         $GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part5').
             ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','days').'</div>'.

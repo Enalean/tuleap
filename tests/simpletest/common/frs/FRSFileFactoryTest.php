@@ -1099,14 +1099,12 @@ class FRSFileFactoryTest extends TuleapTestCase
         $r->setGroupID(111);
         $r->setProject($p);
 
-
         $f = new FRSFile();
         $f->setFileName('toto.txt');
         $f->setFilePath('toto.txt_1299584210');
         $f->setRelease($r);
         $f->setFileID(15225);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
-
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setLogger(mock('Logger'));
@@ -1146,13 +1144,11 @@ class FRSFileFactoryTest extends TuleapTestCase
         $r->setGroupID(111);
         $r->setProject($p);
 
-
         $f = new FRSFile();
         $f->setFileName('toto.txt');
         $f->setFilePath('toto.txt_1299584210');
         $f->setRelease($r);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
-
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setLogger(mock('Logger'));

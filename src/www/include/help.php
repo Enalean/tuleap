@@ -25,7 +25,7 @@
 * @param        type      the php script or html page that contains/generates help
 * @param        helpid   if specified this is an argument passed to the PHP script
 *                                      if false then it is a static HTML page
-* @param        prompt what to display to point to the  help 
+* @param        prompt what to display to point to the  help
 */
 function help_button($type,$helpid=false,$prompt='[?]') {
     $purifier = Codendi_HTMLPurifier::instance();
@@ -35,7 +35,7 @@ function help_button($type,$helpid=false,$prompt='[?]') {
         $lang = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
         $script = '/doc/'.$lang.'/user-guide/'.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
     } else {
-    // $type is a php script - the invoker probably wants to customize 
+    // $type is a php script - the invoker probably wants to customize
     // the help display somehow
         $script = '/help/'.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
         $script .= '.php?helpid='.$purifier->purify(urlencode($helpid), CODENDI_PURIFIER_JS_QUOTE);

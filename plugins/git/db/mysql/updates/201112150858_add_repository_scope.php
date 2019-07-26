@@ -49,17 +49,17 @@ EOT;
     public function up() {
         $sql = 'ALTER TABLE plugin_git 
                     ADD repository_scope varchar(1) NULL';
-        $res = $this->db->dbh->exec($sql);        
+        $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_scope to the table plugin_git');
         }
-        
+
         $sql = "UPDATE plugin_git SET repository_scope = 'P'";
-        $res = $this->db->dbh->exec($sql);        
+        $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_scope to the table plugin_git');
         }
-        
+
     }
 
     /**

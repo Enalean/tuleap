@@ -198,7 +198,7 @@ class BackendCVS extends Backend {
     protected function recursiveSgidOnDirectories($root) {
         $this->system('find '.$root.' -type d -exec chmod g+rws {} \;');
     }
-    
+
     /**
      * Create lock dir if missing
      *
@@ -252,7 +252,6 @@ class BackendCVS extends Backend {
                     $no_filter_file_extension
                 );
             }
-
 
             // hook for commit tracking in cvs commitinfo file
             $filename = "$cvs_dir/CVSROOT/commitinfo";
@@ -489,7 +488,6 @@ class BackendCVS extends Backend {
             $repolist[]="/cvsroot/".$row['unix_group_name'];
         }
 
-
         if ($this->useCVSNT()) {
             $config_file=$GLOBALS['cvsnt_config_file'];
             $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODENDI BLOCK";
@@ -615,11 +613,11 @@ class BackendCVS extends Backend {
 
         return true;
     }
-   
+
     public function changeRepoOwnership($repo_path, $unix_group_name) {
             return $this->system("chown -R {$this->getHTTPUser()}:{$unix_group_name} $repo_path");
     }
-    
+
     /**
      * Deleting files older than 2 hours in /var/run/log_accum that contain 'files'
      * (they have not been deleted due to commit abort)

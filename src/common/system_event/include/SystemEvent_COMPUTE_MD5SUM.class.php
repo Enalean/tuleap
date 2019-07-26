@@ -28,9 +28,9 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
 
     /**
      * Set multiple logs
-     *  
+     *
      * @param String $log Log string
-     * 
+     *
      * @return void
      */
     public function setLog($log) {
@@ -42,10 +42,10 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     }
 
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -56,9 +56,9 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
         return $txt;
     }
 
-    /** 
+    /**
      * Process stored event
-     * 
+     *
      * @return bool
      */
     public function process() {
@@ -98,7 +98,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     }
     /**
      * Computes the md5sum for a given file
-     * 
+     *
      * @param String $filePath
      *
      * @return String
@@ -108,7 +108,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     }
     /**
      * Inserts the computed md5sum for the uploaded files using ftp
-     * 
+     *
      * @param int $fileId
      * @param String  $md5Computed
      *
@@ -129,12 +129,12 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     }
     /**
      * Manage the mail content and send it
-     * 
+     *
      * @param PFUser    $user
      * @param FRSFile $file
      * @param String  $bodyContent
      * @param Array   $option
-     * 
+     *
      * @return bool
      */
     function sendNotificationMail($user, $file, $bodyContent, $option)
@@ -151,12 +151,12 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
         $mail->setBodyText($language->getText('mail_system_event', $bodyContent, $option));
         return $mail->send();
     }
-    
+
     /**
      * Make comparison between the computed and the reference md5sum
-     * 
+     *
      * @param FRSFile $file
-     * 
+     *
      * @return bool
      */
     function compareMd5Checksums($file) {

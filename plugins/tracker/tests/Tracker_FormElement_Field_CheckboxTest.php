@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_CheckboxTest extends TuleapTestCase {
 
     public function itHasAnHiddenFieldForEachCheckbox() {
         $value = aFieldListStaticValue()->withId(55)->withLabel('bla')->build();
-        
+
         $field = new Tracker_FormElement_Field_CheckboxHTMLTest();
         $field->setBind(mock('Tracker_FormElement_Field_List_Bind_Static'));
         $html = $field->fetchFieldValue($value, 'lename', false);

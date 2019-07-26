@@ -33,10 +33,10 @@
  * |       `-- gitolite
  * `-- tools
  * `-- lxc
- * 
+ *
  */
 $repositories = array(
-    2 => 
+    2 =>
     array (
       'repository_id' => '2',
       'repository_name' => 'abc',
@@ -53,7 +53,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    3 => 
+    3 =>
     array (
       'repository_id' => '3',
       'repository_name' => 'Python',
@@ -70,7 +70,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    4 => 
+    4 =>
     array (
       'repository_id' => '4',
       'repository_name' => 'Ruby',
@@ -87,7 +87,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    5 => 
+    5 =>
     array (
       'repository_id' => '5',
       'repository_name' => 'cvsgraph',
@@ -104,7 +104,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    6 => 
+    6 =>
     array (
       'repository_id' => '6',
       'repository_name' => 'geshi',
@@ -121,7 +121,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    7 => 
+    7 =>
     array (
       'repository_id' => '7',
       'repository_name' => 'gitolite',
@@ -138,7 +138,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    8 => 
+    8 =>
     array (
       'repository_id' => '8',
       'repository_name' => 'lxc/tools',
@@ -155,7 +155,7 @@ $repositories = array(
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
     ),
-    9 => 
+    9 =>
     array (
       'repository_id' => '9',
       'repository_name' => 'gitshell',

@@ -21,18 +21,18 @@
 require_once 'TreeNode.class.php';
 
 class TreeNode_GetStateVisitor {
-    
+
     public const STATE_NODE  = 0;
     public const STATE_LAST  = 1;
     public const STATE_BLANK = 2;
     public const STATE_PIPE  = 3;
-    
+
     private $states = array();
-    
+
     public function getState(TreeNode $node) {
         return $this->states[$node->getId()];
     }
-    
+
     private function setState(TreeNode $node, $prefix) {
         $children    = $node->getChildren();
         $nb_children = count($children);
@@ -59,26 +59,26 @@ class TreeNode_GetStateVisitor {
         $prefix[] = self::STATE_PIPE;
         return $prefix;
     }
-    
+
     private function getChildrenPrefixForLastChild($prefix) {
         $prefix[] = self::STATE_BLANK;
         return $prefix;
     }
-    
+
     private function getDefaultState($prefix) {
         $prefix[] = self::STATE_NODE;
         return $prefix;
     }
-    
+
     private function getStateWhenChildIsTheLastOne($prefix) {
         $prefix[] = self::STATE_LAST;
         return $prefix;
     }
-    
+
     private function isLastChildren($i, $nb_children) {
         return $i == $nb_children - 1;
     }
-    
+
     public function visit(TreeNode $node, $prefix = null) {
         if (!$prefix) {
             $prefix = array();

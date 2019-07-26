@@ -24,29 +24,29 @@
  */
 abstract class SVN_Apache {
     private $project = array();
-    
+
     /**
      * Takes a project DB row
-     * 
-     * @param Array $project 
+     *
+     * @param Array $project
      */
     public function __construct($project) {
         $this->project = $project;
     }
-    
+
     /**
      * Return something to be inserted at the top of the svnroot.conf file
-     * 
+     *
      * @return String
      */
     public function getHeaders() {
         return '';
     }
-    
+
     /**
      * Return project location configuration
-     * 
-     * @return String 
+     *
+     * @return String
      */
     public function getConf($public_path, $system_path) {
         $conf = '';
@@ -60,22 +60,22 @@ abstract class SVN_Apache {
 
         return $conf;
     }
-    
+
     /**
      * Returns the Apache authentication directives for given project
-     * 
+     *
      * @param Array $row Project DB row
-     * 
-     * @return String 
+     *
+     * @return String
      */
     abstract protected function getProjectAuthentication($row);
-    
+
     /**
      * Returns the standard Apache authentication directives (shared by most modules)
-     * 
+     *
      * @param String $projectName
-     * 
-     * @return String 
+     *
+     * @return String
      */
     protected function getCommonAuthentication($projectName) {
         $conf = '';
@@ -84,18 +84,18 @@ abstract class SVN_Apache {
         $conf .= "    AuthName \"Subversion Authorization (".$this->escapeStringForApacheConf($projectName).")\"\n";
         return $conf;
     }
-    
+
 
     protected function getRepositoryAuthorization($svn_dir) {
         $conf = "    AuthzSVNAccessFile ".$svn_dir."/.SVNAccessFile\n";
         return $conf;
     }
-    
+
     /**
      * Replace double quotes by single quotes in project name (conflict with Apache realm name)
-     * 
+     *
      * @param String $str
-     * 
+     *
      * @return String
      */
     protected function escapeStringForApacheConf($str) {

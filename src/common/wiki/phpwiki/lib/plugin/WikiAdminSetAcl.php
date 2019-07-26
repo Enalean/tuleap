@@ -72,7 +72,7 @@ extends WikiPlugin_WikiAdminSelect
                 $group = $acl['_new_group'][$access];
                 $acl[$access][$group] = isset($acl['_new_perm'][$access]) ? 1 : 0;
             }
-            unset($acl['_add_group']); 
+            unset($acl['_add_group']);
         }
         unset($acl['_new_group']); unset($acl['_new_perm']);
         if (isset($acl['_del_group'])) {
@@ -114,7 +114,7 @@ extends WikiPlugin_WikiAdminSelect
                         HTML::p(fmt("No pages changed.")));
         }
     }
-    
+
     function run($dbi, $argstr, &$request, $basepage) {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     //if (!DEBUG)
@@ -124,7 +124,7 @@ extends WikiPlugin_WikiAdminSelect
                 return $this->disabled("(action != 'browse')");
         if (!ENABLE_PAGEPERM)
             return $this->disabled("ENABLE_PAGEPERM = false");
-        
+
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
         $this->preSelectS($args, $request);
@@ -166,7 +166,7 @@ extends WikiPlugin_WikiAdminSelect
         if ($next_action == 'verify') {
             $args['info'] = "checkbox,pagename,perm,mtime,owner,author";
         }
-        $pagelist = new PageList_Selectable($args['info'], 
+        $pagelist = new PageList_Selectable($args['info'],
                                             $args['exclude'],
                                             array('types' => array(
                                                   'perm'
@@ -229,7 +229,7 @@ extends WikiPlugin_WikiAdminSelect
         $header->pushContent(HTML::strong(_("Type").': '), HTML::tt($type),HTML::br());
         $header->pushContent(HTML::strong(_("getfacl").': '), pagePermissionsSimpleFormat($perm_tree, $owner),HTML::br());
         $header->pushContent(HTML::strong(_("ACL").': '), HTML::tt($perm->asAclLines()),HTML::br());
-        
+
         $header->pushContent(HTML::p(HTML::strong(_("Description").': '),
                                      _("Selected Grant checkboxes allow access, unselected checkboxes deny access."),
                                      _("To ignore delete the line."),
@@ -238,8 +238,8 @@ extends WikiPlugin_WikiAdminSelect
         $header->pushContent(HTML::blockquote($table));
         // display array of checkboxes for existing perms
         // and a dropdown for user/group to add perms.
-        // disabled if inherited, 
-        // checkbox to disable inheritance, 
+        // disabled if inherited,
+        // checkbox to disable inheritance,
         // another checkbox to progate new permissions to all childs (if there exist some)
         //Todo:
         // warn if more pages are selected and they have different perms

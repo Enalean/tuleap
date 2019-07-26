@@ -4,7 +4,7 @@
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -88,7 +88,7 @@ class Docman_MetaMetadataHtml
             $selected = '';
             if($this->md->isEmptyAllowed()) {
                 $selected = 'checked="checked"';
-            }          
+            }
             $mdContent .= '<input type="checkbox" data-test="empty_allowed" name="empty_allowed" value="1" '.$selected.' />';
         }
         else {
@@ -115,7 +115,7 @@ class Docman_MetaMetadataHtml
             $selected = '';
             if($this->md->isMultipleValuesAllowed()) {
                 $selected = 'checked="checked"';
-            }          
+            }
             $mdContent .= '<input type="checkbox" name="multiplevalues_allowed" id="multiplevalues_allowed" value="1" '.$selected.' />';
         }
         else {
@@ -143,7 +143,7 @@ class Docman_MetaMetadataHtml
             $selected = '';
             if($this->md->isUsed()) {
                 $selected = 'checked="checked"';
-            }          
+            }
             $mdContent .= '<input type="checkbox" data-test="use_it" name="use_it" value="1" '.$selected.' />';
         }
         else {
@@ -195,8 +195,8 @@ class Docman_MetaMetadataHtml
                            $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_string'),
                            $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_date'),
                            $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type_list'));
-            
-            $mdContent .= html_build_select_box_from_arrays($vals, $texts, 'type', '', false, '');            
+
+            $mdContent .= html_build_select_box_from_arrays($vals, $texts, 'type', '', false, '');
         }
         else {
             switch($this->md->getType()) {

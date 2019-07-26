@@ -62,7 +62,6 @@ class CommitMetadataRetrieverTest extends TestCase
         $this->status_retriever->shouldReceive('getLastCommitStatuses')
             ->andReturns([\Mockery::mock(CommitStatus::class), \Mockery::mock(CommitStatus::class)]);
 
-
         $user = \Mockery::mock(\PFUser::class);
         $user_email_collection = \Mockery::mock(UserEmailCollection::class);
         $user_email_collection->shouldReceive('getUserByEmail')->andReturns($user);

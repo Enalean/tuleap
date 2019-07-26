@@ -127,8 +127,8 @@ $symbol_arr = array(
 '~'    => array( 'input'=>'!~','tag'=>'mo', 'output'=>'&#' . hexdec('0020') . ';'),
 '\\ '    => array( 'input'=>'~','tag'=>'mo', 'output'=>'&#' . hexdec('00A0') . ';'),
 'quad'    => array( 'input'=>'quad','tag'=>'mo', 'output'=>'&#' . hexdec('00A0') . ';&#' . hexdec('00A0') . ';'),
-'qquad'    => array( 'input'=>'qquad','tag'=>'mo', 'output'=>    '&#' . hexdec('00A0') . 
-                                                            ';&#' . hexdec('00A0') . 
+'qquad'    => array( 'input'=>'qquad','tag'=>'mo', 'output'=>    '&#' . hexdec('00A0') .
+                                                            ';&#' . hexdec('00A0') .
                                                             ';&#' . hexdec('00A0') . ';'),
 
 'cdots'    => array( 'input'=>'cdots','tag'=>'mo', 'output'=>'&#' . hexdec('22EF') . ';'),

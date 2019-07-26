@@ -48,18 +48,18 @@ class HudsonBuild {
         RequestFactoryInterface $request_factory
     ) {
         $parsed_url = parse_url($hudson_build_url);
-        
+
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
             throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_build_url)));
         }
-                
+
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
         $this->http_client      = $http_client;
         $this->request_factory  = $request_factory;
 
         $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
     }
-    
+
     protected function _getXMLObject(string $hudson_build_url)
     {
         $response = $this->http_client->sendRequest(
@@ -75,11 +75,11 @@ class HudsonBuild {
         }
         throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_build_url)));
     }
-    
+
     function getDom() {
         return $this->dom_build;
     }
-    
+
     function getBuildStyle() {
         return $this->dom_build->getName();
     }

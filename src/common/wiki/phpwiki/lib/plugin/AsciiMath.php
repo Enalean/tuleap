@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 require_once("lib/ASCIIMathPHP/ASCIIMathPHP.class.php");
 
-/** 
+/**
  * Render ASCII math as MathML
  * Requires ENABLE_XHTML_XML = true
  * See http://www.jcphysics.com/ASCIIMath/

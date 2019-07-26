@@ -22,17 +22,17 @@
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Icons extends Docman_View_Browse {
-    
+
     /* protected */ function _content($params) {
-        
+
         $html = '';
-        
+
         $itemFactory = new Docman_ItemFactory($params['group_id']);
         $itemTree = $itemFactory->getItemSubTree($params['item'], $params['user']);
-        
+
         $items = $itemTree->getAllItems();
         $nb = $items->size();
-        if ($nb) { 
+        if ($nb) {
             $html .= '<table border="0" cellpadding="0" cellspacing="4" width="100%">';
             $folders   = array();
             $documents = array();
@@ -79,7 +79,7 @@ class Docman_View_Icons extends Docman_View_Browse {
         }
         echo $html;
     }
-    
+
     function visitFolder(&$item, $params) {
         $this->is_folder = true;
     }
@@ -101,13 +101,13 @@ class Docman_View_Icons extends Docman_View_Browse {
     function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    
+
     function _displayItem(&$item, $params) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<div id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'" style="position:relative;">';
-        
+
         $show_options = isset($params['show_options']) && $params['show_options'] == $item->getId();
-        
+
         $icon_src = $params['docman_icons']->getIconForItem($item, $params);
         $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
 

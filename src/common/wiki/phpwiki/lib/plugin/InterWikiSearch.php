@@ -69,7 +69,7 @@ extends WikiPlugin
  * @desc
  */
 if (defined('DEBUG') && DEBUG) {
-    class PageFormatter_searchableInterWikiMap 
+    class PageFormatter_searchableInterWikiMap
     extends PageFormatter_interwikimap {}
 
     class PageType_searchableInterWikiMap

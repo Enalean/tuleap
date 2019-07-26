@@ -61,8 +61,6 @@ class ArtifactLinkInformationPrepender
             $value = $this->fetchLinkToFolder($folder_hierarchy);
         }
 
-
-
         if (! $read_only) {
             $current_folder = null;
             if ($folder_hierarchy) {

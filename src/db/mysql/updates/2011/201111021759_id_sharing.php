@@ -33,7 +33,7 @@ EOT;
     public function up() {
         $aid = 0;
         $tid = 0;
-        
+
         $sql = "SELECT IFNULL(MAX(artifact_id), 0) AS last_artifact_id FROM artifact";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
@@ -43,7 +43,7 @@ EOT;
         $aid = $row['last_artifact_id'];
         $res->closeCursor();
         unset($res);
-        
+
         $sql = "SELECT IFNULL(MAX(group_artifact_id), 0) AS last_tracker_id FROM artifact_group_list";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
@@ -53,7 +53,7 @@ EOT;
         $tid = $row['last_tracker_id'];
         $res->closeCursor();
         unset($res);
-        
+
         // Is plugin tracker installed?
         if ($this->db->tableNameExists('tracker_artifact')) {
             $sql = "SELECT IFNULL(MAX(id), 0) AS last_artifact_id FROM tracker_artifact";
@@ -65,7 +65,7 @@ EOT;
             $aid = max($aid, $row['last_artifact_id']);
             $res->closeCursor();
             unset($res);
-            
+
             $sql = "SELECT IFNULL(MAX(id), 0) AS last_tracker_id FROM tracker";
             $res = $this->db->dbh->query($sql);
             if ($res === false) {
@@ -76,10 +76,10 @@ EOT;
             $res->closeCursor();
             unset($res);
         }
-        
+
         $aid++;
         $tid++;
-        
+
         $sql = "CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT = $aid";
         $this->db->createTable('tracker_idsharing_artifact', $sql);
         $sql = "CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT = $tid";

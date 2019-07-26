@@ -33,7 +33,7 @@ class UserHelper {
     var $_cache_by_id;
     var $_cache_by_username;
     var $_userdao;
-    
+
     /**
      * Constructor
      * @todo make it protected (singleton powaaa)
@@ -44,10 +44,10 @@ class UserHelper {
         $this->_cache_by_username = array();
         $this->_userdao = $this->_getuserDao();
     }
-    
+
     protected static $_instance;
     /**
-     * 
+     *
      * @return UserHelper
      */
     public static function instance() {
@@ -67,7 +67,7 @@ class UserHelper {
     {
         self::$_instance = null;
     }
-    
+
     function _getCurrentUserUsernameDisplayPreference() {
         return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
@@ -76,9 +76,9 @@ class UserHelper {
     }
     /**
      * getDisplayName
-     * 
+     *
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
-     * 
+     *
      * Username display preference:
      *  1: user_name (realname)
      *  2: user_name
@@ -106,12 +106,12 @@ class UserHelper {
         }
         return $name;
     }
-    
+
     /**
      * getDisplayNameSQLQuery
-     * 
+     *
      * Get SQL statement for extracting display name from the "user" table, according to the user prefs
-     * 
+     *
      * Username display preference: see getDisplayName()
      *
      */
@@ -157,9 +157,9 @@ class UserHelper {
 
     /**
      * getDisplayNameSQLOrder
-     * 
+     *
      * Get SQL statement for sorting display name from the "user" table, according to the user prefs
-     * 
+     *
      * Username display preference: see getDisplayName()
      *
      */
@@ -181,10 +181,10 @@ class UserHelper {
         }
         return $order;
     }
-    
+
     /**
      * getDisplayNameFromUser
-     * 
+     *
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param PFUser the user to display
@@ -202,10 +202,10 @@ class UserHelper {
             return $this->getDisplayName($user->getUserName(), $user->getRealName());
         }
     }
-    
+
     /**
      * getDisplayNameFromUserId
-     * 
+     *
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param int the user_id of the user to display
@@ -230,10 +230,10 @@ class UserHelper {
         }
         return $display;
     }
-    
+
     /**
      * getDisplayNameFromUserName
-     * 
+     *
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param string the user_name of the user to display
@@ -265,15 +265,15 @@ class UserHelper {
 
     /**
      * Get a link on user profile with name according to user prefs.
-     * 
+     *
      * @param int $user_id User id
-     * 
+     *
      * @return string
      */
     public function getLinkOnUserFromUserId($user_id) {
         return $this->getLinkOnUser($this->_getUserManager()->getUserById($user_id));
     }
-    
+
     /**
      * Get a link on user profile with name according to user prefs.
      *
@@ -298,12 +298,12 @@ class UserHelper {
     /**
      * _isUserNameNone
      *
-     * @param  user_name  
+     * @param  user_name
      */
     function _isUserNameNone($user_name) {
         return $user_name == $GLOBALS['Language']->getText('global', 'none');
     }
-    
+
     /**
      * Returns the user dao
      */

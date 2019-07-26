@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -170,16 +170,16 @@ class Docman_ReportHtml
         // Special filters
         $gsmd = $this->report->getGlobalSearchMetadata();
         $itmd = $this->report->getItemTypeSearchMetadata();
-        
+
         $showGlobalSearch = !in_array($gsmd->getLabel(), $displayedFilters);
         $showItemTypeSearch = !in_array($itmd->getLabel(), $displayedFilters);
         if ($showGlobalSearch || $showItemTypeSearch) {
             $html .= $this->getSelectOption('--', '--');
-            
+
             if ($showGlobalSearch) {
                 $html .= $this->getSelectOption($gsmd->getLabel(), $gsmd->getName(), '');
             }
-                    
+
             if ($showItemTypeSearch) {
                 $html .= $this->getSelectOption($itmd->getLabel(), $itmd->getName(), '');
             }
@@ -187,20 +187,18 @@ class Docman_ReportHtml
 
         $html .= '</select>';
 
-        
         // Advanced search
         if($this->report->advancedSearch) {
             $html .= '<input type="hidden" name="advsearch" value="1" />';
             $advSearchToggle = 0;
         } else {
             $advSearchToggle = 1;
-        }        
+        }
         $advSearchUrl = $this->view->_buildSearchUrl($params, array('advsearch' => $advSearchToggle));
         $html .= '&nbsp;';
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'filters_advsearch_'.$advSearchToggle, array($advSearchUrl));
 
         $html .= '</div><!-- docman_report_options-->';
-
 
         return $html;
     }
@@ -255,7 +253,7 @@ class Docman_ReportHtml
         $html .= '<a href="'.$settingsUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_my').'</a>';
 
         $html .= '</div><!-- docman_report_save-->';
-        
+
         return $html;
     }
 
@@ -264,20 +262,20 @@ class Docman_ReportHtml
      */
     public function toHtml($params) {
         $html = '';
-        
+
         $html .= $this->getReportSelector($params['item']);
-        
+
         $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" data-test="docman_report_search">';
         $toggle   = '<a href="#" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
         $title    = $GLOBALS['Language']->getText('plugin_docman', 'filters');
-       
+
         $hidden_fields = '';
         $hidden_fields .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
         $hidden_fields .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
         $hidden_fields .= '<input type="hidden" name="action" value="search" />';
-        
+
         $global_txt = $this->hp->purify($params['docman']->request->get('global_txt'));
-        
+
         $html .= "<div id=\"docman_filters_title\">\n";
         $html .= '<form method="get" action="?" id="plugin_docman_report_form_global">';
         $html .= $toggle;
@@ -294,12 +292,7 @@ class Docman_ReportHtml
         $html .= '</form>';
         $html .= "</div>\n";
 
-
-
-
         $html .= "<div id=\"docman_filters_fieldset\">\n";
-
-
 
         $html .= '<div style="float: left;">';
         $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
@@ -317,7 +310,6 @@ class Docman_ReportHtml
         $html .= '</form>';
         $html .= "</div> <!-- left -->\n";
 
-
         $html .= '<div style="float: right;">';
         //Retrieve the minimum length allowed when searching pattern
         $dao = Docman_ReportFactory::getDao();
@@ -325,11 +317,9 @@ class Docman_ReportHtml
         $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'search_help', array($minLen)).'</div>';
         $html .= '</div>';
 
-
         $html .= '<div style="clear: both;"></div>';
 
         $html .= "</div> <!-- docman_filters_fieldset -->\n";
-
 
         $html .= "\n<!-- filter list -->\n";
 

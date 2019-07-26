@@ -517,7 +517,6 @@ class PolarAxis extends Axis {
             //('Unknown alignment specified for X-axis title. ('.$this->title_adjust.')');
         }
 
-
         if (!$this->hide_labels) {
             $this->StrokeLabels($pos,false);
         }
@@ -554,7 +553,6 @@ class PolarAxis extends Axis {
         $n = count($this->scale->ticks->ticks_pos);
         $yu = $pos - $this->scale->ticks->direction*$this->scale->ticks->GetMinTickAbsSize();
 
-
         // Minor ticks
         if( ! $this->scale->ticks->supress_minor_tickmarks ) {
             $i=1;
@@ -567,7 +565,6 @@ class PolarAxis extends Axis {
 
         $n = count($this->scale->ticks->maj_ticks_pos);
         $yu = $pos - $this->scale->ticks->direction*$this->scale->ticks->GetMajTickAbsSize();
-
 
         // Major ticks
         if( ! $this->scale->ticks->supress_tickmarks ) {
@@ -610,7 +607,7 @@ class PolarScale extends LinearScale {
         $aRad = $aRad/$m*$w;
 
         $a = $aAngle/180 * M_PI;
-        if( $this->clockwise ) { 
+        if( $this->clockwise ) {
             $a = 2*M_PI-$a;
         }
 
@@ -816,7 +813,6 @@ class PolarGraph extends Graph {
         for($i=0; $i < count($this->plots); ++$i) {
             $this->plots[$i]->Stroke($this->img,$this->scale);
         }
-
 
         if( $this->iDoClipping ) {
             // Clipping only supports graphs at 0 and 90 degrees

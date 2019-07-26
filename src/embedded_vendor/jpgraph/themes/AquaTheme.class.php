@@ -2,7 +2,7 @@
 /**
 * Aqua Theme class
 */
-class AquaTheme extends Theme 
+class AquaTheme extends Theme
 {
     protected $font_color       = '#0044CC';
     protected $background_color = '#DDFFFF';
@@ -70,14 +70,14 @@ class AquaTheme extends Theme
         $graph->legend->SetMarkAbsSize(5);
 
         // xaxis
-        $graph->xaxis->title->SetColor($this->font_color);  
-        $graph->xaxis->SetColor($this->axis_color, $this->font_color);    
+        $graph->xaxis->title->SetColor($this->font_color);
+        $graph->xaxis->SetColor($this->axis_color, $this->font_color);
         $graph->xaxis->SetTickSide(SIDE_BOTTOM);
         $graph->xaxis->SetLabelMargin(10);
-                
+
         // yaxis
-        $graph->yaxis->title->SetColor($this->font_color);  
-        $graph->yaxis->SetColor($this->axis_color, $this->font_color);    
+        $graph->yaxis->title->SetColor($this->font_color);
+        $graph->yaxis->SetColor($this->axis_color, $this->font_color);
         $graph->yaxis->SetTickSide(SIDE_LEFT);
         $graph->yaxis->SetLabelMargin(8);
         $graph->yaxis->HideLine();
@@ -87,7 +87,6 @@ class AquaTheme extends Theme
         // grid
         $graph->ygrid->SetColor($this->grid_color);
         $graph->ygrid->SetLineStyle('dotted');
-
 
         // font
         $graph->title->SetColor($this->font_color);
@@ -127,9 +126,9 @@ class AquaTheme extends Theme
         if ($graph->legend->HasItems()) {
             $img = $graph->img;
             $graph->SetMargin(
-                $img->raw_left_margin, 
-                $img->raw_right_margin, 
-                $img->raw_top_margin, 
+                $img->raw_left_margin,
+                $img->raw_right_margin,
+                $img->raw_top_margin,
                 is_numeric($img->raw_bottom_margin) ? $img->raw_bottom_margin : $img->height * 0.25
             );
         }
@@ -138,7 +137,7 @@ class AquaTheme extends Theme
     function ApplyPlot($plot) {
 
         switch (get_class($plot))
-        { 
+        {
             case 'GroupBarPlot':
             {
                 foreach ($plot->plots as $_plot) {
@@ -188,7 +187,7 @@ class AquaTheme extends Theme
                 $plot->SetSliceColors($this->GetThemeColors());
                 break;
             }
-    
+
             default:
             {
             }

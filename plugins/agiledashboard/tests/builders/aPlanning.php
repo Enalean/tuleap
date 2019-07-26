@@ -44,12 +44,12 @@ class Test_Planning_Builder {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withName($name) {
         $this->name = $name;
         return $this;
     }
-    
+
     public function withBacklogTrackerId($backlog_tracker_id) {
         $this->backlog_tracker_ids[] = $backlog_tracker_id;
         return $this;
@@ -59,12 +59,12 @@ class Test_Planning_Builder {
         $this->group_id = $group_id;
         return $this;
     }
-    
+
     public function withPlanningTrackerId($planning_tracker_id) {
         $this->planning_tracker_id = $planning_tracker_id;
         return $this;
     }
-    
+
     public function withPlanningTracker($tracker) {
         $this->planning_tracker    = $tracker;
         $this->planning_tracker_id = $tracker->getId();
@@ -85,14 +85,14 @@ class Test_Planning_Builder {
                                  $this->plan_title,
                                  $this->backlog_tracker_ids,
                                  $this->planning_tracker_id);
-        
+
         if ($this->planning_tracker) {
             $planning->setPlanningTracker($this->planning_tracker);
         }
         if ($this->backlog_trackers) {
             $planning->setBacklogTrackers($this->backlog_trackers);
         }
-        
+
         return $planning;
     }
 }

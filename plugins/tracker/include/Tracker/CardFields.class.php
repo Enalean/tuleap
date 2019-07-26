@@ -19,18 +19,18 @@
  */
 
 class Tracker_CardFields {
-    
+
     /**
      * @var Array
      */
     private $displayed_fields;
-    
+
     /**
      * @var PFUser
      */
     private $user_manager;
-    
-    
+
+
     public function __construct() {
         $this->displayed_fields     = array(Tracker::REMAINING_EFFORT_FIELD_NAME,
                                             Tracker::ASSIGNED_TO_FIELD_NAME,
@@ -48,7 +48,7 @@ class Tracker_CardFields {
     public function getFields(Tracker_Artifact $artifact) {
         $diplayed_fields = array();
         $tracker_id      = $artifact->getTrackerId();
-        
+
         foreach ($this->displayed_fields as $diplayed_field_name) {
             $field = $this->form_element_factory->getUsedFieldByNameForUser(
                         $tracker_id,
