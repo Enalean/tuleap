@@ -586,6 +586,7 @@ export const deleteItem = async (context, [item, additional_options]) => {
             context.commit("updateCurrentlyPreviewedItem", null);
         }
 
+        context.commit("clipboard/emptyClipboardAfterItemDeletion", item);
         context.commit("removeItemFromFolderContent", item);
         context.commit("showPostDeletionNotification");
     } catch (exception) {

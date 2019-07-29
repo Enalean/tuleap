@@ -20,6 +20,7 @@
 import {
     cutItem,
     copyItem,
+    emptyClipboardAfterItemDeletion,
     emptyClipboard,
     startPasting,
     pastingHasFailed
@@ -108,5 +109,23 @@ describe("Clipboard mutations", () => {
 
         pastingHasFailed(state);
         expect(state.pasting_in_progress).toBe(false);
+    });
+
+    it("Clears the clipboard when the item in it is deleted", () => {
+        const state = {
+            item_id: 741
+        };
+
+        emptyClipboardAfterItemDeletion(state, { id: 741 });
+        expect(state.item_id).toBe(null);
+    });
+
+    it("Keeps the clipboard intact when another item is deleted", () => {
+        const state = {
+            item_id: 741
+        };
+
+        emptyClipboardAfterItemDeletion(state, { id: 999 });
+        expect(state.item_id).toBe(741);
     });
 });
