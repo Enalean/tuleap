@@ -414,18 +414,29 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         if ($computed_value === null) {
-            $computed_value = $this->getFieldEmptyMessage();
+            $html_computed_value = '<span class="auto-computed">'. $purifier->purify($this->getFieldEmptyMessage()) .'</span>';
+        } else {
+            $html_computed_value = $purifier->purify($computed_value);
         }
 
-        $html_computed_value = '<span class="auto-computed">'. $purifier->purify($computed_value) .' (' .
+        $html_computed_complete_value = $html_computed_value .'<span class="auto-computed"> (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
         if ($value === null) {
-            $value = $html_computed_value;
+            $value = $html_computed_complete_value;
         }
 
-        return '<div class="auto-computed-label">'. $value. '</div>'.
-            '<div class="back-to-autocompute">'.$html_computed_value.'</div>';
+        $user              = $this->getCurrentUser();
+        $time_frame_helper = $this->getArtifactTimeframeHelper();
+
+        if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
+            $value = $value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
+        }
+
+        $html = '<div class="auto-computed-label">'. $value. '</div>'.
+            '<div class="back-to-autocompute">'.$html_computed_complete_value.'</div>';
+
+        return $html;
     }
 
     /**

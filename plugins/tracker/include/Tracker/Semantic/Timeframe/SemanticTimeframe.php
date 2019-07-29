@@ -32,7 +32,6 @@ use Tracker_FormElement_Field_Numeric;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\REST\SemanticTimeframeRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
@@ -170,13 +169,19 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        $is_start_date = $this->start_date_field !== null
-            && (int) $field->getId() === (int) $this->start_date_field->getId();
+        return $this->isDurationField($field) || $this->isStartDateField($field);
+    }
 
-        $is_duration = $this->duration_field !== null
-            && (int) $field->getId() === (int) $this->duration_field->getId();
+    public function isDurationField(Tracker_FormElement_Field $field): bool
+    {
+        return $this->duration_field !== null &&
+            (int)$field->getId() === (int)$this->duration_field->getId();
+    }
 
-        return $is_start_date || $is_duration;
+    public function isStartDateField(Tracker_FormElement_Field $field): bool
+    {
+        return $this->start_date_field !== null &&
+            (int)$field->getId() === (int)$this->start_date_field->getId();
     }
 
     public function save(): bool
