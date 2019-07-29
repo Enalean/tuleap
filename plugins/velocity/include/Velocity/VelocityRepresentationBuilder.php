@@ -66,9 +66,10 @@ class VelocityRepresentationBuilder
     {
         $representations = new VelocityCollection();
 
-        $backlog_artifacts = $milestone->getLinkedArtifacts($user);
+        $sub_milestones = $this->milestone_factory->getSubMilestones($user, $milestone);
 
-        foreach ($backlog_artifacts as $artifact) {
+        foreach ($sub_milestones as $sub_milestone) {
+            $artifact           = $sub_milestone->getArtifact();
             $velocity           = $this->semantic_velocity_factory->getInstanceByTracker($artifact->getTracker());
             $done_semantic      = $this->semantic_done_factory->getInstanceByTracker($artifact->getTracker());
             $timeframe_semantic = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
@@ -79,7 +80,6 @@ class VelocityRepresentationBuilder
 
             if ($velocity->getVelocityField() && $done_semantic->isDone($artifact->getLastChangeset()) && $timeframe_semantic->isDefined()) {
                 $computed_velocity = $artifact->getLastChangeset()->getValue($velocity->getVelocityField());
-                $sub_milestone     = $this->milestone_factory->getMilestoneFromArtifact($artifact);
                 $this->milestone_factory->updateMilestoneContextualInfo($user, $sub_milestone);
 
                 $start_date = $sub_milestone->getStartDate();
