@@ -31,17 +31,21 @@
             {{ formatDate(releaseData.end_date) }}
         </span>
         <div class="release-spacer"></div>
-        <release-header-remaining-effort v-bind:release-data="releaseData" data-test="display-remaining-effort"/>
+        <div class="release-remaining-effort-badges">
+            <release-header-remaining-days data-test="display-remaining-days" v-bind:release-data="releaseData"/>
+            <release-header-remaining-points data-test="display-remaining-points" v-bind:release-data="releaseData"/>
+        </div>
     </div>
 </template>
 
 <script>
-import { formatDateYearMonthDay } from "../../helpers/date-formatters";
-import ReleaseHeaderRemainingEffort from "./ReleaseHeaderRemainingEffort.vue";
+import { formatDateYearMonthDay } from "../../../helpers/date-formatters";
+import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
+import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 
 export default {
     name: "ReleaseHeader",
-    components: { ReleaseHeaderRemainingEffort },
+    components: { ReleaseHeaderRemainingPoints, ReleaseHeaderRemainingDays },
     props: {
         releaseData: Object
     },

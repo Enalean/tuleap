@@ -33,6 +33,10 @@ msgstr "Capacité : N/A"
 msgid "Go to release overview"
 msgstr "Aller au résumé de la version"
 
+msgid "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
+msgstr ""
+"L'effort estimé (%s) doit être plus grand ou égal à l'effort restant (%s)."
+
 msgid "Initial effort equal at 0."
 msgstr "Effort estimé égal à 0."
 
