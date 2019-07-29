@@ -133,7 +133,7 @@ class NotificationsBuilder
             $group = $this->ugroup_manager->getById($row['ugroup_id']);
 
             $ugroup_representation = new UserGroupRepresentation();
-            $ugroup_representation->build($notification->getRepository()->getProject()->getID(), $group);
+            $ugroup_representation->build((int) $notification->getRepository()->getProject()->getID(), $group);
 
             $ugroups[] = $ugroup_representation;
         }

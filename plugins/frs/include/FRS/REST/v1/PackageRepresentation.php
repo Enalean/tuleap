@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,20 +36,24 @@ class PackageRepresentation extends PackageMinimalRepresentation
      */
     public $resources;
 
-    public function build(FRSPackage $package)
+    /**
+     * @var PermissionsForGroupsRepresentation | null
+     */
+    public $permissions_for_groups;
+
+    public function buildFullRepresentation(FRSPackage $package, Project $project, ?PermissionsForGroupsRepresentation $permissions_for_groups)
     {
-        parent::build($package);
+        $this->build($package);
+
+        $this->project = new ProjectReference();
+        $this->project->build($project);
+
+        $this->permissions_for_groups = $permissions_for_groups;
 
         $this->resources = array(
             'releases' => array(
                 'uri' => $this->uri .'/'. ReleaseRepresentation::ROUTE
             )
         );
-    }
-
-    public function setProject(Project $project)
-    {
-        $this->project = new ProjectReference();
-        $this->project->build($project);
     }
 }

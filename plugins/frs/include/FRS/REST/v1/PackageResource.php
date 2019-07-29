@@ -24,6 +24,7 @@ use FRSPackageFactory;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use ProjectManager;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\UploadedLinksDao;
@@ -44,6 +45,14 @@ class PackageResource extends AuthenticatedResource
     private $project_manager;
     private $retriever;
     private $user_manager;
+    /**
+     * @var FRSReleaseFactory
+     */
+    private $release_factory;
+    /**
+     * @var PackageRepresentationBuilder
+     */
+    private $package_representation_builder;
 
     public function __construct()
     {
@@ -53,6 +62,11 @@ class PackageResource extends AuthenticatedResource
         $this->retriever               = new Retriever(new Dao());
         $this->user_manager            = UserManager::instance();
         $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), $this->user_manager);
+        $this->package_representation_builder = new PackageRepresentationBuilder(
+            \PermissionsManager::instance(),
+            new \UGroupManager(),
+            FRSPermissionManager::build()
+        );
     }
 
     /**
@@ -100,10 +114,7 @@ class PackageResource extends AuthenticatedResource
 
         $this->sendOptionsHeaders();
 
-        return $this->getPackageRepresentation(
-            $this->getPackage($new_package_id),
-            $project
-        );
+        return $this->package_representation_builder->getPackageForUser($this->user_manager->getCurrentUser(), $this->getPackage($new_package_id), $project);
     }
 
     /**
@@ -138,7 +149,7 @@ class PackageResource extends AuthenticatedResource
 
         $this->sendOptionsHeadersForGetId();
 
-        return $this->getPackageRepresentation($package, $project);
+        return $this->package_representation_builder->getPackageForUser($this->user_manager->getCurrentUser(), $package, $project);
     }
 
     /**
@@ -264,20 +275,6 @@ class PackageResource extends AuthenticatedResource
         }
 
         return $project;
-    }
-
-    /**
-     * @param $package
-     * @param $project
-     * @return PackageRepresentation
-     */
-    private function getPackageRepresentation($package, $project)
-    {
-        $representation = new PackageRepresentation();
-        $representation->build($package);
-        $representation->setProject($project);
-
-        return $representation;
     }
 
     private function sendOptionsHeaders()

@@ -123,7 +123,7 @@ class UserGroupResource extends AuthenticatedResource
         }
 
         $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build($project_id, $ugroup);
+        $ugroup_representation->build((int) $project_id, $ugroup);
         $this->sendAllowHeadersForUserGroupId();
 
         return $ugroup_representation;
@@ -568,7 +568,7 @@ class UserGroupResource extends AuthenticatedResource
 
             $new_ugroup                = $this->ugroup_manager->getById($new_ugroup_id);
             $new_ugroup_representation = new UserGroupRepresentation();
-            $new_ugroup_representation->build($project_id, $new_ugroup);
+            $new_ugroup_representation->build((int) $project_id, $new_ugroup);
 
             return $new_ugroup_representation;
 

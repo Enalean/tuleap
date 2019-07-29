@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-/**
- * This interface describe all methods needed to replace the old permissions.php
- */
-interface IPermissionsManagerNG {
+declare(strict_types=1);
+
+namespace Tuleap\FRS\REST\v1;
+
+class PermissionsForGroupsRepresentation
+{
     /**
-     * @return int[]
+     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
      */
-    public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type);
-    public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids);
+    public $can_read;
+
+    public function build(array $can_read)
+    {
+        $this->can_read = $can_read;
+        return $this;
+    }
 }

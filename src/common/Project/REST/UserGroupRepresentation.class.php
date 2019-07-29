@@ -59,7 +59,7 @@ class UserGroupRepresentation {
      */
     public $key;
 
-    public function build($project_id, ProjectUGroup $ugroup) {
+    public function build(int $project_id, ProjectUGroup $ugroup) {
         $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id ;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());

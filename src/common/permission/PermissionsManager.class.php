@@ -212,7 +212,8 @@ class PermissionsManager implements IPermissionsManagerNG {
         return $ugroups;
     }
 
-    public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type) {
+    public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type)
+    {
         $ugroups = array();
         $dar = $this->getAuthorizedUgroups($object_id, $permission_type, false);
         if ($dar && ! $dar->isError()) {

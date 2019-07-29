@@ -36,7 +36,7 @@ class PermissionsOnArtifacts {
 
         foreach ($ugroups as $user_group) {
             $ugroup_representation = new UserGroupRepresentation();
-            $ugroup_representation->build($project_id, $user_group);
+            $ugroup_representation->build((int) $project_id, $user_group);
             $ugroup_representations[] = $ugroup_representation;
         }
 
