@@ -231,6 +231,18 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @return Tracker_FormElement_Field_List|null
+     */
+    public function getFormElementListById($field_id)
+    {
+        $field = $this->getFormElementById($field_id);
+        if ($field instanceof Tracker_FormElement_Field_List) {
+            return $field;
+        }
+        return null;
+    }
+
+    /**
      * Get a formElement by its short name
      *
      * @param int $tracker_id the tracker of the formElement to retrieve
