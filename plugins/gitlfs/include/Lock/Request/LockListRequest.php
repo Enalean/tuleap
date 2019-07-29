@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -82,7 +82,7 @@ class LockListRequest implements GitLfsHTTPOperation
 
     public function isRead(): bool
     {
-        return false;
+        return true;
     }
 
     public function getReference(): ?RequestReference

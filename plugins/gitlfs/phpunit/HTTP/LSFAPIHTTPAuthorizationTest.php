@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,11 +25,13 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\GitLFS\Authorization\User\Operation\UserOperationDownload;
+use Tuleap\GitLFS\Authorization\User\Operation\UserOperationUpload;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 
-class LSFBatchAPIHTTPAuthorizationTest extends TestCase
+final class LSFAPIHTTPAuthorizationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -42,7 +44,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
         $this->token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
     }
 
-    public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation()
+    public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation() : void
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
@@ -51,6 +53,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
         $this->token_unserializer->shouldReceive('getSplitToken')->andReturns(\Mockery::mock(SplitToken::class));
         $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(true);
+        $batch_request->shouldReceive('isWrite')->andReturns(false);
         $expected_user = \Mockery::mock(\PFUser::class);
         $this->token_verifier->shouldReceive('getUser')->andReturns($expected_user);
 
@@ -83,6 +86,34 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
                 $request,
                 \Mockery::mock(\GitRepository::class),
                 $batch_request
+            )
+        );
+    }
+
+    public function testUserIsFoundWhenTheOperationCanBeEitherAnDownloadOrUploadOperationAndUploadTokenIsGiven() : void
+    {
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+
+        $request = \Mockery::mock(\HTTPRequest::class);
+        $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
+        $this->token_unserializer->shouldReceive('getSplitToken')->andReturns(\Mockery::mock(SplitToken::class));
+        $lfs_request = \Mockery::mock(GitLfsHTTPOperation::class);
+        $lfs_request->shouldReceive('isRead')->andReturns(true);
+        $lfs_request->shouldReceive('isWrite')->andReturns(true);
+        $expected_user = \Mockery::mock(\PFUser::class);
+        $this->token_verifier->shouldReceive('getUser')
+            ->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::type(UserOperationDownload::class))
+            ->andReturns(null);
+        $this->token_verifier->shouldReceive('getUser')
+            ->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::type(UserOperationUpload::class))
+            ->andReturns($expected_user);
+
+        $this->assertSame(
+            $expected_user,
+            $lfs_http_api_authorization->getUserFromAuthorizationToken(
+                $request,
+                \Mockery::mock(\GitRepository::class),
+                $lfs_request
             )
         );
     }
@@ -140,7 +171,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
         );
     }
 
-    public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid()
+    public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid() : void
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
@@ -149,6 +180,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
         $this->token_unserializer->shouldReceive('getSplitToken')->andReturns(\Mockery::mock(SplitToken::class));
         $batch_request = \Mockery::mock(BatchRequest::class);
         $batch_request->shouldReceive('isRead')->andReturns(true);
+        $batch_request->shouldReceive('isWrite')->andReturns(false);
         $this->token_verifier->shouldReceive('getUser')->andThrows(\Mockery::mock(UserAuthorizationException::class));
 
         $this->assertNull(
