@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { CONTAINER_FIELDSET } from "../../../constants/fields-constants.js";
+
 const white_listed_fields = [
-    "fieldset",
+    CONTAINER_FIELDSET,
     "column",
     "linebreak",
     "separator",
@@ -68,9 +70,23 @@ function recursiveGetCompleteField(structure_field, all_fields) {
     complete_field.template_url = "field-" + complete_field.type + ".tpl.html";
 
     if (structure_field.content !== null) {
-        complete_field.content = structure_field.content
+        var content = structure_field.content
             .map(sub_field => recursiveGetCompleteField(sub_field, all_fields))
             .filter(field => field !== null);
+
+        if (complete_field.type === CONTAINER_FIELDSET || complete_field.type === "column") {
+            if (content.length === 0) {
+                return null;
+            }
+
+            if (
+                content.every(field => field.type === CONTAINER_FIELDSET || field.type === "column")
+            ) {
+                return null;
+            }
+        }
+
+        complete_field.content = content;
     }
 
     return complete_field;
