@@ -111,7 +111,12 @@ class ReleaseRepresentation
      */
     public $status;
 
-    public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever)
+    /**
+     * @var ReleasePermissionsForGroupsRepresentation | null
+     */
+    public $permissions_for_groups;
+
+    public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever, ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
         $this->uri          = self::ROUTE ."/". urlencode((string) $release->getReleaseID());
@@ -144,6 +149,8 @@ class ReleaseRepresentation
         }
 
         $this->license_approval = $this->getLicenseApprovalState($release);
+
+        $this->permissions_for_groups = $permissions_for_groups_builder->getRepresentation($user, $release);
     }
 
     private function getLicenseApprovalState(FRSRelease $release)

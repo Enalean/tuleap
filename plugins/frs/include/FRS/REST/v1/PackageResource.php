@@ -23,6 +23,7 @@ namespace Tuleap\FRS\REST\v1;
 use FRSPackageFactory;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use ProjectManager;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
@@ -32,6 +33,7 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use UGroupManager;
 use UserManager;
 
 class PackageResource extends AuthenticatedResource
@@ -53,6 +55,10 @@ class PackageResource extends AuthenticatedResource
      * @var PackageRepresentationBuilder
      */
     private $package_representation_builder;
+    /**
+     * @var ReleasePermissionsForGroupsBuilder
+     */
+    private $release_permissions_for_groups_builder;
 
     public function __construct()
     {
@@ -66,6 +72,11 @@ class PackageResource extends AuthenticatedResource
             \PermissionsManager::instance(),
             new \UGroupManager(),
             FRSPermissionManager::build()
+        );
+        $this->release_permissions_for_groups_builder = new ReleasePermissionsForGroupsBuilder(
+            FRSPermissionManager::build(),
+            PermissionsManager::instance(),
+            new UGroupManager()
         );
     }
 
@@ -197,7 +208,7 @@ class PackageResource extends AuthenticatedResource
         $releases = array();
         foreach ($paginated_releases->getReleases() as $release) {
             $representation = new ReleaseRepresentation();
-            $representation->build($release, $this->retriever, $current_user, $this->uploaded_link_retriever);
+            $representation->build($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder);
 
             $releases[] = $representation;
         }

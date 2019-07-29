@@ -26,12 +26,14 @@ require_once __DIR__ . '/constants.php';
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\AdditionalInformationPresenter;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Updater;
 use Tuleap\FRS\PluginInfo;
 use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\ResourcesInjector;
+use Tuleap\FRS\REST\v1\ReleasePermissionsForGroupsBuilder;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\FileUploadCleaner;
@@ -282,7 +284,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
 
         $renderer       = $this->getTemplateRenderer();
         $representation = new ReleaseRepresentation();
-        $representation->build($release, $this->getLinkRetriever(), $user, $this->getUploadedLinkRetriever());
+        $representation->build($release, $this->getLinkRetriever(), $user, $this->getUploadedLinkRetriever(), $this->getReleasePermissionsForGroupsBuilder());
         $presenter = new ReleasePresenter(
             $representation,
             $user->getShortLocale()
@@ -400,5 +402,14 @@ class frsPlugin extends \Plugin //phpcs:ignore
         if ($release_id !== null) {
             $event->setCanNotBeMoveDueToExternalPlugin(dgettext('tuleap-frs', 'Artifact linked to a Files release cannot be moved'));
         }
+    }
+
+    private function getReleasePermissionsForGroupsBuilder()
+    {
+        return new ReleasePermissionsForGroupsBuilder(
+            FRSPermissionManager::build(),
+            PermissionsManager::instance(),
+            new UGroupManager()
+        );
     }
 }
