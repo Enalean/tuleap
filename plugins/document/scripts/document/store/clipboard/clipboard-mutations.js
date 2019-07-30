@@ -20,7 +20,14 @@
 import defaultState from "./clipboard-default-state.js";
 import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
 
-export { cutItem, copyItem, emptyClipboard, startPasting, pastingHasFailed };
+export {
+    cutItem,
+    copyItem,
+    emptyClipboardAfterItemDeletion,
+    emptyClipboard,
+    startPasting,
+    pastingHasFailed
+};
 
 function cutItem(state, item) {
     startNewClipboardOperation(state, item, CLIPBOARD_OPERATION_CUT);
@@ -38,6 +45,12 @@ function startNewClipboardOperation(state, item, operationType) {
     state.item_type = item.type;
     state.item_title = item.title;
     state.operation_type = operationType;
+}
+
+function emptyClipboardAfterItemDeletion(state, deleted_item) {
+    if (state.item_id === deleted_item.id) {
+        emptyClipboard(state);
+    }
 }
 
 function emptyClipboard(state) {

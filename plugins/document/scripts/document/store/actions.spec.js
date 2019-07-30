@@ -1250,6 +1250,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [file_item]);
             expect(deleteFile).toHaveBeenCalledWith(file_item);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                file_item
+            );
         });
 
         it("when item is a link, then the delete link route is called", async () => {
@@ -1261,6 +1265,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [link_item]);
             expect(deleteLink).toHaveBeenCalledWith(link_item);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                link_item
+            );
         });
 
         it("when item is an embedded file, then the delete embedded file route is called", async () => {
@@ -1272,6 +1280,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [embedded_file_item]);
             expect(deleteEmbeddedFile).toHaveBeenCalledWith(embedded_file_item);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                embedded_file_item
+            );
         });
 
         it("when item is a wiki, then the delete wiki route is called", async () => {
@@ -1285,6 +1297,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [wiki_item, additional_options]);
             expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                wiki_item
+            );
         });
 
         it("when item is an empty document, then the delete empty document route is called", async () => {
@@ -1296,6 +1312,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [empty_doc_item]);
             expect(deleteEmptyDocument).toHaveBeenCalledWith(empty_doc_item);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                empty_doc_item
+            );
         });
 
         it("when item is a folder, then the delete folder route is called", async () => {
@@ -1309,6 +1329,10 @@ describe("Store actions", () => {
 
             await deleteItem(context, [folder_item, additional_options]);
             expect(deleteFolder).toHaveBeenCalledWith(folder_item, additional_options);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                folder_item
+            );
         });
 
         it("deletes the given item and removes it from the tree view", async () => {
@@ -1316,6 +1340,10 @@ describe("Store actions", () => {
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
+                item_to_delete
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
                 item_to_delete
             );
         });
@@ -1330,6 +1358,10 @@ describe("Store actions", () => {
                 item_to_delete
             );
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
+            expect(context.commit).toHaveBeenCalledWith(
+                "clipboard/emptyClipboardAfterItemDeletion",
+                item_to_delete
+            );
         });
     });
 
