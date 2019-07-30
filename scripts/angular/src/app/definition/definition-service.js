@@ -18,6 +18,7 @@
  */
 
 import _ from "lodash";
+import {recursiveGet} from 'tlp';
 import { UNCATEGORIZED } from "./definition-constants.js";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
@@ -55,18 +56,15 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
         });
     }
 
-    function getDefinitionReports() {
-        var data = $q.defer();
+    async function getDefinitionReports() {
         var def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
+        const response = await recursiveGet("/api/v1/trackers/" + encodeURI(def_tracker_id) + "/tracker_reports",  {
+            params: {
+                limit: 10
+            }
+        });
 
-        rest.one("trackers", def_tracker_id)
-            .all("tracker_reports")
-            .getList()
-            .then(function(response) {
-                data.resolve(response.data);
-            });
-
-        return data.promise;
+        return response;
     }
 
     function getArtifactById(artifact_id) {
