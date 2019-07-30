@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Language: fr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "No color"
+msgstr "Pas de couleur"
+
+msgid "Switch to default colors"
+msgstr "Passer à la palette par défaut"
+
+msgid "Switch to old colors"
+msgstr "Passer à l'ancienne palette"
+
+msgid ""
+"You can't switch to old colors because the field is currently being used "
+"by the card background color semantic"
+msgstr ""
+"Vous ne pouvez pas passer à l'ancienne palette car le champ est "
+"actuellement utilisé par la sémantique couleur de fond des cartes"

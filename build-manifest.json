@@ -49,7 +49,7 @@
     },
     "gettext-vue": {
         "core": {
-            "scripts": "src/www/scripts/",
+            "src": "src/www/scripts/",
             "po": "src/www/scripts/po"
         }
     }

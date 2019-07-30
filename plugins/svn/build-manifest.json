@@ -50,7 +50,7 @@
     ],
     "gettext-vue": {
         "permissions-per-group": {
-            "scripts": "www/scripts/",
+            "src": "www/scripts/permissions-per-group/src",
             "po": "www/scripts/permissions-per-group/po"
         }
     }

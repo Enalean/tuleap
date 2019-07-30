@@ -274,14 +274,14 @@ function gettextVue($translated_plugin, $path, $manifest_json)
 
     foreach ($manifest_json['gettext-vue'] as $component => $gettext) {
         info("[$translated_plugin][vue][$component] Generating default .pot file");
-        $scripts           = escapeshellarg("$path/${gettext['scripts']}");
-        $po                = escapeshellarg("$path/${gettext['po']}");
-        $template          = escapeshellarg("$path/${gettext['po']}/template.pot");
-        $vue_template_path = "$path/${gettext['po']}/template.pot";
-        $vue_template      = escapeshellarg($vue_template_path);
-        executeCommandAndExitIfStderrNotEmpty("(cd $scripts && npm run extract-gettext-cli -- --output $template)");
+        $src      = escapeshellarg("$path/${gettext['src']}");
+        $po       = escapeshellarg("$path/${gettext['po']}");
+        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        exec("msgcat --no-location --sort-output -o $template $vue_template");
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js $(find $src -type f -name '*.vue') --output $template");
+        executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
+
+        executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
         exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");

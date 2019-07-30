@@ -2,7 +2,7 @@
     "name": "release_widget",
     "gettext-vue": {
         "release_widget": {
-            "scripts": "scripts/",
+            "src": "scripts/releasewidget",
             "po": "scripts/releasewidget/po"
         }
     },

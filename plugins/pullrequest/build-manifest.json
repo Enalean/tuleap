@@ -40,7 +40,7 @@
     },
     "gettext-vue": {
         "create-pullrequest-button": {
-            "scripts": "www/scripts",
+            "src": "www/scripts/create-pullrequest-button",
             "po": "www/scripts/create-pullrequest-button/po"
         }
     },
