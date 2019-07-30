@@ -19,9 +19,9 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import VueRouter from 'vue-router';
 import localVue from "../support/local-vue.js";
 import IndexPage from "./IndexPage.vue";
-import router from "../router";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";
 import store_options from "../store/store_options";
 import { createList } from "../support/factories";
@@ -32,6 +32,7 @@ describe("IndexPage", () => {
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
+        const router = new VueRouter();
 
         wrapper = shallowMount(IndexPage, {
             propsData: { project_id: 1 },
