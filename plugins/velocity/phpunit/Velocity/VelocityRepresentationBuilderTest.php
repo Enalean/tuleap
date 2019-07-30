@@ -92,8 +92,6 @@ class VelocityRepresentationBuilderTest extends TestCase
         $linked_artifact->shouldReceive('getId')->andReturn(102);
         $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
 
-        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
-
         $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
         $semantic_done      = Mockery::mock(SemanticDone::class);
         $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
@@ -117,11 +115,14 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($linked_artifact)
-            ->andReturn($sub_milestone);
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
 
         $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->once();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
 
         $sub_milestone->shouldReceive('getStartDate')->andReturn(1);
         $sub_milestone->shouldReceive('getDuration')->andReturn(1);
@@ -147,8 +148,6 @@ class VelocityRepresentationBuilderTest extends TestCase
         $linked_artifact->shouldReceive('getId')->andReturn(102);
         $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
 
-        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
-
         $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
         $semantic_done      = Mockery::mock(SemanticDone::class);
         $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
@@ -172,11 +171,14 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($linked_artifact)
-            ->never();
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
 
         $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->never();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
@@ -192,8 +194,6 @@ class VelocityRepresentationBuilderTest extends TestCase
         $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
         $linked_artifact->shouldReceive('getId')->andReturn(102);
         $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
-
-        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
 
         $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
         $semantic_done      = Mockery::mock(SemanticDone::class);
@@ -218,11 +218,14 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($linked_artifact)
-            ->never();
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
 
         $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->never();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
 
         $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
 
@@ -250,8 +253,6 @@ class VelocityRepresentationBuilderTest extends TestCase
         $linked_artifact->shouldReceive('getXref')->andReturn('art #102 Sprint 01');
         $linked_artifact->shouldReceive('getUri')->andReturn('artifacts/102');
 
-        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
-
         $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
         $semantic_done      = Mockery::mock(SemanticDone::class);
         $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
@@ -275,11 +276,14 @@ class VelocityRepresentationBuilderTest extends TestCase
             ->andReturnTrue();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($linked_artifact)
-            ->andReturn($sub_milestone);
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
 
         $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->once();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
 
         $sub_milestone->shouldReceive('getStartDate')->andReturnNull();
         $sub_milestone->shouldReceive('getDuration')->andReturn(1);
@@ -309,8 +313,6 @@ class VelocityRepresentationBuilderTest extends TestCase
         $linked_artifact->shouldReceive('getId')->andReturn(102);
         $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
 
-        $this->milestone->shouldReceive('getLinkedArtifacts')->andReturn([$linked_artifact]);
-
         $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
         $semantic_done      = Mockery::mock(SemanticDone::class);
         $semantic_timeframe = Mockery::mock(SemanticTimeframe::class);
@@ -332,9 +334,14 @@ class VelocityRepresentationBuilderTest extends TestCase
         $semantic_timeframe->shouldReceive('isDefined')->andReturnFalse();
 
         $sub_milestone = Mockery::mock(Planning_Milestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($linked_artifact)
-            ->andReturn($sub_milestone);
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
+
+        $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->never();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
 
         $sub_milestone->shouldReceive('getStartDate')->andReturn(1);
         $sub_milestone->shouldReceive('getDuration')->andReturn(1);
@@ -345,5 +352,65 @@ class VelocityRepresentationBuilderTest extends TestCase
         $this->assertCount(0, $collection->getInvalidArtifacts());
         $this->assertCount(1, $collection->getInvalidTrackersNames());
         $this->assertEquals('Sprints', $collection->getInvalidTrackersNames()[0]);
+    }
+
+    public function testItDoesNotAddLinkedArtifactsWhichAreNotASubmilestone()
+    {
+        $tracker = Mockery::mock(Tracker::class);
+
+        $velocity_field = Mockery::mock(Tracker_FormElement_Field_Float::class);
+
+        $last_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+        $last_changeset_value->shouldReceive('getNumeric')->andReturn(10);
+
+        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $last_changeset->shouldReceive('getValue')->with($velocity_field)->andReturn($last_changeset_value);
+
+        $linked_artifact = Mockery::mock(Tracker_Artifact::class);
+        $linked_artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $linked_artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+        $linked_artifact->shouldReceive('getId')->andReturn(102);
+        $linked_artifact->shouldReceive('getTitle')->andReturn('Sprint 01');
+
+        $semantic_velocity  = Mockery::mock(SemanticVelocity::class);
+        $semantic_done      = Mockery::mock(SemanticDone::class);
+        $timeframe_semantic = Mockery::mock(SemanticTimeframe::class);
+
+        $this->semantic_velocity_factory->shouldReceive('getInstanceByTracker')
+            ->with($tracker)
+            ->andReturn($semantic_velocity);
+
+        $this->semantic_done_factory->shouldReceive('getInstanceByTracker')
+            ->with($tracker)
+            ->andReturn($semantic_done);
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive("getSemantic")
+            ->andReturn($timeframe_semantic);
+
+        $semantic_velocity->shouldReceive('getVelocityField')->andReturn($velocity_field);
+        $semantic_done->shouldReceive('isDone')->with($last_changeset)->andReturnTrue();
+        $timeframe_semantic
+            ->shouldReceive("isDefined")
+            ->andReturnTrue();
+
+        $sub_milestone = Mockery::mock(Planning_Milestone::class);
+        $sub_milestone->shouldReceive('getArtifact')
+            ->andReturn($linked_artifact);
+
+        $this->milestone_factory->shouldReceive('updateMilestoneContextualInfo')->with($this->user, $sub_milestone)->once();
+        $this->milestone_factory
+            ->shouldReceive('getSubMilestones')
+            ->with($this->user, $this->milestone)
+            ->andReturn([$sub_milestone]);
+
+        $sub_milestone->shouldReceive('getStartDate')->andReturn(1);
+        $sub_milestone->shouldReceive('getDuration')->andReturn(1);
+
+        $collection = $this->builder->buildCollectionOfRepresentations($this->milestone, $this->user);
+
+        $this->milestone->shouldReceive('getLinkedArtifacts')->never();
+        $this->assertCount(1, $collection->getVelocityRepresentations());
+        $this->assertCount(0, $collection->getInvalidArtifacts());
     }
 }
