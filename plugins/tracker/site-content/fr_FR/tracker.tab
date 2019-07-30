@@ -22,7 +22,6 @@ plugin_tracker	submit_at_least_one_field	Vous ne pouvez pas soumettre d'artefact
 # Script: SF/www/tracker/add.php
 #
 plugin_tracker_add	invalid	Cet outil de suivi n'est plus valide.
-plugin_tracker	add_a	Créer un(e) $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/browse.php
@@ -999,7 +998,6 @@ plugin_tracker	create_new_report	Créer un nouveau rapport
 plugin_tracker	create_new_report_name	nom
 plugin_tracker	create_new_report_submit	Créer un rapport
 plugin_tracker	create_new_report_invalid	Nom de rapport invalide
-plugin_tracker	submit_new_artifact	Soumettre un nouvel artefact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Aide
