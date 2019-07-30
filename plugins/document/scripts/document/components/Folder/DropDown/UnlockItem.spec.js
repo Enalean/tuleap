@@ -114,4 +114,25 @@ describe("UnlockItem", () => {
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeTruthy();
     });
+
+    it(`unlock document on click`, () => {
+        const item = {
+            id: 1,
+            title: "my file",
+            type: "file",
+            user_can_write: true,
+            lock_info: {
+                locked_by: {
+                    id: 105
+                }
+            }
+        };
+        const wrapper = unlock_factory({
+            item
+        });
+
+        wrapper.find("[data-test=document-dropdown-menu-unlock-item]").trigger("click");
+
+        expect(store.dispatch).toHaveBeenCalledWith("unlockDocument", item);
+    });
 });

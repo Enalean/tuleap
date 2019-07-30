@@ -102,4 +102,21 @@ describe("LockItem", () => {
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
     });
+
+    it(`Lock document on click`, () => {
+        const item = {
+            id: 1,
+            title: "my file",
+            type: "file",
+            user_can_write: true,
+            lock_info: null
+        };
+        const wrapper = lock_factory({
+            item
+        });
+
+        wrapper.find("[data-test=document-dropdown-menu-lock-item]").trigger("click");
+
+        expect(store.dispatch).toHaveBeenCalledWith("lockDocument", item);
+    });
 });

@@ -46,7 +46,7 @@
                                      v-bind:key="parent.id"
                                      v-bind:item="parent"
         />
-        <span class="breadcrumb-item" v-if="is_loading_ascendant_hierarchy">
+        <span class="breadcrumb-item" v-if="is_loading_ascendant_hierarchy" data-test="document-breadcrumb-skeleton">
             <a class="breadcrumb-link" href="#">
                 <span class="tlp-skeleton-text"></span>
             </a>

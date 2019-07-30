@@ -35,4 +35,77 @@ describe("Store mutations", () => {
             expect(state.folder_loading_error).toBeNull();
         });
     });
+
+    it("switchFolderPermissionError", () => {
+        const state = {
+            has_folder_permission_error: false
+        };
+
+        mutations.switchFolderPermissionError(state);
+        expect(state.has_folder_permission_error).toBe(true);
+    });
+
+    it("switchItemPermissionError", () => {
+        const state = {
+            has_document_permission_error: false
+        };
+
+        mutations.switchItemPermissionError(state);
+        expect(state.has_document_permission_error).toBe(true);
+    });
+
+    it("setFolderLoadingError", () => {
+        const state = {
+            has_folder_loading_error: false,
+            folder_loading_error: ""
+        };
+
+        mutations.setFolderLoadingError(state, "my error message");
+        expect(state.has_folder_loading_error).toBe(true);
+        expect(state.folder_loading_error).toBe("my error message");
+    });
+
+    it("setItemLoadingError", () => {
+        const state = {
+            has_document_loading_error: false,
+            document_loading_error: ""
+        };
+
+        mutations.setItemLoadingError(state, "my error message");
+        expect(state.has_document_loading_error).toBe(true);
+        expect(state.document_loading_error).toBe("my error message");
+    });
+
+    it("setModalError", () => {
+        const state = {
+            has_modal_error: false,
+            modal_error: ""
+        };
+
+        mutations.setModalError(state, "my modal error message");
+        expect(state.has_modal_error).toBe(true);
+        expect(state.modal_error).toBe("my modal error message");
+    });
+
+    it("resetModalError", () => {
+        const state = {
+            has_modal_error: true,
+            modal_error: "previous error"
+        };
+
+        mutations.resetModalError(state);
+        expect(state.has_modal_error).toBe(false);
+        expect(state.modal_error).toBe(null);
+    });
+
+    it("setLockError", () => {
+        const state = {
+            has_document_lock_error: false,
+            document_lock_error: ""
+        };
+
+        mutations.setLockError(state, "error lock");
+        expect(state.has_document_lock_error).toBe(true);
+        expect(state.document_lock_error).toBe("error lock");
+    });
 });

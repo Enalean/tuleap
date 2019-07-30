@@ -20,6 +20,10 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import DropDownButton from "./DropDownButton.vue";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../helpers/event-bus.js";
 
 describe("DropDownButton", () => {
     let dropdown_factory;
@@ -30,6 +34,9 @@ describe("DropDownButton", () => {
                 propsData: { ...props }
             });
         };
+    });
+    afterEach(() => {
+        restoreEventBus();
     });
 
     it(`Given drop down button is appended (aka user has write permissions)
@@ -70,5 +77,21 @@ describe("DropDownButton", () => {
         });
 
         expect(wrapper.contains(".tlp-button-large")).toBeTruthy();
+    });
+
+    it(`Hide the dropdown
+        When component is destroyed`, () => {
+        const wrapper = dropdown_factory({
+            isAppended: true,
+            isInQuickLookMode: true,
+            isInLargeMode: true
+        });
+
+        const event_bus = jasmine.createSpyObj("event_bus", ["$off"]);
+        rewireEventBus(event_bus);
+
+        wrapper.destroy();
+
+        expect(event_bus.$off).toHaveBeenCalledWith("hide-action-menu", jasmine.any(Function));
     });
 });

@@ -18,12 +18,15 @@
   -->
 
 <template>
-    <div class="document-upload-to-current-folder" v-bind:class="classes">
-        <div v-if="user_can_dragndrop_in_current_folder" class="document-upload-to-current-folder-message">
+    <div class="document-upload-to-current-folder" v-bind:class="classes" data-test="document-current-folder-dropzone">
+        <div v-if="user_can_dragndrop_in_current_folder"
+             class="document-upload-to-current-folder-message"
+             data-test="document-current-folder-success-dropzone"
+        >
             <i class="fa fa-rotate-90 fa-mail-forward document-upload-to-current-folder-icon"></i>
             <p>{{ message_success }}</p>
         </div>
-        <div v-else class="document-upload-to-current-folder-message">
+        <div v-else class="document-upload-to-current-folder-message" data-test="document-current-folder-error-dropzone">
             <i class="fa fa-ban document-upload-to-current-folder-icon"></i>
             <p>{{ message_error }}</p>
         </div>

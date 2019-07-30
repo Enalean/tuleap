@@ -23,6 +23,7 @@
         class="tlp-dropdown-split-button-main"
         type="button"
         v-on:click="showNewDocumentModal()"
+        data-test="docman-new-item-button"
     >
         <i class="fa fa-plus tlp-button-icon"></i>
         <translate>New document</translate>

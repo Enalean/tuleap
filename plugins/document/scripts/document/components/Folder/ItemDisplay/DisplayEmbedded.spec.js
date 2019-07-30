@@ -94,4 +94,23 @@ describe("DisplayEmbedded", () => {
         expect(wrapper.find("[data-test=embedded_content]").exists()).toBeTruthy();
         expect(wrapper.find("[data-test=embedded_spinner]").exists()).toBeFalsy();
     });
+
+    it(`Reset currently displayed item form stored
+        When compontent is destroyed`, () => {
+        const store_options = {
+            state: {
+                error: {}
+            },
+            getters: {
+                "error/does_document_have_any_error": false
+            }
+        };
+
+        store = createStoreMock(store_options);
+
+        const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
+
+        wrapper.destroy();
+        expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
+    });
 });
