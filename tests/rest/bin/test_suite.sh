@@ -7,7 +7,7 @@ run_testsuite() {
     if [ -x "$PHP_CLI" ]; then
         PHPUNIT="$PHP_CLI $PHPUNIT"
     fi
-    $PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --random-order --do-not-cache-result --log-junit /output/rest_tests.xml $1
+    $PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --do-not-cache-result --log-junit /output/rest_tests.xml $1
 }
 
 run_testsuite $1
