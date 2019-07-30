@@ -92,6 +92,85 @@ describe("form-tree-builder", () => {
             ]);
         });
 
+        it(`Given a tracker
+                when I build the form tree
+                then the form tree given by the tracker structure will be filled with the complete fields,
+                and empty fieldsets will be removed`, () => {
+            tracker = {
+                fields: [
+                    { field_id: 1, type: "int" },
+                    { field_id: 2, type: "int" },
+                    { field_id: 3, type: "fieldset" }
+                ],
+                structure: [
+                    { id: 1, content: null },
+                    { id: 2, content: null },
+                    {
+                        id: 3,
+                        content: []
+                    }
+                ]
+            };
+
+            const output = buildFormTree(tracker);
+
+            expect(output).toEqual([
+                {
+                    field_id: 1,
+                    type: "int",
+                    template_url: "field-int.tpl.html"
+                },
+                {
+                    field_id: 2,
+                    type: "int",
+                    template_url: "field-int.tpl.html"
+                }
+            ]);
+        });
+
+        it(`Given a tracker
+                when I build the form tree
+                then the form tree given by the tracker structure will be filled with the complete fields,
+                and fieldsets containing only structural fields will be removed`, () => {
+            tracker = {
+                fields: [
+                    { field_id: 1, type: "int" },
+                    { field_id: 2, type: "int" },
+                    { field_id: 3, type: "fieldset" },
+                    { field_id: 4, type: "fieldset" },
+                    { field_id: 5, type: "column" }
+                ],
+                structure: [
+                    { id: 1, content: null },
+                    { id: 2, content: null },
+                    {
+                        id: 3,
+                        content: [
+                            {
+                                id: 4,
+                                content: [{ id: 5, content: null }]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const output = buildFormTree(tracker);
+
+            expect(output).toEqual([
+                {
+                    field_id: 1,
+                    type: "int",
+                    template_url: "field-int.tpl.html"
+                },
+                {
+                    field_id: 2,
+                    type: "int",
+                    template_url: "field-int.tpl.html"
+                }
+            ]);
+        });
+
         it(`Given a structural field, it will add a template_url according to the field type`, () => {
             tracker = {
                 fields: [{ field_id: 1, type: "fieldset" }],
