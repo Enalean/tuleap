@@ -38,6 +38,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
@@ -729,7 +730,8 @@ class AgileDashboardPlugin extends Plugin
             new TimeframeBuilder(
                 $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
-            )
+            ),
+            new MilestoneBurndownFieldChecker($this->getFormElementFactory())
         );
     }
 

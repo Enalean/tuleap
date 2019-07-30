@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -237,7 +238,8 @@ class AgileDashboardRouterBuilder
             new TimeframeBuilder(
                 $form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
-            )
+            ),
+            new MilestoneBurndownFieldChecker($form_element_factory)
         );
     }
 

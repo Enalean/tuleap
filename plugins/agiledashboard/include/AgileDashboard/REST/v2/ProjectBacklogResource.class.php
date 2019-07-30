@@ -42,6 +42,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\REST\Header;
 use PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneDao;
@@ -108,7 +109,8 @@ class ProjectBacklogResource {
             new TimeframeBuilder(
                 $tracker_form_element_factory,
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory)
-            )
+            ),
+            new MilestoneBurndownFieldChecker($tracker_form_element_factory)
         );
 
         $this->backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(
