@@ -48,7 +48,7 @@
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
                 <label for="document-creation-date" class="tlp-label" v-translate>
-                    Creation date
+                    Creation
                 </label>
                 <p id="document-creation-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)">
                     {{ getFormattedDateForDisplay(item.creation_date) }}
@@ -56,7 +56,7 @@
             </div>
             <div class="tlp-property">
                 <label for="document-last-update-date" class="tlp-label" v-translate>
-                    Last updated date
+                    Last update date
                 </label>
                 <p id="document-last-update-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)">
                     {{ getFormattedDateForDisplay(item.last_update_date) }}
