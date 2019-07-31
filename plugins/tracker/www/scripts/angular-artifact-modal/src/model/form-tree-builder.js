@@ -78,12 +78,6 @@ function recursiveGetCompleteField(structure_field, all_fields) {
             if (content.length === 0) {
                 return null;
             }
-
-            if (
-                content.every(field => field.type === CONTAINER_FIELDSET || field.type === "column")
-            ) {
-                return null;
-            }
         }
 
         complete_field.content = content;
