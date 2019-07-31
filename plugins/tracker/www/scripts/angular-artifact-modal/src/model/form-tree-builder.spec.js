@@ -148,7 +148,7 @@ describe("form-tree-builder", () => {
                         content: [
                             {
                                 id: 4,
-                                content: [{ id: 5, content: null }]
+                                content: [{ id: 5, content: [] }]
                             }
                         ]
                     }
