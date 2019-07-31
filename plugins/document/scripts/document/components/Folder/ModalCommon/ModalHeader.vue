@@ -24,7 +24,7 @@
             <i class="fa tlp-modal-title-icon" v-bind:class="iconHeaderClass"></i>
             {{ modalTitle }}
         </h1>
-        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
+        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="`${$gettext('Close')}`">
             &times;
         </div>
     </div>

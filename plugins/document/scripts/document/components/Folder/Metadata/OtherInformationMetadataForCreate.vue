@@ -19,10 +19,10 @@
   -->
 
 <template>
-    <div class="document-metadata" v-if="should_display_other_information" data-test="document-other-information">
+    <div class="document-metadata" v-if="is_obsolescence_date_metadata_used" data-test="document-other-information">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
-        <obsolescence-date-metadata-for-create v-model="date_value"/>
+        <obsolescence-date-metadata-for-create v-model="currentlyUpdatedItem.obsolescence_date"/>
     </div>
 </template>
 
@@ -40,25 +40,7 @@ export default {
     },
     computed: {
         ...mapState(["is_obsolescence_date_metadata_used"]),
-        ...mapGetters(["obsolescence_date_metadata"]),
-        should_display_other_information() {
-            return this.is_obsolescence_date_metadata_used;
-        },
-        date_value: {
-            get() {
-                const metadata = this.currentlyUpdatedItem.metadata.find(
-                    metadata => metadata.short_name === "obsolescence_date"
-                );
-                return metadata.value;
-            },
-            set(value) {
-                const metadata = this.currentlyUpdatedItem.metadata.find(
-                    metadata => metadata.short_name === "obsolescence_date"
-                );
-                metadata.value = value;
-                this.currentlyUpdatedItem.obsolescence_date = value;
-            }
-        }
+        ...mapGetters(["obsolescence_date_metadata"])
     }
 };
 </script>

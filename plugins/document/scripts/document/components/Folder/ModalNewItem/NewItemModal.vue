@@ -133,7 +133,7 @@ export default {
                 embedded_properties: {
                     content: ""
                 },
-                metadata: [{ short_name: "obsolescence_date", value: null }]
+                obsolescence_date: null
             };
         },
         show(event) {
