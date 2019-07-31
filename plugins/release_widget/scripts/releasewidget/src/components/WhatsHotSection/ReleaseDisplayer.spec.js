@@ -22,7 +22,7 @@ import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import ReleaseHeader from "./ReleaseHeader.vue";
+import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 
 let releaseData = {};
 let component_options = {};

@@ -40,7 +40,7 @@
 <script>
 import ReleaseBadges from "./ReleaseBadges.vue";
 import ReleaseDescription from "./ReleaseDescription.vue";
-import ReleaseHeader from "./ReleaseHeader.vue";
+import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 
 export default {
     name: "ReleaseDisplayer",

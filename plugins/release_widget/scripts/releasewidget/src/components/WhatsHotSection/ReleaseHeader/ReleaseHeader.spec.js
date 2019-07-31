@@ -101,6 +101,7 @@ describe("ReleaseHeader", () => {
 
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=display-remaining-effort]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=display-remaining-days]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=display-remaining-points]")).toBeTruthy();
     });
 });

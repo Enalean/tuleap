@@ -79,7 +79,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     flex: 1 0 auto;
 }
 
-.release-remaining-badges {
+.release-remaining-effort-badges {
     display: flex;
 }
 
@@ -131,9 +131,27 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     white-space: nowrap;
 }
 
-.release-remaining.tlp-tooltip.tlp-tooltip-bottom::before {
-    max-width: 130px;
+.release-remaining-progress {
+    width: 100%;
+    height: 3px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    border-radius: 3px;
+    background: $tlp-swatch-firemist-silver;
+}
+
+.release-remaining-progress-value {
+    height: 3px;
+    background: $tlp-theme-color;
+}
+
+.release-remaining-progress-value-danger {
+    background: $tlp-ui-danger;
+}
+
+.release-remaining-progress-value-disabled {
+    background: $tlp-ui-dimmed;
+}
+
+.release-remaining-progress-value-success {
+    background: $tlp-ui-success;
 }
