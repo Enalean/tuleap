@@ -54,14 +54,9 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
      */
     private $user;
     /**
-     * @var \Docman_MetadataFactory
-     */
-    private $metadata_factory;
-    /**
      * @var Docman_MetadataValueFactory
      */
     private $metadata_value_factory;
-
 
     public function __construct(string $project_name)
     {
@@ -69,7 +64,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         $this->project             = $this->project_manager->getProjectByUnixName($project_name);
         $this->docman_item_factory = Docman_ItemFactory::instance($this->project->getID());
         $this->installPlugin($this->project);
-        $this->metadata_factory       = new \Docman_MetadataFactory($this->project->getID());
+
         $this->metadata_value_factory = new Docman_MetadataValueFactory($this->project->getID());
     }
 
@@ -218,65 +213,6 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             $ugroup_name,
             true
         );
-    }
-
-    public function createCustomMetadata(): void
-    {
-        $custom_metadata = new \Docman_Metadata();
-
-        $custom_metadata->setName("Custom metadata");
-        $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $custom_metadata->setDescription("A custom metadata used for testing purpose");
-        $custom_metadata->setIsRequired(true);
-        $custom_metadata->setIsEmptyAllowed(false);
-        $custom_metadata->setIsMultipleValuesAllowed(false);
-        $custom_metadata->setSpecial(false);
-        $custom_metadata->setUseIt(true);
-
-        $this->metadata_factory->create(
-            $custom_metadata
-        );
-
-        $text_metadata = new \Docman_Metadata();
-
-        $text_metadata->setName("text metadata");
-        $text_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $text_metadata->setDescription("");
-        $text_metadata->setIsRequired(false);
-        $text_metadata->setIsEmptyAllowed(false);
-        $text_metadata->setIsMultipleValuesAllowed(false);
-        $text_metadata->setSpecial(false);
-        $text_metadata->setUseIt(true);
-
-        $this->metadata_factory->create(
-            $text_metadata
-        );
-
-        $custom_metadata = new \Docman_Metadata();
-
-        $custom_metadata->setName("list metadata");
-        $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $custom_metadata->setDescription("");
-        $custom_metadata->setIsRequired(false);
-        $custom_metadata->setIsEmptyAllowed(false);
-        $custom_metadata->setIsMultipleValuesAllowed(false);
-        $custom_metadata->setSpecial(false);
-        $custom_metadata->setUseIt(true);
-
-        $list_id = $this->metadata_factory->create(
-            $custom_metadata
-        );
-
-        $love_factory = new \Docman_MetadataListOfValuesElementFactory($list_id);
-
-        $value = new \Docman_MetadataListOfValuesElement();
-        $value->setName("value 1");
-
-        $value_two = new \Docman_MetadataListOfValuesElement();
-        $value_two->setName("value 2");
-
-        $love_factory->create($value);
-        $love_factory->create($value_two);
     }
 
     public function appendCustomMetadataValueToItem(int $item_id, string $value): void

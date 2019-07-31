@@ -42,7 +42,6 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $this->installPlugin($this->project);
         $this->generateDocmanRegularUser();
-        $this->createCustomMetadata();
         $this->addContent();
     }
 

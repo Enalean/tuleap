@@ -456,38 +456,4 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             $status['list_value'][0]['name']
         );
     }
-
-    /**
-     * @param $response
-     * @param $date
-     */
-    private function checkObsolesenceDate($response, $date): void
-    {
-        $obsolescence_date_metadata = $this->findMetadataByName(
-            $response->json()['metadata'],
-            'Obsolescence Date'
-        );
-
-        $obsolescence_date_string = $obsolescence_date_metadata['value'];
-        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
-            \DateTimeInterface::ATOM,
-            $obsolescence_date_string
-        );
-        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
-        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
-
-        $this->assertTrue($date->modify('+2 day')->getTimestamp() === $obsolescence_date->getTimestamp());
-    }
-
-    /**
-     * @param $response
-     */
-    private function checkStatus($response, string $value): void
-    {
-        $status = $this->findMetadataByName($response->json()['metadata'], 'Status');
-        $this->assertEquals(
-            $value,
-            $status['list_value'][0]['name']
-        );
-    }
 }

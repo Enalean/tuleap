@@ -137,27 +137,6 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertNotNull($embedded['permissions_for_groups']);
         $this->assertNotNull($wiki['permissions_for_groups']);
 
-        $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($empty['metadata'], 'Custom metadata'),
-            "custom value"
-        );
-        $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($file['metadata'], 'Custom metadata'),
-            "custom value"
-        );
-        $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($link['metadata'], 'Custom metadata'),
-            "custom value"
-        );
-        $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($embedded['metadata'], 'Custom metadata'),
-            "custom value"
-        );
-        $this->assertMetadataIsProperlySet(
-            $this->findMetadataByName($wiki['metadata'], 'Custom metadata'),
-            "custom value"
-        );
-
         return $items;
     }
 
@@ -234,17 +213,5 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'Folder');
         $this->assertEquals($json_parents[2]['title'], 'GET FO');
-    }
-
-    private function assertMetadataIsProperlySet(array $metadata, string $title): void
-    {
-        $this->assertEquals($metadata['name'], 'Custom metadata');
-        $this->assertEquals($metadata['type'], 'string');
-        $this->assertEquals($metadata['value'], $title);
-        $this->assertEquals($metadata['post_processed_value'], $title);
-        $this->assertEquals($metadata['list_value'], null);
-        $this->assertEquals($metadata['is_required'], true);
-        $this->assertEquals($metadata['is_multiple_value_allowed'], false);
-        $this->assertEquals($metadata['short_name'], 'field_1');
     }
 }

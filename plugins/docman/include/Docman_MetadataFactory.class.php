@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Metadata\CustomMetadataException;
 
 /**
  * MetadataFactory give access to metadata fields
@@ -362,29 +363,13 @@ class Docman_MetadataFactory
 
     /**
      * Return the Metadata corresponding to the given label.
+     * @deprecated use getMetadataFromLabel instead (throw exception instead of breaking code)
      */
     public function getFromLabel($label) {
-        if(in_array($label, self::HARDCODED_METADATA_LABELS)) {
-            $md = $this->getHardCodedMetadataFromLabel($label);
-
-            if($this->groupId !== null) {
-                $md->setGroupId($this->groupId);
-            }
-
-            if(in_array($md->getLabel(), $this->modifiableMetadata)) {
-                $this->appendHardCodedMetadataParams($md);
-            }
-
-            return $md;
-        }
-        else {
-            if(preg_match('/^field_([0-9]+)$/', $label, $match)) {
-                return $this->getRealMetadata($match[1]);
-            }
-            else {
-                trigger_error($GLOBALS['Language']->getText('plugin_docman', 'md_bo_badlabel', array($label)), E_USER_ERROR);
-                return null;
-            }
+        try {
+            return $this->getMetadataFromLabel($label);
+        } catch (CustomMetadataException $exception) {
+            trigger_error($GLOBALS['Language']->getText('plugin_docman', 'md_bo_badlabel', [$label]), E_USER_ERROR);
         }
     }
 
@@ -836,5 +821,32 @@ class Docman_MetadataFactory
             $item->addMetadata($metadata);
             unset($metadata);
         }
+    }
+
+    /**
+     * @return Docman_ListMetadata|Docman_Metadata|null
+     * @throws CustomMetadataException
+     */
+    public function getMetadataFromLabel($label)
+    {
+        if (in_array($label, self::HARDCODED_METADATA_LABELS)) {
+            $md = $this->getHardCodedMetadataFromLabel($label);
+
+            if ($this->groupId !== null) {
+                $md->setGroupId($this->groupId);
+            }
+
+            if (in_array($md->getLabel(), $this->modifiableMetadata)) {
+                $this->appendHardCodedMetadataParams($md);
+            }
+
+            return $md;
+        }
+
+        if (preg_match('/^field_([0-9]+)$/', $label, $match)) {
+            return $this->getRealMetadata($match[1]);
+        }
+
+        throw CustomMetadataException::metadataNotFound($label);
     }
 }

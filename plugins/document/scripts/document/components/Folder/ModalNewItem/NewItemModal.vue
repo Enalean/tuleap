@@ -133,7 +133,8 @@ export default {
                 embedded_properties: {
                     content: ""
                 },
-                obsolescence_date: null
+                obsolescence_date: null,
+                metadata: null
             };
         },
         show(event) {

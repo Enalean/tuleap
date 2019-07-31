@@ -25,6 +25,7 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
@@ -33,8 +34,8 @@ use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
-use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -45,11 +46,6 @@ use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
 class DocmanItemCreator
 {
-    public const ITEM_TYPE_ID = [
-        ItemRepresentation::TYPE_EMPTY => PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
-        ItemRepresentation::TYPE_WIKI  => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-    ];
-
     /**
      * @var \Docman_ItemFactory
      */
@@ -82,6 +78,10 @@ class DocmanItemCreator
      * @var HardcodedMetadataObsolescenceDateRetriever
      */
     private $date_retriever;
+    /**
+     * @var CustomMetadataRepresentationRetriever
+     */
+    private $custom_checker;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -91,7 +91,8 @@ class DocmanItemCreator
         EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
         DocmanLinksValidityChecker $links_validity_checker,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataObsolescenceDateRetriever $date_retriever
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever,
+        CustomMetadataRepresentationRetriever $custom_checker
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
@@ -101,6 +102,7 @@ class DocmanItemCreator
         $this->links_validity_checker            = $links_validity_checker;
         $this->status_mapper                     = $status_mapper;
         $this->date_retriever                    = $date_retriever;
+        $this->custom_checker                    = $custom_checker;
     }
 
     /**
@@ -139,6 +141,7 @@ class DocmanItemCreator
         Project $project,
         $title,
         $description,
+        array $formatted_representations,
         ?string $status,
         ?string $obsolescence_date,
         $wiki_page,
@@ -169,11 +172,12 @@ class DocmanItemCreator
         );
 
         $params = [
-            'group_id'      => $project->getID(),
-            'parent'        => $parent_item,
-            'item'          => $item,
-            'user'          => $user,
-            'creation_time' => $current_time
+            'group_id'           => $project->getID(),
+            'parent'             => $parent_item,
+            'item'               => $item,
+            'user'               => $user,
+            'creation_time'      => $current_time,
+            'formatted_metadata' => $formatted_representations
         ];
 
         if ($item_type_id === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
@@ -253,6 +257,7 @@ class DocmanItemCreator
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
      */
     public function createFolder(
         Docman_Item $parent_item,
@@ -266,6 +271,8 @@ class DocmanItemCreator
             throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
 
+        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             $current_time,
@@ -274,6 +281,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $formatted_representations,
             $representation->status,
             ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             null,
@@ -286,6 +294,7 @@ class DocmanItemCreator
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
      */
     public function createEmpty(
         Docman_Item $parent_item,
@@ -297,6 +306,8 @@ class DocmanItemCreator
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
+
+        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
 
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
@@ -313,6 +324,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $formatted_representations,
             $representation->status,
             $representation->obsolescence_date,
             null,
@@ -325,6 +337,7 @@ class DocmanItemCreator
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
      */
     public function createWiki(
         Docman_Item $parent_item,
@@ -336,6 +349,8 @@ class DocmanItemCreator
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
+
+        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
 
         if (! $project->usesWiki()) {
             throw new RestException(
@@ -359,6 +374,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $formatted_representations,
             $representation->status,
             $representation->obsolescence_date,
             $representation->wiki_properties->page_name,
@@ -372,6 +388,7 @@ class DocmanItemCreator
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
      */
     public function createEmbedded(
         Docman_Item $parent_item,
@@ -383,6 +400,8 @@ class DocmanItemCreator
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
+
+        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
 
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
@@ -399,6 +418,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $formatted_representations,
             $representation->status,
             $representation->obsolescence_date,
             null,
@@ -412,6 +432,7 @@ class DocmanItemCreator
      * @throws Metadata\HardCodedMetadataException
      * @throws RestException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws CustomMetadataException
      */
     public function createLink(
         Docman_Item $parent_item,
@@ -423,6 +444,8 @@ class DocmanItemCreator
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
+
+        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
 
         $link_url = $representation->link_properties->link_url;
         $this->links_validity_checker->checkLinkValidity($link_url);
@@ -442,6 +465,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $formatted_representations,
             $representation->status,
             $representation->obsolescence_date,
             null,

@@ -25,11 +25,12 @@ namespace Tuleap\Docman\Test\rest\Docman;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use REST_TestDataBuilder;
-use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 
-class DocmanProjectMetadataTest extends DocmanTestExecutionHelper
+class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 {
-    public function testGetMetadataForProject(): void
+    public function testGetMetadataForProject(): array
     {
         $response = $this->getResponse($this->client->get('projects/' . $this->project_id . '/docman_metadata'));
 
@@ -53,6 +54,55 @@ class DocmanProjectMetadataTest extends DocmanTestExecutionHelper
 
         $this->assertEquals("value 1", $value["value"]);
         $this->assertEquals("value 2", $value_two["value"]);
+
+        return $json_result;
+    }
+
+    /**
+     * @depends testGetRootId
+     * @depends testGetMetadataForProject
+     */
+    public function testPOSTEmptyItemCanBeCreatedWithMetadata(int $root_id, array $project_metadata): void
+    {
+        $text_metadata = $this->findMetadataByName($project_metadata, "text metadata");
+        $list_metadata = $this->findMetadataByName($project_metadata, "list metadata");
+        $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
+
+        $list_values = $list_metadata["allowed_list_values"];
+        $value       = $this->findValueByValueName($list_values, "value 1");
+
+        $query = json_encode(
+            [
+                'title'           => 'empty with custom metadata',
+                'metadata'        => [
+                    [
+                        'short_name' => $text_metadata['short_name'],
+                        'value' => 'aaaaa'
+                    ],
+                    [
+                        'short_name' => $list_metadata['short_name'],
+                        'value' => $value['id']
+                    ],
+                    [
+                        'short_name' => $other_list_metadata['short_name'],
+                        'list_value' => []
+                    ]
+                ]
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', null, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_empty_documents/' .  $response1->json()['id'])
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testOptionsProjectMetadata(): void

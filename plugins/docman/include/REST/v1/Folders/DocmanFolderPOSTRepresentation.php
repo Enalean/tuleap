@@ -45,6 +45,11 @@ class DocmanFolderPOSTRepresentation implements CanContainACopyRepresentation
     public $status = ItemStatusMapper::ITEM_STATUS_NONE;
 
     /**
+     * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}
+     */
+    public $metadata;
+
+    /**
      * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
      */
     public $copy;
