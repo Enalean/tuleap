@@ -28,13 +28,15 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
     name: "ReleaseDescription",
     props: {
         releaseData: Object
     },
     computed: {
-        get_overview_link() {
+        get_overview_link(): string {
             return (
                 "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(this.$store.state.project_id) +
@@ -46,5 +48,5 @@ export default {
             );
         }
     }
-};
+});
 </script>

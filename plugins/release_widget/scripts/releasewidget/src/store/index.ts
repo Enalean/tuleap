@@ -18,15 +18,16 @@
  */
 
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { Store } from "vuex";
 import mutations from "./mutations";
 import * as getters from "./getters";
 import * as actions from "./actions";
 import state from "./state";
+import { State } from "../type";
 
 Vue.use(Vuex);
 
-export function createStore() {
+export function createStore(): Store<State> {
     return new Vuex.Store({
         getters,
         actions,

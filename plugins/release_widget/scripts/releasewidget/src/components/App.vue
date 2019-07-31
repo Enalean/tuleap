@@ -34,28 +34,29 @@
 </template>
 
 <script lang="ts">
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "App",
     components: { WhatsHotSection, RoadmapSection },
     props: {
         projectId: Number
     },
     computed: {
-        ...mapState(["error_message", "is_loading"]),
+        ...mapState(["is_loading"]),
         ...mapGetters(["has_rest_error"]),
-        error() {
-            return this.error_message === ""
+        error(): string {
+            return this.$store.state.error_message === ""
                 ? this.$gettext("Oops, an error occurred!")
-                : this.error_message;
+                : this.$store.state.error_message;
         }
     },
-    created() {
+    created(): void {
         this.$store.commit("setProjectId", this.projectId);
         this.$store.dispatch("getMilestones");
     }
-};
+});
 </script>

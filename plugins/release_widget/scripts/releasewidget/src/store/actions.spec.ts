@@ -19,20 +19,23 @@
 
 import * as actions from "./actions";
 import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
+import { Context } from "../type";
 
 describe("Store actions", () => {
-    let context;
+    let context: Context;
 
     beforeEach(() => {
         context = {
             commit: jasmine.createSpy("commit"),
             state: {
-                project_id: null,
+                project_id: 102,
                 nb_backlog_items: 0,
                 nb_upcoming_releases: 0,
                 offset: 0,
                 limit: 50,
-                current_milestones: []
+                current_milestones: [],
+                error_message: null,
+                is_loading: false
             }
         };
     });
@@ -59,14 +62,14 @@ describe("Store actions", () => {
         describe("getMilestones - success", () => {
             it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
                 context.state = {
-                    project_id: null,
+                    project_id: 102,
                     nb_backlog_items: 0,
                     nb_upcoming_releases: 0,
                     error_message: null,
-                    pagination_offset: 0,
-                    pagination_limit: 50,
                     is_loading: false,
-                    current_milestones: {}
+                    current_milestones: [],
+                    offset: 0,
+                    limit: 50
                 };
 
                 const milestones = [
@@ -80,13 +83,8 @@ describe("Store actions", () => {
 
                 mockFetchSuccess(tlp.get, {
                     headers: {
-                        get: header_name => {
-                            const headers = {
-                                "X-PAGINATION-SIZE": 2
-                            };
-
-                            return headers[header_name];
-                        }
+                        // X-PAGINATION-SIZE
+                        get: () => 2
                     },
                     return_json: milestones
                 });

@@ -47,8 +47,10 @@
     </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     name: "ReleaseHeaderRemainingDays",
     props: {
         releaseData: Object
@@ -63,13 +65,13 @@ export default {
         };
     },
     computed: {
-        are_dates_correctly_set() {
+        are_dates_correctly_set(): boolean {
             return (
                 this.releaseData.number_days_since_start >= 0 &&
                 this.releaseData.number_days_until_end > 0
             );
         },
-        get_tooltip_effort_date() {
+        get_tooltip_effort_date(): string {
             const days_since_start = this.releaseData.number_days_since_start;
             const days_until_end = this.releaseData.number_days_until_end;
 
@@ -102,9 +104,9 @@ export default {
         }
     },
     methods: {
-        formatDate(date) {
+        formatDate(date: number): number {
             return date && date > 0 ? date : 0;
         }
     }
-};
+});
 </script>

@@ -21,16 +21,17 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
-let releaseData = {};
-let component_options = {};
+let releaseData: MilestoneData;
+let component_options: ComponentOption;
 
 describe("ReleaseHeaderRemainingDays", () => {
-    let store_options;
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -51,7 +52,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00"),
             capacity: 10
         };
 
@@ -70,7 +71,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 number_days_until_end: 10,
                 number_days_since_start: 0
@@ -99,7 +100,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 }
             };
 
@@ -126,7 +127,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 number_days_until_end: -10,
                 number_days_since_start: -10
@@ -156,7 +157,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 number_days_until_end: -10,
@@ -187,7 +188,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null
             };
@@ -215,7 +216,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 number_days_until_end: 0,
@@ -245,7 +246,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 number_days_since_start: 10,
@@ -275,7 +276,7 @@ describe("ReleaseHeaderRemainingDays", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 number_days_until_end: 5,

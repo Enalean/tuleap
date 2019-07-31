@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-let user_locale;
+let user_locale: string;
 
-export function setUserLocale(current_user_locale) {
+export function setUserLocale(current_user_locale: string): void {
     user_locale = current_user_locale;
 }
 
-export function getUserLocale() {
+export function getUserLocale(): string {
     return user_locale;
 }

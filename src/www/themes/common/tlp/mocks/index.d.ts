@@ -17,17 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
-
-const state: State = {
-    project_id: null,
-    nb_backlog_items: 0,
-    nb_upcoming_releases: 0,
-    error_message: null,
-    offset: 0,
-    limit: 50,
-    is_loading: false,
-    current_milestones: []
+export function mockFetchSuccess(mocked_function: jasmine.Spy, options: object): void;
+export function mockFetchError(mocked_function: jasmine.Spy, options: object): void;
+export const tlp: {
+    get: jasmine.Spy;
+    recursiveGet: jasmine.Spy;
 };
-
-export default state;

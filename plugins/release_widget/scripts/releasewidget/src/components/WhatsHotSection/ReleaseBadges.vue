@@ -45,13 +45,15 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
     name: "ReleaseBadges",
     props: {
         releaseData: Object
     },
     computed: {
-        get_top_planning_link() {
+        get_top_planning_link(): string {
             return (
                 "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(this.$store.state.project_id) +
@@ -62,12 +64,12 @@ export default {
                 "&pane=planning-v2"
             );
         },
-        capacity_exists() {
+        capacity_exists(): boolean {
             return this.releaseData.capacity && this.releaseData.capacity > 0;
         },
-        initial_effort_exist() {
+        initial_effort_exist(): boolean {
             return this.releaseData.initial_effort && this.releaseData.initial_effort > 0;
         }
     }
-};
+});
 </script>

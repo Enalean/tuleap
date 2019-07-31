@@ -36,18 +36,19 @@
 
 <script lang="ts">
 import { mapState } from "vuex";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "RoadmapSection",
     computed: {
-        ...mapState(["nb_backlog_items", "nb_upcoming_releases", "project_id"]),
-        backlog_link() {
+        ...mapState(["nb_backlog_items", "nb_upcoming_releases"]),
+        backlog_link(): string {
             return (
                 "/plugins/agiledashboard/?action=show-top&group_id=" +
-                encodeURIComponent(this.project_id) +
+                encodeURIComponent(this.$store.state.project_id) +
                 "&pane=topplanning-v2"
             );
         }
     }
-};
+});
 </script>

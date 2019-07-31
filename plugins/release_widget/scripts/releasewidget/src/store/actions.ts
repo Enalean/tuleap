@@ -25,35 +25,37 @@ import {
     getNbOfUpcomingReleases as getReleases
 } from "../api/rest-querier";
 
-async function getNumberOfBacklogItems(context) {
+import { Context, MilestoneContent, MilestoneData } from "../type";
+
+async function getNumberOfBacklogItems(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
     const total = await getBacklogs(context.state);
     return context.commit("setNbBacklogItem", total);
 }
 
-async function getNumberOfUpcomingReleases(context) {
+async function getNumberOfUpcomingReleases(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
     const total = await getReleases(context.state);
     return context.commit("setNbUpcomingReleases", total);
 }
 
-async function getCurrentMilestones(context) {
+async function getCurrentMilestones(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
     const milestones = await getAllCurrentMilestones(context.state);
 
-    const promises = [];
+    const promises: Promise<void>[] = [];
 
-    milestones.forEach(milestone => {
+    milestones.forEach((milestone: MilestoneData) => {
         promises.push(getInitialEffortOfRelease(context, milestone));
         promises.push(getNumberOfSprints(context, milestone));
     });
 
-    await Promise.all(promises);
+    await Promise.all<void>(promises);
 
     return context.commit("setCurrentMilestones", milestones);
 }
 
-export async function getMilestones(context) {
+export async function getMilestones(context: Context): Promise<void> {
     try {
         context.commit("setIsLoading", true);
 
@@ -67,24 +69,30 @@ export async function getMilestones(context) {
     }
 }
 
-async function getNumberOfSprints(context, milestone) {
+async function getNumberOfSprints(context: Context, milestone: MilestoneData): Promise<void> {
     context.commit("resetErrorMessage");
     milestone.total_sprint = await getSprints(milestone.id, context.state);
 }
 
-async function getInitialEffortOfRelease(context, milestone) {
+async function getInitialEffortOfRelease(
+    context: Context,
+    milestone: MilestoneData
+): Promise<void> {
     context.commit("resetErrorMessage");
     const user_stories = await getContent(milestone.id, context.state);
 
-    milestone.initial_effort = user_stories.reduce((nb_users_stories, user_story) => {
-        if (user_story.initial_effort !== null) {
-            return nb_users_stories + user_story.initial_effort;
-        }
-        return nb_users_stories;
-    }, 0);
+    milestone.initial_effort = user_stories.reduce(
+        (nb_users_stories: number, user_story: MilestoneContent) => {
+            if (user_story.initial_effort !== null) {
+                return nb_users_stories + user_story.initial_effort;
+            }
+            return nb_users_stories;
+        },
+        0
+    );
 }
 
-export async function handleErrorMessage(context, rest_error) {
+export async function handleErrorMessage(context: Context, rest_error: any): Promise<void> {
     try {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);

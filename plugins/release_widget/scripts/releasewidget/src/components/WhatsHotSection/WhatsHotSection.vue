@@ -32,12 +32,13 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "WhatsHotSection",
     components: { ReleaseDisplayer },
     computed: {
         ...mapState(["current_milestones"])
     }
-};
+});
 </script>

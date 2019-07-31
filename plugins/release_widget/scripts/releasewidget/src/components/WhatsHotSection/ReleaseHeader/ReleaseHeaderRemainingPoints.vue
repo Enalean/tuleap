@@ -47,10 +47,11 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { sprintf } from "sprintf-js";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "ReleaseHeaderRemainingPoints",
     props: {
         releaseData: Object
@@ -64,14 +65,14 @@ export default {
         };
     },
     computed: {
-        are_all_effort_defined() {
+        are_all_effort_defined(): boolean {
             return (
                 this.releaseData.remaining_effort > 0 &&
                 this.releaseData.initial_effort > 0 &&
                 this.releaseData.initial_effort > this.releaseData.remaining_effort
             );
         },
-        get_tooltip_effort_points() {
+        get_tooltip_effort_points(): string {
             const remaining_effort = this.releaseData.remaining_effort;
             const initial_effort = this.releaseData.initial_effort;
 
@@ -109,9 +110,9 @@ export default {
         }
     },
     methods: {
-        formatPoints(pts) {
+        formatPoints(pts: number): number {
             return pts ? pts : 0;
         }
     }
-};
+});
 </script>

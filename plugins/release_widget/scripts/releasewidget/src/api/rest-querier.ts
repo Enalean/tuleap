@@ -18,6 +18,12 @@
  */
 
 import { get, recursiveGet } from "tlp";
+import {
+    MilestoneContent,
+    MilestoneData,
+    ParametersRequestWithId,
+    ParametersRequestWithoutId
+} from "../type";
 
 export {
     getNbOfBacklogItems,
@@ -27,7 +33,12 @@ export {
     getMilestonesContent
 };
 
-function recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset) {
+function recursiveGetProjectMilestonesWithQuery(
+    project_id: number,
+    query: string,
+    limit: number,
+    offset: number
+): Promise<MilestoneData[]> {
     return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/milestones`, {
         params: {
             limit,
@@ -37,26 +48,43 @@ function recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset
     });
 }
 
-async function getNbOfUpcomingReleases({ project_id, limit, offset }) {
+async function getNbOfUpcomingReleases({
+    project_id,
+    limit,
+    offset
+}: ParametersRequestWithId): Promise<number> {
     const query = JSON.stringify({
         period: "future"
     });
 
-    const response = await recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
+    const response = await recursiveGetProjectMilestonesWithQuery(
+        project_id!,
+        query,
+        limit,
+        offset
+    );
 
     return response.length;
 }
 
-function getCurrentMilestones({ project_id, limit, offset }) {
+function getCurrentMilestones({
+    project_id,
+    limit,
+    offset
+}: ParametersRequestWithId): Promise<MilestoneData[]> {
     const query = JSON.stringify({
         period: "current"
     });
 
-    return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
+    return recursiveGetProjectMilestonesWithQuery(project_id!, query, limit, offset);
 }
 
-async function getNbOfBacklogItems({ project_id, limit, offset }) {
-    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
+async function getNbOfBacklogItems({
+    project_id,
+    limit,
+    offset
+}: ParametersRequestWithId): Promise<number> {
+    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id!)}/backlog`, {
         params: {
             limit,
             offset
@@ -66,7 +94,10 @@ async function getNbOfBacklogItems({ project_id, limit, offset }) {
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getNbOfSprints(milestone_id, { limit, offset }) {
+async function getNbOfSprints(
+    milestone_id: number,
+    { limit, offset }: ParametersRequestWithoutId
+): Promise<number> {
     const response = await get(
         `/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`,
         {
@@ -80,7 +111,10 @@ async function getNbOfSprints(milestone_id, { limit, offset }) {
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getMilestonesContent(id_release, { limit, offset }) {
+async function getMilestonesContent(
+    id_release: number,
+    { limit, offset }: ParametersRequestWithoutId
+): Promise<MilestoneContent[]> {
     const response = await get(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
         params: {
             limit,
@@ -91,6 +125,6 @@ async function getMilestonesContent(id_release, { limit, offset }) {
     return response.json();
 }
 
-function getPaginationSizeFromHeader(header) {
-    return Number(header.get("X-PAGINATION-SIZE"));
+function getPaginationSizeFromHeader(header: any): number {
+    return Number.parseInt(header.get("X-PAGINATION-SIZE"), 10);
 }

@@ -42,20 +42,21 @@
 import { formatDateYearMonthDay } from "../../../helpers/date-formatters";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "ReleaseHeader",
     components: { ReleaseHeaderRemainingPoints, ReleaseHeaderRemainingDays },
     props: {
         releaseData: Object
     },
     methods: {
-        formatDate(date) {
+        formatDate(date: string): string {
             return formatDateYearMonthDay(date);
         },
-        startDateExist() {
-            return this.releaseData.start_date;
+        startDateExist(): boolean {
+            return this.releaseData.start_date !== null;
         }
     }
-};
+});
 </script>

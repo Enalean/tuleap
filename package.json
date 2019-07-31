@@ -12,6 +12,7 @@
     "@babel/core": "^7.4.3",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.3",
+    "@types/jasmine": "^3.3.16",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "@vue/component-compiler-utils": "^2.6.0",

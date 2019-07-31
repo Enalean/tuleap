@@ -19,12 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import { StoreOptions } from "../type";
 
 const project_id = 102;
-function getPersonalWidgetInstance(store_options) {
+function getPersonalWidgetInstance(store_options: StoreOptions) {
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
@@ -42,7 +43,7 @@ function getPersonalWidgetInstance(store_options) {
 }
 
 describe("Given a release widget", () => {
-    let store_options;
+    let store_options: StoreOptions;
     beforeEach(() => {
         store_options = {
             state: {
@@ -65,7 +66,7 @@ describe("Given a release widget", () => {
     });
 
     it("When there is an error, then the widget content will not be displayed", () => {
-        store_options.getters.has_rest_error = true;
+        store_options.getters!.has_rest_error = true;
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=show-error-message]")).toBeTruthy();
@@ -84,7 +85,7 @@ describe("Given a release widget", () => {
 
     it("When there is a rest error and it is empty, Then another message is displayed", () => {
         store_options.state.error_message = "";
-        store_options.getters.has_rest_error = true;
+        store_options.getters!.has_rest_error = true;
 
         const wrapper = getPersonalWidgetInstance(store_options);
         expect(wrapper.find("[data-test=show-error-message]").text()).toEqual(
