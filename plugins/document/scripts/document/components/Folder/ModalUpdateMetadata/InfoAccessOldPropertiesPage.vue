@@ -18,9 +18,11 @@
   -->
 
 <template functional>
-    <div class="tlp-alert-info access-legacy-update-properties-page" v-translate>
-        Access to <a class="access-legacy-update-properties-page-link"
-                     v-bind:href="`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props.itemId}`"
-        >legacy properties page</a>
+    <div class="tlp-alert-info access-legacy-update-properties-page">
+        <a class="access-legacy-update-properties-page-link"
+           v-bind:href="`/plugins/docman/?group_id=${props.projectId}&action=edit&id=${props.itemId}`"
+        >
+            <translate>Access to legacy properties page</translate>
+        </a>
     </div>
 </template>
