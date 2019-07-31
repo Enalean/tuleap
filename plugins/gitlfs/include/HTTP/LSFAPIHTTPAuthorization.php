@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,10 +23,13 @@ namespace Tuleap\GitLFS\HTTP;
 
 use GitRepository;
 use HTTPRequest;
+use PFUser;
 use Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
+use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\GitLFS\Authorization\User\Operation\UserOperation;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationDownload;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationUpload;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
@@ -49,10 +52,7 @@ class LSFAPIHTTPAuthorization
         $this->split_token_unserializer = $split_token_unserializer;
     }
 
-    /**
-     * @return \PFUser|null
-     */
-    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request)
+    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request) : ?PFUser
     {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {
@@ -69,17 +69,32 @@ class LSFAPIHTTPAuthorization
             return null;
         }
 
-        $user_operation = null;
+        $user_operations = [];
         if ($lfs_request->isRead()) {
-            $user_operation = new UserOperationDownload();
+            $user_operations[] = new UserOperationDownload();
         }
-        if ($user_operation === null && $lfs_request->isWrite()) {
-            $user_operation = new UserOperationUpload();
+        if ($lfs_request->isWrite()) {
+            $user_operations[] = new UserOperationUpload();
         }
-        if ($user_operation === null) {
+        if (empty($user_operations)) {
             return null;
         }
 
+        foreach ($user_operations as $user_operation) {
+            $user = $this->findUserMatchingTokenAndOperation($repository, $authorization_token, $user_operation);
+            if ($user !== null) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    private function findUserMatchingTokenAndOperation(
+        GitRepository $repository,
+        SplitToken $authorization_token,
+        UserOperation $user_operation
+    ) : ?PFUser {
         try {
             return $this->token_verifier->getUser(
                 new \DateTimeImmutable(),
