@@ -7,7 +7,7 @@
     ],
     "gettext-vue": {
         "step-definition-field": {
-            "scripts": "./scripts/step-definition-field",
+            "src": "./scripts/step-definition-field",
             "po": "./scripts/step-definition-field/po"
         }
     }
