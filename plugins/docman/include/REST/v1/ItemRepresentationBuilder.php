@@ -99,17 +99,17 @@ class ItemRepresentationBuilder
      * @return ItemRepresentation|null
      * @throws UnknownMetadataException
      */
-    public function buildRootId(Project $project, \PFUser $current_user)
+    public function buildRootId(Project $project, \PFUser $current_user) : ?ItemRepresentation
     {
         $result = $this->dao->searchRootItemForGroupId($project->getID());
 
         if (! $result) {
-            return;
+            return null;
         }
 
         $item = $this->docman_item_factory->getItemFromRow($result);
-        if (! $item) {
-            return;
+        if ($item === null || ! $this->permissions_manager->userCanRead($current_user, $item->getId())) {
+            return null;
         }
 
         return $this->buildItemRepresentation(
