@@ -2,7 +2,7 @@
     "name": "baseline",
     "gettext-vue": {
         "baseline": {
-            "scripts": "scripts/",
+            "src": "scripts/baseline",
             "po": "scripts/baseline/po"
         }
     },

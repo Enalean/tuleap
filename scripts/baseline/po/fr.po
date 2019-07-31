@@ -179,6 +179,9 @@ msgstr "Aucune autre baseline disponible posée sur le même artefact."
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
 
+msgid "Page not found"
+msgstr "Page non trouvée"
+
 msgid "Please choose two baselines to compare"
 msgstr "Veuillez choisir deux baselines à comparer"
 
