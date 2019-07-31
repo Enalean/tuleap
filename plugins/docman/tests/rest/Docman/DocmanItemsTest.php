@@ -239,16 +239,4 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($metadata['is_multiple_value_allowed'], false);
         $this->assertEquals($metadata['short_name'], 'field_1');
     }
-
-    /**
-     * @return array | null Found item. null otherwise.
-     */
-    public function findMetadataByName(array $metadata, string $name): ?array
-    {
-        $index = array_search($name, array_column($metadata, 'name'));
-        if ($index === false) {
-            return null;
-        }
-        return $metadata[$index];
-    }
 }

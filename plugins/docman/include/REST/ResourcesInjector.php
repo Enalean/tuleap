@@ -32,6 +32,8 @@ use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanWikiResource;
+use Tuleap\Docman\REST\v1\ProjectResource;
+use Tuleap\Project\REST\ProjectRepresentation;
 
 class ResourcesInjector
 {
@@ -78,6 +80,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanEmptyDocumentsResource::class,
             self::EMPTY_DOCUMENT_NAME
+        );
+
+        $restler->addAPIClass(
+            ProjectResource::class,
+            ProjectRepresentation::ROUTE
         );
     }
 }

@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
+
 require_once('Docman_MetadataListOfValuesElement.class.php');
 require_once('Docman_MetadataListOfValuesElementDao.class.php');
 
@@ -118,17 +120,8 @@ class Docman_MetadataListOfValuesElementFactory {
             return $lst;
         }
         else {
-            $dao = $this->getDao();
-            $dar = $dao->serachByFieldId($id, $onlyActive);
-            $res = array();
-            while($dar->valid()) {
-                $row = $dar->current();
-
-                $res[] = $this->instanciateLove($row);
-
-                $dar->next();
-            }
-            return $res;
+            $builder = new MetadataListOfValuesElementListBuilder($this->getDao());
+            return $builder->build($id, $onlyActive);
         }
     }
 

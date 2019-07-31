@@ -1260,6 +1260,7 @@ class DocmanPlugin extends Plugin
 
         $html_purifier = Codendi_HTMLPurifier::instance();
 
+        $metadata_factory            = new Docman_MetadataFactory($project->getID());
         $item_representation_builder = new ItemRepresentationBuilder(
             new Docman_ItemDao(),
             $this->getUserManager(),
@@ -1268,7 +1269,7 @@ class DocmanPlugin extends Plugin
             $this->getDocmanLockFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
-                new Docman_MetadataFactory($project->getID()),
+                $metadata_factory,
                 $html_purifier,
                 UserHelper::instance()
             ),
@@ -1285,6 +1286,8 @@ class DocmanPlugin extends Plugin
         }
 
         $params['informations'][$this->getName()]['root_item'] = $item_representation;
+
+        $params['informations'][$this->getName()]['metadata_uri'] = "projects/" . urlencode((string)$project->getID()) . "/docman_metadata";
     }
 
     /** @see Event::REST_RESOURCES */

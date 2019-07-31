@@ -227,6 +227,11 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['additional_informations']['docman']['root_item']['id']
         );
 
+        $this->assertEquals(
+            'projects/' . $this->project_private_member_id . '/docman_metadata',
+            $json_projects[0]['additional_informations']['docman']['metadata_uri']
+        );
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

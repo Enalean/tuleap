@@ -153,4 +153,16 @@ class DocmanTestExecutionHelper extends DocmanBase
 
         return $response->json();
     }
+
+    /**
+     * @return array | null Found item. null otherwise.
+     */
+    public function findMetadataByName(array $metadata, string $name): ?array
+    {
+        $index = array_search($name, array_column($metadata, 'name'));
+        if ($index === false) {
+            return null;
+        }
+        return $metadata[$index];
+    }
 }
