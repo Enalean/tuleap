@@ -83,7 +83,7 @@ class PermissionsRepresentationBuilder
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
             $representation = new UserGroupRepresentation();
-            $representation->build($tracker->getProject()->getID(), $ugroup);
+            $representation->build((int) $tracker->getProject()->getID(), $ugroup);
             $ugroup_representations[] = $representation;
         }
     }

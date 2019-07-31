@@ -7,4 +7,11 @@
   <email><![CDATA[test_user_1@example.com]]></email>
   <ldapid>tester1</ldapid>
  </user>
+ <user>
+  <id>106</id>
+  <username>rest_api_tester_5</username>
+  <realname><![CDATA[]]></realname>
+  <email><![CDATA[test_user_5@example.com]]></email>
+  <ldapid></ldapid>
+ </user>
 </users>

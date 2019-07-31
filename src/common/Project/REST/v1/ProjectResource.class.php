@@ -1217,7 +1217,7 @@ class ProjectResource extends AuthenticatedResource
 
         foreach ($ugroups as $ugroup) {
             $representation = new UserGroupRepresentation();
-            $representation->build($project_id, $ugroup);
+            $representation->build((int) $project_id, $ugroup);
             $user_groups[] = $representation;
         }
 

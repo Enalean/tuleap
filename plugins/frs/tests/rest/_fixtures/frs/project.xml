@@ -8,6 +8,7 @@
     <ugroup name="project_members" description="Project members">
       <members>
         <member format="username">rest_api_tester_1</member>
+        <member format="username">rest_api_tester_5</member>
       </members>
     </ugroup>
     <ugroup name="FRS_Admin" description="">
@@ -17,6 +18,9 @@
     </ugroup>
   </ugroups>
   <frs>
+      <read-access>
+          <ugroup>project_members</ugroup>
+      </read-access>
       <admin-access>
           <ugroup>FRS_Admin</ugroup>
       </admin-access>

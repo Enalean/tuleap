@@ -70,7 +70,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
         foreach ($ugroup_rows as $row) {
             $ugroup = $this->ugroup_manager->getById($row['ugroup_id']);
             $rewind_ugroup_representation = new UserGroupRepresentation();
-            $rewind_ugroup_representation->build($repository->getProjectId(), $ugroup);
+            $rewind_ugroup_representation->build((int) $repository->getProjectId(), $ugroup);
 
             $ugroup_representations[] = $rewind_ugroup_representation;
         }

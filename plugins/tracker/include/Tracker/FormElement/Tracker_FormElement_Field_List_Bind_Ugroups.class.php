@@ -650,7 +650,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
         }
         $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build($project->getID(), $ugroup);
+        $ugroup_representation->build((int) $project->getID(), $ugroup);
 
         $representation = new FieldListBindUGroupValueRepresentation();
         $representation->build($value, $ugroup_representation);
@@ -665,7 +665,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $rest_array = array();
         foreach ($bind_values as $value) {
             $representation = new UserGroupRepresentation();
-            $representation->build($project_id, $value->getUgroup());
+            $representation->build((int) $project_id, $value->getUgroup());
             $rest_array[] = $representation;
 
         }
