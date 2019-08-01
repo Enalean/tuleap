@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -299,10 +299,10 @@ class create_test_envPlugin extends Plugin
     {
         if ($this->shouldCallMeBackButtonBeDisplayed()) {
             $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/create_test_env/FlamingParrot',
-                '/assets/create_test_env/FlamingParrot'
+                __DIR__ . '/../../../src/www/assets/create_test_env/themes',
+                '/assets/create_test_env/themes'
             );
-            $css_file_url = $assets->getFileURL('style.css');
+            $css_file_url = $assets->getFileURL('flamingparrot-style.css');
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
@@ -324,12 +324,12 @@ class create_test_envPlugin extends Plugin
     public function burningParrotGetStylesheets(array $params)
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/create_test_env/BurningParrot',
-            '/assets/create_test_env/BurningParrot'
+            __DIR__ . '/../../../src/www/assets/create_test_env/themes',
+            '/assets/create_test_env/themes'
         );
 
         $variant = $params['variant'];
-        $params['stylesheets'][] = $assets->getFileURL('create-test-env-' . $variant->getName() . '.css');
+        $params['stylesheets'][] = $assets->getFileURL('burningparrot-style-' . $variant->getName() . '.css');
     }
 
     public function burningParrotGetJavascriptFiles(array $params)

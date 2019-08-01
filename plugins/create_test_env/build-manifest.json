@@ -1,41 +1,5 @@
 {
     "name": "create_test_env",
-    "themes": {
-        "FlamingParrot": {
-            "files": [
-                "themes/FlamingParrot/css/style.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/FlamingParrot/css/utils"
-            ],
-            "target_dir": "../../src/www/assets/create_test_env/FlamingParrot",
-            "is_revisioned": true
-        },
-        "BurningParrot": {
-            "files": [
-                "themes/BurningParrot/css/create-test-env-blue.scss",
-                "themes/BurningParrot/css/create-test-env-blue-condensed.scss",
-                "themes/BurningParrot/css/create-test-env-green.scss",
-                "themes/BurningParrot/css/create-test-env-green-condensed.scss",
-                "themes/BurningParrot/css/create-test-env-grey.scss",
-                "themes/BurningParrot/css/create-test-env-grey-condensed.scss",
-                "themes/BurningParrot/css/create-test-env-orange.scss",
-                "themes/BurningParrot/css/create-test-env-orange-condensed.scss",
-                "themes/BurningParrot/css/create-test-env-purple.scss",
-                "themes/BurningParrot/css/create-test-env-purple-condensed.scss",
-                "themes/BurningParrot/css/create-test-env-red.scss",
-                "themes/BurningParrot/css/create-test-env-red-condensed.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/common/tlp/src/scss"
-            ],
-            "watched_includes": [
-                "themes/BurningParrot/css/**/_*.scss"
-            ],
-            "target_dir": "../../src/www/assets/create_test_env/BurningParrot",
-            "is_revisioned": true
-        }
-    },
     "gettext-vue": {
         "call-me-back": {
             "src": "scripts",
@@ -43,6 +7,7 @@
         }
     },
     "components": [
-        "scripts/"
+        "scripts/",
+        "themes/"
     ]
 }
