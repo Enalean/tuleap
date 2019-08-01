@@ -23,7 +23,8 @@ use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 use Exception;
 
-class UserGroupRepresentation {
+class UserGroupRepresentation
+{
 
     public const ROUTE = 'user_groups';
 
@@ -59,16 +60,19 @@ class UserGroupRepresentation {
      */
     public $key;
 
-    public function build(int $project_id, ProjectUGroup $ugroup) {
+    public function build(int $project_id, ProjectUGroup $ugroup): self
+    {
         $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id ;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         $this->key        = $ugroup->getName();
         $this->users_uri  = self::ROUTE . '/'. $this->id .'/users';
         $this->short_name = $ugroup->getNormalizedName();
+        return $this;
     }
 
-    static function getRESTIdForProject($project_id, $user_group_id) {
+    public static function getRESTIdForProject($project_id, $user_group_id)
+    {
         if ($user_group_id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
             || in_array($user_group_id, ProjectUGroup::$forge_user_groups)
         ) {
@@ -78,7 +82,8 @@ class UserGroupRepresentation {
         return $project_id.'_'.$user_group_id;
     }
 
-    static function getProjectAndUserGroupFromRESTId($identifier) {
+    public static function getProjectAndUserGroupFromRESTId($identifier)
+    {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {
             return array(
                 'project_id'    => null,
@@ -94,7 +99,8 @@ class UserGroupRepresentation {
         }
     }
 
-    static public function checkRESTIdIsAppropriate($identifier) {
+    public static function checkRESTIdIsAppropriate($identifier)
+    {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier, $simple_id)) {
             $id = $simple_id[0];
             if ($id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY

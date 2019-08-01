@@ -24,7 +24,9 @@ use FRSPackageFactory;
 use FRSRelease;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use PFUser;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\UploadedLinksDao;
@@ -32,6 +34,7 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use UGroupManager;
 use UserManager;
 
 class ReleaseResource extends AuthenticatedResource
@@ -60,14 +63,23 @@ class ReleaseResource extends AuthenticatedResource
      * @var Retriever
      */
     private $retriever;
+    /**
+     * @var ReleasePermissionsForGroupsBuilder
+     */
+    private $permissions_for_groups_builder;
 
     public function __construct()
     {
-        $this->release_factory         = FRSReleaseFactory::instance();
-        $this->retriever               = new Retriever(new Dao());
-        $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
-        $this->package_factory         = FRSPackageFactory::instance();
-        $this->user_manager            = UserManager::instance();
+        $this->release_factory                = FRSReleaseFactory::instance();
+        $this->retriever                      = new Retriever(new Dao());
+        $this->uploaded_link_retriever        = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+        $this->package_factory                = FRSPackageFactory::instance();
+        $this->user_manager                   = UserManager::instance();
+        $this->permissions_for_groups_builder = new ReleasePermissionsForGroupsBuilder(
+            FRSPermissionManager::build(),
+            PermissionsManager::instance(),
+            new UGroupManager()
+        );
     }
 
     /**
@@ -97,7 +109,7 @@ class ReleaseResource extends AuthenticatedResource
         $this->checkUserCanReadRelease($release, $user);
 
         $release_representation = new ReleaseRepresentation();
-        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
+        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
 
         return $release_representation;
     }
@@ -221,8 +233,11 @@ class ReleaseResource extends AuthenticatedResource
         }
 
         $release = $this->release_factory->getFRSReleaseFromDb($id);
+        if (! $release) {
+            throw new RestException(500, "Unable to retrieve the release from the DB. Please contact site administrators");
+        }
         $release_representation = new ReleaseRepresentation();
-        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
+        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
 
         return $release_representation;
     }
