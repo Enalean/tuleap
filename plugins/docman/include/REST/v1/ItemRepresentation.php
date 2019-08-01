@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\REST\JsonCast;
@@ -142,6 +143,12 @@ class ItemRepresentation
      */
     public $approval_table;
 
+    /**
+     * @var DocmanItemPermissionsForGroupsRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation}
+     * @psalm-var DocmanItemPermissionsForGroupsRepresentation|null
+     */
+    public $permissions_for_groups;
+
     public function build(
         \Docman_Item $item,
         Codendi_HTMLPurifier $purifier,
@@ -153,12 +160,13 @@ class ItemRepresentation
         array $metadata_representations,
         bool $has_approval_table,
         bool $is_approval_table_enabled,
-        ?ItemApprovalTableRepresentation $approval_table = null,
-        ?ItemLockInfoRepresentation $lock_info = null,
-        ?FilePropertiesRepresentation $file_properties = null,
-        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
-        ?LinkPropertiesRepresentation $link_properties = null,
-        ?WikiPropertiesRepresentation $wiki_properties = null
+        ?ItemApprovalTableRepresentation $approval_table,
+        ?ItemLockInfoRepresentation $lock_info,
+        ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
+        ?FilePropertiesRepresentation $file_properties,
+        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties,
+        ?LinkPropertiesRepresentation $link_properties,
+        ?WikiPropertiesRepresentation $wiki_properties
     ) {
         $this->id                         = JsonCast::toInt($item->getId());
         $this->title                      = $item->getTitle();
@@ -180,6 +188,7 @@ class ItemRepresentation
         $this->metadata                   = $metadata_representations;
         $this->has_approval_table         = $has_approval_table;
         $this->is_approval_table_enabled  = $is_approval_table_enabled;
+        $this->permissions_for_groups     = $permissions_for_groups;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

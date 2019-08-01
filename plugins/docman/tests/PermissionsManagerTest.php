@@ -429,7 +429,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         // No need to fetch perms when admin
         $dao = new MockDocman_PermissionsManagerDao($this);
-        $dao->expectCallCount('retreivePermissionsForItems', 0);
+        $dao->expectCallCount('retrievePermissionsForItems', 0);
 
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
@@ -447,7 +447,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         // No need to fetch perms when admin
         $dao = new MockDocman_PermissionsManagerDao($this);
-        $dao->expectCallCount('retreivePermissionsForItems', 0);
+        $dao->expectCallCount('retrievePermissionsForItems', 0);
 
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 

@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -31,12 +31,17 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         $this->groupId = $groupId;
     }
 
-    function retreivePermissionsForItems($itemsIds, $perms, $ugroupIds) {
+    public function retrievePermissionsForItems($itemsIds, $perms, $ugroupIds)
+    {
+        $itemsIds  = $this->da->quoteSmartImplode(',', $itemsIds);
+        $perms     = $this->da->quoteSmartImplode(',', $perms);
+        $ugroupIds = $this->da->escapeIntImplode($ugroupIds);
+
         $sql = 'SELECT *'.
             ' FROM permissions'.
-            " WHERE object_id IN ('".implode("','", $itemsIds)."')".
-            ' AND permission_type IN ('.implode(',', $perms).')'.
-            ' AND ugroup_id IN ('.implode(',', $ugroupIds).')';
+            " WHERE object_id IN ('.$itemsIds.')".
+            ' AND permission_type IN ('.$perms.')'.
+            ' AND ugroup_id IN ('.$ugroupIds.')';
         return $this->retrieve($sql);
     }
 
@@ -66,21 +71,21 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
             return false;
         }
     }
-    
+
 
     /**
      * Returns project admin members for a given group
-     * 
+     *
      * @param Project $project
      */
     function getProjectAdminMembers($project) {
         $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.$this->da->escapeInt($project->getId());
-        return $this->retrieve($sql); 
+        return $this->retrieve($sql);
     }
-    
+
     /**
      * Returns ugroup members of ugroups
-     * 
+     *
      * @param Integer $ugroupId
      */
     function getUgroupMembers($ugroupId) {
@@ -90,7 +95,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
 
     /**
      * Returns docman admin ugroups
-     * 
+     *
      * @param Project $project
      *
      * @return DataAccessResult
