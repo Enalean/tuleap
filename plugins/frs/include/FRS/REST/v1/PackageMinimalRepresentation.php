@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,25 @@ namespace Tuleap\FRS\REST\v1;
 
 use FRSPackage;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\FRSPackageRepresentationBase;
 
-class PackageMinimalRepresentation extends FRSPackageRepresentationBase
+class PackageMinimalRepresentation
 {
     public const ROUTE = 'frs_packages';
+
+    /**
+     * @var int ID of the package
+     */
+    public $id;
+
+    /**
+     * @var string $uri
+     */
+    public $uri;
+
+    /**
+     * @var string
+     */
+    public $label;
 
     public function build(FRSPackage $package)
     {

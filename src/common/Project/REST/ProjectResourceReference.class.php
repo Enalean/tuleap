@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@ namespace Tuleap\Project\REST;
 
 use Project;
 
-class ProjectResourceReference {
+class ProjectResourceReference
+{
 
     /**
      * @var string The type of the resource
@@ -33,8 +34,10 @@ class ProjectResourceReference {
      */
     public $uri;
 
-    public function build(Project $project, $resource_type) {
+    public function build(Project $project, string $resource_type) : self
+    {
         $this->type = $resource_type;
         $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;
+        return $this;
     }
 }
