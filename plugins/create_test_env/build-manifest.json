@@ -38,7 +38,7 @@
     },
     "gettext-vue": {
         "call-me-back": {
-            "scripts": "scripts/",
+            "src": "scripts",
             "po": "scripts/po"
         }
     },

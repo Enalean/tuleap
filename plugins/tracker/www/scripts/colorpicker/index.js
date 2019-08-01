@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "./po/fr.po";
 import ColorPicker from "./ColorPicker.vue";
 
 const ColorPickerComponent = Vue.extend(ColorPicker);

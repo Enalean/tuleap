@@ -79,7 +79,7 @@
     },
     "gettext-vue": {
         "permissions-per-group": {
-            "scripts": "www/js/",
+            "src": "www/js/permissions-per-group/src/",
             "po": "www/js/permissions-per-group/po"
         }
     }

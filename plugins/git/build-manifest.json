@@ -63,15 +63,15 @@
     },
     "gettext-vue": {
         "permissions-per-group": {
-            "scripts": "www/scripts/permissions-per-group/",
+            "src": "www/scripts/permissions-per-group",
             "po": "www/scripts/permissions-per-group/po"
         },
         "git-repositories": {
-            "scripts": "www/scripts/repositories/src",
+            "src": "www/scripts/repositories/src",
             "po": "www/scripts/repositories/po"
         },
         "branch-tag-selector": {
-            "scripts": "www/scripts/repository/branch-tag-selector/src",
+            "src": "www/scripts/repository/branch-tag-selector/src",
             "po": "www/scripts/repository/branch-tag-selector/po"
         }
     },

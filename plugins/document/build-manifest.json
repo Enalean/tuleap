@@ -28,7 +28,7 @@
     },
     "gettext-vue": {
         "document": {
-            "scripts": "scripts/",
+            "src": "scripts/document",
             "po": "scripts/document/po"
         }
     },

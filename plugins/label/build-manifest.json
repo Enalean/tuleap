@@ -31,7 +31,7 @@
     ],
     "gettext-vue": {
         "labeled-items": {
-            "scripts": "www/scripts/",
+            "src": "www/scripts/project-labeled-items/src",
             "po": "www/scripts/project-labeled-items/po"
         }
     }

@@ -29,7 +29,7 @@
     "components": ["scripts/"],
     "gettext-vue": {
         "cross-tracker": {
-            "scripts": "scripts/",
+            "src": "scripts/cross-tracker/src",
             "po": "scripts/cross-tracker/po"
         }
     }

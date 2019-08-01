@@ -106,16 +106,20 @@
         }
     },
     "gettext-vue": {
-        "tracker": {
-            "scripts": "www/scripts/",
-            "po": "www/scripts/po"
+        "colorpicker": {
+            "src": "www/scripts/colorpicker",
+            "po": "www/scripts/colorpicker/po"
+        },
+        "artifact-action-buttons": {
+            "src": "www/scripts/artifact-action-buttons",
+            "po": "www/scripts/artifact-action-buttons/po"
         },
         "permissions-per-group": {
-            "scripts": "www/scripts/permissions-per-group/",
+            "src": "www/scripts/permissions-per-group",
             "po": "www/scripts/permissions-per-group/po"
         },
         "workflow-transitions": {
-            "scripts": "www/scripts/workflow-transitions/",
+            "src": "www/scripts/workflow-transitions",
             "po": "www/scripts/workflow-transitions/po"
         }
     }
