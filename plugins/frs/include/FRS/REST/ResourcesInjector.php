@@ -29,6 +29,7 @@ use Tuleap\FRS\REST\v1\PackageResource;
 use Tuleap\FRS\REST\v1\ProjectResource;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\REST\v1\ReleaseResource;
+use Tuleap\FRS\REST\v1\ServiceRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 
@@ -45,5 +46,6 @@ class ResourcesInjector
     public function declareProjectResources(array &$resources, Project $project)
     {
         $resources[] = (new ProjectResourceReference())->build($project, PackageMinimalRepresentation::ROUTE);
+        $resources[] = (new ProjectResourceReference())->build($project, ServiceRepresentation::ROUTE);
     }
 }

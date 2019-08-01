@@ -39,6 +39,20 @@ class PackagesTest extends RestBase
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 
+    public function testPackagesIsInProjectResources()
+    {
+        $response = $this->getResponse($this->client->get(sprintf('projects/%d', $this->project_id)));
+        $project  = $response->json();
+
+        $this->assertContains(
+            [
+                'type' => 'frs_packages',
+                'uri'  => sprintf('projects/%d/frs_packages', $this->project_id),
+            ],
+            $project['resources']
+        );
+    }
+
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('frs_packages'));

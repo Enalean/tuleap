@@ -25,6 +25,9 @@ use PFUser;
 use Project;
 use Luracast\Restler\RestException;
 use ProjectManager;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -136,6 +139,40 @@ class ProjectResource extends AuthenticatedResource
         }
 
         return new PackageMinimalRepresentationPaginatedCollection($packages, $paginated_packages->getTotalSize());
+    }
+
+    /**
+     * Get File Release System service
+     *
+     * Get metadata about the file release system service for a given project
+     *
+     * @url    GET {id}/frs_service
+     * @access hybrid
+     *
+     * @param int $id     Id of the project
+     *
+     * @return ServiceRepresentation {@type \Tuleap\FRS\REST\v1\ServiceRepresentation}
+     */
+    public function getService(int $id): ServiceRepresentation
+    {
+        $builder = new ServiceRepresentationBuilder(
+            FRSPermissionManager::build(),
+            new FRSPermissionFactory(
+                new FRSPermissionDao()
+            ),
+            new \UGroupManager()
+        );
+        return $builder->getServiceRepresentation($this->user_manager->getCurrentUser(), $this->getProjectForUser($id));
+    }
+
+    /**
+     * @url OPTIONS {id}/frs_service
+     *
+     * @param int $id Id of the project
+     */
+    public function optionsService(int $id)
+    {
+        Header::allowOptionsGet();
     }
 
     private function sendAllowHeadersForFRSPackages()
