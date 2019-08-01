@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../../www/include/pre.php';
 
 use Tuleap\Svn\ApacheConfGenerator;
 

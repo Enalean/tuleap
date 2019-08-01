@@ -16,9 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/html/HTML_Element_Selectbox.class.php');
-require_once('common/include/Codendi_HTMLPurifier.class.php');
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class HTML_Element_SelectboxTest extends TuleapTestCase {

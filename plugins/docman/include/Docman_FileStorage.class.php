@@ -22,7 +22,6 @@
  * FileStorage is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-require_once('common/include/lib/PHP_BigFile.class.php');
 class Docman_FileStorage {
 
     var $root;

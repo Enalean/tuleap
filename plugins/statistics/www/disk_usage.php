@@ -35,8 +35,8 @@ use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
-require 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ .'/../include/Statistics_DiskUsageHtml.class.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();

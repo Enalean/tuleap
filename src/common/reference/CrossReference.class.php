@@ -9,7 +9,7 @@
  * Stores a Cross Reference as extracted from some user text.
  */
 
-require_once 'utils.php';
+require_once __DIR__ . '/../../www/include/utils.php';
 
 class CrossReference {
     var $id;

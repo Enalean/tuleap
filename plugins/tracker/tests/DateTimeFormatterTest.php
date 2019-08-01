@@ -19,7 +19,7 @@
  */
 
 require_once('bootstrap.php');
-require_once('utils.php');
+require_once __DIR__ . '/../../../src/www/include/utils.php';
 
 class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 

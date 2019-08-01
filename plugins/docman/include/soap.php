@@ -18,12 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('pre.php');
-require_once ('session.php');
-require_once('Docman_Item.class.php');
-require_once('Docman_ItemFactory.class.php');
-require_once('common/include/SOAPRequest.class.php');
-require_once('common/include/MIME.class.php');
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../src/www/include/session.php';
 
 // define fault code constants
 define('invalid_item_fault', '3017');

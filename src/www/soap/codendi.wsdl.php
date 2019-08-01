@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('pre.php');
-require_once ('nusoap.php');
-require_once('utils_soap.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/nusoap.php';
+require_once __DIR__ . '/../include/utils_soap.php';
 
 define ('permission_denied_fault', '3016');
 

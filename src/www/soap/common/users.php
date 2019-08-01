@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('user.php');
+require_once __DIR__ . '/../../include/user.php';
+require_once __DIR__ . '/../../include/utils_soap.php';
 
 if (defined('NUSOAP')) {
 

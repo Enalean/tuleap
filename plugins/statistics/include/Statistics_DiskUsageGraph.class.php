@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/chart/Chart.class.php';
-require_once 'common/chart/Chart_Pie.class.php';
-require_once 'Statistics_DiskUsageOutput.class.php';
-
 class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
     /**

@@ -31,7 +31,7 @@ use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 
-include_once('www/project/admin/permissions.php');
+include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 
 class ProjectResource
 {

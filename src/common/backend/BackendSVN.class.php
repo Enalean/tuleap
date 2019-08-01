@@ -25,7 +25,7 @@ use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
 use Tuleap\URI\URIModifier;
 
-require_once('www/svn/svn_utils.php');
+require_once __DIR__ . '/../../www/svn/svn_utils.php';
 
 /**
  * Backend class to work on subversion repositories

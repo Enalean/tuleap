@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('pre.php');
-require_once('common/plugin/PluginManager.class.php');
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('webdav');

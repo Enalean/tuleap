@@ -19,12 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/frs/FRSFileFactory.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/backend/BackendSystem.class.php');
-require_once 'common/valid/Rule.class.php';
-require_once('common/language/BaseLanguage.class.php');
-
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('Project');

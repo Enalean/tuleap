@@ -71,8 +71,8 @@ class ProjectLinksPlugin extends Plugin {
 
         global $Language;
 
-        require_once('form_utils.php');
-        require_once('www/project/admin/project_admin_utils.php');
+        require_once __DIR__ . '/form_utils.php';
+        require_once __DIR__ . '/../../../src/www/project/admin/project_admin_utils.php';
 
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');

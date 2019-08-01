@@ -24,10 +24,8 @@ use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\ReleasePermissionManager;
 
-require_once('pre.php');
-require_once('www/file/file_utils.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/file_utils.php';
 
 $release_id = (int)     $request->getValidated('release_id', 'uint', 0);
 if($release_id === 0) {

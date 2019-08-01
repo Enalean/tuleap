@@ -644,7 +644,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     private function getTrackersV3ForProject(Project $project) {
         if ($project->usesService('tracker')) {
-            require_once 'common/tracker/ArtifactTypeFactory.class.php';
             $atf         = new ArtifactTypeFactory($project);
             return $atf->getArtifactTypes();
         }

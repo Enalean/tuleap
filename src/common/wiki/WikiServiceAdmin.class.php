@@ -21,10 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/mvc/Controler.class.php');
-require_once(dirname(__FILE__).'/actions/WikiServiceAdminActions.class.php');
-require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class.php');
-
 class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
 

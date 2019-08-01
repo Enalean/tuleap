@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
-
 class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends TuleapTestCase {
 
     public function itStripsVerticalSpaces() {

@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../include/pre.php';
 
 // Inherited from old .htaccess
 ini_set('max_execution_time', 3600);

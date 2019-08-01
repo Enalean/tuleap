@@ -27,11 +27,9 @@ use Tuleap\Project\ProjectAccessChecker;
 Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao', '_getUserManager'));
 Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion2', array('getProject', 'getProjectByUnixName', 'checkRestrictedAccess'));
 Mock::generate('Project');
-require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class ProjectManagerTest extends TuleapTestCase {

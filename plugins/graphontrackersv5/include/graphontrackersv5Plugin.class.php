@@ -249,7 +249,6 @@ class GraphOnTrackersV5Plugin extends Plugin
      */
     public function isAllowed($group_id)
     {
-        require_once('common/include/HTTPRequest.class.php');
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if(!isset($this->allowedForProject[$group_id])) {

@@ -20,8 +20,8 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\ProjectQuotaPresenter;
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ .'/../include/ProjectQuotaHtml.class.php';
 
 
 $pluginManager = PluginManager::instance();

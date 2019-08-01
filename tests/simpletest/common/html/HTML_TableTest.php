@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/html/HTML_Table.class.php';
-
 class HTML_TableTest extends TuleapTestCase {
 
     /**

@@ -19,8 +19,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Create a new attachment revision

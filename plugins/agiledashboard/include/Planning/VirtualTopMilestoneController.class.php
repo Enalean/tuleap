@@ -23,8 +23,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Handles the HTTP actions related to a planning milestone.
  */

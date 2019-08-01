@@ -19,10 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
 Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
 
-require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
 
 class FakePluginToTestHooks extends Plugin {

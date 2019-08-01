@@ -21,8 +21,7 @@
 
 define('EMPTY_FILE_MD5', 'd41d8cd98f00b204e9800998ecf8427e');
 
-require_once 'pre.php';
-require_once 'common/tracker/ArtifactFile.class.php';
+require_once __DIR__ . '/../../src/www/include/pre.php';
 
 $option = isset($argv[1]) ? $argv[1] : '';
 

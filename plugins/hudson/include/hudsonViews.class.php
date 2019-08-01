@@ -24,7 +24,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-require_once 'www/include/help.php';
+require_once __DIR__ . '/../../../src/www/include/help.php';
 
 class hudsonViews extends Views {
 

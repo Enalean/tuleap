@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/ArtifactGlobalNotificationDao.class.php');
-require_once('ArtifactGlobalNotification.class.php');
 
 /**
 * ArtifactGlobalNotificationFactory

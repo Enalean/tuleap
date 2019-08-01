@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/system_event/SystemEvent.class.php');
-
 class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
 
     public const NAME = 'TRACKER_V3_MIGRATION';

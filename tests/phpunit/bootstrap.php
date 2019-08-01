@@ -19,19 +19,9 @@
  *
  */
 
-$basedir      = dirname(__DIR__, 2);
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
-
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
-
-require_once __DIR__ . '/../../src/vendor/autoload.php';
-require_once __DIR__ . '/../../src/www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
-require_once __DIR__ . '/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
+require_once __DIR__ . '/../lib/bootstrap.php';
 require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
 
 foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
     require_once $bootstrap_plugin;
 }
-
-require_once __DIR__ . '/../../src/vendor/squizlabs/php_codesniffer/autoload.php';

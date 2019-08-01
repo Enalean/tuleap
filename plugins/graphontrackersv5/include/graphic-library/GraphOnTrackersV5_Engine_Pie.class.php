@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/chart/Chart_Pie.class.php');
-require_once('common/layout/ColorHelper.class.php');
-
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
     var $title;

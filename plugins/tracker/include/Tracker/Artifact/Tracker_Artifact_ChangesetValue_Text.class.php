@@ -21,8 +21,6 @@
 
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 
-require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
-
 /**
  * Manage values in changeset for string fields
  */

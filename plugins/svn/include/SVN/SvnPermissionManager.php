@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN;
 
-require_once 'www/project/admin/permissions.php';
+require_once __DIR__ . '/../../../../src/www/project/admin/permissions.php';
 
 use Project;
 use PFUser;

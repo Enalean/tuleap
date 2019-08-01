@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/valid/Rule.class.php');
-
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class Rule_ProjectFullNameTest extends TuleapTestCase {

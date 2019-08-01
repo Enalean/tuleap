@@ -21,8 +21,8 @@
 
 use Tuleap\CookieManager;
 
-require_once('pre.php');
-require_once('utils.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/utils.php';
 
 $cookie_manager = new CookieManager();
 $user = UserManager::instance()->getCurrentUser();

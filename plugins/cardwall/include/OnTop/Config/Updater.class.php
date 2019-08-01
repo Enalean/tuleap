@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/Codendi_Request.class.php';
-
 /**
  * Handle requests to update config of cardwalls on top of trackers
  */

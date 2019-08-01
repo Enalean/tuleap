@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
-require_once 'common/backend/BackendService.class.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends TuleapTestCase {
 

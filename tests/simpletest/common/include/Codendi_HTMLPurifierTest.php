@@ -23,13 +23,11 @@
  *
  */
 
-require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generatePartial(
     'Codendi_HTMLPurifier',
     'Codendi_HTMLPurifierTestVersion2',
     array('getReferenceManager')
 );
-require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
 

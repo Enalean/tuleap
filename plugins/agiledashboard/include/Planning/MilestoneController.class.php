@@ -27,8 +27,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
-require_once 'common/mvc2/PluginController.class.php';
-
 /**
  * Handles the HTTP actions related to a planning milestone.
  */

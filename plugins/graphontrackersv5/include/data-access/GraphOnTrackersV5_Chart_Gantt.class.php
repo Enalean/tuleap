@@ -22,17 +22,6 @@
 
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
-require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Gantt.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_DatesV5.class.php');
-require_once('common/html/HTML_Element_Selectbox_TrackerFields_Numerics.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5.class.php');
-require_once('common/html/HTML_Element_Input_Date.class.php');
-require_once('common/html/HTML_Element_Selectbox_Scale.class.php');
-require_once('GraphOnTrackersV5_Chart_GanttDao.class.php');
-
 class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 {
     protected $field_start;

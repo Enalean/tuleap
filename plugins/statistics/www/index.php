@@ -26,7 +26,7 @@ use Tuleap\Statistics\AdminHeaderPresenter;
 use Tuleap\Statistics\Frequencies\FrequenciesPresenter;
 use Tuleap\Statistics\SearchFieldsPresenterBuilder;
 
-require 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();

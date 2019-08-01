@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('Widget.class.php');
-
 /**
 * Widget_MyAdmin
 *
@@ -64,8 +62,8 @@ class Widget_MyAdmin extends Widget {
     }
 
     private function getHTMLForSuperAdmin() {
-        require_once('www/forum/forum_utils.php');
-        require_once('www/project/admin/ugroup_utils.php');
+        require_once __DIR__ . '/../../www/forum/forum_utils.php';
+        require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
         $html_my_admin = '';
         // Get the number of pending users and projects

@@ -527,7 +527,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id)
     {
-        include_once 'www/project/admin/ugroup_utils.php';
+        include_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 

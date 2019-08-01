@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
 $request = HTTPRequest::instance();

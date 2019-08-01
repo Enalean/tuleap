@@ -21,8 +21,6 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-require_once('common/date/DateHelper.class.php');
-
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly {
 
     public $default_properties = array();

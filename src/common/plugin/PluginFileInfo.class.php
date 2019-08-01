@@ -22,9 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'PluginInfo.class.php';
-require_once 'common/include/PropertyDescriptor.class.php';
-
 /**
  * File based plugin options management
  */

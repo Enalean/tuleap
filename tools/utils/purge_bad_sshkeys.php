@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../src/www/include/pre.php';
 
 $sql = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WHERE authorized_keys != "" AND authorized_keys IS NOT NULL';
 $res = db_query($sql);

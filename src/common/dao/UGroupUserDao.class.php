@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('www/project/admin/ugroup_utils.php');
+require_once __DIR__. '/../../www/project/admin/ugroup_utils.php';
 
 /**
  *  Data Access Object for ProjectUGroup

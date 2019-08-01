@@ -22,7 +22,6 @@ use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 
-require_once('common/system_event/SystemEvent.class.php');
 /**
  * Description of SystemEvent_GIT_REPO_DELETE
  */

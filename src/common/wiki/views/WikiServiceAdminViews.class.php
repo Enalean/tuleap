@@ -23,12 +23,12 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-require_once('WikiViews.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiPageWrapper.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiAttachment.class.php');
-require_once('www/project/admin/permissions.php');
+require_once __DIR__ . '/WikiViews.class.php';
+require_once __DIR__ . '/../lib/WikiEntry.class.php';
+require_once __DIR__ . '/../lib/WikiPage.class.php';
+require_once __DIR__ . '/../lib/WikiPageWrapper.class.php';
+require_once __DIR__ . '/../lib/WikiAttachment.class.php';
+require_once __DIR__ . '/../../../www/project/admin/permissions.php';
 
 /**
  * HTML display of Wiki Service Administration Panel

@@ -133,7 +133,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/15-future-releases
 
     echo "Load initial data"
-    "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
+    "$PHP_CLI" /usr/share/tuleap/tests/rest/bin/init_data.php
 
     seed_plugin_data
 }
@@ -155,7 +155,7 @@ seed_plugin_data() {
     done
 
     echo "Load plugins initial data"
-    "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
+    "$PHP_CLI" /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
 }
 
 setup_tuleap

@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginDescriptor.class.php');
-
-
 class GraphOnTrackersV5PluginDescriptor extends PluginDescriptor {
 
     function __construct() {

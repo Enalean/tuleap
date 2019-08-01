@@ -16,11 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'ProjectManager.class.php';
-require_once 'ProjectCreator.class.php';
-require_once 'common/soap/SOAP_RequestLimitator.class.php';
-require_once 'www/include/account.php';
-require_once 'www/include/utils_soap.php';
+require_once __DIR__ . '/../../www/include/account.php';
+require_once __DIR__ .  '/../../www/include/utils_soap.php';
 
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;

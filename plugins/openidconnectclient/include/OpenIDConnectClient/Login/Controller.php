@@ -85,7 +85,7 @@ class Controller {
 
     public function login(\HTTPRequest $request, $return_to, $login_time)
     {
-        require_once('account.php');
+        require_once __DIR__ . '/../../../../../src/www/include/account.php';
         $this->checkIfUserAlreadyLogged($return_to);
 
         try {

@@ -23,11 +23,9 @@
 
 use Tuleap\PHPWiki\WikiPage;
 
-require_once('common/mvc/Controler.class.php');
-require_once('common/wiki/views/WikiServiceViews.class.php');
-require_once('common/wiki/actions/WikiServiceActions.class.php');
-require_once('common/wiki/lib/WikiPage.class.php');
-require_once('common/wiki/lib/Wiki.class.php');
+require_once __DIR__ . '/lib/WikiPage.class.php';
+require_once __DIR__ . '/lib/Wiki.class.php';
+require_once __DIR__ . '/views/WikiViews.class.php';
 
 /**
  * Entry point of WikiService

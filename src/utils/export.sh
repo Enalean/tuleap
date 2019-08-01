@@ -25,4 +25,4 @@ fi
 
 export TULEAP_LOCAL_INC=$PWD/conf/local.inc
 
-php -q -d include_path=$SRC_DIR/www/include:$SRC_DIR:. -d display_errors=On $mydir/export_project_xml.php $@
+php -q -d display_errors=On $mydir/export_project_xml.php $@

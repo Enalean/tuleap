@@ -22,9 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/SvnCommitsDao.class.php';
-require_once 'common/svn/SVN_Hooks.class.php';
-
 /**
  * I'm responsible of handling what happens in post-revprop-change subversion hook
  */

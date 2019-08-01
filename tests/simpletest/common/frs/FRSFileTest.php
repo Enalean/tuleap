@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/frs/FRSFile.class.php');
-
 class FRSFileTest extends TuleapTestCase {
 
     function testGetContentWholeFile() {

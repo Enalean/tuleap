@@ -20,7 +20,7 @@
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require_once 'pre.php';
+require_once __DIR__ . '/pre.php';
 
 $request = HTTPRequest::instance();
 $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
 $current_tour = $tour_factory->getTour($current_user, $request->get('tour_name'));

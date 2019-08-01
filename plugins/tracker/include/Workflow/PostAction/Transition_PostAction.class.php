@@ -20,8 +20,6 @@
 
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-require_once 'common/include/Codendi_Request.class.php';
-
 /**
  *
  * Post action occuring when transition is run

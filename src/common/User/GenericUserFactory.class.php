@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'GenericUser.class.php';
-require_once 'UserManager.class.php';
-require_once 'common/dao/GenericUserDao.class.php';
 
 
 class GenericUserFactory {

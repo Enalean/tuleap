@@ -24,9 +24,6 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-require_once('FRSFile.class.php');
-require_once('common/dao/FileModuleMonitorDao.class.php');
-
 class FileModuleMonitorFactory {
 
     var $dao;

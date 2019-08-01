@@ -27,7 +27,7 @@ use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 
-require_once('www/news/news_utils.php');
+require_once __DIR__ . '/../../../src/www/news/news_utils.php';
 
 /**
  * @template-extends Actions<Docman_Controller>

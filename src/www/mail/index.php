@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('../mail/mail_utils.php');
-require_once('common/include/HTTPRequest.class.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../mail/mail_utils.php';
 
 
 $pv=isset($pv)?$pv:false;

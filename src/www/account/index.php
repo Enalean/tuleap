@@ -24,7 +24,7 @@ use Tuleap\User\AccessKey\AccessKeyMetadataPresenter;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../include/pre.php';
 
 session_require(array('isloggedin'=>'1'));
 

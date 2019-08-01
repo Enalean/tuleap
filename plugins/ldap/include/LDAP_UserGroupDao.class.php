@@ -117,7 +117,7 @@ extends DataAccessObject
      */
     function _getUgroupRow($ugroupId)
     {
-        include_once 'www/project/admin/ugroup_utils.php';
+        include_once __DIR__ . '/../../../src/www/project/admin/ugroup_utils.php';
         $Language = $GLOBALS['Language'];
         $res = ugroup_db_get_ugroup($ugroupId);
         return db_fetch_array($res);
@@ -125,7 +125,7 @@ extends DataAccessObject
 
     function getMembersId($id)
     {
-        include_once 'www/project/admin/ugroup_utils.php';
+        include_once __DIR__ . '/../../../src/www/project/admin/ugroup_utils.php';
         $ret = array();
         $sql = ugroup_db_get_members($id);
         $dar = $this->retrieve($sql);

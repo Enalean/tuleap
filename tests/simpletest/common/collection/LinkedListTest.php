@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('LinkedListTestCase.class.php');
-require_once('common/collection/LinkedList.class.php');
+require_once __DIR__ . '/LinkedListTestCase.class.php';
 
 class LinkedListTest extends LinkedListTestCase {
     /**

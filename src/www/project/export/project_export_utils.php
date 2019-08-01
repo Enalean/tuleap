@@ -22,8 +22,7 @@
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
-require_once('utils.php');
-require_once('common/include/SimpleSanitizer.class.php');
+require_once __DIR__ . '/../../include/utils.php';
 
 function tocsv($string, $csv_separator) {
 

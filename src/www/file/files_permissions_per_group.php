@@ -28,7 +28,7 @@ use Tuleap\FRS\PermissionsPerGroup\PackagePermissionPerGroupRepresentationBuilde
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../include/pre.php';
 
 if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
     $GLOBALS['Response']->send400JSONErrors(

@@ -20,8 +20,6 @@
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
     public const COPY_BY_REFERENCE = true;
     public const COPY_BY_VALUE = false;

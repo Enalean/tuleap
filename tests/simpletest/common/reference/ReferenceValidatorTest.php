@@ -22,8 +22,6 @@ namespace Tuleap\reference;
 
 use TuleapTestCase;
 
-require_once('common/reference/ReferenceValidator.php');
-
 class ReferenceValidatorTest extends TuleapTestCase
 {
     /**

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'www/svn/svn_utils.php';
+require_once __DIR__ . '/../../www/svn/svn_utils.php';
 
 /**
  * Manage the edition of .SVNAccessFile

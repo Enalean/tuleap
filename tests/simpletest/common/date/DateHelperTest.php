@@ -19,11 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('common/date/DateHelper.class.php');
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('utils.php');
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class DateHelperTest extends TuleapTestCase {
 

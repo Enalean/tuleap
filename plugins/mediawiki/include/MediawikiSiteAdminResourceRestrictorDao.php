@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/resource_restrictor/RestrictedResourceDao.class.php';
-
 class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao {
 
     public function getResourceAllowedProjectsTableName() {

@@ -23,8 +23,6 @@
 
 //phpcs:ignoreFile
 
-require_once('common/permission/PermissionsManager.class.php');
-
 class Docman_PermissionsManagerDao extends DataAccessObject {
 
     var $groupId;
@@ -43,7 +41,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
     }
 
     function setDefaultPermissions($objectId, $perm, $force=false) {
-        require_once('www/project/admin/permissions.php');
+        require_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
         /** @psalm-suppress DeprecatedFunction */
         $res = permission_db_get_defaults($perm);
         while($row = $this->getDa()->fetchArray($res)) {

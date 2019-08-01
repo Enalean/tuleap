@@ -18,8 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/soap/SOAP_WSDLMethodGenerator.class.php';
-
 require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
 class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {

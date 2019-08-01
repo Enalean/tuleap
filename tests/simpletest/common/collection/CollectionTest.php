@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('CollectionTestCase.class.php');
-require_once('common/collection/Collection.class.php');
 
 class CollectionTest extends CollectionTestCase {
     /**

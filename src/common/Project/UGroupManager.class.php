@@ -30,7 +30,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\User\UserGroup\NameTranslator;
 
-require_once('www/include/account.php');
+require_once __DIR__ . '/../../www/include/account.php';
 
 class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {

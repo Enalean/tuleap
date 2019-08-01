@@ -22,8 +22,6 @@
  *  Data Access Object for Tracker_FileInfo
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Tracker_FileInfoDao extends DataAccessObject {
 
     function __construct() {

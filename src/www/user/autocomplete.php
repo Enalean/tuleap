@@ -25,7 +25,7 @@
 use Tuleap\User\RequestFromAutocompleter;
 use Tuleap\User\UserAutocompletePostSearchEvent;
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 // Input treatment
 $request = HTTPRequest::instance();

@@ -20,10 +20,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-
 class Docman_View_ItemDetailsSectionReferences extends Docman_View_ItemDetailsSection {
 
 

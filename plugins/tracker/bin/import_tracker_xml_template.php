@@ -1,6 +1,6 @@
 <?php
 //TODO : dont check arguments, but extract parameters from XML file
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 // PERMISSIONS CHECK
 

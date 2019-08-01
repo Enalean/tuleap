@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/Jenkins/Client.class.php';
-
 /**
  * Manage launch of continuous integration jobs on jenkins for git repositories
  * on push

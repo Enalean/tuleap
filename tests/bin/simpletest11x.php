@@ -32,11 +32,6 @@ ini_set('memory_limit', '-1');
 ini_set('display_errors', 'on');
 date_default_timezone_set('Europe/Paris');
 
-$basedir      = dirname(dirname(__DIR__));
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
-ini_set('include_path', implode(':', [$src_path, $include_path]));
-
 exec('start-mysqld.sh');
 
 require_once __DIR__.'/../../src/etc/local.inc.dist';

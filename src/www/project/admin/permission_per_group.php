@@ -34,7 +34,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
-require_once('pre.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 $request  = HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId', 0);

@@ -23,7 +23,7 @@
 
 use Tuleap\User\Password\Reset\TokenNotCreatedException;
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $event_manager = EventManager::instance();
 $event_manager->processEvent('before_lostpw-confirm', array());

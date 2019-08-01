@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/valid/ValidFactory.class.php');
 Mock::generatePartial('Valid', 'MockValid', array('isValid', 'getKey', 'validate', 'required'));
 Mock::generate('Rule');
 Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'));

@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginInfo.class.php');
-require_once('common/collection/Collection.class.php');
-require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
-require_once('common/include/PropertyDescriptor.class.php');
 Mock::generate('PropertyDescriptor');
 class TestPluginInfo extends PluginInfo {
     function addPropertyDescriptor(&$desc) {

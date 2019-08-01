@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/reference/Reference.class.php');
-
-
 class ReferenceTest extends TuleapTestCase {
 
     function testScope() {

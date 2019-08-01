@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/backend/BackendLogger.class.php';
-
 class BackendLoggerTest extends TuleapTestCase {
 
     private $log_file;

@@ -103,7 +103,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
      */
     public function addUserToGroup($groupId, $name)
     {
-        include_once 'account.php';
+        include_once __DIR__ . '/../../../src/www/include/account.php';
         return account_add_user_to_group($groupId, $name);
     }
 

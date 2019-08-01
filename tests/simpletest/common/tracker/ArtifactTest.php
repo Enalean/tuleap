@@ -19,23 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Artifact.class.php');
-
 Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency', 'addHistory', 'getReferenceManager', 'userCanEditFollowupComment'));
 
-require_once('common/tracker/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');
 
-require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
-require_once('common/tracker/ArtifactType.class.php');
 Mock::generate('ArtifactType');
 
-require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generate('Codendi_HTMLPurifier');
 
-require_once('www/include/utils.php');
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class ArtifactTest extends TuleapTestCase {
 

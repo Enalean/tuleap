@@ -6,10 +6,7 @@
 //
 //
 //    Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
-require_once('pre.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once __DIR__ . '/../include/pre.php';
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);
@@ -44,7 +41,6 @@ if (db_numrows($result)>0) {
                 } else {
 
                     // Download the patch with the correct filetype
-                    require_once('common/include/Codendi_HTTPPurifier.class.php');
                     $http = Codendi_HTTPPurifier::instance();
                     header('X-Content-Type-Options: nosniff');
                     header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));

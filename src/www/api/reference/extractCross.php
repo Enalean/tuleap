@@ -35,9 +35,7 @@ http://codendi.example.com/goto?key=art&val=6841&group_id=109
 
 // phpcs:ignorefile
 
-require_once('pre.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/reference/ReferenceManager.class.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 header('Content-type: text/plain');
 

@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\User\PasswordVerifier;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 if ($argc !== 5) {
     fwrite(STDERR, "Usage: {$argv[0]} user_name tracker_id first_artifact_id last_artifact_id". PHP_EOL);

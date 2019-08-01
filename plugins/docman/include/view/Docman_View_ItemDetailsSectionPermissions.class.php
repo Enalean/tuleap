@@ -21,8 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-require_once('www/project/admin/permissions.php');
+require_once __DIR__ . '/../../../../src/www/project/admin/permissions.php';
 
 class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsSection {
     function __construct($item, $url) {

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/tracker/ArtifactRuleFactory.class.php');
 
-require_once('common/dao/ArtifactRuleDao.class.php');
 Mock::generate('ArtifactRuleDao');
 Mock::generate('DataAccessResult');
 class ArtifactRuleFactoryTest extends TuleapTestCase {

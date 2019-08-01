@@ -32,8 +32,6 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetri
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
-require_once 'common/plugin/Plugin.class.php';
-
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
  * (e.g. PlanningController, MilestoneController...).

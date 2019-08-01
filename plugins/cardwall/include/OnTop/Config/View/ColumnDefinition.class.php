@@ -20,8 +20,6 @@
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
-require_once 'common/layout/ColorHelper.class.php';
-
 class Cardwall_OnTop_Config_View_ColumnDefinition {
 
     /**

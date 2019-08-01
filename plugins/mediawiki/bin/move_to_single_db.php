@@ -20,7 +20,7 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 if ($argc != 2) {
     die("Usage: move_to_single_db.php [project_id|all]\n");

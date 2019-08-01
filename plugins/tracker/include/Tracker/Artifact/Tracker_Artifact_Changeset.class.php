@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
-require_once('utils.php');
+require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public const FIELDS_ALL      = 'all';

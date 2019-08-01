@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-require_once('common/system_event/SystemEvent.class.php');
-
 /**
  *  Data Access Object for SystemEvent
  */

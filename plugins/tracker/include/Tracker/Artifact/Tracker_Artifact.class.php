@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../constants.php');
+require_once __DIR__ .'/../../constants.php';
 
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
@@ -243,7 +243,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @deprecated
      */
     public function permission_db_authorized_ugroups( $permission_type ) {
-        include_once 'www/project/admin/permissions.php';
+        include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
         $result = array();
         $res    = permission_db_authorized_ugroups($permission_type, $this->getId());
         if ( db_numrows($res) > 0 ) {

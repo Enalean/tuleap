@@ -20,8 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject {
 
     function __construct($da = null) {

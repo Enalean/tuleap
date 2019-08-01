@@ -832,7 +832,6 @@ class TrackerFactory {
      * @return Tracker
      */
     public function createFromTV3(PFUser $user, $atid, Project $project, $name, $description, $itemname) {
-        require_once 'common/tracker/ArtifactType.class.php';
         $tv3 = new ArtifactType($project, $atid);
         if ($tv3->isError()) {
             throw new Tracker_Exception_Migration_GetTv3Exception($tv3->getErrorMessage());

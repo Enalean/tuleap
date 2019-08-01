@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UGroupDao.class.php');
-
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;

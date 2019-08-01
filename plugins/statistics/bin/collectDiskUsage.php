@@ -1,7 +1,7 @@
 <?php
 // This script is for development use only
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;

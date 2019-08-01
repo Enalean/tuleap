@@ -21,8 +21,6 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-require_once 'common/chart/Chart.class.php';
-
 class Git_LastPushesGraph {
     public const MAX_WEEKSNUMBER  = 25;
     public const WEEKS_IN_SECONDS = 604800;

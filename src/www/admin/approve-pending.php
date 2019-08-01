@@ -26,7 +26,7 @@ use Tuleap\Admin\ProjectPendingPresenter;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $user                             = UserManager::instance()->getCurrentUser();
 $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(

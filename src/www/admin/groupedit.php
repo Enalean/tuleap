@@ -27,11 +27,11 @@ use Tuleap\Project\Admin\ProjectDetailsPresenter;
 use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 
-require_once('pre.php');
-require_once('www/admin/admin_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
-require_once('www/project/export/project_export_utils.php');
-require_once('www/project/admin/project_history.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/admin_utils.php';
+require_once __DIR__ . '/../project/admin/project_admin_utils.php';
+require_once __DIR__ . '/../project/export/project_export_utils.php';
+require_once __DIR__ . '/../project/admin/project_history.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

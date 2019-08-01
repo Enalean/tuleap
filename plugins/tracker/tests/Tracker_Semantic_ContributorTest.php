@@ -20,7 +20,6 @@
  */
 
 require_once('bootstrap.php');
-require_once('common/language/BaseLanguage.class.php');
 
 class Tracker_Semantic_ContributorTest extends TuleapTestCase {
     private $xml_security;

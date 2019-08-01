@@ -19,7 +19,7 @@
  */
 
 require_once __DIR__ . '/bootstrap.php';
-require_once 'www/include/user.php';
+require_once __DIR__ . '/../../../src/www/include/user.php';
 
 class Statistics_Services_UsageFormatterTest extends TuleapTestCase {
 

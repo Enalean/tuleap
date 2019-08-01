@@ -21,8 +21,6 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker {
 
     public function __construct() {

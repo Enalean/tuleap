@@ -23,9 +23,6 @@
 
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 
-require_once('Docman_MetadataListOfValuesElement.class.php');
-require_once('Docman_MetadataListOfValuesElementDao.class.php');
-
 /**
  * High level class to manipulate elements of ListOfValues.
  */

@@ -21,10 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('WikiAttachmentRevision.class.php');
-require_once('WikiAttachmentDao.class.php');
-//require_once('www/project/admin/permissions.php');
-require_once('common/dao/CodendiDataAccess.class.php');
+require_once __DIR__ . '/WikiAttachmentRevision.class.php';
+require_once __DIR__ . '/WikiAttachmentDao.class.php';
 
 /**
  * Management of external ressources linked on a wiki
@@ -514,7 +512,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      */
     public function permissionExist() {
-        require_once('www/project/admin/permissions.php');
+        require_once __DIR__ . '/../../../www/project/admin/permissions.php';
         return (permission_exist('WIKIATTACHMENT_READ', $this->id));
     }
 
@@ -523,7 +521,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      */
     public function isAutorized($uid) {
-        require_once('www/project/admin/permissions.php');
+        require_once __DIR__ . '/../../../www/project/admin/permissions.php';
         return ($this->permissionExist() == false || permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid));
     }
 

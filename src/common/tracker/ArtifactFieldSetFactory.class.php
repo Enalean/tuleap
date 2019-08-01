@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/tracker/ArtifactFieldSet.class.php');
-
 
 // Sort by rank result
 function art_fieldset_factory_cmp_place($fieldset1, $fieldset2) {

@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('pre.php');
-require_once('www/file/file_utils.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../file_utils.php';
 
 use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\FRS\FRSPermissionFactory;

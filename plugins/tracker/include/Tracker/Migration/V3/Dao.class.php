@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'common/dao/TrackerIdSharingDao.class.php';
 
 class Tracker_Migration_V3_Dao extends DataAccessObject {
 

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/system_event/SystemEvent.class.php';
-
-
 /**
  * Change User name
  *

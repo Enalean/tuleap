@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/dao/SessionDao.class.php');
+require_once __DIR__ . '/../include/pre.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

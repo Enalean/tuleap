@@ -6,8 +6,8 @@
 //
 //
 //    Originally written by Laurent Julliard 2004, Codendi Team, Xerox
-require_once('pre.php');
-require_once('../svn_data.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../svn_data.php';
 
 
 $vGroupId = new Valid_GroupId();

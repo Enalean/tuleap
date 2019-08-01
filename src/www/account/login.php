@@ -22,8 +22,8 @@
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
-require_once('pre.php');
-require_once('account.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
 
 $login_controller = new User_LoginController($request);
 

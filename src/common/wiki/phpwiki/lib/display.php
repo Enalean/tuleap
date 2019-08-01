@@ -2,8 +2,7 @@
 // display.php: fetch page or get default content
 rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 
-require_once('lib/Template.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
+require_once __DIR__ . '/Template.php';
 
 /**
  * Extract keywords from Category* links on page.

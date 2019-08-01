@@ -21,9 +21,6 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-require_once('common/dao/CrossReferenceDao.class.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
-
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
 
     public const REST_REF_INDEX          = 'ref';

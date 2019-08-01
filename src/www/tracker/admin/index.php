@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);
@@ -532,7 +532,6 @@ if ($group_id && !$atid) {
                 if ( !$field->updateValueFunction($atid, $request->get('value_function')) ) {
                     exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
                 } else {
-                     require_once('common/tracker/ArtifactRulesManager.class.php');
                      $arm = new ArtifactRulesManager();
                      $arm->deleteRulesByFieldId($atid, $field_id);
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','values_updated'));
@@ -670,7 +669,6 @@ if ($group_id && !$atid) {
                     exit_error($Language->getText('global','error'),$field->getErrorMessage());
                 } else {
                     if ($status == $ath->FIELD_VALUE_STATUS_HIDDEN) {
-                        require_once('common/tracker/ArtifactRulesManager.class.php');
                         $arm = new ArtifactRulesManager();
                         $arm->deleteRulesByValueId($atid, $field_id, $value_id);
                     }
@@ -698,7 +696,6 @@ if ($group_id && !$atid) {
                 if ( !$field->deleteValueList($atid,$value_id) ) {
                     exit_error($Language->getText('global','error'),$field->getErrorMessage());
                 } else {
-                     require_once('common/tracker/ArtifactRulesManager.class.php');
                      $arm = new ArtifactRulesManager();
                      $arm->deleteRulesByValueId($atid, $field_id, $value_id);
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','value_deleted'));
@@ -789,7 +786,6 @@ if ($group_id && !$atid) {
                                exit_error($Language->getText('global','error'),$field->getErrorMessage());
                     } else {
                         if (!(isset($use_it) && $use_it)) {
-                            require_once('common/tracker/ArtifactRulesManager.class.php');
                             $arm = new ArtifactRulesManager();
                             $arm->deleteRulesByFieldId($atid, $field_id);
                         }
@@ -828,7 +824,6 @@ if ($group_id && !$atid) {
                 if ( !$field->delete($atid) ) {
                     exit_error($Language->getText('global','error'),$field->getErrorMessage());
                 } else {
-                     require_once('common/tracker/ArtifactRulesManager.class.php');
                      $arm = new ArtifactRulesManager();
                      $arm->deleteRulesByFieldId($atid, $field_id);
 
@@ -890,7 +885,6 @@ if ($group_id && !$atid) {
                  //@see  preDeleteArtifactType @common/tracker/ArtifactTypeFactory.class.php
                   $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','delete_success', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ));
                   echo $Language->getText('tracker_admin_index','tracker_deleted',array( $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML), $GLOBALS['sys_email_admin']));
-                require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists

@@ -25,9 +25,9 @@ use Tuleap\Project\Admin\ProjectHistoryPresenter;
 use Tuleap\Project\Admin\ProjectHistoryResultsPresenter;
 use Tuleap\Project\Admin\ProjectHistorySearchPresenter;
 
-require_once('pre.php');
-require_once('www/project/export/project_export_utils.php');
-require_once('www/project/admin/project_history.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../project/export/project_export_utils.php';
+require_once __DIR__ . '/../project/admin/project_history.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

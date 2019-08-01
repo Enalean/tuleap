@@ -23,7 +23,6 @@
  *
  */
 
-require_once('common/valid/Rule.class.php');
 
 Mock::generatePartial('Rule_File', 'Rule_FileTestVersion', array('geti18nError'));
 

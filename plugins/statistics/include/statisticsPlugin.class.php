@@ -259,7 +259,6 @@ class StatisticsPlugin extends Plugin
     }
 
     private function dumpWSDL($uri, $service_class) {
-        require_once 'common/soap/SOAP_NusoapWSDL.class.php';
         $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
         $wsdlGen->dumpWSDL();
     }
@@ -314,7 +313,6 @@ class StatisticsPlugin extends Plugin
     }
 
     public function renderWSDL() {
-        require_once 'common/soap/SOAP_WSDLRenderer.class.php';
         $uri = $this->getSoapUri();
         $wsdl_renderer = new SOAP_WSDLRenderer();
         $wsdl_renderer->render($uri .'/?wsdl');

@@ -30,7 +30,7 @@ use Wiki_PermissionsManager;
 use WikiDao;
 use WikiPageWrapper;
 
-require_once('www/project/admin/permissions.php');
+require_once __DIR__ . '/../../../www/project/admin/permissions.php';
 
 /**
  * Tuleap manipulation of WikiPages

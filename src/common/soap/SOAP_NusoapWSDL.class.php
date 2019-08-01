@@ -17,8 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'nusoap.php';
-require_once 'SOAP_WSDLMethodGenerator.class.php';
+require_once __DIR__ . '/../../www/include/nusoap.php';
 
 /**
  * Generate a WSDL for all public methods of a given class name
@@ -72,7 +71,7 @@ class SOAP_NusoapWSDL {
     }
 
     private function appendTypes($server) {
-        include 'www/soap/common/types.php';
+        include __DIR__ . '/../../www/soap/common/types.php';
     }
 }
 

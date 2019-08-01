@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 if (user_get_preference('tracker_comment_invertorder')) {
     user_del_preference('tracker_comment_invertorder');
 } else {

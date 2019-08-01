@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../include/pre.php';
 
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
@@ -48,7 +48,6 @@ $uri = $protocol.'://'.$default_domain.'/soap/project';
 $serviceClass = 'Project_SOAPServer';
 
 if ($request->exist('wsdl')) {
-    require_once 'common/soap/SOAP_NusoapWSDL.class.php';
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {

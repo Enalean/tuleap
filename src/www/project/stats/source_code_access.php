@@ -19,10 +19,10 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('pre.php');
-require_once '../admin/project_admin_utils.php';
-require('./source_code_access_utils.php');
-require('www/project/export/access_logs_export.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../admin/project_admin_utils.php';
+require __DIR__ . '/source_code_access_utils.php';
+require __DIR__ . '/../export/access_logs_export.php';
 
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));

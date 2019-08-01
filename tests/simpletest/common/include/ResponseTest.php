@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/Response.class.php';
-
 class ResponseTest extends TuleapTestCase {
 
     public function itSendsJSON() {

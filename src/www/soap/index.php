@@ -20,7 +20,7 @@
 
 use Tuleap\Templating\TemplateCache;
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 \Tuleap\Request\RequestInstrumentation::incrementSoap();
 
@@ -51,12 +51,12 @@ try {
 
     $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1));
 
-    require_once('utils_soap.php');
-    require_once('common/session.php');
-    require_once('common/group.php');
-    require_once('common/users.php');
-    require_once('tracker/tracker.php');
-    require_once('frs/frs.php');
+    require_once __DIR__ .  '/../include/utils_soap.php';
+    require_once __DIR__ . '/common/session.php';
+    require_once __DIR__ . '/common/group.php';
+    require_once __DIR__ . '/common/users.php';
+    require_once __DIR__ . '/tracker/tracker.php';
+    require_once __DIR__ . '/frs/frs.php';
 
     // include the <Plugin> API (only if plugin is available)
     $event_manager->processEvent('soap', array());
@@ -77,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $server->handle();
     $xml_security->disableExternalLoadOfEntities();
 } else {
-    require_once 'common/templating/mustache/MustacheRenderer.class.php';
     site_header(array('title' => "SOAP API"));
     $renderer = new MustacheRenderer(new TemplateCache(),'templates');
     $renderer->renderToPage('soap_index', array());

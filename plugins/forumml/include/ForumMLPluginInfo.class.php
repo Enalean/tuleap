@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginInfo.class.php');
-require_once('ForumMLPluginDescriptor.class.php');
-require_once('common/include/PropertyDescriptor.class.php');
-
 class ForumMLPluginInfo extends PluginFileInfo
 {
     public function __construct($plugin)

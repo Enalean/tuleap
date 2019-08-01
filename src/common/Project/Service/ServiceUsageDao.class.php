@@ -19,8 +19,6 @@
  *
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
-
 class Project_Service_ServiceUsageDao extends DataAccessObject {
 
     /**

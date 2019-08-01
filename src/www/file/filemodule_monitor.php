@@ -24,7 +24,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
-require_once('pre.php');
+require_once __DIR__ . '/../include/pre.php';
 
 if (! user_isloggedin()) {
     exit_not_logged_in();

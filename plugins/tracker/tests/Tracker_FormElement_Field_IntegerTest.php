@@ -28,10 +28,8 @@ Mock::generate('Tracker_FormElement_Field_Value_IntegerDao');
 
 Mock::generate('DataAccessResult');
 
-require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generatePartial(

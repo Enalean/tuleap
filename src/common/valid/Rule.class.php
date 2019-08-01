@@ -754,7 +754,7 @@ class Rule_ProjectFullName extends Rule_UserName {
  * By default the maxSize is defined by 'sys_max_size_upload' Codendi
  * variable but may be customized with setMaxSize.
  */
-require_once("www/file/file_utils.php"); // Needed for 2 GB workaround
+require_once __DIR__ . '/../../www/file/file_utils.php'; // Needed for 2 GB workaround
 class Rule_File
 extends Rule {
     var $maxSize;

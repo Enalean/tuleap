@@ -96,7 +96,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use UserManager;
 
-include_once('www/project/admin/permissions.php');
+include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
 
 class RepositoryResource extends AuthenticatedResource
 {

@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/backend/BackendService.class.php';
-
 /**
  * I do the real stuff: backuping admin repo and cloning a fresh one
  */

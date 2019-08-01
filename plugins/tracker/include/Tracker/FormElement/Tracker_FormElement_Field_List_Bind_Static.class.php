@@ -24,8 +24,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
-require_once('common/html/HTML_Element_Input_Checkbox.class.php');
-
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
 {
     public const TYPE = 'static';

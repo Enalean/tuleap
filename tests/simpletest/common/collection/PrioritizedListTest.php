@@ -20,7 +20,6 @@
  */
 
 require_once('LinkedListTestCase.class.php');
-require_once('common/collection/PrioritizedList.class.php');
 
 class PrioritizedListTest extends LinkedListTestCase {
     /**

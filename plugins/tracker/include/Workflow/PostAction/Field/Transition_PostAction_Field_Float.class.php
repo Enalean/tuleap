@@ -20,7 +20,6 @@
 
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-include_once 'common/valid/ValidFactory.class.php';
 /**
  * Set the date of a field
  */

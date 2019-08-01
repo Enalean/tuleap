@@ -21,9 +21,9 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 
-require_once('pre.php');
-require_once('account.php');
-require_once('www/project/admin/ugroup_utils.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/account.php';
+require_once __DIR__ . '/../project/admin/ugroup_utils.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

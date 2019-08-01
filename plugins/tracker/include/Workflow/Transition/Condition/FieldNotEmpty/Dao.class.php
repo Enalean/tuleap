@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/include/DataAccessObject.class.php';
-
 /**
  * Class for field condition DAOs.
  */

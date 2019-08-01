@@ -21,9 +21,6 @@
  *
  */
 
-require_once('common/include/Codendi_HTTPPurifier.class.php');
-
-
 /**
  * Tests the class Codendi_HTTPPurifier
  */

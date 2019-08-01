@@ -18,19 +18,14 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/valid/Rule.class.php');
 Mock::generatePartial('Rule_ProjectName', 'Rule_ProjectNameTestVersion', array('_getBackend'));
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('common/backend/BackendSystem.class.php');
 Mock::generate('BackendSystem');
 
-require_once('common/backend/BackendSVN.class.php');
 Mock::generate('BackendSVN');
 
-require_once('common/backend/BackendCVS.class.php');
 Mock::generate('BackendCVS');
 
 

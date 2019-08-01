@@ -53,7 +53,7 @@ use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnPermissionManager;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__.'/../include/svnPlugin.class.php';
 
 function usage()

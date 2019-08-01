@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/reference/ReferenceManager.class.php';
-
 /**
  * I'm responsible of managing Tracker related cross references
  */

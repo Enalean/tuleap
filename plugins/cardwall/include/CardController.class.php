@@ -19,8 +19,6 @@
  */
 
 
-require_once 'common/mvc2/PluginController.class.php';
-
 class Cardwall_CardController extends MVC2_PluginController {
 
     /** @var Cardwall_SingleCard */

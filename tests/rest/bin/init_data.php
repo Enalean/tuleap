@@ -19,7 +19,7 @@
  *
  */
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__.'/../vendor/autoload.php';
 
 $data_builder = new REST_TestDataBuilder();

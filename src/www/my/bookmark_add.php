@@ -3,9 +3,9 @@
 // Copyright (c) Enalean, 2015. All rights reserved
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-require_once('pre.php');
-require_once('bookmarks.php');
-require_once('my_utils.php');
+require_once __DIR__ . '/../include/pre.php';
+require_once __DIR__ . '/../include/bookmarks.php';
+require_once __DIR__ . '/my_utils.php';
 
 $request = HTTPRequest::instance();
 $vUrl = new Valid_String('bookmark_url');

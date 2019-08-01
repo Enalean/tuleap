@@ -22,9 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Docman_ItemFactory.class.php');
-require_once('www/project/export/project_export_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
+require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
+require_once __DIR__ . '/../../../src/www/project/admin/project_admin_utils.php';
 
 class Docman_PermissionsExport {
     protected $group;

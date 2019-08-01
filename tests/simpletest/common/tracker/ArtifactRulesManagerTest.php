@@ -19,22 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/ArtifactRulesManager.class.php');
 Mock::generatePartial('ArtifactRulesManager', 'ArtifactRulesManagerTestVersion', array('_getArtifactRuleFactory', '_getSelectedValuesForField'));
 
-require_once('common/tracker/ArtifactRuleValue.class.php');
 Mock::generate('ArtifactRuleValue');
 
-require_once('common/tracker/ArtifactRuleFactory.class.php');
 Mock::generate('ArtifactRuleFactory');
 
-require_once('common/tracker/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');
 
-require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once('common/tracker/ArtifactField.class.php');
 Mock::generate('ArtifactField');
 
 class ArtifactRulesManagerTest extends TuleapTestCase {

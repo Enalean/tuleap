@@ -6,8 +6,8 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 
-require_once('pre.php');
-require_once('../mail_utils.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../mail_utils.php';
 
 $sys_lists_domain = ForgeConfig::get('sys_lists_domain');
 if ($sys_lists_domain == 'lists.%sys_default_domain%') {

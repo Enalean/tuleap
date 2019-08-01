@@ -22,8 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ .'/../include/Statistics_DiskUsageGraph.class.php';
 
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;

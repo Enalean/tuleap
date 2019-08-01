@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/backend/BackendSVN.class.php';
-require_once 'LDAP_ProjectManager.class.php';
-require_once 'LDAP.class.php';
-require_once 'LDAP_UserManager.class.php';
-
 class LDAP_BackendSVN extends BackendSVN {
     private $ldap;
     private $ldapProjectManager = null;

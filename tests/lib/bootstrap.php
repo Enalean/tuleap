@@ -26,8 +26,6 @@ require_once __DIR__ . '/../../src/www/themes/BurningParrot/vendor/autoload.php'
 
 require_once __DIR__ . '/../../src/vendor/squizlabs/php_codesniffer/autoload.php';
 
-ini_set('include_path', ini_get('include_path').':' . __DIR__ . '/../../src:'. __DIR__ . '/../../src/www/include');
-
 $plugins_directory = __DIR__ . '/../../plugins/';
 foreach (array_diff(scandir($plugins_directory), array('..', '.')) as $plugin_name) {
     $plugin_class_path = $plugins_directory . $plugin_name . "/include/${plugin_name}Plugin.class.php";

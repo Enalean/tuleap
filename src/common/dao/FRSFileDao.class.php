@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('include/DataAccessObject.class.php');
-require_once('www/file/file_utils.php');
+require_once __DIR__ . '/../../www/file/file_utils.php';
 
 class FRSFileDao extends DataAccessObject {
     /**

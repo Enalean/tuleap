@@ -18,11 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('www/project/admin/permissions.php');
-require_once('common/tracker/ArtifactFieldSetFactory.class.php');
-require_once('common/dao/ReferenceDao.class.php');
-require_once('common/dao/CrossReferenceDao.class.php');
-require_once('common/dao/ArtifactGroupListDao.class.php');
+require_once __DIR__ . '/../../www/project/admin/permissions.php';
 
 
 class ArtifactType {

@@ -22,7 +22,7 @@
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../www/include/pre.php';
 
 $logger = new WrapperLogger(
     BackendLogger::getDefaultLogger(),
