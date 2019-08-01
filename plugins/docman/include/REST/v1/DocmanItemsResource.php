@@ -31,6 +31,7 @@ use Docman_ItemFactory;
 use Docman_VersionFactory;
 use EventManager;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
@@ -38,10 +39,12 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UGroupManager;
 use UserHelper;
 
 class DocmanItemsResource extends AuthenticatedResource
@@ -289,15 +292,17 @@ class DocmanItemsResource extends AuthenticatedResource
         );
     }
 
-    private function getItemRepresentationBuilder(Docman_Item $item, Project $project)
+    private function getItemRepresentationBuilder(Docman_Item $item, Project $project) : ItemRepresentationBuilder
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
 
-        $item_representation_builder = new ItemRepresentationBuilder(
+        $permissions_manager = $this->getDocmanPermissionManager($project);
+
+        return new ItemRepresentationBuilder(
             $this->item_dao,
             \UserManager::instance(),
             Docman_ItemFactory::instance($item->getGroupId()),
-            $this->getDocmanPermissionManager($project),
+            $permissions_manager,
             new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log()),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
@@ -309,8 +314,13 @@ class DocmanItemsResource extends AuthenticatedResource
                 new \Docman_ApprovalTableFactoriesFactory(),
                 new Docman_VersionFactory()
             ),
+            new DocmanItemPermissionsForGroupsBuilder(
+                $permissions_manager,
+                ProjectManager::instance(),
+                PermissionsManager::instance(),
+                new UGroupManager()
+            ),
             $html_purifier
         );
-        return $item_representation_builder;
     }
 }

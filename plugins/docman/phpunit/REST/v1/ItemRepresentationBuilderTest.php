@@ -26,11 +26,12 @@ use Codendi_HTMLPurifier;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Mockery;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\GlobalLanguageMock;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
@@ -77,6 +78,10 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
     private $approval_table_state_mapper;
 
     /**
+     * @var Mockery\MockInterface|DocmanItemPermissionsForGroupsBuilder
+     */
+    private $item_permissions_for_groups_builder;
+    /**
      * @var Codendi_HTMLPurifier|Mockery\MockInterface
      */
     private $html_purifier;
@@ -92,12 +97,13 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->lock_factory                = Mockery::Mock(\Docman_LockFactory::class);
         $this->approval_table_state_mapper = new ApprovalTableStateMapper();
 
-        $this->docman_item_factory             = Mockery::Mock(Docman_ItemFactory::class);
-        $this->permissions_manager             = Mockery::Mock(\Docman_PermissionsManager::class);
-        $this->lock_factory                    = Mockery::Mock(\Docman_LockFactory::class);
-        $this->metadata_representation_builder = Mockery::mock(MetadataRepresentationBuilder::class);
-        $this->approval_table_retriever        = Mockery::mock(ApprovalTableRetriever::class);
-        $this->html_purifier                   = Mockery::mock(Codendi_HTMLPurifier::class);
+        $this->docman_item_factory                 = Mockery::Mock(Docman_ItemFactory::class);
+        $this->permissions_manager                 = Mockery::Mock(\Docman_PermissionsManager::class);
+        $this->lock_factory                        = Mockery::Mock(\Docman_LockFactory::class);
+        $this->metadata_representation_builder     = Mockery::mock(MetadataRepresentationBuilder::class);
+        $this->approval_table_retriever            = Mockery::mock(ApprovalTableRetriever::class);
+        $this->item_permissions_for_groups_builder = Mockery::mock(DocmanItemPermissionsForGroupsBuilder::class);
+        $this->html_purifier                       = Mockery::mock(Codendi_HTMLPurifier::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->dao,
@@ -108,6 +114,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             $this->approval_table_state_mapper,
             $this->metadata_representation_builder,
             $this->approval_table_retriever,
+            $this->item_permissions_for_groups_builder,
             $this->html_purifier
         );
     }
@@ -178,6 +185,11 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             ->withArgs([$docman_item])
             ->andReturns(["user_id" => $owner_id, "lock_date" => 1549461600]);
 
+        $permissions_for_groups_representation = new DocmanItemPermissionsForGroupsRepresentation();
+        $this->item_permissions_for_groups_builder->shouldReceive('getRepresentation')
+            ->with($current_user, $docman_item)
+            ->andReturn($permissions_for_groups_representation);
+
         $representation = $this->item_representation_builder->buildItemRepresentation(
             $docman_item,
             $current_user,
@@ -194,6 +206,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($representation->embedded_file_properties, null);
         $this->assertEquals($representation->link_properties, null);
         $this->assertEquals($representation->wiki_properties, null);
+        $this->assertEquals($representation->permissions_for_groups, $permissions_for_groups_representation);
 
         $this->assertEquals($representation->approval_table->id, 10);
         $this->assertEquals($representation->approval_table->approval_state, 'Not yet');

@@ -23,10 +23,19 @@
 
 //phpcs:ignoreFile
 
-class Docman_PermissionsManager {
-
+class Docman_PermissionsManager
+{
     const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
     const PLUGIN_DOCMAN_ADMIN  = 'PLUGIN_DOCMAN_ADMIN';
+
+    public const ITEM_PERMISSION_TYPE_READ   = 'PLUGIN_DOCMAN_READ';
+    public const ITEM_PERMISSION_TYPE_WRITE  = 'PLUGIN_DOCMAN_WRITE';
+    public const ITEM_PERMISSION_TYPE_MANAGE = 'PLUGIN_DOCMAN_MANAGE';
+    public const ITEM_PERMISSION_TYPES       = [
+        self::ITEM_PERMISSION_TYPE_READ,
+        self::ITEM_PERMISSION_TYPE_WRITE,
+        self::ITEM_PERMISSION_TYPE_MANAGE
+    ];
 
     /**
      * @var Project
@@ -189,7 +198,7 @@ class Docman_PermissionsManager {
             $pm = $this->_getPermissionManagerInstance();
             $canRead = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups($this->getProject()->getID(), array()))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_READ, $user->getUgroups($this->getProject()->getID(), array()))
                 || $this->_userHasWritePermission($user, $item_id);
 
             $this->_setCanRead($user->getId(), $item_id, $canRead);
@@ -269,7 +278,7 @@ class Docman_PermissionsManager {
         $pm = $this->_getPermissionManagerInstance();
         $canWrite = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($this->getProject()->getID(), array()))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_WRITE, $user->getUgroups($this->getProject()->getID(), array()))
                 || $this->userCanManage($user, $item_id);
         if($canWrite) {
             $this->_setCanRead($user->getId(), $item_id, true);
@@ -330,7 +339,7 @@ class Docman_PermissionsManager {
             $pm = $this->_getPermissionManagerInstance();
             $canManage = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($this->getProject()->getID(), array())) ;
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), array())) ;
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
@@ -439,9 +448,8 @@ class Docman_PermissionsManager {
     }
 
     function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId) {
-        $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
         $pm = $this->_getPermissionManagerInstance();
-        $pm->clonePermissions($srcItemId, $dstItemId, $perms, $toGroupId);
+        $pm->clonePermissions($srcItemId, $dstItemId, self::ITEM_PERMISSION_TYPES, $toGroupId);
     }
 
     function cloneDocmanPermissions($srcGroupId, $dstGroupId) {
@@ -453,9 +461,9 @@ class Docman_PermissionsManager {
     function setDefaultItemPermissions($itemId, $force=false) {
         $dao = $this->getDao();
 
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_READ', $force);
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_WRITE', $force);
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_MANAGE', $force);
+        $dao->setDefaultPermissions($itemId, self::ITEM_PERMISSION_TYPE_READ, $force);
+        $dao->setDefaultPermissions($itemId, self::ITEM_PERMISSION_TYPE_WRITE, $force);
+        $dao->setDefaultPermissions($itemId, self::ITEM_PERMISSION_TYPE_MANAGE, $force);
     }
 
     function setDefaultDocmanPermissions($groupId) {
@@ -499,17 +507,16 @@ class Docman_PermissionsManager {
         }
 
         if(count($objIds) > 0) {
-            $perms = array("'PLUGIN_DOCMAN_READ'", "'PLUGIN_DOCMAN_WRITE'", "'PLUGIN_DOCMAN_MANAGE'");
-            $dar = $dao->retreivePermissionsForItems($objIds, $perms, $user->getUgroups($this->getProject()->getID(), array()));
+            $dar = $dao->retrievePermissionsForItems($objIds, self::ITEM_PERMISSION_TYPES, $user->getUgroups($this->getProject()->getID(), array()));
             foreach($dar as $row) {
                 switch($row['permission_type']) {
-                case 'PLUGIN_DOCMAN_MANAGE':
+                case self::ITEM_PERMISSION_TYPE_MANAGE:
                     $this->_setCanManage($userId, $row['object_id'], true);
                     break;
-                case 'PLUGIN_DOCMAN_WRITE':
+                case self::ITEM_PERMISSION_TYPE_WRITE:
                     $this->_setCanWrite($userId, $row['object_id'], true);
                     break;
-                case 'PLUGIN_DOCMAN_READ':
+                case self::ITEM_PERMISSION_TYPE_READ:
                     $this->_setCanRead($userId, $row['object_id'], true);
                     break;
                 }
@@ -618,13 +625,13 @@ class Docman_PermissionsManager {
     */
     public static function getDefinitionIndexForPermission($p) {
         switch ($p) {
-            case 'PLUGIN_DOCMAN_READ':
+            case self::ITEM_PERMISSION_TYPE_READ:
                 return 1;
                 break;
-            case 'PLUGIN_DOCMAN_WRITE':
+            case self::ITEM_PERMISSION_TYPE_WRITE:
                 return 2;
                 break;
-            case 'PLUGIN_DOCMAN_MANAGE':
+            case self::ITEM_PERMISSION_TYPE_MANAGE:
                 return 3;
                 break;
             default:
@@ -648,7 +655,7 @@ class Docman_PermissionsManager {
     function getDocmanManagerUsers($objectId, $project) {
         $userArray = array();
         $dao = $this->getDao();
-        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, 'PLUGIN_DOCMAN_MANAGE');
+        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, self::ITEM_PERMISSION_TYPE_MANAGE);
         if ($dar) {
             foreach ($dar as $row) {
                 if ($row['ugroup_id'] > 100) {

@@ -58,6 +58,7 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
@@ -1260,12 +1261,14 @@ class DocmanPlugin extends Plugin
 
         $html_purifier = Codendi_HTMLPurifier::instance();
 
+        $permissions_manager = Docman_PermissionsManager::instance($project->getID());
+
         $metadata_factory            = new Docman_MetadataFactory($project->getID());
         $item_representation_builder = new ItemRepresentationBuilder(
             new Docman_ItemDao(),
             $this->getUserManager(),
             $this->getItemFactory(),
-            Docman_PermissionsManager::instance($project->getID()),
+            $permissions_manager,
             $this->getDocmanLockFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
@@ -1276,6 +1279,12 @@ class DocmanPlugin extends Plugin
             new ApprovalTableRetriever(
                 new Docman_ApprovalTableFactoriesFactory(),
                 new Docman_VersionFactory()
+            ),
+            new DocmanItemPermissionsForGroupsBuilder(
+                $permissions_manager,
+                ProjectManager::instance(),
+                PermissionsManager::instance(),
+                new UGroupManager()
             ),
             $html_purifier
         );

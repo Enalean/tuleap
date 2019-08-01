@@ -130,6 +130,13 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($embedded['wiki_properties'], null);
         $this->assertEquals($wiki['wiki_properties']['page_name'], 'MyWikiPage');
 
+        $this->assertNotNull($folder['permissions_for_groups']);
+        $this->assertNotNull($empty['permissions_for_groups']);
+        $this->assertNotNull($file['permissions_for_groups']);
+        $this->assertNotNull($link['permissions_for_groups']);
+        $this->assertNotNull($embedded['permissions_for_groups']);
+        $this->assertNotNull($wiki['permissions_for_groups']);
+
         $this->assertMetadataIsProperlySet(
             $this->findMetadataByName($empty['metadata'], 'Custom metadata'),
             "custom value"
@@ -200,7 +207,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testGetId($root_id)
+    public function testGetId($root_id) : void
     {
         $response = $this->getResponse(
             $this->client->get('docman_items/' . $root_id),
@@ -211,6 +218,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
         $this->assertEquals('folder', $item['type']);
+        $this->assertNull($item['permissions_for_groups']);
     }
 
     /**

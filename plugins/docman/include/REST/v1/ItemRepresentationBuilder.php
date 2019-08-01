@@ -30,6 +30,7 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -69,6 +70,10 @@ class ItemRepresentationBuilder
      */
     private $approval_table_retriever;
     /**
+     * @var DocmanItemPermissionsForGroupsBuilder
+     */
+    private $item_permissions_for_groups_builder;
+    /**
      * @var Codendi_HTMLPurifier
      */
     private $purifier;
@@ -82,17 +87,19 @@ class ItemRepresentationBuilder
         ApprovalTableStateMapper $approval_table_state_mapper,
         MetadataRepresentationBuilder $metadata_representation_builder,
         ApprovalTableRetriever $approval_table_retriever,
+        DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
         Codendi_HTMLPurifier $purifier
     ) {
-        $this->dao                             = $dao;
-        $this->user_manager                    = $user_manager;
-        $this->docman_item_factory             = $docman_item_factory;
-        $this->permissions_manager             = $permissions_manager;
-        $this->lock_factory                    = $lock_factory;
-        $this->approval_table_state_mapper     = $approval_table_state_mapper;
-        $this->metadata_representation_builder = $metadata_representation_builder;
-        $this->approval_table_retriever        = $approval_table_retriever;
-        $this->purifier                        = $purifier;
+        $this->dao                                 = $dao;
+        $this->user_manager                        = $user_manager;
+        $this->docman_item_factory                 = $docman_item_factory;
+        $this->permissions_manager                 = $permissions_manager;
+        $this->lock_factory                        = $lock_factory;
+        $this->approval_table_state_mapper         = $approval_table_state_mapper;
+        $this->metadata_representation_builder     = $metadata_representation_builder;
+        $this->approval_table_retriever            = $approval_table_retriever;
+        $this->purifier                            = $purifier;
+        $this->item_permissions_for_groups_builder = $item_permissions_for_groups_builder;
     }
 
     /**
@@ -166,6 +173,7 @@ class ItemRepresentationBuilder
             $is_approval_table_enabled,
             $approval_table,
             $lock_info,
+            $this->item_permissions_for_groups_builder->getRepresentation($current_user, $item),
             $file_properties,
             $embedded_file_properties,
             $link_properties,
