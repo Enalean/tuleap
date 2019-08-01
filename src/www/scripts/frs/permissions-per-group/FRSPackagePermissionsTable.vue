@@ -27,7 +27,7 @@
             </tr>
         </thead>
 
-        <package-permissions v-bind="$props" />
+        <package-permissions v-bind="$props"/>
     </table>
 </template>
 <script>

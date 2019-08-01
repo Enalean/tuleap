@@ -82,7 +82,7 @@
     "build": "gulp build",
     "components": "gulp components",
     "core": "gulp core",
-    "eslint": "eslint --config .eslintrc.js --no-eslintrc --report-unused-disable-directives",
+    "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.vue --report-unused-disable-directives",
     "js": "gulp js",
     "sass": "gulp sass",
     "watch": "gulp watch",
