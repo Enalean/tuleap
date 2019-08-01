@@ -24,14 +24,14 @@
             <div class="ttm-definition-step-description">
                 <div v-show="is_marked_as_deleted">
                     <div class="ttm-definition-step-actions">
-                    <span>
-                        <translate>Format:</translate>
-                        <select ref="format" v-on:change="toggleRTE($event)"
-                                class="input-small ttm-definition-step-description-format" disabled>
-                            <option value="text" v-bind:selected="is_text">Text</option>
-                            <option value="html" v-bind:selected="! is_text">HTML</option>
-                        </select>
-                    </span>
+                        <span>
+                            <translate>Format:</translate>
+                            <select ref="format" v-on:change="toggleRTE($event)"
+                                    class="input-small ttm-definition-step-description-format" disabled>
+                                <option value="text" v-bind:selected="is_text">Text</option>
+                                <option value="html" v-bind:selected="! is_text">HTML</option>
+                            </select>
+                        </span>
                         <button
                             class="btn"
                             type="button"
@@ -73,14 +73,14 @@
                         v-bind:value="step.id"
                     >
                     <div class="ttm-definition-step-actions">
-                    <span>
-                        <translate>Format:</translate>
-                        <select ref="format" v-on:change="toggleRTE($event)"
-                                class="input-small ttm-definition-step-description-format">
-                            <option value="text" v-bind:selected="is_text">Text</option>
-                            <option value="html" v-bind:selected="! is_text">HTML</option>
-                        </select>
-                    </span>
+                        <span>
+                            <translate>Format:</translate>
+                            <select ref="format" v-on:change="toggleRTE($event)"
+                                    class="input-small ttm-definition-step-description-format">
+                                <option value="text" v-bind:selected="is_text">Text</option>
+                                <option value="html" v-bind:selected="! is_text">HTML</option>
+                            </select>
+                        </span>
                         <button
                             class="btn"
                             type="button"
