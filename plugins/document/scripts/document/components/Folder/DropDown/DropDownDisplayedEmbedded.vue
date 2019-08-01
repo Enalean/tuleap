@@ -40,7 +40,6 @@
 <script>
 import { mapState } from "vuex";
 import DropDownMenu from "./DropDownMenu.vue";
-import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./DeleteItem.vue";
 import LockItem from "./LockItem.vue";
@@ -55,7 +54,6 @@ export default {
         LockItem,
         DeleteItem,
         DropDownSeparator,
-        NewFolderSecondaryAction,
         DropDownMenu
     },
     props: {

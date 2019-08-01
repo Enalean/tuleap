@@ -52,7 +52,6 @@ import { mapGetters } from "vuex";
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
 import DropDownButton from "./DropDownButton.vue";
-import DropDownItemTitle from "./DropDownItemTitle.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
@@ -66,7 +65,6 @@ export default {
         DropDownSeparator,
         UnlockItem,
         LockItem,
-        DropDownItemTitle,
         DropDownButton,
         CreateNewItemVersionButton,
         DropDownMenu

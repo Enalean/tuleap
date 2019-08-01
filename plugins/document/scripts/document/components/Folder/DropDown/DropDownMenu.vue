@@ -85,9 +85,6 @@
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
-import LockItem from "./LockItem.vue";
-import UnlockItem from "./UnlockItem.vue";
 import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
@@ -97,12 +94,9 @@ export default {
     name: "DropDownMenu",
     components: {
         DropDownSeparator,
-        UnlockItem,
-        LockItem,
         CutItem,
         CopyItem,
-        PasteItem,
-        QuickLookDeleteButton
+        PasteItem
     },
     props: {
         isInFolderEmptyState: Boolean,

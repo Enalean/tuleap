@@ -35,14 +35,12 @@
 <script>
 import TitleMetadata from "../TitleMetadata.vue";
 import DescriptionMetadata from "../DescriptionMetadata.vue";
-import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 
 export default {
     name: "FolderGlobalMetadataForUpdate",
     components: {
         FolderDefaultPropertiesForUpdate,
-        FolderDefaultPropertiesForCreate,
         DescriptionMetadata,
         TitleMetadata
     },

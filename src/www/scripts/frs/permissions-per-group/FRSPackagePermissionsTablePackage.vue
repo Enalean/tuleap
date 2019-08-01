@@ -43,7 +43,7 @@
             />
         </template>
 
-        <empty-state v-if="! has_permissions" v-bind:selected-ugroup-name="selectedUgroupName" />
+        <empty-state v-if="! has_permissions" v-bind:selected-ugroup-name="selectedUgroupName"/>
     </tbody>
 </template>
 <script>
