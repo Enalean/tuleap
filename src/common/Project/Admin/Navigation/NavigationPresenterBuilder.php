@@ -25,6 +25,7 @@ use HTTPRequest;
 use Project;
 use Service;
 use Tuleap\Label\CanProjectUseLabels;
+use Tuleap\Project\Service\IndexController;
 
 class NavigationPresenterBuilder
 {
@@ -132,7 +133,7 @@ class NavigationPresenterBuilder
 
         $entries['services']                 = new NavigationItemPresenter(
             _('Services'),
-            '/project/admin/servicebar.php?' . http_build_query(array('group_id' => $project_id)),
+            IndexController::getUrl($project),
             'services',
             $current_pane_shortname
         );

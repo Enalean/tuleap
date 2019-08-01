@@ -26,9 +26,12 @@ use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
 use FastRoute;
+use ForgeConfig;
 use FRSFileFactory;
 use ProjectHistoryDao;
 use ProjectManager;
+use ServiceDao;
+use ServiceManager;
 use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
@@ -56,6 +59,7 @@ use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
@@ -66,6 +70,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
@@ -73,6 +78,14 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Home;
+use Tuleap\Project\Service\AddController;
+use Tuleap\Project\Service\DeleteController;
+use Tuleap\Project\Service\EditController;
+use Tuleap\Project\Service\IndexController;
+use Tuleap\Project\Service\ServiceCreator;
+use Tuleap\Project\Service\ServicePOSTDataBuilder;
+use Tuleap\Project\Service\ServicesPresenterBuilder;
+use Tuleap\Project\Service\ServiceUpdator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -433,6 +446,46 @@ class RouteCollector
         );
     }
 
+    public static function getGetServices(): DispatchableWithRequest
+    {
+        return new IndexController(
+            new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
+            new IncludeAssets(__DIR__ . '/../../www/assets', '/assets'),
+            new HeaderNavigationDisplayer(),
+            ProjectManager::instance()
+        );
+    }
+
+    public static function getPostServicesAdd(): DispatchableWithRequest
+    {
+        return new AddController(
+            new ServiceCreator(new ServiceDao(), ProjectManager::instance()),
+            new ServicePOSTDataBuilder(EventManager::instance()),
+            ProjectManager::instance(),
+            IndexController::getCSRFTokenSynchronizer()
+        );
+    }
+
+    public static function getPostServicesEdit(): DispatchableWithRequest
+    {
+        return new EditController(
+            new ServiceUpdator(new ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
+            new ServicePOSTDataBuilder(EventManager::instance()),
+            ServiceManager::instance(),
+            ProjectManager::instance(),
+            IndexController::getCSRFTokenSynchronizer()
+        );
+    }
+
+    public static function getPostServicesDelete(): DispatchableWithRequest
+    {
+        return new DeleteController(
+            new ServiceDao(),
+            ProjectManager::instance(),
+            IndexController::getCSRFTokenSynchronizer()
+        );
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -468,6 +521,11 @@ class RouteCollector
             $r->post('/change-synchronized-project-membership', [self::class, 'getPostSynchronizedMembershipActivation']);
             $r->post('/user-group/{user-group-id:\d+}/add', [self::class, 'getPostUserGroupIdAdd']);
             $r->post('/user-group/{user-group-id:\d+}/remove', [self::class, 'getPostUserGroupIdRemove']);
+
+            $r->get('/services', [self::class, 'getGetServices']);
+            $r->post('/services/add', [self::class, 'getPostServicesAdd']);
+            $r->post('/services/edit', [self::class, 'getPostServicesEdit']);
+            $r->post('/services/delete', [self::class, 'getPostServicesDelete']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);

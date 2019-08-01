@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,14 @@ namespace Tuleap\Project\Service;
 use Feedback;
 use HTTPRequest;
 use Project;
+use ProjectManager;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithProject;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
-class AddController
+class AddController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var ServicePOSTDataBuilder
@@ -34,67 +40,80 @@ class AddController
      * @var ServiceCreator
      */
     private $service_creator;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
-    public function __construct(ServiceCreator $service_creator, ServicePOSTDataBuilder $builder)
+    public function __construct(ServiceCreator $service_creator, ServicePOSTDataBuilder $builder, ProjectManager $project_manager, \CSRFSynchronizerToken $csrf_token)
     {
         $this->builder         = $builder;
         $this->service_creator = $service_creator;
-    }
-
-    public function add(HTTPRequest $request)
-    {
-        $project      = $request->getProject();
-        $service_data = $this->getServiceData($request);
-
-        $this->checkShortname($project, $service_data);
-        $this->checkScope($project, $service_data);
-
-        try {
-            $this->service_creator->createService($project, $service_data);
-            $this->redirectToServiceAdministration($project);
-        } catch (UnableToCreateServiceException $exception) {
-            $this->redirectWithError(
-                $project,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_create_s')
-            );
-        }
+        $this->project_manager = $project_manager;
+        $this->csrf_token      = $csrf_token;
     }
 
     /**
-     * @param HTTPRequest $request
-     * @return ServicePOSTData
+     * @throws NotFoundException
      */
-    private function getServiceData(HTTPRequest $request)
+    public function getProject(array $variables): Project
     {
+        $project = $this->project_manager->getProject($variables['id']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException();
+        }
+        return $project;
+    }
+
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        $project = $this->getProject($variables);
+
+        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
+            throw new ForbiddenException();
+        }
+
+        $this->csrf_token->check(IndexController::getUrl($project));
+
         try {
-            return $this->builder->buildFromRequest($request);
+            $service_data = $this->builder->buildFromRequest($request, $project, $layout);
+
+            $this->checkShortname($project, $layout, $service_data);
+            $this->checkScope($project, $layout, $service_data);
+
+            $this->service_creator->createService($project, $service_data);
+            $this->redirectToServiceAdministration($project, $layout);
+        } catch (UnableToCreateServiceException $exception) {
+            $this->redirectWithError(
+                $project,
+                $layout,
+                $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_create_s')
+            );
         } catch (InvalidServicePOSTDataException $exception) {
             $this->redirectWithError(
                 $request->getProject(),
+                $layout,
                 $exception->getMessage()
             );
         }
     }
 
-    /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
-     */
-    private function checkScope(Project $project, ServicePOSTData $service_data)
+    private function checkScope(Project $project, BaseLayout $response, ServicePOSTData $service_data): void
     {
         if ((int) $project->getID() !== 100 && $service_data->getScope() === "system") {
             $this->redirectWithError(
                 $project,
+                $response,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_make_system_wide_s')
             );
         }
     }
 
-    /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
-     */
-    private function checkShortname(Project $project, ServicePOSTData $service_data)
+    private function checkShortname(Project $project, BaseLayout $response, ServicePOSTData $service_data): void
     {
         $short_name = $service_data->getShortName();
         if ($short_name) {
@@ -104,27 +123,21 @@ class AddController
             if (db_numrows($result) > 0) {
                 $this->redirectWithError(
                     $project,
+                    $response,
                     $GLOBALS['Language']->getText('project_admin_servicebar', 'short_name_exist')
                 );
             }
         }
     }
 
-    /**
-     * @param Project $project
-     * @param string $message
-     */
-    private function redirectWithError(Project $project, $message)
+    private function redirectWithError(Project $project, BaseLayout $response, string $message): void
     {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
-        $this->redirectToServiceAdministration($project);
+        $response->addFeedback(Feedback::ERROR, $message);
+        $this->redirectToServiceAdministration($project, $response);
     }
 
-    /**
-     * @param Project $project
-     */
-    private function redirectToServiceAdministration(Project $project)
+    private function redirectToServiceAdministration(Project $project, BaseLayout $response): void
     {
-        $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id=' . $project->getID());
+        $response->redirect(IndexController::getUrl($project));
     }
 }
