@@ -30,7 +30,6 @@
 
 <script>
 import SemanticFieldLabel from "../common/SemanticFieldLabel.vue";
-import DOMPurify from "dompurify";
 export default {
     name: "Field",
 
