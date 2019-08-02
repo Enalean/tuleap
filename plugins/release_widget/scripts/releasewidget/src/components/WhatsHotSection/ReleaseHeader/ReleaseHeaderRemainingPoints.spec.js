@@ -325,5 +325,39 @@ describe("ReleaseHeaderRemainingPoints", () => {
             );
             expect(remaining_point_text.text()).toEqual("5");
         });
+
+        it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: 100
+                },
+                start_date: null,
+                remaining_effort: 100,
+                initial_effort: 10
+            };
+
+            component_options.propsData = {
+                releaseData
+            };
+
+            const wrapper = getPersonalWidgetInstance(store_options);
+
+            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
+            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
+            const remaining_point_value = wrapper.find(
+                "[data-test=display-remaining-points-value]"
+            );
+
+            expect(tooltip.attributes("data-tlp-tooltip")).toEqual(
+                "Initial effort (10) should be bigger or equal to remaining effort (100)."
+            );
+            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
+            expect(remaining_point_value.classes()).toContain(
+                "release-remaining-progress-value-disabled"
+            );
+            expect(remaining_point_text.text()).toEqual("100");
+        });
     });
 });
