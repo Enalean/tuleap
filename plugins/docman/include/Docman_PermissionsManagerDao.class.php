@@ -39,7 +39,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
 
         $sql = 'SELECT *'.
             ' FROM permissions'.
-            " WHERE object_id IN ('.$itemsIds.')".
+            ' WHERE object_id IN ('.$itemsIds.')'.
             ' AND permission_type IN ('.$perms.')'.
             ' AND ugroup_id IN ('.$ugroupIds.')';
         return $this->retrieve($sql);
