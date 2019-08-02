@@ -133,6 +133,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         gettextJS($translated_plugin, $path, $json);
         gettextSmarty($translated_plugin, $path, $json);
         gettextVue($translated_plugin, $path, $json);
+        gettextAngularJS($translated_plugin, $path, $json);
     }
 }
 
@@ -262,6 +263,27 @@ function gettextJS($translated_plugin, $path, $manifest_json)
                         > $template");
 
         info("[$translated_plugin][js][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+    }
+}
+
+function gettextAngularJS(string $translated_plugin, string $path, array $manifest_json): void
+{
+    if (! isset($manifest_json['gettext-angularjs']) || ! is_array($manifest_json['gettext-angularjs'])) {
+        return;
+    }
+
+    foreach ($manifest_json['gettext-angularjs'] as $component => $gettext) {
+        $gettext_step_header = sprintf("[%s][angularjs][%s]", $translated_plugin, $component);
+        info("$gettext_step_header Generating default .pot file");
+        $src      = escapeshellarg("$path/${gettext['src']}");
+        $po       = escapeshellarg("$path/${gettext['po']}");
+        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+
+        executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html)' --exclude '**/*.spec.js' --dest $template");
+        executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
+
+        info("$gettext_step_header Merging .pot file into .po files");
         exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
     }
 }

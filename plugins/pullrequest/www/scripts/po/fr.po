@@ -12,100 +12,71 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/app/file-diff/codemirror-helper-service.js
 msgid "... Skipped 1 common line"
 msgid_plural "... Skipped {{ $count }} common lines"
 msgstr[0] "... 1 ligne commune sautée"
 msgstr[1] "... {{ $count }} lignes communes sautées"
 
-#: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr "Abandonner"
 
-#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
-#: src/app/overview/overview.tpl.html
 msgid "Abandoned"
 msgstr "Abandonné"
 
-#: src/app/pull-request/header/header.tpl.html
 msgid "Add labels"
 msgstr "Ajouter un label"
 
-#: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr "Déjà intégré"
 
-#: src/app/error-modal/error-modal.tpl.html
 msgid "An error occured while doing one of your last actions."
 msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 
-#: src/app/file-diff/file-diff.tpl.html
 msgid "Binary file"
 msgstr "Fichier binaire"
 
-#: src/app/commits/commits.tpl.html
 msgid "CI"
 msgstr "IC"
 
-#: src/app/file-diff/new-inline-comment.html
-#: src/app/overview/edit-modal/edit-modal.tpl.html
-#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/app/pull-request/pull-request.tpl.html
 msgid "Changes"
 msgstr "Changements"
 
-#: src/app/overview/overview.tpl.html
 msgid "Checkout"
 msgstr "Checkout"
 
-#: src/app/overview/overview.tpl.html
 msgid "Checkout with"
 msgstr "Checkout avec"
 
-#: src/app/error-modal/error-modal.tpl.html
-#: src/app/overview/edit-modal/edit-modal.tpl.html
-#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Close"
 msgstr "Fermer"
 
-#: src/app/file-diff/new-inline-comment.html
-#: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr "Commenter"
 
-#: src/app/pull-request/pull-request.tpl.html
 msgid "Commits"
 msgstr "Commits"
 
-#: src/app/commits/commits-controller.js
 msgid "Continuous integration status: Failure on %s"
 msgstr "Status intégration continue : Échec le %s"
 
-#: src/app/commits/commits-controller.js
 msgid "Continuous integration status: Success on %s"
 msgstr "Status intégration continue : Succès le %s"
 
-#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Description"
 msgstr "Description"
 
-#: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion has not started yet"
 msgstr "La discussion n’a pas commencé"
 
-#: src/app/overview/edit-modal/edit-modal.tpl.html
-#: src/app/overview/overview.tpl.html
 msgid "Edit message"
 msgstr "Éditer le message"
 
-#: src/app/error-modal/error-modal.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
-#: src/app/overview/overview.tpl.html
 msgid ""
 "Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
 "DD HH:mm' }}"
@@ -113,39 +84,33 @@ msgstr ""
 "Échec le {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
 "DD HH:mm' }}"
 
-#: src/app/overview/timeline/timeline-service.js
+msgid "Git LFS file"
+msgstr "Fichier Git LFS"
+
 msgid "Has abandoned the pull request."
 msgstr "A abandonné la pull request."
 
-#: src/app/overview/timeline/timeline-service.js
 msgid "Has merged the pull request."
 msgstr "A intégré la pull request."
 
-#: src/app/overview/timeline/timeline-service.js
 msgid "Has rebased the pull request."
 msgstr "A rebasé la pull request."
 
-#: src/app/overview/timeline/timeline-service.js
 msgid "Has updated the pull request."
 msgstr "A mis à jour la pull request."
 
-#: src/app/commits/commits.tpl.html
 msgid "It seems that the pull request does not have any commits."
 msgstr "Il semblerait que la pull request n'a aucun commit."
 
-#: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
 msgstr "Statut intégration continue"
 
-#: src/app/dashboard/dashboard.tpl.html
 msgid "Load closed pull requests"
 msgstr "Charger les pull requests fermées"
 
-#: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr "Intégrer"
 
-#: src/app/overview/overview.tpl.html
 msgid ""
 "Merge commits are forbidden in the repository configuration (fast-forward "
 "only). Please rebase the commit and update the pull request."
@@ -154,31 +119,24 @@ msgstr ""
 "rapide uniquement). Veuillez rebaser votre commit et mettre à jour la pull "
 "request."
 
-#: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
 msgstr "Intégré"
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Non fast-forward merge"
 msgstr "Intégration non fast-forward"
 
-#: src/app/error-modal/error-modal.tpl.html
 msgid "OK"
 msgstr "OK"
 
-#: src/app/error-modal/error-modal.tpl.html
 msgid "Oh snap!"
 msgstr "Oh mince !"
 
-#: src/app/pull-request/pull-request.tpl.html
 msgid "Overview"
 msgstr "Résumé"
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Proceed with merge"
 msgstr "Continuer l’intégration"
 
-#: src/app/overview/overview.tpl.html
 msgid ""
 "Pull request can not be merged automatically due to conflicts with "
 "destination. Resolve conflicts on the command line and update the pull "
@@ -188,7 +146,6 @@ msgstr ""
 "des conflits avec la destination. Résolvez ces conflits via la ligne de "
 "commande et mettez à jour la pull request."
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid ""
 "Pull request destination has diverged. Merge will not resolve in a fast-"
 "forward. You can proceed with the merge, or cancel and update your pull "
@@ -198,7 +155,6 @@ msgstr ""
 "fast-forward. Vous pouvez continuer l’intégration, ou annuler et mettre à "
 "jour la pull request."
 
-#: src/app/overview/overview.tpl.html
 msgid ""
 "Pull request mergeability with destination is not determined. You can merge "
 "on the command line and push to destination."
@@ -206,23 +162,18 @@ msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
 
-#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
 msgstr "Dites quelque chose…"
 
-#: src/app/error-modal/error-modal.tpl.html
 msgid "Show details"
 msgstr "Voir les détails"
 
-#: src/app/files/files.tpl.html
 msgid "Side by side diff"
 msgstr "Diff côte à côte"
 
-#: src/app/overview/overview.tpl.html
 msgid ""
 "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
 "DD HH:mm' }}"
@@ -230,22 +181,17 @@ msgstr ""
 "Succès le {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
 "DD HH:mm' }}"
 
-#: src/app/dashboard/dashboard.tpl.html
 msgid "There are no closed pull requests"
 msgstr "Il n'existe pas de pull requests fermées"
 
-#: src/app/dashboard/dashboard.tpl.html
 msgid "There are no open pull requests"
 msgstr "Il n'existe pas de pull requests ouvertes"
 
-#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Title"
 msgstr "Titre"
 
-#: src/app/files/files.tpl.html
 msgid "Unified diff"
 msgstr "Diff unifié"
 
-#: src/app/overview/overview.tpl.html
 msgid "Unknown"
 msgstr "Inconnu"

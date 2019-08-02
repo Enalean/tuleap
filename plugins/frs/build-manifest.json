@@ -17,5 +17,11 @@
             "target_dir": "www/themes/FlamingParrot/css"
         }
     },
-    "components": ["www/js/angular"]
+    "components": ["www/js/angular"],
+    "gettext-angularjs": {
+        "frs": {
+            "src": "www/js/angular/src/app",
+            "po": "www/js/angular/po"
+        }
+    }
 }

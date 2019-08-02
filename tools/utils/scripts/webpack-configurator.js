@@ -21,7 +21,6 @@ const webpack = require("webpack");
 const merge = require("webpack-merge");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const AngularGettextPlugin = require("angular-gettext-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -64,16 +63,6 @@ function getCleanWebpackPlugin() {
 
 function getVueLoaderPlugin() {
     return new VueLoaderPlugin();
-}
-
-function getAngularGettextPlugin() {
-    return new AngularGettextPlugin({
-        extractStrings: {
-            input: "src/**/*.+(js|html)",
-            lineNumbers: false,
-            destination: "po/template.pot"
-        }
-    });
 }
 
 function getCopyPlugin(patterns = [], options = {}) {
@@ -136,7 +125,6 @@ function extendProdConfiguration(webpack_configs) {
 
 const configurator = {
     configureOutput,
-    getAngularGettextPlugin,
     getCopyPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
