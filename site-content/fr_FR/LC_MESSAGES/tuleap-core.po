@@ -1242,6 +1242,9 @@ msgstr "Le service n'est pas autorisé dans le projet."
 msgid "Service news is disabled for this project."
 msgstr "Le service annonces est désactivé pour ce projet."
 
+msgid "Service not found in database"
+msgstr "Le service n'existe pas dans la base de données"
+
 msgid "Service permissions"
 msgstr "Permissions des services"
 
@@ -1757,12 +1760,6 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le tableau de bord \"%s\". Cette action "
 "est irréversible. Merci de confirmez cette suppression."
-
-msgid ""
-"You are about to delete the service <b>%s</b>. Please, confirm your action."
-msgstr ""
-"Vous êtes sur le point de supprimer le service <b>%s</b>. Merci de confirmer "
-"votre action."
 
 #, php-format
 msgid ""

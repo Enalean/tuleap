@@ -25,7 +25,10 @@ use Feedback;
 use HTTPRequest;
 use Project;
 use ProjectManager;
+use RuntimeException;
+use Service;
 use ServiceDao;
+use ServiceManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -46,12 +49,17 @@ class DeleteController implements DispatchableWithRequest, DispatchableWithProje
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var ServiceManager
+     */
+    private $service_manager;
 
-    public function __construct(ServiceDao $dao, ProjectManager $project_manager, CSRFSynchronizerToken $csrf_token)
+    public function __construct(ServiceDao $dao, ProjectManager $project_manager, CSRFSynchronizerToken $csrf_token, ServiceManager $service_manager)
     {
         $this->dao = $dao;
         $this->project_manager = $project_manager;
         $this->csrf_token = $csrf_token;
+        $this->service_manager = $service_manager;
     }
 
     /**
@@ -76,60 +84,46 @@ class DeleteController implements DispatchableWithRequest, DispatchableWithProje
 
         $this->csrf_token->check(IndexController::getUrl($project));
 
-        $service_id = $request->getValidated('service_id', 'uint', 0);
-        if (! $service_id) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 's_id_not_given')
-            );
+        try {
+            $service_id = (int) $request->getValidated('service_id', 'uint', 0);
+            if (! $service_id) {
+                throw new RuntimeException($GLOBALS['Language']->getText('project_admin_servicebar', 's_id_not_given'));
+            }
 
-            return;
+            $service = $this->service_manager->getService($service_id);
+
+            if (! $this->dao->delete($project->getID(), $service->getId())) {
+                throw new RuntimeException($GLOBALS['Language']->getText('project_admin_editgroupinfo', 'upd_fail'));
+            }
+            $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('project_admin_servicebar', 's_del'));
+
+            $this->deleteFromAllProjects($request, $layout, $project, $service);
+        } catch (ServiceNotFoundException $exception) {
+            $layout->addFeedback(Feedback::ERROR, _('Service not found in database'));
+        } catch (RuntimeException $exception) {
+            $layout->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
-
-        $project_id = $project->getID();
-        if ($this->dao->delete($project_id, $service_id)) {
-            $layout->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 's_del')
-            );
-        } else {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'upd_fail')
-            );
-        }
-
-        $this->deleteFromAllProjects($request, $layout, $project_id);
 
         $layout->redirect(IndexController::getUrl($project));
     }
 
-    private function deleteFromAllProjects(HTTPRequest $request, BaseLayout $response, $project_id): void
+    private function deleteFromAllProjects(HTTPRequest $request, BaseLayout $response, Project $project, Service $service): void
     {
-        if ((int)$project_id !== Project::ADMIN_PROJECT_ID) {
+        if ((int) $project->getID() !== Project::ADMIN_PROJECT_ID) {
             return;
         }
 
-        $short_name = $request->getValidated('short_name', 'string', '');
-        if (! $short_name) {
-            $response->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_delete_s_from_p')
-            );
-
-            return;
+        if (! $service->getShortName()) {
+            throw new RuntimeException($GLOBALS['Language']->getText('project_admin_servicebar', 'cant_delete_s_from_p'));
         }
 
-        if ($this->dao->deleteFromAllProjects($short_name)) {
-            $response->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 's_del_from_p')
-            );
-        } else {
-            $response->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 'del_fail')
-            );
+        if (! $this->dao->deleteFromAllProjects($service->getShortName())) {
+            throw new RuntimeException($GLOBALS['Language']->getText('project_admin_servicebar', 'del_fail'));
         }
+
+        $response->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('project_admin_servicebar', 's_del_from_p')
+        );
     }
 }

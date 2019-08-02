@@ -482,7 +482,8 @@ class RouteCollector
         return new DeleteController(
             new ServiceDao(),
             ProjectManager::instance(),
-            IndexController::getCSRFTokenSynchronizer()
+            IndexController::getCSRFTokenSynchronizer(),
+            ServiceManager::instance()
         );
     }
 

@@ -1,12 +1,12 @@
 <form method="POST"
       action="/project/{{ project_id }}/admin/services/delete"
-      class="tlp-modal tlp-modal-danger"
+      class="tlp-modal tlp-modal-danger project-admin-services-delete-modal"
       role="dialog"
-      id="project-admin-services-delete-modal-{{ id }}"
-      aria-labelledby="project-admin-services-delete-modal-{{ id }}-title"
+      id="project-admin-services-delete-modal"
+      aria-labelledby="project-admin-services-delete-modal-title"
 >
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="project-admin-services-delete-modal-{{ id }}-title">
+        <h1 class="tlp-modal-title" id="project-admin-services-delete-modal-title">
             <i class="fa fa-trash-o tlp-modal-title-icon"></i>
             {{# gettext }} Delete service {{/ gettext }}
         </h1>
@@ -18,21 +18,13 @@
         {{# csrf }}
             {{> csrf_token_input }}
         {{/ csrf }}
-        <input type="hidden" name="service_id" value="{{ id }}">
-        {{# short_name }}
-            <input type="hidden" name="short_name" value="{{ short_name }}">
-        {{/ short_name }}
+        <input type="hidden" name="service_id" id="project-admin-services-delete-modal-service-id">
         {{# is_default_template }}
             <div class="tlp-alert tlp-alert-warning">
                 {{# gettext }}This will remove this service from all projects.{{/ gettext }}
             </div>
         {{/ is_default_template }}
-        <p>
-            {{# gettext }}
-                You are about to delete the service <b>%s</b>. Please, confirm your action.
-                | {{ label }}
-            {{/ gettext }}
-        </p>
+        <p id="project-admin-services-delete-modal-description"></p>
     </div>
     <div class="tlp-modal-footer">
         <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">

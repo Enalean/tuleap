@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicesPresenterBuilder
 {
-    private static $NONE_SERVICE_ID = 100;
+    private const NONE_SERVICE_ID = 100;
 
     /**
      * @var ServiceManager
@@ -46,7 +46,7 @@ class ServicesPresenterBuilder
         $this->event_manager   = $event_manager;
     }
 
-    public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user)
+    public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user): ServicesPresenter
     {
         $service_presenters = array();
         $allowed_services = $this->service_manager->getListOfAllowedServicesForProject($project);
@@ -70,7 +70,7 @@ class ServicesPresenterBuilder
 
     private function isServiceReadable(Service $service, PFUser $user)
     {
-        if ((int) $service->getId() === self::$NONE_SERVICE_ID) {
+        if ((int) $service->getId() === self::NONE_SERVICE_ID) {
             return false;
         }
 
