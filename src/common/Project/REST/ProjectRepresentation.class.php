@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ use Tuleap\REST\JsonCast;
 class ProjectRepresentation extends MinimalProjectRepresentation
 {
     /**
-     * @var array {@type Tuleap\Project\REST\ProjectResourceReference}
+     * @var array {@type \Tuleap\Project\REST\ProjectResourceReference}
      */
     public $resources = array();
 
     /**
-     * @var array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
+     * @var array
      */
     public $additional_informations = array();
     /**

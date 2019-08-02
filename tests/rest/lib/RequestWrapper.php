@@ -79,7 +79,8 @@ class RequestWrapper {
                 sleep($wait_for);
             }
             $retry--;
-            $response = $this->client->post('tokens', null, $payload)->send();
+            // need to hardcode the v1 path here when running v2 tests in standalone
+            $response = $this->client->post('/api/v1/tokens', null, $payload)->send();
         } while(substr($response->getBody(true), 0, 1) !== '{' && $retry > 0);
 
         return $response->json();

@@ -877,61 +877,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * Get FRS packages
-     *
-     * Get the list of packages in the project
-     *
-     * @url    GET {id}/frs_packages
-     * @access hybrid
-     *
-     * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
-     *
-     * @return array {@type Tuleap\REST\v1\FRSPackageRepresentationBase}
-     *
-     * @throws 406
-     */
-    public function getFRSPackages($id, $limit = 10, $offset = 0)
-    {
-        $this->checkAccess();
-        $this->checkLimitValueIsAcceptable($limit);
-        $this->checkFRSEndpointsAvailable();
-
-        $project    = $this->getProjectForUser($id);
-        $result     = [];
-        $total_size = 0;
-
-        $this->event_manager->processEvent(
-            Event::REST_GET_PROJECT_FRS_PACKAGES,
-            [
-                'project'      => $project,
-                'current_user' => $this->user_manager->getCurrentUser(),
-                'limit'        => $limit,
-                'offset'       => $offset,
-                'result'       => &$result,
-                'total_size'   => &$total_size
-            ]
-        );
-
-        $this->sendAllowHeadersForFRSPackages();
-        $this->sendPaginationHeaders($limit, $offset, $total_size);
-
-        return $result;
-    }
-
-    /**
-     * @url OPTIONS {id}/frs_packages
-     *
-     * @param int $id Id of the project
-     */
-    public function optionsFRSPackages($id)
-    {
-        $this->checkFRSEndpointsAvailable();
-        $this->sendAllowHeadersForFRSPackages();
-    }
-
-    /**
      * Get backlog
      *
      * Get the backlog items that can be planned in a top-milestone
@@ -1630,22 +1575,6 @@ class ProjectResource extends AuthenticatedResource
         }
     }
 
-    private function checkFRSEndpointsAvailable()
-    {
-        $available = false;
-
-        $this->event_manager->processEvent(
-            Event::REST_PROJECT_FRS_ENDPOINTS,
-            [
-                'available' => &$available
-            ]
-        );
-
-        if ($available === false) {
-            throw new RestException(404, 'FRS plugin not activated');
-        }
-    }
-
     private function sendAllowHeadersForProject()
     {
         Header::allowOptionsGetPostPatch();
@@ -1704,11 +1633,6 @@ class ProjectResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    private function sendAllowHeadersForFRSPackages()
-    {
-        Header::allowOptionsGet();
     }
 
     private function checkLimitValueIsAcceptable($limit)
