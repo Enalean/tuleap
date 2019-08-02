@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -19,29 +19,23 @@
 
 <template>
     <div>
-        <button
-            type="button"
-            class="btn"
-            v-on:click="addStep(0)"
-        >
-            <i class="fa fa-plus"></i>
-            <translate>Add step</translate>
+        <button type="button" class="btn" v-on:click="addStep(0)">
+            <i class="fa fa-plus"></i> <translate>Add step</translate>
         </button>
-        <step-definition-entry
-            v-for="(step, index) in steps"
-            v-bind:key="step.uuid"
-            v-bind:dynamic-rank="index + 1"
-            v-bind:step="step"
-            v-bind:field-id="fieldId"
-            v-bind:delete-step="deleteStep"
-            v-on:addStep="addStep"
-        />
-        <p v-if="! isThereAtLeastOneStep">
-            <input
-                type="hidden"
-                v-bind:name="'artifact[' + fieldId + '][no_steps]'"
-                value="1"
-            >
+        <template v-for="(step, index) in steps">
+            <step-definition-entry
+                v-bind:key="step.uuid"
+                v-bind:dynamic_rank="index + 1"
+                v-bind:step="step"
+                v-bind:field_id="field_id"
+                v-bind:delete-step="deleteStep"
+            />
+            <button type="button" class="btn" v-on:click="addStep(index + 1)" v-bind:key="'add-button-' + step.uuid">
+                <i class="fa fa-plus"></i> <translate>Add step</translate>
+            </button>
+        </template>
+        <p v-if="!isThereAtLeastOneStep">
+            <input type="hidden" v-bind:name="'artifact[' + field_id + '][no_steps]'" value="1">
             <translate>There isn't any step defined yet. Start by adding one.</translate>
         </p>
     </div>
@@ -56,8 +50,8 @@ export default {
     components: { StepDefinitionEntry },
     props: {
         steps: Array,
-        fieldId: Number,
-        emptyStep: Object
+        field_id: Number,
+        empty_step: Object
     },
     computed: {
         isThereAtLeastOneStep() {
@@ -77,7 +71,7 @@ export default {
             }
         },
         addStep(index) {
-            const step = Object.assign({}, this.emptyStep);
+            const step = Object.assign({}, this.empty_step);
             step.uuid = uuid();
 
             this.steps.splice(index, 0, step);

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2018, Enalean. All rights reserved
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -10,14 +10,15 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "./po/fr.po";
 import StepDefinitionField from "./StepDefinitionField.vue";
@@ -25,6 +26,7 @@ import StepDefinitionField from "./StepDefinitionField.vue";
 const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -38,8 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
         new StepDefinitionFieldComponent({
             propsData: {
                 steps: JSON.parse(mount_point.dataset.steps),
-                fieldId: JSON.parse(mount_point.dataset.fieldId),
-                emptyStep: JSON.parse(mount_point.dataset.emptyStep)
+                field_id: JSON.parse(mount_point.dataset.fieldId),
+                empty_step: JSON.parse(mount_point.dataset.emptyStep)
             }
         }).$mount(mount_point);
     }
