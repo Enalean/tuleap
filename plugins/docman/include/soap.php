@@ -759,9 +759,9 @@ function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $
         'version_number' => $version_number,
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
-    );
+        );
 
-    return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
+        return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
 }
 $soapFunctions[] = array('getDocmanFileChunk', 'Returns a part (chunk) of the content, encoded in base64, '.
                                                'of the file/embedded file which id item_id of a given version version_number, '.

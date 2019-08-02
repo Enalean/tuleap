@@ -269,236 +269,236 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $pm = ProjectManager::instance();
         $params=array('title'=>$pm->getProject($group_id)->getPublicName().' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
-    forum_header($params);
+        forum_header($params);
 
     //private forum check
-    if (db_result($result,0,'is_public') != '1') {
-        if (!user_isloggedin() || !user_ismember($group_id)) {
-         /*
-          If this is a private forum, kick 'em out
-         */
-            echo '<h1>'.$Language->getText('forum_forum','forum_restricted').'</H1>';
-            forum_footer($params);
-            exit;
+        if (db_result($result,0,'is_public') != '1') {
+            if (!user_isloggedin() || !user_ismember($group_id)) {
+             /*
+              If this is a private forum, kick 'em out
+             */
+                echo '<h1>'.$Language->getText('forum_forum','forum_restricted').'</H1>';
+                forum_footer($params);
+                exit;
+            }
         }
-    }
 
 //now set up the query
-    $threading_sql = '';
-    if ($style == 'nested' || $style== 'threaded' ) {
-     //the flat and 'no comments' view just selects the most recent messages out of the forum
-     //the other views just want the top message in a thread so they can recurse.
-        $threading_sql='AND forum.is_followup_to=0';
-    }
-
-    $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-    "FROM forum,user,forum_group_list WHERE forum.group_forum_id='".db_ei($forum_id)."' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
-    "ORDER BY forum.date DESC LIMIT ".db_ei($offset).",".($max_rows+1);
-
-    $result=db_query($sql);
-    $rows=db_numrows($result);
-
-    if ($rows > $max_rows) {
-        $rows=$max_rows;
-    }
-
-    $total_rows=0;
-
-    if (!$result || $rows < 1) {
-     //empty forum
-        $ret_val .= $Language->getText('forum_forum','no_msg',$forum_name) .'<P>'. db_error();
-    } else {
-
-     /*
-
-      build table header
-
-     */
-
-    //create a pop-up select box listing the forums for this project
-     //determine if this person can see private forums or not
-        if (user_isloggedin() && user_ismember($group_id)) {
-            $public_flag='0,1';
-        } else {
-            $public_flag='1';
+        $threading_sql = '';
+        if ($style == 'nested' || $style== 'threaded' ) {
+         //the flat and 'no comments' view just selects the most recent messages out of the forum
+         //the other views just want the top message in a thread so they can recurse.
+            $threading_sql='AND forum.is_followup_to=0';
         }
-        if ($is_a_news) {
-            $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">';
-        } else {
-            $res=db_query("SELECT group_forum_id,forum_name ".
-            "FROM forum_group_list ".
-            "WHERE group_id='".db_ei($group_id)."' AND is_public IN ($public_flag)");
-            $vals=util_result_column_to_array($res,0);
-            $texts=util_result_column_to_array($res,1);
 
-            $forum_popup = html_build_select_box_from_arrays ($vals,$texts,'forum_id',$forum_id,false);
+        $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
+        "FROM forum,user,forum_group_list WHERE forum.group_forum_id='".db_ei($forum_id)."' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
+        "ORDER BY forum.date DESC LIMIT ".db_ei($offset).",".($max_rows+1);
+
+        $result=db_query($sql);
+        $rows=db_numrows($result);
+
+        if ($rows > $max_rows) {
+            $rows=$max_rows;
         }
-    //create a pop-up select box showing options for viewing threads
 
-        $vals=forum_utils_get_styles();
-        $texts=array($Language->getText('forum_forum','nested'),$Language->getText('forum_forum','flat'),$Language->getText('forum_forum','threaded'),$Language->getText('forum_forum','no_comments'));
+        $total_rows=0;
 
-        $options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',$style,false);
+        if (!$result || $rows < 1) {
+         //empty forum
+            $ret_val .= $Language->getText('forum_forum','no_msg',$forum_name) .'<P>'. db_error();
+        } else {
 
-    //create a pop-up select box showing options for max_row count
-        $vals=array(25,50,75,100);
-        $texts=array($Language->getText('forum_forum','show','25'),$Language->getText('forum_forum','show','50'),$Language->getText('forum_forum','show','75'),$Language->getText('forum_forum','show','100'));
+         /*
 
-        $max_row_popup=html_build_select_box_from_arrays ($vals,$texts,'max_rows',$max_rows,false);
+          build table header
 
-    //now show the popup boxes in a form
-        $ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
-        if (!isset($pv)||(!$pv)) {
-            $ret_val .= '
+         */
+
+        //create a pop-up select box listing the forums for this project
+         //determine if this person can see private forums or not
+            if (user_isloggedin() && user_ismember($group_id)) {
+                $public_flag='0,1';
+            } else {
+                $public_flag='1';
+            }
+            if ($is_a_news) {
+                $forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">';
+            } else {
+                $res=db_query("SELECT group_forum_id,forum_name ".
+                "FROM forum_group_list ".
+                "WHERE group_id='".db_ei($group_id)."' AND is_public IN ($public_flag)");
+                $vals=util_result_column_to_array($res,0);
+                $texts=util_result_column_to_array($res,1);
+
+                $forum_popup = html_build_select_box_from_arrays ($vals,$texts,'forum_id',$forum_id,false);
+            }
+        //create a pop-up select box showing options for viewing threads
+
+            $vals=forum_utils_get_styles();
+            $texts=array($Language->getText('forum_forum','nested'),$Language->getText('forum_forum','flat'),$Language->getText('forum_forum','threaded'),$Language->getText('forum_forum','no_comments'));
+
+            $options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',$style,false);
+
+        //create a pop-up select box showing options for max_row count
+            $vals=array(25,50,75,100);
+            $texts=array($Language->getText('forum_forum','show','25'),$Language->getText('forum_forum','show','50'),$Language->getText('forum_forum','show','75'),$Language->getText('forum_forum','show','100'));
+
+            $max_row_popup=html_build_select_box_from_arrays ($vals,$texts,'max_rows',$max_rows,false);
+
+        //now show the popup boxes in a form
+            $ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
+            if (!isset($pv)||(!$pv)) {
+                $ret_val .= '
 				<FORM ACTION="?" METHOD="POST">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 				<TR><TD><FONT SIZE="-1">'. $forum_popup .
-            '</TD><TD><FONT SIZE="-1">'. $options_popup .
-            '</TD><TD><FONT SIZE="-1">'. $max_row_popup .
-            '</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('forum_forum','change_view').'"></TD></TR></TABLE></FORM>';
-        }
-
-        if (($style == 'nested')||($style == 'flat')) {
-         /*
-          no top table row for nested threads or flat display
-         */
-        } else {
-         /*
-          threaded or no comments
-
-          different header for default threading
-         */
-
-            $title_arr=array();
-            $title_arr[]=$Language->getText('forum_forum','thread');
-            $title_arr[]=$Language->getText('forum_forum','author');
-            $title_arr[]=$Language->getText('forum_forum','date');
-
-            $ret_val .= html_build_list_table_top ($title_arr);
-
-        }
-
-        $i=0;
-        while (($total_rows < $max_rows) && ($i < $rows)) {
-            $total_rows++;
-            if ($style == 'nested') {
-                /*
-                 New slashdot-inspired nested threads,
-                 showing all submessages and bodies
-                */
-                //show this one message
-                $ret_val .= forum_show_a_nested_message ( $result,$i ).'<BR>';
-
-                if (db_result($result,$i,'has_followups') > 0) {
-                 //show submessages for this message
-                    $ret_val .= forum_show_nested_messages ( db_result($result,$i,'thread_id'), db_result($result,$i,'msg_id') );
-                }
-                $ret_val .= '<hr /><br />';
-            } else if ($style == 'flat') {
-
-                //just show the message boxes one after another
-
-                $ret_val .= forum_show_a_nested_message ( $result,$i ).'<BR>';
-
-            } else {
-                /*
-                 no-comments or threaded use the "old" colored-row style
-
-                 phorum-esque threaded list of messages,
-                 not showing message bodies
-                */
-
-                $ret_val .= '
-					<TR class="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
-                 db_result($result, $i, 'msg_id').'">'.
-                 '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
-                /*
-
-                 See if this message is new or not
-                 If so, highlite it in bold
-
-                */
-                if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) {
-                    $ret_val .= '<B>';
-                }
-                /*
-                 show the subject and poster
-                */
-                $poster   = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
-                $ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-                 '<TD>'.UserHelper::instance()->getLinkOnUser($poster).'</TD>'.
-                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
-
-                /*
-
-                 Show subjects for submessages in this thread
-
-                 show_submessages() is recursive
-
-                */
-                if ($style == 'threaded') {
-                    if (db_result($result,$i,'has_followups') > 0) {
-                         $ret_val .= show_submessages(db_result($result, $i, 'thread_id'),
-                          db_result($result, $i, 'msg_id'),1,0);
-                    }
-                }
+                '</TD><TD><FONT SIZE="-1">'. $options_popup .
+                '</TD><TD><FONT SIZE="-1">'. $max_row_popup .
+                '</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('forum_forum','change_view').'"></TD></TR></TABLE></FORM>';
             }
 
-            $i++;
-        }
+            if (($style == 'nested')||($style == 'flat')) {
+             /*
+              no top table row for nested threads or flat display
+             */
+            } else {
+             /*
+              threaded or no comments
 
-     /*
-      This code puts the nice next/prev.
-     */
-        if (($offset != 0)||(db_numrows($result) > $i)) {
+              different header for default threading
+             */
 
-            $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
-            $ret_val .= '<TR class="threadbody"><TD ALIGN="LEFT" WIDTH="50%">';
-            if ($offset != 0) {
-                 $ret_val .= '<B><span>
+                $title_arr=array();
+                $title_arr[]=$Language->getText('forum_forum','thread');
+                $title_arr[]=$Language->getText('forum_forum','author');
+                $title_arr[]=$Language->getText('forum_forum','date');
+
+                $ret_val .= html_build_list_table_top ($title_arr);
+
+            }
+
+            $i=0;
+            while (($total_rows < $max_rows) && ($i < $rows)) {
+                $total_rows++;
+                if ($style == 'nested') {
+                    /*
+                     New slashdot-inspired nested threads,
+                     showing all submessages and bodies
+                    */
+                    //show this one message
+                    $ret_val .= forum_show_a_nested_message ( $result,$i ).'<BR>';
+
+                    if (db_result($result,$i,'has_followups') > 0) {
+                     //show submessages for this message
+                        $ret_val .= forum_show_nested_messages ( db_result($result,$i,'thread_id'), db_result($result,$i,'msg_id') );
+                    }
+                    $ret_val .= '<hr /><br />';
+                } else if ($style == 'flat') {
+
+                    //just show the message boxes one after another
+
+                    $ret_val .= forum_show_a_nested_message ( $result,$i ).'<BR>';
+
+                } else {
+                    /*
+                     no-comments or threaded use the "old" colored-row style
+
+                     phorum-esque threaded list of messages,
+                     not showing message bodies
+                    */
+
+                    $ret_val .= '
+					<TR class="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
+                     db_result($result, $i, 'msg_id').'">'.
+                     '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
+                    /*
+
+                     See if this message is new or not
+                     If so, highlite it in bold
+
+                    */
+                    if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) {
+                        $ret_val .= '<B>';
+                    }
+                    /*
+                     show the subject and poster
+                    */
+                    $poster   = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
+                    $ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
+                     '<TD>'.UserHelper::instance()->getLinkOnUser($poster).'</TD>'.
+                     '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
+
+                    /*
+
+                     Show subjects for submessages in this thread
+
+                     show_submessages() is recursive
+
+                    */
+                    if ($style == 'threaded') {
+                        if (db_result($result,$i,'has_followups') > 0) {
+                             $ret_val .= show_submessages(db_result($result, $i, 'thread_id'),
+                              db_result($result, $i, 'msg_id'),1,0);
+                        }
+                    }
+                }
+
+                $i++;
+            }
+
+         /*
+          This code puts the nice next/prev.
+         */
+            if (($offset != 0)||(db_numrows($result) > $i)) {
+
+                $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
+                $ret_val .= '<TR class="threadbody"><TD ALIGN="LEFT" WIDTH="50%">';
+                if ($offset != 0) {
+                     $ret_val .= '<B><span>
                         <A HREF="javascript:history.back()">
                         <B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '
                     .$Language->getText('forum_forum','prev_msg').'</A></B></span>';
-            } else {
-                $ret_val .= '&nbsp;';
-            }
-
-            $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
-            if (db_numrows($result) > $i) {
-                if (isset($pv)) {
-                    $pv_param = "&pv=".$pv;
                 } else {
-                    $pv_param = "";
+                    $ret_val .= '&nbsp;';
                 }
-                 $ret_val .= '<B><span>
+
+                $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
+                if (db_numrows($result) > $i) {
+                    if (isset($pv)) {
+                        $pv_param = "&pv=".$pv;
+                    } else {
+                        $pv_param = "";
+                    }
+                     $ret_val .= '<B><span>
                      <A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
                      <B>'.$Language->getText('forum_forum','next_msg').
-                 ' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
-            } else {
-                $ret_val .= '&nbsp;';
+                     ' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
+                } else {
+                    $ret_val .= '&nbsp;';
+                }
+                 $ret_val .= '</TD></TABLE>';
             }
-             $ret_val .= '</TD></TABLE>';
+
         }
 
-    }
+        echo $ret_val;
 
-    echo $ret_val;
+        $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
+        $crossref_fact->fetchDatas();
+        if ($crossref_fact->getNbReferences() > 0) {
+            echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
+            $crossref_fact->DisplayCrossRefs();
+        }
 
-    $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
-    $crossref_fact->fetchDatas();
-    if ($crossref_fact->getNbReferences() > 0) {
-        echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
-        $crossref_fact->DisplayCrossRefs();
-    }
+        if (!isset($pv)||!$pv) {
+            echo '<P>&nbsp;<P>';
 
-    if (!isset($pv)||!$pv) {
-        echo '<P>&nbsp;<P>';
+            echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';
+            show_post_form($forum_id);
+        }
 
-        echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';
-        show_post_form($forum_id);
-    }
-
-    forum_footer($params);
+        forum_footer($params);
 
 } else {
 

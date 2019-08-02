@@ -725,7 +725,7 @@ class SvnPlugin extends Plugin
                 'sql'   => $query,
                 'field' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_field'),
                 'title' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_title')
-            );
+             );
         }
     }
 

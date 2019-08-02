@@ -176,19 +176,19 @@ class Tracker_DateReminderRenderer {
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
             new Tracker_DateReminder_Role_Commenter()
-        );
-        $purifier = Codendi_HTMLPurifier::instance();
-        foreach ($all_possible_roles as $role) {
-            if ($roles && in_array($role, $roles)) {
-                $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'" selected>'.
+         );
+         $purifier = Codendi_HTMLPurifier::instance();
+         foreach ($all_possible_roles as $role) {
+             if ($roles && in_array($role, $roles)) {
+                 $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'" selected>'.
                     $purifier->purify($role->getLabel()).'</option>';
-            } else {
-                $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'">'.$purifier->purify($role->getLabel()).'</option>';
-            }
-        }
-        $output  .= '</optgroup>';
-        $output  .= '</select>';
-        return $output;
+             } else {
+                 $output .= '<option value="r_'.$purifier->purify($role->getIdentifier()).'">'.$purifier->purify($role->getLabel()).'</option>';
+             }
+         }
+         $output  .= '</optgroup>';
+         $output  .= '</select>';
+         return $output;
     }
 
     /**
