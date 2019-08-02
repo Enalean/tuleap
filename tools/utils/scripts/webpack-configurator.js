@@ -82,7 +82,10 @@ function getCopyPlugin(patterns = [], options = {}) {
 
 function getCSSExtractionPlugins() {
     return [
-        new FixStyleOnlyEntriesPlugin(),
+        new FixStyleOnlyEntriesPlugin({
+            extensions: ["scss", "css"],
+            silent: true
+        }),
         new MiniCssExtractPlugin({
             filename: "[name]-[chunkhash].css"
         })
@@ -118,7 +121,15 @@ function extendProdConfiguration(webpack_configs) {
     return webpack_configs.map(webpack_config =>
         merge(webpack_config, {
             mode: "production",
-            plugins: [getCSSOptimizerPlugin()]
+            plugins: [getCSSOptimizerPlugin()],
+            stats: {
+                all: false,
+                assets: true,
+                errors: true,
+                errorDetails: true,
+                performance: true,
+                timings: true
+            }
         })
     );
 }
