@@ -37,9 +37,11 @@ use Tuleap\REST\ProjectStatusVerificator;
 use URLVerification;
 use UserManager;
 
-class ProjectResource extends AuthenticatedResource
+class ProjectMetadataResource extends AuthenticatedResource
 {
-    private const MAX_LIMIT = 50;
+    public const RESOURCE_TYPE = 'docman_metadata';
+    private const MAX_LIMIT    = 50;
+
     /**
      * @var Docman_ItemDao
      */

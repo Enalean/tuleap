@@ -25,6 +25,7 @@
 namespace Tuleap\Docman\REST;
 
 use Luracast\Restler\Restler;
+use Project;
 use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanEmptyDocumentsResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
@@ -32,8 +33,10 @@ use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanWikiResource;
-use Tuleap\Docman\REST\v1\ProjectResource;
+use Tuleap\Docman\REST\v1\ProjectMetadataResource;
+use Tuleap\Docman\REST\v1\Service\DocmanServiceResource;
 use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
 
 class ResourcesInjector
 {
@@ -83,8 +86,21 @@ class ResourcesInjector
         );
 
         $restler->addAPIClass(
-            ProjectResource::class,
+            ProjectMetadataResource::class,
             ProjectRepresentation::ROUTE
         );
+        $restler->addAPIClass(
+            DocmanServiceResource::class,
+            ProjectRepresentation::ROUTE
+        );
+    }
+
+    public static function declareProjectResources(array &$resources, Project $project) : void
+    {
+        if (! $project->usesService(\DocmanPlugin::SERVICE_SHORTNAME)) {
+            return;
+        }
+        $resources[] = (new ProjectResourceReference())->build($project, ProjectMetadataResource::RESOURCE_TYPE);
+        $resources[] = (new ProjectResourceReference())->build($project, DocmanServiceResource::RESOURCE_TYPE);
     }
 }
