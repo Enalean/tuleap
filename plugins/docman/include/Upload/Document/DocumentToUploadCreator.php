@@ -37,11 +37,19 @@ class DocumentToUploadCreator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var DocumentMetadataCreator
+     */
+    private $creator;
 
-    public function __construct(DocumentOngoingUploadDAO $dao, DBTransactionExecutor $transaction_executor)
-    {
+    public function __construct(
+        DocumentOngoingUploadDAO $dao,
+        DBTransactionExecutor $transaction_executor,
+        DocumentMetadataCreator $creator
+    ) {
         $this->dao                  = $dao;
         $this->transaction_executor = $transaction_executor;
+        $this->creator              = $creator;
     }
 
     public function create(
@@ -53,7 +61,8 @@ class DocumentToUploadCreator
         $filename,
         $filesize,
         int $status,
-        int $obsolescence_date
+        int $obsolescence_date,
+        ?array $formatted_metadata
     ) {
         if ((int) $filesize > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
@@ -72,7 +81,8 @@ class DocumentToUploadCreator
             $filesize,
             &$item_id,
             $status,
-            $obsolescence_date
+            $obsolescence_date,
+            $formatted_metadata
         ) {
             $rows = $this->dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
                 $parent_item->getId(),
@@ -107,6 +117,10 @@ class DocumentToUploadCreator
                 $status,
                 $obsolescence_date
             );
+
+            if ($formatted_metadata) {
+                $this->creator->storeItemCustomMetadata($item_id, $formatted_metadata);
+            }
         });
 
         return new DocumentToUpload($item_id);

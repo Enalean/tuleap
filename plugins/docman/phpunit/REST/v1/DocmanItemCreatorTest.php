@@ -313,7 +313,8 @@ class DocmanItemCreatorTest extends TestCase
             'approved',
             '2019-06-06',
             $current_time,
-            $file_properties_post_representation
+            $file_properties_post_representation,
+            []
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -352,7 +353,8 @@ class DocmanItemCreatorTest extends TestCase
             'approved',
             '2019-06-06',
             $current_time,
-            $file_properties_post_representation
+            $file_properties_post_representation,
+            []
         );
     }
 
@@ -1008,7 +1010,8 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation->status,
             $post_representation->obsolescence_date,
             $current_time,
-            $file_properties_post_representation
+            $file_properties_post_representation,
+            null
         );
 
         $this->assertSame(12, $created_item_representation->id);

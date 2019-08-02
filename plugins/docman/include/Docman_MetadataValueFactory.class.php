@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -20,6 +20,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\Metadata\DocmanMetadataInputValidator;
+use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
+use Tuleap\Docman\Metadata\MetadataDoesNotExistException;
+use Tuleap\Docman\Metadata\MetadataValueCreator;
+use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
 
 /**
  * High level object for Metadata Values management.
@@ -54,131 +60,54 @@ class Docman_MetadataValueFactory {
     }
 
     /**
-     * Factory. Create a MetadataValue object based on the metadata type.
-     */
-    function &createFromType($type) {
-        $mdv = null;
-        switch($type) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $mdv = new Docman_MetadataValueList();
-            break;
-
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $mdv = new Docman_MetadataValueScalar();
-            break;
-        }
-        $mdv->setType($type);
-        return $mdv;
-    }
-
-    /**
      * Create and set-up a MetadataValue object.
+     * @deprecated use MetadataValueObjectFactory::createNewMetadataValue
      */
-    function &newMetadataValue($itemId, $fieldId, $type, $value) {
-        $mdv = $this->createFromType($type);
-
-        $mdv->setFieldId($fieldId);
-        $mdv->setItemId($itemId);
-        $mdv->setType($type);
-        if($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $ea = array();
-            if(is_array($value)) {
-                foreach($value as $val) {
-                    $e = new Docman_MetadataListOfValuesElement();
-                    $e->setId($val);
-                    $ea[] = $e;
-                }
-            }
-            else {
-                $e = new Docman_MetadataListOfValuesElement();
-                $e->setId($value);
-                $ea[] = $e;
-            }
-            $mdv->setValue($ea);
-        }
-        else {
-            $mdv->setValue($value);
-        }
-
-        return $mdv;
+    function newMetadataValue($itemId, $fieldId, $type, $value) {
+        return $this->getMetadataTypeObjectFactory()->createMetadataValueObjectWithCorrectValue((int)$itemId, (int)$fieldId, (int)$type, $value);
     }
 
     /**
      * Insert new metadata value(s) in database.
+     * @deprecated use MetadataValueCreator::storeMetadata
      */
-    function create(&$mdv) {
-        $dao = $this->getDao();
-        switch($mdv->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $eIter = $mdv->getValue();
-                $eIter->rewind();
-                $ret = true;
-                while($eIter->valid()) {
-                    $e = $eIter->current();
-
-                    $pret = $dao->create($mdv->getItemId(),
-                                     $mdv->getFieldId(),
-                                     $mdv->getType(),
-                                     $e->getId());
-                    if($pret === false) {
-                        //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
-                        $ret = false;
-                    }
-
-                    $eIter->next();
-                }
-            break;
-
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $ret = $dao->create($mdv->getItemId(),
-                                $mdv->getFieldId(),
-                                $mdv->getType(),
-                                $mdv->getValue());
-                // extract cross references
-                $reference_manager = ReferenceManager::instance();
-                $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
-            break;
-
-            default:
-                $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                          'mdv_bo_errbadtype'));
-                $ret = false;
+    function create(&$mdv)
+    {
+        try {
+            $this->getMetadataCreator()->storeMetadata($mdv, $this->groupId);
+            return true;
+        } catch (MetadataDoesNotExistException $e) {
+            $this->setError(
+                $GLOBALS['Language']->getText(
+                    'plugin_docman',
+                    'mdv_bo_errbadtype'
+                )
+            );
         }
-        return $ret;
+
+        return false;
     }
 
     /**
      * Create new MetadataValue record.
+     * @deprecated use MetadataValueCreator::createMetadataObject
      */
-    function createFromRow($id, $row) {
+    function createFromRow($id, $row)
+    {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
 
-        foreach($row as $md_name => $md_v) {
+        foreach ($row as $md_name => $md_v) {
             $md = $mdFactory->getFromLabel($md_name);
-
-            if($md !== null) {
-                $this->validateInput($md, $md_v);
-
-                $mdv = $this->newMetadataValue($id
-                                                ,$md->getId()
-                                                ,$md->getType()
-                                                ,$md_v);
-
-                $created = $this->create($mdv);
-                if(!$created) {
-                    $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                                  'mdv_bo_createerror',
-                                                                  array($md->getName())));
-                }
-            }
-            else {
-                $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                              'mdv_bo_createunknown',
-                                                              array($md_name)));
+            if ($md !== null) {
+                $this->getMetadataCreator()->createMetadataObject($md, $id, $md_v);
+            } else {
+                $this->setError(
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'mdv_bo_createunknown',
+                        [$md_name]
+                    )
+                );
             }
         }
     }
@@ -328,31 +257,12 @@ class Docman_MetadataValueFactory {
      * type! Gosh! Well, the only real problem is with list of values because
      * sometime we are dealing with array (input from user) and sometimes with
      * iterators.
+     *
+     * @deprecated use DocmanMetadataInputValidator::validateInput
      */
-    function validateInput(&$md, &$value) {
-        switch($md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                if($md->isMultipleValuesAllowed()) {
-                    if(!is_array($value) && !is_numeric($value)) {
-                        //$value = 100; // Set to default
-                        // Maybe a warning ?
-                    }
-                } else if (is_array($value) && count($value) > 1) {
-                    $value = $value[0]; // If only one value is allowed, the first is taken
-                }
-            break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value, $d)) {
-                    $value = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                } else if (!preg_match('/\d+/', $value)) { // Allow timestamps as supplied value
-                    $value = 0;
-                }
-            break;
-        }
+    public function validateInput(&$md, &$value) {
+        $validator = new DocmanMetadataInputValidator();
+        $value = $validator->validateInput($md, $value);
     }
 
     /**
@@ -380,6 +290,25 @@ class Docman_MetadataValueFactory {
     public function isError() {
         return $this->error_state;
     }
-}
 
-?>
+    /**
+     * @return \Tuleap\Docman\Metadata\MetadataValueCreator
+     */
+    private function getMetadataCreator(): MetadataValueCreator
+    {
+        return new Tuleap\Docman\Metadata\MetadataValueCreator(
+            new DocmanMetadataInputValidator(),
+            new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory()),
+            $this->getDao(),
+            ReferenceManager::instance()
+        );
+    }
+
+    /**
+     * @return MetadataValueObjectFactory
+     */
+    private function getMetadataTypeObjectFactory(): MetadataValueObjectFactory
+    {
+        return new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory());
+    }
+}

@@ -80,6 +80,48 @@ class CustomMetadataRepresentationRetriever
     /**
      * @throws CustomMetadataException
      */
+    public function checkAndRetrieveFileFormattedRepresentation(?array $metadata_list): array
+    {
+        if (empty($metadata_list)) {
+            return [];
+        }
+
+        $representations = [];
+        foreach ($metadata_list as $metadata_representation) {
+            $metadata = $this->factory->getFromLabel($metadata_representation->short_name);
+            if (! $metadata) {
+                throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
+            }
+
+            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                if ($metadata->isMultipleValuesAllowed() === true) {
+                    $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
+                    $representations[] = [
+                        'id'    => (int)$metadata->getId(),
+                        'value' => $metadata_representation->list_value,
+                    ];
+                } else {
+                    $this->checkSimpleMetadataListValues($metadata_representation, $metadata);
+                    $representations[] = [
+                        'id'    => (int)$metadata->getId(),
+                        'value' => $metadata_representation->value
+                    ];
+                }
+            } else {
+                $this->checkMetadataValue($metadata_representation);
+                $representations[] = [
+                    'id'    => (int)$metadata->getId(),
+                    'value' => $metadata_representation->value
+                ];
+            }
+        }
+
+        return $representations;
+    }
+
+    /**
+     * @throws CustomMetadataException
+     */
     private function checkMultipleMetadataListValues(POSTCustomMetadataRepresentation $metadata_representation, Docman_Metadata $metadata): void
     {
         if ($metadata_representation->value !== null) {

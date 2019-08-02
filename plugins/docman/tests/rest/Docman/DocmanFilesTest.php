@@ -27,7 +27,6 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
-use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
 class DocmanFilesTest extends DocmanTestExecutionHelper
