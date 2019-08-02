@@ -23,7 +23,7 @@ import {
     getNbOfBacklogItems as getBacklogs,
     getNbOfSprints as getSprints,
     getNbOfUpcomingReleases as getReleases
-} from "../api/rest-querier.js";
+} from "../api/rest-querier";
 
 async function getNumberOfBacklogItems(context) {
     context.commit("resetErrorMessage");
@@ -41,7 +41,7 @@ async function getCurrentMilestones(context) {
     context.commit("resetErrorMessage");
     const milestones = await getAllCurrentMilestones(context.state);
 
-    let promises = [];
+    const promises = [];
 
     milestones.forEach(milestone => {
         promises.push(getInitialEffortOfRelease(context, milestone));
@@ -74,7 +74,7 @@ async function getNumberOfSprints(context, milestone) {
 
 async function getInitialEffortOfRelease(context, milestone) {
     context.commit("resetErrorMessage");
-    let user_stories = await getContent(milestone.id, context.state);
+    const user_stories = await getContent(milestone.id, context.state);
 
     milestone.initial_effort = user_stories.reduce((nb_users_stories, user_story) => {
         if (user_story.initial_effort !== null) {

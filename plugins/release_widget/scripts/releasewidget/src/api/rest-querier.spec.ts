@@ -23,7 +23,7 @@ import {
     getCurrentMilestones,
     getNbOfSprints,
     getMilestonesContent
-} from "./rest-querier.js";
+} from "./rest-querier";
 
 import { mockFetchSuccess, tlp } from "tlp-mocks";
 
@@ -36,7 +36,7 @@ describe("getProject() -", () => {
     it("the REST API will be queried and the project's backlog returned", async () => {
         mockFetchSuccess(tlp.get, {
             headers: {
-                get: header_name => {
+                get: (header_name: string) => {
                     const headers = {
                         "X-PAGINATION-SIZE": 2
                     };
@@ -58,7 +58,7 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and the milestones planned returned", async () => {
-        let milestones = [
+        const milestones = [
             [
                 {
                     start_date: {},

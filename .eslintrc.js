@@ -1,15 +1,15 @@
 module.exports = {
-    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue", "jasmine"],
+    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue", "jasmine", "@typescript-eslint"],
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
-        "plugin:vue/recommended"
+        "plugin:vue/recommended",
+        "plugin:@typescript-eslint/eslint-recommended"
     ],
     parser: "vue-eslint-parser",
     parserOptions: {
-        parser: "babel-eslint",
-        ecmaVersion: 2019,
-        sourceType: "module"
+        parser: "@typescript-eslint/parser",
+        extraFileExtensions: [".vue"]
     },
     env: {
         es6: true,

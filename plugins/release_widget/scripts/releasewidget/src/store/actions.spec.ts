@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./actions.js";
+import * as actions from "./actions";
 import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
 
 describe("Store actions", () => {
@@ -69,7 +69,7 @@ describe("Store actions", () => {
                     current_milestones: {}
                 };
 
-                let milestones = [
+                const milestones = [
                     {
                         initial_effort: null
                     },
@@ -93,7 +93,7 @@ describe("Store actions", () => {
 
                 tlp.recursiveGet.and.returnValue(milestones);
 
-                let state_milestones = [
+                const state_milestones = [
                     {
                         total_sprint: 2,
                         initial_effort: 5

@@ -19,18 +19,18 @@
 
 import "tlp-mocks";
 
-import "./api/rest-querier.spec.js";
+import "./api/rest-querier.spec.ts";
 
-import "./store/actions.spec.js";
+import "./store/actions.spec.ts";
 
-import "./components/App.spec.js";
-import "./components/WhatsHotSection/WhatsHotSection.spec.js";
-import "./components/WhatsHotSection/ReleaseBadges.spec.js";
-import "./components/WhatsHotSection/ReleaseDescription.spec.js";
-import "./components/WhatsHotSection/ReleaseDisplayer.spec.js";
-import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeader.spec.js";
-import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeaderRemainingDays.spec.js";
-import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeaderRemainingPoints.spec.js";
-import "./components/RoadmapSection/RoadmapSection.spec.js";
+import "./components/App.spec.ts";
+import "./components/WhatsHotSection/WhatsHotSection.spec.ts";
+import "./components/WhatsHotSection/ReleaseBadges.spec.ts";
+import "./components/WhatsHotSection/ReleaseDescription.spec.ts";
+import "./components/WhatsHotSection/ReleaseDisplayer.spec.ts";
+import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeader.spec.ts";
+import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeaderRemainingDays.spec.ts";
+import "./components/WhatsHotSection/ReleaseHeader/ReleaseHeaderRemainingPoints.spec.ts";
+import "./components/RoadmapSection/RoadmapSection.spec.ts";
 
-import "./helpers/date-formatters.spec.js";
+import "./helpers/date-formatters.spec.ts";

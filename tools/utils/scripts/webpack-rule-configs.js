@@ -69,7 +69,7 @@ const babel_options_karma = {
                 [
                     BabelPluginIstanbul,
                     {
-                        exclude: ["**/*.spec.js"]
+                        exclude: ["**/*.spec.js", "**/*.spec.ts"]
                     }
                 ]
             ]
@@ -88,6 +88,28 @@ function configureBabelRule(babel_options) {
             }
         ]
     };
+}
+
+function configureTypescriptRules(babel_options) {
+    return [
+        {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: "babel-loader",
+                    options: babel_options
+                },
+                {
+                    loader: "ts-loader",
+                    options: {
+                        transpileOnly: true,
+                        appendTsSuffixTo: ["\\.vue$"]
+                    }
+                }
+            ]
+        }
+    ];
 }
 
 const rule_vue_loader = {
@@ -198,6 +220,7 @@ const rule_css_assets = {
 
 module.exports = {
     configureBabelRule,
+    configureTypescriptRules,
     babel_options_ie11,
     babel_options_karma,
     rule_po_files,
