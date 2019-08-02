@@ -185,6 +185,7 @@ class DocmanPlugin extends Plugin
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(GetWhitelistedKeys::NAME);
 
@@ -1304,6 +1305,12 @@ class DocmanPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /** @see \Event::REST_PROJECT_RESOURCES */
+    public function rest_project_resources(array $params) : void
+    {
+        ResourcesInjector::declareProjectResources($params['resources'], $params['project']);
     }
 
     public function routeUploadsDocmanFile(): FileUploadController
