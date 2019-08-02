@@ -29,6 +29,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
 
 /**
  * @template-implements ItemVisitor<void>
@@ -55,24 +56,31 @@ class AfterItemCreationVisitor implements ItemVisitor
      * @var \Docman_VersionFactory
      */
     private $docman_version_factory;
+    /**
+     * @var \Docman_MetadataValueFactory
+     */
+    private $metadata_value_factory;
 
     public function __construct(
         \PermissionsManager $permission_manager,
         \EventManager $event_manager,
         \Docman_LinkVersionFactory $docman_link_version_factory,
         \Docman_FileStorage $docman_file_storage,
-        \Docman_VersionFactory $docman_version_factory
+        \Docman_VersionFactory $docman_version_factory,
+        \Docman_MetadataValueFactory $metadata_value_factory
     ) {
         $this->permission_manager          = $permission_manager;
         $this->event_manager               = $event_manager;
         $this->docman_link_version_factory = $docman_link_version_factory;
         $this->docman_file_storage         = $docman_file_storage;
         $this->docman_version_factory      = $docman_version_factory;
+        $this->metadata_value_factory      = $metadata_value_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         $this->inheritPermissionsFromParent($item);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FOLDER, $params);
         $this->triggerPostCreationEvents($params);
     }
@@ -80,6 +88,7 @@ class AfterItemCreationVisitor implements ItemVisitor
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         $this->inheritPermissionsFromParent($item);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $params['wiki_page'] = $item->getPagename();
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_PHPWIKI_PAGE, $params);
         $this->triggerPostCreationEvents($params);
@@ -96,6 +105,7 @@ class AfterItemCreationVisitor implements ItemVisitor
             $creation_time->getTimestamp()
         );
         $this->inheritPermissionsFromParent($item);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINK, $params);
         $this->triggerPostCreationEvents($params);
     }
@@ -132,6 +142,7 @@ class AfterItemCreationVisitor implements ItemVisitor
 
         $this->docman_version_factory->create($new_embedded_version_row);
         $this->inheritPermissionsFromParent($item);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $params['version'] = $this->docman_version_factory->getCurrentVersionForItem($item);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE, $params);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE_VERSION, $params);
@@ -141,6 +152,7 @@ class AfterItemCreationVisitor implements ItemVisitor
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         $this->inheritPermissionsFromParent($item);
+        $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_EMPTY, $params);
         $this->triggerPostCreationEvents($params);
     }
@@ -150,18 +162,27 @@ class AfterItemCreationVisitor implements ItemVisitor
         throw new CannotCreateThisItemTypeException();
     }
 
-    private function triggerPostCreationEvents($params)
+    private function triggerPostCreationEvents($params): void
     {
         $this->event_manager->processEvent('plugin_docman_event_add', $params);
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    private function inheritPermissionsFromParent(Docman_Item $item)
+    private function inheritPermissionsFromParent(Docman_Item $item): void
     {
         $this->permission_manager->clonePermissions(
             $item->getParentId(),
             $item->getId(),
             ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
         );
+    }
+
+    /**
+     * @param Docman_Item                        $item
+     * @param POSTCustomMetadataRepresentation[] $metadata_representations
+     */
+    private function storeCustomMetadata(Docman_Item $item, array $metadata_representations): void
+    {
+        $this->metadata_value_factory->createFromRow($item->getId(), $metadata_representations);
     }
 }

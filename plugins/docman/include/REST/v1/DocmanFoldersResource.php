@@ -31,6 +31,7 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Docman_Link;
 use Docman_LinkVersionFactory;
+use Docman_MetadataFactory;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use DocmanPlugin;
@@ -41,6 +42,7 @@ use Project;
 use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
@@ -159,6 +161,7 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         if ($representation_for_copy_validation->isValidAsANonCopyRepresentation($files_representation)) {
             $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+
             try {
                 return $docman_item_creator->createFileDocument(
                     $parent,
@@ -242,6 +245,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                     400,
                     $e->getI18NExceptionMessage()
                 );
+            } catch (CustomMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
             }
         }
         if ($representation_for_copy_validation->isValidAsACopyRepresentation($folder_representation)) {
@@ -317,6 +325,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                     400,
                     $e->getI18NExceptionMessage()
                 );
+            } catch (CustomMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
             }
         }
         if ($representation_for_copy_validation->isValidAsACopyRepresentation($empty_representation)) {
@@ -388,6 +401,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $project
                 );
             } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            } catch (CustomMetadataException $e) {
                 throw new I18NRestException(
                     400,
                     $e->getI18NExceptionMessage()
@@ -470,6 +488,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                     400,
                     $e->getI18NExceptionMessage()
                 );
+            } catch (CustomMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
             }
         }
         if ($representation_for_copy_validation->isValidAsACopyRepresentation($embeds_representation)) {
@@ -542,6 +565,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $project
                 );
             } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            } catch (CustomMetadataException $e) {
                 throw new I18NRestException(
                     400,
                     $e->getI18NExceptionMessage()

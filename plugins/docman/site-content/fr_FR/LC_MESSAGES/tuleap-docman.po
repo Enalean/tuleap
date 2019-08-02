@@ -169,6 +169,10 @@ msgstr "Le fichier ne peut être trouvé."
 msgid "The item %d is not a folder."
 msgstr "L'objet %d n'est pas un dossier."
 
+#, php-format
+msgid "The list type property %s can accept only one value."
+msgstr "La propriété de type liste %s accepte une seule valeur"
+
 msgid "The obsolescence date is before the current date"
 msgstr "La date d'obsolescence est antérieur à la date actuelle"
 
@@ -178,6 +182,18 @@ msgid ""
 msgstr ""
 "Le project ne supporte l'obsolescence date, vous ne devriez pas le "
 "renseigner à la création ou à la mise à jour d'un document."
+
+#, php-format
+msgid "The property with short name %s does not exist in project."
+msgstr "La propriété avec le nom %s n'existe pas dans le projet."
+
+#, php-format
+msgid ""
+"The property with short name %s is a value, list_value should be empty and "
+"value should be provided."
+msgstr ""
+"La propriété avec le nom %s est une valeur, list_value devrait être "
+"vide et value devrait être fourni"
 
 msgid "The requested version of this file cannot be found."
 msgstr "La version demandée de ce fichier ne peut être trouvé."
@@ -195,6 +211,12 @@ msgstr ""
 #, php-format
 msgid "The status \"%s\" is invalid."
 msgstr "Le statut \"%s\" est invalide."
+
+#, php-format
+msgid "The value '%s' of '%s' is unknown"
+msgid_plural "The values of '%s' for field '%s' are unknown"
+msgstr[0] "La valeur '%s' de '%s' est inconnue"
+msgstr[1] "Les valeurs '%s' de '%s' sont inconnues"
 
 msgid "There is already a document being uploaded for this item"
 msgstr "Il y a déjà un document en cours de téléversement pour cet élément"

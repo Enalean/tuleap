@@ -39,7 +39,7 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { DOCMAN_ITEM_STATUS_NONE, TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
@@ -60,7 +60,8 @@ export default {
             is_loading: false,
             is_displayed: false,
             modal: null,
-            parent: {}
+            parent: {},
+            metadata: null
         };
     },
     computed: {
@@ -91,13 +92,7 @@ export default {
             return {
                 title: "",
                 description: "",
-                type: TYPE_FOLDER,
-                metadata: [
-                    {
-                        short_name: "status",
-                        list_value: [{ id: DOCMAN_ITEM_STATUS_NONE, name: "" }]
-                    }
-                ]
+                type: TYPE_FOLDER
             };
         },
         show(event) {

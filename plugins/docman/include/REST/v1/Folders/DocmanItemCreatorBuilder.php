@@ -25,6 +25,8 @@ namespace Tuleap\Docman\REST\v1\Folders;
 use Docman_FileStorage;
 use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_MetadataFactory;
+use Docman_MetadataListOfValuesElementDao;
 use Docman_MIMETypeDetector;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
@@ -34,10 +36,12 @@ use PluginManager;
 use Project;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
@@ -72,6 +76,13 @@ class DocmanItemCreatorBuilder
             $docman_setting_bo
         );
 
+        $metadata_factory = new Docman_MetadataFactory($project->getGroupId());
+        $custom_checker   = new CustomMetadataRepresentationRetriever(
+            $metadata_factory,
+            new MetadataListOfValuesElementListBuilder(new Docman_MetadataListOfValuesElementDao())
+        );
+
+        $metadata_value_factory = new \Docman_MetadataValueFactory($project->getID());
         return new DocmanItemCreator(
             $item_factory,
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
@@ -84,7 +95,8 @@ class DocmanItemCreatorBuilder
                 $event_manager,
                 new \Docman_LinkVersionFactory(),
                 $docman_file_storage,
-                $version_factory
+                $version_factory,
+                $metadata_value_factory
             ),
             new EmptyFileToUploadFinisher(
                 new DocumentUploadFinisher(
@@ -107,7 +119,8 @@ class DocmanItemCreatorBuilder
             new ItemStatusMapper($docman_setting_bo),
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
-            )
+            ),
+            $custom_checker
         );
     }
 }
