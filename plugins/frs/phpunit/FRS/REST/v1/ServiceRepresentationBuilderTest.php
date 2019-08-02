@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
+use Luracast\Restler\RestException;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Project;
@@ -68,6 +69,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
     {
         $this->project_id = 120;
         $this->project = M::mock(Project::class, ['getID' => (string) $this->project_id]);
+        $this->project->shouldReceive('usesFile')->andReturnTrue()->byDefault();
         $this->frs_admin_user = M::mock(\PFUser::class);
         $this->frs_permissions_manager = M::mock(FRSPermissionManager::class);
         $this->frs_permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->frs_admin_user)->andReturnTrue();
@@ -96,17 +98,17 @@ final class ServiceRepresentationBuilderTest extends TestCase
     public function testItReturnsGroupsWithCanReadPermissions(): void
     {
         $project_members = new ProjectUGroup([
-            'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
+            'ugroup_id' => (string) ProjectUGroup::PROJECT_MEMBERS,
             'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
-            'group_id' => $this->project_id,
+            'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup = new ProjectUGroup([
-            'ugroup_id' => $static_ugroup_id,
+            'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
-            'group_id' => $this->project_id,
+            'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
@@ -125,9 +127,9 @@ final class ServiceRepresentationBuilderTest extends TestCase
     {
         $static_ugroup_id = 345;
         $static_ugroup = new ProjectUGroup([
-            'ugroup_id' => $static_ugroup_id,
+            'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
-            'group_id' => $this->project_id,
+            'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
@@ -143,17 +145,17 @@ final class ServiceRepresentationBuilderTest extends TestCase
     public function testItReturnsGroupsWithBothdPermissions(): void
     {
         $project_members = new ProjectUGroup([
-            'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
+            'ugroup_id' => (string) ProjectUGroup::PROJECT_MEMBERS,
             'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
-            'group_id' => $this->project_id,
+            'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
 
         $static_ugroup_id = 345;
         $static_ugroup = new ProjectUGroup([
-            'ugroup_id' => $static_ugroup_id,
+            'ugroup_id' => (string) $static_ugroup_id,
             'name' => 'Developers',
-            'group_id' => $this->project_id,
+            'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, $static_ugroup_id)->andReturn($static_ugroup);
 
@@ -170,5 +172,31 @@ final class ServiceRepresentationBuilderTest extends TestCase
 
         $this->assertCount(1, $representation->permissions_for_groups->can_admin);
         $this->assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
+    }
+
+    public function testItThrowAnExceptionIfProjectDoesntUsesFiles(): void
+    {
+        $this->project->shouldReceive('usesFile')->andReturnFalse();
+
+        $this->expectException(RestException::class);
+
+        $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
+    }
+
+    public function testItReturnsAnEmptyListWhenNobodyIsSelected(): void
+    {
+        $nobody = new ProjectUGroup([
+            'ugroup_id' => (string) ProjectUGroup::NONE,
+            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::NONE],
+            'group_id' => (string) $this->project_id,
+        ]);
+        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::NONE)->andReturn($nobody);
+
+        $this->frs_permissions_factory->shouldReceive('getFrsUGroupsByPermission')->with($this->project, FRSPermission::FRS_READER)->andReturn([
+            new FRSPermission($this->project_id, FRSPermission::FRS_READER, (string) ProjectUGroup::NONE),
+        ]);
+
+        $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
+        $this->assertCount(0, $representation->permissions_for_groups->can_read);
     }
 }

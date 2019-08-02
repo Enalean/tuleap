@@ -83,7 +83,6 @@ class ProjectResource extends AuthenticatedResource
         $this->checkLimitValueIsAcceptable($limit);
 
         $project = $this->getProjectForUser($id);
-
         $paginated_packages = $this->getPackages($project, $this->user_manager->getCurrentUser(), $limit, $offset);
 
         $this->sendAllowHeadersForFRSPackages();
@@ -152,6 +151,8 @@ class ProjectResource extends AuthenticatedResource
      * @param int $id     Id of the project
      *
      * @return ServiceRepresentation {@type \Tuleap\FRS\REST\v1\ServiceRepresentation}
+     * @throws 404
+     * @throws 403
      */
     public function getService(int $id): ServiceRepresentation
     {
