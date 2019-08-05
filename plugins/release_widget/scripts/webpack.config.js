@@ -54,7 +54,7 @@ const webpack_config = {
     }
 };
 
-if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "watch") {
+if (process.env.NODE_ENV !== "production") {
     webpack_config.devtool = "cheap-eval-source-map";
 }
 
