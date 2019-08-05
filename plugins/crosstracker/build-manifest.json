@@ -1,32 +1,7 @@
 {
     "name": "crosstracker",
     "dependencies": ["tracker"],
-    "themes": {
-        "BurningParrot": {
-            "files": [
-                "themes/BurningParrot/css/style-blue.scss",
-                "themes/BurningParrot/css/style-blue-condensed.scss",
-                "themes/BurningParrot/css/style-green.scss",
-                "themes/BurningParrot/css/style-green-condensed.scss",
-                "themes/BurningParrot/css/style-grey.scss",
-                "themes/BurningParrot/css/style-grey-condensed.scss",
-                "themes/BurningParrot/css/style-orange.scss",
-                "themes/BurningParrot/css/style-orange-condensed.scss",
-                "themes/BurningParrot/css/style-purple.scss",
-                "themes/BurningParrot/css/style-purple-condensed.scss",
-                "themes/BurningParrot/css/style-red.scss",
-                "themes/BurningParrot/css/style-red-condensed.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/common/tlp/src/scss",
-                "../tracker/www/scripts/node_modules"
-            ],
-            "watched_includes": ["themes/BurningParrot/css/**/_*.scss"],
-            "target_dir": "../../src/www/assets/crosstracker/BurningParrot",
-            "is_revisioned": true
-        }
-    },
-    "components": ["scripts/"],
+    "components": ["scripts/", "themes/"],
     "gettext-vue": {
         "cross-tracker": {
             "src": "scripts/cross-tracker/src",
