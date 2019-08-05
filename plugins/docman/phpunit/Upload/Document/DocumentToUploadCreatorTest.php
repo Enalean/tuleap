@@ -45,9 +45,14 @@ class DocumentToUploadCreatorTest extends TestCase
         \ForgeConfig::restore();
     }
 
-    public function testCreation()
+    public function testCreation(): void
     {
-        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
+        $metadata_creator = \Mockery::mock(DocumentMetadataCreator::class);
+        $creator          = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $metadata_creator
+        );
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -61,6 +66,8 @@ class DocumentToUploadCreatorTest extends TestCase
 
         $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
+        $metadata_creator->shouldReceive('storeItemCustomMetadata')->never();
+
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
@@ -70,7 +77,47 @@ class DocumentToUploadCreatorTest extends TestCase
             'filename',
             123456,
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            $obsolescence_date->getTimestamp()
+            $obsolescence_date->getTimestamp(),
+            null
+        );
+
+        $this->assertSame(12, $document_to_upload->getItemId());
+    }
+
+    public function testCreationWithMetadata(): void
+    {
+        $metadata_creator = \Mockery::mock(DocumentMetadataCreator::class);
+        $creator          = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $metadata_creator
+        );
+
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        $parent_item = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(102);
+        $current_time = new \DateTimeImmutable();
+
+        $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([]);
+        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturns(12);
+
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
+        $metadata_creator->shouldReceive('storeItemCustomMetadata')->once();
+
+        $document_to_upload = $creator->create(
+            $parent_item,
+            $user,
+            $current_time,
+            'title',
+            'description',
+            'filename',
+            123456,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp(),
+            ['id' => 1, 'value' => 'abcde']
         );
 
         $this->assertSame(12, $document_to_upload->getItemId());
@@ -78,7 +125,11 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
     {
-        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
+        $creator = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            \Mockery::mock(DocumentMetadataCreator::class)
+        );
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -102,7 +153,8 @@ class DocumentToUploadCreatorTest extends TestCase
             'filename',
             123456,
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            $obsolescence_date->getTimestamp()
+            $obsolescence_date->getTimestamp(),
+            null
         );
 
         $this->assertSame(12, $document_to_upload->getItemId());
@@ -110,7 +162,11 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
     {
-        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
+        $creator = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            \Mockery::mock(DocumentMetadataCreator::class)
+        );
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -136,13 +192,18 @@ class DocumentToUploadCreatorTest extends TestCase
             'filename',
             123456,
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            $obsolescence_date->getTimestamp()
+            $obsolescence_date->getTimestamp(),
+            null
         );
     }
 
     public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
     {
-        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
+        $creator = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            \Mockery::mock(DocumentMetadataCreator::class)
+        );
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -168,13 +229,18 @@ class DocumentToUploadCreatorTest extends TestCase
             'filename2',
             789,
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            $obsolescence_date->getTimestamp()
+            $obsolescence_date->getTimestamp(),
+            null
         );
     }
 
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
     {
-        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
+        $creator = new DocumentToUploadCreator(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            \Mockery::mock(DocumentMetadataCreator::class)
+        );
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -194,7 +260,8 @@ class DocumentToUploadCreatorTest extends TestCase
             'filename',
             2,
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
-            $obsolescence_date->getTimestamp()
+            $obsolescence_date->getTimestamp(),
+            null
         );
     }
 }

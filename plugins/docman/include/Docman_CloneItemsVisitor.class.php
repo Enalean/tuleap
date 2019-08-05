@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 
 /**
  * @template-implements ItemVisitor<void>
@@ -231,6 +232,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
         //   project metadata)
         // * for list of values change the values (use mapping as behind).
         $newMdvFactory = $this->_getMetadataValueFactory($this->dstGroupId);
+        $type_value_factory = new DocmanMetadataTypeValueFactory();
 
         $oldMdFactory = $this->_getMetadataFactory($item->getGroupId());
         $oldMdFactory->appendItemMetadataList($item);
@@ -244,7 +246,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
                 $oldValue = $oldMdFactory->getMetadataValue($item, $oldMd);
 
                 if(isset($metadataMapping['md'][$oldMd->getId()])) {
-                    $newMdv = $newMdvFactory->createFromType($oldMd->getType());
+                    $newMdv = $type_value_factory->createFromType($oldMd->getType());
                     $newMdv->setItemId($newItemId);
                     $newMdv->setFieldId($metadataMapping['md'][$oldMd->getId()]);
                     if($oldMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {

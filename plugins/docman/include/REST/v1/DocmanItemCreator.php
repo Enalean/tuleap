@@ -203,7 +203,8 @@ class DocmanItemCreator
         ?string $status,
         ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
-        FilePropertiesPOSTPATCHRepresentation $file_properties
+        FilePropertiesPOSTPATCHRepresentation $file_properties,
+        ?array $formatted_metadata
     ) : CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
@@ -226,7 +227,8 @@ class DocmanItemCreator
                 $file_properties->file_name,
                 $file_properties->file_size,
                 $status_id,
-                $obsolescence_date_time_stamp
+                $obsolescence_date_time_stamp,
+                $formatted_metadata
             );
 
             if ($file_properties->file_size === 0) {

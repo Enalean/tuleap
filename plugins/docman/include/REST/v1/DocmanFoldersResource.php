@@ -32,6 +32,7 @@ use Docman_ItemFactory;
 use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
+use Docman_MetadataListOfValuesElementDao;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use DocmanPlugin;
@@ -43,6 +44,7 @@ use ProjectManager;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
+use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
@@ -54,6 +56,7 @@ use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
@@ -163,6 +166,14 @@ class DocmanFoldersResource extends AuthenticatedResource
             $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
             try {
+                $metadata_factory = new Docman_MetadataFactory($project->getGroupId());
+                $custom_retriever = new CustomMetadataRepresentationRetriever(
+                    $metadata_factory,
+                    new MetadataListOfValuesElementListBuilder(new Docman_MetadataListOfValuesElementDao())
+                );
+
+                $formatted_metadata = $custom_retriever->checkAndRetrieveFileFormattedRepresentation($files_representation->metadata);
+
                 return $docman_item_creator->createFileDocument(
                     $parent,
                     $current_user,
@@ -171,9 +182,15 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $files_representation->status,
                     $files_representation->obsolescence_date,
                     new DateTimeImmutable(),
-                    $files_representation->file_properties
+                    $files_representation->file_properties,
+                    $formatted_metadata
                 );
             } catch (Metadata\HardCodedMetadataException $e) {
+                throw new I18NRestException(
+                    400,
+                    $e->getI18NExceptionMessage()
+                );
+            } catch (CustomMetadataException $e) {
                 throw new I18NRestException(
                     400,
                     $e->getI18NExceptionMessage()

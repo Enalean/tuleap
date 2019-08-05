@@ -34,9 +34,14 @@ use EventManager;
 use PermissionsManager;
 use PluginManager;
 use Project;
+use ReferenceManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Docman\Metadata\DocmanMetadataInputValidator;
+use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
+use Tuleap\Docman\Metadata\MetadataValueCreator;
+use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
@@ -45,6 +50,7 @@ use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\Upload\Document\DocumentMetadataCreator;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -88,7 +94,18 @@ class DocmanItemCreatorBuilder
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
             new DocumentToUploadCreator(
                 $document_on_going_upload_dao,
-                $transaction_executor
+                $transaction_executor,
+                new DocumentMetadataCreator(
+                    new MetadataValueCreator(
+                        new DocmanMetadataInputValidator(),
+                        new MetadataValueObjectFactory(
+                            new DocmanMetadataTypeValueFactory()
+                        ),
+                        new \Docman_MetadataValueDao(),
+                        ReferenceManager::instance()
+                    ),
+                    new \Docman_MetadataDao(\CodendiDataAccess::instance())
+                )
             ),
             new AfterItemCreationVisitor(
                 $permission_manager,
