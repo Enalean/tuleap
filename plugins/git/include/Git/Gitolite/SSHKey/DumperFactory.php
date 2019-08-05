@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 use Git_Exec;
 use Git_Gitolite_SSHKeyDumper;
 use Git_Gitolite_SSHKeyMassDumper;
+use Logger;
 use System_Command;
 use UserManager;
 
@@ -53,13 +54,19 @@ class DumperFactory
      */
     private $user_manager;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     public function __construct(
         ManagementDetector $management_detector,
         AuthorizedKeysFileCreator $authorized_keys_file_creator,
         System_Command $system_command,
         Git_Exec $git_exec,
         $admin_path,
-        UserManager $user_manager
+        UserManager $user_manager,
+        Logger $logger
     ) {
         $this->management_detector          = $management_detector;
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;
@@ -67,6 +74,7 @@ class DumperFactory
         $this->git_exec                     = $git_exec;
         $this->admin_path                   = $admin_path;
         $this->user_manager                 = $user_manager;
+        $this->logger                       = $logger;
     }
 
     /**
@@ -75,7 +83,7 @@ class DumperFactory
     public function buildDumper()
     {
         if ($this->management_detector->isAuthorizedKeysFileManagedByTuleap()) {
-            return new Gitolite3Dumper($this->authorized_keys_file_creator, $this->system_command);
+            return new Gitolite3Dumper($this->authorized_keys_file_creator, $this->system_command, $this->logger);
         }
         return new Git_Gitolite_SSHKeyDumper($this->admin_path, $this->git_exec);
     }
