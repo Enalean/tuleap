@@ -21,7 +21,6 @@
 namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
-use PFUser;
 use Project;
 
 class ServicesPresenter
@@ -31,7 +30,10 @@ class ServicesPresenter
     public $project_id;
     public $is_default_template;
     public $minimal_rank;
-    public $locale;
+    /** @var string */
+    public $csrf_token_name;
+    /** @var string */
+    public $csrf_token;
 
     /**
      * @param Project               $project
@@ -41,6 +43,8 @@ class ServicesPresenter
     public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)
     {
         $this->services            = $services;
+        $this->csrf_token_name     = $csrf->getTokenName();
+        $this->csrf_token          = $csrf->getToken();
         $this->csrf                = $csrf;
         $this->project_id          = $project->getID();
         $this->is_default_template = (int)$project->getID() === Project::ADMIN_PROJECT_ID;

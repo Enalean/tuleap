@@ -117,7 +117,7 @@ const webpack_config_for_burning_parrot_code = {
     entry: {
         "burning-parrot": "./BurningParrot/index.js",
         "project-admin": "./project/admin/index.js",
-        "project-admin-ugroups": "./project/admin//project-admin-ugroups.js",
+        "project-admin-ugroups": "./project/admin/project-admin-ugroups.js",
         "site-admin-permission-delegation": "./admin/permission-delegation.js",
         "site-admin-mass-emailing": "./admin/massmail.js",
         "site-admin-most-recent-logins": "./admin/most-recent-logins.js",
@@ -154,7 +154,8 @@ const webpack_config_for_burning_parrot_code = {
 const webpack_config_for_vue_components = {
     entry: {
         "news-permissions": "./news/permissions-per-group/index.js",
-        "frs-permissions": "./frs/permissions-per-group/index.js"
+        "frs-permissions": "./frs/permissions-per-group/index.js",
+        "project-admin-services": "./project/admin/services/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

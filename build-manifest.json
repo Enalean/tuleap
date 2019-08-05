@@ -55,6 +55,10 @@
         "permissions-per-group-news": {
             "src": "src/www/scripts/news/permissions-per-group",
             "po": "src/www/scripts/news/permissions-per-group/po"
+        },
+        "project-admin-services": {
+            "src": "src/www/scripts/project/admin/services/src",
+            "po": "src/www/scripts/project/admin/services/po"
         }
     }
 }

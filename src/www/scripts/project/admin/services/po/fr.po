@@ -1,0 +1,59 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2.3\n"
+
+msgid "Awesome service to manage extra stuff"
+msgstr "Le service qui gère des trucs"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Display in iframe"
+msgstr "Afficher dans une iframe"
+
+msgid "Edit service"
+msgstr "Éditer le service"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Label"
+msgstr "Label"
+
+msgid "Link"
+msgstr "Lien"
+
+msgid "My service"
+msgstr "Mon service"
+
+msgid "Please, enter a http:// or https:// link"
+msgstr "Veuillez utiliser un lien http:// ou https://"
+
+msgid "Rank"
+msgstr "Rang"
+
+msgid "Save modifications"
+msgstr "Enregistrer les modifications"
+
+#. javascript-format
+msgid ""
+"You are about to delete the <b>%s</b> service. Please, confirm your action"
+msgstr ""
+"Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
+"votre action"

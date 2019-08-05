@@ -36,13 +36,6 @@ msgstr ""
 
 #, javascript-format
 msgid ""
-"You are about to delete the <b>%s</b> service. Please, confirm your action"
-msgstr ""
-"Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
-"votre action."
-
-#, javascript-format
-msgid ""
 "You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
 "action."
 msgstr ""
