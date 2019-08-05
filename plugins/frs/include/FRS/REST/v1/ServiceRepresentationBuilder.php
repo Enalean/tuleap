@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use ProjectUGroup;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
@@ -52,8 +54,17 @@ class ServiceRepresentationBuilder
         $this->ugroup_manager = $ugroup_manager;
     }
 
+    /**
+     * @param PFUser  $user
+     * @param Project $project
+     * @return ServiceRepresentation
+     * @throws RestException
+     */
     public function getServiceRepresentation(PFUser $user, Project $project): ServiceRepresentation
     {
+        if (! $project->usesFile()) {
+            throw new RestException(404, 'File Release System service is not used by the project');
+        }
         $service_representation = new ServiceRepresentation();
         if (! $this->permission_manager->isAdmin($project, $user)) {
             return $service_representation;
@@ -84,7 +95,7 @@ class ServiceRepresentationBuilder
         $ugroups = [];
         foreach ($frs_permissions as $frs_permission) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $frs_permission->getUGroupId());
-            if ($ugroup) {
+            if ($ugroup && (int) $ugroup->getId() !== ProjectUGroup::NONE) {
                 $ugroups[] = (new UserGroupRepresentation())->build((int) $project->getID(), $ugroup);
             }
         }

@@ -45,7 +45,9 @@ class ResourcesInjector
 
     public function declareProjectResources(array &$resources, Project $project)
     {
-        $resources[] = (new ProjectResourceReference())->build($project, PackageMinimalRepresentation::ROUTE);
-        $resources[] = (new ProjectResourceReference())->build($project, ServiceRepresentation::ROUTE);
+        if ($project->usesFile()) {
+            $resources[] = (new ProjectResourceReference())->build($project, PackageMinimalRepresentation::ROUTE);
+            $resources[] = (new ProjectResourceReference())->build($project, ServiceRepresentation::ROUTE);
+        }
     }
 }
