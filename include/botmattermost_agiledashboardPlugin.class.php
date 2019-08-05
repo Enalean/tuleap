@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
@@ -134,41 +135,53 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $logger = new BotMattermostLogger();
 
         $tracker_form_element_factory = Tracker_FormElementFactory::instance();
+
+        $planning_milestone_factory = new Planning_MilestoneFactory(
+            $planning_factory,
+            $artifact_factory,
+            $tracker_form_element_factory,
+            TrackerFactory::instance(),
+            $milestone_status_counter,
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            new TimeframeBuilder(
+                $tracker_form_element_factory,
+                new SemanticTimeframeBuilder(
+                    new SemanticTimeframeDao(),
+                    $tracker_form_element_factory
+                )
+            ),
+            new MilestoneBurndownFieldChecker(
+                $tracker_form_element_factory
+            )
+        );
+
+        $stand_up_notification_builder = new StandUpNotificationBuilder(
+            $planning_milestone_factory,
+            $milestone_status_counter,
+            $planning_factory,
+            new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang')),
+            MarkdownTemplateRendererFactory::build()
+                ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/template')
+        );
+
+        $bot_agiledashboard_factory = new Factory(
+            new Dao(),
+            new BotFactory(new BotDao()),
+            $logger
+        );
+
+        $sender = new Sender(
+            new EncoderMessage(),
+            new ClientBotMattermost(),
+            $logger
+        );
+
         $stand_up_notification_sender = new StandUpNotificationSender(
-            new Factory(
-                new Dao,
-                new BotFactory(new BotDao()),
-                $logger
-            ),
-            new Sender(
-                new EncoderMessage(),
-                new ClientBotMattermost(),
-                $logger
-            ),
-            new StandUpNotificationBuilder(
-                new Planning_MilestoneFactory(
-                    $planning_factory,
-                    $artifact_factory,
-                    $tracker_form_element_factory,
-                    TrackerFactory::instance(),
-                    $milestone_status_counter,
-                    new PlanningPermissionsManager(),
-                    new AgileDashboard_Milestone_MilestoneDao(),
-                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-                    new TimeframeBuilder(
-                        $tracker_form_element_factory,
-                        new SemanticTimeframeBuilder(
-                            new SemanticTimeframeDao(),
-                            $tracker_form_element_factory
-                        )
-                    )
-                ),
-                $milestone_status_counter,
-                $planning_factory,
-                new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang')),
-                MarkdownTemplateRendererFactory::build()
-                    ->getRenderer(PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template')
-            ),
+            $bot_agiledashboard_factory,
+            $sender,
+            $stand_up_notification_builder,
             ProjectManager::instance(),
             $logger
         );
