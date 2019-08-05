@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -105,7 +105,14 @@ class StandUpNotificationBuilder
     ) {
         $linked_artifacts = $this->getLinkedArtifactsWithRecentModification($milestone, $user);
         $tracker_artifact = $milestone->getArtifact();
-        $burndown_url     = $this->getBurndownUrl($http_request, $tracker_artifact->getParent($user), $user);
+
+        $burndown_url    = null;
+        $parent_artifact = $tracker_artifact->getParent($user);
+
+        if ($parent_artifact !== null) {
+            $burndown_url = $this->getBurndownUrl($http_request, $parent_artifact, $user);
+        }
+
         if ($burndown_url === null) {
             $burndown_url = $this->getBurndownUrl($http_request, $tracker_artifact, $user);
         }
