@@ -74,6 +74,7 @@ import "./components/Folder/DropDown/DropDownDisplayedEmbedded.spec.js";
 import "./components/Folder/DropDown/DropDownQuickLook.spec.js";
 import "./components/Folder/DropDown/NewFolderSecondaryAction.spec.js";
 import "./components/Folder/DropDown/NewIDocument.spec.js";
+import "./components/Folder/DropDown/UpdatePermissions.spec";
 import "./components/Folder/DropDown/UpdateProperties.spec.js";
 import "./components/Folder/DropDown/LockItem.spec.js";
 import "./components/Folder/DropDown/UnlockItem.spec.js";
@@ -124,6 +125,8 @@ import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBind
 import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBindingForFolderUpdate.spec.js";
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForUpdate.spec.js";
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForCreate.spec.js";
+
+import "./components/Folder/Permissions/PermissionsUpdateModal.spec";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";

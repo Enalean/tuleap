@@ -24,6 +24,7 @@
             <new-folder-secondary-action v-bind:item="current_folder" slot="new-folder-secondary-action" data-test="document-new-folder-creation-button"/>
 
             <update-properties v-bind:item="current_folder" data-test="document-update-properties" slot="update-properties"/>
+            <update-permissions v-bind:item="current_folder" slot="update-permissions"/>
 
             <drop-down-separator slot="delete-item-separator" v-if="can_user_delete_item" data-test="document-delete-folder-separator"/>
             <delete-item
@@ -44,6 +45,7 @@ import NewFolderSecondaryAction from "./NewFolderSecondaryAction.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import DeleteItem from "./DeleteItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";
+import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 
 export default {
@@ -51,6 +53,7 @@ export default {
     components: {
         DropDownItemTitle,
         UpdateProperties,
+        UpdatePermissions,
         DeleteItem,
         DropDownSeparator,
         NewFolderSecondaryAction,

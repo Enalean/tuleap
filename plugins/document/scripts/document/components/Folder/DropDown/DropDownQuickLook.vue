@@ -24,8 +24,14 @@
                 v-bind:item="item"
                 v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
                 v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
-                v-if="! is_item_a_wiki_with_approval_table"
+                v-if="! is_item_a_wiki_with_approval_table && ! is_item_a_folder(item)"
                 data-test="document-quicklook-action-button-new-version"
+            />
+            <new-item-button
+                v-if="item.user_can_write && is_item_a_folder(item)"
+                class="tlp-button-primary tlp-button-small tlp-button-outline"
+                v-bind:item="item"
+                data-test="document-quicklook-action-button-new-item"
             />
             <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
@@ -42,6 +48,7 @@
                     </template>
 
                     <update-properties slot="update-properties" data-test="document-dropdown-menu-update-properties" v-bind:item="item" v-if="item.user_can_write"/>
+                    <update-permissions slot="update-permissions" v-bind:item="item"/>
                 </drop-down-menu>
             </drop-down-button>
         </div>
@@ -51,22 +58,26 @@
 import { mapGetters } from "vuex";
 import DropDownMenu from "./DropDownMenu.vue";
 import CreateNewItemVersionButton from "../ActionsButton/NewItemVersionButton.vue";
+import NewItemButton from "../ActionsButton/NewItemButton.vue";
 import DropDownButton from "./DropDownButton.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
 import UpdateProperties from "./UpdateProperties.vue";
+import UpdatePermissions from "./UpdatePermissions.vue";
 import { TYPE_WIKI } from "../../../constants.js";
 
 export default {
     name: "DropDownQuickLook",
     components: {
         UpdateProperties,
+        UpdatePermissions,
         DropDownSeparator,
         UnlockItem,
         LockItem,
         DropDownButton,
         CreateNewItemVersionButton,
+        NewItemButton,
         DropDownMenu
     },
     props: {

@@ -43,6 +43,7 @@
             v-bind:item="item_to_delete"
             v-on:delete-modal-closed="hideDeleteItemModal"
         />
+        <permissions-update-modal v-bind:item="item_to_update_permissions"/>
     </div>
 </template>
 
@@ -66,7 +67,9 @@ export default {
         FileUploadManager,
         "confirm-deletion-modal": () =>
             import(/* webpackChunkName: "document-confirm-item-deletion-modal" */
-            "./ModalDeleteItem/ModalConfirmDeletion.vue")
+            "./ModalDeleteItem/ModalConfirmDeletion.vue"),
+        "permissions-update-modal": () =>
+            import(/* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue")
     },
     data() {
         return {
@@ -74,7 +77,8 @@ export default {
             shown_update_metadata_modal: "",
             updated_item: null,
             updated_metadata: null,
-            item_to_delete: null
+            item_to_delete: null,
+            item_to_update_permissions: {}
         };
     },
     computed: {
@@ -99,11 +103,13 @@ export default {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
+        EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -144,6 +150,9 @@ export default {
         },
         hideDeleteItemModal() {
             this.item_to_delete = null;
+        },
+        showUpdateItemPermissionsModal(event) {
+            this.item_to_update_permissions = event.detail.current_item;
         },
         isItemAFolder(item) {
             return item.type === TYPE_FOLDER;

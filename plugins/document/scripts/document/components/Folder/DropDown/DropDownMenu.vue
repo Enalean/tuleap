@@ -50,17 +50,7 @@
                 History
             </span>
         </a>
-        <a v-if="item.can_user_manage"
-           v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)"
-           class="tlp-dropdown-menu-item"
-           role="menuitem"
-           data-test="document-dropdown-permissions"
-        >
-            <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
-            <span v-translate>
-                Permissions
-            </span>
-        </a>
+        <slot name="update-permissions"/>
         <a v-if="! is_item_an_empty_document(item)"
            v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
            class="tlp-dropdown-menu-item"
@@ -109,7 +99,6 @@ export default {
         return {
             NOTIFS_PANE_NAME: "notifications",
             HISTORY_PANE_NAME: "history",
-            PERMISSIONS_PANE_NAME: "permissions",
             APPROVAL_TABLES_PANE_NAME: "approval"
         };
     },
