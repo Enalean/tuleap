@@ -1,5 +1,5 @@
 <form method="POST"
-      action=""
+      action="/project/{{ project_id }}/admin/services/add"
       class="tlp-modal"
       role="dialog"
       id="project-admin-services-add-modal"
@@ -18,8 +18,6 @@
         {{# csrf }}
             {{> csrf_token_input }}
         {{/ csrf }}
-        <input type="hidden" name="group_id" value="{{ project_id }}">
-        <input type="hidden" name="action" value="add">
 
         <div class="tlp-form-element">
             <label class="tlp-label" for="project-admin-services-add-modal-label">

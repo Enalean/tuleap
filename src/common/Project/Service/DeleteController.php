@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,65 @@
 
 namespace Tuleap\Project\Service;
 
+use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
+use ProjectManager;
 use ServiceDao;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithProject;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
-class DeleteController
+class DeleteController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var ServiceDao
      */
     private $dao;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
-    public function __construct(ServiceDao $dao)
+    public function __construct(ServiceDao $dao, ProjectManager $project_manager, CSRFSynchronizerToken $csrf_token)
     {
         $this->dao = $dao;
+        $this->project_manager = $project_manager;
+        $this->csrf_token = $csrf_token;
     }
 
-    public function delete(HTTPRequest $request)
+    /**
+     * @throws NotFoundException
+     */
+    public function getProject(array $variables): Project
     {
+        $project = $this->project_manager->getProject($variables['id']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException();
+        }
+        return $project;
+    }
+
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        $project = $this->getProject($variables);
+
+        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
+            throw new ForbiddenException();
+        }
+
+        $this->csrf_token->check(IndexController::getUrl($project));
+
         $service_id = $request->getValidated('service_id', 'uint', 0);
         if (! $service_id) {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 's_id_not_given')
             );
@@ -49,23 +86,25 @@ class DeleteController
             return;
         }
 
-        $project_id = $request->getProject()->getID();
+        $project_id = $project->getID();
         if ($this->dao->delete($project_id, $service_id)) {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 's_del')
             );
         } else {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'upd_fail')
             );
         }
 
-        $this->deleteFromAllProjects($request, $project_id);
+        $this->deleteFromAllProjects($request, $layout, $project_id);
+
+        $layout->redirect(IndexController::getUrl($project));
     }
 
-    private function deleteFromAllProjects(HTTPRequest $request, $project_id)
+    private function deleteFromAllProjects(HTTPRequest $request, BaseLayout $response, $project_id): void
     {
         if ((int)$project_id !== Project::ADMIN_PROJECT_ID) {
             return;
@@ -73,7 +112,7 @@ class DeleteController
 
         $short_name = $request->getValidated('short_name', 'string', '');
         if (! $short_name) {
-            $GLOBALS['Response']->addFeedback(
+            $response->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_delete_s_from_p')
             );
@@ -82,12 +121,12 @@ class DeleteController
         }
 
         if ($this->dao->deleteFromAllProjects($short_name)) {
-            $GLOBALS['Response']->addFeedback(
+            $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_servicebar', 's_del_from_p', db_affected_rows($result))
+                $GLOBALS['Language']->getText('project_admin_servicebar', 's_del_from_p')
             );
         } else {
-            $GLOBALS['Response']->addFeedback(
+            $response->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 'del_fail')
             );

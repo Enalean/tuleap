@@ -25,6 +25,7 @@ use Feedback;
 use ForgeConfig;
 use Project;
 use Service;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicePOSTDataBuilder
@@ -40,14 +41,10 @@ class ServicePOSTDataBuilder
     }
 
     /**
-     * @param Codendi_Request $request
-     * @return ServicePOSTData
      * @throws InvalidServicePOSTDataException
      */
-    public function buildFromRequest(Codendi_Request $request)
+    public function buildFromRequest(\HTTPRequest $request, Project $project, BaseLayout $response): ServicePOSTData
     {
-        $project = $request->getProject();
-
         $service_id        = $request->getValidated('service_id', 'uint', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
         $label             = $request->getValidated('label', 'string', '');
@@ -61,7 +58,7 @@ class ServicePOSTDataBuilder
 
         if (! $is_active) {
             if ($is_used) {
-                $GLOBALS['Response']->addFeedback(
+                $response->addFeedback(
                     Feedback::WARN,
                     _(
                         'A non available service cannot be enabled. To enable this service, switch it to available before.'
@@ -169,7 +166,6 @@ class ServicePOSTDataBuilder
     }
 
     /**
-     * @extracted from servicebar.php
      * @param Project $project
      * @param $link
      * @return mixed

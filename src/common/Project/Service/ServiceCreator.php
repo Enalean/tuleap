@@ -103,7 +103,6 @@ class ServiceCreator
     }
 
     /**
-     * @extracted from servicebar.php
      * @param ServicePOSTData $service_data
      */
     private function addServiceToAllProjects(ServicePOSTData $service_data)

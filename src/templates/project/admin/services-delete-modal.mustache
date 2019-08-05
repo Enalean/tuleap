@@ -1,5 +1,5 @@
 <form method="POST"
-      action=""
+      action="/project/{{ project_id }}/admin/services/delete"
       class="tlp-modal tlp-modal-danger"
       role="dialog"
       id="project-admin-services-delete-modal-{{ id }}"
@@ -18,8 +18,6 @@
         {{# csrf }}
             {{> csrf_token_input }}
         {{/ csrf }}
-        <input type="hidden" name="group_id" value="{{ project_id }}">
-        <input type="hidden" name="action" value="delete">
         <input type="hidden" name="service_id" value="{{ id }}">
         {{# short_name }}
             <input type="hidden" name="short_name" value="{{ short_name }}">

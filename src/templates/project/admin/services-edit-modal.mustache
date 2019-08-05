@@ -1,5 +1,5 @@
 <form method="POST"
-      action=""
+      action="/project/{{ project_id }}/admin/services/edit"
       class="tlp-modal"
       role="dialog"
       id="project-admin-services-edit-modal-{{ id }}"
@@ -18,9 +18,7 @@
         {{# csrf }}
             {{> csrf_token_input }}
         {{/ csrf }}
-        <input type="hidden" name="group_id" value="{{ project_id }}">
         <input type="hidden" name="service_id" value="{{ id }}">
-        <input type="hidden" name="action" value="edit">
 
         {{# short_name }}
             <input type="hidden" name="short_name" value="{{ short_name }}">

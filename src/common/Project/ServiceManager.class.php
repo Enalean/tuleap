@@ -162,6 +162,9 @@ class ServiceManager {
         );
     }
 
+    /**
+     * @throws ServiceCannotBeUpdatedException
+     */
     public function checkServiceCanBeUpdated(Project $project, $short_name, $is_used)
     {
         if ($short_name === 'admin' && ! $is_used) {

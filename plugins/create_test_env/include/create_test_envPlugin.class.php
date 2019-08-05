@@ -227,7 +227,7 @@ class create_test_envPlugin extends Plugin
         $platform_url = $request->getServerUrl();
         $project = ProjectManager::instance()->getProject($params['group_id']);
         $verb = $params['is_used'] ? 'activated' : 'desactivated';
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getUnconvertedPublicName()}]({$platform_url}/project/admin/servicebar.php?group_id={$project->getID()}). #project-admin #{$current_user->getUnixName()}");
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getUnconvertedPublicName()}]({$platform_url}/project/{$project->getID()}/admin/services. #project-admin #{$current_user->getUnixName()}");
         (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'project_admin', "$verb service {$params['shortname']}");
     }
 

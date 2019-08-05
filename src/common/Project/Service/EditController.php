@@ -20,12 +20,19 @@
 
 namespace Tuleap\Project\Service;
 
+use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use Project;
+use ProjectManager;
 use ServiceManager;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithProject;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
-class EditController
+class EditController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var ServiceUpdator
@@ -39,115 +46,125 @@ class EditController
      * @var ServiceManager
      */
     private $service_manager;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     public function __construct(
         ServiceUpdator $service_updator,
         ServicePOSTDataBuilder $builder,
-        ServiceManager $service_manager
+        ServiceManager $service_manager,
+        ProjectManager $project_manager,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->service_updator = $service_updator;
         $this->builder         = $builder;
         $this->service_manager = $service_manager;
-    }
-
-    public function edit(HTTPRequest $request)
-    {
-        $user         = $request->getCurrentUser();
-        $project      = $request->getProject();
-        $service_data = $this->getServiceData($request);
-
-        $this->checkId($project, $service_data);
-        $this->checkServiceIsAllowedForProject($project, $service_data);
-        $this->checkServiceCanBeUpdated($project, $service_data);
-
-        $this->service_updator->updateService($project, $service_data, $user);
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            $GLOBALS['Language']->getText('project_admin_servicebar', 's_update_success')
-        );
-        $this->redirectToServiceAdministration($project);
+        $this->project_manager = $project_manager;
+        $this->csrf_token      = $csrf_token;
     }
 
     /**
-     * @param HTTPRequest $request
-     * @return ServicePOSTData
+     * @throws NotFoundException
      */
-    private function getServiceData(HTTPRequest $request)
+    public function getProject(array $variables): Project
     {
+        $project = $this->project_manager->getProject($variables['id']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException();
+        }
+        return $project;
+    }
+
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
+        $project = $this->getProject($variables);
+
+        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
+            throw new ForbiddenException();
+        }
+
+        $this->csrf_token->check(IndexController::getUrl($project));
+
         try {
-            return $this->builder->buildFromRequest($request);
+            $service_data = $this->builder->buildFromRequest($request, $project, $layout);
+
+            $this->checkId($project, $layout, $service_data);
+            $this->checkServiceIsAllowedForProject($project, $layout, $service_data);
+            $this->checkServiceCanBeUpdated($project, $service_data);
+
+            $this->service_updator->updateService($project, $service_data, $request->getCurrentUser());
+            $layout->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('project_admin_servicebar', 's_update_success')
+            );
+            $this->redirectToServiceAdministration($project, $layout);
         } catch (InvalidServicePOSTDataException $exception) {
             $this->redirectWithError(
                 $request->getProject(),
+                $layout,
                 $exception->getMessage()
             );
+        } catch (ServiceCannotBeUpdatedException $exception) {
+            $layout->addFeedback(
+                Feedback::WARN,
+                $exception->getMessage()
+            );
+            $this->redirectToServiceAdministration($project, $layout);
         }
     }
 
-    private function checkId(Project $project, ServicePOSTData $service_data)
+    private function checkId(Project $project, BaseLayout $response, ServicePOSTData $service_data): void
     {
         if (! $service_data->getId()) {
             $this->redirectWithError(
                 $project,
+                $response,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 's_id_missed')
             );
         }
     }
 
-    /**
-     * @param Project $project
-     * @param string $message
-     */
-    private function redirectWithError(Project $project, $message)
+    private function redirectWithError(Project $project, BaseLayout $response, $message): void
     {
-        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
-        $this->redirectToServiceAdministration($project);
+        $response->addFeedback(Feedback::ERROR, $message);
+        $this->redirectToServiceAdministration($project, $response);
     }
 
-    /**
-     * @param Project $project
-     */
-    private function redirectToServiceAdministration(Project $project)
+    private function redirectToServiceAdministration(Project $project, BaseLayout $response): void
     {
-        $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id=' . $project->getID());
+        $response->redirect(IndexController::getUrl($project));
     }
 
-    /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
-     */
-    private function checkServiceIsAllowedForProject(Project $project, ServicePOSTData $service_data)
+    private function checkServiceIsAllowedForProject(Project $project, BaseLayout $response, ServicePOSTData $service_data): void
     {
         if (! $this->service_manager->isServiceAllowedForProject($project, $service_data->getId())) {
             $this->redirectWithError(
                 $project,
+                $response,
                 $GLOBALS['Language']->getText('project_admin_servicebar', 'not_allowed')
             );
         }
     }
 
     /**
-     * @param Project $project
-     * @param ServicePOSTData $service_data
+     * @throws ServiceCannotBeUpdatedException
      */
-    private function checkServiceCanBeUpdated(Project $project, ServicePOSTData $service_data)
+    private function checkServiceCanBeUpdated(Project $project, ServicePOSTData $service_data): void
     {
         if (! $service_data->isSystemService()) {
             return;
         }
 
-        try {
-            $this->service_manager->checkServiceCanBeUpdated(
-                $project,
-                $service_data->getShortName(),
-                $service_data->isUsed()
-            );
-        } catch (ServiceCannotBeUpdatedException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                $exception->getMessage()
-            );
-            $this->redirectToServiceAdministration($project);
-        }
+        $this->service_manager->checkServiceCanBeUpdated(
+            $project,
+            $service_data->getShortName(),
+            $service_data->isUsed()
+        );
     }
 }
