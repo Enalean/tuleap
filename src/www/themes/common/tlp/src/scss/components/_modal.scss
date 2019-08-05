@@ -217,7 +217,7 @@ $tlp-modal-transition: 100ms ease-out;
 
 .tlp-modal-separator {
     height: 1px;
-    margin: 0 -$tlp-spacing $tlp-spacing;
+    margin: 0 calc(-1 * #{$tlp-spacing}) $tlp-spacing;
     border: 0;
     background-color: $tlp-ui-border-light;
     color: $tlp-ui-border-light;
