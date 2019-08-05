@@ -85,9 +85,7 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     public function cacheYesterdayValues()
     {
         $yesterday = $this->date_retriever->getYesterday();
-
-        $yesterday_period = new TimePeriodWithoutWeekEnd($yesterday, 1);
-        if (! $yesterday_period->isNotWeekendDay($yesterday)) {
+        if (! TimePeriodWithoutWeekEnd::isNotWeekendDay($yesterday)) {
             return;
         }
 

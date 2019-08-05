@@ -25,6 +25,7 @@
 namespace Tuleap\Date;
 
 use DateTime;
+use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -454,5 +455,90 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, "0.21");
 
         $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
+    }
+
+    /**
+     * @dataProvider provideEndDateData
+     */
+    public function testCreationFromEndDate(
+        string $start_date,
+        string $end_date,
+        string $expected_end_date,
+        int $expected_duration,
+        ?string $expected_error_message
+    ): void {
+        $logger = Mockery::mock(Logger::class);
+        if ($expected_error_message === null) {
+            $logger->shouldReceive('error')->never();
+        } else {
+            $logger->shouldReceive('error')->with($expected_error_message)->once();
+        }
+
+        $start_date_timestamp = (new \DateTime($start_date))->getTimestamp();
+        $end_date_timestamp = (new DateTime($end_date))->getTimestamp();
+        $time_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+            $start_date_timestamp,
+            $end_date_timestamp,
+            $logger
+        );
+
+        $this->assertSame($expected_duration, $time_period->getDuration());
+
+        $expected_end_date_timestamp = (new DateTime($expected_end_date))->getTimestamp();
+        $this->assertSame(
+            $expected_end_date_timestamp,
+            $time_period->getEndDate(),
+            "End date should be $expected_end_date"
+        );
+
+        $time_period_from_time_period = new TimePeriodWithoutWeekEnd(
+            $time_period->getStartDate(),
+            $time_period->getDuration()
+        );
+        $this->assertEquals(
+            $time_period->getEndDate(),
+            $time_period_from_time_period->getEndDate()
+        );
+    }
+
+    public function provideEndDateData(): array
+    {
+        return [
+            'Monday to Monday' => [
+                '2019-08-05',
+                '2019-08-05',
+                '2019-08-05',
+                0,
+                null
+            ],
+            'Monday to Tuesday' => [
+                '2019-08-05',
+                '2019-08-06',
+                '2019-08-06',
+                1,
+                null
+            ],
+            'Monday to Friday'  => [
+                '2019-08-05',
+                '2019-08-09',
+                '2019-08-09',
+                4,
+                null
+            ],
+            'Monday to Friday of next week'  => [
+                '2019-08-05',
+                '2019-08-16',
+                '2019-08-16',
+                9,
+                null
+            ],
+            'End date "in the past" are ignored and we take duration = 0 instead' => [
+                '2019-08-05',
+                '2019-08-01',
+                '2019-08-05',
+                0,
+                'Inconsistent TimePeriod: end date 2019-08-01 is lesser than start date 2019-08-05.'
+            ],
+        ];
     }
 }

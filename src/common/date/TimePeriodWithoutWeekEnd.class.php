@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class TimePeriodWithoutWeekEnd  extends TimePeriod
+{
+    public static function buildFromEndDate(int $start_date, int $end_date, Logger $logger): TimePeriodWithoutWeekEnd
+    {
+        if ($end_date < $start_date) {
+            $logger->error(
+                sprintf(
+                'Inconsistent TimePeriod: end date %s is lesser than start date %s.',
+                    (new \DateTimeImmutable())->setTimestamp($end_date)->format('Y-m-d'),
+                    (new \DateTimeImmutable())->setTimestamp($start_date)->format('Y-m-d')
+                )
+            );
+            return new self($start_date, 0);
+        }
 
-class TimePeriodWithoutWeekEnd  extends TimePeriod {
+        $duration = 0;
+        $timestamp = $start_date;
+        while ($timestamp < $end_date) {
+            $timestamp = self::getNextDay(1, $timestamp);
+            if (self::isNotWeekendDay($timestamp)) {
+                $duration++;
+            }
+        }
+
+        return new self($start_date, $duration);
+    }
+
     /**
      * To be used to iterate consistently over the time period
      *
@@ -49,8 +74,8 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
         $day_offsets_excluding_we = array();
         $day_offset = 0;
         while (count($day_offsets_excluding_we)-1 != $this->getDuration()) {
-            $day = $this->getNextDay($day_offset, $this->getStartDate());
-            if ( $this->isNotWeekendDay($day)) {
+            $day = self::getNextDay($day_offset, $this->getStartDate());
+            if (self::isNotWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
             }
             $day_offset++;
@@ -63,20 +88,20 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
      */
     private function getDayOffsetsWithInconsistentDuration() {
         $day_offset = 0;
-        $day        = $this->getNextDay($day_offset, $this->getStartDate());
-        while (! $this->isNotWeekendDay($day)) {
+        $day        = self::getNextDay($day_offset, $this->getStartDate());
+        while (! self::isNotWeekendDay($day)) {
             $day_offset++;
-            $day = $this->getNextDay($day_offset, $this->getStartDate());
+            $day = self::getNextDay($day_offset, $this->getStartDate());
         }
 
         return array($day_offset);
     }
 
-    private function getNextDay($next_day_number, $date) {
+    private static function getNextDay($next_day_number, $date) {
         return strtotime("+$next_day_number days", $date);
     }
 
-    public function isNotWeekendDay($day) {
+    public static function isNotWeekendDay($day) {
         return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
     }
 
@@ -96,17 +121,17 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
     private function getNumberOfDaysWithoutWeekEnd($start_date, $end_date) {
         $real_number_of_days_after_start = 0;
         $day        = $start_date;
-        if ($this->isNotWeekendDay($day)) {
+        if (self::isNotWeekendDay($day)) {
             $day_offset = -1;
         } else {
             $day_offset = 0;
         }
 
         do {
-            if ($this->isNotWeekendDay($day)) {
+            if (self::isNotWeekendDay($day)) {
                 $day_offset++;
             }
-            $day = $this->getNextDay($real_number_of_days_after_start, $start_date);
+            $day = self::getNextDay($real_number_of_days_after_start, $start_date);
             $real_number_of_days_after_start++;
         } while ($day < $end_date);
 
