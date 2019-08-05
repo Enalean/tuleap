@@ -30,7 +30,6 @@ plugin_tracker	submit_at_least_one_field	You can't submit an artifact because yo
 # Script: SF/www/tracker/add.php
 #
 plugin_tracker_add	invalid	This tracker is no longer valid.
-plugin_tracker	add_a	Add a $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/browse.php
@@ -1001,7 +1000,6 @@ plugin_tracker	create_new_report	Create a new one
 plugin_tracker	create_new_report_name	name
 plugin_tracker	create_new_report_submit	Create Report
 plugin_tracker	create_new_report_invalid	Invalid name for a report
-plugin_tracker	submit_new_artifact	Submit new artifact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Help

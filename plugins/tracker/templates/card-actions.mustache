@@ -8,7 +8,9 @@
             </li>
             {{# allowedChildrenTypes }}
                 <li>
-                    <a href="/plugins/tracker/?tracker={{ getId }}&func=new-artifact-link&id={{ getArtifactId }}&immediate=1&{{ planning_redirect_parameter }}" class="create-item-link" data-tracker-id="{{ getId }}" data-link-id="{{ getArtifactId }}">{{ getAddNewLabel }}</a>
+                    <a href="/plugins/tracker/?tracker={{ getId }}&func=new-artifact-link&id={{ getArtifactId }}&immediate=1&{{ planning_redirect_parameter }}" class="create-item-link" data-tracker-id="{{ getId }}" data-link-id="{{ getArtifactId }}">
+                        {{# dgettext }} tuleap-tracker | Create a %s | {{ getItemName }} {{/ dgettext }}
+                    </a>
                 </li>
             {{/ allowedChildrenTypes }}
         </ul>

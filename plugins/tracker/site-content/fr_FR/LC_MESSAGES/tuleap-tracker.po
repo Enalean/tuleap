@@ -285,6 +285,10 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+#, php-format
+msgid "Create a %s"
+msgstr "Créer un(e) %s"
+
 msgid "Default Tuleap notifications"
 msgstr "Notifications par défaut"
 

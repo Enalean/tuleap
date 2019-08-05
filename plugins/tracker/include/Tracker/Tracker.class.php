@@ -200,13 +200,6 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     }
 
     /**
-     * @return string ~ 'Add new bug'
-     */
-    public function getAddNewLabel() {
-        return $GLOBALS['Language']->getText('plugin_tracker', 'add_a', $this->getItemName());
-    }
-
-    /**
      * getGroupId - get this Tracker Group ID.
      *
      * @return int The group_id
@@ -1288,12 +1281,16 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     public function getDefaultToolbar() {
         $toolbar = array();
 
-        $toolbar[] = array(
-                'title'      => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
+        $html_purifier = Codendi_HTMLPurifier::instance();
+
+        $toolbar[] = [
+                'title'      => $html_purifier->purify(
+                    sprintf(dgettext('tuleap-tracker', 'Create a %s'), $this->getItemName())
+                ),
                 'url'        => $this->getSubmitUrl(),
                 'class'      => 'tracker-submit-new',
                 'submit-new' => 1
-        );
+        ];
 
         $artifact_by_email_status = $this->getArtifactByMailStatus();
         if ($artifact_by_email_status->canCreateArtifact($this)) {
@@ -1304,7 +1301,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
             }
 
             $email = trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION .'+'. $this->id .'@'. $email_domain;
-            $email = Codendi_HTMLPurifier::instance()->purify($email);
+            $email = $html_purifier->purify($email);
             $toolbar[] = array(
                     'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="fa fa-envelope"></i></span>',
                     'url'        => 'javascript:;',
