@@ -11,7 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2\n"
 
-#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
 msgid ""
 "A card has been updated by another user. As your kanban is filtered you "
 "can't see modifications."
@@ -19,15 +18,12 @@ msgstr ""
 "Une carte a été modifiée par un autre utilisateur. Comme votre kanban est "
 "filtré, vous ne pouvez pas voir les modifications."
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add a column"
 msgstr "Ajouter une colonne"
 
-#: src/app/error-modal/error.tpl.html
 msgid ""
 "An error occured while saving one of your last action. <br>We're afraid that "
 "you will have to reload the page in order to bring you back to a consistent "
@@ -36,136 +32,103 @@ msgstr ""
 "Une erreur est survenue lors de la sauvegarde de votre dernière action. "
 "<br>Vous allez devoir rafraichir la page afin de retrouver un état cohérent."
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Archive"
 msgstr "Archive"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr "Backlog"
 
-#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Based on the {{ trackerLink }} tracker."
 msgstr "Basé sur l’outil de suivi {{ trackerLink }}."
 
-#: src/app/edit-kanban/edit-kanban.tpl.html src/app/error-modal/error.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/app/add-in-place/add-in-place.tpl.html
 msgid "Card summary"
 msgstr "Titre de la carte"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Column name"
 msgstr "Nom de la colonne"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Columns configuration"
 msgstr "Configuration des colonnes"
 
-#: src/app/kanban.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Confirm deletion of this Kanban"
 msgstr "Confirmer la suppression de ce Kanban"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Cumulative flow chart"
 msgstr "Diagramme de flux cumulé"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Danger zone"
 msgstr "Zone de danger"
 
-#: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
 msgstr "Maximum :"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Delete this Kanban"
 msgstr "Supprimer ce Kanban"
 
-#: src/app/kanban.tpl.html
 msgid "Detailed view"
 msgstr "Vue détaillée"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Edit"
 msgstr "Éditer"
 
-#: src/app/kanban.tpl.html
 msgid "Edit this Kanban"
 msgstr "Éditer ce Kanban"
 
-#: src/app/error-modal/error.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
-#: src/app/kanban-item/kanban-item.tpl.html
 msgid "Expand/collapse the card"
 msgstr "Afficher/cacher les détails de la carte"
 
-#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
 msgid "Filters:"
 msgstr "Filtres :"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "General configuration"
 msgstr "Configuration générale"
 
-#: src/app/go-to-kanban/go-to-kanban.tpl.html
 msgid "Go to Kanban"
 msgstr "Aller sur le Kanban"
 
-#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In Kanban since:"
 msgstr "Dans le Kanban depuis :"
 
-#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In column since:"
 msgstr "Dans la colonne depuis :"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
 
-#: src/app/kanban-service.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr "Le Kanban {{ label }} a été supprimé"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last 3 months"
 msgstr "3 derniers mois"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last 6 months"
 msgstr "6 derniers mois"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last 7 days"
 msgstr "7 derniers jours"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last month"
 msgstr "Dernier mois"
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last year"
 msgstr "Dernière année"
 
 #. moment.js Date format
-#: src/app/reports-modal/diagram-directive.js
 msgid "MM/DD"
 msgstr "DD/MM"
 
-#: src/app/edit-kanban/edit-kanban-controller.js
 msgid ""
 "More information about columns are available in the field administration "
 "used by the semantic status in the {{ trackerLink }} tracker."
@@ -174,72 +137,56 @@ msgstr ""
 "l’administration du champ utilisé par la sémantique de statut dans l’outil "
 "de suivi {{ tracker_link }}."
 
-#: src/app/kanban-item/kanban-item.tpl.html
 msgid "Move to bottom"
 msgstr "Déplacer en bas"
 
-#: src/app/kanban-item/kanban-item.tpl.html
 msgid "Move to top"
 msgstr "Déplacer en haut"
 
-#: src/app/reports-modal/diagram-directive.js
 msgid "Nb. of cards"
 msgstr "Nb. de cartes"
 
-#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
 msgid "None"
 msgstr "Aucun"
 
-#: src/app/error-modal/error.tpl.html
 msgid "OK, reload the page"
 msgstr "OK, rafraichir la page"
 
-#: src/app/error-modal/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
 
-#: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
 msgid "Please reload your page."
 msgstr "Veuillez recharger votre page."
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Remove"
 msgstr "Supprimer"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Save the selected reports"
 msgstr "Sauvegarder les rapports sélectionnés"
 
-#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Select tracker reports"
 msgstr "Sélectionnez des rapports d'outil de suivi"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Select which tracker reports can be used to filter this kanban."
 msgstr ""
 "Sélectionnez quels rapports d'outil de suivi peuvent être utilisées pour "
 "filtrer ce kanban."
 
-#: src/app/error-modal/error.tpl.html
 msgid "Show details"
 msgstr "Afficher plus de détails"
 
-#: src/app/kanban.tpl.html
 msgid "Show reports"
 msgstr "Afficher les rapports"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid ""
 "The deletion of a Kanban is irreversible. Please be certain before doing it."
 msgstr ""
 "La suppression d'un Kanban est irréversible. Veuillez être certain de ce que "
 "vous faites."
 
-#: src/app/app-kanban-controller.js
 msgid ""
 "There was an error while loading the Edit Kanban modal. Please check your "
 "network connection."
@@ -247,7 +194,6 @@ msgstr ""
 "Une erreur est survenue pendant le chargement de la modale d'édition du "
 "Kanban. Veuillez vérifier votre connexion au réseau."
 
-#: src/app/app-kanban-controller.js
 msgid ""
 "There was an error while loading the Reports modal. Please check your "
 "network connection."
@@ -255,31 +201,24 @@ msgstr ""
 "Une erreur est survenue pendant le chargement de la modale des Rapports. "
 "Veuillez vérifier votre connexion au réseau."
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "Timeframe:"
 msgstr "Période de temps :"
 
-#: src/app/kanban.tpl.html
 msgid "Toggle the archive"
 msgstr "Basculer l'affichage de l'archive"
 
-#: src/app/kanban.tpl.html
 msgid "Toggle the backlog"
 msgstr "Basculer l'affichage du backlog"
 
-#: src/app/kanban.tpl.html
 msgid "Toggle this column"
 msgstr "Basculer l'affichage de cette colonne"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Tracker report filters"
 msgstr "Rapports de l'outil de suivi"
 
-#: src/app/socket/socket-service.js
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 
-#: src/app/edit-kanban/edit-kanban-controller.js
 msgid ""
 "You can't manage columns of the tracker configuration. More information "
 "about columns are available in the field administration used by the semantic "
@@ -289,25 +228,20 @@ msgstr ""
 "colonnes sont disponibles dans l’administration du champ utilisé par la "
 "sémantique de statut dans l’outil de suivi {{ tracker_link }}."
 
-#: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
 
-#: src/app/kanban.tpl.html
 msgid "Your kanban is filtered, there is no update of WIP."
 msgstr "Votre kanban est filtré, il n'y a pas de mise à jour du WIP."
 
-#: src/app/kanban.tpl.html
 msgid ""
 "Your kanban is filtered, there is no update of cards in real time or WIP."
 msgstr ""
 "Votre kanban est filtré, il n'y a pas de mise à jour des cartes en temps "
 "réel, ou du WIP."
 
-#: src/app/kanban.tpl.html
 msgid "id, title, ..."
 msgstr "id, titre, ..."
 
-#: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
 msgstr "Rapports de {{ reports_modal.kanban_label }}"

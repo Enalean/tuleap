@@ -16,128 +16,96 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.3\n"
 
-#: src/app/backlog/backlog-controller.js
 msgid "%s succesfully created."
 msgstr "%s a été créé avec succès."
 
-#: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 
-#: src/app/backlog/backlog.tpl.html src/app/milestone/milestone.tpl.html
 msgid "Add item"
 msgstr "Ajouter élément"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
-#: src/app/backlog/backlog.tpl.html src/app/milestone/milestone.tpl.html
 msgid "Add {{ accepted_type.label }}"
 msgstr "Ajouter un(e) {{ accepted_type.label }}"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "Add {{ backlog.details.accepted_types.content[0].label }}"
 msgstr "Ajouter un(e) {{ backlog.details.accepted_types.content[0].label }}"
 
-#: src/app/planning.tpl.html
 msgid "Add {{ planning.backlog.submilestone_type.label }}"
 msgstr "Ajouter un(e) {{ planning.backlog.submilestone_type.label }}"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "All items have been loaded"
 msgstr "Tous les éléments ont été chargés"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "Backlog Item"
 msgstr "Éléments de backlog"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Capacity: N/A"
 msgstr "Capacité : N/A"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Capacity: {{ milestoneController.milestone.capacity }}"
 msgstr "Capacité : {{ milestoneController.milestone.capacity }}"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Cardwall"
 msgstr "Cardwall"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Children"
 msgstr "Enfants"
 
-#: src/app/planning.tpl.html
 msgid "Closed milestones are below"
 msgstr "Les jalons fermés sont en dessous"
 
-#: src/app/planning.tpl.html
 msgid "Compact view"
 msgstr "Vue compacte"
 
-#: src/app/planning.tpl.html
 msgid "Detailed view"
 msgstr "Vue détaillée"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Edit"
 msgstr "Éditer"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Edit this item"
 msgstr "Éditer cet élément"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."
 
-#: src/app/planning.tpl.html
 msgid "Hide closed backlog items"
 msgstr "Cacher les éléments du backlog fermés"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Initial effort"
 msgstr "Effort estimé"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Initial effort: N/A"
 msgstr "Effort estimé : N/A"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Initial effort: {{ milestoneController.milestone.initialEffort }}"
 msgstr "Effort estimé : {{ milestoneController.milestone.initialEffort }}"
 
-#: src/app/planning.tpl.html
 msgid "Load closed milestones"
 msgstr "Charger les jalons fermés"
 
-#: src/app/planning.tpl.html
 msgid "Milestones"
 msgstr "Jalons"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Move to bottom"
 msgstr "Déplacer en bas"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "Move to top"
 msgstr "Déplacer en haut"
 
-#: src/app/backlog-item/backlog-item-details/backlog-item-details.tpl.html
 msgid "No initial effort defined"
 msgstr "Aucun effort n’a été estimé"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Overview"
 msgstr "Résumé"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "Parents"
 msgstr "Parents"
 
-#: src/app/milestone/milestone.tpl.html
 msgid "Planning"
 msgstr "Planification"
 
-#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
 msgid ""
 "Press <span class=\"tlp-badge-primary\">ESC</span> to cancel the selection, "
 "only siblings can be multi-selected."
@@ -145,27 +113,21 @@ msgstr ""
 "Appuyez sur <span class=\\\"tlp-badge-primary\\\">Échap</span> pour annuler "
 "la sélection, seuls les éléments frères peuvent être multi-sélectionnés."
 
-#: src/app/planning.tpl.html
 msgid "Show closed backlog items"
 msgstr "Afficher les éléments du backlog fermés"
 
-#: src/app/planning.tpl.html
 msgid "There are no closed milestones"
 msgstr "Aucun jalon fermé"
 
-#: src/app/planning.tpl.html
 msgid "There are no open milestones"
 msgstr "Aucun jalon ouvert"
 
-#: src/app/backlog/backlog.tpl.html
 msgid "To be planned"
 msgstr "A planifier"
 
-#: src/app/backlog/backlog.tpl.html src/app/planning.tpl.html
 msgid "You are not allowed to rank on this planning"
 msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
 
-#: src/app/backlog-item-selected/backlog-item-selected-bar.tpl.html
 msgid ""
 "{{ selected_bar_controller.nb_selected_backlog_items }} item is selected."
 msgid_plural ""
