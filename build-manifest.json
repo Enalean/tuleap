@@ -5,6 +5,12 @@
         "./scripts",
         "./"
     ],
+    "gettext-angularjs": {
+        "testmanagement": {
+            "src": "scripts/angular/src/app",
+            "po": "scripts/angular/po"
+        }
+    },
     "gettext-vue": {
         "step-definition-field": {
             "src": "./scripts/step-definition-field",
