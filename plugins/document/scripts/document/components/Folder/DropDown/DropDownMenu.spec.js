@@ -42,35 +42,6 @@ describe("DropDownMenu", () => {
         restore();
     });
 
-    describe("Permission menu option - ", () => {
-        it(`Given user is administrator
-            When we display the menu
-            Then the permission link should be available`, () => {
-            const wrapper = dropdown_menu_factory({
-                item: {
-                    id: 4,
-                    title: "my item title",
-                    type: "file",
-                    can_user_manage: true
-                }
-            });
-            expect(wrapper.contains("[data-test=document-dropdown-permissions]")).toBeTruthy();
-        });
-        it(`Given user is docman reader
-            When we display the menu
-            Then the permission link should not be available`, () => {
-            const wrapper = dropdown_menu_factory({
-                item: {
-                    id: 4,
-                    title: "my item title",
-                    type: "file",
-                    can_user_manage: false
-                }
-            });
-            expect(wrapper.contains("[data-test=document-dropdown-permissions]")).toBeFalsy();
-        });
-    });
-
     describe("Approval table menu option - ", () => {
         it(`Given item type is empty
             When we display the menu

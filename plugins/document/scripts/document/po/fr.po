@@ -58,6 +58,9 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
+msgid "Access to legacy permissions update page"
+msgstr "Accéder à l'ancienne page de mise à jour des permissions"
+
 msgid "Access to legacy properties page"
 msgstr "Accéder à l'ancienne page des propriétés"
 
@@ -201,6 +204,9 @@ msgstr "Déposer pour téléverser dans le dossier"
 
 msgid "Dropping files in %s is forbidden."
 msgstr "Déposer des fichiers dans %s n'est pas permis."
+
+msgid "Edit \"%s\" permissions"
+msgstr "Editer les permissions de \"%s\""
 
 msgid "Edit \"%s\" properties"
 msgstr "Editer les propriétés de \"%s\""

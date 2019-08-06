@@ -23,12 +23,7 @@
         <button v-if="item.user_can_write" type="button" class="tlp-button-primary tlp-button-small document-quick-look-folder-action-new-folder-button" v-on:click.prevent="showNewFolderModal">
             <i class="fa fa-folder-open-o tlp-button-icon"></i> <translate> New folder </translate>
         </button>
-        <div class="tlp-dropdown-split-button">
-            <new-item-button v-if="item.user_can_write" class="tlp-button-primary tlp-button-small tlp-button-outline" v-bind:item="item"/>
-            <drop-down-button v-bind:is-in-quick-look-mode="true" v-bind:is-appended="item.user_can_write">
-                <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true"/>
-            </drop-down-button>
-        </div>
+        <drop-down-quick-look v-bind:item="item"/>
         <template v-if="can_delete_folder">
             <div class="document-header-spacer"></div>
             <quick-look-delete-button v-bind:item="item"/>
@@ -37,14 +32,12 @@
 </template>
 
 <script>
-import NewItemButton from "../ActionsButton/NewItemButton.vue";
-import DropDownButton from "../DropDown/DropDownButton.vue";
-import DropDownMenu from "../DropDown/DropDownMenu.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import DropDownQuickLook from "../DropDown/DropDownQuickLook.vue";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
-    components: { NewItemButton, DropDownButton, DropDownMenu, QuickLookDeleteButton },
+    components: { QuickLookDeleteButton, DropDownQuickLook },
     props: {
         item: Object
     },

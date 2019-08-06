@@ -48,6 +48,7 @@
                                v-if="item.user_can_write"
                                data-test="document-update-properties"
             />
+            <update-permissions v-bind:item="item" slot="update-permissions"/>
             <drop-down-separator slot="delete-item-separator"/>
             <delete-item v-bind:item="item" role="menuitem" data-test="document-dropdown-delete" slot="delete-item"/>
         </template>
@@ -64,6 +65,7 @@ import NewDocument from "./NewDocument.vue";
 import LockItem from "./LockItem.vue";
 import UnlockItem from "./UnlockItem.vue";
 import UpdateProperties from "./UpdateProperties.vue";
+import UpdatePermissions from "./UpdatePermissions.vue";
 import DropDownItemTitle from "./DropDownItemTitle.vue";
 
 export default {
@@ -71,6 +73,7 @@ export default {
     components: {
         DropDownItemTitle,
         UpdateProperties,
+        UpdatePermissions,
         UnlockItem,
         LockItem,
         NewDocument,

@@ -61,6 +61,7 @@
             v-bind:item="currently_previewed_item"
             v-on:update-metadata-modal-closed="hideUpdateMetadataModal"
         />
+        <update-permissions-modal v-bind:item="currently_previewed_item"/>
     </div>
 </template>
 
@@ -70,6 +71,7 @@ import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
 import UpdateMetadataModal from "../ModalUpdateMetadata/UpdateMetadataModal.vue";
+import UpdatePermissionsModal from "../Permissions/PermissionsUpdateModal.vue";
 import { mapState } from "vuex";
 import EventBus from "../../../helpers/event-bus.js";
 
@@ -77,6 +79,7 @@ export default {
     name: "DisplayEmbeddedContent",
     components: {
         UpdateMetadataModal,
+        UpdatePermissionsModal,
         EmbeddedFileEditionSwitcher,
         ApprovalTableBadge,
         DocumentTitleLockInfo,

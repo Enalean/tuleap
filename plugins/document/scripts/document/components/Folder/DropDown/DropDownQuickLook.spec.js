@@ -101,7 +101,10 @@ describe("DropDownQuickLook", () => {
             wrapper = factory({ item });
 
             expect(
-                wrapper.contains("[data-test=document-dropdown-create-new-version-button]")
+                wrapper.contains("[data-test=document-quicklook-action-button-new-item]")
+            ).toBeTruthy();
+            expect(
+                wrapper.contains("[data-test=document-quicklook-action-button-new-version]")
             ).toBeFalsy();
             expect(
                 wrapper.contains("[data-test=document-dropdown-menu-update-properties]")
