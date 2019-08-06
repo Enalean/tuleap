@@ -203,6 +203,7 @@ _pluginSVN() {
 
     if [ ${plugin_svn_configured} = "true" ]; then
         ${tuleapcfg} systemctl restart "httpd.service"
+        ${tuleapcfg} systemctl enable "httpd.service"
         _infoMessage "Plugin SVN is configured"
         plugins_configured+=('true')
     else

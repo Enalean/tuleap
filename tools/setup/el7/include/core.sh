@@ -78,7 +78,8 @@ EOF
     if [ ${has_mailman_been_configured} = "true" ]; then
         ${tuleapcfg} systemctl enable "mailman-tuleap.service"
         ${tuleapcfg} systemctl restart "mailman-tuleap.service"
-        ${tuleapcfg} systemctl reload "httpd.service"
+        ${tuleapcfg} systemctl restart "httpd.service"
+        ${tuleapcfg} systemctl enable "httpd.service"
         _infoMessage "mailman-tuleap has been configured"
     else
         _infoMessage "mailman-tuleap is already configured"
