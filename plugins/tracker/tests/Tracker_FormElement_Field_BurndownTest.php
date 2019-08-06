@@ -287,8 +287,6 @@ class Tracker_FormElement_Field_Burndown_CacheGeneration extends TuleapTestCase
         stub($this->remaining_effort_field)->getId()->returns(10);
         stub($this->field)->isCacheBurndownAlreadyAsked()->returns(false);
 
-        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
-
         $time_period = new TimePeriodWithoutWeekEnd($this->timestamp, $this->duration);
 
         $this->field->getBurndownData($this->sprint, $this->current_user, $time_period);

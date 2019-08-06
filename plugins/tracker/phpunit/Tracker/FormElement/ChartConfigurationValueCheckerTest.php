@@ -128,8 +128,6 @@ class ChartConfigurationValueCheckerTest extends TestCase
             ->with($this->tracker, $this->user)
             ->andThrow(new Tracker_FormElement_Chart_Field_Exception());
 
-        $this->expectException('Tracker_FormElement_Chart_Field_Exception');
-
         $this->assertFalse(
             $this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user)
         );
