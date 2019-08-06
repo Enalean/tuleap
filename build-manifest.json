@@ -48,9 +48,13 @@
         }
     },
     "gettext-vue": {
-        "core": {
-            "src": "src/www/scripts/",
-            "po": "src/www/scripts/po"
+        "permissions-per-group-frs": {
+            "src": "src/www/scripts/frs/permissions-per-group",
+            "po": "src/www/scripts/frs/permissions-per-group/po"
+        },
+        "permissions-per-group-news": {
+            "src": "src/www/scripts/news/permissions-per-group",
+            "po": "src/www/scripts/news/permissions-per-group/po"
         }
     }
 }

@@ -1,9 +1,5 @@
-/**
- * Copyright Enalean (c) 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +19,7 @@
 
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import french_translations from "../../po/fr.po";
+import french_translations from "./po/fr.po";
 
 import NewsPermissions from "./BaseNewsPermissions.vue";
 
