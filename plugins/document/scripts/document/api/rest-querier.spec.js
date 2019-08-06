@@ -44,7 +44,8 @@ import {
     copyEmpty,
     copyWiki,
     copyEmbedded,
-    copyLink
+    copyLink,
+    getProjectUserGroups
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -562,6 +563,19 @@ describe("rest-querier", () => {
                     body: JSON.stringify({ copy: { item_id: copied_item_id } })
                 }
             );
+        });
+    });
+
+    describe("getProjectUserGroups()", () => {
+        it("Given a project ID, then the REST API will be queried with it to retrieve all user groups", async () => {
+            mockFetchSuccess(tlp.get, { return_json: [] });
+
+            const result = await getProjectUserGroups(102);
+
+            expect(tlp.get).toHaveBeenCalledWith(
+                "/api/projects/102/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
+            );
+            expect(result).toEqual([]);
         });
     });
 });

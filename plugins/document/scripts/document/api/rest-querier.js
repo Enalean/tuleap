@@ -77,7 +77,8 @@ export {
     putLinkMetadata,
     putWikiMetadata,
     putEmptyDocumentMetadata,
-    putFolderDocumentMetadata
+    putFolderDocumentMetadata,
+    getProjectUserGroups
 };
 
 async function getProject(project_id) {
@@ -653,4 +654,15 @@ function putFolderDocumentMetadata(id, title, description, owner_id, status, obs
             obsolescence_date
         })
     });
+}
+
+async function getProjectUserGroups(project_id) {
+    const response = await get(
+        "/api/projects/" +
+            encodeURIComponent(project_id) +
+            "/user_groups?query=" +
+            encodeURIComponent(JSON.stringify({ with_system_user_groups: true }))
+    );
+
+    return response.json();
 }

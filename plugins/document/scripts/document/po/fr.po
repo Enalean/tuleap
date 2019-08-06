@@ -279,6 +279,9 @@ msgstr "Verrouiller"
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
 
+msgid "Manager"
+msgstr "Gestionnaire"
+
 msgid "Modal \"create a new version\" for documents of type \"empty\""
 msgstr ""
 "Modale \"créer une nouvelle version\" pour les documents de type \"vide\""
@@ -395,6 +398,9 @@ msgstr "Propager la suppression au service wiki"
 
 msgid "Quick look"
 msgstr "Aperçu"
+
+msgid "Reader"
+msgstr "Lecteur"
 
 msgid "Recursion option"
 msgstr "Options de récursion"
@@ -523,6 +529,9 @@ msgstr ""
 
 msgid "Wiki page"
 msgstr "Page wiki"
+
+msgid "Writer"
+msgstr "Rédacteur"
 
 msgid "You are about to delete \"%s\" permanently. Please confirm your action."
 msgstr ""

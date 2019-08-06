@@ -20,3 +20,19 @@
 .document-access-legacy-permissions-update-page {
     margin: $tlp-spacing;
 }
+
+.document-permissions-modal-loading-state {
+    height: 200px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.document-permissions-ugroups {
+    display: flex;
+    justify-content: center;
+    padding: $tlp-spacing;
+
+    > .tlp-form-element {
+        margin: 0 $tlp-spacing 0 0;
+    }
+}

@@ -70,6 +70,7 @@ describe("error_getters", () => {
 
     describe("does_document_have_any_error", () => {
         it("document has an error if user can't write", () => {
+            state.has_folder_loading_error = false;
             state.has_document_permission_error = true;
             state.has_document_loading_error = false;
             state.has_document_lock_error = false;
@@ -80,6 +81,7 @@ describe("error_getters", () => {
         });
 
         it("document has an error if load fail", () => {
+            state.has_folder_loading_error = false;
             state.has_document_permission_error = false;
             state.has_document_loading_error = true;
             state.has_document_lock_error = false;
@@ -90,6 +92,7 @@ describe("error_getters", () => {
         });
 
         it("document has an error if lock action fail", () => {
+            state.has_folder_loading_error = false;
             state.has_document_permission_error = false;
             state.has_document_loading_error = false;
             state.has_document_lock_error = true;
@@ -99,7 +102,19 @@ describe("error_getters", () => {
             expect(result).toEqual(true);
         });
 
+        it("document has an error if the folder has an error", () => {
+            state.has_folder_loading_error = true;
+            state.has_document_permission_error = false;
+            state.has_document_loading_error = false;
+            state.has_document_lock_error = false;
+
+            const result = getters.does_document_have_any_error(state);
+
+            expect(result).toEqual(true);
+        });
+
         it("document has no error", () => {
+            state.has_folder_loading_error = false;
             state.has_document_permission_error = false;
             state.has_document_loading_error = false;
             state.has_document_lock_error = false;
