@@ -1117,20 +1117,22 @@ CREATE TABLE svn_token (
 # Service table
 #
 CREATE TABLE service (
-	service_id int(11) NOT NULL auto_increment,
-	group_id int(11) NOT NULL,
-	label text,
-	description text,
-	short_name text,
-	link text,
-	is_active int(11) DEFAULT 0 NOT NULL,
-	is_used int(11) DEFAULT 0 NOT NULL,
-        scope text NOT NULL,
-        rank int(11) NOT NULL default '0',
-        location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master', -- distributed architecture: to be deleted (but requires to check all plugins)
-        server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
-        is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
-	primary key (service_id),
+    service_id int(11) NOT NULL auto_increment,
+    group_id int(11) NOT NULL,
+    label text,
+    description text,
+    short_name text,
+    link text,
+    is_active int(11) DEFAULT 0 NOT NULL,
+    is_used int(11) DEFAULT 0 NOT NULL,
+    scope text NOT NULL,
+    rank int(11) NOT NULL default '0',
+    location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master', -- distributed architecture: to be deleted (but requires to check all plugins)
+    server_id INT( 11 ) UNSIGNED NULL,  -- distributed architecture: to be deleted (but requires to check all plugins)
+    is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
+    is_in_new_tab BOOL NOT NULL DEFAULT false,
+    icon VARCHAR(255) NOT NULL DEFAULT '',
+    primary key (service_id),
     key idx_group_id(group_id),
     INDEX idx_short_name (short_name(10))
 );
