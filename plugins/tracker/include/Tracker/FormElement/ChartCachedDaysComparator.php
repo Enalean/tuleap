@@ -61,7 +61,7 @@ class ChartCachedDaysComparator
     private function isTodayAWeekDayAndIsTodayBeforeTimePeriodEnd(TimePeriodWithoutWeekEnd $time_period_without_week_end)
     {
         return $time_period_without_week_end->isTodayWithinTimePeriod()
-            && $time_period_without_week_end->isNotWeekendDay($_SERVER['REQUEST_TIME']);
+            && TimePeriodWithoutWeekEnd::isNotWeekendDay($_SERVER['REQUEST_TIME']);
     }
 
     private function compareCachedDaysWhenLastDayIsAComputedValue($cache_days, $number_of_days_for_period)
