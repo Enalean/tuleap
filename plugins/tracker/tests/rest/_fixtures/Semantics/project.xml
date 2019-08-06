@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project
+    unix-name="test-tracker-semantics" full-name="testTrackerSemantics" description="For test" access="public">
+    <long-description>Semantics</long-description>
+    <services>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T59" parent_id="0" instantiate_for_new_projects="1" notifications_level="1">
+            <name><![CDATA[Releases]]></name>
+            <item_name>tracker_semantic_timeframe</item_name>
+            <description><![CDATA[releases - tracker used in scrum]]></description>
+            <color>clockwork-orange</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="column" ID="F1397" rank="0">
+                    <name>c1</name>
+                    <label><![CDATA[C1]]></label>
+                    <formElements>
+                        <formElement type="date" ID="F2685" rank="4">
+                            <name>release_start_date</name>
+                            <label><![CDATA[Release start date]]></label>
+                            <properties default_value="today" display_time="0"/>
+                        </formElement>
+                        <formElement type="int" ID="F2686" rank="5">
+                            <name>release_duration</name>
+                            <label><![CDATA[Release duration]]></label>
+                            <properties size="5"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="timeframe">
+                    <start_date_field REF="F2685"/>
+                    <duration_field REF="F2686"/>
+                </semantic>
+            </semantics>
+        </tracker>
+    </trackers>
+</project>
