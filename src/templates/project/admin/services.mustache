@@ -6,7 +6,7 @@
                     {{# gettext }}Services{{/ gettext }}
                 </h1>
             </div>
-            <section class="tlp-pane-section">
+            <section class="tlp-pane-section" id="project-admin-services">
                 <div class="tlp-table-actions">
                     <button
                        id="project-admin-services-add-button"
@@ -73,7 +73,9 @@
                                                 {{/ can_be_deleted }}
                                                 project-admin-services-delete-button
                                             "
-                                            data-target-modal-id="project-admin-services-delete-modal-{{ id }}"
+                                            data-target-modal-id="project-admin-services-delete-modal"
+                                            data-service-label="{{ label }}"
+                                            data-service-id="{{ id }}"
                                         {{^ can_be_deleted }}
                                             disabled
                                             data-tlp-tooltip="{{# gettext }}
@@ -84,12 +86,12 @@
                                         <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                     </button>
                                     {{> services-edit-modal }}
-                                    {{> services-delete-modal }}
                                 </td>
                             </tr>
                         {{/ services }}
                     </tbody>
                 </table>
+                {{> services-delete-modal }}
             </section>
         </div>
     </section>

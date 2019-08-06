@@ -52,8 +52,7 @@ class ProjectUGroupPresenter
         PermissionsDelegationPresenter $permissions_delegation,
         BindingPresenter $binding,
         MembersPresenter $members,
-        CSRFSynchronizerToken $csrf_token,
-        PFUser $user
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->id                        = $ugroup->getId();
         $this->project_id                = $ugroup->getProjectId();
@@ -63,7 +62,6 @@ class ProjectUGroupPresenter
         $this->members                   = $members;
         $this->csrf_token                = $csrf_token;
         $this->is_static_ugroup          = $ugroup->isStatic();
-        $this->locale                    = $user->getLocale();
         $this->permissions_per_group_url = $this->getPermissionPerGroupUrl();
 
         $this->permissions_delegation = $permissions_delegation;

@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     if (member_list_container) {
         gettext_provider.addTranslations("fr_FR", "project-admin", french_translations);
-        gettext_provider.setLocale(member_list_container.dataset.locale);
+        gettext_provider.setLocale(document.body.dataset.userLocale);
         gettext_provider.setTextDomain("project-admin");
     }
 

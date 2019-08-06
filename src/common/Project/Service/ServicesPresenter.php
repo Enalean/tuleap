@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
+use PFUser;
 use Project;
 
 class ServicesPresenter
@@ -30,7 +31,13 @@ class ServicesPresenter
     public $project_id;
     public $is_default_template;
     public $minimal_rank;
+    public $locale;
 
+    /**
+     * @param Project               $project
+     * @param CSRFSynchronizerToken $csrf
+     * @param ServicePresenter[]    $services
+     */
     public function __construct(Project $project, CSRFSynchronizerToken $csrf, array $services)
     {
         $this->services            = $services;

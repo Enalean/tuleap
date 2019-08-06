@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -33,6 +33,13 @@ msgid "You are about to add <b>%s</b> in <b>%s</b> users group."
 msgstr ""
 "Vous êtes sur le point d'ajouter <b>%s</b> dans le groupe utilisateur <b>%s</"
 "b>."
+
+#, javascript-format
+msgid ""
+"You are about to delete the <b>%s</b> service. Please, confirm your action"
+msgstr ""
+"Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
+"votre action."
 
 #, javascript-format
 msgid ""
