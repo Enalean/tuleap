@@ -72,20 +72,22 @@
 import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import { TEXT_FORMAT_TEXT } from "../../../tracker/www/scripts/constants/fields-constants.js";
 import { RTE } from "codendi";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "StepDefinitionEditableStep",
-    components: { StepDefinitionArrowExpected, StepDefinitionActions, StepDeletionActionButtonMarkAsDeleted },
+    components: {
+        StepDefinitionArrowExpected,
+        StepDefinitionActions,
+        StepDeletionActionButtonMarkAsDeleted
+    },
     props: {
-        step: Object,
-        field_id: Number
+        step: Object
     },
     computed: {
-        is_text() {
-            return this.step.description_format === TEXT_FORMAT_TEXT;
-        }
+        ...mapState(["field_id"]),
+        ...mapGetters(["is_text"])
     },
     mounted() {
         this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
@@ -97,13 +99,14 @@ export default {
         },
         toggleRTE(event, value) {
             this.step.description_format = value;
+
             for (const editor of this.editors) {
                 editor.toggle(event, value);
             }
         },
         loadRTE(field) {
             const element = this.$refs[field];
-            const is_html = !this.is_text;
+            const is_html = !this.is_text(this.step.description_format);
             const editor = new RTE(element, {
                 toggle: true,
                 default_in_html: false,

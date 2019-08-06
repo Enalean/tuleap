@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { createStore } from "./store/index.js";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "./po/fr.po";
 import StepDefinitionField from "./StepDefinitionField.vue";
@@ -37,10 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.config.language = document.body.dataset.userLocale;
 
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
+        const store = createStore();
         new StepDefinitionFieldComponent({
+            store,
             propsData: {
-                steps: JSON.parse(mount_point.dataset.steps),
-                field_id: JSON.parse(mount_point.dataset.fieldId),
+                initial_steps: JSON.parse(mount_point.dataset.steps),
+                artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
                 empty_step: JSON.parse(mount_point.dataset.emptyStep)
             }
         }).$mount(mount_point);

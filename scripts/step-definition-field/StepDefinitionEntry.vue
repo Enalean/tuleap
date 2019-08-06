@@ -28,10 +28,10 @@
             />
             <step-definition-editable-step
                 v-show="! is_marked_as_deleted"
-                v-bind:field_id="field_id"
                 v-bind:step="step"
                 v-on:markAsDeleted="markAsDeleted"
-                v-on:removeDeletedStepsOnFormSubmission="removeDeletedStepsOnFormSubmission"/>
+                v-on:removeDeletedStepsOnFormSubmission="removeDeletedStepsOnFormSubmission"
+            />
         </div>
     </div>
 </template>
@@ -45,9 +45,7 @@ export default {
     components: { StepDefinitionMarkedAsDeleted, StepDefinitionEditableStep },
     props: {
         step: Object,
-        dynamic_rank: Number,
-        field_id: Number,
-        deleteStep: Function
+        dynamic_rank: Number
     },
     data() {
         return {
@@ -57,10 +55,13 @@ export default {
     methods: {
         markAsDeleted() {
             if (this.step.raw_description.length === 0) {
-                this.deleteStep(this.step);
+                this.$store.commit("deleteStep", this.step);
             } else {
                 this.is_marked_as_deleted = true;
             }
+        },
+        addStep(index) {
+            this.$store.commit("addStep", index);
         },
         unmarkDeletion() {
             this.is_marked_as_deleted = false;
@@ -68,7 +69,7 @@ export default {
         removeDeletedStepsOnFormSubmission(description_form) {
             description_form.addEventListener("submit", () => {
                 if (this.is_marked_as_deleted) {
-                    this.deleteStep(this.step);
+                    this.$store.commit("deleteStep", this.step);
                 }
             });
         }

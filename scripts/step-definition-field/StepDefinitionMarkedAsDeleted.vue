@@ -25,7 +25,6 @@
         >
             <step-deletion-action-button-unmark-deletion
                 v-bind:unmark-deletion="unmarkDeletion"
-                v-bind:is_deletion="false"
             />
         </step-definition-actions>
         <div class="ttm-definition-step-description-deleted">
@@ -39,9 +38,8 @@
                     <div class="ttm-definition-step-expected-edit-title">
                         <translate>Expected results</translate>
                     </div>
-                    <div
-                        v-dompurify-html="step.raw_expected_results"
-                        v-bind:class="{ 'ttm-definition-step-description-text': is_text }"
+                    <div v-dompurify-html="step.raw_expected_results"
+                         v-bind:class="{ 'ttm-definition-step-description-text': is_text(step.description_format) }"
                     ></div>
                 </div>
             </section>
@@ -50,20 +48,23 @@
 </template>
 
 <script>
-import StepDeletionActionButtonUnmarkDeletion from "./StepDeletionActionButtonUnmarkDeletion.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
-import { TEXT_FORMAT_TEXT } from "../../../tracker/www/scripts/constants/fields-constants.js";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
+import StepDeletionActionButtonUnmarkDeletion from "./StepDeletionActionButtonUnmarkDeletion.vue";
+import { mapGetters } from "vuex";
+
 export default {
     name: "StepDefinitionMarkedAsDeleted",
-    components: { StepDefinitionActions, StepDefinitionArrowExpected, StepDeletionActionButtonUnmarkDeletion },
+    components: {
+        StepDefinitionArrowExpected,
+        StepDeletionActionButtonUnmarkDeletion,
+        StepDefinitionActions
+    },
     props: {
         step: Object
     },
     computed: {
-        is_text() {
-            return this.step.description_format === TEXT_FORMAT_TEXT;
-        }
+        ...mapGetters(["is_text"])
     },
     methods: {
         unmarkDeletion() {
