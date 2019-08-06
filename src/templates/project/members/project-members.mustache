@@ -62,15 +62,17 @@
                     <thead>
                         <tr>
                             <th>{{# gettext }}Name{{/ gettext }}</th>
+                            <th>{{# gettext }}User email address{{/ gettext }}</th>
                             {{# can_see_ugroups }}
                                 <th>{{# gettext }}Members of user groups{{/gettext}}</th>
                             {{/ can_see_ugroups }}
+                            <th>{{# gettext }}Account status{{/ gettext }}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="tlp-table-empty-filter">
-                            <td colspan="{{# can_see_ugroups }}3{{/ can_see_ugroups }}{{^ can_see_ugroups }}2{{/ can_see_ugroups }}"
+                            <td colspan="{{# can_see_ugroups }}5{{/ can_see_ugroups }}{{^ can_see_ugroups }}2{{/ can_see_ugroups }}"
                                 class="tlp-table-cell-empty"
                             >
                                 {{# gettext }}There isn't any matching members{{/ gettext }}
@@ -86,6 +88,11 @@
                                     </div>
                                     <a href="{{ profile_page_url }}">{{ username_display }}</a>
                                 </td>
+                                <td class="project-admin-members-uemails">
+                                    <a href="mailto:{{ email }}">
+                                        {{ email }}
+                                    </a>
+                                </td>
                                 {{# can_see_ugroups }}
                                     <td class="project-admin-members-ugroups">
                                         {{# ugroups }}
@@ -98,6 +105,15 @@
                                         {{/ ugroups }}
                                     </td>
                                 {{/ can_see_ugroups }}
+                                {{# status_presenter }}
+                                <td>
+                                    <span class = "tlp-badge-{{status_level}}
+                                        {{^ status_is_important }}tlp-badge-outline{{/ status_is_important}}"
+                                    >
+                                        {{ status_label }}
+                                    </span>
+                                </td>
+                                {{/ status_presenter }}
                                 <td class="tlp-table-cell-actions">
                                     {{# is_generic }}
                                         <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
@@ -148,3 +164,4 @@
         {{{ purified_html_modal }}}
     {{/ modals_content }}
 {{/ additional_modals }}
+

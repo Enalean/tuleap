@@ -39,6 +39,7 @@ class ProjectMembersDAO extends DataAccessObject
                     user.realname,
                     user.user_id,
                     user.user_name,
+                    user.email,
                     user.status,
                     user_group.admin_flags,
                     user_group.wiki_flags,

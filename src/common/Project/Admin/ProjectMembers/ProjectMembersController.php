@@ -47,6 +47,7 @@ use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\StatusPresenter;
 use UGroupBinding;
 use UGroupManager;
 use UserHelper;
@@ -284,6 +285,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
                 $member['realname']
             );
 
+            $member['status_presenter'] = new StatusPresenter($member['status']);
             $project_members[] = $member;
         }
 
@@ -370,7 +372,6 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $this->user_importer->updateDB($project, $user_collection);
             $this->user_group_bindings->reloadUgroupBindingInProject($project);
         }
-
     }
 
     private function canUserSeeUGroups(PFUser $user, Project $project)

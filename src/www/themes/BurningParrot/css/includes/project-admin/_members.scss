@@ -58,11 +58,20 @@ $small-screen-size: 1200px;
 }
 
 .project-admin-members-username-column {
-    width: 50%;
+    width: 25%;
+}
+
+.project-admin-members-uemails {
+    width: 25%;
+    color: $tlp-theme-color;
+}
+
+.project-admin-members-account-status {
+    width: 20%;
 }
 
 .project-admin-members-ugroups {
-    width: 50%;
+    width: 25%;
 
     @media screen and (max-width: #{$small-screen-size}) {
         word-break: break-all;
