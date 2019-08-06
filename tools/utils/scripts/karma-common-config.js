@@ -27,8 +27,8 @@ function getBaseConfig(config) {
         basePath: ".",
         plugins: [
             "karma-chrome-launcher",
-            "karma-coverage",
             "karma-jasmine",
+            "karma-coverage-istanbul-reporter",
             "karma-junit-reporter",
             "karma-webpack"
         ],

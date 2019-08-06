@@ -62,11 +62,16 @@ function configureKarmaForWatchMode() {
 function configureKarmaCoverage(coverage_directory, coverage_folder_name) {
     return {
         singleRun: true,
-        reporters: ["dots", "coverage"],
-        coverageReporter: {
+        reporters: ["dots", "coverage-istanbul"],
+        coverageIstanbulReporter: {
+            reports: ["html"],
             dir: coverage_directory,
-            subdir: coverage_folder_name,
-            reporters: [{ type: "html" }]
+            "report-config": {
+                html: {
+                    subdir: coverage_folder_name
+                }
+            },
+            fixWebpackSourcePaths: true
         }
     };
 }
