@@ -504,7 +504,8 @@ class WorkflowFactory //phpcs:ignoreFile
         return new Tracker_RulesManager($tracker,
             $this->formelement_factory,
             $this->read_only_dao,
-            new TrackerRulesListValidator($this->formelement_factory)
+            new TrackerRulesListValidator($this->formelement_factory),
+            $this->tracker_factory
         );
     }
 

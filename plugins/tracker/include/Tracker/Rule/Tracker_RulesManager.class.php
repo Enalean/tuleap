@@ -56,16 +56,23 @@ class Tracker_RulesManager
      */
     private $tracker_rules_list_validator;
 
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
     public function __construct(
         Tracker $tracker,
         Tracker_FormElementFactory $form_element_factory,
         FrozenFieldsDao $frozen_fields_dao,
-        TrackerRulesListValidator $tracker_rules_list_validator
+        TrackerRulesListValidator $tracker_rules_list_validator,
+        TrackerFactory $tracker_factory
     ) {
         $this->tracker                      = $tracker;
         $this->form_element_factory         = $form_element_factory;
         $this->frozen_fields_dao            = $frozen_fields_dao;
         $this->tracker_rules_list_validator = $tracker_rules_list_validator;
+        $this->tracker_factory              = $tracker_factory;
     }
 
     /**
@@ -165,8 +172,9 @@ class Tracker_RulesManager
      * false otherwise
      */
     function validate($tracker_id, $value_field_list) {
+        $tracker =  $this->tracker_factory->getTrackerByid($tracker_id);
         $valid_list_rules = $this->tracker_rules_list_validator
-            ->validateListRules($tracker_id, $value_field_list, $this->getAllListRulesByTrackerWithOrder($tracker_id) );
+            ->validateListRules($tracker, $value_field_list, $this->getAllListRulesByTrackerWithOrder($tracker_id) );
         $valid_date_rules = $this->validateDateRules($tracker_id, $value_field_list);
 
         if(! $valid_list_rules || ! $valid_date_rules) {
