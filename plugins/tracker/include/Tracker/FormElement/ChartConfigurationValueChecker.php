@@ -48,8 +48,12 @@ class ChartConfigurationValueChecker
 
     public function hasStartDate(Tracker_Artifact $artifact, PFUser $user)
     {
-        $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
-        $artifact_value   = $artifact->getValue($start_date_field);
+        try {
+            $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
+            return false;
+        }
+        $artifact_value = $artifact->getValue($start_date_field);
 
         if ($artifact_value === null) {
             return false;
