@@ -537,6 +537,9 @@ msgstr "Éditer les paramètres"
 msgid "Edit widget"
 msgstr "Éditer le widget"
 
+msgid "Email"
+msgstr "E-mail"
+
 msgid "Email change complete"
 msgstr "Changement d'e-mail confirmé"
 
@@ -1294,6 +1297,9 @@ msgstr "Gestion de code source"
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
 
+msgid "Status"
+msgstr "Statut"
+
 msgid "Style"
 msgstr "Style"
 
@@ -1673,6 +1679,9 @@ msgstr "L'utilisateur est déjà membre du projet"
 
 msgid "User name"
 msgstr "Nom d'utilisateur"
+
+msgid "User status"
+msgstr "Statut de l'utilisateur"
 
 msgid "Users"
 msgstr "Utilisateurs"

@@ -21,6 +21,8 @@
 
 require_once __DIR__ . '/../../include/pre.php';
 
+use Tuleap\User\StatusPresenter;
+
 // Inherited from old .htaccess
 ini_set('max_execution_time', 3600);
 ini_set('memory_limit', '256M');
@@ -46,10 +48,12 @@ $vExport->required();
 if ($request->valid($vExport)) {
     $export = $request->get('export');
 
-    $col_list = array('group', 'username', 'realname');
+    $col_list = array('group', 'username', 'realname', 'email', 'status');
     $lbl_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group'),
                       'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', array($GLOBALS['sys_name'])),
-                      'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname'));
+                      'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname'),
+                      'email'    => _('Email'),
+                      'status'   => _('Status'));
     $um  = UserManager::instance();
 
     switch($export) {
@@ -66,7 +70,7 @@ if ($request->valid($vExport)) {
             $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
             while($ugrp = db_fetch_array($ugs)) {
                 if ($ugrp['ugroup_id'] <= 100) {
-                    $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id);
+                    $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id, false, null, true);
                 } else {
                     $sqlUsers = ugroup_db_get_members($ugrp['ugroup_id']);
                 }
@@ -75,9 +79,12 @@ if ($request->valid($vExport)) {
                 }
                 $users = db_query($sqlUsers);
                 while ($user = db_fetch_array($users)) {
+                    $user_status_presenter = new StatusPresenter($user['status']);
                     $r = array('group'    => util_translate_name_ugroup($ugrp['name']),
                                'username' => $user['user_name'],
-                               'realname' => $um->getUserById($user['user_id'])->getRealname());
+                               'realname' => $um->getUserById($user['user_id'])->getRealname(),
+                               'email'    => $user['email'],
+                               'status'   => $user_status_presenter->status_label);
                     echo build_csv_record($col_list, $r).$eol;
                 }
             }
@@ -88,7 +95,7 @@ if ($request->valid($vExport)) {
             echo '<p>'.$Language->getText('project_export_user_groups','exp_format_msg').'</p>';
 
             // Pick-up a random project member
-            $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id);
+            $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id, false, null, true);
             if ($sqlUsers === null) {
                 return;
             }
@@ -98,10 +105,15 @@ if ($request->valid($vExport)) {
 
             $dsc_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group_desc'),
                               'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username_desc', array($GLOBALS['sys_name'])),
-                              'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname_desc'));
+                              'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname_desc'),
+                              'email'    => _('User email address'),
+                              'status'   => _('User status'));
+            $user_status_presenter = new StatusPresenter($user->getStatus());
             $record   = array('group'    => util_translate_name_ugroup('project_members'),
                               'username' => $user->getName(),
-                              'realname' => $user->getRealName());
+                              'realname' => $user->getRealName(),
+                              'email'    => $user->getEmail(),
+                              'status'   => $user_status_presenter->status_label);
             display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
             break;
     }
