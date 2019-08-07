@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
+use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
@@ -49,11 +50,15 @@ class AccessKeyDAO extends DataAccessObject
         return $this->getDB()->row('SELECT verifier, user_id, last_usage, last_ip, expiration_date FROM user_access_key WHERE id = ?', $key_id);
     }
 
-    public function searchMetadataByUserID($user_id)
+    public function searchMetadataByUserIDAtCurrentTime(int $user_id, int $current_timestamp)
     {
         return $this->getDB()->run(
-            'SELECT id, creation_date, description, last_usage, last_ip FROM user_access_key WHERE user_id = ?',
-            $user_id
+            'SELECT id, creation_date, expiration_date, description, last_usage, last_ip
+             FROM user_access_key
+             WHERE user_id = ?
+             AND (expiration_date IS NULL OR expiration_date > ?)',
+            $user_id,
+            $current_timestamp
         );
     }
 

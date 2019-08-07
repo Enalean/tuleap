@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\User\AccessKey;
 
+use DateTimeImmutable;
+
 class AccessKeyMetadataRetriever
 {
     /**
@@ -37,14 +39,18 @@ class AccessKeyMetadataRetriever
      */
     public function getMetadataByUser(\PFUser $user)
     {
+        $user_id      = (int) $user->getId();
+        $current_time = (new DateTimeImmutable())->getTimestamp();
+
         $all_metadata = [];
-        foreach ($this->dao->searchMetadataByUserID($user->getId()) as $metadata) {
+        foreach ($this->dao->searchMetadataByUserIDAtCurrentTime($user_id, $current_time) as $metadata) {
             $all_metadata[] = new AccessKeyMetadata(
                 $metadata['id'],
-                new \DateTimeImmutable('@' . $metadata['creation_date']),
+                new DateTimeImmutable('@' . $metadata['creation_date']),
                 $metadata['description'],
-                $metadata['last_usage'] === null ? null : new \DateTimeImmutable('@' . $metadata['last_usage']),
-                $metadata['last_ip']
+                $metadata['last_usage'] === null ? null : new DateTimeImmutable('@' . $metadata['last_usage']),
+                $metadata['last_ip'],
+                $metadata['expiration_date'] === null ? null : new DateTimeImmutable('@' . $metadata['expiration_date'])
             );
         }
         return $all_metadata;
