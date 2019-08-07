@@ -72,16 +72,23 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
 
     let formatted_metadata_list = [];
     parent_metadata.forEach(parent_metadata => {
-        if (parent_metadata.type === "text") {
-            const formatted_metadata = {
-                short_name: parent_metadata.short_name,
-                type: parent_metadata.type,
-                name: parent_metadata.name,
-                is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed
-            };
-            formatted_metadata.value = parent_metadata.value;
-            formatted_metadata_list.push(formatted_metadata);
+        let formatted_metadata = {
+            short_name: parent_metadata.short_name,
+            type: parent_metadata.type,
+            name: parent_metadata.name,
+            is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed
+        };
+
+        switch (parent_metadata.type) {
+            case "text":
+            case "string":
+                formatted_metadata.value = parent_metadata.value;
+                formatted_metadata_list.push(formatted_metadata);
+                break;
+            default:
+                break;
         }
     });
+
     return formatted_metadata_list;
 }

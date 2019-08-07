@@ -19,13 +19,13 @@
 
 import localVue from "../../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
-import CustomMetadataText from "./CustomMetadataText.vue";
+import CustomMetadataString from "./CustomMetadataString.vue";
 
-describe("CustomMetadataText", () => {
+describe("CustomMetadataString", () => {
     let factory;
     beforeEach(() => {
         factory = (props = {}) => {
-            return shallowMount(CustomMetadataText, {
+            return shallowMount(CustomMetadataString, {
                 localVue,
                 propsData: { ...props }
             });
@@ -34,16 +34,15 @@ describe("CustomMetadataText", () => {
 
     it(`It renders an input with a required value`, () => {
         const currentlyUpdatedItemMetadata = {
-            value: "text value",
+            value: "string value",
             is_required: true,
             name: "field",
-            type: "text",
-            short_name: "short_name"
+            type: "string"
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-text-input]");
+        const date_input = wrapper.find("[data-test=document-string-input]");
 
-        expect(date_input.element.value).toEqual("text value");
+        expect(date_input.element.value).toEqual("string value");
         expect(date_input.element.required).toBe(true);
     });
 
@@ -52,27 +51,24 @@ describe("CustomMetadataText", () => {
             value: "",
             is_required: false,
             name: "field",
-            type: "text",
-            short_name: "short_name"
+            type: "string"
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-text-input]");
+        const date_input = wrapper.find("[data-test=document-string-input]");
 
         expect(date_input.element.value).toEqual("");
         expect(date_input.element.required).toBe(false);
     });
 
-    it(`Given custom text metadata
-        Then it renders the corresponding component`, () => {
+    it(`It does not render the component when type does not match`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
             name: "field",
-            short_name: "text",
             type: "text"
         };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
 
-        expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeTruthy();
+        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
     });
 });
