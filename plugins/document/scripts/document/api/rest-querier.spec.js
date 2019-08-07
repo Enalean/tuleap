@@ -23,7 +23,7 @@ import {
     addNewEmpty,
     addNewWiki,
     getFolderContent,
-    getProject,
+    getDocumentManagerServiceInformation,
     getItem,
     getParents,
     postEmbeddedFile,
@@ -79,29 +79,25 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("getProject()", () => {
+    describe("getDocumentManagerServiceInformation()", () => {
         it("Given a project_id, then the REST API will be queried with it", async () => {
-            const project = {
-                additional_informations: {
-                    docman: {
-                        root_item: {
-                            id: 3,
-                            title: "Project Documentation",
-                            owner: {
-                                id: 101,
-                                display_name: "user (login)"
-                            },
-                            last_update_date: "2018-08-21T17:01:49+02:00"
-                        }
-                    }
+            const service = {
+                root_item: {
+                    id: 3,
+                    title: "Project Documentation",
+                    owner: {
+                        id: 101,
+                        display_name: "user (login)"
+                    },
+                    last_update_date: "2018-08-21T17:01:49+02:00"
                 }
             };
-            mockFetchSuccess(tlp.get, { return_json: project });
+            mockFetchSuccess(tlp.get, { return_json: service });
 
-            const result = await getProject(891);
+            const result = await getDocumentManagerServiceInformation(891);
 
-            expect(tlp.get).toHaveBeenCalledWith("/api/projects/891");
-            expect(result).toEqual(project);
+            expect(tlp.get).toHaveBeenCalledWith("/api/projects/891/docman_service");
+            expect(result).toEqual(service);
         });
     });
 

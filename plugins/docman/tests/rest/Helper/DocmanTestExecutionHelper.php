@@ -52,12 +52,14 @@ class DocmanTestExecutionHelper extends DocmanBase
 
     public function testGetRootId(): int
     {
-        $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
+        $project_response = $this->getResponse(
+            $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service')
+        );
 
         $this->assertSame(200, $project_response->getStatusCode());
 
-        $json_projects = $project_response->json();
-        return $json_projects['additional_informations']['docman']['root_item']['id'];
+        $json_docman_service = $project_response->json();
+        return $json_docman_service['root_item']['id'];
     }
 
     public function loadRootFolderContent(int $root_id): array

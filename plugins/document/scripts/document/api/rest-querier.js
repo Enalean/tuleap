@@ -21,7 +21,7 @@ import { del, get, patch, post, recursiveGet, put } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 export {
-    getProject,
+    getDocumentManagerServiceInformation,
     getFolderContent,
     getItem,
     getParents,
@@ -80,8 +80,10 @@ export {
     putFolderDocumentMetadata
 };
 
-async function getProject(project_id) {
-    const response = await get("/api/projects/" + encodeURIComponent(project_id));
+async function getDocumentManagerServiceInformation(project_id) {
+    const response = await get(
+        "/api/projects/" + encodeURIComponent(project_id) + "/docman_service"
+    );
 
     return response.json();
 }

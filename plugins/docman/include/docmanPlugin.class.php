@@ -184,7 +184,6 @@ class DocmanPlugin extends Plugin
         }
 
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(GetWhitelistedKeys::NAME);
@@ -1243,61 +1242,6 @@ class DocmanPlugin extends Plugin
         )->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
-    }
-
-    /**
-     * @see Event::REST_PROJECT_ADDITIONAL_INFORMATIONS
-     */
-    public function rest_project_additional_informations($params) // phpcs:ignore
-    {
-        /** @var PFUser $current_user */
-        $current_user = $params['current_user'];
-        /**
-         * @var $project Project
-         */
-        $project = $params['project'];
-        if (! $this->isAllowed($project->getID())) {
-            return;
-        }
-
-        $html_purifier = Codendi_HTMLPurifier::instance();
-
-        $permissions_manager = Docman_PermissionsManager::instance($project->getID());
-
-        $metadata_factory            = new Docman_MetadataFactory($project->getID());
-        $item_representation_builder = new ItemRepresentationBuilder(
-            new Docman_ItemDao(),
-            $this->getUserManager(),
-            $this->getItemFactory(),
-            $permissions_manager,
-            $this->getDocmanLockFactory(),
-            new ApprovalTableStateMapper(),
-            new MetadataRepresentationBuilder(
-                $metadata_factory,
-                $html_purifier,
-                UserHelper::instance()
-            ),
-            new ApprovalTableRetriever(
-                new Docman_ApprovalTableFactoriesFactory(),
-                new Docman_VersionFactory()
-            ),
-            new DocmanItemPermissionsForGroupsBuilder(
-                $permissions_manager,
-                ProjectManager::instance(),
-                PermissionsManager::instance(),
-                new UGroupManager()
-            ),
-            $html_purifier
-        );
-
-        $item_representation = $item_representation_builder->buildRootId($project, $current_user);
-        if (! $item_representation) {
-            return;
-        }
-
-        $params['informations'][$this->getName()]['root_item'] = $item_representation;
-
-        $params['informations'][$this->getName()]['metadata_uri'] = "projects/" . urlencode((string)$project->getID()) . "/docman_metadata";
     }
 
     /** @see Event::REST_RESOURCES */

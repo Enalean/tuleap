@@ -61,8 +61,6 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected $deleted_tracker_id;
     protected $kanban_tracker_id;
 
-    protected $docman_root_id = 2;
-
     protected $project_ids = array();
     protected $tracker_ids = array();
     protected $user_groups_ids = array();
