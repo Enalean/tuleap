@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -903,7 +903,7 @@ class PullRequestsResource extends AuthenticatedResource
         $this->sendAllowHeadersForPullRequests();
 
         $user                            = $this->user_manager->getCurrentUser();
-        $pull_request_with_git_reference = $this->getWritablePullRequestWithGitReference($id);
+        $pull_request_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $repository_src                  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest                 = $this->getRepository($pull_request->getRepoDestId());
@@ -940,11 +940,18 @@ class PullRequestsResource extends AuthenticatedResource
         );
     }
 
+    /**
+     * @throws RestException
+     */
     private function patchStatus(PFUser $user, PullRequest $pull_request, $status)
     {
+        $git_repository_dest   = $this->getRepository($pull_request->getRepoDestId());
+        $git_repository_source = $this->getRepository($pull_request->getRepositoryId());
+
         switch ($status) {
             case PullRequestRepresentation::STATUS_ABANDON:
                 try {
+                    $this->checkUserCanAbandon($user, $git_repository_source, $git_repository_dest, $pull_request);
                     $this->abandon($pull_request);
                     $this->timeline_event_creator->storeAbandonEvent($pull_request, $user);
                 } catch (PullRequestCannotBeAbandoned $exception) {
@@ -952,9 +959,8 @@ class PullRequestsResource extends AuthenticatedResource
                 }
                 break;
             case PullRequestRepresentation::STATUS_MERGE:
-                $git_repository_dest = $this->getRepository($pull_request->getRepoDestId());
-
                 try {
+                    $this->checkUserCanWrite($user, $git_repository_dest, $pull_request->getBranchDest());
                     $this->pull_request_closer->doMerge($git_repository_dest, $pull_request, $user);
                     $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
                 } catch (PullRequestCannotBeMerged $exception) {
@@ -979,6 +985,7 @@ class PullRequestsResource extends AuthenticatedResource
 
     /**
      * @throws 400
+     * @throws 403
      */
     private function patchInfo(
         PFUser $user,
@@ -986,6 +993,9 @@ class PullRequestsResource extends AuthenticatedResource
         $project_id,
         $body
     ) {
+        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
+        $this->checkUserCanWrite($user, $repository_dest, $pull_request->getBranchDest());
+
         $trimmed_title = trim($body->title);
         if (empty($trimmed_title)) {
             throw new RestException(400, 'Title cannot be empty');
@@ -1259,6 +1269,22 @@ class PullRequestsResource extends AuthenticatedResource
 
         if (! $repository->userCanRead($user)) {
             throw new RestException(403, 'User is not able to READ the git repository');
+        }
+    }
+
+    private function checkUserCanAbandon(
+        PFUser $user,
+        GitRepository $repository_source,
+        GitRepository $repository_dest,
+        $reference
+    ) {
+        ProjectAuthorization::userCanAccessProject($user, $repository_source->getProject(), new URLVerification());
+        ProjectAuthorization::userCanAccessProject($user, $repository_dest->getProject(), new URLVerification());
+
+        if (! $this->access_control_verifier->canWrite($user, $repository_source, $reference) &&
+            ! $this->access_control_verifier->canWrite($user, $repository_dest, $reference)
+        ) {
+            throw new RestException(403, 'User is not able to WRITE in both source and destination git repositories');
         }
     }
 
