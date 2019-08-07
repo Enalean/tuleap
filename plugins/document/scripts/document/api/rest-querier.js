@@ -78,7 +78,8 @@ export {
     putWikiMetadata,
     putEmptyDocumentMetadata,
     putFolderDocumentMetadata,
-    getProjectUserGroups
+    getProjectUserGroups,
+    getProjectMetadata
 };
 
 async function getDocumentManagerServiceInformation(project_id) {
@@ -667,4 +668,14 @@ async function getProjectUserGroups(project_id) {
     );
 
     return response.json();
+}
+
+function getProjectMetadata(project_id) {
+    const escaped_project_id = encodeURIComponent(project_id);
+    return recursiveGet(`/api/projects/${escaped_project_id}/docman_metadata`, {
+        params: {
+            limit: 50,
+            offset: 0
+        }
+    });
 }

@@ -14,15 +14,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import localVue from "../../../helpers/local-vue.js";
+import localVue from "../../../../helpers/local-vue.js";
 import OtherInformationMetadata from "./OtherInformationMetadataForUpdate.vue";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE } from "../../../../constants.js";
 
 describe("OtherInformationMetadata", () => {
     let other_metadata, state, store;
@@ -84,5 +83,60 @@ describe("OtherInformationMetadata", () => {
         store.state.is_obsolescence_date_metadata_used = false;
 
         expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
+    });
+
+    describe("Given obsolescence date value is updated", () => {
+        it(`Then the props used for document creation is updated`, () => {
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "obsolescence_date",
+                                value: null
+                            }
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title",
+                        value: ""
+                    }
+                },
+                { parent: 102 }
+            );
+
+            store.state.is_obsolescence_date_metadata_used = true;
+
+            const date = "2019-07-10";
+            wrapper.vm.date_value = date;
+
+            expect(wrapper.vm.currentlyUpdatedItem.metadata[0].value).toEqual(date);
+        });
+
+        it(`Then the props used for document update is updated`, () => {
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "obsolescence_date",
+                                value: null
+                            }
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title",
+                        value: ""
+                    }
+                },
+                { parent: 102 }
+            );
+
+            store.state.is_obsolescence_date_metadata_used = true;
+
+            const date = "2019-07-10";
+            wrapper.vm.date_value = date;
+            expect(wrapper.vm.currentlyUpdatedItem.obsolescence_date).toEqual(date);
+        });
     });
 });

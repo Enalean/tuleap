@@ -14,33 +14,32 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
-    <div class="document-metadata" v-if="is_obsolescence_date_metadata_used" data-test="document-other-information">
-        <hr class="tlp-modal-separator">
-        <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
-        <obsolescence-date-metadata-for-create v-model="currentlyUpdatedItem.obsolescence_date"/>
+    <div>
+        <div v-for="item_metadata in currentlyUpdatedItem.metadata"
+             v-bind:key="item_metadata.short_name"
+             class="document-metadata-properties-margin"
+        >
+            <custom-metadata-text
+                v-bind:currently-updated-item-metadata="item_metadata"
+                data-test="document-custom-metadata-text"
+            />
+        </div>
     </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
-import ObsolescenceDateMetadataForCreate from "./ObsolescenceMetadata/ObsolescenceDateMetadataForCreate.vue";
-
+import CustomMetadataText from "./CustomMetadataText.vue";
 export default {
-    name: "OtherInformationMetadataForCreate",
+    name: "CustomMetadata",
     components: {
-        ObsolescenceDateMetadataForCreate
+        CustomMetadataText
     },
     props: {
         currentlyUpdatedItem: Object
-    },
-    computed: {
-        ...mapState(["is_obsolescence_date_metadata_used"]),
-        ...mapGetters(["obsolescence_date_metadata"])
     }
 };
 </script>

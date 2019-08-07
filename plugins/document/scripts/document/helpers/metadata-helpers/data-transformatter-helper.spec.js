@@ -20,7 +20,8 @@
 import {
     transformFolderMetadataForRecursionAtUpdate,
     transformItemMetadataForCreation,
-    transformDocumentMetadataForUpdate
+    transformDocumentMetadataForUpdate,
+    transformCustomMetadataForItemCreation
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -147,5 +148,42 @@ describe("transformDocumentMetadataForUpdate", () => {
         transformDocumentMetadataForUpdate(item, false);
 
         expect(item.status).toEqual(undefined);
+    });
+});
+
+describe("transformCustomMetadataForItemCreation", () => {
+    it("Given parent has no metadata then it returns an empty array", () => {
+        const parent_metadata = [];
+
+        const formatted_result = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(formatted_result).toEqual([]);
+    });
+
+    it(`Given parent has a text value,
+        then the formatted metadata is bound to value`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "value",
+                type: "text",
+                is_multiple_value_allowed: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "text",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "value"
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
     });
 });

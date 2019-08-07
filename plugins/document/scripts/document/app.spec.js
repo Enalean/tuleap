@@ -40,6 +40,9 @@ import "./store/error/error-getters.spec.js";
 import "./store/clipboard/clipboard-mutations.spec.js";
 import "./store/clipboard/clipboard-actions.spec.js";
 
+import "./store/metadata/metadata-mutations.spec.js";
+import "./store/metadata/metadata-actions.spec.js";
+
 import "./store/store-persistence/storage.spec.js";
 
 import "./components/Breadcrumb/DocumentBreadcrumb.spec.js";
@@ -111,11 +114,13 @@ import "./components/Folder/Property/ApprovalUpdateProperties.spec.js";
 import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 import "./components/Folder/Property/LockProperty.spec.js";
 
+import "./components/Folder/Metadata/CustomMetadata/CustomMetadataText.spec.js";
+
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 import "./components/Folder/Metadata/ObsolescenceMetadata/ObsolescenceDateMetadataForCreate.spec.js";
 import "./components/Folder/Metadata/ObsolescenceMetadata/ObsolescenceDateMetadataForUpdate.spec.js";
-import "./components/Folder/Metadata/OtherInformationMetadataForUpdate.spec.js";
-import "./components/Folder/Metadata/OtherInformationMetadataForCreate.spec.js";
+import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadataForUpdate.spec.js";
+import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadataForCreate.spec.js";
 import "./components/Folder/Metadata/OwnerMetadata.spec.js";
 
 import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBindingForDocumentCreate.spec.js";
@@ -126,8 +131,10 @@ import "./components/Folder/Metadata/FolderMetadata/StatusMetadataWithCustomBind
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForUpdate.spec.js";
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForCreate.spec.js";
 
-import "./components/Folder/Permissions/PermissionsUpdateModal.spec";
-import "./components/Folder/Permissions/PermissionsSelector.spec";
+import "./components/Folder/ModalNewItem/NewItemModal.spec.js";
+
+import "./components/Folder/Permissions/PermissionsUpdateModal.spec.js";
+import "./components/Folder/Permissions/PermissionsSelector.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";
@@ -139,3 +146,4 @@ import "./helpers/clipboard/clipboard-helpers.spec.js";
 import "./helpers/metadata-helpers/hardcoded-metadata-mapping-helper.spec.js";
 import "./helpers/metadata-helpers/obsolescence-date-value.spec.js";
 import "./helpers/permissions/ugroups.spec.js";
+import "./helpers/metadata-helpers/custom-metadata-helper.spec.js";
