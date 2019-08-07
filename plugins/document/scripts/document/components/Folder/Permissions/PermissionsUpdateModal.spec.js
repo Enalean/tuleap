@@ -19,9 +19,20 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
+import { tlp } from "tlp-mocks";
 
 import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+
+import {
+    rewire$getProjectUserGroupsWithoutServiceSpecialUGroups,
+    restore as restoreUGroupsHelper
+} from "../../../helpers/permissions/ugroups.js";
+import {
+    rewire$handleErrors,
+    restore as restoreHandleErrorsHelper
+} from "../../../store/actions-helpers/handle-errors.js";
+import EventBus from "../../../helpers/event-bus.js";
 
 describe("PermissionsUpdateModal", () => {
     let factory, store;
@@ -36,15 +47,87 @@ describe("PermissionsUpdateModal", () => {
                 mocks: { $store: store }
             });
         };
+
+        tlp.modal.and.returnValue({
+            addEventListener: () => {},
+            show: () => {},
+            hide: () => {}
+        });
     });
 
-    it("Given the user want to edit the permissions the corresponding modal can be opened", () => {
+    afterEach(() => {
+        restoreUGroupsHelper();
+        restoreHandleErrorsHelper();
+    });
+
+    it("Set a loading a state by default", () => {
+        const wrapper = factory({ item: {} });
+
+        expect(wrapper.find("[class=document-permissions-modal-loading-state]").exists()).toBe(
+            true
+        );
+    });
+
+    it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
+        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
+            "getProjectUserGroupsWithoutServiceSpecialUGroups"
+        );
+        rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
+            getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
+        );
+        getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.and.returnValue(
+            Promise.resolve([{ id: "102_3", label: "Project members" }])
+        );
+
         const item_to_update = {
             id: 104,
-            title: "My item"
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: []
+            }
         };
         const wrapper = factory({ item: item_to_update });
 
-        expect(wrapper.html()).toBeTruthy();
+        EventBus.$emit("show-update-permissions-modal");
+        await wrapper.vm.$nextTick().then(() => {});
+        expect(wrapper.find("[data-test=document-permissions-update-selectors]").exists()).toBe(
+            true
+        );
+
+        const nb_calls_after_first_opening_of_the_modal = getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.calls.count();
+        EventBus.$emit("show-update-permissions-modal");
+        expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).toHaveBeenCalledTimes(
+            nb_calls_after_first_opening_of_the_modal
+        );
+    });
+
+    it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
+        const handleErrors = jasmine.createSpy("handleErrors");
+        rewire$handleErrors(handleErrors);
+        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
+            "getProjectUserGroupsWithoutServiceSpecialUGroups"
+        );
+        rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
+            getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
+        );
+        getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.and.returnValue(Promise.reject({}));
+
+        const item_to_update = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: []
+            }
+        };
+        const wrapper = factory({ item: item_to_update });
+
+        EventBus.$emit("show-update-permissions-modal");
+        await wrapper.vm.$nextTick().then(() => {});
+
+        expect(handleErrors).toHaveBeenCalledTimes(1);
     });
 });

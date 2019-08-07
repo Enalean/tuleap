@@ -127,6 +127,7 @@ import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForUp
 import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForCreate.spec.js";
 
 import "./components/Folder/Permissions/PermissionsUpdateModal.spec";
+import "./components/Folder/Permissions/PermissionsSelector.spec";
 
 import "./components/User/UserBadge.spec.js";
 import "./components/User/UserName.spec.js";
@@ -137,3 +138,4 @@ import "./helpers/approval-table-helper.spec.js";
 import "./helpers/clipboard/clipboard-helpers.spec.js";
 import "./helpers/metadata-helpers/hardcoded-metadata-mapping-helper.spec.js";
 import "./helpers/metadata-helpers/obsolescence-date-value.spec.js";
+import "./helpers/permissions/ugroups.spec.js";

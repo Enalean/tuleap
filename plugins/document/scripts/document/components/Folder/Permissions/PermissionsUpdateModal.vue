@@ -34,9 +34,27 @@
                     <translate>Access to legacy permissions update page</translate>
                 </a>
             </div>
-            <div></div>
+            <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">
+                <i class="fa fa-spin fa-circle-o-notch"></i>
+            </div>
+            <div v-else-if="item.permissions_for_groups" class="document-permissions-ugroups" data-test="document-permissions-update-selectors">
+                <permissions-selector
+                    v-bind:label="label_reader"
+                    v-bind:project_ugroups="project_ugroups"
+                    v-bind:selected_ugroups="item.permissions_for_groups.can_read"
+                />
+                <permissions-selector
+                    v-bind:label="label_writer"
+                    v-bind:project_ugroups="project_ugroups"
+                    v-bind:selected_ugroups="item.permissions_for_groups.can_write"
+                />
+                <permissions-selector
+                    v-bind:label="label_manager"
+                    v-bind:project_ugroups="project_ugroups"
+                    v-bind:selected_ugroups="item.permissions_for_groups.can_manage"
+                />
+            </div>
         </div>
-
         <div v-bind:aria-labelled-by="aria_labelled_by" class="tlp-modal-footer">
             <button
                 type="button"
@@ -56,19 +74,25 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EventBus from "../../../helpers/event-bus.js";
+import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../../helpers/permissions/ugroups.js";
+import PermissionsSelector from "./PermissionsSelector.vue";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
 
 export default {
     name: "PermissionsUpdateModal",
     components: {
         ModalHeader,
-        ModalFeedback
+        ModalFeedback,
+        PermissionsSelector
     },
     props: {
         item: Object
     },
     data: () => {
         return {
-            aria_labelled_by: "document-update-permissions-modal"
+            modal: null,
+            aria_labelled_by: "document-update-permissions-modal",
+            project_ugroups: null
         };
     },
     computed: {
@@ -76,6 +100,15 @@ export default {
         ...mapState("error", ["has_modal_error"]),
         modal_title() {
             return sprintf(this.$gettext('Edit "%s" permissions'), this.item.title);
+        },
+        label_reader() {
+            return this.$gettext("Reader");
+        },
+        label_writer() {
+            return this.$gettext("Writer");
+        },
+        label_manager() {
+            return this.$gettext("Manager");
         },
         legacy_update_page_href() {
             return (
@@ -97,8 +130,18 @@ export default {
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
-        show() {
+        async show() {
             this.modal.show();
+            if (this.project_ugroups === null) {
+                try {
+                    this.project_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(
+                        this.project_id
+                    );
+                } catch (e) {
+                    await handleErrors(this.$store, e);
+                    this.modal.hide();
+                }
+            }
         },
         reset() {
             this.$store.commit("error/resetModalError");
