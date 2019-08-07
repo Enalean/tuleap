@@ -62,7 +62,7 @@ class ServicesPresenterBuilder
                 $service->getScope() !== Service::SCOPE_SYSTEM,
                 $this->canUpdateIsActive($user),
                 $this->getServiceLink($service, $project),
-                $this->shouldShowDynamicModal($service, $user)
+                $this->shouldShowDynamicModal($service)
             );
         }
 
@@ -110,8 +110,8 @@ class ServicesPresenterBuilder
         return $service_url_collector->getUrl();
     }
 
-    private function shouldShowDynamicModal(Service $service, PFUser $user): bool
+    private function shouldShowDynamicModal(Service $service): bool
     {
-        return $service->getScope() !== Service::SCOPE_SYSTEM && ! $user->isSuperUser();
+        return $service->getScope() !== Service::SCOPE_SYSTEM;
     }
 }

@@ -72,14 +72,15 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
+        $current_user = $request->getCurrentUser();
 
-        if (! $request->getCurrentUser()->isAdmin($project->getID())) {
+        if (! $current_user->isAdmin($project->getID())) {
             throw new ForbiddenException();
         }
 
         $presenter = $this->presenter_builder->build($project, self::getCSRFTokenSynchronizer(), $request->getCurrentUser());
 
-        $this->displayHeader($project, $layout);
+        $this->displayHeader($project, $layout, $current_user);
         TemplateRendererFactory::build()
             ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/services/')
             ->renderToPage(
@@ -89,10 +90,14 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
         $this->displayFooter();
     }
 
-    private function displayHeader(Project $project, BaseLayout $layout)
+    private function displayHeader(Project $project, BaseLayout $layout, \PFUser $current_user): void
     {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('project-admin-services.js'));
+        $javascript_file_name = 'project-admin-services.js';
+        if ($current_user->isSuperUser()) {
+            $javascript_file_name = 'site-admin-services.js';
+        }
+        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL($javascript_file_name));
         $this->navigation_displayer->displayBurningParrotNavigation($title, $project, 'services');
     }
 

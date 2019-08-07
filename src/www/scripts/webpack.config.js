@@ -155,7 +155,8 @@ const webpack_config_for_vue_components = {
     entry: {
         "news-permissions": "./news/permissions-per-group/index.js",
         "frs-permissions": "./frs/permissions-per-group/index.js",
-        "project-admin-services": "./project/admin/services/src/index.js"
+        "project-admin-services": "./project/admin/services/src/index-project-admin.js",
+        "site-admin-services": "./project/admin/services/src/index-site-admin.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

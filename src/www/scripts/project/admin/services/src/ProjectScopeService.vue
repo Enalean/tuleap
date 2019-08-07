@@ -80,7 +80,9 @@
 
         <hr class="tlp-modal-separator">
 
-        <input type="hidden" name="is_active" v-bind:value="is_active_string">
+        <slot name="is_active">
+            <input type="hidden" name="is_active" v-bind:value="is_active_string">
+        </slot>
 
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,17 +22,16 @@ import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 
-import { createVueModal } from "./edit-modal-initializer.js";
 import VueTranslater from "./VueTranslater.vue";
 
 const VueTranslaterComponent = new VueTranslater();
 
-document.addEventListener("DOMContentLoaded", () => {
+export function setupModalButtons(createVueModalCallback) {
     initVueGettext();
     setupAddButton();
-    setupEditButtons();
+    setupEditButtons(createVueModalCallback);
     setupDeleteButtons();
-});
+}
 
 function setupAddButton() {
     const add_button_id = "project-admin-services-add-button";
@@ -45,8 +44,8 @@ function setupAddButton() {
     });
 }
 
-function setupEditButtons() {
-    const vue_modal = createVueModal();
+function setupEditButtons(createVueModalCallback) {
+    const vue_modal = createVueModalCallback();
 
     const edit_buttons = document.querySelectorAll(".project-admin-services-edit-button");
     for (const edit_button of edit_buttons) {
