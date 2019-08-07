@@ -50,69 +50,64 @@
 <script lang="ts">
 import { sprintf } from "sprintf-js";
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { MilestoneData } from "../../../type";
 
-export default Vue.extend({
-    name: "ReleaseHeaderRemainingPoints",
-    props: {
-        releaseData: Object
-    },
-    data() {
-        return {
-            disabled_points:
-                (!this.releaseData.remaining_effort && this.releaseData.remaining_effort !== 0) ||
-                !this.releaseData.initial_effort ||
-                this.releaseData.initial_effort < this.releaseData.remaining_effort
-        };
-    },
-    computed: {
-        are_all_effort_defined(): boolean {
-            return (
-                this.releaseData.remaining_effort > 0 &&
-                this.releaseData.initial_effort > 0 &&
-                this.releaseData.initial_effort > this.releaseData.remaining_effort
-            );
-        },
-        get_tooltip_effort_points(): string {
-            const remaining_effort = this.releaseData.remaining_effort;
-            const initial_effort = this.releaseData.initial_effort;
+@Component
+export default class ReleaseHeaderRemainingPoints extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
 
-            if (!remaining_effort && remaining_effort !== 0) {
-                return this.$gettext("No remaining effort defined.");
-            }
+    disabled_points =
+        (!this.releaseData.remaining_effort && this.releaseData.remaining_effort !== 0) ||
+        !this.releaseData.initial_effort ||
+        this.releaseData.initial_effort < this.releaseData.remaining_effort;
 
-            if (!initial_effort && initial_effort !== 0) {
-                return this.$gettext("No initial effort defined.");
-            }
+    formatPoints = (pts: number): number => (pts ? pts : 0);
 
-            if (initial_effort === 0) {
-                return this.$gettext("Initial effort equal at 0.");
-            }
-
-            if (initial_effort < remaining_effort) {
-                return sprintf(
-                    this.$gettext(
-                        "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
-                    ),
-                    initial_effort,
-                    remaining_effort
-                );
-            }
-
-            return (
-                (
-                    ((this.releaseData.initial_effort - this.releaseData.remaining_effort) /
-                        this.releaseData.initial_effort) *
-                    100
-                )
-                    .toFixed(2)
-                    .toString() + "%"
-            );
-        }
-    },
-    methods: {
-        formatPoints(pts: number): number {
-            return pts ? pts : 0;
-        }
+    get are_all_effort_defined(): boolean {
+        return (
+            this.releaseData.remaining_effort! > 0 &&
+            this.releaseData.initial_effort! > 0 &&
+            this.releaseData.initial_effort! > this.releaseData.remaining_effort!
+        );
     }
-});
+
+    get get_tooltip_effort_points(): string {
+        const remaining_effort = this.releaseData.remaining_effort;
+        const initial_effort = this.releaseData.initial_effort;
+
+        if (!remaining_effort && remaining_effort !== 0) {
+            return this.$gettext("No remaining effort defined.");
+        }
+
+        if (!initial_effort && initial_effort !== 0) {
+            return this.$gettext("No initial effort defined.");
+        }
+
+        if (initial_effort === 0) {
+            return this.$gettext("Initial effort equal at 0.");
+        }
+
+        if (initial_effort < remaining_effort) {
+            return sprintf(
+                this.$gettext(
+                    "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
+                ),
+                initial_effort,
+                remaining_effort
+            );
+        }
+
+        return (
+            (
+                ((this.releaseData.initial_effort! - this.releaseData.remaining_effort!) /
+                    this.releaseData.initial_effort!) *
+                100
+            )
+                .toFixed(2)
+                .toString() + "%"
+        );
+    }
+}
 </script>

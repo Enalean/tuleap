@@ -49,64 +49,61 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { State } from "vuex-class";
+import { MilestoneData } from "../../../type";
 
-export default Vue.extend({
-    name: "ReleaseHeaderRemainingDays",
-    props: {
-        releaseData: Object
-    },
-    data() {
-        return {
-            disabled_date:
-                (!this.releaseData.number_days_since_start &&
-                    this.releaseData.number_days_since_start !== 0) ||
-                (!this.releaseData.number_days_until_end &&
-                    this.releaseData.number_days_until_end !== 0)
-        };
-    },
-    computed: {
-        are_dates_correctly_set(): boolean {
-            return (
-                this.releaseData.number_days_since_start >= 0 &&
-                this.releaseData.number_days_until_end > 0
-            );
-        },
-        get_tooltip_effort_date(): string {
-            const days_since_start = this.releaseData.number_days_since_start;
-            const days_until_end = this.releaseData.number_days_until_end;
+@Component
+export default class ReleaseHeaderRemainingDays extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+    @State
+    readonly project_id!: number;
 
-            if (!days_since_start && days_since_start !== 0) {
-                return this.$gettext("No start date defined.");
-            }
+    disabled_date =
+        (!this.releaseData.number_days_since_start &&
+            this.releaseData.number_days_since_start !== 0) ||
+        (!this.releaseData.number_days_until_end && this.releaseData.number_days_until_end !== 0);
 
-            if (!days_until_end && days_until_end !== 0) {
-                return this.$gettext("No end date defined.");
-            }
+    formatDate = (date: number): number => (date && date > 0 ? date : 0);
 
-            if (days_since_start < 0) {
-                return "0.00%";
-            }
-
-            if (days_since_start > 0 && days_until_end < 0) {
-                return "100.00%";
-            }
-
-            return (
-                (
-                    (this.releaseData.number_days_since_start /
-                        (this.releaseData.number_days_since_start +
-                            this.releaseData.number_days_until_end)) *
-                    100
-                )
-                    .toFixed(2)
-                    .toString() + "%"
-            );
-        }
-    },
-    methods: {
-        formatDate(date: number): number {
-            return date && date > 0 ? date : 0;
-        }
+    get are_dates_correctly_set(): boolean {
+        return (
+            this.releaseData.number_days_since_start! >= 0 &&
+            this.releaseData.number_days_until_end! > 0
+        );
     }
-});
+
+    get get_tooltip_effort_date(): string {
+        const days_since_start = this.releaseData.number_days_since_start;
+        const days_until_end = this.releaseData.number_days_until_end;
+
+        if (!days_since_start && days_since_start !== 0) {
+            return this.$gettext("No start date defined.");
+        }
+
+        if (!days_until_end && days_until_end !== 0) {
+            return this.$gettext("No end date defined.");
+        }
+
+        if (days_since_start < 0) {
+            return "0.00%";
+        }
+
+        if (days_since_start > 0 && days_until_end < 0) {
+            return "100.00%";
+        }
+
+        return (
+            (
+                (this.releaseData.number_days_since_start! /
+                    (this.releaseData.number_days_since_start! +
+                        this.releaseData.number_days_until_end!)) *
+                100
+            )
+                .toFixed(2)
+                .toString() + "%"
+        );
+    }
+}
 </script>

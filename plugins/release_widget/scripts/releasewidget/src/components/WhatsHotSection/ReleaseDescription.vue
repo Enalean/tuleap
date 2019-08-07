@@ -29,24 +29,27 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { MilestoneData } from "../../type";
+import { State } from "vuex-class";
 
-export default Vue.extend({
-    name: "ReleaseDescription",
-    props: {
-        releaseData: Object
-    },
-    computed: {
-        get_overview_link(): string {
-            return (
-                "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(this.$store.state.project_id) +
-                "&planning_id=" +
-                encodeURIComponent(this.releaseData.planning.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(this.releaseData.id) +
-                "&pane=details"
-            );
-        }
+@Component
+export default class ReleaseDescription extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+    @State
+    readonly project_id!: number;
+
+    get get_overview_link(): string {
+        return (
+            "/plugins/agiledashboard/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&planning_id=" +
+            encodeURIComponent(this.releaseData.planning!.id) +
+            "&action=show&aid=" +
+            encodeURIComponent(this.releaseData.id) +
+            "&pane=details"
+        );
     }
-});
+}
 </script>

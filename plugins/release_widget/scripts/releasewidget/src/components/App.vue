@@ -34,29 +34,38 @@
 </template>
 
 <script lang="ts">
-import { mapGetters, mapState } from "vuex";
-import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
+import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Action, Getter, Mutation, State } from "vuex-class";
 
-export default Vue.extend({
-    name: "App",
-    components: { WhatsHotSection, RoadmapSection },
-    props: {
-        projectId: Number
-    },
-    computed: {
-        ...mapState(["is_loading"]),
-        ...mapGetters(["has_rest_error"]),
-        error(): string {
-            return this.$store.state.error_message === ""
-                ? this.$gettext("Oops, an error occurred!")
-                : this.$store.state.error_message;
-        }
-    },
+@Component({
+    components: { WhatsHotSection, RoadmapSection }
+})
+export default class App extends Vue {
+    @Prop()
+    readonly projectId!: number;
+    @State
+    readonly is_loading!: boolean;
+    @State
+    readonly error_message!: string;
+    @Getter
+    has_rest_error!: boolean;
+    @Mutation
+    setProjectId!: (projectId: number) => void;
+    @Action
+    getMilestones!: () => void;
+
     created(): void {
-        this.$store.commit("setProjectId", this.projectId);
-        this.$store.dispatch("getMilestones");
+        this.setProjectId(this.projectId);
+        this.getMilestones();
     }
-});
+
+    get error(): string {
+        return this.error_message === ""
+            ? this.$gettext("Oops, an error occurred!")
+            : this.error_message;
+    }
+}
 </script>

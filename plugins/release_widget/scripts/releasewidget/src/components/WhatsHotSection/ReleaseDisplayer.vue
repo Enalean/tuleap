@@ -42,26 +42,24 @@ import ReleaseBadges from "./ReleaseBadges.vue";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
+import { MilestoneData } from "../../type";
+import { Component, Prop } from "vue-property-decorator";
 
-export default Vue.extend({
-    name: "ReleaseDisplayer",
+@Component({
     components: {
         ReleaseHeader,
         ReleaseDescription,
         ReleaseBadges
-    },
-    props: {
-        releaseData: Object
-    },
-    data() {
-        return {
-            is_open: false
-        };
-    },
-    methods: {
-        toggleReleaseDetails(): void {
-            this.is_open = !this.is_open;
-        }
     }
-});
+})
+export default class ReleaseDisplayer extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+
+    is_open = false;
+
+    toggleReleaseDetails(): void {
+        this.is_open = !this.is_open;
+    }
+}
 </script>
