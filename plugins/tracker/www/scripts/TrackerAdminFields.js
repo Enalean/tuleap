@@ -97,7 +97,7 @@ document.observe("dom:loaded", function() {
                 });
                 var parameters = {};
                 parameters[button.name] = 1;
-                //eslint-disable-next-line no-unused-vars
+                //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var req = new Ajax.Request(button.up("form").action, {
                     parameters: parameters,
                     onComplete: function(transport) {
@@ -157,7 +157,7 @@ document.observe("dom:loaded", function() {
                             });
 
                         //Edit list values
-                        var e = new codendi.tracker.bind.Editor(admin_field_properties); //eslint-disable-line no-unused-vars
+                        var e = new codendi.tracker.bind.Editor(admin_field_properties); //eslint-disable-line @typescript-eslint/no-unused-vars
 
                         // Restore button icon
                         buttonImg.src = buttonIcon;
@@ -208,7 +208,7 @@ document.observe("dom:loaded", function() {
                     admin_field_properties.hide();
                     palette.show();
                 }
-                //eslint-disable-next-line no-unused-vars
+                //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var r = new Ajax.Request(a.href, {
                     onComplete: function(transport) {
                         //Don't use directly updater since the form is stripped
@@ -232,7 +232,7 @@ document.observe("dom:loaded", function() {
                                     if (element.viewportOffset()[1] < 0) {
                                         element.scrollTo();
                                     }
-                                    //eslint-disable-next-line no-unused-vars
+                                    //eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     var e = new Effect.Highlight(element, {
                                         queue: "end"
                                     });
@@ -278,7 +278,7 @@ document.observe("dom:loaded", function() {
                         });
 
                         //Edit list values
-                        var e = new codendi.tracker.bind.Editor(selected_element); //eslint-disable-line no-unused-vars
+                        var e = new codendi.tracker.bind.Editor(selected_element); //eslint-disable-line @typescript-eslint/no-unused-vars
 
                         //register hide action
                         tracker_register_hide_value();

@@ -268,7 +268,7 @@ document.observe("dom:loaded", function() {
                                 content = $("tracker_followup_comment_edit_" + id).getValue();
                             }
                             var format = $("rte_format_selectbox" + id).value;
-                            //eslint-disable-next-line no-unused-vars
+                            //eslint-disable-next-line @typescript-eslint/no-unused-vars
                             var req = new Ajax.Request(location.href, {
                                 parameters: {
                                     func: "update-comment",
@@ -284,7 +284,7 @@ document.observe("dom:loaded", function() {
                                     }
                                     edit_panel.remove();
                                     comment_panel.update(transport.responseText).show();
-                                    var e = new Effect.Highlight(comment_panel); //eslint-disable-line no-unused-vars
+                                    var e = new Effect.Highlight(comment_panel); //eslint-disable-line @typescript-eslint/no-unused-vars
                                 }
                             });
                             edit.show();

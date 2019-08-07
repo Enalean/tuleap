@@ -55,7 +55,7 @@ codendi.ReorderColumns = Class.create({
                 }
             }.bind(this)
         );
-        //eslint-disable-next-line no-unused-vars
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
         var d = new Draggable(cell.down("table"), {
             handle: cell.down(".tracker_report_table_column_grip"),
             revert: true,
@@ -108,7 +108,7 @@ codendi.ReorderColumns = Class.create({
                     }
 
                     //save the new column order
-                    var req = new Ajax.Request( //eslint-disable-line no-unused-vars
+                    var req = new Ajax.Request( //eslint-disable-line @typescript-eslint/no-unused-vars
                         codendi.tracker.base_url +
                             "?report=" +
                             report_id +

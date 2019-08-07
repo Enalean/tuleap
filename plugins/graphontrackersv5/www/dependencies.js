@@ -26,7 +26,7 @@
 //                one selected option
 /*
 DESCRIPTION: These are general functions to deal with and manipulate
-select boxes. Also see the OptionTransfer library to more easily 
+select boxes. Also see the OptionTransfer library to more easily
 handle transferring options between two lists
 
 COMPATABILITY: These are fairly basic functions - they should work on
@@ -82,7 +82,7 @@ function selectUnselectMatchingOptions(obj, regex, which, only) {
 //  This function selects all options that match the regular expression
 //  passed in. Currently-selected options will not be changed.
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function selectMatchingOptions(obj, regex) {
     selectUnselectMatchingOptions(obj, regex, "select", false);
 }
@@ -91,7 +91,7 @@ function selectMatchingOptions(obj, regex) {
 //  This function selects all options that match the regular expression
 //  passed in. Selected options that don't match will be un-selected.
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function selectOnlyMatchingOptions(obj, regex) {
     selectUnselectMatchingOptions(obj, regex, "select", true);
 }
@@ -257,7 +257,7 @@ function copySelectedOptions(from, to) {
 // moveAllOptions(select_object,select_object[,autosort(true/false)[,regex]])
 //  Move all options from one select box to another.
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function moveAllOptions(from, to) {
     selectAllOptions(from);
     if (arguments.length == 2) {
@@ -274,7 +274,7 @@ function moveAllOptions(from, to) {
 //  Copy all options from one select box to another, instead of
 //  removing items. Duplicates in the target list are not allowed.
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function copyAllOptions(from, to) {
     selectAllOptions(from);
     if (arguments.length == 2) {
@@ -304,7 +304,7 @@ function swapOptions(obj, i, j) {
 // moveOptionUp(select_object)
 //  Move selected option in a select list up one
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function moveOptionUp(obj) {
     if (!hasOptions(obj)) {
         return;
@@ -323,7 +323,7 @@ function moveOptionUp(obj) {
 // moveOptionDown(select_object)
 //  Move selected option in a select list down one
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function moveOptionDown(obj) {
     if (!hasOptions(obj)) {
         return;
@@ -343,7 +343,7 @@ function moveOptionDown(obj) {
 //  Remove all selected options from a list
 //  (Thanks to Gene Ninestein)
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeSelectedOptions(from) {
     if (!hasOptions(from)) {
         return;
@@ -365,7 +365,7 @@ function removeSelectedOptions(from) {
 // removeAllOptions(select_object)
 //  Remove all options from a list
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeAllOptions(from) {
     if (!hasOptions(from)) {
         return;
@@ -380,7 +380,7 @@ function removeAllOptions(from) {
 // addOption(select_object,display_text,value,selected)
 //  Add an option to a list
 // -------------------------------------------------------------------
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function addOption(obj, text, value, selected) {
     if (obj != null && obj.options != null) {
         obj.options[obj.options.length] = new Option(text, value, false, selected);

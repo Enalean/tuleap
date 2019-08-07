@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function addHeader(cc, file, header_type) {
     var ni = document.getElementById("mail_header");
     var numi = document.getElementById("header_val");
@@ -53,7 +53,7 @@ function addHeader(cc, file, header_type) {
     ni.appendChild(newdiv);
 }
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeHeader(divNum) {
     var d = document.getElementById("mail_header");
     var olddiv = document.getElementById(divNum);

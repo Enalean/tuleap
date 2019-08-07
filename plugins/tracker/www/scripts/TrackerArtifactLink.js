@@ -192,7 +192,7 @@ codendi.tracker.artifact.artifactLink = {
                 if (nature_select) {
                     nature = nature_select.value;
                 }
-                //eslint-disable-next-line no-unused-vars
+                //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var req = new Ajax.Request(codendi.tracker.base_url + "?", {
                     parameters: {
                         formElement: codendi.tracker.artifact.artifactLinker_currentField_id,
@@ -504,7 +504,7 @@ codendi.tracker.artifact.artifactLink = {
                 )[1]; // class="tracker-form-element-artifactlink-tracker_974"
             }
 
-            var firstNotLabel = tab_list //eslint-disable-line no-unused-vars
+            var firstNotLabel = tab_list //eslint-disable-line @typescript-eslint/no-unused-vars
                 .childElements()
                 .grep(new Selector(":not(li.tracker-form-element-artifactlink-list-nav-label)"))[0];
             var current_tab = tab_list.down(

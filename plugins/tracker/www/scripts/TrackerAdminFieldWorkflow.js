@@ -22,7 +22,7 @@
 
 document.observe("dom:loaded", function() {
     $$(".tracker-field-richtext").each(function define_rich_text(elem) {
-        var r = new codendi.RTE(elem); //eslint-disable-line no-unused-vars
+        var r = new codendi.RTE(elem); //eslint-disable-line @typescript-eslint/no-unused-vars
     });
 
     $$(

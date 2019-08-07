@@ -1369,7 +1369,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 if (!init_obsolescence_date) {
     var init_obsolescence_date = -1;
 }
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function change_obsolescence_date(form) {
     // Find selected value
     var element = form.validity;

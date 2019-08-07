@@ -19,6 +19,8 @@ module.exports = {
         // Possible Errors
         "no-template-curly-in-string": "error",
         // Best Practices
+        "@typescript-eslint/no-unused-vars": "error",
+        "no-unused-vars": "off",
         "array-callback-return": "warn",
         "consistent-return": "warn",
         curly: "error",
@@ -117,12 +119,6 @@ module.exports = {
                 "jasmine/no-suite-callback-args": "error",
                 "jasmine/no-unsafe-spy": "error",
                 "jasmine/prefer-jasmine-matcher": "error"
-            }
-        },
-        {
-            files: ["*.ts"],
-            rules: {
-                "no-unused-vars": "off"
             }
         },
         {

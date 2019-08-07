@@ -22,7 +22,7 @@ var codendi = codendi || {};
 (function($, codendi) {
     $(document).ready(function() {
         var embedded_content = $("#embedded_content"),
-            //eslint-disable-next-line no-unused-vars
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             rte = null,
             options = null;
 

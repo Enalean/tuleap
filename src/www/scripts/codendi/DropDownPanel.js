@@ -127,7 +127,7 @@ codendi.DropDownPanel = Class.create({
 document.observe("dom:loaded", function() {
     $$(".dropdown_panel").each(function(element) {
         if (element.id && $(element.id + "_handle")) {
-            //eslint-disable-next-line no-unused-vars
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var d = new codendi.DropDownPanel(element, $(element.id + "_handle"));
         }
     });
