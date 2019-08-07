@@ -33,6 +33,7 @@ class TrackerBase extends RestBase
     public const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
     public const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
     public const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
+    public const TRACKER_SEMANTICS_PROJECT_NAME     = 'test-tracker-semantics';
     private const TRACKER_FILE_URL_PROJECT_NAME     = 'test-tracker-file-url';
 
     public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
@@ -46,6 +47,7 @@ class TrackerBase extends RestBase
     public const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode';
     public const TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch';
     public const TRACKER_WORKFLOW_SIMPLE_MODE_FROM_XML_SHORTNAME  = 'workflow_simple_mode_from_xml';
+    public const TRACKER_WITH_TIMEFRAME_SEMANTIC_SHORTNAME        = 'tracker_semantic_timeframe';
     private const TRACKER_FILE_URL_SHORTNAME                      = 'image';
 
     protected $tracker_administrator_project_id;
@@ -64,6 +66,11 @@ class TrackerBase extends RestBase
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
 
+    /**
+     * @var int
+     */
+    public $tracker_with_timeframe_semantic_id;
+
     public function setUp() : void
     {
         parent::setUp();
@@ -74,6 +81,7 @@ class TrackerBase extends RestBase
         $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
         $this->tracker_workflows_project_id     = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
         $file_url_project_id                    = $this->getProjectId(self::TRACKER_FILE_URL_PROJECT_NAME);
+        $tracker_semantics_project_id           = $this->getProjectId(self::TRACKER_SEMANTICS_PROJECT_NAME);
 
         $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
@@ -85,6 +93,7 @@ class TrackerBase extends RestBase
         $this->simple_mode_workflow_to_switch_tracker_id = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME];
         $this->simple_mode_from_xml_tracker_id           = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_FROM_XML_SHORTNAME];
         $this->tracker_file_url_id                       = $this->tracker_ids[$file_url_project_id][self::TRACKER_FILE_URL_SHORTNAME];
+        $this->tracker_with_timeframe_semantic_id        = $this->tracker_ids[$tracker_semantics_project_id][self::TRACKER_WITH_TIMEFRAME_SEMANTIC_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
