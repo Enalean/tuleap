@@ -29,37 +29,46 @@ const VueTranslaterComponent = new VueTranslater();
 
 document.addEventListener("DOMContentLoaded", () => {
     initVueGettext();
-    initModals();
+    setupAddButton();
+    setupEditButtons();
+    setupDeleteButtons();
 });
 
-function initModals() {
+function setupAddButton() {
+    const add_button_id = "project-admin-services-add-button";
+    const add_button = document.getElementById(add_button_id);
+    if (!add_button) {
+        throw new Error(`Could not find button #${add_button_id}`);
+    }
+    add_button.addEventListener("click", () => {
+        createAndShowModal(add_button);
+    });
+}
+
+function setupEditButtons() {
     const vue_modal = createVueModal();
 
-    document.addEventListener("click", event => {
-        const button = event.target;
-        const is_add_button = button.id === "project-admin-services-add-button";
-        const is_edit_button = button.classList.contains("project-admin-services-edit-button");
-        const is_delete_button = button.classList.contains("project-admin-services-delete-button");
-
-        if (is_add_button) {
-            createAndShowModal(button);
-            return;
-        }
-
-        if (is_edit_button) {
-            if (typeof button.dataset.serviceJson !== "undefined") {
-                vue_modal.show(button);
+    const edit_buttons = document.querySelectorAll(".project-admin-services-edit-button");
+    for (const edit_button of edit_buttons) {
+        const should_show_dynamic_modal = typeof edit_button.dataset.serviceJson !== "undefined";
+        edit_button.addEventListener("click", () => {
+            if (should_show_dynamic_modal === true) {
+                vue_modal.show(edit_button);
                 return;
             }
-            createAndShowModal(button);
-            return;
-        }
+            createAndShowModal(edit_button);
+        });
+    }
+}
 
-        if (is_delete_button) {
-            updateDeleteModalContent(button);
-            createAndShowModal(button);
-        }
-    });
+function setupDeleteButtons() {
+    const delete_buttons = document.querySelectorAll(".project-admin-services-delete-button");
+    for (const delete_button of delete_buttons) {
+        delete_button.addEventListener("click", () => {
+            updateDeleteModalContent(delete_button);
+            createAndShowModal(delete_button);
+        });
+    }
 }
 
 function initVueGettext() {
