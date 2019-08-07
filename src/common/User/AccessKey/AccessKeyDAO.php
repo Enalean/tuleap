@@ -69,6 +69,14 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
+    public function deleteByExpirationDate(int $timestamp)
+    {
+        $this->getDB()->delete(
+            'user_access_key',
+            EasyStatement::open()->with('expiration_date <= ?', $timestamp)->andWith('expiration_date IS NOT NULL')
+        );
+    }
+
     public function updateAccessKeyUsageByID($id, $current_time, $ip_address)
     {
         $sql = 'UPDATE user_access_key

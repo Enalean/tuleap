@@ -36,6 +36,8 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyRevoker;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -139,6 +141,9 @@ $CLI_command_collector->addCommand(
         return new DailyJobCommand(
             $event_manager,
             $user_manager,
+            new AccessKeyRevoker(
+                new AccessKeyDAO()
+            ),
             DBFactory::getMainTuleapDBConnection(),
             new ExecutionDelayedLauncher(
                 new ConditionalTuleapCronEnvExecutionDelayer(
