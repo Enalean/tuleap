@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Gitolite\SSHKey;
 
 use IHaveAnSSHKey;
+use Logger;
 use System_Command;
 use System_Command_CommandException;
 
@@ -38,10 +39,19 @@ class Gitolite3Dumper implements Dumper
      */
     private $system_command;
 
-    public function __construct(AuthorizedKeysFileCreator $authorized_keys_file_creator, System_Command $system_command)
-    {
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(
+        AuthorizedKeysFileCreator $authorized_keys_file_creator,
+        System_Command $system_command,
+        Logger $logger
+    ) {
         $this->authorized_keys_file_creator = $authorized_keys_file_creator;
         $this->system_command               = $system_command;
+        $this->logger                       = $logger;
     }
 
     /**
@@ -52,6 +62,7 @@ class Gitolite3Dumper implements Dumper
         try {
             $this->dumpKeys($invalid_keys_collector);
         } catch (DumpKeyException $ex) {
+            $this->logger->error($ex->getMessage());
             return false;
         }
 

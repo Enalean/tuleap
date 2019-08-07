@@ -2083,11 +2083,12 @@ class GitPlugin extends Plugin
 
         return new DumperFactory(
             $this->getManagementDetector(),
-            new AuthorizedKeysFileCreator($whole_instance_keys, $system_command, $this->getLogger()),
+            new AuthorizedKeysFileCreator($whole_instance_keys, $system_command),
             $system_command,
             $git_exec,
             $gitolite_admin_path,
-            $user_manager
+            $user_manager,
+            $this->getLogger()
         );
     }
 
