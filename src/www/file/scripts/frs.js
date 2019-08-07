@@ -38,7 +38,7 @@ function replace(expr, a, b) {
     return expr;
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function update_news() {
     var rel_name = $("release_name");
     var subject = $("release_news_subject");
@@ -201,7 +201,7 @@ function add_new_file() {
     current_select_number++;
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function add_new_link(event) {
     event.preventDefault();
     var table = document.getElementById("frs-uploaded-link-creation");
@@ -288,7 +288,7 @@ function onselectchange(select, number, id, cell_trash, image) {
     }
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function delete_file(row_id, id) {
     nb_files--;
     if ($("file_" + id) == null) {
@@ -309,7 +309,7 @@ function delete_file(row_id, id) {
     }
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function show_upload_change_log() {
     Element.hide("cl_upload_link");
     Element.hide("change_log_area");
@@ -317,7 +317,7 @@ function show_upload_change_log() {
     Element.show("cancel_change_log");
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function cancel_update_change_log() {
     Element.show("change_log_area");
     Element.show("cl_upload_link");
@@ -335,7 +335,7 @@ function cancel_update_change_log() {
     Element.hide("cancel_change_log");
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function add_change_log() {
     Element.hide("add_change_log");
     Element.show("change_log_title");
@@ -352,7 +352,7 @@ function add_change_log() {
     });
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function show_upload_notes() {
     Element.show("upload_notes");
     Element.hide("rn_upload_link");
@@ -363,7 +363,7 @@ function show_upload_notes() {
     Element.hide("release_notes_area");
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function cancel_update_notes() {
     Element.show("release_notes_area");
     Element.show("rn_upload_link");
@@ -381,13 +381,13 @@ function cancel_update_notes() {
     Element.hide("cancel_notes");
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function view_change_permissions() {
     Element.hide("default_permissions");
     Element.show("permissions");
 }
 
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function refresh_file_list() {
     var url = "frsajax.php?group_id=" + group_id + "&action=refresh_file_list";
 

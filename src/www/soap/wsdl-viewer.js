@@ -1,4 +1,4 @@
-//eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function pagingInit() {
     var nav = document.getElementById("nav");
     var tabs = nav.getElementsByTagName("li");

@@ -187,6 +187,6 @@ codendi.tracker.bind.Editor = Class.create({
 });
 
 document.observe("dom:loaded", function() {
-    //eslint-disable-next-line no-unused-vars
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     var e = new codendi.tracker.bind.Editor();
 });

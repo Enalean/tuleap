@@ -29,7 +29,7 @@
         containers.each(function() {
             var container = $(this),
                 artifact_id = container.data("artifactId"),
-                //eslint-disable-next-line no-unused-vars
+                //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 hierarchy_viewer = new tuleap.artifact.HierarchyViewer(
                     codendi.tracker.base_url,
                     container.get(0),

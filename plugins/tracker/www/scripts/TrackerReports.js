@@ -101,7 +101,7 @@ codendi.tracker.report.table.saveColumnsWidth = function(table, onComplete) {
         }
     }
     var onCompleteFunction = onComplete || Prototype.emptyFunction;
-    //eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     var req = new Ajax.Request(location.href, {
         parameters: parameters,
         onComplete: function() {
@@ -194,7 +194,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                 parameters["renderer_table[add-column][artlink-nature]"] = artlink_nature;
             }
 
-            //eslint-disable-next-line no-unused-vars
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var req = new Ajax.Request(url, {
                 parameters: parameters,
                 onSuccess: function onSuccessAddColumn(transport) {
@@ -292,7 +292,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     column_id;
             });
         } else {
-            //eslint-disable-next-line no-unused-vars
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var req = new Ajax.Request(
                 codendi.tracker.base_url +
                     "?report=" +
@@ -438,7 +438,7 @@ codendi.tracker.report.loadAdvancedCriteria = function(element) {
                 .next()
                 .down("label")
                 .htmlFor.match(/_(\d+)$/)[1];
-            //eslint-disable-next-line no-unused-vars
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var req = new Ajax.Updater(li, location.href, {
                 parameters: {
                     func: "toggle-advanced",
@@ -734,7 +734,7 @@ document.observe("dom:loaded", function() {
                         "&renderer=" +
                         renderer_id;
 
-                    //eslint-disable-next-line no-unused-vars
+                    //eslint-disable-next-line @typescript-eslint/no-unused-vars
                     var req = new Ajax.Request(location.href, {
                         parameters: parameters,
                         onComplete: function() {
