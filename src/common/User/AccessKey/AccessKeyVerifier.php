@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
+use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
@@ -48,6 +49,7 @@ class AccessKeyVerifier
     /**
      * @return \PFUser
      * @throws AccessKeyNotFoundException
+     * @throws ExpiredAccessKeyException
      * @throws InvalidAccessKeyException
      * @throws AccessKeyMatchingUnknownUserException
      */
@@ -57,6 +59,11 @@ class AccessKeyVerifier
         if ($row === null) {
             throw new AccessKeyNotFoundException($access_key->getID());
         }
+
+        if ($this->isAccessKeyExpired($row['expiration_date'])) {
+            throw new ExpiredAccessKeyException();
+        }
+
         $is_valid_access_key = $this->hasher->verifyHash($access_key->getVerificationString(), $row['verifier']);
         if (! $is_valid_access_key) {
             throw new InvalidAccessKeyException();
@@ -77,9 +84,20 @@ class AccessKeyVerifier
         return $user;
     }
 
+    private function isAccessKeyExpired(?int $expiration_timestamp): bool
+    {
+        if ($expiration_timestamp === null) {
+            return false;
+        }
+
+        $current_time = new DateTimeImmutable();
+
+        return $expiration_timestamp <= $current_time->getTimestamp();
+    }
+
     private function updateLastAccessInformationIfNeeded(SplitToken $access_key, $last_usage, $last_ip, $ip_address_requesting_verification)
     {
-        $current_time = new \DateTimeImmutable();
+        $current_time = new DateTimeImmutable();
         if ($last_usage !== null && $last_ip !== null &&
             $last_ip === $ip_address_requesting_verification &&
             ($current_time->getTimestamp() - $last_usage) < (int) \ForgeConfig::get('last_access_resolution')
