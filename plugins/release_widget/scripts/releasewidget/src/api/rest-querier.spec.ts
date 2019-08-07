@@ -26,6 +26,7 @@ import {
 } from "./rest-querier";
 
 import { mockFetchSuccess, tlp } from "tlp-mocks";
+import { MilestoneData } from "../type";
 
 describe("getProject() -", () => {
     const limit = 50,
@@ -36,12 +37,8 @@ describe("getProject() -", () => {
     it("the REST API will be queried and the project's backlog returned", async () => {
         mockFetchSuccess(tlp.get, {
             headers: {
-                get: (header_name: string) => {
-                    const headers = {
-                        "X-PAGINATION-SIZE": 2
-                    };
-                    return headers[header_name];
-                }
+                // X-PAGINATION-SIZE
+                get: () => 2
             }
         });
 
@@ -102,14 +99,11 @@ describe("getProject() -", () => {
     });
 
     it("the REST API will be queried and the current milestones returned", async () => {
-        const milestones = [
-            [
-                {
-                    start_date: {},
-                    end_date: {},
-                    project: {}
-                }
-            ]
+        const milestones: MilestoneData[] = [
+            {
+                id: 1,
+                start_date: new Date()
+            }
         ];
 
         tlp.recursiveGet.and.returnValue(milestones);
@@ -141,13 +135,8 @@ describe("getProject() -", () => {
     it("the REST API will be queried and the total of sprints of a milestone returned", async () => {
         mockFetchSuccess(tlp.get, {
             headers: {
-                get: header_name => {
-                    const headers = {
-                        "X-PAGINATION-SIZE": 2
-                    };
-
-                    return headers[header_name];
-                }
+                // X-PAGINATION-SIZE
+                get: () => 2
             }
         });
 
@@ -178,13 +167,8 @@ describe("getProject() -", () => {
 
         mockFetchSuccess(tlp.get, {
             headers: {
-                get: header_name => {
-                    const headers = {
-                        "X-PAGINATION-SIZE": 2
-                    };
-
-                    return headers[header_name];
-                }
+                // X-PAGINATION-SIZE
+                get: () => 2
             },
             return_json: user_stories
         });

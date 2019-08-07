@@ -25,7 +25,7 @@ describe("Date formatters", () => {
         it("Given date, When I call this function with an ISO date, then it should return date at good format", () => {
             setUserLocale("en-US");
             const date_iso = new Date("2017-01-22T13:42:08+02:00");
-            expect(formatDateYearMonthDay(date_iso)).toEqual("Jan 22, 2017");
+            expect(formatDateYearMonthDay(date_iso.toDateString())).toEqual("Jan 22, 2017");
         });
 
         it("Given empty string, When I call this function with date null, then it should return empty string", () => {

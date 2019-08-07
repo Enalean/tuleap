@@ -21,16 +21,17 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeader from "./ReleaseHeader.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
-let releaseData = {};
-let component_options = {};
+let releaseData: MilestoneData;
+let component_options: ComponentOption;
 
 describe("ReleaseHeader", () => {
-    let store_options;
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -51,7 +52,7 @@ describe("ReleaseHeader", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00"),
             capacity: 10
         };
 
@@ -91,8 +92,7 @@ describe("ReleaseHeader", () => {
     it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", () => {
         releaseData = {
             label: "mile",
-            id: 2,
-            start_date: null
+            id: 2
         };
 
         component_options.propsData = {

@@ -19,20 +19,21 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
 
-let releaseData = {};
-let component_options = {};
-const project_id = "102";
+let releaseData: MilestoneData;
+const component_options: ComponentOption = {};
+const project_id = 102;
 
 describe("ReleaseDescription", () => {
-    let store_options;
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -55,14 +56,12 @@ describe("ReleaseDescription", () => {
         releaseData = {
             id: 2,
             planning: {
-                id: 100
+                id: "100"
             }
         };
 
-        component_options = {
-            propsData: {
-                releaseData
-            }
+        component_options.propsData = {
+            releaseData
         };
 
         getPersonalWidgetInstance(store_options);
@@ -77,7 +76,7 @@ describe("ReleaseDescription", () => {
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
-                encodeURIComponent(releaseData.planning.id) +
+                encodeURIComponent(releaseData.planning!.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(releaseData.id) +
                 "&pane=details"

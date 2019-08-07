@@ -21,17 +21,18 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
 
-let releaseData = {};
-let component_options = {};
+let releaseData: MilestoneData;
+let component_options: ComponentOption;
 
 describe("ReleaseDisplayer", () => {
-    let store_options;
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -52,7 +53,7 @@ describe("ReleaseDisplayer", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00"),
             capacity: 10,
             total_sprint: 20,
             initial_effort: 10

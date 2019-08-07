@@ -21,7 +21,7 @@ import { getUserLocale } from "./user-locale-helper";
 
 export { formatDateYearMonthDay };
 
-function formatDateYearMonthDay(date) {
+function formatDateYearMonthDay(date: string | null): string {
     if (!(date && Date.parse(date))) {
         return "";
     }

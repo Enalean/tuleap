@@ -19,21 +19,23 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ReleaseBadges from "./ReleaseBadges.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
 
-let releaseData = {};
-const total_sprint = 10;
-let initial_effort = 10;
-let component_options = {};
-const project_id = "102";
+let releaseData: MilestoneData;
+const total_sprint: number = 10;
+const initial_effort: number = 10;
+const component_options: ComponentOption = {};
+
+const project_id = 102;
 
 describe("ReleaseBadges", () => {
-    let store_options;
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -48,39 +50,35 @@ describe("ReleaseBadges", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {
+                project_id: project_id
+            }
         };
 
         releaseData = {
             label: "mile",
             id: 2,
             planning: {
-                id: 100
+                id: "100"
             },
             capacity: 10,
             total_sprint,
             initial_effort
         };
 
-        component_options = {
-            propsData: {
-                releaseData
-            }
-        };
+        component_options.propsData = { releaseData };
 
         getPersonalWidgetInstance(store_options);
     });
 
     it("When the component is displayed, Then a good link to top planning of the release is rendered", () => {
-        store_options.state.project_id = project_id;
-
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=planning-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
-                encodeURIComponent(releaseData.planning.id) +
+                encodeURIComponent(releaseData.planning!.id) +
                 "&action=show&aid=" +
                 encodeURIComponent(releaseData.id) +
                 "&pane=planning-v2"
@@ -96,24 +94,18 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", () => {
-            initial_effort = null;
-
             releaseData = {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 capacity: 10,
                 total_sprint,
-                initial_effort
+                initial_effort: null
             };
 
-            component_options = {
-                propsData: {
-                    releaseData
-                }
-            };
+            component_options.propsData = { releaseData };
             const wrapper = getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
@@ -121,22 +113,18 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there isn't initial effort, Then the points of initial effort are 'N/A'", () => {
-            initial_effort = null;
-
             releaseData = {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
-                capacity: 10,
+                capacity: null,
                 total_sprint
             };
 
-            component_options = {
-                propsData: {
-                    releaseData
-                }
+            component_options.propsData = {
+                releaseData
             };
             const wrapper = getPersonalWidgetInstance(store_options);
 
@@ -158,7 +146,7 @@ describe("ReleaseBadges", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 capacity: null,
                 total_sprint,
@@ -180,7 +168,7 @@ describe("ReleaseBadges", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 total_sprint,
                 initial_effort

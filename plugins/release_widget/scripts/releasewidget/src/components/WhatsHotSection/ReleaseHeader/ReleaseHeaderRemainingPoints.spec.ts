@@ -21,16 +21,17 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import { shallowMount } from "@vue/test-utils";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
-let releaseData = {};
-let component_options = {};
+let releaseData: MilestoneData;
+const component_options: ComponentOption = {};
 
-describe("ReleaseHeaderRemainingPoints", () => {
-    let store_options;
+describe("ReleaseHeaderRemainingEffort", () => {
+    let store_options: StoreOptions;
     let store;
 
-    function getPersonalWidgetInstance(store_options) {
+    function getPersonalWidgetInstance(store_options: StoreOptions) {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
@@ -51,14 +52,12 @@ describe("ReleaseHeaderRemainingPoints", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00"),
             capacity: 10
         };
 
-        component_options = {
-            propsData: {
-                releaseData
-            }
+        component_options.propsData = {
+            releaseData
         };
 
         getPersonalWidgetInstance(store_options);
@@ -70,7 +69,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: -1,
@@ -106,7 +105,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 initial_effort: 10
@@ -137,7 +136,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: null,
@@ -169,7 +168,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 5,
@@ -201,7 +200,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 0,
@@ -236,7 +235,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 5
@@ -267,7 +266,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 5,
@@ -299,7 +298,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 5,
@@ -331,7 +330,7 @@ describe("ReleaseHeaderRemainingPoints", () => {
                 label: "mile",
                 id: 2,
                 planning: {
-                    id: 100
+                    id: "100"
                 },
                 start_date: null,
                 remaining_effort: 100,

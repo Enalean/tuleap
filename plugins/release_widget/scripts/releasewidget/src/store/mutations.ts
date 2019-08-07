@@ -17,32 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { MilestoneData, State } from "../type";
+
 export default {
-    setProjectId(state, project_id) {
+    setProjectId(state: State, project_id: number): void {
         state.project_id = project_id;
     },
 
-    setIsLoading(state, loading) {
+    setIsLoading(state: State, loading: boolean): void {
         state.is_loading = loading;
     },
 
-    setNbBacklogItem(state, total) {
+    setNbBacklogItem(state: State, total: number): void {
         state.nb_backlog_items = total;
     },
 
-    setNbUpcomingReleases(state, total) {
+    setNbUpcomingReleases(state: State, total: number): void {
         state.nb_upcoming_releases = total;
     },
 
-    setErrorMessage(state, error_message) {
+    setErrorMessage(state: State, error_message: string): void {
         state.error_message = error_message;
     },
 
-    resetErrorMessage(state) {
+    resetErrorMessage(state: State): void {
         state.error_message = null;
     },
 
-    setCurrentMilestones(state, milestones) {
+    setCurrentMilestones(state: State, milestones: MilestoneData[]): void {
         state.current_milestones = milestones;
     }
 };

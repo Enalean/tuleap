@@ -19,12 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import { MilestoneData, StoreOptions } from "../../type";
 
 const project_id = 102;
-function getPersonalWidgetInstance(store_options) {
+
+function getPersonalWidgetInstance(store_options: StoreOptions) {
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
@@ -41,7 +43,11 @@ function getPersonalWidgetInstance(store_options) {
 }
 
 describe("What'sHotSection", () => {
-    let store_options;
+    let store_options: StoreOptions = {
+        state: {},
+        getters: {}
+    };
+
     beforeEach(() => {
         store_options = {
             state: {
@@ -63,12 +69,12 @@ describe("What'sHotSection", () => {
     });
 
     it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", () => {
-        const release1 = {
+        const release1: MilestoneData = {
             label: "release_1",
             id: 1
         };
 
-        const release2 = {
+        const release2: MilestoneData = {
             label: "release_2",
             id: 2
         };

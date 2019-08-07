@@ -19,12 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import { StoreOptions } from "../../type";
 
-const project_id = "102";
-function getPersonalWidgetInstance(store_options) {
+const project_id = 102;
+function getPersonalWidgetInstance(store_options: StoreOptions) {
     const store = createStoreMock(store_options);
     const component_options = {
         mocks: { $store: store }
@@ -38,12 +39,13 @@ function getPersonalWidgetInstance(store_options) {
 }
 
 describe("RoadmapSection", () => {
-    let store_options;
+    let store_options: StoreOptions;
     beforeEach(() => {
         store_options = {
             state: {
                 is_loading: false,
-                current_milestones: []
+                current_milestones: [],
+                project_id: project_id
             },
             getters: {
                 has_rest_error: false
@@ -54,8 +56,6 @@ describe("RoadmapSection", () => {
     });
 
     it("Given user display widget, Then a good link to top planning of the project is rendered", () => {
-        store_options.state.project_id = project_id;
-
         const wrapper = getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=backlog-link]").attributes("href")).toContain(

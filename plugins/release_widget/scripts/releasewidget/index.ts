@@ -21,7 +21,7 @@
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-
+// @ts-ignore
 import french_translations from "./po/fr.po";
 import App from "./src/components/App.vue";
 import { createStore } from "./src/store/index";
@@ -38,8 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
 
     const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
-    setUserLocale(locale.replace("_", "-"));
+    if (locale !== undefined) {
+        Vue.config.language = locale;
+        setUserLocale(locale.replace("_", "-"));
+    }
 
     const vue_mount_point = document.getElementById("release-widget");
 
@@ -47,7 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
+    const project_id_dataset = vue_mount_point.dataset.projectId;
+
+    if (!project_id_dataset) {
+        throw new Error("Project Id is missing.");
+    }
+
+    const project_id = Number.parseInt(project_id_dataset, 10);
 
     const AppComponent = Vue.extend(App);
     const store = createStore();

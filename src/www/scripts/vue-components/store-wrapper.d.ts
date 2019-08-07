@@ -17,17 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "../type";
+import { Store } from "vuex-mock-store";
 
-const state: State = {
-    project_id: null,
-    nb_backlog_items: 0,
-    nb_upcoming_releases: 0,
-    error_message: null,
-    offset: 0,
-    limit: 50,
-    is_loading: false,
-    current_milestones: []
-};
-
-export default state;
+export function createStoreMock(store_options: object, custom_state?: object): Store;

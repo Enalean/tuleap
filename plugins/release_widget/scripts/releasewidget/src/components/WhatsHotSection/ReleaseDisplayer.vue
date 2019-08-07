@@ -41,8 +41,9 @@
 import ReleaseBadges from "./ReleaseBadges.vue";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
     name: "ReleaseDisplayer",
     components: {
         ReleaseHeader,
@@ -58,9 +59,9 @@ export default {
         };
     },
     methods: {
-        toggleReleaseDetails() {
+        toggleReleaseDetails(): void {
             this.is_open = !this.is_open;
         }
     }
-};
+});
 </script>

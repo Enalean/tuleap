@@ -86,7 +86,7 @@ module.exports = {
         "vue/prop-name-casing": "off", // This would be interesting, but the --fix does not rename all instances, which will silently break your code
         "vue/require-component-is": "error",
         "vue/require-default-prop": "off",
-        "vue/require-direct-export": "error",
+        "vue/require-direct-export": "off",
         "vue/singleline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"]
@@ -117,6 +117,12 @@ module.exports = {
                 "jasmine/no-suite-callback-args": "error",
                 "jasmine/no-unsafe-spy": "error",
                 "jasmine/prefer-jasmine-matcher": "error"
+            }
+        },
+        {
+            files: ["*.ts"],
+            rules: {
+                "no-unused-vars": "off"
             }
         },
         {
