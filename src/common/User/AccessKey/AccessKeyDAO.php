@@ -29,15 +29,16 @@ class AccessKeyDAO extends DataAccessObject
     /**
      * @return int
      */
-    public function create($user_id, $hashed_verification_string, $current_time, $description)
+    public function create($user_id, $hashed_verification_string, $current_time, $description, $expiration_date_timestamp)
     {
         return (int) $this->getDB()->insertReturnId(
             'user_access_key',
             [
-                'user_id'       => $user_id,
-                'verifier'      => $hashed_verification_string,
-                'creation_date' => $current_time,
-                'description'   => $description
+                'user_id'         => $user_id,
+                'verifier'        => $hashed_verification_string,
+                'creation_date'   => $current_time,
+                'description'     => $description,
+                'expiration_date' => $expiration_date_timestamp
             ]
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,8 +50,9 @@ class AccessKeyCreationController implements DispatchableWithRequest
         );
 
         $description = $request->get('access-key-description') ?: '';
+        $expiration_date = null;
 
-        $access_key_creator->create($current_user, $description);
+        $access_key_creator->create($current_user, $description, $expiration_date);
 
         $layout->redirect('/account/#account-access-keys');
     }
