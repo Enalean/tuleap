@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,6 +50,9 @@ class PullRequestCloser
         $this->pull_request_merger  = $pull_request_merger;
     }
 
+    /**
+     * @throws PullRequestCannotBeAbandoned
+     */
     public function abandon(PullRequest $pull_request)
     {
         $status = $pull_request->getStatus();
@@ -64,6 +67,9 @@ class PullRequestCloser
         $this->pull_request_factory->markAsAbandoned($pull_request);
     }
 
+    /**
+     * @throws PullRequestCannotBeMerged
+     */
     public function doMerge(
         GitRepository $repository_dest,
         PullRequest $pull_request,
