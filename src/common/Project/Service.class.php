@@ -47,6 +47,25 @@ class Service
         self::TRACKERV3 => 'fa-list-ol',
     ];
 
+    /**
+     * @var array{
+     *          service_id: int,
+     *          group_id: int,
+     *          label: string,
+     *          description: string,
+     *          short_name: string,
+     *          link: string,
+     *          is_active: int,
+     *          is_used: int,
+     *          scope: string,
+     *          rank: int,
+     *          location: string,
+     *          server_id: ?int,
+     *          is_in_iframe: int,
+     *          is_in_new_tab: bool,
+     *          icon: string
+     *       }
+     */
     public $data;
 
     /**
@@ -242,6 +261,9 @@ class Service
 
     public function getIcon() : string
     {
+        if ($this->data['icon'] !== '') {
+            return $this->getFontAwesomeIcon($this->data['icon']);
+        }
         if (isset(self::ICONS[$this->getShortName()])) {
             return $this->getFontAwesomeIcon(self::ICONS[$this->getShortName()]);
         }
