@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,7 +46,7 @@ class AccessKeyDAO extends DataAccessObject
      */
     public function searchAccessKeyVerificationAndTraceabilityDataByID($key_id)
     {
-        return $this->getDB()->row('SELECT verifier, user_id, last_usage, last_ip FROM user_access_key WHERE id = ?', $key_id);
+        return $this->getDB()->row('SELECT verifier, user_id, last_usage, last_ip, expiration_date FROM user_access_key WHERE id = ?', $key_id);
     }
 
     public function searchMetadataByUserID($user_id)
@@ -69,7 +69,7 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
-    public function deleteByExpirationDate(int $timestamp)
+    public function deleteByExpirationDate(int $timestamp): void
     {
         $this->getDB()->delete(
             'user_access_key',

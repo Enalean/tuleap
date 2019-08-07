@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
+use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
@@ -78,7 +79,7 @@ class AccessKeyVerifierTest extends TestCase
         \ForgeConfig::set('last_access_resolution', self::LAST_ACCESS_RESOLUTION);
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => $last_usage, 'last_ip' => $last_ip]
+            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => $last_usage, 'last_ip' => $last_ip, 'expiration_date' => null]
         );
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $this->access_key->shouldReceive('getVerificationString')->andReturns($verification_string);
@@ -99,22 +100,22 @@ class AccessKeyVerifierTest extends TestCase
         return [
             [ // Different IP and last seen outside of the last access resolution
                 true,
-                (new \DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
+                (new DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
                 '192.0.2.7'
             ],
             [ // Different IP and last seen inside of the last access resolution
                 true,
-                (new \DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
+                (new DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
                 '192.0.2.7'
             ],
             [ // Same IP and last seen outside of the last access resolution
                 true,
-                (new \DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
+                (new DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
                 self::IP_ADDRESS_REQUESTING_VERIFICATION
             ],
             [ // Same IP and last seen inside of the last access resolution
                 false,
-                (new \DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
+                (new DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
                 self::IP_ADDRESS_REQUESTING_VERIFICATION
             ],
             [ // Access token never used before
@@ -139,7 +140,7 @@ class AccessKeyVerifierTest extends TestCase
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'invalid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
+            ['user_id' => 101, 'verifier' => 'invalid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
         $this->access_key->shouldReceive('getVerificationString')
             ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
@@ -154,7 +155,7 @@ class AccessKeyVerifierTest extends TestCase
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
+            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION, 'expiration_date' => null]
         );
         $this->access_key->shouldReceive('getVerificationString')
             ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
@@ -162,6 +163,24 @@ class AccessKeyVerifierTest extends TestCase
         $this->user_manager->shouldReceive('getUserById')->andReturns(null);
 
         $this->expectException(AccessKeyMatchingUnknownUserException::class);
+
+        $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
+    }
+
+    public function testVerificationFailsWhenTheAccessKeyIsExpired()
+    {
+        $this->access_key->shouldReceive('getID')->andReturns(1);
+        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+            [
+                'user_id' => 101,
+                'verifier' => 'valid',
+                'last_usage' => 1538408328,
+                'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION,
+                'expiration_date' => (new DateTimeImmutable("yesterday"))->getTimestamp()
+            ]
+        );
+
+        $this->expectException(ExpiredAccessKeyException::class);
 
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
