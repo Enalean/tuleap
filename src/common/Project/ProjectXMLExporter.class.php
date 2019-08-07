@@ -75,7 +75,7 @@ class ProjectXMLExporter
         foreach ($project->getServices() as $service) {
             $service_node = $services_node->addChild('service');
             $service_node->addAttribute('shortname', $service->getShortName());
-            $service_node->addAttribute('enabled', $service->isUsed());
+            $service_node->addAttribute('enabled', (string) $service->isUsed());
         }
     }
 

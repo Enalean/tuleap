@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ServiceTracker extends Service {
+class ServiceTracker extends Service
+{
 
     public const NAME = 'tracker';
 
@@ -28,14 +29,9 @@ class ServiceTracker extends Service {
 
     /**
      * Display header for service tracker
-     *
-     * @param string $title       The title
-     * @param array  $breadcrumbs array of breadcrumbs (array of 'url' => string, 'title' => string)
-     * @param array  $toolbar     array of toolbars (array of 'url' => string, 'title' => string)
-     *
-     * @return void
      */
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = array()): void
+    {
         $GLOBALS['HTML']->includeCalendarScripts();
 
         $tracker_manager         = new TrackerManager();
@@ -56,7 +52,8 @@ class ServiceTracker extends Service {
      *
      * @return void
      */
-    public function duplicate($to_project_id, $ugroup_mapping) {
+    public function duplicate(int $to_project_id, array $ugroup_mapping): void
+    {
         $tracker_manager = $this->getTrackerManager();
         $tracker_manager->duplicate($this->project->getId(), $to_project_id, $ugroup_mapping);
     }
@@ -64,18 +61,16 @@ class ServiceTracker extends Service {
     /**
      * @return TrackerManager
      */
-    protected function getTrackerManager() {
+    protected function getTrackerManager()
+    {
         return new TrackerManager();
     }
 
     /**
      * Say if the service is allowed for the project
-     *
-     * @param Project $project
-     *
-     * @return bool
      */
-    protected function isAllowed($project) {
+    protected function isAllowed($project): bool
+    {
         $plugin_manager = PluginManager::instance();
         $p = $plugin_manager->getPluginByName('tracker');
         if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed($project->getGroupId())) {
@@ -86,12 +81,9 @@ class ServiceTracker extends Service {
 
     /**
      * Say if the service is restricted
-     *
-     * @param Project $project
-     *
-     * @return bool
      */
-    public function isRestricted() {
+    public function isRestricted(): bool
+    {
         $plugin_manager = PluginManager::instance();
         $p = $plugin_manager->getPluginByName('tracker');
         if ($p && $plugin_manager->isProjectPluginRestricted($p)) {
@@ -104,10 +96,9 @@ class ServiceTracker extends Service {
      * Trackers are cloned on project creation
      *
      * @see Service::isInheritedOnDuplicate()
-     *
-     * @return bool
      */
-    public function isInheritedOnDuplicate() {
+    public function isInheritedOnDuplicate(): bool
+    {
         return true;
     }
 
@@ -126,4 +117,3 @@ class ServiceTracker extends Service {
         );
     }
 }
-?>

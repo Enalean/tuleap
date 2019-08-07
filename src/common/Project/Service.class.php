@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Service
+class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SUMMARY   = 'summary';
     public const ADMIN     = 'admin';
@@ -82,7 +82,8 @@ class Service
      *
      * @throws ServiceNotAllowedForProjectException if the Service is not allowed for the project (mainly for plugins)
      */
-    public function __construct(Project $project, array $data) {
+    public function __construct(Project $project, array $data)
+    {
         if (!$this->isAllowed($project)) {
             throw new ServiceNotAllowedForProjectException();
         }
@@ -90,69 +91,92 @@ class Service
         $this->data    = $data;
     }
 
-    public function getProject() {
+    public function getProject(): Project
+    {
         return $this->project;
     }
-    function getGroupId() {
-        return $this->data['group_id'];
-    }
-    function getId() {
-        return $this->data['service_id'];
-    }
-    function getDescription() {
-        return $this->data['description'];
-    }
-    function getShortName() {
-        return $this->data['short_name'];
-    }
-    function getLabel() {
-        return $this->data['label'];
-    }
-    function getRank() {
-        return $this->data['rank'];
-    }
-    function isUsed() {
-        return $this->data['is_used'];
-    }
-    function isActive() {
-        return $this->data['is_active'];
-    }
-    function isIFrame() {
-        return $this->data['is_in_iframe'];
-    }
-    function getUrl($url = null) {
-        if (is_null($url)) {
-            $url = $this->data['link'];
-        }
-        return $url;
+
+    public function getGroupId(): int
+    {
+        return (int) $this->data['group_id'];
     }
 
-    public function getScope() {
+    public function getId(): int
+    {
+        return (int) $this->data['service_id'];
+    }
+
+    public function getDescription(): string
+    {
+        return $this->data['description'];
+    }
+
+    public function getShortName(): string
+    {
+        return $this->data['short_name'];
+    }
+
+    public function getLabel(): string
+    {
+        return $this->data['label'];
+    }
+
+    public function getRank(): int
+    {
+        return (int) $this->data['rank'];
+    }
+
+    public function isUsed(): bool
+    {
+        return (bool) $this->data['is_used'];
+    }
+
+    public function isActive(): bool
+    {
+        return (bool) $this->data['is_active'];
+    }
+
+    public function isIFrame(): bool
+    {
+        return (bool) $this->data['is_in_iframe'];
+    }
+
+    public function getUrl(?string $url = null): string
+    {
+        if ($url) {
+            return $url;
+        }
+        return $this->data['link'];
+    }
+
+    public function getScope(): string
+    {
         return $this->data['scope'];
     }
 
     /**
-    * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
-    */
-    function isAbsolute($url) {
+     * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
+     */
+    public function isAbsolute(string $url): bool
+    {
         $components = array();
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
-        return isset($components[1]) && $components[1] ? true : false;
+        return (isset($components[1]) && $components[1]);
     }
 
-    function getPublicArea() {
-    }
-    function isRequestedPageDistributed(&$request) {
-        return false;
+    public function getPublicArea(): string
+    {
+        return '';
     }
 
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = array()): void
+    {
         \Tuleap\Project\ServiceInstrumentation::increment(strtolower($this->getShortName()));
 
         $GLOBALS['HTML']->setRenderedThroughService(true);
         $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
 
-        foreach($toolbar as $t) {
+        foreach ($toolbar as $t) {
             $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];
             $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class .'>'. $item_title .'</a>');
@@ -178,13 +202,15 @@ class Service
     /**
      * Display a warning if the service configuration is not inherited on project creation
      */
-    public function displayDuplicateInheritanceWarning() {
+    public function displayDuplicateInheritanceWarning(): void
+    {
         if ($this->project->isTemplate() && !$this->isInheritedOnDuplicate()) {
             $GLOBALS['HTML']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
         }
     }
 
-    public function displayFooter() {
+    public function displayFooter(): void
+    {
         $params = array(
             'group' => $this->project->group_id,
         );
@@ -194,41 +220,29 @@ class Service
         site_project_footer($params);
     }
 
-    public function duplicate($to_project_id, $ugroup_mapping) {
+    public function duplicate(int $to_project_id, array $ugroup_mapping): void
+    {
     }
 
-    /**
-     * Say if the service is allowed for the project
-     *
-     * @param Project $project
-     *
-     * @return bool
-     */
-    protected function isAllowed($project) {
+    protected function isAllowed(Project $project): bool
+    {
         return true;
     }
 
-     /**
-     * Say if the service is restricted
-     *
-     * @param Project $project
-     *
-     * @return bool
-     */
-    public function isRestricted() {
+    public function isRestricted(): bool
+    {
         return false;
     }
 
     /**
      * Return true if service configuration is inherited on clone
-     *
-     * @return bool
      */
-    public function isInheritedOnDuplicate() {
+    public function isInheritedOnDuplicate(): bool
+    {
         return false;
     }
 
-    public function getInternationalizedName()
+    public function getInternationalizedName(): string
     {
         $label      = $this->getLabel();
         $short_name = $this->getShortName();
@@ -236,7 +250,7 @@ class Service
         return $this->getInternationalizedText($label, "service_{$short_name}_lbl_key");
     }
 
-    public function getInternationalizedDescription()
+    public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
         $short_name  = $this->getShortName();
@@ -244,7 +258,7 @@ class Service
         return $this->getInternationalizedText($description, "service_{$short_name}_desc_key");
     }
 
-    private function getInternationalizedText($text, $key)
+    private function getInternationalizedText($text, $key): string
     {
         if ($text === $key) {
             return $GLOBALS['Language']->getText('project_admin_editservice', $key);

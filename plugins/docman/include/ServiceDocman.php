@@ -22,7 +22,7 @@ namespace Tuleap\Docman;
 
 class ServiceDocman extends \Service
 {
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = [])
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 

@@ -43,7 +43,7 @@ class ServiceMediawiki extends Service
         return TemplateRendererFactory::build()->getRenderer(dirname(MEDIAWIKI_BASE_DIR).'/templates');
     }
 
-    public function displayHeader($title, $breadcrumbs = [], $toolbar = [], $params = [])
+    public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], array $params = []): void
     {
         if ($this->userIsAdmin(UserManager::instance()->getCurrentUser())) {
             $toolbar[] = array(

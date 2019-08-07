@@ -31,7 +31,7 @@ class GitService extends Service
         return $this->getFontAwesomeIcon('fa-tlp-versioning-git');
     }
 
-    public function getInternationalizedName()
+    public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
 
@@ -42,7 +42,7 @@ class GitService extends Service
         return $label;
     }
 
-    public function getInternationalizedDescription()
+    public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
 
