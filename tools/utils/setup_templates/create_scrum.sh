@@ -33,7 +33,7 @@ cp -r /usr/share/tuleap/tools/utils/setup_templates/scrum/* "$import_archive"
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/setup_templates/merge_xml_files.php \
     /usr/share/tuleap/tools/utils/setup_templates/scrum/project.xml \
-    /usr/share/tuleap/plugins/agiledashboard/resources/scrum_dashboard_template.xml \
+    /usr/share/tuleap/plugins/agiledashboard/www/resources/scrum_dashboard_template.xml \
     "$import_archive/project.xml"
 
 /usr/share/tuleap/src/utils/tuleap import-project-xml \
