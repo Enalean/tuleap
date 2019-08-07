@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "%{ user_group } has no permissions for any package or release"
+msgstr "%{ user_group } n'a de permission sur aucun paquet ou version"
+
+msgid "No packages found for project"
+msgstr "Pas de paquet trouvé pour ce projet"
+
+msgid "Package"
+msgstr "Paquet"
+
+msgid "Packages are loading"
+msgstr "Les paquets sont en train de charger"
+
+msgid "Readers"
+msgstr "Lecteurs"
+
+msgid "Release"
+msgstr "Version"
+
+msgid "See all packages permissions"
+msgstr "Voir toutes les permissions des paquets"
