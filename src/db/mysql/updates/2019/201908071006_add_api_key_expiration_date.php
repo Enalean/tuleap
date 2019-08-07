@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
-
-class AccessKeyRevoker
+class b201908071006_add_api_key_expiration_date extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-    /**
-     * @var AccessKeyDAO
-     */
-    private $dao;
-
-    public function __construct(AccessKeyDAO $dao)
+    public function description()
     {
-        $this->dao = $dao;
+        return 'Add expiration date to user API access key';
     }
 
-    public function revokeASetOfUserAccessKeys(\PFUser $user, array $access_key_ids)
+    public function preUp()
     {
-        $this->dao->deleteByUserIDAndKeyIDs($user->getId(), $access_key_ids);
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function revokeExpiredUserAccessKeys(int $timestamp)
+    public function up()
     {
-        $this->dao->deleteByExpirationDate($timestamp);
+        $sql = "ALTER TABLE user_access_key ADD COLUMN expiration_date INT(11) UNSIGNED DEFAULT NULL AFTER creation_date";
+
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occurred while modifying the user_access_key table.');
+        }
     }
 }

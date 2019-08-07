@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;
+use Tuleap\User\AccessKey\AccessKeyRevoker;
 use UserManager;
 
 class DailyJobCommand extends Command
@@ -53,9 +54,15 @@ class DailyJobCommand extends Command
      */
     private $execution_delayed_launcher;
 
+    /**
+     * @var AccessKeyRevoker
+     */
+    private $access_key_revoker;
+
     public function __construct(
         EventManager $event_manager,
         UserManager $user_manager,
+        AccessKeyRevoker $access_key_revoker,
         DBConnection $db_connection,
         ExecutionDelayedLauncher $execution_delayed_launcher
     ) {
@@ -64,6 +71,7 @@ class DailyJobCommand extends Command
         $this->user_manager               = $user_manager;
         $this->db_connection              = $db_connection;
         $this->execution_delayed_launcher = $execution_delayed_launcher;
+        $this->access_key_revoker         = $access_key_revoker;
     }
 
     protected function configure() : void
@@ -77,6 +85,9 @@ class DailyJobCommand extends Command
             $this->db_connection->reconnectAfterALongRunningProcess();
             $this->event_manager->processEvent('codendi_daily_start');
             $this->user_manager->checkUserAccountValidity();
+
+            $now = (new \DateTime())->getTimestamp();
+            $this->access_key_revoker->revokeExpiredUserAccessKeys($now);
         });
 
         return 0;
