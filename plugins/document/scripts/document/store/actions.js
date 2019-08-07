@@ -31,7 +31,7 @@ import {
     deleteUserPreferenciesForUnderConstructionModal,
     getFolderContent,
     getItem,
-    getProject,
+    getDocumentManagerServiceInformation,
     patchUserPreferenciesForFolderInProject,
     postEmbeddedFile,
     postWiki,
@@ -93,8 +93,8 @@ import { addNewFolder } from "../api/rest-querier";
 export const loadRootFolder = async context => {
     try {
         context.commit("beginLoading");
-        const project = await getProject(context.state.project_id);
-        const root = project.additional_informations.docman.root_item;
+        const service = await getDocumentManagerServiceInformation(context.state.project_id);
+        const root = service.root_item;
 
         context.commit("setCurrentFolder", root);
 

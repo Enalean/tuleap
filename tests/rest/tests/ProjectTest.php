@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -201,6 +201,21 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
+        $this->assertContains(
+            [
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
+                'type' => 'docman_service',
+            ],
+            $json_projects[0]['resources']
+        );
+        $this->assertContains(
+            [
+                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
+                'type' => 'docman_metadata',
+            ],
+            $json_projects[0]['resources']
+        );
+
         $this->assertArrayHasKey('id', $json_projects[0]);
         $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 
@@ -220,16 +235,6 @@ class ProjectTest extends ProjectBase
         $this->assertEquals(
             $this->releases_tracker_id,
             $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
-        );
-
-        $this->assertEquals(
-            $this->docman_root_id,
-            $json_projects[0]['additional_informations']['docman']['root_item']['id']
-        );
-
-        $this->assertEquals(
-            'projects/' . $this->project_private_member_id . '/docman_metadata',
-            $json_projects[0]['additional_informations']['docman']['metadata_uri']
         );
 
         $this->assertEquals($response->getStatusCode(), 200);

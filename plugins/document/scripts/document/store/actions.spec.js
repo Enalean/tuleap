@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,7 +69,7 @@ import {
     rewire$getItem,
     rewire$getItemsReferencingSameWikiPage,
     rewire$getParents,
-    rewire$getProject,
+    rewire$getDocumentManagerServiceInformation,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$postEmbeddedFile,
     rewire$postLinkVersion,
@@ -112,7 +112,7 @@ describe("Store actions", () => {
     });
 
     let context,
-        getProject,
+        getDocumentManagerServiceInformation,
         getItem,
         loadFolderContent,
         loadAscendantHierarchy,
@@ -140,8 +140,10 @@ describe("Store actions", () => {
             }
         };
 
-        getProject = jasmine.createSpy("getProject");
-        rewire$getProject(getProject);
+        getDocumentManagerServiceInformation = jasmine.createSpy(
+            "getDocumentManagerServiceInformation"
+        );
+        rewire$getDocumentManagerServiceInformation(getDocumentManagerServiceInformation);
 
         getItem = jasmine.createSpy("getItem");
         rewire$getItem(getItem);
@@ -212,15 +214,11 @@ describe("Store actions", () => {
                 last_update_date: "2018-08-21T17:01:49+02:00"
             };
 
-            const project = {
-                additional_informations: {
-                    docman: {
-                        root_item
-                    }
-                }
+            const service = {
+                root_item
             };
 
-            getProject.and.returnValue(project);
+            getDocumentManagerServiceInformation.and.returnValue(service);
 
             await loadRootFolder(context);
 
@@ -234,7 +232,7 @@ describe("Store actions", () => {
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
-            mockFetchError(getProject, {
+            mockFetchError(getDocumentManagerServiceInformation, {
                 status: 403,
                 error_json: {
                     error: {
@@ -251,7 +249,7 @@ describe("Store actions", () => {
 
         it("When the project can't be found, an error will be raised", async () => {
             const error_message = "Project does not exist.";
-            mockFetchError(getProject, {
+            mockFetchError(getDocumentManagerServiceInformation, {
                 status: 404,
                 error_json: {
                     error: {
@@ -271,7 +269,7 @@ describe("Store actions", () => {
 
         it("When an error occurred, then the translated exception will be raised", async () => {
             const error_message = "My translated exception";
-            mockFetchError(getProject, {
+            mockFetchError(getDocumentManagerServiceInformation, {
                 status: 404,
                 error_json: {
                     error: {
