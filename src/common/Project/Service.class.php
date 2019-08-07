@@ -82,7 +82,7 @@ class Service
      *
      * @throws ServiceNotAllowedForProjectException if the Service is not allowed for the project (mainly for plugins)
      */
-    public function __construct($project, $data) {
+    public function __construct(Project $project, array $data) {
         if (!$this->isAllowed($project)) {
             throw new ServiceNotAllowedForProjectException();
         }
@@ -261,13 +261,10 @@ class Service
 
     public function getIcon() : string
     {
-        if ($this->data['icon'] !== '') {
-            return $this->getFontAwesomeIcon($this->data['icon']);
-        }
         if (isset(self::ICONS[$this->getShortName()])) {
             return $this->getFontAwesomeIcon(self::ICONS[$this->getShortName()]);
         }
-        return $this->getFontAwesomeIcon('fa-angle-double-right');
+        throw new RuntimeException('Regular services must provide an icon');
     }
 
     protected function getFontAwesomeIcon(string $icon) : string

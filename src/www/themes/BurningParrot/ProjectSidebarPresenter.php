@@ -53,7 +53,7 @@ class ProjectSidebarPresenter
      */
     public $project_is_private_incl_restricted;
 
-    public function __construct(PFUser $current_user, Project $project, array $sidebar, $project_privacy)
+    public function __construct(PFUser $current_user, Project $project, \Generator $sidebar, $project_privacy)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 

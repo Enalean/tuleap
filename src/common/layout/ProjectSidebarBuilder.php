@@ -29,6 +29,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Service\ProjectDefinedService;
 use Tuleap\Sanitizer\URISanitizer;
 
 class ProjectSidebarBuilder
@@ -74,10 +75,8 @@ class ProjectSidebarBuilder
         $this->membership_delegation_dao = $membership_delegation_dao;
     }
 
-    /** @return array[] Array of sidebar entries */
-    public function getSidebar(PFUser $user, $toptab, Project $project)
+    public function getSidebar(PFUser $user, $toptab, Project $project): \Generator
     {
-        $sidebar          = array();
         $allowed_services = $this->getAllowedServicesForUser($user, $project);
 
         foreach ($project->getServices() as $service) {
@@ -85,18 +84,20 @@ class ProjectSidebarBuilder
                 continue;
             }
 
-            $sidebar[] = array(
-                'link'        => $this->getLink($service, $project),
-                'icon'        => $service->getIcon(),
-                'name'        => $this->purifier->purify($service->getInternationalizedName()),
-                'label'       => $this->getLabel($service),
-                'enabled'     => $this->isEnabled($toptab, $service),
-                'description' => $this->purifier->purify($service->getInternationalizedDescription()),
-                'id'          => $this->purifier->purify('sidebar-' . $service->getShortName())
-            );
+            if ($service instanceof ProjectDefinedService) {
+                yield new SidebarProjectDefinedServicePresenter($service, $this->getLink($service, $project));
+            } else {
+                yield new SidebarServicePresenter(
+                    $this->purifier->purify('sidebar-' . $service->getShortName()),
+                    $this->purifier->purify($service->getInternationalizedName()),
+                    $this->getLink($service, $project),
+                    $service->getIcon(),
+                    $this->getLabel($service),
+                    $this->purifier->purify($service->getInternationalizedDescription()),
+                    $this->isEnabled($toptab, $service)
+                );
+            }
         }
-
-        return $sidebar;
     }
 
     private function restrictedMemberIsNotProjectMember(PFUser $user, Project $project)
