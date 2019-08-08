@@ -22,6 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Codendi_Request;
+use Exception;
+use Tracker;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldDoesNotBelongToTrackerException;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldDoesNotHaveTheRightTypeException;
 use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldIdIsNotAnIntegerException;
@@ -41,20 +44,27 @@ class SemanticTimeframeUpdator
 
     public function __construct(SemanticTimeframeDao $dao, \Tracker_FormElementFactory $form_factory)
     {
-        $this->dao          = $dao;
+        $this->dao = $dao;
         $this->form_factory = $form_factory;
     }
 
-    public function update(\Tracker $tracker, \Codendi_Request $request) : void
+    public function update(Tracker $tracker, Codendi_Request $request): void
     {
         try {
-            $start_date_field_id = $this->getStartDateFieldIdFromRequest($tracker, $request);
-            $duration_field_id   = $this->getDurationIdFromRequest($tracker, $request);
+            $start_date_field_id = $this->getNumericFieldIdFromRequest($request, 'start-date-field-id');
+            $duration_field_id   = $this->getNumericFieldIdFromRequest($request, 'duration-field-id');
+            $end_date_field_id   = $this->getNumericFieldIdFromRequest($request, 'end-date-field-id');
+
+            if (! $this->requestIsCorrect($tracker, $start_date_field_id, $duration_field_id, $end_date_field_id)) {
+                $this->displayFeedbackError();
+                return;
+            }
 
             $result = $this->dao->save(
-                (int) $tracker->getId(),
+                (int)$tracker->getId(),
                 $start_date_field_id,
-                $duration_field_id
+                $duration_field_id,
+                $end_date_field_id
             );
 
             if ($result === true) {
@@ -62,26 +72,27 @@ class SemanticTimeframeUpdator
             } else {
                 $this->displayFeedbackError();
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->displayFeedbackError();
         }
     }
 
-    /**
-     * @throws FieldIdIsNotAnIntegerException
-     */
-    private function getNumericFieldIdFromRequest(\Codendi_Request $request, string $field_name) : int
+    private function getNumericFieldIdFromRequest(Codendi_Request $request, string $field_name): ?int
     {
         $field_id = $request->get($field_name);
 
-        if (! is_numeric($field_id)) {
-            throw new \Exception('Field id is not an integer');
+        if (! $field_id) {
+            return null;
         }
 
-        return (int) $field_id;
+        if (! is_numeric($field_id)) {
+            throw new Exception('Field id is not an integer');
+        }
+
+        return (int)$field_id;
     }
 
-    private function displayFeedbackSuccess() : void
+    private function displayFeedbackSuccess(): void
     {
         $GLOBALS['Response']->addFeedback(
             \Feedback::INFO,
@@ -89,7 +100,7 @@ class SemanticTimeframeUpdator
         );
     }
 
-    private function displayFeedbackError() : void
+    private function displayFeedbackError(): void
     {
         $GLOBALS['Response']->addFeedback(
             \Feedback::ERROR,
@@ -97,31 +108,52 @@ class SemanticTimeframeUpdator
         );
     }
 
-    private function getStartDateFieldIdFromRequest(\Tracker $tracker, \Codendi_Request $request) : int
+    private function startDateFieldIdIsCorrect(Tracker $tracker, int $start_date_field_id) : bool
     {
-        $start_date_field_id = $this->getNumericFieldIdFromRequest($request, 'start-date-field-id');
-        $start_date_field    = $this->form_factory->getUsedDateFieldById($tracker, $start_date_field_id);
+        $start_date_field = $this->form_factory->getUsedDateFieldById($tracker, $start_date_field_id);
 
-        if ($start_date_field === null) {
-            throw new \Exception('Field not found');
-        }
-
-        return $start_date_field_id;
+        return $start_date_field !== null;
     }
 
-    private function getDurationIdFromRequest(\Tracker $tracker, \Codendi_Request $request) : int
+    private function durationFieldIdIsCorrect(Tracker $tracker, int $duration_field_id) : bool
     {
-        $duration_field_id = $this->getNumericFieldIdFromRequest($request, 'duration-field-id');
-        $duration_field    = $this->form_factory->getUsedFieldByIdAndType(
+        $duration_field = $this->form_factory->getUsedFieldByIdAndType(
             $tracker,
             $duration_field_id,
             ['int', 'float', 'computed']
         );
 
-        if (! $duration_field) {
-            throw new \Exception('Field not found');
+        return $duration_field !== null;
+    }
+
+    private function endDateFieldIdIsCorrect(Tracker $tracker, int $end_date_field_id) : bool
+    {
+        $end_date_field = $this->form_factory->getUsedDateFieldById($tracker, $end_date_field_id);
+
+        return $end_date_field !== null;
+    }
+
+    /**
+     * @psalm-assert-if-true !null $start_date_field_id
+     */
+    private function requestIsCorrect(Tracker $tracker, ?int $start_date_field_id, ?int $duration_field_id, ?int $end_date_field_id) : bool
+    {
+        if ($start_date_field_id === null || ! $this->startDateFieldIdIsCorrect($tracker, $start_date_field_id)) {
+            return false;
         }
 
-        return $duration_field_id;
+        if ($duration_field_id === null && $end_date_field_id === null) {
+            return false;
+        }
+
+        if ($duration_field_id !== null && $end_date_field_id !== null) {
+            return false;
+        }
+
+        if ($duration_field_id !== null) {
+            return $this->durationFieldIdIsCorrect($tracker, $duration_field_id);
+        }
+
+        return $this->endDateFieldIdIsCorrect($tracker, $end_date_field_id);
     }
 }

@@ -27,22 +27,22 @@ use Tuleap\DB\DataAccessObject;
 class SemanticTimeframeDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{start_date_field_id: int, duration_field_id: ?int}|null
+     * @psalm-return array{start_date_field_id: int, duration_field_id: ?int, end_date_field_id: ?int}|null
      */
     public function searchByTrackerId(int $tracker_id): ?array
     {
-        $sql = 'SELECT start_date_field_id, duration_field_id
-                FROM tracker_semantic_timeframe
+        $sql = 'SELECT start_date_field_id, duration_field_id, end_date_field_id
+            FROM tracker_semantic_timeframe
                 WHERE tracker_id = ?';
 
         return $this->getDB()->row($sql, $tracker_id);
     }
 
-    public function save(int $tracker_id, int $start_date_field_id, ?int $duration_field_id): bool
+    public function save(int $tracker_id, int $start_date_field_id, ?int $duration_field_id, ?int $end_date_field_id): bool
     {
-        $sql = 'REPLACE INTO tracker_semantic_timeframe(tracker_id, start_date_field_id, duration_field_id) VALUES (?, ?, ?)';
+        $sql = 'REPLACE INTO tracker_semantic_timeframe(tracker_id, start_date_field_id, duration_field_id, end_date_field_id) VALUES (?, ?, ?, ?)';
 
-        $result = $this->getDB()->run($sql, $tracker_id, $start_date_field_id, $duration_field_id);
+        $result = $this->getDB()->run($sql, $tracker_id, $start_date_field_id, $duration_field_id, $end_date_field_id);
 
         return $result !== null;
     }

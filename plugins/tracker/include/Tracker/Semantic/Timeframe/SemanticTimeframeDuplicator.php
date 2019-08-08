@@ -73,6 +73,6 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $this->dao->save((int) $to_tracker_id, $to_start_date_field_id, $to_duration_field_id);
+        $this->dao->save((int) $to_tracker_id, $to_start_date_field_id, $to_duration_field_id, null);
     }
 }
