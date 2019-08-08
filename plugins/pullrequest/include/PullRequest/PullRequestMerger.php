@@ -41,6 +41,9 @@ class PullRequestMerger
         $this->merge_setting_retriever = $merge_setting_retriever;
     }
 
+    /**
+     * @throws PullRequestCannotBeMerged
+     */
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
     {
         if ((int) $pull_request->getRepoDestId() !== (int) $repository_dest->getId()) {
