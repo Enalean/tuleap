@@ -72,6 +72,8 @@ class SemanticTimeframeUpdator
             } else {
                 $this->displayFeedbackError();
             }
+        } catch (TimeframeStartDateAndEndDateAreTheSameFieldException $exception) {
+            $this->displayStartDateAndEndDateAreTheSameFieldFeedbackError();
         } catch (Exception $exception) {
             $this->displayFeedbackError();
         }
@@ -105,6 +107,14 @@ class SemanticTimeframeUpdator
         $GLOBALS['Response']->addFeedback(
             \Feedback::ERROR,
             dgettext('tuleap-tracker', 'An error occurred while updating the timeframe semantic')
+        );
+    }
+
+    private function displayStartDateAndEndDateAreTheSameFieldFeedbackError() : void
+    {
+        $GLOBALS['Response']->addFeedback(
+            \Feedback::ERROR,
+            dgettext('tuleap-tracker', 'The start date field and the end date field cannot be the same.')
         );
     }
 
@@ -154,6 +164,22 @@ class SemanticTimeframeUpdator
             return $this->durationFieldIdIsCorrect($tracker, $duration_field_id);
         }
 
+        $this->checkStartDateFieldIsDifferentOfEndDateField($start_date_field_id, $end_date_field_id);
+
         return $this->endDateFieldIdIsCorrect($tracker, $end_date_field_id);
+    }
+
+    /**
+     * @throws TimeframeStartDateAndEndDateAreTheSameFieldException
+     */
+    private function checkStartDateFieldIsDifferentOfEndDateField(?int $start_date_field_id, ?int $end_date_field_id) : void
+    {
+        if ($start_date_field_id === null || $end_date_field_id === null) {
+            return;
+        }
+
+        if ($start_date_field_id === $end_date_field_id) {
+            throw new TimeframeStartDateAndEndDateAreTheSameFieldException();
+        }
     }
 }

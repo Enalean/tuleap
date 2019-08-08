@@ -99,7 +99,8 @@ const webpack_config_for_vue = {
         "tracker-permissions-per-group": "./permissions-per-group/src/index.js",
         "tracker-workflow-transitions": "./workflow-transitions/src/index.js",
         MoveArtifactModal: "./artifact-action-buttons/src/index.js",
-        TrackerAdminFields: "./TrackerAdminFields.js"
+        TrackerAdminFields: "./TrackerAdminFields.js",
+        "tracker-semantic-timeframe-option-selector": "./semantic-timeframe-option-selector"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),

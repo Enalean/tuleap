@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.3\n"
 
 msgid "\"duration\" field is empty or invalid"
 msgstr "Le champ \"duration\" est vide ou invalide"
@@ -351,6 +351,9 @@ msgid ""
 msgstr ""
 "Activer les notifications pour ce tracker, vous pourrez choisir le modede "
 "notifications"
+
+msgid "End date"
+msgstr "Date de fin"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
@@ -993,6 +996,10 @@ msgstr ""
 "La sémantique statut ne peut être supprimée car la configuration des "
 "notifications est définie à \"Notifications lors du changement de status\"."
 
+msgid "The start date field and the end date field cannot be the same."
+msgstr ""
+"Le champ date de début et le champ date de fin ne peuvent pas être le même."
+
 msgid "The submitted URL is not valid."
 msgstr "L'URL soumise n'est pas valide."
 
@@ -1169,6 +1176,13 @@ msgid ""
 msgstr ""
 "La plage de temps est définie par le champ date de début \"%s\" et le champ "
 "durée \"%s\"."
+
+#, php-format
+msgid ""
+"Timeframe is based on start date field \"%s\" and end date field \"%s\"."
+msgstr ""
+"La plage de temps est définie par le champ date de début \"%s\" et le champ "
+"date de fin \"%s\"."
 
 msgid "Tracker"
 msgstr "Tracker"
