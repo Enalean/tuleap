@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,7 +146,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGoodLogin() {
-        $cm               = mock(\Tuleap\CookieManager::class);
+        $cm               = Mockery::mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
@@ -167,7 +167,7 @@ class UserManagerTest extends TuleapTestCase
         $user123->setReturnValue('getStatus', 'A');
         $user123->setReturnValue('isAnonymous', false);
 
-        $cm->expectOnce('setCookie', array('session_hash', $hash, 0));
+        $cm->shouldReceive('setCookie')->with('session_hash', $hash, 0)->once();
 
         stub($session_manager)->createSession()->returns($hash);
 
@@ -186,7 +186,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testBadLogin() {
-        $cm               = mock(\Tuleap\CookieManager::class);
+        $cm               = Mockery::mock(\Tuleap\CookieManager::class);
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -205,7 +205,7 @@ class UserManagerTest extends TuleapTestCase
         $userAnonymous->setReturnValue('getId', 0);
         $userAnonymous->setReturnValue('isAnonymous', true);
 
-        $cm->expectNever('setCookie');
+        $cm->shouldReceive('setCookie')->never();
         $um->setReturnReference('getCookieManager', $cm);
 
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
@@ -221,7 +221,7 @@ class UserManagerTest extends TuleapTestCase
 
     function testSuspenedUserGetSession() {
 
-        $cm               = mock(\Tuleap\CookieManager::class);
+        $cm               = Mockery::mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -236,7 +236,7 @@ class UserManagerTest extends TuleapTestCase
 
         $userAnonymous->setReturnValue('isAnonymous', true);
 
-        $cm->setReturnValue('getCookie', 'valid_hash');
+        $cm->shouldReceive('getCookie')->andReturn('valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
@@ -254,7 +254,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testDeletedUserGetSession() {
-        $cm               = mock(\Tuleap\CookieManager::class);
+        $cm               = Mockery::mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -269,7 +269,7 @@ class UserManagerTest extends TuleapTestCase
 
         $userAnonymous->setReturnValue('isAnonymous', true);
 
-        $cm->setReturnValue('getCookie', 'valid_hash');
+        $cm->shouldReceive('getCookie')->andReturn('valid_hash');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));

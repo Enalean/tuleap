@@ -23,27 +23,20 @@ use Tuleap\CookieManager;
 
 class PHP_Session
 {
-    public static function start()
+    public static function start() : void
     {
         session_cache_limiter('');
-        self::configureSessionCookie();
-        \Delight\Cookie\Session::start();
+        session_name(CookieManager::getCookieName(session_name()));
+        session_set_cookie_params([
+            'httponly' => true,
+            'secure'   => CookieManager::canCookieUseSecureFlag(),
+            'samesite' => 'Lax'
+        ]);
+        session_start();
     }
 
-    private static function configureSessionCookie()
+    public static function destroy()
     {
-        $session_name = CookieManager::getCookieName(session_name());
-        session_name($session_name);
-
-        $lifetime  = 0;
-        $path      = '/';
-        $domain    = null;
-        $secure    = CookieManager::canCookieUseSecureFlag();
-        $http_only = true;
-        session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
-    }
-
-    public static function destroy() {
         unset($_SESSION);
         session_destroy();
     }
