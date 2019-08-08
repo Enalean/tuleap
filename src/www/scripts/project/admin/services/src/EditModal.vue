@@ -34,7 +34,6 @@
                 ×
             </div>
         </div>
-        <slot name="csrf"/>
         <slot name="content"/>
         <div class="tlp-modal-footer">
             <button

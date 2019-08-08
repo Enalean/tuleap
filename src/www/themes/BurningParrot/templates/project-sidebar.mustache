@@ -38,7 +38,7 @@
                    title="{{ description }}"
                 >
                     <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                    <span>{{ label }}</span>
+                    <span class="project-sidebar-nav-item-label">{{ label }}</span>
                     {{# open_in_new_tab }}
                         <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
                     {{/ open_in_new_tab }}
@@ -51,7 +51,8 @@
                     aria-label="{{{ name }}}"
                     title="{{{ name }}}"
                 >
-                    <i class="{{ icon }} project-sidebar-nav-item-icon"></i> {{{ label }}}
+                    <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                    <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
                 </a>
             {{/ is_project_defined }}
     {{/ sidebar }}
