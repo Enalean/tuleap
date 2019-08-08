@@ -908,7 +908,8 @@ CREATE TABLE user_access_key (
   expiration_date INT(11) UNSIGNED DEFAULT NULL,
   description TEXT,
   last_usage INT(11) UNSIGNED DEFAULT NULL,
-  last_ip VARCHAR(45) DEFAULT NULL
+  last_ip VARCHAR(45) DEFAULT NULL,
+  INDEX idx_expiration_date (expiration_date)
 );
 
 #
