@@ -28,11 +28,30 @@
         </a>
     </div>
     <ul class="nav nav-list">
-        {{#sidebar}}
-            <li {{#enabled}}class="active"{{/enabled}}>
-                <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}"><i class="{{ icon }} project-sidebar-nav-item-icon"></i> {{{ label }}}</a>
-            </li>
-        {{/sidebar}}
+        {{# sidebar }}
+            {{# is_project_defined }}
+                <li>
+                    <a href="{{{ link }}}"
+                       aria-label="{{ label }}"
+                       {{# open_in_new_tab }}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                       {{/ open_in_new_tab }}
+                    >
+                        <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                        <span title="{{ description }}">{{ label }}</span>
+                        {{# open_in_new_tab }}
+                            <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
+                        {{/ open_in_new_tab }}
+                    </a>
+                </li>
+            {{/ is_project_defined }}
+            {{^ is_project_defined }}
+                <li {{#enabled}}class="active"{{/enabled}}>
+                    <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}"><i class="{{ icon }} project-sidebar-nav-item-icon"></i> {{{ label }}}</a>
+                </li>
+            {{/ is_project_defined }}
+        {{/ sidebar }}
     </ul>
     {{# is_sidebar_collapsable }}
         <i id="sidebar-collapser" class="fa fa-chevron-left sidebar-collapse"></i>

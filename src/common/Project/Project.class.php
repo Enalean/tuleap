@@ -174,9 +174,13 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      */
     public function getServiceClassName($short_name)
     {
+        if (! $short_name) {
+            return \Tuleap\Project\Service\ProjectDefinedService::class;
+        }
+
         $this->cacheServiceClassnames();
 
-        $classname = 'Service';
+        $classname = Service::class;
         if (isset($this->serviceClassnames[$short_name])) {
             $classname = $this->serviceClassnames[$short_name];
         }

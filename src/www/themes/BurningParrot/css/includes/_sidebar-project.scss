@@ -64,6 +64,11 @@
         text-decoration: none;
     }
 
+    &:hover > .project-sidebar-nav-item-new-tab {
+        opacity: 1;
+        transform: rotate(-45deg) translate(3px, 0px);
+    }
+
     &.active {
         border-left-color: $tlp-theme-color;
         background: darken($tlp-theme-sidebar-background-color, 2%);
@@ -81,6 +86,16 @@
             content: '';
         }
     }
+}
+
+.project-sidebar-nav-item-new-tab {
+    position: relative;
+    top: -7px;
+    left: 3px;
+    font-size: 10px;
+    transform: rotate(-45deg);
+    opacity: .5;
+    transition: transform ease-in-out 100ms, opacity ease-in-out 100ms;
 }
 
 .project-sidebar-nav-item-icon {

@@ -34,6 +34,10 @@ msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
 #, php-format
+msgid "%s (opens in a new tab)"
+msgstr "%s (s'ouvre dans un nouvel onglet)"
+
+#, php-format
 msgid "%s full project listing"
 msgstr "Liste complète des projets %s"
 
