@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ class AccessKeyMetadataPresenter
     public $description;
     public $last_used_on;
     public $last_used_by;
+    public $expiration_date;
 
     public function __construct(AccessKeyMetadata $access_key_information)
     {
@@ -35,11 +36,21 @@ class AccessKeyMetadataPresenter
             $GLOBALS['Language']->getText('system', 'datefmt')
         );
         $this->description   = $access_key_information->getDescription();
-        if ($access_key_information->getLastUsedDate() !== null) {
-            $this->last_used_on = $access_key_information->getLastUsedDate()->format(
+
+        $last_used_date = $access_key_information->getLastUsedDate();
+        if ($last_used_date !== null) {
+            $this->last_used_on = $last_used_date->format(
                 $GLOBALS['Language']->getText('system', 'datefmt')
             );
         }
+
+        $expiration_date = $access_key_information->getExpirationDate();
+        if ($expiration_date !== null) {
+            $this->expiration_date = $expiration_date->format(
+                $GLOBALS['Language']->getText('system', 'datefmt')
+            );
+        }
+
         $this->last_used_by = $access_key_information->getLastUsedIP();
     }
 }
