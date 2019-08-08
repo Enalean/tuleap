@@ -556,6 +556,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1024,6 +1025,7 @@ fi
 %{APP_DIR}/src/www/assets/*.js
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
+%{APP_DIR}/src/www/assets/docman
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/ckeditor-*
