@@ -35,6 +35,7 @@
                 </th>
                 <th>{{# gettext }}Last used by{{/ gettext }}</th>
                 <th>{{# gettext }}Description{{/ gettext }}</th>
+                <th>{{# gettext }}Expire on{{/ gettext }}</th>
             </tr>
             </thead>
             {{# has_access_keys }}
@@ -52,6 +53,10 @@
                             {{^ last_used_by }}-{{/ last_used_by }}
                         </td>
                         <td>{{ description }}</td>
+                        <td>
+                            {{# expiration_date }}{{ expiration_date }}{{/ expiration_date }}
+                            {{^ expiration_date }}-{{/ expiration_date }}
+                        </td>
                     </tr>
                 {{/ access_keys }}
                 </tbody>

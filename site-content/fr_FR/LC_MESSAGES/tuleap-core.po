@@ -561,6 +561,9 @@ msgstr "Activé ?"
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 
+msgid "Expire on"
+msgstr "Expire le"
+
 msgid "Export"
 msgstr "Exporter"
 
