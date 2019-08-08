@@ -50,15 +50,17 @@ class SemanticTimeframeSaver
     {
         $start_date_field = $semantic_timeframe->getStartDateField();
         $duration_field   = $semantic_timeframe->getDurationField();
+        $end_date_field   = $semantic_timeframe->getEndDateField();
 
-        if ($start_date_field === null || $duration_field === null) {
+        if ($start_date_field === null || ($duration_field === null && $end_date_field === null)) {
             return false;
         }
 
         return $this->dao->save(
             (int) $semantic_timeframe->getTracker()->getId(),
             (int) $start_date_field->getId(),
-            (int) $duration_field->getId()
+            $duration_field ? (int) $duration_field->getId() : null,
+            $end_date_field ? (int) $end_date_field->getId() : null
         );
     }
 }

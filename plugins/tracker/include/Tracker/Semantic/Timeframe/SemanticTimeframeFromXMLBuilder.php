@@ -39,6 +39,6 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
         $xml_duration_field_attributes = $xml_duration_field->attributes();
         $duration_field = $xml_mapping[(string)$xml_duration_field_attributes['REF']];
 
-        return new SemanticTimeframe($tracker, $start_date_field, $duration_field);
+        return new SemanticTimeframe($tracker, $start_date_field, $duration_field, null);
     }
 }

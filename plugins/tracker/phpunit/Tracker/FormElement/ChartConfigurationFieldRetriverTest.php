@@ -134,6 +134,7 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 $this->field_start_date,
+                null,
                 null
             )
         );
@@ -163,7 +164,8 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 $this->field_start_date,
-                $this->field_duration
+                $this->field_duration,
+                null
             )
         );
 
@@ -195,7 +197,8 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 $this->field_start_date,
-                $this->field_duration
+                $this->field_duration,
+                null
             )
         );
 
@@ -224,7 +227,8 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 null,
-                $this->field_duration
+                $this->field_duration,
+                null
             )
         );
 
@@ -254,7 +258,8 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 $this->field_start_date,
-                $this->field_duration
+                $this->field_duration,
+                null
             )
         );
 
@@ -286,7 +291,8 @@ class ChartConfigurationFieldRetrieverTest extends TestCase
             new SemanticTimeframe(
                 $this->tracker,
                 $this->field_start_date,
-                $this->field_duration
+                $this->field_duration,
+                null
             )
         );
 

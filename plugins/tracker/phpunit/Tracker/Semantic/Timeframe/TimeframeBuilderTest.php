@@ -91,7 +91,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -112,7 +112,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockDurationFieldWithValue($duration, $duration_field);
@@ -131,7 +131,7 @@ final class TimeframeBuilderTest extends TestCase
         $start_date_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, null)
+            new SemanticTimeframe($this->tracker, $start_date_field, null, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -152,7 +152,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -177,7 +177,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -204,7 +204,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -226,7 +226,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field   = null;
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
@@ -245,7 +245,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
@@ -272,7 +272,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -297,7 +297,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field = null;
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -320,7 +320,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -344,7 +344,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -368,7 +368,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -392,7 +392,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -415,7 +415,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -443,7 +443,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -464,7 +464,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockDurationFieldWithValue($duration, $duration_field);
@@ -484,7 +484,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field = null;
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);
@@ -505,7 +505,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $start_date_field->shouldReceive('getLastChangesetValue')
@@ -530,7 +530,7 @@ final class TimeframeBuilderTest extends TestCase
         $duration_field->shouldReceive('userCanRead')->andReturn(true);
 
         $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
-            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field)
+            new SemanticTimeframe($this->tracker, $start_date_field, $duration_field, null)
         );
 
         $this->mockStartDateFieldWithValue($start_date, $start_date_field);

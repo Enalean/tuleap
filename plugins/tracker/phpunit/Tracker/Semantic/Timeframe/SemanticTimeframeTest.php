@@ -44,80 +44,143 @@ class SemanticTimeframeTest extends TestCase
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $duration   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $end_date   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, null, null))->isDefined()
+            (new SemanticTimeframe($this->tracker, null, null, null))->isDefined()
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, null))->isDefined()
+            (new SemanticTimeframe($this->tracker, $start_date, null, null))->isDefined()
         );
         $this->assertTrue(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDefined()
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isDefined()
         );
+        $this->assertTrue(
+            (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->isDefined()
+        );
+    }
+
+    public function testItThrowsAnErrorIfThereIsBothADurationAndAnEndDateField(): void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $duration   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $end_date   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+
+        $this->tracker->shouldReceive('getId')->andReturn(34);
+
+        $this->expectException(TimeframeBrokenConfigurationException::class);
+        new SemanticTimeframe($this->tracker, $start_date, $duration, $end_date);
     }
 
     public function testIsUsedInSemantic(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $start_date->shouldReceive(['getId' => 42]);
+        $start_date->shouldReceive('getId')->andReturn(42);
         $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $duration->shouldReceive(['getId' => 43]);
+        $duration->shouldReceive('getId')->andReturn(43);
         $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $a_field->shouldReceive(['getId' => 44]);
+        $a_field->shouldReceive('getId')->andReturn(44);
+        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date->shouldReceive('getId')->andReturn(45);
+
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, null, null))->isUsedInSemantics($a_field)
+            (new SemanticTimeframe($this->tracker, null, null, null))->isUsedInSemantics($a_field)
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isUsedInSemantics($a_field)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isUsedInSemantics($a_field)
         );
         $this->assertTrue(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isUsedInSemantics($start_date)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isUsedInSemantics($start_date)
         );
         $this->assertTrue(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isUsedInSemantics($duration)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isUsedInSemantics($duration)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->isUsedInSemantics($end_date)
         );
     }
 
     public function testIsStartDateField(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $start_date->shouldReceive(['getId' => 42]);
+        $start_date->shouldReceive('getId')->andReturn(42);
         $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $duration->shouldReceive(['getId' => 43]);
+        $duration->shouldReceive('getId')->andReturn(43);
         $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $a_field->shouldReceive(['getId' => 44]);
+        $a_field->shouldReceive('getId')->andReturn(44);
+        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date->shouldReceive('getId')->andReturn(45);
+
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, null, null))->isStartDateField($a_field)
+            (new SemanticTimeframe($this->tracker, null, null, null))->isStartDateField($a_field)
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($a_field)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isStartDateField($a_field)
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($duration)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isStartDateField($duration)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->isStartDateField($end_date)
         );
         $this->assertTrue(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isStartDateField($start_date)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isStartDateField($start_date)
         );
     }
 
     public function testIsDurationField(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $start_date->shouldReceive(['getId' => 42]);
+        $start_date->shouldReceive('getId')->andReturn(42);
         $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
-        $duration->shouldReceive(['getId' => 43]);
+        $duration->shouldReceive('getId')->andReturn(43);
         $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
-        $a_field->shouldReceive(['getId' => 44]);
+        $a_field->shouldReceive('getId')->andReturn(44);
+        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date->shouldReceive('getId')->andReturn(45);
+
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, null, null))->isDurationField($a_field)
+            (new SemanticTimeframe($this->tracker, null, null, null))->isDurationField($a_field)
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($a_field)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isDurationField($a_field)
         );
         $this->assertFalse(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($start_date)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isDurationField($start_date)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->isDurationField($end_date)
         );
         $this->assertTrue(
-            (new SemanticTimeframe($this->tracker, $start_date, $duration))->isDurationField($duration)
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isDurationField($duration)
+        );
+    }
+
+    public function testIsEndDateField(): void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date->shouldReceive('getId')->andReturn(42);
+        $duration = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $duration->shouldReceive('getId')->andReturn(43);
+        $a_field = Mockery::mock(\Tracker_FormElement_Field::class);
+        $a_field->shouldReceive('getId')->andReturn(44);
+        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date->shouldReceive('getId')->andReturn(45);
+
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, null, null, null))->isEndDateField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isEndDateField($a_field)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isEndDateField($start_date)
+        );
+        $this->assertFalse(
+            (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->isEndDateField($duration)
+        );
+        $this->assertTrue(
+            (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->isEndDateField($end_date)
         );
     }
 
@@ -127,6 +190,7 @@ class SemanticTimeframeTest extends TestCase
 
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
+            null,
             null,
             null
         ))->exportToXml($root, []);
@@ -141,7 +205,8 @@ class SemanticTimeframeTest extends TestCase
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             null,
-            Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+            Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
+            null
         ))->exportToXml($root, []);
 
         $this->assertCount(0, $root->children());
@@ -154,6 +219,7 @@ class SemanticTimeframeTest extends TestCase
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             Mockery::mock(\Tracker_FormElement_Field_Date::class),
+            null,
             null
         ))->exportToXml($root, []);
 
@@ -170,7 +236,8 @@ class SemanticTimeframeTest extends TestCase
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             $start_date_field,
-            Mockery::mock(\Tracker_FormElement_Field_Numeric::class)
+            Mockery::mock(\Tracker_FormElement_Field_Numeric::class),
+            null
         ))->exportToXml($root, []);
 
         $this->assertCount(0, $root->children());
@@ -189,7 +256,8 @@ class SemanticTimeframeTest extends TestCase
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             $start_date_field,
-            $duration_field
+            $duration_field,
+            null
         ))->exportToXml($root, [
             'F101' => 101
         ]);
@@ -210,7 +278,8 @@ class SemanticTimeframeTest extends TestCase
         (new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             $start_date_field,
-            $duration_field
+            $duration_field,
+            null
         ))->exportToXml($root, [
             'F101' => 101,
             'F102' => 102

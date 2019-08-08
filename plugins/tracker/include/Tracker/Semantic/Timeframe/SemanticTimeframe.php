@@ -48,14 +48,25 @@ class SemanticTimeframe extends Tracker_Semantic
      */
     private $duration_field;
 
+    /**
+     * @var Tracker_FormElement_Field_Date|null
+     */
+    private $end_date_field;
+
     public function __construct(
         Tracker $tracker,
         ?Tracker_FormElement_Field_Date $start_date_field,
-        ?Tracker_FormElement_Field_Numeric $duration_field
+        ?Tracker_FormElement_Field_Numeric $duration_field,
+        ?Tracker_FormElement_Field_Date $end_date_field
     ) {
+        if ($duration_field !== null && $end_date_field !== null) {
+            throw new TimeframeBrokenConfigurationException($tracker);
+        }
+
         parent::__construct($tracker);
         $this->start_date_field = $start_date_field;
         $this->duration_field   = $duration_field;
+        $this->end_date_field   = $end_date_field;
     }
 
     public function getShortName(): string
@@ -169,7 +180,13 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
     {
-        return $this->isDurationField($field) || $this->isStartDateField($field);
+        return $this->isDurationField($field) || $this->isStartDateField($field) || $this->isEndDateField($field);
+    }
+
+    public function isEndDateField(Tracker_FormElement_Field $field): bool
+    {
+        return $this->end_date_field !== null &&
+            (int)$field->getId() === (int)$this->end_date_field->getId();
     }
 
     public function isDurationField(Tracker_FormElement_Field $field): bool
@@ -202,9 +219,15 @@ class SemanticTimeframe extends Tracker_Semantic
         return $this->duration_field;
     }
 
+    public function getEndDateField(): ?Tracker_FormElement_Field_Date
+    {
+        return $this->end_date_field;
+    }
+
     public function isDefined(): bool
     {
-        return $this->start_date_field !== null && $this->duration_field !== null;
+        return $this->start_date_field !== null &&
+            ($this->duration_field !== null || $this->end_date_field !== null);
     }
 
     public function exportToREST(PFUser $user)

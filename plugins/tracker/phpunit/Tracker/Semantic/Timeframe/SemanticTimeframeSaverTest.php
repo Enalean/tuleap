@@ -53,6 +53,7 @@ class SemanticTimeframeSaverTest extends TestCase
         $semantic_timeframe = new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             null,
+            null,
             null
         );
 
@@ -68,21 +69,7 @@ class SemanticTimeframeSaverTest extends TestCase
         $semantic_timeframe = new SemanticTimeframe(
             Mockery::mock(Tracker::class),
             null,
-            Mockery::mock(Tracker_FormElement_Field_Numeric::class)
-        );
-
-        $this->dao
-            ->shouldReceive('save')
-            ->never();
-
-        $this->assertFalse($this->savior->save($semantic_timeframe));
-    }
-
-    public function testItDoesNotSaveIfThereIsNoDurationField(): void
-    {
-        $semantic_timeframe = new SemanticTimeframe(
-            Mockery::mock(Tracker::class),
-            Mockery::mock(Tracker_FormElement_Field_Date::class),
+            Mockery::mock(Tracker_FormElement_Field_Numeric::class),
             null
         );
 
@@ -93,7 +80,24 @@ class SemanticTimeframeSaverTest extends TestCase
         $this->assertFalse($this->savior->save($semantic_timeframe));
     }
 
-    public function testItSavesTheSemantic(): void
+    public function testItDoesNotSaveIfThereIsNoDurationNorEndDateField(): void
+    {
+        $semantic_timeframe = new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            Mockery::mock(Tracker_FormElement_Field_Date::class),
+            null,
+            null,
+            null
+        );
+
+        $this->dao
+            ->shouldReceive('save')
+            ->never();
+
+        $this->assertFalse($this->savior->save($semantic_timeframe));
+    }
+
+    public function testItSavesTheSemanticWithDuration(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(1);
@@ -107,12 +111,40 @@ class SemanticTimeframeSaverTest extends TestCase
         $semantic_timeframe = new SemanticTimeframe(
             $tracker,
             $start_date_field,
-            $duration_field
+            $duration_field,
+            null
         );
 
         $this->dao
             ->shouldReceive('save')
-            ->with(1, 101, 102)
+            ->with(1, 101, 102, null)
+            ->once()
+            ->andReturn(true);
+
+        $this->assertTrue($this->savior->save($semantic_timeframe));
+    }
+
+    public function testItSavesTheSemanticWithEndDate(): void
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(1);
+
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('getId')->andReturn(102);
+
+        $semantic_timeframe = new SemanticTimeframe(
+            $tracker,
+            $start_date_field,
+            null,
+            $end_date_field
+        );
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(1, 101, null, 102)
             ->once()
             ->andReturn(true);
 
