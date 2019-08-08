@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,18 +29,27 @@ class UserAccessKeyRepresentation
      * @var int
      */
     public $id;
+
     /**
-     * @var int
+     * @var string
      */
     public $creation_date;
+
+    /**
+     * @var string|null
+     */
+    public $expiration_date;
+
     /**
      * @var string
      */
     public $description;
+
     /**
-     * @var int|null
+     * @var string|null
      */
     public $last_used_on;
+
     /**
      * @var string|null
      */
@@ -48,14 +57,23 @@ class UserAccessKeyRepresentation
 
     public function build(AccessKeyMetadata $access_key_metadata)
     {
-        $this->id            = $access_key_metadata->getID();
-        $this->creation_date = JsonCast::toDate($access_key_metadata->getCreationDate()->getTimestamp());
-        $this->description   = $access_key_metadata->getDescription();
-        if ($access_key_metadata->getLastUsedDate() !== null) {
-            $this->last_used_on = JsonCast::toDate($access_key_metadata->getLastUsedDate()->getTimestamp());
+        $this->id              = $access_key_metadata->getID();
+        $this->creation_date   = JsonCast::toDate($access_key_metadata->getCreationDate()->getTimestamp());
+
+        $expiration_date = $access_key_metadata->getExpirationDate();
+        if ($expiration_date !== null) {
+            $this->expiration_date = JsonCast::toDate($expiration_date->getTimestamp());
         }
-        if ($access_key_metadata->getLastUsedIP() !== null) {
-            $this->last_used_by = $access_key_metadata->getLastUsedIP();
+        $this->description = $access_key_metadata->getDescription();
+
+        $last_used_date = $access_key_metadata->getLastUsedDate();
+        if ($last_used_date !== null) {
+            $this->last_used_on = JsonCast::toDate($last_used_date->getTimestamp());
+        }
+
+        $last_used_ip = $access_key_metadata->getLastUsedIP();
+        if ($last_used_ip !== null) {
+            $this->last_used_by = $last_used_ip;
         }
     }
 }

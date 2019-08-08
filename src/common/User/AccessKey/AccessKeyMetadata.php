@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,19 +43,26 @@ class AccessKeyMetadata
      */
     private $last_used_ip;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
+    private $expiration_date;
+
     public function __construct(
         $id,
         \DateTimeImmutable $creation_date,
         $description,
         ?\DateTimeImmutable $last_used_date = null,
-        $last_used_ip = null
+        $last_used_ip = null,
+        ?\DateTimeImmutable $expiration_date = null
     ) {
 
-        $this->id             = $id;
-        $this->creation_date  = $creation_date;
-        $this->description    = $description;
-        $this->last_used_date = $last_used_date;
-        $this->last_used_ip   = $last_used_ip;
+        $this->id               = $id;
+        $this->creation_date    = $creation_date;
+        $this->expiration_date  = $expiration_date;
+        $this->description      = $description;
+        $this->last_used_date   = $last_used_date;
+        $this->last_used_ip     = $last_used_ip;
     }
 
     public function getID()
@@ -93,5 +100,13 @@ class AccessKeyMetadata
     public function getLastUsedIP()
     {
         return $this->last_used_ip;
+    }
+
+    /**
+     * @return \DateTimeImmutable|null
+     */
+    public function getExpirationDate(): ?\DateTimeImmutable
+    {
+        return $this->expiration_date;
     }
 }

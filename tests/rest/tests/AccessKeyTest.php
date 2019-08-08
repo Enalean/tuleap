@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,6 +46,7 @@ class AccessKeyTest extends RestBase
         $this->assertGreaterThanOrEqual(1, count($access_keys_user_1));
         $has_generated_access_key_been_found = false;
         foreach ($access_keys_user_1 as $access_key) {
+            $this->assertArrayHasKey('expiration_date', $access_key);
             if ($access_key['description'] === self::DESCRIPTION_ACCESS_KEY) {
                 $has_generated_access_key_been_found = true;
                 break;
