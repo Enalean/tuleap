@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
+use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -55,16 +56,29 @@ class AccessKeyCreator
         $this->notifier                         = $notifier;
     }
 
-    public function create(\PFUser $user, $description)
+    /**
+     * @throws AccessKeyAlreadyExpiredException
+     */
+    public function create(\PFUser $user, $description, ?DateTimeImmutable $expiration_date)
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
-        $current_time        = new \DateTimeImmutable();
+        $current_time        = new DateTimeImmutable();
+
+        $expiration_date_timestamp = null;
+        if ($expiration_date !== null) {
+            $expiration_date_timestamp = $expiration_date->getTimestamp();
+        }
+
+        if ($expiration_date_timestamp !== null && $expiration_date_timestamp < $current_time->getTimestamp()) {
+            throw new AccessKeyAlreadyExpiredException();
+        }
 
         $key_id = $this->dao->create(
             $user->getId(),
             $this->hasher->computeHash($verification_string),
             $current_time->getTimestamp(),
-            $description
+            $description,
+            $expiration_date_timestamp
         );
         $access_key = new SplitToken($key_id, $verification_string);
 

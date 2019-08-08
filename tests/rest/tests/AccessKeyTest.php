@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey\REST;
 
+use DateTimeImmutable;
 use REST_TestDataBuilder;
 use RestBase;
 
@@ -46,8 +47,8 @@ class AccessKeyTest extends RestBase
         $this->assertGreaterThanOrEqual(1, count($access_keys_user_1));
         $has_generated_access_key_been_found = false;
         foreach ($access_keys_user_1 as $access_key) {
-            $this->assertArrayHasKey('expiration_date', $access_key);
             if ($access_key['description'] === self::DESCRIPTION_ACCESS_KEY) {
+                $this->assertNull($access_key['expiration_date']);
                 $has_generated_access_key_been_found = true;
                 break;
             }
@@ -59,13 +60,53 @@ class AccessKeyTest extends RestBase
         $this->assertEmpty($this->getAccessKeys());
     }
 
-    private function createAccessKey(): string
+    public function testAccessKeyLifeCycleWithExpirationDate(): void
     {
+        $expiration_date       = $this->getFormattedExpirationDate();
+        $access_key_identifier = $this->createAccessKey($expiration_date);
+
+        $this->assertTrue($this->isAuthenticationSuccessful($access_key_identifier));
+
+        $access_keys_user_1 = $this->getAccessKeys();
+
+        $this->assertGreaterThanOrEqual(1, count($access_keys_user_1));
+        $has_generated_access_key_been_found = false;
+        foreach ($access_keys_user_1 as $access_key) {
+            if ($access_key['description'] === self::DESCRIPTION_ACCESS_KEY) {
+                $this->assertEquals($expiration_date, $access_key['expiration_date']);
+                $has_generated_access_key_been_found = true;
+                break;
+            }
+        }
+        $this->assertTrue($has_generated_access_key_been_found);
+
+        $this->revokeAccessKeys($access_keys_user_1);
+        $this->assertFalse($this->isAuthenticationSuccessful($access_key_identifier));
+        $this->assertEmpty($this->getAccessKeys());
+    }
+
+    private function getFormattedExpirationDate(): string
+    {
+        $expiration_date = new DateTimeImmutable("tomorrow");
+
+        return $expiration_date->format(DateTimeImmutable::ATOM);
+    }
+
+    private function createAccessKey($expiration_date = null): string
+    {
+        $body_content = json_encode(['description' => self::DESCRIPTION_ACCESS_KEY]);
+        if ($expiration_date !== null) {
+            $body_content = json_encode([
+                'description'     => self::DESCRIPTION_ACCESS_KEY,
+                'expiration_date' => $expiration_date
+            ]);
+        }
+
         $response = $this->getResponse(
             $this->client->post(
                 'access_keys',
                 null,
-                json_encode(['description' => self::DESCRIPTION_ACCESS_KEY])
+                $body_content
             ),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
