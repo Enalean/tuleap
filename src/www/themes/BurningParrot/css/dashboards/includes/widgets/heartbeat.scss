@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,7 +43,7 @@
 
 .dashboard-widget-content-projectheartbeat-loading {
     height: 200px;
-    background: url('../images/spinner.gif') no-repeat center center;
+    background: url('../../images/spinner.gif') no-repeat center center;
 }
 
 .widget-project-heartbeat-empty-icon {
@@ -57,21 +57,22 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     padding: $tlp-spacing 0;
 
     &::before {
+        content: '';
         position: absolute;
+        z-index: 1;
         top: 0;
         left: 10px;
         width: 4px;
         height: 100%;
         background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
             linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
-        content: '';
-        z-index: 1;
     }
 }
 
 .dashboard-widget-content-projectheartbeat-label {
     display: inline-block;
     position: relative;
+    z-index: 2;
     margin: $tlp-spacing 0;
     padding: 5px;
     border-radius: 3px;
@@ -82,7 +83,6 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     letter-spacing: .5px;
     line-height: 7px;
     text-transform: uppercase;
-    z-index: 2;
 
     &:first-child {
         margin: 0 0 $tlp-spacing;
@@ -92,9 +92,9 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .dashboard-widget-content-projectheartbeat-item {
     display: flex;
     position: relative;
+    z-index: 2;
     align-items: flex-start;
     margin: 0 0 $tlp-spacing;
-    z-index: 2;
 
     &:last-child {
         margin: 0;

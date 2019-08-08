@@ -113,8 +113,8 @@ class Home implements DispatchableWithRequest
                             new CssAssetCollection(
                                 [new CssAsset(
                                     new IncludeAssets(
-                                        __DIR__ . '/../../www/themes/BurningParrot/assets',
-                                        '/themes/BurningParrot/assets'
+                                        __DIR__ . '/../../www/assets/dashboards/themes',
+                                        '/assets/dashboards/themes'
                                     ),
                                     'dashboards'
                                 )]

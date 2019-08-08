@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'widgets/contacts';
-@import 'widgets/heartbeat';
-@import 'widgets/imageviewer';
-@import 'widgets/lastcommit';
-@import 'widgets/myprojects';
-@import 'widgets/project-members';
-@import 'widgets/trackerv3';
-@import 'widgets/project-classification';
-@import 'widgets/welcomemessage';
-@import 'widgets/public-areas';
+@import './widgets/contacts';
+@import './widgets/heartbeat';
+@import './widgets/imageviewer';
+@import './widgets/lastcommit';
+@import './widgets/myprojects';
+@import './widgets/project-members';
+@import './widgets/trackerv3';
+@import './widgets/project-classification';
+@import './widgets/welcomemessage';
+@import './widgets/public-areas';
 
 .dashboard-widget-container {
     width: 100%;
 }
 
-// scss-lint:disable QualifyingElement
+/* stylelint-disable selector-no-qualifying-type */
 .dashboard-widget-asynchronous-loading,
 .tlp-table > tbody > tr:nth-child(odd) > td.dashboard-add-widget-content-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
-    background: $tlp-ui-white url('../images/spinner.gif') center center no-repeat;
+    background: $tlp-ui-white url('../../images/spinner.gif') center center no-repeat;
 }
+/* stylelint-enable */
 
 .dashboard-widget-header {
     display: flex;
@@ -123,7 +124,7 @@
     cursor: pointer;
 }
 
-// scss-lint:disable QualifyingElement
+/* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr.dashboard-add-widget-list-table-widget-selected {
     > .dashboard-add-widget-list-table-widget-content-name,
     > .dashboard-add-widget-list-table-widget-content-link,
@@ -136,6 +137,7 @@
         color: $tlp-theme-color;
     }
 }
+/* stylelint-enable */
 
 .dashboard-add-widget-list-table-widget-content-name {
     width: 100%;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../scripts/node_modules/dragula/dist/dragula.min';
+@import '../../../../scripts/node_modules/dragula/dist/dragula.min.css';
 
 #add-dashboard-button {
     margin: 11px 0 11px $tlp-double-spacing;
@@ -163,7 +163,7 @@
     }
 }
 
-/* scss-lint:disable QualifyingElement */
+/* stylelint-disable selector-no-qualifying-type */
 body.gu-unselectable {
     $placeholder-width: 3px;
     $placeholder-height: 3px;
@@ -258,6 +258,7 @@ body.gu-unselectable {
         }
     }
 }
+/* stylelint-enable */
 
 .dashboard-dropdown-layout {
     margin: 0;
@@ -306,15 +307,15 @@ body.gu-unselectable {
 }
 
 $nb-empty-columns-separators-in-three-columns: 4;
-$nb-empty-columns-separators-in-four-columns:  5;
+$nb-empty-columns-separators-in-four-columns: 5;
 
 $empty-space-taken-in-three-columns: $nb-empty-columns-separators-in-three-columns * $tlp-half-spacing;
-$empty-space-taken-in-four-columns:  $nb-empty-columns-separators-in-four-columns * $tlp-half-spacing;
+$empty-space-taken-in-four-columns: $nb-empty-columns-separators-in-four-columns * $tlp-half-spacing;
 
-$grid-width-in-three-columns:       calc((100% - #{$empty-space-taken-in-three-columns} ) / 3);
+$grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns} ) / 3);
 $two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2 ) + #{$tlp-half-spacing});
 
-$grid-width-in-four-columns:       calc((100% - #{$empty-space-taken-in-four-columns} ) / 4);
+$grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns} ) / 4);
 $two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + #{$tlp-half-spacing});
 
 .two-columns-small-big {
@@ -405,6 +406,6 @@ $two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + 
     }
 }
 
-@import 'dashboard-widgets';
-@import 'dashboard-project';
-@import 'dashboard-user';
+@import 'includes/dashboard-widgets';
+@import 'includes/dashboard-project';
+@import 'includes/dashboard-user';

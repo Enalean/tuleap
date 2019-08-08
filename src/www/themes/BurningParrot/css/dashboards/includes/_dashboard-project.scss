@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,8 +67,8 @@
     width: 13px;
     height: 10px;
     margin: 2px 0 0;
-    vertical-align: top;
     fill: $tlp-ui-dimmed;
+    vertical-align: top;
 
     + .dashboard-project-title-name {
         margin: 0 0 0 -7px;
