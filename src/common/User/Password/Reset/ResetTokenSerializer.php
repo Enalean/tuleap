@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,8 +54,11 @@ final class ResetTokenSerializer implements SplitTokenFormatter, SplitTokenIdent
             throw new InvalidIdentifierFormatException();
         }
 
-        list($token_id, $verifier) = $identifier_parts;
-        $verification_string       = new SplitTokenVerificationString(new ConcealedString(\sodium_hex2bin($verifier)));
+        [$token_id, $verifier] = $identifier_parts;
+        if ((\strlen($verifier) % 2) !== 0) {
+            throw new InvalidIdentifierFormatException();
+        }
+        $verification_string = new SplitTokenVerificationString(new ConcealedString(\sodium_hex2bin($verifier)));
 
         return new SplitToken((int) $token_id, $verification_string);
     }

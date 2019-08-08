@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-class AccessKeySerializerTest extends TestCase
+final class AccessKeySerializerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -58,12 +58,23 @@ class AccessKeySerializerTest extends TestCase
         $this->assertSame($hex_verification_string, bin2hex($access_key->getVerificationString()->getString()));
     }
 
-    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
+    /**
+     * @dataProvider incorrectlyFormattedIdentifierProvider
+     */
+    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier) : void
     {
         $access_key_serializer = new AccessKeySerializer();
 
         $this->expectException(InvalidIdentifierFormatException::class);
 
-        $access_key_serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
+        $access_key_serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
+    }
+
+    public function incorrectlyFormattedIdentifierProvider() : array
+    {
+        return [
+            ['incorrect_identifier'],
+            ['tlp-k1-1.aaa'],
+        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,12 +45,23 @@ class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
         );
     }
 
-    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
+    /**
+     * @dataProvider incorrectlyFormattedIdentifierProvider
+     */
+    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier) : void
     {
         $serializer = new LFSAuthorizationTokenHeaderSerializer();
 
         $this->expectException(InvalidIdentifierFormatException::class);
 
-        $serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
+        $serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
+    }
+
+    public function incorrectlyFormattedIdentifierProvider() : array
+    {
+        return [
+            ['incorrect_identifier'],
+            ['RemoteAuth 1.aaa'],
+        ];
     }
 }

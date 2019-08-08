@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,7 @@ final class LFSAuthorizationTokenHeaderSerializer implements SplitTokenFormatter
      */
     public function getSplitToken(ConcealedString $identifier)
     {
-        if (preg_match('/^RemoteAuth (?<id>\d+)\.(?<verifier>[[:xdigit:]]+)$/', $identifier, $matches) !== 1) {
+        if (preg_match('/^RemoteAuth (?<id>\d+)\.(?<verifier>(?:[[:xdigit:]]{2})+)$/', $identifier, $matches) !== 1) {
             throw new InvalidIdentifierFormatException();
         }
         $verification_string = new SplitTokenVerificationString(new ConcealedString(\sodium_hex2bin($matches['verifier'])));
