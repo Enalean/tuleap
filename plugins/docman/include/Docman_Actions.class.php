@@ -26,6 +26,7 @@ use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 
 require_once __DIR__ . '/../../../src/www/news/news_utils.php';
 
@@ -65,6 +66,17 @@ class Docman_Actions extends Actions
     protected function _getEventManager() {
         $em = EventManager::instance();
         return $em;
+    }
+
+    private function getPermissionItemUpdater(Docman_Item $item) : PermissionItemUpdater
+    {
+        return new PermissionItemUpdater(
+            $this->_controler->feedback,
+            $this->_getItemFactory(),
+            $this->_getDocmanPermissionsManagerInstance($item->getGroupId()),
+            $this->_getPermissionsManagerInstance(),
+            $this->_getEventManager()
+        );
     }
 
     function expandFolder() {
@@ -373,11 +385,9 @@ class Docman_Actions extends Actions
                     $new_item = $item_factory->getItemFromDb($id);
                     $parent   = $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
-                        $this->setPermissionsOnItem(
+                        $this->getPermissionItemUpdater($new_item)->initPermissionsOnNewlyCreatedItem(
                             $new_item,
-                            true,
-                            $this->_controler->request->get('permissions'),
-                            (bool) $this->_controler->request->get('recursive')
+                            $this->_controler->request->get('permissions')
                         );
                     } else {
                         $pm = $this->_getPermissionsManagerInstance();
@@ -999,22 +1009,20 @@ class Docman_Actions extends Actions
     {
         $id    = isset($params['id'])    ? $params['id']    : $this->_controler->request->get('id');
         if ($id && $this->_controler->request->exist('permissions')) {
-            $user = $this->_controler->getUser();
             $item = $this->_getItemFactory()->getItemFromDb($id);
-            $this->setPermissionsOnItem(
-                $item,
-                false,
-                $this->_controler->request->get('permissions'),
-                (bool) $this->_controler->request->get('recursive')
-            );
-            $this->event_manager->processEvent(
-                'plugin_docman_event_perms_change',
-                array(
-                    'group_id' => $item->getGroupId(),
-                    'item'     => $item,
-                    'user'     => $user,
-                )
-            );
+            if ($item instanceof Docman_Folder && $this->_controler->request->get('recursive')) {
+                $this->getPermissionItemUpdater($item)->updateFolderAndChildrenPermissions(
+                    $item,
+                    $this->_controler->getUser(),
+                    $this->_controler->request->get('permissions')
+                );
+            } else {
+                $this->getPermissionItemUpdater($item)->updateItemPermissions(
+                    $item,
+                    $this->_controler->getUser(),
+                    $this->_controler->request->get('permissions')
+                );
+            }
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params'] = [
@@ -1022,192 +1030,6 @@ class Docman_Actions extends Actions
                 'section' => 'permissions',
                 'id'      => $id,
             ];
-        }
-    }
-
-    /**
-     * @param Docman_Item  $item  The id of the item
-     * @param bool         $force true if you want to bypass permissions checking (@see permission_add_ugroup)
-     * @psalm-param array<int,key-of<self::PERMISSIONS_DEFINITIONS>> $permissions
-     */
-    private function setPermissionsOnItem(Docman_Item $item, $force, array $permissions, bool $apply_recursively)
-    {
-        $old_permissions  = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), Docman_PermissionsManager::ITEM_PERMISSION_TYPES, false);
-        $done_permissions = array();
-        $history = [
-            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ   => false,
-            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE  => false,
-            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE => false
-        ];
-        foreach($permissions as $ugroup_id => $wanted_permission) {
-            $this->_setPermission($item->getGroupId(), $item->getId(), $old_permissions, $done_permissions, $ugroup_id, $wanted_permission, $history, $force);
-        }
-
-        foreach($history as $perm => $put_in_history) {
-            if ($put_in_history) {
-                permission_add_history($item->getGroupId(), $perm, $item->getId());
-            }
-        }
-
-        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
-
-        // If requested by user, apply permissions recursively on sub items
-        if ($apply_recursively) {
-            //clone permissions for sub items
-            // Recursive application via a callback of Docman_Actions::recursivePermissions in
-            // Docman_ItemFactory::breathFirst
-            $item_factory = $this->_getItemFactory();
-            $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
-        }
-    }
-
-    /**
-     * Apply permissions of the reference item on the target item.
-     *
-     * This method is used as a callback by Docman_ItemFactory::breathFirst. It
-     * aims to clone the permissions set on the reference item ($params['id'])
-     * on a given item ($data['item_id']).
-     *
-     * Current user must have 'manage' permissions on the item to update its permissions.
-     *
-     * @see Docman_ItemFactory::breathFirst
-     *
-     * $params['id']    Reference item id.
-     * $data['item_id'] Item id on which permissions applies.
-     */
-    function recursivePermissions($data, $params) {
-        if ($this->_controler->userCanManage($data["item_id"])) {
-            $pm = $this->_getPermissionsManagerInstance();
-            $pm->clonePermissions($params['id'], $data["item_id"], Docman_PermissionsManager::ITEM_PERMISSION_TYPES);
-        } else {
-            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
-        }
-    }
-
-    /**
-    * Set the permission for a ugroup on an item.
-    *
-    * The difficult part of the algorithm comes from two point:
-    * - There is a hierarchy between ugroups (@see ugroup_get_parent)
-    * - There is a hierarchy between permissions (READ < WRITE < MANAGE)
-    *
-    * Let's see a scenario:
-    * I've selected WRITE permission for Registered users and READ permission for Project Members
-    * => Project Members ARE registered users therefore they have WRITE permission.
-    * => WRITE is stronger than READ permission.
-    * So the permissions wich will be set are: WRITE for registered and WRITE for project members
-    *
-    * The force parameter must be set to true if you want to bypass permissions checking (@see permission_add_ugroup).
-    * Pretty difficult to know if a user can update the permissions which does not exist for a new item...
-    *
-    * @param $group_id integer The id of the project
-    * @param $item_id integer The id of the item
-    * @param $old_permissions array The permissions before
-    * @param &$done_permissions array The permissions after
-    * @param int $ugroup_id ugroup_id we want to set permission now
-    * @param int $wanted_permission The permissions the user has asked
-    * @param &$history array Does a permission has been set ?
-    *
-    * @psalm-param key-of<self::PERMISSIONS_DEFINITIONS> $wanted_permission
-    *
-    * @access protected
-    */
-    function _setPermission($group_id, $item_id, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permission, &$history, $force = false) {
-        //Do nothing if we have already choose a permission for ugroup
-        if (!isset($done_permissions[$ugroup_id])) {
-
-            //if the ugroup has a parent
-            if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
-
-                //first choose the permission for the parent
-                $this->_setPermission($group_id, $item_id, $old_permissions, $done_permissions, $parent, $wanted_permission, $history);
-
-                //is there a conflict between given permissions?
-                if ($parent = $this->_getBiggerOrEqualParent($done_permissions, $parent, $wanted_permission)) {
-
-                    //warn the user that there was a conflict
-                    $this->_controler->feedback->log(
-                        'warning',
-                        $GLOBALS['Language']->getText(
-                            'plugin_docman',
-                            'warning_perms',
-                            array(
-                                $old_permissions[$ugroup_id]['ugroup']['name'],
-                                $old_permissions[$parent]['ugroup']['name'],
-                                permission_get_name(self::PERMISSIONS_DEFINITIONS[$done_permissions[$parent]]['type'])
-                            )
-                        )
-                    );
-
-                    //remove permissions which was set for the ugroup
-                    if (count($old_permissions[$ugroup_id]['permissions'])) {
-                        foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
-                            permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
-                            $history[$permission] = true;
-                        }
-                    }
-
-                    //The permission is none (default) for this ugroup
-                    $done_permissions[$ugroup_id] = 100;
-                }
-            }
-
-            //If the permissions have not been set (no parent || no conflict)
-            if (!isset($done_permissions[$ugroup_id])) {
-
-                //remove permissions if needed
-                $perms_cleared = false;
-                foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
-                    if ($permission != self::PERMISSIONS_DEFINITIONS[$wanted_permission]['type']) {
-                        //The permission has been changed
-                        permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
-                        $history[$permission] = true;
-                        $perms_cleared = true;
-                        $done_permissions[$ugroup_id] = 100;
-                    } else {
-                        //keep the old permission
-                        $done_permissions[$ugroup_id] = Docman_PermissionsManager::getDefinitionIndexForPermission($permission);
-                    }
-                }
-
-                //If the user set an explicit permission and there was no perms before or they have been removed
-                if ($wanted_permission != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
-                    //Then give the permission
-                    $permission = self::PERMISSIONS_DEFINITIONS[$wanted_permission]['type'];
-                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
-
-                    $history[$permission] = true;
-                    $done_permissions[$ugroup_id] = $wanted_permission;
-                } else {
-                    //else set none(default) permission
-                    $done_permissions[$ugroup_id] = 100;
-                }
-            }
-        }
-    }
-
-    /**
-    * Return the parent (or grand parent) of ugroup $parent which has a bigger permission
-    * @return int the ugroup id which has been found or false
-    */
-    function _getBiggerOrEqualParent($done_permissions, $parent, $wanted_permission) {
-        //No need to search for parent if the wanted permission is the default one
-        if ($wanted_permission == 100) {
-            return false;
-        } else {
-            //If the parent permission is bigger than the wanted permission
-            if (self::PERMISSIONS_DEFINITIONS[$done_permissions[$parent]]['order'] >= self::PERMISSIONS_DEFINITIONS[$wanted_permission]['order']) {
-                //then return parent
-                return $parent;
-            } else {
-                //else compare with grand parents (recursively)
-                if (($parent = ugroup_get_parent($parent)) !== false) {
-                    return $this->_getBiggerOrEqualParent($done_permissions, $parent, $wanted_permission);
-                } else {
-                    return false;
-                }
-            }
         }
     }
 
