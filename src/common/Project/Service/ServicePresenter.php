@@ -43,25 +43,19 @@ class ServicePresenter
     public $is_summary;
     public $is_in_iframe;
     public $is_link_customizable;
-
     /**
-     *
-     *
-     * @param Service $service
-     * @param         $is_read_only
-     * @param         $can_see_shortname
-     * @param         $is_scope_project
-     * @param         $can_update_is_active
-     * @param         $is_link_customizable
-     * @param         $service_link
+     * @var ?string JSON
      */
+    public $service_json = null;
+
     public function __construct(
         Service $service,
         $is_read_only,
         $can_see_shortname,
         $is_scope_project,
         $can_update_is_active,
-        $service_link
+        $service_link,
+        bool $should_show_dynamic_modal
     ) {
         $this->id                   = $service->getId();
         $this->label                = $service->getInternationalizedName();
@@ -81,6 +75,10 @@ class ServicePresenter
         $this->can_update_is_used   = $service->getShortName() !== 'admin' || ! $this->is_used;
         $this->is_summary           = $service->getShortName() === 'summary';
         $this->is_link_customizable = $service_link === null;
+
+        if ($should_show_dynamic_modal === true) {
+            $this->service_json = json_encode($this->buildJSONPresenter());
+        }
     }
 
     private function canBeDeleted(Service $service)
@@ -101,5 +99,19 @@ class ServicePresenter
         $home_page_label = $GLOBALS['Language']->getText('project_admin_servicebar', 'home_page');
 
         return $service->getInternationalizedName() === $home_page_label;
+    }
+
+    private function buildJSONPresenter(): ServiceJSONPresenter
+    {
+        return new ServiceJSONPresenter(
+            $this->id,
+            $this->label,
+            $this->link,
+            $this->description,
+            $this->is_active,
+            $this->is_used,
+            $this->is_in_iframe,
+            $this->rank
+        );
     }
 }

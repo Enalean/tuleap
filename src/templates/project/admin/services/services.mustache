@@ -60,6 +60,7 @@
                                         "
                                         data-test="service-{{ short_name }}"
                                         data-target-modal-id="project-admin-services-edit-modal-{{ id }}"
+                                        {{# service_json }}data-service-json="{{ service_json }}"{{/ service_json }}
                                     >
                                         <i class="fa fa-pencil tlp-button-icon"></i> {{# gettext }}Edit{{/ gettext }}
                                     </button>
@@ -92,6 +93,12 @@
                     </tbody>
                 </table>
                 {{> services-delete-modal }}
+                <div id="custom-service-edit-modal"
+                     data-project-id="{{ project_id }}"
+                     data-minimal-rank="{{ minimal_rank }}"
+                     data-csrf-token-name="{{ csrf_token_name }}"
+                     data-csrf-token="{{ csrf_token }}"
+                ></div>
             </section>
         </div>
     </section>

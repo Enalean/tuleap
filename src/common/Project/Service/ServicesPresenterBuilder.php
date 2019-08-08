@@ -61,7 +61,8 @@ class ServicesPresenterBuilder
                 $this->canSeeShortname($service, $user),
                 $service->getScope() !== Service::SCOPE_SYSTEM,
                 $this->canUpdateIsActive($user),
-                $this->getServiceLink($service, $project)
+                $this->getServiceLink($service, $project),
+                $this->shouldShowDynamicModal($service, $user)
             );
         }
 
@@ -107,5 +108,10 @@ class ServicesPresenterBuilder
         $this->event_manager->processEvent($service_url_collector);
 
         return $service_url_collector->getUrl();
+    }
+
+    private function shouldShowDynamicModal(Service $service, PFUser $user): bool
+    {
+        return $service->getScope() !== Service::SCOPE_SYSTEM && ! $user->isSuperUser();
     }
 }

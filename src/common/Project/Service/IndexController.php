@@ -81,7 +81,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
 
         $this->displayHeader($project, $layout);
         TemplateRendererFactory::build()
-            ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/')
+            ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/services/')
             ->renderToPage(
                 'services',
                 $presenter
@@ -92,7 +92,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
     private function displayHeader(Project $project, BaseLayout $layout)
     {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');
-        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('project-admin.js'));
+        $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('project-admin-services.js'));
         $this->navigation_displayer->displayBurningParrotNavigation($title, $project, 'services');
     }
 
