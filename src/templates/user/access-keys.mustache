@@ -113,6 +113,27 @@
             <label for="access-key-description">{{# gettext }}Access key description{{/ gettext }}</label>
             <textarea id="access-key-description" name="access-key-description" rows="5"
                       placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
+
+            <div class="form-group">
+                <label for="access-key-expiration-date-picker">{{# gettext }}Access key expiration date{{/ gettext }}</label>
+                <div id="access-key-expiration-date-picker" class="input-append">
+                    <span class="access-key-expiration-date-input">
+                        <input name="access-key-expiration-date"
+                               class="input-small form-control"
+                               data-format="yyyy-MM-dd"
+                               type="text"
+                               value=""
+                        />
+                        <span class="add-on">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </span>
+                </div>
+                <p class="text-warning">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    {{# gettext }} The key will expire at the end of the selected date. Keep it empty if you don't want that this key will expire. {{/ gettext }}
+                </p>
+            </div>
         </div>
 
         <div class="modal-footer">

@@ -100,6 +100,9 @@ msgstr "Journal des accès"
 msgid "Access key description"
 msgstr "Description de la clé d'accès"
 
+msgid "Access key expiration date"
+msgstr "Date d'expiration de la clé d'accès"
+
 msgid "Access keys have been successfully deleted."
 msgstr "Les clés d'accès ont été supprimées avec succès."
 
@@ -560,6 +563,9 @@ msgstr "Activé ?"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
+
+msgid "Expiration date is not well formed."
+msgstr "La date d'expiration n'est pas au bon format."
 
 msgid "Expire on"
 msgstr "Expire le"
@@ -1357,6 +1363,11 @@ msgstr "L'identifiant du groupe utilisateur est requis"
 msgid "The group name is missing"
 msgstr "Le nom du groupe utilisateur est requis"
 
+msgid ""
+"The key will expire at the end of the selected date. Keep it empty if you "
+"don't want that this key will expire."
+msgstr "La clé expirera à la fin de la date selectionnée. Laissez le champ vide si vous ne souhaitez pas que la clé expire."
+
 msgid "The last project administrator cannot be removed."
 msgstr ""
 "Il n'est pas possible de supprimer le dernier administrateur du projet."
@@ -1881,6 +1892,9 @@ msgstr ""
 
 msgid "You cannot access to this page."
 msgstr "Vous ne pouvez pas accéder à cette page."
+
+msgid "You cannot create an already expired access key."
+msgstr "Vous ne pouvez pas créer une clé déja expirée."
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
