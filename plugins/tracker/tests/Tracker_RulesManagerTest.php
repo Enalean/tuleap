@@ -64,13 +64,16 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+
         $arm = partial_mock(
             'Tracker_RulesManager',
             array('getRuleFactory', 'getSelectedValuesForField'),
             [Mockery::mock(Tracker::class),
                 Mockery::mock(Tracker_FormElementFactory::class),
                 $frozen_dao,
-                $tracker_rules_list_validator
+                $tracker_rules_list_validator,
+                $tracker_factory
             ]
         );
         $arm->setReturnReference('getRuleFactory', $arf);
@@ -263,7 +266,13 @@ XML;
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
-        $manager = new Tracker_RulesManager($tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator);
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+
+        $manager = new Tracker_RulesManager($tracker,
+            $form_element_factory,
+            $frozen_dao,
+            $tracker_rules_list_validator,
+            $tracker_factory);
 
         stub($tracker)->getId()->returns(45);
 
@@ -300,6 +309,9 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+
         $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
         stub($source_field)->getLabel()->returns('aaaaa');
         stub($form_element_factory)->getFormElementById()->returns($source_field);
@@ -321,7 +333,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllListRulesByTrackerWithOrder',
                 'getAllDateRulesByTrackerId',
             ],
-            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator]
+            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator, $tracker_factory]
         );
 
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
@@ -346,6 +358,9 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+
         $tracker_rule_date  = mock('Tracker_Rule_Date');
         $tracker_rule_date2 = mock('Tracker_Rule_Date');
 
@@ -360,7 +375,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $fozen_dao, $tracker_rules_list_validator]
+            [$tracker, $form_element_factory, $fozen_dao, $tracker_rules_list_validator, $tracker_factory]
         );
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array($tracker_rule_date, $tracker_rule_date2));
@@ -386,10 +401,13 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator]
+            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator, $tracker_factory]
         );
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
@@ -414,13 +432,16 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             [
                 'getAllListRulesByTrackerWithOrder',
                 'getAllDateRulesByTrackerId',
             ],
-            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator]
+            [$tracker, $form_element_factory, $frozen_dao, $tracker_rules_list_validator, $tracker_factory]
         );
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
@@ -442,13 +463,16 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(false);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             [
                 'getAllListRulesByTrackerWithOrder',
                 'getAllDateRulesByTrackerId',
             ],
-            [$tracker, $form_element_factory, $frozen_field, $tracker_rules_list_validator]
+            [$tracker, $form_element_factory, $frozen_field, $tracker_rules_list_validator, $tracker_factory]
         );
 
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
@@ -520,6 +544,8 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
         $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
+        $tracker_factory = Mockery::mock(TrackerFactory::class);
+
         stub($rule_date_factory)->searchByTrackerId($this->tracker_id)->returns($rules_date);
 
         $element_factory    = mock('Tracker_FormElementFactory');
@@ -527,7 +553,7 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $this->rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getRuleFactory'],
-            [$tracker, $element_factory, $frozen_dao, $tracker_rules_list_validator]
+            [$tracker, $element_factory, $frozen_dao, $tracker_rules_list_validator, $tracker_factory]
         );
         stub($this->rules_manager)->getRuleFactory()->returns($rule_list_factory);
         $this->rules_manager->setRuleDateFactory($rule_date_factory);

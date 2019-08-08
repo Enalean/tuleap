@@ -898,7 +898,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $this->getTracker(),
             Tracker_FormElementFactory::instance(),
             new FrozenFieldsDao(),
-            new TrackerRulesListValidator($tracker_formelement_factory)
+            new TrackerRulesListValidator($tracker_formelement_factory),
+            TrackerFactory::instance()
         );
         return $tracker_rules_manager->isUsedInFieldDependency($this);
     }
