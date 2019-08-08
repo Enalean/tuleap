@@ -30,15 +30,12 @@
                 <i class="fa fa-pencil tlp-modal-title-icon"></i>
                 <translate>Edit service</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="close_label">
+            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
                 ×
             </div>
         </div>
-        <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
-        <project-scope-service
-            v-bind:minimal_rank="minimal_rank"
-            v-bind:service="service"
-        />
+        <slot name="csrf"/>
+        <slot name="content"/>
         <div class="tlp-modal-footer">
             <button
                 type="reset"
@@ -61,46 +58,30 @@
 </template>
 <script>
 import { modal as createModal } from "tlp";
-import ProjectScopeService from "./ProjectScopeService.vue";
 
 export default {
     name: "BaseEditModal",
-    components: { ProjectScopeService },
     props: {
-        project_id: {
-            type: String,
-            required: true
-        },
-        minimal_rank: {
-            type: String,
-            required: true
-        },
-        csrf_token: {
-            type: String,
-            required: true
-        },
-        csrf_token_name: {
+        form_url: {
             type: String,
             required: true
         }
     },
     data() {
         return {
-            modal: null,
-            service: this.resetService()
+            modal: null
         };
     },
     computed: {
-        form_url() {
-            return `/project/${encodeURIComponent(this.project_id)}/admin/services/edit`;
-        },
         close_label() {
             return this.$gettext("Close");
         }
     },
     mounted() {
         this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
+        this.modal.addEventListener("tlp-modal-hidden", () => {
+            this.$emit("reset-modal");
+        });
     },
     beforeDestroy() {
         if (this.modal !== null) {
@@ -108,22 +89,7 @@ export default {
         }
     },
     methods: {
-        resetModal() {
-            this.service = this.resetService();
-        },
-        resetService() {
-            return {
-                id: null,
-                label: null,
-                link: null,
-                description: null,
-                is_active: true,
-                is_in_iframe: false,
-                rank: this.minimal_rank
-            };
-        },
-        show(button) {
-            this.service = JSON.parse(button.dataset.serviceJson);
+        show() {
             this.modal.show();
         }
     }

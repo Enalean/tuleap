@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.3\n"
 
+msgid "Available (also available for new projects)"
+msgstr "Disponible (également disponible dans les nouveaux projets)"
+
 msgid "Awesome service to manage extra stuff"
 msgstr "Le service qui gère des trucs"
 

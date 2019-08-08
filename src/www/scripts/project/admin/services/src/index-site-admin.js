@@ -17,23 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function buildCreateModalCallback(RootComponent) {
-    const vue_mount_point_id = "custom-service-edit-modal";
-    const vue_mount_point = document.getElementById(vue_mount_point_id);
+import Vue from "vue";
+import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
+import { buildCreateModalCallback } from "./edit-modal-initializer.js";
+import { setupModalButtons } from "./modal-initializer.js";
 
-    if (!vue_mount_point) {
-        throw new Error(`Could not find Vue mount point ${vue_mount_point_id}`);
-    }
-    const { projectId, minimalRank, csrfToken, csrfTokenName } = vue_mount_point.dataset;
+document.addEventListener("DOMContentLoaded", () => {
+    const RootComponent = Vue.extend(BaseSiteAdminEditModal);
 
-    return () => {
-        return new RootComponent({
-            propsData: {
-                project_id: projectId,
-                minimal_rank: minimalRank,
-                csrf_token_name: csrfTokenName,
-                csrf_token: csrfToken
-            }
-        }).$mount(vue_mount_point);
-    };
-}
+    const createModalCallback = buildCreateModalCallback(RootComponent);
+    setupModalButtons(createModalCallback);
+});
