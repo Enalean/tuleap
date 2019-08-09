@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,7 +69,24 @@
         $(window).resize(updateHeightValue);
 
         initThemeVariantSelection();
+        initApiAccessKeyExpirationDatePicker();
     });
+
+    function initApiAccessKeyExpirationDatePicker() {
+        var field_times = document.querySelectorAll(".access-key-expiration-date-input");
+        if (field_times.length != 0) {
+            [].forEach.call(field_times, function(date_picker) {
+                const dateToday = new Date();
+                $(date_picker).datetimepicker({
+                    language: codendi.locale,
+                    pickTime: false,
+                    pickSeconds: false,
+                    pickDate: true,
+                    startDate: dateToday
+                });
+            });
+        }
+    }
 
     function getResizedImageUrl(url) {
         var tmp_img = document.createElement("img");
