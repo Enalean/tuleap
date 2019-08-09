@@ -7,10 +7,12 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "core-js": "^3.2.0",
     "dom4": "^1.8.3",
     "flatpickr": "1.9.1",
     "jquery": "2.1.0",
     "popper.js": "^1.14.7",
+    "regenerator-runtime": "^0.13.3",
     "select2": "4.0.3",
     "whatwg-fetch": "^2.0.3"
   },

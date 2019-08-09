@@ -1,6 +1,6 @@
 var path = require("path");
-var gulp = require("gulp");
-var sass = require("gulp-sass");
+var gulp = require("gulp"); // eslint-disable-line import/no-extraneous-dependencies
+var sass = require("gulp-sass"); // eslint-disable-line import/no-extraneous-dependencies
 
 var all_scss_glob = "src/app/**/*.scss";
 var main_scss_file = "src/app/tuleap-frs.scss";
