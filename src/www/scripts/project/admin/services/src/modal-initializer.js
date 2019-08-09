@@ -21,8 +21,7 @@ import { modal as createModal } from "tlp";
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
-
-import VueTranslater from "./VueTranslater.vue";
+import VueTranslater from "./components/VueTranslater.vue";
 
 const VueTranslaterComponent = new VueTranslater();
 

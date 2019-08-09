@@ -25,12 +25,9 @@ namespace Tuleap\Project\Service;
 
 class ProjectDefinedService extends \Service
 {
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        if ($this->data['icon'] !== '') {
-            return $this->getFontAwesomeIcon($this->data['icon']);
-        }
-        return $this->getFontAwesomeIcon('fa-angle-double-right');
+        return ($this->data['icon'] !== '') ? $this->data['icon'] : 'fa-angle-double-right';
     }
 
     public function isOpenedInNewTab() : bool

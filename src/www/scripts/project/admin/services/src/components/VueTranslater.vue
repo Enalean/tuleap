@@ -26,7 +26,7 @@
 import Vue from "vue";
 import { sanitize } from "dompurify";
 import { sprintf } from "sprintf-js";
-import { escaper } from "../../../../tuleap/escaper.js";
+import { escaper } from "../../../../../tuleap/escaper.js";
 
 export default Vue.extend({
     name: "VueTranslater",
