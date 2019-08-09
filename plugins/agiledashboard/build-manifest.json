@@ -77,6 +77,17 @@
             "po": "www/js/burnup-chart/po"
         }
     },
+    "gettext-angularjs": {
+        "planning-v2": {
+            "src": "www/js/planning-v2/src/app",
+            "po": "www/js/planning-v2/po"
+        },
+        "kanban": {
+            "src": "www/js/kanban/src/app",
+            "po": "www/js/kanban/po"
+        }
+    },
+
     "gettext-vue": {
         "permissions-per-group": {
             "src": "www/js/permissions-per-group/src/",
