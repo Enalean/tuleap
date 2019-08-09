@@ -24,22 +24,21 @@ namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
 
-class SemanticTimeframeRepresentation
+class SemanticTimeframeWithDurationRepresentation
 {
     /**
      * @var int
      */
     public $start_date_field_id;
+
     /**
-     * @var int|null
+     * @var int
      */
     public $duration_field_id;
 
-    public function build(int $start_date_field_id, ?int $duration_field_id): void
+    public function build(int $start_date_field_id, int $duration_field_id): void
     {
         $this->start_date_field_id = JsonCast::toInt($start_date_field_id);
-        if ($duration_field_id) {
-            $this->duration_field_id = JsonCast::toInt($duration_field_id);
-        }
+        $this->duration_field_id = JsonCast::toInt($duration_field_id);
     }
 }
