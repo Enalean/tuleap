@@ -19,8 +19,14 @@
 
 <template>
     <div class="ttm-definition-step">
-        <div class="ttm-definition-step-rank ttm-execution-step-rank-edition">{{ dynamic_rank }}</div>
-        <div class="ttm-definition-step-description">
+        <step-definition-draggable-component
+            v-show="is_dragging"
+            v-bind:step="step"
+            v-bind:dynamic_rank="dynamic_rank"
+        />
+        <div v-show="!is_dragging" class="ttm-definition-step-rank ttm-execution-step-rank-edition">{{ dynamic_rank }}
+        </div>
+        <div v-show="!is_dragging" class="ttm-definition-step-description">
             <step-definition-marked-as-deleted
                 v-show="is_marked_as_deleted"
                 v-bind:step="step"
@@ -39,10 +45,16 @@
 <script>
 import StepDefinitionMarkedAsDeleted from "./StepDefinitionMarkedAsDeleted.vue";
 import StepDefinitionEditableStep from "./StepDefinitionEditableStep.vue";
+import StepDefinitionDraggableComponent from "./StepDefinitionDraggableComponent.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "StepDefinitionEntry",
-    components: { StepDefinitionMarkedAsDeleted, StepDefinitionEditableStep },
+    components: {
+        StepDefinitionMarkedAsDeleted,
+        StepDefinitionEditableStep,
+        StepDefinitionDraggableComponent
+    },
     props: {
         step: Object,
         dynamic_rank: Number
@@ -52,6 +64,9 @@ export default {
             is_marked_as_deleted: false
         };
     },
+    computed: {
+        ...mapState(["is_dragging"])
+    },
     methods: {
         markAsDeleted() {
             if (this.step.raw_description.length === 0) {
@@ -60,11 +75,11 @@ export default {
                 this.is_marked_as_deleted = true;
             }
         },
-        addStep(index) {
-            this.$store.commit("addStep", index);
-        },
         unmarkDeletion() {
             this.is_marked_as_deleted = false;
+        },
+        addStep(index) {
+            this.$store.commit("addStep", index);
         },
         removeDeletedStepsOnFormSubmission(description_form) {
             description_form.addEventListener("submit", () => {

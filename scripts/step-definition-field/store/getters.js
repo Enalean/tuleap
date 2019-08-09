@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { TEXT_FORMAT_TEXT } from "../../../../tracker/www/scripts/constants/fields-constants.js";
 
 export const is_text = () => format => {
