@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,8 +65,8 @@
     }
 
     &:hover > .project-sidebar-nav-item-new-tab {
+        transform: rotate(-45deg) translate(3px, 0);
         opacity: 1;
-        transform: rotate(-45deg) translate(3px, 0px);
     }
 
     &.active {
@@ -74,6 +74,7 @@
         background: darken($tlp-theme-sidebar-background-color, 2%);
 
         &::before {
+            content: '';
             position: absolute;
             top: 50%;
             right: 0;
@@ -83,7 +84,6 @@
             border-width: 10px 10px 10px 0;
             border-style: solid;
             border-color: transparent $tlp-theme-background-color transparent transparent;
-            content: '';
         }
     }
 }
@@ -92,10 +92,10 @@
     position: relative;
     top: -7px;
     left: 3px;
-    font-size: 10px;
     transform: rotate(-45deg);
-    opacity: .5;
     transition: transform ease-in-out 100ms, opacity ease-in-out 100ms;
+    opacity: .5;
+    font-size: 10px;
 }
 
 .project-sidebar-nav-item-icon {
@@ -103,8 +103,17 @@
     -webkit-font-smoothing: antialiased;
 }
 
+.project-sidebar-nav-item-label {
+    max-width: $sidebar-expanded-width - 60px;
+    overflow: hidden;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .project-sidebar-collapser-icon {
     display: flex;
+    z-index: 10001;
     align-items: center;
     justify-content: center;
     width: 30px;
@@ -116,15 +125,13 @@
     color: transparentize($tlp-ui-border-dark, .4);
     font-size: 12px;
     cursor: pointer;
-    z-index: 10001;
 
-    // scss-lint:disable PseudoElement
-    &.fa-chevron-left:before {
+    &.fa-chevron-left::before {
         position: relative;
         left: -1.5px;
     }
 
-    &.fa-chevron-right:before {
+    &.fa-chevron-right::before {
         position: relative;
         left: 1px;
     }

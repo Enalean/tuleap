@@ -23,22 +23,22 @@
         ref="modal"
         v-on:reset-modal="resetModal"
     >
-        <template v-slot:csrf>
-            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
-        </template>
         <template v-slot:content>
-            <project-scope-service v-bind:minimal_rank="minimal_rank" v-bind:service="service"/>
+            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
+            <sidebar-previewer v-bind:label="service.label"/>
+            <project-defined-service v-bind:minimal_rank="minimal_rank" v-bind:service="service"/>
         </template>
     </edit-modal>
 </template>
 <script>
-import ProjectScopeService from "./ProjectScopeService.vue";
+import ProjectDefinedService from "./ProjectDefinedService.vue";
+import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";
 import { edit_modal_mixin } from "./edit-modal-mixin.js";
 
 export default {
     name: "BaseProjectAdminEditModal",
-    components: { EditModal, ProjectScopeService },
+    components: { EditModal, ProjectDefinedService, SidebarPreviewer },
     mixins: [edit_modal_mixin]
 };
 </script>

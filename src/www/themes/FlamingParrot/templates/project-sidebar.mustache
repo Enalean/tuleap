@@ -39,7 +39,7 @@
                        {{/ open_in_new_tab }}
                     >
                         <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
-                        <span title="{{ description }}">{{ label }}</span>
+                        <span title="{{ description }}" class="project-sidebar-nav-item-label">{{ label }}</span>
                         {{# open_in_new_tab }}
                             <i class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
                         {{/ open_in_new_tab }}
@@ -47,8 +47,11 @@
                 </li>
             {{/ is_project_defined }}
             {{^ is_project_defined }}
-                <li {{#enabled}}class="active"{{/enabled}}>
-                    <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}"><i class="{{ icon }} project-sidebar-nav-item-icon"></i> {{{ label }}}</a>
+                <li {{# enabled }}class="active"{{/ enabled }}>
+                    <a id="{{ id }}" href="{{{ link }}}" aria-label="{{{ name }}}" title="{{{ name }}}">
+                        <i class="{{ icon }} project-sidebar-nav-item-icon"></i>
+                        <span class="project-sidebar-nav-item-label">{{{ label }}}</span>
+                    </a>
                 </li>
             {{/ is_project_defined }}
         {{/ sidebar }}

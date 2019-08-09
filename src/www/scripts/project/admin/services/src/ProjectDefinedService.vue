@@ -131,7 +131,7 @@
 </template>
 <script>
 export default {
-    name: "ProjectScopeService",
+    name: "ProjectDefinedService",
     props: {
         minimal_rank: {
             type: String,

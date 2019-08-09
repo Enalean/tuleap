@@ -1,12 +1,32 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 .sidebar-nav {
-    background: $sidebar-background;
-    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     position: fixed;
-    height: calc(100vh - #{$navbar-height});
+    z-index: 1000;
     width: $sidebar-width;
     max-width: $sidebar-width;
+    height: calc(100vh - #{$navbar-height});
     overflow: hidden;
-    z-index: 1000;
+    background: $sidebar-background;
+    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     @media screen and (max-width: 880px) {
         padding: $navbar-height 0 0;
     }
@@ -53,6 +73,7 @@
     li > a {
         display: flex;
         position: relative;
+        box-sizing: border-box;
         align-items: center;
         width: $sidebar-width;
         height: $navbar-height;
@@ -60,20 +81,22 @@
         border-left: 3px solid transparent;
         color: transparentize(#ffffff, .2);
         text-shadow: none;
-        box-sizing: border-box;
 
         > i {
             -webkit-font-smoothing: antialiased;
         }
     }
 
-    .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
-        font-weight: normal;
-        color: lighten($grey, 25%);
+    .nav-list > .active > a,
+    .nav-list > .active > a:hover,
+    .nav-list > .active > a:focus {
         border-left: 3px solid $main;
         background: darken($sidebar-background, 2%);
+        color: lighten($grey, 25%);
+        font-weight: normal;
 
         &::before {
+            content: '';
             position: absolute;
             top: 50%;
             right: 0;
@@ -83,11 +106,11 @@
             border-width: 10px 10px 10px 0;
             border-style: solid;
             border-color: transparent $main-background transparent transparent;
-            content: '';
         }
     }
 
-    .nav > li > a:hover, .nav > li > a:focus {
+    .nav > li > a:hover,
+    .nav > li > a:focus {
         border-left: 3px solid transparent;
         background: darken($sidebar-background, 2%);
     }
@@ -96,30 +119,30 @@
         position: relative;
         top: -7px;
         left: 3px;
-        font-size: 10px;
         transform: rotate(-45deg);
-        opacity: .5;
         transition: transform ease-in-out 100ms, opacity ease-in-out 100ms;
+        opacity: .5;
+        font-size: 10px;
     }
 
     .nav > li > a:hover > .project-sidebar-nav-item-new-tab {
+        transform: rotate(-45deg) translate(3px, 0);
         opacity: 1;
-        transform: rotate(-45deg) translate(3px, 0px);
     }
 
     i.sidebar-collapse {
-        flex: 0 0 auto;
-        color: transparentize(#ffffff, .3);
-        background: darken($sidebar-background, 2%);
-        font-size: 1em;
         display: block;
-        text-align: center;
+        box-sizing: border-box;
+        flex: 0 0 auto;
         width: 30px;
         height: 30px;
-        box-sizing: border-box;
         margin: 20px auto;
-        border-radius: 50%;
         padding: 8px 2px 0 0;
+        border-radius: 50%;
+        background: darken($sidebar-background, 2%);
+        color: transparentize(#ffffff, .3);
+        font-size: 1em;
+        text-align: center;
         cursor: pointer;
 
         &.fa-chevron-right {
@@ -127,23 +150,23 @@
         }
 
         &:hover {
-            color: lighten($grey, 10%);
             background: darken($sidebar-background, 4%);
+            color: lighten($grey, 10%);
         }
     }
 }
 
 .sidebar-about {
     display: flex;
+    flex: 1 0 auto;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    flex: 1 0 auto;
     width: $sidebar-width;
-    padding: 33px 0 20px 0;
     height: 75px;
-    text-align: center;
+    padding: 33px 0 20px;
     color: lighten($sidebar-background, 15%);
+    text-align: center;
 
     > .admin-sidebar-tuleap {
         margin: 0 0 8px;
@@ -151,8 +174,8 @@
     }
 
     p {
-        font-size: 12px;
         margin: 0;
+        font-size: 12px;
 
         a {
             color: lighten($sidebar-background, 15%);
@@ -168,4 +191,11 @@
 .project-sidebar-nav-item-icon {
     margin: 0 7px 0 0;
     -webkit-font-smoothing: antialiased;
+}
+
+.project-sidebar-nav-item-label {
+    max-width: $sidebar-width - 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
