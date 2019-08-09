@@ -26,6 +26,8 @@ use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 use Tuleap\Docman\Metadata\MetadataDoesNotExistException;
 use Tuleap\Docman\Metadata\MetadataValueCreator;
 use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
+use Tuleap\Docman\Metadata\MetadataValueStore;
+use Tuleap\Docman\Metadata\MetadataValueUpdator;
 
 /**
  * High level object for Metadata Values management.
@@ -74,7 +76,8 @@ class Docman_MetadataValueFactory {
     function create(&$mdv)
     {
         try {
-            $this->getMetadataCreator()->storeMetadata($mdv, $this->groupId);
+            $store = new MetadataValueStore($this->getDao(), ReferenceManager::instance());
+            $store->storeMetadata($mdv, $this->groupId);
             return true;
         } catch (MetadataDoesNotExistException $e) {
             $this->setError(
@@ -96,61 +99,29 @@ class Docman_MetadataValueFactory {
     {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
 
-        foreach ($row as $md_name => $md_v) {
-            $md = $mdFactory->getFromLabel($md_name);
-            if ($md !== null) {
-                $this->getMetadataCreator()->createMetadataObject($md, $id, $md_v);
-            } else {
-                $this->setError(
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'mdv_bo_createunknown',
-                        [$md_name]
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * Update MetadataValue in database.
-     */
-    function update($mdv) {
-        $dao = $this->getDao();
-        switch($mdv->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                // First delete all previous values
-                $dao->delete($mdv->getFieldId(), $mdv->getItemId());
-
-                // Now create new one
-                $pret = $this->create($mdv);
-                if($pret === false) {
-                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
-                    $ret = false;
+        try {
+            foreach ($row as $md_name => $md_v) {
+                $md = $mdFactory->getFromLabel($md_name);
+                if ($md !== null) {
+                    $this->getMetadataCreator()->createMetadataObject($md, $id, $md_v);
                 } else {
-                    $ret = true;
+                    $this->setError(
+                        $GLOBALS['Language']->getText(
+                            'plugin_docman',
+                            'mdv_bo_createunknown',
+                            [$md_name]
+                        )
+                    );
                 }
-            break;
-
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $ret = $dao->updateValue($mdv->getItemId(),
-                                     $mdv->getFieldId(),
-                                     $mdv->getType(),
-                                     $mdv->getValue());
-                // extract cross references
-                $reference_manager = ReferenceManager::instance();
-                $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
-            break;
-
-            default:
-                $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                          'mdv_bo_errbadtype'));
-                $ret = false;
+            }
+        } catch (MetadataDoesNotExistException $e) {
+            $this->setError(
+                $GLOBALS['Language']->getText(
+                    'plugin_docman',
+                    'mdv_bo_errbadtype'
+                )
+            );
         }
-
-        return $ret;
     }
 
     /**
@@ -158,35 +129,31 @@ class Docman_MetadataValueFactory {
      */
     function updateFromRow($id, $row) {
         $mdFactory = new Docman_MetadataFactory($this->groupId);
+        $updator   = $this->getMetadataUpdator();
 
-        foreach($row as $md_name => $md_v) {
-            $md = $mdFactory->getFromLabel($md_name);
+        try {
+            foreach($row as $md_name => $md_v) {
+                $md = $mdFactory->getFromLabel($md_name);
 
-            if($md !== null) {
-                $this->validateInput($md, $md_v);
-
-                $mdv = $this->newMetadataValue($id
-                                                ,$md->getId()
-                                                ,$md->getType()
-                                                ,$md_v);
-
-                if($this->exist($mdv->getItemId(), $mdv->getFieldId())) {
-                    $success = $this->update($mdv);
-                }
-                else {
-                    $success = $this->create($mdv);
-                }
-                if($success === false) {
-                    $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                                  'mdv_bo_updateerror',
-                                                                  array($mdv->getName())));
+                if ($md !== null) {
+                    $updator->updateMetadata($md, $id, $md_v);
+                } else {
+                    $this->setError(
+                        $GLOBALS['Language']->getText(
+                            'plugin_docman',
+                            'mdv_bo_updateunknown',
+                            array($md_name)
+                        )
+                    );
                 }
             }
-            else {
-                $this->setError($GLOBALS['Language']->getText('plugin_docman',
-                                                              'mdv_bo_updateunknown',
-                                                              array($md_name)));
-            }
+        } catch (MetadataDoesNotExistException $e) {
+            $this->setError(
+                $GLOBALS['Language']->getText(
+                    'plugin_docman',
+                    'mdv_bo_errbadtype'
+                )
+            );
         }
     }
 
@@ -299,8 +266,26 @@ class Docman_MetadataValueFactory {
         return new Tuleap\Docman\Metadata\MetadataValueCreator(
             new DocmanMetadataInputValidator(),
             new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory()),
+            new MetadataValueStore(
+                $this->getDao(),
+                ReferenceManager::instance()
+            )
+        );
+    }
+
+    /**
+     * @return \Tuleap\Docman\Metadata\MetadataValueUpdator
+     */
+    private function getMetadataUpdator(): MetadataValueUpdator
+    {
+        return new Tuleap\Docman\Metadata\MetadataValueUpdator(
+            new DocmanMetadataInputValidator(),
+            new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory()),
             $this->getDao(),
-            ReferenceManager::instance()
+            new MetadataValueStore(
+                $this->getDao(),
+                ReferenceManager::instance()
+            )
         );
     }
 

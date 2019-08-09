@@ -22,47 +22,67 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Metadata;
 
-class MetadataValueCreator
+use Docman_MetadataValueDao;
+
+class MetadataValueUpdator
 {
     /**
-     * @var DocmanMetadataInputValidator
+     * @var Docman_MetadataValueDao
      */
-    private $validator;
+    private $metadata_value_dao;
     /**
      * @var MetadataValueObjectFactory
      */
     private $metadata_value_object_factory;
     /**
+     * @var DocmanMetadataInputValidator
+     */
+    private $validator;
+    /**
      * @var MetadataValueStore
      */
     private $metadata_value_store;
 
-
     public function __construct(
         DocmanMetadataInputValidator $validator,
         MetadataValueObjectFactory $metadata_value_object_factory,
+        Docman_MetadataValueDao $metadata_value_dao,
         MetadataValueStore $metadata_value_store
     ) {
         $this->validator                     = $validator;
         $this->metadata_value_object_factory = $metadata_value_object_factory;
+        $this->metadata_value_dao            = $metadata_value_dao;
         $this->metadata_value_store          = $metadata_value_store;
     }
 
     /**
      * @param $value string | int | array $value
+     *
      * @throws MetadataDoesNotExistException
      */
-    public function createMetadataObject(\Docman_Metadata $metadata_to_create, int $id, $value): void
+    public function updateMetadata(\Docman_Metadata $metadata_to_update, int $id, $value): void
     {
-        $validated_value = $this->validator->validateInput($metadata_to_create, $value);
+        $validated_value = $this->validator->validateInput($metadata_to_update, $value);
 
         $docman_metadata_value = $this->metadata_value_object_factory->createMetadataValueObjectWithCorrectValue(
             $id,
-            (int)$metadata_to_create->getId(),
-            (int)$metadata_to_create->getType(),
+            (int) $metadata_to_update->getId(),
+            (int) $metadata_to_update->getType(),
             $validated_value
         );
 
-        $this->metadata_value_store->storeMetadata($docman_metadata_value, (int) $metadata_to_create->getGroupId());
+        $existing_metadata_value = $this->metadata_value_dao->searchById(
+            $docman_metadata_value->getFieldId(),
+            $docman_metadata_value->getItemId()
+        );
+
+        if ($existing_metadata_value->count() > 0) {
+            $this->metadata_value_store->updateMetadata(
+                $docman_metadata_value,
+                (int) $metadata_to_update->getGroupId()
+            );
+        } else {
+            $this->metadata_value_store->storeMetadata($docman_metadata_value, (int) $metadata_to_update->getGroupId());
+        }
     }
 }

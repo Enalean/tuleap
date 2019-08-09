@@ -42,6 +42,7 @@ use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\Metadata\MetadataValueCreator;
 use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
+use Tuleap\Docman\Metadata\MetadataValueStore;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
@@ -101,8 +102,10 @@ class DocmanItemCreatorBuilder
                         new MetadataValueObjectFactory(
                             new DocmanMetadataTypeValueFactory()
                         ),
-                        new \Docman_MetadataValueDao(),
-                        ReferenceManager::instance()
+                        new MetadataValueStore(
+                            new \Docman_MetadataValueDao(),
+                            ReferenceManager::instance()
+                        )
                     ),
                     new \Docman_MetadataDao(\CodendiDataAccess::instance())
                 )
