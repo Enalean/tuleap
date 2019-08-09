@@ -35,20 +35,28 @@
 </template>
 
 <script lang="ts">
-import { mapState } from "vuex";
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { MilestoneData } from "../../type";
+import { State } from "vuex-class";
 
-export default Vue.extend({
-    name: "RoadmapSection",
-    computed: {
-        ...mapState(["nb_backlog_items", "nb_upcoming_releases"]),
-        backlog_link(): string {
-            return (
-                "/plugins/agiledashboard/?action=show-top&group_id=" +
-                encodeURIComponent(this.$store.state.project_id) +
-                "&pane=topplanning-v2"
-            );
-        }
+@Component
+export default class RoadmapSection extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+    @State
+    readonly nb_backlog_items!: number;
+    @State
+    readonly nb_upcoming_releases!: number;
+    @State
+    readonly project_id!: number;
+
+    get backlog_link(): string {
+        return (
+            "/plugins/agiledashboard/?action=show-top&group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&pane=topplanning-v2"
+        );
     }
-});
+}
 </script>

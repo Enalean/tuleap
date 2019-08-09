@@ -13,8 +13,10 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
+    "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.0-beta.27",
-    "@types/sprintf-js": "^1.1.2"
+    "vue-property-decorator": "^8.2.1",
+    "vuex-class": "^0.3.2"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"

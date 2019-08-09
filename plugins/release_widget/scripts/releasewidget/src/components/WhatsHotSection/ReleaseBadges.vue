@@ -46,30 +46,35 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+import { MilestoneData } from "../../type";
+import { State } from "vuex-class";
 
-export default Vue.extend({
-    name: "ReleaseBadges",
-    props: {
-        releaseData: Object
-    },
-    computed: {
-        get_top_planning_link(): string {
-            return (
-                "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(this.$store.state.project_id) +
-                "&planning_id=" +
-                encodeURIComponent(this.releaseData.planning.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(this.releaseData.id) +
-                "&pane=planning-v2"
-            );
-        },
-        capacity_exists(): boolean {
-            return this.releaseData.capacity && this.releaseData.capacity > 0;
-        },
-        initial_effort_exist(): boolean {
-            return this.releaseData.initial_effort && this.releaseData.initial_effort > 0;
-        }
+@Component
+export default class ReleaseBadges extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+    @State
+    readonly project_id!: number;
+
+    get get_top_planning_link(): string {
+        return (
+            "/plugins/agiledashboard/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&planning_id=" +
+            encodeURIComponent(this.releaseData.planning!.id) +
+            "&action=show&aid=" +
+            encodeURIComponent(this.releaseData.id) +
+            "&pane=planning-v2"
+        );
     }
-});
+
+    get capacity_exists(): boolean {
+        return this.releaseData.capacity! > 0;
+    }
+
+    get initial_effort_exist(): boolean {
+        return this.releaseData.initial_effort! > 0;
+    }
+}
 </script>

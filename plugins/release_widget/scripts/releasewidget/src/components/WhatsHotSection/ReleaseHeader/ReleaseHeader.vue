@@ -43,20 +43,20 @@ import { formatDateYearMonthDay } from "../../../helpers/date-formatters";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import Vue from "vue";
+import { MilestoneData } from "../../../type";
+import { Component, Prop } from "vue-property-decorator";
 
-export default Vue.extend({
-    name: "ReleaseHeader",
-    components: { ReleaseHeaderRemainingPoints, ReleaseHeaderRemainingDays },
-    props: {
-        releaseData: Object
-    },
-    methods: {
-        formatDate(date: string): string {
-            return formatDateYearMonthDay(date);
-        },
-        startDateExist(): boolean {
-            return this.releaseData.start_date !== null;
-        }
+@Component({
+    components: { ReleaseHeaderRemainingPoints, ReleaseHeaderRemainingDays }
+})
+export default class ReleaseHeader extends Vue {
+    @Prop()
+    readonly releaseData!: MilestoneData;
+
+    formatDate = (date: string): string => formatDateYearMonthDay(date);
+
+    startDateExist(): boolean {
+        return this.releaseData.start_date !== null;
     }
-});
+}
 </script>

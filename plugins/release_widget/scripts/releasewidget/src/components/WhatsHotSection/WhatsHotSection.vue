@@ -30,15 +30,17 @@
 </template>
 
 <script lang="ts">
-import { mapState } from "vuex";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import Vue from "vue";
+import { State } from "vuex-class";
+import { MilestoneData } from "../../type";
+import { Component } from "vue-property-decorator";
 
-export default Vue.extend({
-    name: "WhatsHotSection",
-    components: { ReleaseDisplayer },
-    computed: {
-        ...mapState(["current_milestones"])
-    }
-});
+@Component({
+    components: { ReleaseDisplayer }
+})
+export default class WhatsHotSection extends Vue {
+    @State
+    readonly current_milestones!: MilestoneData[];
+}
 </script>
