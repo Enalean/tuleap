@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -22,21 +22,25 @@
 /**
  *  Data Access Object for Service
  */
-class ServiceDao extends DataAccessObject
+class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
     * Return active projects that use a specific service
     * WARNING: this returns all fields of all projects (might be big)
     * @return DataAccessResult
     */
-    function searchActiveUnixGroupByUsedService($service_short_name) {
-        $sql = sprintf("SELECT * FROM groups, service
+    public function searchActiveUnixGroupByUsedService($service_short_name)
+    {
+        $sql = sprintf(
+            "SELECT * FROM groups, service
                 WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
-                $this->da->quoteSmart($service_short_name));
+            $this->da->quoteSmart($service_short_name)
+        );
         return $this->retrieve($sql);
     }
 
-    public function searchByProjectIdAndShortNames($project_id, $allowed_shortnames) {
+    public function searchByProjectIdAndShortNames($project_id, $allowed_shortnames)
+    {
         $project_id         = $this->da->escapeInt($project_id);
         $allowed_shortnames = $this->da->quoteSmartImplode(',', $allowed_shortnames);
 
@@ -49,16 +53,17 @@ class ServiceDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function isServiceAvailableAtSiteLevelByShortName($name) {
+    public function isServiceAvailableAtSiteLevelByShortName($name)
+    {
         return $this->isServiceActiveInProjectByShortName(100, $name);
     }
 
     public function isServiceActiveInProjectByShortName($project_id, $name)
     {
         $project_id = $this->da->escapeInt($project_id);
-        $name = $this->da->quoteSmart($name);
+        $name       = $this->da->quoteSmart($name);
 
-        $sql  = "SELECT NULL
+        $sql = "SELECT NULL
                  FROM service
                  WHERE group_id = $project_id
                      AND is_active = 1

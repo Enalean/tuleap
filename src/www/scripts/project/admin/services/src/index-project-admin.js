@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
+import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
 import { buildCreateModalCallback } from "./edit-modal-initializer.js";
 import { setupModalButtons } from "./modal-initializer.js";
 

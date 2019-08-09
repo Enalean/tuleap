@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project\Service;
 
-class ServicePOSTData
+final class ServicePOSTData
 {
     /**
      * @var string
@@ -67,31 +67,18 @@ class ServicePOSTData
      */
     private $id;
 
-    /**
-     * @param int $id
-     * @param string $short_name
-     * @param string $label
-     * @param string $description
-     * @param string $link
-     * @param int $rank
-     * @param string $scope
-     * @param bool $is_active
-     * @param bool $is_used
-     * @param bool $is_system_service
-     * @param bool $is_in_iframe
-     */
     public function __construct(
-        $id,
-        $short_name,
-        $label,
-        $description,
-        $link,
-        $rank,
-        $scope,
-        $is_active,
-        $is_used,
-        $is_system_service,
-        $is_in_iframe
+        int $id,
+        string $short_name,
+        string $label,
+        string $description,
+        string $link,
+        int $rank,
+        string $scope,
+        bool $is_active,
+        bool $is_used,
+        bool $is_system_service,
+        bool $is_in_iframe
     ) {
         $this->id                = $id;
         $this->short_name        = $short_name;
@@ -106,18 +93,12 @@ class ServicePOSTData
         $this->is_in_iframe      = $is_in_iframe;
     }
 
-    /**
-     * @return string
-     */
-    public function getShortName()
+    public function getShortName(): string
     {
         return $this->short_name;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -130,66 +111,42 @@ class ServicePOSTData
         return $this->description;
     }
 
-    /**
-     * @return string
-     */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->link;
     }
 
-    /**
-     * @return int
-     */
-    public function getRank()
+    public function getRank(): int
     {
         return $this->rank;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->is_active;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSystemService()
+    public function isSystemService(): bool
     {
         return $this->is_system_service;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUsed()
+    public function isUsed(): bool
     {
         return $this->is_used;
     }
 
-    /**
-     * @return string
-     */
-    public function getScope()
+    public function getScope(): string
     {
         return $this->scope;
     }
 
-    /**
-     * @return bool
-     */
-    public function isInIframe()
+    public function isInIframe(): bool
     {
         return $this->is_in_iframe;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
