@@ -70,14 +70,9 @@ class TrackerRulesManagerValidationTest extends TestCase
     private $tracker_factory;
 
     /**
-     * @var Mockery\MockInterface|Tracker_Rule_Date
+     * @var Mockery\MockInterface|TrackerRulesDateValidator
      */
-    private $tracker_rule_date;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_Rule_Date
-     */
-    private $tracker_rule_date2;
+    private $tracker_rules_date_validator;
 
     public function setUp(): void
     {
@@ -87,6 +82,7 @@ class TrackerRulesManagerValidationTest extends TestCase
         $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->frozen_fields_dao            = \Mockery::mock(FrozenFieldsDao::class);
         $this->tracker_rules_list_validator = \Mockery::mock(TrackerRulesListValidator::class);
+        $this->tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
         $this->tracker_factory              = \Mockery::mock(TrackerFactory::class);
 
         $this->tracker_factory->shouldReceive("getTrackerById")->andReturn($this->tracker);
@@ -95,19 +91,21 @@ class TrackerRulesManagerValidationTest extends TestCase
             $this->formelement_factory,
             $this->frozen_fields_dao,
             $this->tracker_rules_list_validator,
+            $this->tracker_rules_date_validator,
             $this->tracker_factory])->makePartial();
 
-        $this->tracker_rule_date  = \Mockery::mock(\Tracker_Rule_Date::class);
-        $this->tracker_rule_date2 = \Mockery::mock(\Tracker_Rule_Date::class);
+        $tracker_rule_date  = \Mockery::mock(\Tracker_Rule_Date::class);
+        $tracker_rule_date2 = \Mockery::mock(\Tracker_Rule_Date::class);
 
         $rule_list_1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
         $rule_list_2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
         $rule_list_3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
 
-        $rule_factory                 = \Mockery::mock(Tracker_RuleFactory::class);
+        $rule_factory = \Mockery::mock(Tracker_RuleFactory::class);
         $rule_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_list_1, $rule_list_2, $rule_list_3]);
 
         $this->tracker_rules_manager->shouldReceive("getRuleFactory")->andReturn($rule_factory);
+        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([$tracker_rule_date, $tracker_rule_date2]);
     }
 
     public function testValidateReturnsFalseWhenTheDateDataIsInvalid()
@@ -120,25 +118,7 @@ class TrackerRulesManagerValidationTest extends TestCase
         ];
 
         $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-
-        $source_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $source_field->shouldReceive('getLabel')->andReturn('aaaaa');
-        $source_field->shouldReceive('setHasErrors')->withArgs([true]);
-        $this->formelement_factory->shouldReceive('getFormElementById')->andReturn($source_field);
-
-        $this->tracker_rule_date->shouldReceive('validate')->andReturn(true);
-        $this->tracker_rule_date->shouldReceive('getSourceFieldId')->andReturn(10);
-        $this->tracker_rule_date->shouldReceive('getTargetFieldId')->andReturn(11);
-
-        $this->tracker_rule_date2->shouldReceive('validate')->andReturn(false);
-        $this->tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
-        $this->tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
-        $this->tracker_rule_date2->shouldReceive('getComparator')->andReturn('<');
-
-        $GLOBALS['Language']->shouldReceive('getText');
-        $GLOBALS['Language']->shouldReceive('addFeedback');
-
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([$this->tracker_rule_date, $this->tracker_rule_date2]);
+        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(false);
 
         $this->assertFalse($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }
@@ -153,40 +133,7 @@ class TrackerRulesManagerValidationTest extends TestCase
         ];
 
         $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-
-        $this->tracker_rule_date->shouldReceive('validate')->andReturn(true);
-        $this->tracker_rule_date->shouldReceive('getSourceFieldId')->andReturn(10);
-        $this->tracker_rule_date->shouldReceive('getTargetFieldId')->andReturn(11);
-
-        $this->tracker_rule_date2->shouldReceive('validate')->andReturn(true);
-        $this->tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
-        $this->tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
-
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([$this->tracker_rule_date, $this->tracker_rule_date2]);
-
-        $this->assertTrue($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateReturnsTrueWhenThereAreNoRules()
-    {
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([]);
-
-        $value_field_list = [];
-
-        $this->assertTrue($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
-    }
-
-    public function testValidateReturnsTrueWhenValidateListRulesReturnsTrue()
-    {
-        $value_field_list = [
-            123 => 456,
-            789 => 586,
-        ];
-
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
-
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([]);
+        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(true);
 
         $this->assertTrue($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }
@@ -199,9 +146,7 @@ class TrackerRulesManagerValidationTest extends TestCase
         ];
 
         $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(false);
-
-        $this->tracker_rules_manager->shouldReceive('getAllDateRulesByTrackerId')->andReturns([]);
-        $this->tracker_rules_manager->setTrackerFormElementFactory($this->formelement_factory);
+        $this->tracker_rules_date_validator->shouldReceive('validateDateRules')->andReturn(true);
 
         $this->assertFalse($this->tracker_rules_manager->validate($this->tracker->getId(), $value_field_list));
     }

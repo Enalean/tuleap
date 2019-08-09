@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
@@ -505,6 +506,7 @@ class WorkflowFactory //phpcs:ignoreFile
             $this->formelement_factory,
             $this->read_only_dao,
             new TrackerRulesListValidator($this->formelement_factory),
+            new TrackerRulesDateValidator($this->formelement_factory),
             $this->tracker_factory
         );
     }
