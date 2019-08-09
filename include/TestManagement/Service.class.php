@@ -24,7 +24,7 @@ use Service as CoreService;
 
 class Service extends CoreService
 {
-    public function getInternationalizedName()
+    public function getInternationalizedName(): string
     {
         $label = $this->getLabel();
 
@@ -35,7 +35,7 @@ class Service extends CoreService
         return $label;
     }
 
-    public function getInternationalizedDescription()
+    public function getInternationalizedDescription(): string
     {
         $description = $this->getDescription();
 
