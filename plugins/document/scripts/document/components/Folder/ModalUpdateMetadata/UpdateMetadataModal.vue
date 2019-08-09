@@ -49,7 +49,7 @@ import { mapState } from "vuex";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import DocumentGlobalMetadataForUpdate from "../Metadata/DocumentMetadata/DocumentGlobalMetadataForUpdate.vue";
-import OtherInformationMetadataForUpdate from "../Metadata/OtherInformationMetadataForUpdate.vue";
+import OtherInformationMetadataForUpdate from "../Metadata/DocumentMetadata/OtherInformationMetadataForUpdate.vue";
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";

@@ -32,8 +32,6 @@ export const ICON_FOLDER_ICON = "fa-folder-open-o document-folder-icon";
 
 export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;
 
-export const DOCMAN_ITEM_STATUS_NONE = 100;
-
 export const ITEM_TITLE_SUBSTRING_LENGTH = 15;
 
 export const RETRY_DELAYS = [0, 1000, 3000, 5000];

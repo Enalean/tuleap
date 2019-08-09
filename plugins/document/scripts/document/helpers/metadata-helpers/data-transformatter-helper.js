@@ -64,3 +64,24 @@ function updateItemMetadata(metadata, item) {
 
     item.status = status;
 }
+
+export function transformCustomMetadataForItemCreation(parent_metadata) {
+    if (parent_metadata.length === 0) {
+        return [];
+    }
+
+    let formatted_metadata_list = [];
+    parent_metadata.forEach(parent_metadata => {
+        if (parent_metadata.type === "text") {
+            const formatted_metadata = {
+                short_name: parent_metadata.short_name,
+                type: parent_metadata.type,
+                name: parent_metadata.name,
+                is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed
+            };
+            formatted_metadata.value = parent_metadata.value;
+            formatted_metadata_list.push(formatted_metadata);
+        }
+    });
+    return formatted_metadata_list;
+}

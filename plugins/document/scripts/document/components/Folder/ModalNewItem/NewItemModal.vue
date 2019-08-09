@@ -63,8 +63,10 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
 import FileProperties from "../Property/FileProperties.vue";
-import OtherInformationMetadataForCreate from "../Metadata/OtherInformationMetadataForCreate.vue";
+import OtherInformationMetadataForCreate from "../Metadata/DocumentMetadata/OtherInformationMetadataForCreate.vue";
 import EventBus from "../../../helpers/event-bus.js";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
+import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/data-transformatter-helper";
 
 export default {
     name: "NewItemModal",
@@ -93,9 +95,11 @@ export default {
         ...mapState([
             "current_folder",
             "is_obsolescence_date_metadata_used",
-            "is_item_status_metadata_used"
+            "is_item_status_metadata_used",
+            "project_id"
         ]),
         ...mapState("error", ["has_modal_error"]),
+        ...mapState("metadata", ["has_loaded_metadata"]),
         submit_button_label() {
             return this.$gettext("Create document");
         },
@@ -140,6 +144,7 @@ export default {
         show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
+            this.addParentMetadataToDefaultItem();
             this.is_displayed = true;
             this.modal.show();
         },
@@ -162,6 +167,14 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
+            }
+        },
+        addParentMetadataToDefaultItem() {
+            const parent_metadata = getCustomMetadata(this.parent.metadata);
+
+            const formatted_metadata = transformCustomMetadataForItemCreation(parent_metadata);
+            if (formatted_metadata.length > 0) {
+                this.item.metadata = formatted_metadata;
             }
         }
     }

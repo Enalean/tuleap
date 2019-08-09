@@ -25,15 +25,17 @@
             All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
         </div>
         <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
+        <custom-metadata v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import StatusMetadataWithCustomBindingForFolderCreate from "./StatusMetadataWithCustomBindingForFolderCreate.vue";
+import CustomMetadata from "../CustomMetadata/CustomMetadata.vue";
 export default {
     name: "FolderDefaultPropertiesForCreate",
-    components: { StatusMetadataWithCustomBindingForFolderCreate },
+    components: { CustomMetadata, StatusMetadataWithCustomBindingForFolderCreate },
     props: {
         currentlyUpdatedItem: Object,
         parent: Object

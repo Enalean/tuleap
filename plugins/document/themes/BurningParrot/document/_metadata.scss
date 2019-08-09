@@ -43,3 +43,11 @@
 #document-item-owner {
     width: 260px;
 }
+
+.document-modal-other-information-title-container {
+    display: flex;
+}
+
+.document-modal-other-information-title-container-spinner {
+    margin: 0 $tlp-half-spacing 0 0;
+}

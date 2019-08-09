@@ -14,8 +14,7 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
@@ -28,7 +27,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import ObsolescenceDateMetadataForUpdate from "./ObsolescenceMetadata/ObsolescenceDateMetadataForUpdate.vue";
+import ObsolescenceDateMetadataForUpdate from "../ObsolescenceMetadata/ObsolescenceDateMetadataForUpdate.vue";
 
 export default {
     name: "OtherInformationMetadataForUpdate",

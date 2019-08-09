@@ -28,6 +28,7 @@ import * as actions from "./actions.js";
 import state from "./state.js";
 import error from "./error/module.js";
 import clipboard from "./clipboard/module.js";
+import metadata from "./metadata/module.js";
 
 Vue.use(Vuex);
 
@@ -39,7 +40,8 @@ export function createStore(user_id, project_id) {
         actions,
         modules: {
             error,
-            clipboard
+            clipboard,
+            metadata
         },
         plugins: [
             createPersistedState({
