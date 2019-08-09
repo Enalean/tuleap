@@ -68,6 +68,7 @@ class ChartMessageFetcherTest extends TestCase
         $chart_configuration = new ChartFieldUsage(true, true, false, false, false);
 
         $this->configuration_field_retriever->shouldReceive('getStartDateField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->configuration_field_retriever->shouldReceive('getEndDateField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
         $this->configuration_field_retriever->shouldReceive('getDurationField')->andThrow(\Tracker_FormElement_Chart_Field_Exception::class);
 
         $expected_warning = '<ul class="feedback_warning">';

@@ -61,10 +61,17 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         );
     }
 
-    public static function buildFromEndDate(int $start_date, int $end_date, Logger $logger): TimePeriodWithoutWeekEnd
+    public static function buildFromEndDate(?int $start_date, ?int $end_date, Logger $logger): TimePeriodWithoutWeekEnd
     {
+        if ($start_date === null) {
+            return new self(null, null, $end_date);
+        }
+        if ($end_date === null) {
+            return new self($start_date, null, null);
+        }
+
         if ($end_date < $start_date) {
-            $logger->error(
+            $logger->warn(
                 sprintf(
                 'Inconsistent TimePeriod: end date %s is lesser than start date %s.',
                     (new \DateTimeImmutable())->setTimestamp($end_date)->format('Y-m-d'),

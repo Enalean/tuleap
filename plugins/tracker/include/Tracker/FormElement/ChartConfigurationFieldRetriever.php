@@ -101,6 +101,25 @@ class ChartConfigurationFieldRetriever
      * @return Tracker_FormElement_Field
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
+    public function getEndDateField(Tracker $tracker, PFUser $user)
+    {
+        $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
+
+        $field = $semantic->getEndDateField();
+
+        if (! $field || ! $field->userCanRead($user)) {
+            throw new Tracker_FormElement_Chart_Field_Exception(
+                dgettext('tuleap-tracker', 'The tracker doesn\'t have a "end_date" Date field or you don\'t have the permission to access it.')
+            );
+        }
+
+        return $field;
+    }
+
+    /**
+     * @return Tracker_FormElement_Field
+     * @throws Tracker_FormElement_Chart_Field_Exception
+     */
     public function getStartDateField(Tracker $tracker, PFUser $user)
     {
         $semantic = $this->semantic_timeframe_builder->getSemantic($tracker);
@@ -150,6 +169,17 @@ class ChartConfigurationFieldRetriever
     {
         try {
             $this->getCapacityField($tracker);
+
+            return true;
+        } catch (Tracker_FormElement_Chart_Field_Exception $e) {
+            return false;
+        }
+    }
+
+    public function doesEndDateFieldExist(Tracker $tracker, PFUser $user): bool
+    {
+        try {
+            $this->getEndDateField($tracker, $user);
 
             return true;
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {

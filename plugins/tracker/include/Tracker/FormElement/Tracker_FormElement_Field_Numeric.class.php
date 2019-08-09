@@ -423,7 +423,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             $semantic_timeframe_builder,
             new TimeframeBuilder(
                 $form_element_factory,
-                $semantic_timeframe_builder
+                $semantic_timeframe_builder,
+                new \BackendLogger()
             )
         );
     }

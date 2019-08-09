@@ -63,6 +63,7 @@ class ChartMessageFetcher
     public function fetchWarnings(Tracker_FormElement_Field $field, ChartFieldUsage $usage)
     {
         $tracker = $field->getTracker();
+        assert($tracker instanceof Tracker);
         $user    = UserManager::build()->getCurrentUser();
 
         $warnings = array();
@@ -77,8 +78,13 @@ class ChartMessageFetcher
         if ($usage->getUseDuration()) {
             try {
                 $this->configuration_field_retriever->getDurationField($tracker, $user);
-            } catch (Tracker_FormElement_Chart_Field_Exception $e) {
-                $warnings[] = '<li>'. $e->getMessage() . '</li>';
+            } catch (Tracker_FormElement_Chart_Field_Exception $exception_duration) {
+                try {
+                    $this->configuration_field_retriever->getEndDateField($tracker, $user);
+                } catch (Tracker_FormElement_Chart_Field_Exception $exception_end_date) {
+                    $warnings[] = '<li>'. $exception_duration->getMessage() . '</li>';
+                    $warnings[] = '<li>'. $exception_end_date->getMessage() . '</li>';
+                }
             }
         }
 

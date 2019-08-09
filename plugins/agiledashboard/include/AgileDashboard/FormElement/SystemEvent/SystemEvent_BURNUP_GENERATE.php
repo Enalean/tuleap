@@ -128,11 +128,18 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
         $start_date_field   = $semantic_timeframe->getStartDateField();
         $duration_field     = $semantic_timeframe->getDurationField();
+        $end_date_field     = $semantic_timeframe->getEndDateField();
         if ($start_date_field !== null && $duration_field !== null) {
-            $burnup_information = $this->burnup_dao->getBurnupInformation(
+            $burnup_information = $this->burnup_dao->getBurnupInformationBasedOnDuration(
                 $artifact_id,
                 $start_date_field->getId(),
                 $duration_field->getId()
+            );
+        } elseif ($start_date_field !== null && $end_date_field !== null) {
+            $burnup_information = $this->burnup_dao->getBurnupInformationBasedOnEndDate(
+                $artifact_id,
+                $start_date_field->getId(),
+                $end_date_field->getId()
             );
         }
 
@@ -145,10 +152,18 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             return false;
         }
 
-        $burnup_period = TimePeriodWithoutWeekEnd::buildFromDuration(
-            $burnup_information['start_date'],
-            $burnup_information['duration']
-        );
+        if (empty($burnup_information['duration'])) {
+            $burnup_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+                $burnup_information['start_date'],
+                $burnup_information['end_date'],
+                $this->logger
+            );
+        } else {
+            $burnup_period = TimePeriodWithoutWeekEnd::buildFromDuration(
+                $burnup_information['start_date'],
+                $burnup_information['duration']
+            );
+        }
 
         $yesterday = new DateTime();
         $yesterday->setTime(23, 59, 59);
