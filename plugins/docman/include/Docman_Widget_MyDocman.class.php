@@ -196,12 +196,12 @@ class Docman_Widget_MyDocman extends Widget
         return $ajax_url;
     }
 
-    public function getStylesheetDependencies()
+    public function getStylesheetDependencies() : CssAssetCollection
     {
         $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../www/themes/BurningParrot/assets',
-            DOCMAN_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../src/www/assets/docman/themes/',
+            '/assets/docman/themes'
         );
-        return new CssAssetCollection([new CssAsset($theme_include_assets, 'style')]);
+        return new CssAssetCollection([new CssAsset($theme_include_assets, 'burningparrot-style')]);
     }
 }

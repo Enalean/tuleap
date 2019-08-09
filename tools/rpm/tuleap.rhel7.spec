@@ -483,6 +483,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1127,6 +1128,7 @@ fi
 %files plugin-docman
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/docman
+%{APP_DIR}/src/www/assets/docman
 
 %files api-explorer
 %defattr(-,root,root,-)

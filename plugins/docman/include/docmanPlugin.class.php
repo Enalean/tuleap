@@ -69,6 +69,7 @@ use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
@@ -316,7 +317,11 @@ class DocmanPlugin extends Plugin
         if ($this->currentRequestIsForPlugin() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/docman/themes/',
+                '/assets/docman/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default-style.css') .'" />'."\n";
         }
     }
 

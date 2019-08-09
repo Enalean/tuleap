@@ -1,4 +1,5 @@
-h3, h4 {
+h3,
+ h4 {
     border-bottom: 1px solid #999999;
 }
 
@@ -6,17 +7,20 @@ h3 {
     font-size: large;
 }
 
-.dir, .subdir {
-    padding: 0;
+.dir,
+ .subdir {
     margin: 0;
+    padding: 0;
     border: 0;
 }
 
-.dir img, .dir p, .dir form {
+.dir img,
+ .dir p,
+ .dir form {
     display: inline;
-    padding: 0;
     margin: 0;
-    border: 0px;
+    padding: 0;
+    border: 0;
 }
 
 .dir img {
@@ -28,20 +32,20 @@ h3 {
 }
 
 .newDocument {
-    background-color: #CCCCCC;
+    padding: .5em;
     border: 1px solid black;
-    padding: 0.5em;
+    background-color: #cccccc;
 }
 
 .newDocument h4 {
-    padding: 0;
     margin: 0;
-    margin-bottom: 0.5em;
+    margin-bottom: .5em;
+    padding: 0;
 }
 
 .docman_new_submit {
-    text-align: center;
     margin-top: 1em;
+    text-align: center;
 }
 
 #docman_new_item_location_current_folder {
@@ -54,16 +58,16 @@ h3 {
 
 .docman_help {
     width: auto;
-    background: url(../images/ic/help.png) no-repeat;
-    background-position: 5px center;
-    border: 1px solid #DDDDDD;
-    padding: 0.5em;
+    margin: .5em;
+    padding: .5em;
     padding-left: 40px;
-    margin: 0.5em;
+    border: 1px solid #dddddd;
+    background: url('../../../www/themes/default/images/ic/help.png') no-repeat;
+    background-position: 5px center;
 }
 
 .docman_help span.code {
-    font-family: "Courier New", Courier;
+    font-family: 'Courier New', Courier;
 }
 
 /**
@@ -71,35 +75,35 @@ UL/LI Based
 */
 
 ul.docman_items {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     padding-left: 24px;
+    list-style: none;
 }
 
 li.docman_item {
-    background: transparent url(../images/line.gif) left top repeat-y;
+    background: transparent url('../../../www/themes/default/images/line.gif') left top repeat-y;
 }
 
 li.docman_item_last {
 }
 
 .docman_properties_navlist {
-    padding: 3px 0;
     margin: 0;
+    padding: 3px 0;
     border-bottom: 1px solid #bcbcad;
     font: bold 12px Verdana, sans-serif;
 }
 
 .docman_properties_navlist li {
-    list-style: none;
-    margin: 0;
     display: inline;
+    margin: 0;
+    list-style: none;
 }
 
 .docman_properties_navlist li a {
-    padding: 3px 0.5em;
     margin-left: 3px;
+    padding: 3px .5em;
     border: 1px solid #bcbcad;
     border-bottom: none;
     background: #e8e8e0;
@@ -112,26 +116,26 @@ li.docman_item_last {
 }
 
 .docman_properties_navlist li a.docman_properties_navlist_current {
-    background: white;
     border-bottom: 1px solid white;
+    background: white;
 }
 
 .docman_properties_content {
+    padding: 10px 20px;
     border: 1px solid #bcbcad;
     border-top: none;
-    padding: 10px 20px;
     background: white;
 }
 
 .docman_properties_content dl dt {
-    font-weight: bold;
     font-size: 1.1em;
+    font-weight: bold;
 }
 
 .docman_confirm_delete {
-    border: medium solid red;
-    background: #FFC;
     padding: 4px 10px;
+    border: medium solid red;
+    background: #ffffcc;
 
 }
 
@@ -140,19 +144,19 @@ li.docman_item_last {
 }
 
 .docman_item_title {
-    font-weight: bold;
     padding-left: 6px;
+    font-weight: bold;
 }
 
 .docman_item_description {
     margin-left: 30px;
-    font-size: 0.9em;
     padding-bottom: 6px;
+    font-size: .9em;
 }
 
 .docman_item_icon {
-    vertical-align: middle;
     margin-right: 4px;
+    vertical-align: middle;
 }
 
 .docman_item_options {
@@ -161,11 +165,11 @@ li.docman_item_last {
 
 .docman_item_show_options {
     margin-left: 24px;
-    font-size: 0.7em;
+    font-size: .7em;
 }
 
 a.docman_item_show_options {
-    color: #ccc;
+    color: #cccccc;
 }
 
 a.docman_item_show_options:hover {
@@ -195,11 +199,11 @@ a img {
 }
 
 #docman_filters_title {
-    font-weight: bold;
-    background-color: #DDDDDD;
+    margin-bottom: .3em;
     padding: 2px;
-    border: 1px solid #DDDDDD;
-    margin-bottom: 0.3em;
+    border: 1px solid #dddddd;
+    background-color: #dddddd;
+    font-weight: bold;
 }
 
 #docman_filters_title select {
@@ -208,14 +212,14 @@ a img {
 }
 
 #docman_filters_fieldset {
-    border-left: 1px solid #DDDDDD;
-    border-right: 1px solid #DDDDDD;
-    border-bottom: 1px solid #DDDDDD;
-    padding: 0.2em;
     /* Linked to #docman_filters_title::margin-bottom */
-    margin-top: -0.3em;
+    margin-top: -.3em;
     /* Need to be the same value than #docman_filters_title::margin-bottom */
-    margin-bottom: 0.3em;
+    margin-bottom: .3em;
+    padding: .2em;
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
 }
 
 #docman_report_filterlist {
@@ -251,31 +255,31 @@ a img {
 */
 
 .docman_item_menu {
+    position: absolute;
+    z-index: 100;
     border: 1px solid #bcbcad;
     border-right: 2px solid #bcbcad;
     border-bottom: 2px solid #bcbcad;
-    position: absolute;
-    z-index: 100;
     background: #e8e8e0;
     /*background:#e8e8e0 url('../images/bg-menu.png') 0 0 repeat-y;*/
 }
 
 .docman_item_menu ul {
-    list-style: none;
     margin: 0;
     padding: 0;
+    list-style: none;
 }
 
 .docman_item_menu ul li a {
-    border: 1px solid #e8e8e0;
-    padding-top: 0px;
+    padding-top: 0;
     padding-right: 1em;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     padding-left: 24px;
-    text-decoration: none;
+    border: 1px solid #e8e8e0;
     /*display: block;*/
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    text-decoration: none;
 }
 
 .docman_item_menu ul li a:hover {
@@ -284,10 +288,10 @@ a img {
 }
 
 .docman_item_menu_close {
-    text-align: right;
     height: inherit;
-    font-size: 0.8em;
     padding-left: 2px;
+    font-size: .8em;
+    text-align: right;
 }
 
 /*
@@ -296,32 +300,32 @@ a img {
  * just for move.
  */
 .docman_item_option_id_info {
-    font-size: 0.8em;
-    border: 1px solid #e8e8e0;
-    padding-top: 0px;
-    padding-right: 1em;
-    padding-bottom: 0px;
-    text-decoration: none;
     display: inline;
+    padding-top: 0;
+    padding-right: 1em;
+    padding-bottom: 0;
+    border: 1px solid #e8e8e0;
     background-repeat: no-repeat;
     background-position: 2px 1px;
+    font-size: .8em;
     text-align: right;
+    text-decoration: none;
 }
 
 .docman_item_option_details {
-    background-image: url('../images/ic/item-details.png');
+    background-image: url('../../../www/themes/default/images/ic/item-details.png');
 }
 
 .docman_item_option_newdocument {
-    background-image: url('../images/ic/document-new.png');
+    background-image: url('../../../www/themes/default/images/ic/document-new.png');
 }
 
 .docman_item_option_newfolder {
-    background-image: url('../images/ic/folder-new.png');
+    background-image: url('../../../www/themes/default/images/ic/folder-new.png');
 }
 
 .docman_item_option_newversion {
-    background-image: url('../images/ic/file-newversion.png');
+    background-image: url('../../../www/themes/default/images/ic/file-newversion.png');
 }
 
 /*
@@ -330,68 +334,68 @@ a img {
  * just for move.
  */
 .docman_item_option_move {
-    border: 1px solid #e8e8e0;
-    padding-top: 0px;
-    padding-right: 1em;
-    padding-bottom: 0px;
-    padding-left: 24px;
-    text-decoration: none;
     display: inline;
+    padding-top: 0;
+    padding-right: 1em;
+    padding-bottom: 0;
+    padding-left: 24px;
+    border: 1px solid #e8e8e0;
+    background-image: url('../../../www/themes/default/images/ic/item-move.png');
     background-repeat: no-repeat;
     background-position: 2px 1px;
-    background-image: url('../images/ic/item-move.png');
+    text-decoration: none;
 }
 
 .docman_item_option_history {
-    background-image: url('../images/ic/history.png');
+    background-image: url('../../../www/themes/default/images/ic/history.png');
 }
 
 .docman_item_option_notifications {
-    background-image: url('../images/ic/notifications.png');
+    background-image: url('../../../www/themes/default/images/ic/notifications.png');
 }
 
 .docman_item_option_permissions {
-    background-image: url('../images/ic/permissions.png');
+    background-image: url('../../../www/themes/default/images/ic/permissions.png');
 }
 
 .docman_item_option_delete {
-    background-image: url('../images/ic/delete.png');
+    background-image: url('../../../www/themes/default/images/ic/delete.png');
 }
 
 .docman_item_option_update {
-    background-image: url('../images/ic/file-newversion.png');
+    background-image: url('../../../www/themes/default/images/ic/file-newversion.png');
 }
 
 .docman_item_option_copy {
-    background-image: url('../images/ic/copy.png');
+    background-image: url('../../../www/themes/default/images/ic/copy.png');
 }
 
 .docman_item_option_cut {
-    background-image: url('../images/ic/cut.png');
+    background-image: url('../../../www/themes/default/images/ic/cut.png');
 }
 
 .docman_item_option_paste {
     display: inline;
-    background-image: url('../images/ic/paste.png');
+    background-image: url('../../../www/themes/default/images/ic/paste.png');
 }
 
 .docman_item_option_approval {
-    background-image: url('../images/ic/approval.png');
+    background-image: url('../../../www/themes/default/images/ic/approval.png');
 }
 
 .docman_item_option_lock_add {
-    background-image: url('../images/ic/lock_add.png');
+    background-image: url('../../../www/themes/default/images/ic/lock_add.png');
 }
 
 .docman_item_option_lock_del {
-    background-image: url('../images/ic/lock_delete.png');
+    background-image: url('../../../www/themes/default/images/ic/lock_delete.png');
 }
 
 .docman_item_option_separator {
     width: 10em;
-    padding: 0;
-    margin-top: 0.25em;
+    margin-top: .25em;
     margin-bottom: 0;
+    padding: 0;
 }
 
 /**********/
@@ -409,10 +413,12 @@ a img {
 /*
  * Metadata import
  */
-.docman_md_missing, .docman_md_equivalent, .docman_md_conflict {
-    text-align: center;
+.docman_md_missing,
+ .docman_md_equivalent,
+ .docman_md_conflict {
     /* This color is orange light */
     background-color: rgb(253, 185, 111);
+    text-align: center;
 }
 
 .docman_md_equals {
@@ -425,9 +431,9 @@ a img {
 
 /* Table */
 .docman_approval_readonly {
-    vertical-align: top;
-    font-style: italic;
     color: grey;
+    font-style: italic;
+    vertical-align: top;
 }
 
 .docman_approval_highlight {
@@ -435,9 +441,9 @@ a img {
 }
 
 .docman_approval_email {
+    background-color: #cccccc;
     font-family: courier, monospace;
     white-space: pre;
-    background-color: #CCCCCC;
 }
 
 /* Generic */
@@ -477,8 +483,8 @@ a img {
 }
 
 .docman-notification-email-list-group-icon {
-    color: #666;
     margin: 0 5px 0 4px;
+    color: #666666;
 }
 
 .avatar.docman-notification-user-avatar {
@@ -496,12 +502,12 @@ a img {
 }
 
 .docman-footer-with-external-content {
-    margin: 20px 0 0 0;
+    margin: 20px 0 0;
 }
 
 .docman-footer-external-link {
-    font-size: 12px;
     color: #747474;
+    font-size: 12px;
     text-decoration: none;
 
     &:hover {
@@ -510,5 +516,5 @@ a img {
 }
 
 .docman-footer-external-link-icon {
-    margin:0 5px 0 0;
+    margin: 0 5px 0 0;
 }
