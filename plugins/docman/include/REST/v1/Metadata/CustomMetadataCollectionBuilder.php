@@ -83,11 +83,20 @@ class CustomMetadataCollectionBuilder
          */
         foreach ($list_of_values as $value) {
             $representation = new DocmanMetadataListValueRepresentation();
-            $representation->build((int)$value->getId(), $value->getName());
+            $representation->build((int)$value->getId(), $this->getNoneMetadataValue($value));
 
             $possible_values_representation[] = $representation;
         }
 
         return $possible_values_representation;
+    }
+
+    private function getNoneMetadataValue(Docman_MetadataListOfValuesElement $metadata): string
+    {
+        if ((int)$metadata->getId() === PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
+            return $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+        }
+
+        return $metadata->getName();
     }
 }
