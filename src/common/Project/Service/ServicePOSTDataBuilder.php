@@ -52,7 +52,7 @@ class ServicePOSTDataBuilder
         $rank              = $request->getValidated('rank', 'int', 500);
         $is_active         = $request->getValidated('is_active', 'uint', 0);
         $is_used           = $request->getValidated('is_used', 'uint', false);
-        $is_in_iframe      = $request->get('is_in_iframe') ? 1 : 0;
+        $is_in_iframe      = $request->get('is_in_iframe') ? true : false;
         $is_system_service = $this->isSystemService($request, $short_name);
         $submitted_link    = $request->getValidated('link', 'localuri', '');
 
@@ -117,7 +117,7 @@ class ServicePOSTDataBuilder
      * @param         $is_used
      * @param         $service_id
      * @param         $description
-     * @param int     $is_in_iframe
+     * @param bool     $is_in_iframe
      * @param bool    $is_system_service
      *
      * @return ServicePOSTData
@@ -133,7 +133,7 @@ class ServicePOSTDataBuilder
         $submitted_link,
         $is_active,
         $is_used,
-        int $is_in_iframe,
+        bool $is_in_iframe,
         bool $is_system_service
     ): ServicePOSTData {
         $scope = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
@@ -160,8 +160,8 @@ class ServicePOSTDataBuilder
             $scope,
             (bool) $is_active,
             (bool) $is_used,
-            (bool) $is_system_service,
-            (bool) $is_in_iframe
+            $is_system_service,
+            $is_in_iframe
         );
     }
 
