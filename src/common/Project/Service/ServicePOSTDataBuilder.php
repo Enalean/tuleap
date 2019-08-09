@@ -48,6 +48,7 @@ class ServicePOSTDataBuilder
         $service_id        = $request->getValidated('service_id', 'uint', 0);
         $short_name        = $request->getValidated('short_name', 'string', '');
         $label             = $request->getValidated('label', 'string', '');
+        $icon_name         = $request->getValidated('icon_name', 'string', '');
         $description       = $request->getValidated('description', 'string', '');
         $rank              = $request->getValidated('rank', 'int', 500);
         $is_active         = $request->getValidated('is_active', 'uint', 0);
@@ -73,6 +74,7 @@ class ServicePOSTDataBuilder
             $service_id,
             $short_name,
             $label,
+            $icon_name,
             $description,
             $rank,
             $submitted_link,
@@ -97,6 +99,7 @@ class ServicePOSTDataBuilder
             $service->getId(),
             $service->getShortName(),
             $service->getLabel(),
+            $service->getIconName(),
             $service->getDescription(),
             $service->getRank(),
             $service->getUrl(),
@@ -128,6 +131,7 @@ class ServicePOSTDataBuilder
         $service_id,
         $short_name,
         $label,
+        $icon_name,
         $description,
         $rank,
         $submitted_link,
@@ -141,6 +145,9 @@ class ServicePOSTDataBuilder
         $this->checkShortname($project, $short_name);
         $this->checkLabel($label);
         $this->checkRank($project, $short_name, $rank);
+        if (! $is_system_service) {
+            $this->checkIcon($icon_name);
+        }
 
         $service_url_collector = new ServiceUrlCollector($project, $short_name);
         $this->event_manager->processEvent($service_url_collector);
@@ -154,6 +161,7 @@ class ServicePOSTDataBuilder
             $service_id,
             $short_name,
             $label,
+            $icon_name,
             $description,
             $link,
             $rank,
@@ -266,6 +274,16 @@ class ServicePOSTDataBuilder
             throw new InvalidServicePOSTDataException(
                 $GLOBALS['Language']->getText('project_admin_servicebar', 'cant_make_s')
             );
+        }
+    }
+
+    /**
+     * @throws InvalidServicePOSTDataException
+     */
+    private function checkIcon(string $icon_name): void
+    {
+        if (! ServiceIconValidator::isValidIcon($icon_name)) {
+            throw new InvalidServicePOSTDataException(_("This service icon name is not allowed."));
         }
     }
 }

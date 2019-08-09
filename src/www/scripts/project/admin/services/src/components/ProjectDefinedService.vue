@@ -39,6 +39,8 @@
             >
         </div>
 
+        <icon-selector v-model="service.icon_name" v-bind:allowed_icons="allowed_icons"/>
+
         <div class="tlp-form-element">
             <label class="tlp-label" for="project-admin-services-custom-edit-modal-link">
                 <translate>Link</translate>
@@ -130,14 +132,20 @@
     </div>
 </template>
 <script>
+import IconSelector from "./IconSelector.vue";
 export default {
     name: "ProjectDefinedService",
+    components: { IconSelector },
     props: {
         minimal_rank: {
             type: String,
             required: true
         },
         service: {
+            type: Object,
+            required: true
+        },
+        allowed_icons: {
             type: Object,
             required: true
         }

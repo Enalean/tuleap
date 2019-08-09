@@ -77,7 +77,7 @@ class ServicePresenter
         $this->is_link_customizable = $service_link === null;
 
         if ($should_show_dynamic_modal === true) {
-            $this->service_json = json_encode($this->buildJSONPresenter());
+            $this->service_json = json_encode($this->buildJSONPresenter($service));
         }
     }
 
@@ -101,11 +101,12 @@ class ServicePresenter
         return $service->getInternationalizedName() === $home_page_label;
     }
 
-    private function buildJSONPresenter(): ServiceJSONPresenter
+    private function buildJSONPresenter(Service $service): ServiceJSONPresenter
     {
         return new ServiceJSONPresenter(
             $this->id,
             $this->label,
+            $service->getIconName(),
             $this->link,
             $this->description,
             $this->is_active,

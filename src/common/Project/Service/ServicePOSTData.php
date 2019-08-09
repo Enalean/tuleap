@@ -33,6 +33,10 @@ final class ServicePOSTData
     /**
      * @var string
      */
+    private $icon_name;
+    /**
+     * @var string
+     */
     private $description;
     /**
      * @var string
@@ -71,6 +75,7 @@ final class ServicePOSTData
         int $id,
         string $short_name,
         string $label,
+        string $icon_name,
         string $description,
         string $link,
         int $rank,
@@ -83,6 +88,7 @@ final class ServicePOSTData
         $this->id                = $id;
         $this->short_name        = $short_name;
         $this->label             = $label;
+        $this->icon_name         = $icon_name;
         $this->description       = $description;
         $this->link              = $link;
         $this->rank              = $rank;
@@ -103,10 +109,12 @@ final class ServicePOSTData
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getIconName(): string
+    {
+        return $this->icon_name;
+    }
+
+    public function getDescription(): string
     {
         return $this->description;
     }

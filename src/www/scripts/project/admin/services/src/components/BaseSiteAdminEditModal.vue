@@ -25,8 +25,12 @@
     >
         <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
-            <sidebar-previewer v-bind:label="service.label"/>
-            <project-defined-service v-bind:minimal_rank="minimal_rank" v-bind:service="service">
+            <sidebar-previewer v-bind:label="service.label" v-bind:icon_name="service.icon_name"/>
+            <project-defined-service
+                v-bind:minimal_rank="minimal_rank"
+                v-bind:service="service"
+                v-bind:allowed_icons="allowed_icons"
+            >
                 <template v-slot:is_active>
                     <is-active-input v-bind:value="service.is_active"/>
                 </template>

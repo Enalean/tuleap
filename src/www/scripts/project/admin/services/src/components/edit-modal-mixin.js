@@ -34,6 +34,10 @@ export const edit_modal_mixin = {
         csrf_token_name: {
             type: String,
             required: true
+        },
+        allowed_icons: {
+            type: Object,
+            required: true
         }
     },
     data() {
@@ -57,6 +61,7 @@ export const edit_modal_mixin = {
         resetService() {
             return {
                 id: null,
+                icon_name: "",
                 label: null,
                 link: null,
                 description: null,

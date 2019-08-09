@@ -29,6 +29,8 @@ final class ServiceJSONPresenter
     /** @var string */
     public $label;
     /** @var string */
+    public $icon_name;
+    /** @var string */
     public $link;
     /** @var string */
     public $description;
@@ -44,6 +46,7 @@ final class ServiceJSONPresenter
     public function __construct(
         int $id,
         string $label,
+        string $icon_name,
         string $link,
         string $description,
         bool $is_active,
@@ -53,6 +56,7 @@ final class ServiceJSONPresenter
     ) {
         $this->id           = $id;
         $this->label        = $label;
+        $this->icon_name    = $icon_name;
         $this->link         = $link;
         $this->description  = $description;
         $this->is_active    = $is_active;
