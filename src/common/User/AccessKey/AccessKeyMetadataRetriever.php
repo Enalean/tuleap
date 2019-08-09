@@ -46,11 +46,11 @@ class AccessKeyMetadataRetriever
         foreach ($this->dao->searchMetadataByUserIDAtCurrentTime($user_id, $current_time) as $metadata) {
             $all_metadata[] = new AccessKeyMetadata(
                 $metadata['id'],
-                new DateTimeImmutable('@' . $metadata['creation_date']),
+                (new DateTimeImmutable())->setTimestamp($metadata['creation_date']),
                 $metadata['description'],
-                $metadata['last_usage'] === null ? null : new DateTimeImmutable('@' . $metadata['last_usage']),
+                $metadata['last_usage'] === null ? null : (new DateTimeImmutable())->setTimestamp($metadata['last_usage']),
                 $metadata['last_ip'],
-                $metadata['expiration_date'] === null ? null : new DateTimeImmutable('@' . $metadata['expiration_date'])
+                $metadata['expiration_date'] === null ? null : (new DateTimeImmutable())->setTimestamp($metadata['expiration_date'])
             );
         }
         return $all_metadata;
