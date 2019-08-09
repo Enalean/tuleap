@@ -131,6 +131,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     if (is_file($manifest)) {
         $json = json_decode(file_get_contents($manifest), true);
         gettextJS($translated_plugin, $path, $json);
+        gettextTS($translated_plugin, $path, $json);
         gettextSmarty($translated_plugin, $path, $json);
         gettextVue($translated_plugin, $path, $json);
         gettextAngularJS($translated_plugin, $path, $json);
@@ -306,6 +307,32 @@ function gettextVue($translated_plugin, $path, $manifest_json)
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+    }
+}
+
+function gettextTS($translated_plugin, $path, $manifest_json)
+{
+    if (! isset($manifest_json['gettext-ts']) || ! is_array($manifest_json['gettext-ts'])) {
+        return;
+    }
+
+    foreach ($manifest_json['gettext-ts'] as $component => $gettext) {
+        info("[$translated_plugin][ts][$component] Generating default .pot file");
+        $src      = escapeshellarg("$path/${gettext['src']}");
+        $po       = escapeshellarg("$path/${gettext['po']}");
+        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/typescript-gettext-extractor-cli.js \
+        $(find $src -type f -name '*.ts' \
+        -not \( -name '*.spec.ts' -o -name '*.d.ts' \) \
+        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) ) \
+        --output $template");
+        executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
+
+        executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
+
+        info("[$translated_plugin][ts][$component] Merging .pot file into .po files");
         exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
     }
 }
