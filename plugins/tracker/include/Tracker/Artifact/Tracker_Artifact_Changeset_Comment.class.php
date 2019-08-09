@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -122,12 +122,13 @@ class Tracker_Artifact_Changeset_Comment {
         return $this->purifyBody($level);
     }
 
-    private function purifyBody($level) {
+    private function purifyBody($level)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify(
             $this->body,
             $level,
-            $this->changeset->artifact->getTracker()->group_id
+            $this->changeset->getArtifact()->getTracker()->getGroupId()
         );
     }
 

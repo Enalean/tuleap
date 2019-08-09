@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -745,8 +745,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return UserManager::instance();
     }
 
-    public function getTracker() {
-        return $this->artifact->getTracker();
+    public function getTracker()
+    {
+        return $this->getArtifact()->getTracker();
     }
 
     public function executePostCreationActions()
@@ -821,13 +822,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $changeset_representation->build(
             $this,
             $comment,
-            $this->getFullRESTFieldValuesWitoutPermissions($user)
+            $this->getFullRESTFieldValuesWithoutPermissions($user)
         );
 
         return $changeset_representation;
     }
 
-    private function getFullRESTFieldValuesWitoutPermissions(PFUser $user)
+    private function getFullRESTFieldValuesWithoutPermissions(PFUser $user)
     {
         $values = array();
         $factory = $this->getFormElementFactory();
@@ -836,7 +837,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $values[] = $field->getRESTValue($user, $this);
         }
 
-        return array_filter($values);
+        return array_values(array_filter($values));
     }
 
     /**
