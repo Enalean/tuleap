@@ -101,10 +101,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         return $docman_setting_bo->getMetadataUsage($label) === "1";
     }
 
-    /**
-     * @return IncludeAssets
-     */
-    private function includeJavascriptFiles(BaseLayout $layout)
+    private function includeJavascriptFiles(BaseLayout $layout) : void
     {
         $include_assets = new IncludeAssets(
             __DIR__ . '/../../../../src/www/assets/document/scripts',
@@ -138,10 +135,10 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../../../src/www/assets/document/BurningParrot',
-                    '/assets/document/BurningParrot'
+                    __DIR__ . '/../../../../src/www/assets/document/themes',
+                    '/assets/document/themes'
                 ),
-                'document'
+                'style'
             )
         );
     }
