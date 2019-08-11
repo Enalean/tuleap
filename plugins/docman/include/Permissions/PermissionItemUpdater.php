@@ -35,20 +35,24 @@ use Tuleap\Docman\ResponseFeedbackWrapper;
  */
 class PermissionItemUpdater
 {
+    public const PERMISSION_DEFINITION_READ   = 1;
+    public const PERMISSION_DEFINITION_WRITE  = 2;
+    public const PERMISSION_DEFINITION_MANAGE = 3;
+    public const PERMISSION_DEFINITION_NONE   = 100;
     private const PERMISSIONS_DEFINITIONS = [
-        1 => [
+        self::PERMISSION_DEFINITION_READ   => [
             'order' => 1,
             'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,
         ],
-        2 => [
+        self::PERMISSION_DEFINITION_WRITE  => [
             'order' => 2,
             'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE,
         ],
-        3 => [
+        self::PERMISSION_DEFINITION_MANAGE => [
             'order' => 3,
             'type'  => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE,
         ],
-        100 => [
+        self::PERMISSION_DEFINITION_NONE => [
             'order' => 0,
             'type'  => null
         ],
@@ -278,9 +282,10 @@ class PermissionItemUpdater
             //If the permissions have not been set (no parent || no conflict)
             if (! isset($done_permissions[$ugroup_id])) {
                 //remove permissions if needed
-                $perms_cleared = false;
+                $perms_cleared          = false;
+                $old_ugroup_permissions = $old_permissions[$ugroup_id]['permissions'] ?? [];
                 /** @psalm-var value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES> $permission */
-                foreach ($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
+                foreach ($old_ugroup_permissions as $permission => $nop) {
                     if ($permission != self::PERMISSIONS_DEFINITIONS[$wanted_permission]['type']) {
                         //The permission has been changed
                         permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
