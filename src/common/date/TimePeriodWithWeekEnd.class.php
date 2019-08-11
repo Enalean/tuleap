@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,49 @@
 /**
  * A time period, starting at a given date, and with a given duration.
  */
-class TimePeriodWithWeekEnd extends TimePeriod
+class TimePeriodWithWeekEnd implements TimePeriod
 {
+    /**
+     * @var int The time period start date, as a Unix timestamp.
+     */
+    private $start_date;
+
+    /**
+     * @var int The time period duration, in days.
+     */
+    private $duration;
+
+    public function __construct($start_date, $duration)
+    {
+        $this->start_date = $start_date;
+        $this->duration   = $this->formatDuration($duration);
+    }
+
+    private function formatDuration($duration)
+    {
+        if (is_numeric($duration)) {
+            return (int) ceil((float) $duration);
+        }
+
+        return $duration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartDate() {
+        return $this->start_date;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndDate() {
+        $day_offsets = $this->getDayOffsets();
+        $last_offset = end($day_offsets);
+        return strtotime("+$last_offset days", $this->getStartDate());
+    }
+
     /**
      * To be used to iterate consistently over the time period
      *
@@ -30,15 +71,10 @@ class TimePeriodWithWeekEnd extends TimePeriod
      */
     public function getDayOffsets()
     {
-        if ($this->getDuration() < 0) {
+        if ($this->duration < 0) {
             return array(0);
         } else {
-            return range(0, $this->getDuration());
+            return range(0, $this->duration);
         }
-    }
-
-    public function getCountDayUntilDate($date)
-    {
-        return count($this->getDayOffsets());
     }
 }

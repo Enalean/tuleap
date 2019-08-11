@@ -18,8 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TimePeriodWithoutWeekEnd  extends TimePeriod
+class TimePeriodWithoutWeekEnd implements TimePeriod
 {
+    /**
+     * @var int The time period start date, as a Unix timestamp.
+     */
+    private $start_date;
+
+    /**
+     * @var int The time period duration, in days.
+     */
+    private $duration;
+
+    public function __construct($start_date, $duration)
+    {
+        $this->start_date = $start_date;
+        $this->duration   = $this->formatDuration($duration);
+    }
+
+    private function formatDuration($duration)
+    {
+        if (is_numeric($duration)) {
+            return (int) ceil((float) $duration);
+        }
+
+        return $duration;
+    }
+
     public static function buildFromEndDate(int $start_date, int $end_date, Logger $logger): TimePeriodWithoutWeekEnd
     {
         if ($end_date < $start_date) {
@@ -43,6 +68,76 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod
         }
 
         return new self($start_date, $duration);
+    }
+
+    private static function getNextDay($next_day_number, $date) {
+        return strtotime("+$next_day_number days", $date);
+    }
+
+    public static function isNotWeekendDay($day) {
+        return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartDate() {
+        return $this->start_date;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration() {
+        return $this->duration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndDate() {
+        $day_offsets = $this->getDayOffsets();
+        $last_offset = end($day_offsets);
+        return strtotime("+$last_offset days", $this->getStartDate());
+    }
+
+    /**
+     * @return array of string
+     */
+    public function getHumanReadableDates() {
+        $dates = array();
+
+        foreach($this->getDayOffsets() as $day_offset) {
+            $day     = strtotime("+$day_offset days", $this->getStartDate());
+            $dates[] = date('D d', $day);
+        }
+
+        return $dates;
+    }
+
+    public function isTodayBeforeTimePeriod()
+    {
+        return $this->getStartDate() > $this->getTodayTimestamp();
+    }
+
+    /**
+     * @return int
+     */
+    private function getTodayTimestamp()
+    {
+        return strtotime($this->getTodayDate());
+    }
+
+    /**
+     * Set to protected because it makes testing possible.
+     * Protected for testing purpose
+     */
+    protected function getTodayDate()
+    {
+        if (isset($_SERVER['REQUEST_TIME'])) {
+            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        }
+        return date('Y-m-d');
     }
 
     /**
@@ -95,14 +190,6 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod
         }
 
         return array($day_offset);
-    }
-
-    private static function getNextDay($next_day_number, $date) {
-        return strtotime("+$next_day_number days", $date);
-    }
-
-    public static function isNotWeekendDay($day) {
-        return ! ((int) date('N', $day) === 6 || (int) date('N', $day) === 7);
     }
 
     /**

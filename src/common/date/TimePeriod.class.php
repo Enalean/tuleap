@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - Present. All rights reserved.
+ * Copyright Enalean (c) 2019 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,103 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * A time period that has a start date and a duration
- */
-abstract class TimePeriod
+interface TimePeriod
 {
-    /**
-     * @var int The time period start date, as a Unix timestamp.
-     */
-    private $start_date;
-
-    /**
-     * @var int The time period duration, in days.
-     */
-    private $duration;
-
-    public function __construct($start_date, $duration)
-    {
-        $this->start_date = $start_date;
-        $this->duration   = $this->formatDuration($duration);
-    }
-
-    private function formatDuration($duration)
-    {
-        if (is_numeric($duration)) {
-            return (int) ceil((float) $duration);
-        }
-
-        return $duration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStartDate() {
-        return $this->start_date;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDuration() {
-        return $this->duration;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEndDate() {
-        $day_offsets = $this->getDayOffsets();
-        $last_offset = end($day_offsets);
-        return strtotime("+$last_offset days", $this->getStartDate());
-    }
-
-    /**
-     * @return array of string
-     */
-    public function getHumanReadableDates() {
-        $dates = array();
-
-        foreach($this->getDayOffsets() as $day_offset) {
-            $day     = strtotime("+$day_offset days", $this->getStartDate());
-            $dates[] = date('D d', $day);
-        }
-
-        return $dates;
-    }
-
-    /**
-     * To be used to iterate consistently over the time period
-     *
-     * @return array of int
-     */
-    public abstract function getDayOffsets();
-
-    public abstract function getCountDayUntilDate($date);
-
-    public function isTodayBeforeTimePeriod()
-    {
-        return $this->getStartDate() > $this->getTodayTimestamp();
-    }
-
-    /**
-     * @return int
-     */
-    protected function getTodayTimestamp()
-    {
-        return strtotime($this->getTodayDate());
-    }
-
-    /**
-     * Set to protected because it makes testing possible.
-     */
-    protected function getTodayDate()
-    {
-        if (isset($_SERVER['REQUEST_TIME'])) {
-            return date('Y-m-d', $_SERVER['REQUEST_TIME']);
-        }
-        return date('Y-m-d');
-    }
 }

@@ -59,14 +59,6 @@ class TimePeriodWithWeekEndTest extends TestCase
         $this->following_day_timestamp = $following_day->getTimestamp();
     }
 
-    public function testItComputesDateBasedOnStartDate()
-    {
-        $this->assertSame(
-            $this->time_period->getHumanReadableDates(),
-            array('Wed 04', 'Thu 05', 'Fri 06', 'Sat 07')
-        );
-    }
-
     public function testItProvidesAListOfTheDayOffsetsInTheTimePeriod()
     {
         $this->assertSame([0, 1, 2, 3], $this->time_period->getDayOffsets());
@@ -111,23 +103,5 @@ class TimePeriodWithWeekEndTest extends TestCase
     {
         $time_period = new TimePeriodWithWeekEnd($this->day_timestamp, "1");
         $this->assertSame($this->following_day_timestamp, $time_period->getEndDate());
-    }
-
-    public function testItReturnsTrueWhenTodayIsBeforeFirstDay()
-    {
-        $day = new DateTime();
-        $day->modify('+5 day');
-
-        $time_period = new TimePeriodWithWeekEnd($day->getTimestamp(), 2);
-        $this->assertTrue($time_period->isTodayBeforeTimePeriod());
-    }
-
-    public function testItReturnsFalseWhenTodayIsAfterFirstDay()
-    {
-        $day = new DateTime();
-        $day->modify('-5 day');
-
-        $time_period = new TimePeriodWithWeekEnd($day->getTimestamp(), 2);
-        $this->assertFalse($time_period->isTodayBeforeTimePeriod());
     }
 }
