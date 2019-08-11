@@ -86,7 +86,7 @@ class BurnupCacheCheckerTest extends TestCase
 
         $start_date        = new \DateTime();
         $duration          = 10;
-        $this->time_period = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), $duration);
+        $this->time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
 
         $this->user = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(101);

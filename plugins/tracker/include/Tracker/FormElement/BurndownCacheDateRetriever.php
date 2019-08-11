@@ -54,16 +54,16 @@ class BurndownCacheDateRetriever
     private function getFirstDayToCache(TimePeriodWithoutWeekEnd $burndown_period)
     {
         $start_date = new DateTime();
-        $start_date->setTimestamp($burndown_period->getStartDate());
+        $start_date->setTimestamp((int) $burndown_period->getStartDate());
         $this->addOneDayToDateTime($start_date);
 
         return $start_date;
     }
 
-    private function getLastDayToCache($burndown_period)
+    private function getLastDayToCache(TimePeriodWithoutWeekEnd $burndown_period)
     {
         $end_date = new DateTime();
-        $end_date->setTimestamp($burndown_period->getEndDate());
+        $end_date->setTimestamp((int) $burndown_period->getEndDate());
         $this->addOneDayToDateTime($end_date);
 
         return $end_date;

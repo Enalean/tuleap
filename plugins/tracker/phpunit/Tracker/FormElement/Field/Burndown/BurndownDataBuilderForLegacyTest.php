@@ -112,7 +112,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
@@ -126,7 +126,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 5;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $time_period);
 
@@ -140,7 +140,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');
@@ -158,7 +158,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
 
         $start_date  = strtotime('2018-11-01');
         $duration    = 2;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');

@@ -44,6 +44,10 @@ class TimePeriodWithoutWeekEndTest extends TestCase
      * @var int
      */
     private $following_week_day_timestamp;
+    /**
+     * @var string
+     */
+    private $request_time;
 
     protected function setUp(): void
     {
@@ -51,12 +55,19 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $this->week_day_timestamp           = $week_day->getTimestamp();
         $following_week_day                 = new DateTime('2016-02-02');
         $this->following_week_day_timestamp = $following_week_day->getTimestamp();
+
+        $this->request_time = $_SERVER['REQUEST_TIME'];
+    }
+
+    protected function tearDown(): void
+    {
+        $_SERVER['REQUEST_TIME'] = $this->request_time;
     }
 
     public function testItProvidesAListOfDaysWhileExcludingWeekends()
     {
         $start_date  = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
         $this->assertSame(
             ['Wed 04', 'Thu 05', 'Fri 06', 'Mon 09', 'Tue 10'],
@@ -67,7 +78,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
     public function testItProvidesTheEndDate()
     {
         $start_date  = mktime(0, 0, 0, 7, 4, 2012);
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
         $this->assertSame('Tue 10', date('D d', $time_period->getEndDate()));
     }
@@ -75,7 +86,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
     public function testItProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsBeforeToday()
     {
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
         $today = mktime(23, 59, 59, 11, 12, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
@@ -86,7 +97,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
     public function testItProvidesTheCorrectNumberOfDayWhenLastDateOfBurndownIsAfterToday()
     {
         $start_date  = mktime(23, 59, 59, 11, 5, 2016);
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, 4);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 4);
 
         $today = mktime(23, 59, 59, 11, 8, 2016);
         $timestamps = $time_period->getCountDayUntilDate($today);
@@ -94,328 +105,226 @@ class TimePeriodWithoutWeekEndTest extends TestCase
         $this->assertSame(1, $timestamps);
     }
 
-    public function testItDoesNotCountTheStartDate()
-    {
-        $start_date  = mktime(0, 0, 0, 1, 31, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+    /**
+     * @dataProvider providerForNumberOfDaysSinceStart
+     */
+    public function testGetNumberOfDaysSinceStart(
+        $start_date,
+        $duration,
+        $current_time,
+        $expected_number_of_days_since_start
+    ): void {
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 1, 31, 2014)));
+        $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertSame(0, $time_period->getNumberOfDaysSinceStart());
+        $this->assertSame($expected_number_of_days_since_start, $time_period->getNumberOfDaysSinceStart());
     }
 
-    public function testItCountsTheNextDayAsOneDay()
+    public function providerForNumberOfDaysSinceStart(): array
     {
-        $start_date  = mktime(0, 0, 0, 2, 3, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 4, 2014)));
-
-        $this->assertSame(1, $time_period->getNumberOfDaysSinceStart());
+        return [
+            'It does not count the start date' => [
+                mktime(0, 0, 0, 1, 31, 2014),
+                15,
+                mktime(0, 0, 0, 1, 31, 2014),
+                0
+            ],
+            'It counts the next day as one day' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                15,
+                mktime(0, 0, 0, 2, 4, 2014),
+                1
+            ],
+            'It counts a week as five days' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                15,
+                mktime(0, 0, 0, 2, 10, 2014),
+                5
+            ],
+            'It counts a weekend as nothing' => [
+                mktime(0, 0, 0, 2, 7, 2014),
+                15,
+                mktime(0, 0, 0, 2, 10, 2014),
+                1
+            ],
+            'It excludes all weekends' => [
+                mktime(0, 0, 0, 1, 31, 2014),
+                15,
+                mktime(0, 0, 0, 2, 27, 2014),
+                19
+            ],
+            'It ignores future start date' => [
+                mktime(0, 0, 0, 1, 31, 2014),
+                15,
+                mktime(0, 0, 0, 2, 27, 2013),
+                0
+            ]
+        ];
     }
 
-    public function testItCountsAWeekAsFiveDays()
-    {
-        $start_date  = mktime(0, 0, 0, 2, 3, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+    /**
+     * @dataProvider providerForIsTodayWithinTimePeriod
+     */
+    public function testIsTodayWitthinTimePeriod(
+        $start_date,
+        $duration,
+        $current_time,
+        $should_today_be_within_time_period
+    ): void {
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
+        $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertSame(5, $time_period->getNumberOfDaysSinceStart());
+        $this->assertEquals($should_today_be_within_time_period, $time_period->isTodayWithinTimePeriod());
     }
 
-    public function testItCountsAWeekendAsNothing()
+    public function providerForIsTodayWithinTimePeriod(): array
     {
-        $start_date  = mktime(0, 0, 0, 2, 7, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
-
-        $this->assertSame(1, $time_period->getNumberOfDaysSinceStart());
+        return [
+            'It accepts today' => [
+                mktime(0, 0, 0, 2, 6, 2014),
+                10,
+                mktime(0, 0, 0, 2, 6, 2014),
+                true
+            ],
+            'It accepts today if zero duration' => [
+                mktime(0, 0, 0, 2, 6, 2014),
+                0,
+                mktime(0, 0, 0, 2, 6, 2014),
+                true
+            ],
+            'It refuses tomorrow' => [
+                mktime(0, 0, 0, 2, 7, 2014),
+                10,
+                mktime(0, 0, 0, 2, 6, 2014),
+                false
+            ],
+            'It works in standard case' => [
+                mktime(0, 0, 0, 2, 7, 2014),
+                10,
+                mktime(0, 0, 0, 2, 13, 2014),
+                true
+            ],
+            'It accepts last day of period' => [
+                mktime(0, 0, 0, 2, 5, 2014),
+                10,
+                mktime(0, 0, 0, 2, 19, 2014),
+                true
+            ],
+            'It refuses the day after the last day of period' => [
+                mktime(0, 0, 0, 2, 5, 2014),
+                9,
+                mktime(0, 0, 0, 2, 19, 2014),
+                false
+            ]
+        ];
     }
 
-    public function testItExcludesAllTheWeekends()
-    {
-        $start_date  = mktime(0, 0, 0, 1, 31, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+    /**
+     * @dataProvider providerForGetNumberOfDaysUntilEnd
+     */
+    public function testGetNumberOfDaysUntilEnd(
+        $start_date,
+        $duration,
+        $current_time,
+        $expected_number_of_days_until_end
+    ): void {
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2014)));
+        $_SERVER['REQUEST_TIME'] = $current_time;
 
-        $this->assertSame(19, $time_period->getNumberOfDaysSinceStart());
+        $this->assertSame($expected_number_of_days_until_end, $time_period->getNumberOfDaysUntilEnd());
     }
 
-    public function testItIgnoresFutureStartDates()
+    public function providerForGetNumberOfDaysUntilEnd(): array
     {
-        $start_date  = mktime(0, 0, 0, 1, 31, 2014);
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 15))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 27, 2013)));
-
-        $this->assertSame(0, $time_period->getNumberOfDaysSinceStart());
-    }
-
-    public function testItAcceptsToday()
-    {
-        $start_date = mktime(0, 0, 0, 2, 6, 2014);
-        $duration   = 10;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 6, 2014)));
-
-        $this->assertTrue($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItAcceptsTodayIfZeroDuration()
-    {
-        $start_date = mktime(0, 0, 0, 2, 6, 2014);
-        $duration   = 0;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 6, 2014)));
-
-        $this->assertTrue($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItRefusesTomorrow()
-    {
-        $start_date = mktime(0, 0, 0, 2, 7, 2014);
-        $duration   = 10;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 6, 2014)));
-
-        $this->assertFalse($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItWorksInStandardCase()
-    {
-        $start_date = mktime(0, 0, 0, 2, 7, 2014);
-        $duration   = 10;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 13, 2014)));
-
-        $this->assertTrue($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItAcceptsLastDayOfPeriod()
-    {
-        $start_date = mktime(0, 0, 0, 2, 5, 2014);
-        $duration   = 10;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 19, 2014)));
-
-        $this->assertTrue($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItRefusesTheDayAfterTheLastDayOfPeriod()
-    {
-        $start_date = mktime(0, 0, 0, 2, 5, 2014);
-        $duration   = 9;
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, $duration))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 19, 2014)));
-
-        $this->assertFalse($time_period->isTodayWithinTimePeriod());
-    }
-
-    public function testItLetsTheFullDurationAtStart()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 3, 2014)));
-
-        $this->assertSame(10, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItLetsDurationMinusOneTheDayAfter()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 4, 2014)));
-
-        $this->assertSame(9, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItLetsFiveDaysDuringTheWeekEndAtTheMiddleOfTheTwoSprints()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 8, 2014)));
-
-        $this->assertSame(5, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItLetsFiveDaysAtTheBeginningOfSecondWeek()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 10, 2014)));
-
-        $this->assertSame(5, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItLetsOneDayOnTheLastDayOfSprint()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 14, 2014)));
-
-        $this->assertSame(1, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItIsZeroDuringTheWeekEndJustBeforeTheEndDate()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 15, 2014)));
-
-        $this->assertSame(0, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItIsZeroWhenTheTimeHasCome()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 17, 2014)));
-
-        $this->assertSame(0, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItsMinus4TheFridayAfterTheEndOfTheSprint()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 21, 2014)));
-
-        $this->assertSame(-4, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItsMinus5TheWeekEndAfterTheEndOfTheSprint()
-    {
-        $start_date = mktime(0, 0, 0, 2, 3, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 22, 2014)));
-
-        $this->assertSame(-5, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItAddsTheMissingDayWhenStartDateIsInTheFuture()
-    {
-        $start_date = mktime(0, 0, 0, 2, 4, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 3, 2014)));
-
-        $this->assertSame(11, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItAddsTheMissingDayWithoutWeekEndWhenStartDateIsInTheFuture()
-    {
-        $start_date = mktime(0, 0, 0, 2, 4, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 10))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 1, 31, 2014)));
-
-        $this->assertSame(12, $time_period->getNumberOfDaysUntilEnd());
-    }
-
-    public function testItContinuesWhenTheEndDateIsOver()
-    {
-        $start_date = mktime(0, 0, 0, 1, 14, 2014);
-
-        $time_period = Mockery::mock(TimePeriodWithoutWeekEnd::class, array($start_date, 14))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $time_period->shouldReceive('getTodayDate')->andReturn(date('Y-m-d', mktime(0, 0, 0, 2, 18, 2014)));
-
-        $this->assertSame(-11, $time_period->getNumberOfDaysUntilEnd());
+        return [
+            'It lets the full duration at start' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 3, 2014),
+                10
+            ],
+            'It lets duration minus one the day after' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 4, 2014),
+                9
+            ],
+            'It lets five days during the weekend at the middle of the two sprints' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 8, 2014),
+                5
+            ],
+            'It lets five days at the beginning of second week' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 10, 2014),
+                5
+            ],
+            'It lets one day on the last day of sprint' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 14, 2014),
+                1
+            ],
+            'It is zero during the weekend just before the end date' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 15, 2014),
+                0
+            ],
+            'It zero when the time has come' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 17, 2014),
+                0
+            ],
+            'It is -4 the friday after the end of the sprint' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 21, 2014),
+                -4
+            ],
+            'It is -5 the weekend after the end of the sprint' => [
+                mktime(0, 0, 0, 2, 3, 2014),
+                10,
+                mktime(0, 0, 0, 2, 22, 2014),
+                -5
+            ],
+            'It adds the missing day when start date is in the future' => [
+                mktime(0, 0, 0, 2, 4, 2014),
+                10,
+                mktime(0, 0, 0, 2, 3, 2014),
+                11
+            ],
+            'It adds missing day without weekend when start date is in the future' => [
+                mktime(0, 0, 0, 2, 4, 2014),
+                10,
+                mktime(0, 0, 0, 1, 31, 2014),
+                12
+            ],
+            'It continues when the end date is over' => [
+                mktime(0, 0, 0, 1, 14, 2014),
+                14,
+                mktime(0, 0, 0, 2, 18, 2014),
+                -11
+            ]
+        ];
     }
 
     public function testItProcessesNegativeDuration()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, -2);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, -2);
 
         $this->assertSame($this->week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesNullDuration()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, 0);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 0);
 
         $this->assertSame($this->week_day_timestamp, $time_period->getEndDate());
     }
@@ -424,35 +333,35 @@ class TimePeriodWithoutWeekEndTest extends TestCase
     {
         $week_end_day  = new DateTime('2016-02-06');
         $next_week_day = new DateTime('2016-02-08');
-        $time_period   = new TimePeriodWithoutWeekEnd($week_end_day->getTimestamp(), 0);
+        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($week_end_day->getTimestamp(), 0);
 
         $this->assertSame($next_week_day->getTimestamp(), $time_period->getEndDate());
     }
 
     public function testItProcessesPositiveDuration()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, 1);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 1);
 
         $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesFloatDuration()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, 0.21);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, 0.21);
 
         $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesPositiveDurationAsStringValue()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, "1");
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "1");
 
         $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
 
     public function testItProcessesFloatDurationAsStringValue()
     {
-        $time_period = new TimePeriodWithoutWeekEnd($this->week_day_timestamp, "0.21");
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($this->week_day_timestamp, "0.21");
 
         $this->assertSame($this->following_week_day_timestamp, $time_period->getEndDate());
     }
@@ -491,7 +400,7 @@ class TimePeriodWithoutWeekEndTest extends TestCase
             "End date should be $expected_end_date"
         );
 
-        $time_period_from_time_period = new TimePeriodWithoutWeekEnd(
+        $time_period_from_time_period = TimePeriodWithoutWeekEnd::buildFromDuration(
             $time_period->getStartDate(),
             $time_period->getDuration()
         );

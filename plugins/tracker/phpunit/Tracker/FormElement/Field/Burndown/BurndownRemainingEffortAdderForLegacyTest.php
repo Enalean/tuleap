@@ -62,7 +62,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
         $capacity    = 10;
         $duration    = 4;
         $date        = new DateTime('2019-06-17');
-        $time_period = new \TimePeriodWithoutWeekEnd($date->getTimestamp(), $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($date->getTimestamp(), $duration);
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
@@ -131,7 +131,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
         $capacity    = 10;
         $duration    = 4;
         $now         = new DateTime();
-        $time_period = new \TimePeriodWithoutWeekEnd($now->getTimestamp() + 10000, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() + 10000, $duration);
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
@@ -162,7 +162,7 @@ class BurndownRemainingEffortAdderForLegacyTest extends TestCase
         $capacity    = 10;
         $duration    = 5;
         $now         = new DateTime();
-        $time_period = new \TimePeriodWithoutWeekEnd($now->getTimestamp() - 1000, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($now->getTimestamp() - 1000, $duration);
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 

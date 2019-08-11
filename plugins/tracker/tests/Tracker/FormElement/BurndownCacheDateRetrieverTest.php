@@ -43,7 +43,7 @@ class BurndownCacheDateRetrieverTest extends TuleapTestCase
     public function itAssertThatNumberOfDaysAreCorrectWhenBurndownIsComputedInPast()
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
-        $octobre_month_period = new TimePeriodWithoutWeekEnd($start_date, 20);
+        $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 20);
 
         $today      = mktime(0, 0, 0, 11, 8, 2016);
         $today_time = new DateTime();
@@ -82,7 +82,7 @@ class BurndownCacheDateRetrieverTest extends TuleapTestCase
     public function itAssertThatNumberOfDaysAreCorrectWhenBurndownIsCurrent()
     {
         $start_date           = mktime(23, 59, 59, 10, 1, 2016);
-        $octobre_month_period = new TimePeriodWithoutWeekEnd($start_date, 21);
+        $octobre_month_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, 21);
 
         $today      = mktime(0, 0, 0, 10, 15, 2016);
         $today_time = new DateTime();

@@ -254,7 +254,7 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
         $timestamp = mktime(0, 0, 0, 7, 3, 2011);
         $duration  = 5;
 
-        $time_period   = new TimePeriodWithoutWeekEnd($timestamp, $duration);
+        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($timestamp, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
 
         $burndown_view = \Mockery::spy(\Tracker_Chart_BurndownView::class);

@@ -101,7 +101,7 @@ class BurndownRemainingEffortAdderForLegacy
     private function getFirstDayDate(TimePeriodWithoutWeekEnd $time_period)
     {
         $date = new DateTime();
-        $date->setTimestamp($time_period->getStartDate());
+        $date->setTimestamp((int) $time_period->getStartDate());
         $date->setTime(23, 59, 59);
 
         return $date;

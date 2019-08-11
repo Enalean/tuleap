@@ -129,7 +129,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $start_date = strtotime('2018-11-01');
         $duration = 5;
 
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
 
@@ -146,7 +146,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $start_date = strtotime('2018-11-01');
         $duration = 5;
 
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
 
@@ -187,7 +187,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
             ]
         );
 
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
 
@@ -227,7 +227,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
 
         $duration = 2;
 
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
 
@@ -245,7 +245,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $duration = 2;
 
         $start_date  = new DateTime('+1d');
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), $duration);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), $duration);
 
         $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $time_period);
         $this->assertSame([0 => null], $user_burndown_data->getRemainingEffort());

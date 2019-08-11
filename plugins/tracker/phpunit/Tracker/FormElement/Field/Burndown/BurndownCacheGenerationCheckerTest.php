@@ -116,7 +116,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity   = 5;
         $this->assertFalse(
@@ -144,7 +144,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity   = 5;
         $this->assertFalse(
@@ -178,7 +178,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity   = 5;
         $this->assertTrue(
@@ -211,7 +211,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $start_date  = 1543404090;
         $duration    = 10;
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $capacity   = 5;
         $this->assertTrue(

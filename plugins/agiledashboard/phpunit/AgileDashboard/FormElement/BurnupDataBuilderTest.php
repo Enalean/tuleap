@@ -72,7 +72,7 @@ class BurnupDataBuilderTest extends TestCase
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
 
-        $time_period = new \TimePeriodWithoutWeekEnd(1560760543, 3);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)
@@ -126,7 +126,7 @@ class BurnupDataBuilderTest extends TestCase
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
 
-        $time_period = new \TimePeriodWithoutWeekEnd(1560760543, 3);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(1560760543, 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)
@@ -156,7 +156,7 @@ class BurnupDataBuilderTest extends TestCase
         $start_date = new \DateTime();
         $start_date->setTime(0, 0, 0);
 
-        $time_period = new \TimePeriodWithoutWeekEnd($start_date->getTimestamp(), 3);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration($start_date->getTimestamp(), 3);
 
         $this->chart_configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($artifact, $user)

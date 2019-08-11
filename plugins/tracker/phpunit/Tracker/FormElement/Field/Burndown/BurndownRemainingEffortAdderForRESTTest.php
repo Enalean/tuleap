@@ -100,7 +100,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $date_in_future = strtotime('+1 month');
         $capacity       = 5;
         $duration       = 20;
-        $time_period    = new TimePeriodWithoutWeekEnd($date_in_future, $duration);
+        $time_period    = TimePeriodWithoutWeekEnd::buildFromDuration($date_in_future, $duration);
 
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
@@ -123,7 +123,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $old_start_date         = strtotime('-3 month');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = new TimePeriodWithoutWeekEnd($old_start_date, 5);
+        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
 
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
@@ -147,7 +147,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $old_start_date         = strtotime('-3 month');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = new TimePeriodWithoutWeekEnd($old_start_date, 5);
+        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
 
         $remaining_effort_field->shouldReceive('getId')->andReturn($field_id);
@@ -214,7 +214,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $recent_start_date      = strtotime('-3 days');
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
 
-        $time_period   = new TimePeriodWithoutWeekEnd($recent_start_date, 5);
+        $time_period   = TimePeriodWithoutWeekEnd::buildFromDuration($recent_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $duration);
 
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
