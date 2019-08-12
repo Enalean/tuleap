@@ -352,13 +352,8 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
         $permissions_for_groups_representation = $empty_doc_representation_response->json()['permissions_for_groups'];
-        /*
-         * REST endpoint GET /docman_items/:id returns incorrect information when a type of permissions is missing
-         * The following two tests can not pass right now because of this issue:
-         *
-         * $this->assertEmpty($permissions_for_groups_representation['can_read']);
-         * $this->assertEmpty($permissions_for_groups_representation['can_write']);
-         */
+        $this->assertEmpty($permissions_for_groups_representation['can_read']);
+        $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
 

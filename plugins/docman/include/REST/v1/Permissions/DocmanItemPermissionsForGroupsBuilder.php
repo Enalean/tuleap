@@ -85,7 +85,7 @@ class DocmanItemPermissionsForGroupsBuilder
     {
         $user_group_representations = [];
 
-        $ugroup_ids = $this->permissions_manager->getAuthorizedUGroupIdsForProject(
+        $ugroup_ids = $this->permissions_manager->getAuthorizedUGroupIdsForProjectWithoutDefaultValues(
             $project,
             $item->getId(),
             $permission_type

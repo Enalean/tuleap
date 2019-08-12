@@ -111,13 +111,13 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
             'group_id'  => $project_id,
         ]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
             ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ)
             ->andReturn([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
             ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE)
             ->andReturn([ProjectUGroup::PROJECT_MEMBERS, $ugroup_static_id]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
             ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE)
             ->andReturn([]);
 

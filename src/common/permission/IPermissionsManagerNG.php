@@ -27,5 +27,9 @@ interface IPermissionsManagerNG {
      * @return int[]
      */
     public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type);
+    /**
+     * @return int[]
+     */
+    public function getAuthorizedUGroupIdsForProjectWithoutDefaultValues(Project $project, $object_id, $permission_type);
     public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids);
 }
