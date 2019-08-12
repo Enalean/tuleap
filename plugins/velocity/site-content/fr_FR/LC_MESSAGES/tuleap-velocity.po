@@ -128,7 +128,7 @@ msgid "This tracker does not have a <i>velocity</i> field yet."
 msgstr "Cet outil de suivi n'a pas encore de champ <i>vélocité</i>."
 
 msgid "Tracker %s does not have a configured Timeframe semantic"
-msgstr "Le tracker %s n'a pas de sémantique Timeframe configurée"
+msgstr "L'outil de suivi %s n'a pas de sémantique plage de temps configurée"
 
 msgid "Tracker semantic velocity"
 msgstr "Sémantique vélocité de l'outil de suivi"
