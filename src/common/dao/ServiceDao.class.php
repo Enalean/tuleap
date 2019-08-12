@@ -148,10 +148,11 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
         return $this->update($sql) && $this->da->affectedRows() > 0;
     }
 
-    public function saveBasicInformation($service_id, $label, $description, $link, $rank, $is_in_iframe)
+    public function saveBasicInformation($service_id, $label, $icon_name, $description, $link, $rank, $is_in_iframe)
     {
         $service_id   = $this->da->escapeInt($service_id);
         $label        = $this->da->quoteSmart($label);
+        $icon_name    = $this->da->quoteSmart($icon_name);
         $description  = $this->da->quoteSmart($description);
         $link         = $this->da->quoteSmart($link);
         $rank         = $this->da->escapeInt($rank);
@@ -159,6 +160,7 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
 
         $sql = "UPDATE service
                 SET label = $label,
+                    icon = $icon_name,
                     description = $description,
                     link = $link,
                     rank = $rank,

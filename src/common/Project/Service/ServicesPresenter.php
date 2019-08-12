@@ -25,15 +25,22 @@ use Project;
 
 class ServicesPresenter
 {
+    /** @var array|ServicePresenter[] */
     public $services;
+    /** @var CSRFSynchronizerToken */
     public $csrf;
+    /** @var int */
     public $project_id;
+    /** @var bool */
     public $is_default_template;
+    /** @var int */
     public $minimal_rank;
     /** @var string */
     public $csrf_token_name;
     /** @var string */
     public $csrf_token;
+    /** @var string */
+    public $allowed_icons;
 
     /**
      * @param Project               $project
@@ -49,5 +56,6 @@ class ServicesPresenter
         $this->project_id          = $project->getID();
         $this->is_default_template = (int)$project->getID() === Project::ADMIN_PROJECT_ID;
         $this->minimal_rank        = $project->getMinimalRank() + 1;
+        $this->allowed_icons       = ServiceIconValidator::getAllowedIconsJSON();
     }
 }

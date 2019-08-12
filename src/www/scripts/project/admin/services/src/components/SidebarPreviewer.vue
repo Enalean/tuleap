@@ -21,7 +21,10 @@
     <div class="tlp-modal-body project-admin-services-modal-preview">
         <div class="project-admin-services-modal-preview-sidebar">
             <div class="project-sidebar-nav-item active">
-                <span class="project-sidebar-nav-item-label">{{ props.label }}</span>
+                <i class="fa fa-fw project-sidebar-nav-item-icon" v-bind:class="[props.icon_name]"></i>
+                <span class="project-sidebar-nav-item-label project-admin-services-modal-preview-label">
+                    {{ props.label }}
+                </span>
             </div>
         </div>
     </div>

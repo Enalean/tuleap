@@ -1366,7 +1366,9 @@ msgstr "Le nom du groupe utilisateur est requis"
 msgid ""
 "The key will expire at the end of the selected date. Keep it empty if you "
 "don't want that this key will expire."
-msgstr "La clé expirera à la fin de la date selectionnée. Laissez le champ vide si vous ne souhaitez pas que la clé expire."
+msgstr ""
+"La clé expirera à la fin de la date selectionnée. Laissez le champ vide si "
+"vous ne souhaitez pas que la clé expire."
 
 msgid "The last project administrator cannot be removed."
 msgstr ""
@@ -1536,6 +1538,9 @@ msgstr ""
 
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
+
+msgid "This service icon name is not allowed."
+msgstr "Cette icône de service n'est pas autorisée."
 
 msgid ""
 "This users group is bound to a group you are not allowed to administrate."

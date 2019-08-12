@@ -37,5 +37,18 @@
 
     > .project-sidebar-nav-item {
         flex: 1 1 auto;
+
+        > .project-sidebar-nav-item-icon {
+            margin: 0 7px 0 0;
+        }
+
+        > .project-admin-services-modal-preview-label {
+            display: initial;
+        }
     }
+}
+
+.project-admin-services-modal-icon-item {
+    margin: 0 5px 0 0;
+    font-size: 18px;
 }

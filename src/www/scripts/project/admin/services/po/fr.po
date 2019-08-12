@@ -21,6 +21,9 @@ msgstr "Le service qui gère des trucs"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Choose an icon"
+msgstr "Choisissez une icône"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -35,6 +38,9 @@ msgstr "Éditer le service"
 
 msgid "Enabled"
 msgstr "Activé"
+
+msgid "Icon"
+msgstr "Icône"
 
 msgid "Label"
 msgstr "Label"

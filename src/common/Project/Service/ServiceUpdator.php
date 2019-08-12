@@ -53,11 +53,12 @@ class ServiceUpdator
      * @param ServicePOSTData $service_data
      * @param PFUser $user
      */
-    public function updateService(Project $project, ServicePOSTData $service_data, PFUser $user)
+    public function updateService(Project $project, ServicePOSTData $service_data, PFUser $user): void
     {
         $this->dao->saveBasicInformation(
             $service_data->getId(),
             $service_data->getLabel(),
+            $service_data->getIconName(),
             $service_data->getDescription(),
             $service_data->getLink(),
             $service_data->getRank(),
