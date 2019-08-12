@@ -76,7 +76,7 @@ class BurningParrotTheme extends BaseLayout
             ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
             '/themes/common/tlp/dist'
         );
-        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp-' . $user->getLocale() . '.js'));
+        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
     }
 
