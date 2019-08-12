@@ -22,7 +22,7 @@
  */
 
 const path = require("path");
-const webpack = require("webpack");
+const webpack = require("webpack"); // eslint-disable-line import/no-extraneous-dependencies
 const [webpack_config_for_angular] = require("./webpack.config.js");
 const karma_configurator = require("../../../tools/utils/scripts/karma-configurator.js");
 
