@@ -19,9 +19,25 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label tlp-checkbox">
-            <input type="checkbox" name="is_active" value="1" v-bind:checked="props.value">
-            <translate>Available (also available for new projects)</translate>
-        </label>
+        <label
+            class="tlp-label"
+            for="project-admin-services-custom-edit-modal-active"
+            v-translate
+        >Available (also available for new projects)</label>
+        <div class="tlp-switch">
+            <input
+                class="tlp-switch-checkbox"
+                id="project-admin-services-custom-edit-modal-active"
+                type="checkbox"
+                name="is_active"
+                value="1"
+                v-bind:checked="props.value"
+            >
+            <label
+                class="tlp-switch-button"
+                for="project-admin-services-custom-edit-modal-active"
+                aria-hidden
+            ></label>
+        </div>
     </div>
 </template>

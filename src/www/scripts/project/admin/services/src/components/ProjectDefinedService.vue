@@ -21,25 +21,74 @@
     <div class="tlp-modal-body">
         <input type="hidden" name="service_id" v-bind:value="service.id">
 
+        <div class="project-admin-services-custom-edit-modal-top-fields">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="project-admin-services-custom-edit-modal-label">
+                    <translate>Label</translate>
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="project-admin-services-custom-edit-modal-label"
+                    name="label"
+                    v-bind:placeholder="label_placeholder"
+                    maxlength="40"
+                    required
+                    v-model="service.label"
+                >
+            </div>
+            <div class="tlp-form-element">
+                <label
+                    class="tlp-label"
+                    for="project-admin-services-custom-edit-modal-enabled"
+                    v-translate
+                >Enabled</label>
+                <div class="tlp-switch">
+                    <input
+                        class="tlp-switch-checkbox"
+                        id="project-admin-services-custom-edit-modal-enabled"
+                        type="checkbox"
+                        name="is_used"
+                        value="1"
+                        v-bind:checked="service.is_used"
+                        data-test="service-is-used"
+                    >
+                    <label
+                        class="tlp-switch-button"
+                        for="project-admin-services-custom-edit-modal-enabled"
+                        aria-hidden
+                    ></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-admin-services-custom-edit-modal-top-fields">
+            <icon-selector v-model="service.icon_name" v-bind:allowed_icons="allowed_icons"/>
+
+            <slot name="is_active">
+                <input type="hidden" name="is_active" v-bind:value="is_active_string">
+            </slot>
+        </div>
+
         <div class="tlp-form-element">
-            <label class="tlp-label" for="project-admin-services-custom-edit-modal-label">
-                <translate>Label</translate>
+            <label class="tlp-label" for="project-admin-services-custom-edit-modal-rank">
+                <translate>Rank</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
             <input
-                type="text"
+                type="number"
                 class="tlp-input"
-                id="project-admin-services-custom-edit-modal-label"
-                name="label"
-                v-bind:placeholder="label_placeholder"
-                size="30"
-                maxlength="40"
+                id="project-admin-services-custom-edit-modal-rank"
+                name="rank"
+                placeholder="150"
+                size="5"
+                maxlength="5"
+                v-bind:min="minimal_rank"
                 required
-                v-model="service.label"
+                v-model="service.rank"
             >
         </div>
-
-        <icon-selector v-model="service.icon_name" v-bind:allowed_icons="allowed_icons"/>
 
         <div class="tlp-form-element">
             <label class="tlp-label" for="project-admin-services-custom-edit-modal-link">
@@ -58,6 +107,16 @@
                 required
                 v-model="service.link"
             >
+            <p class="tlp-text-info">
+                <i class="fa fa-info-circle"></i>
+                <translate>A few keywords can be inserted into the link, they will be automatically replaced by their value:</translate>
+            </p>
+            <ul class="tlp-text-info">
+                <li v-translate>$projectname: short name of the project</li>
+                <li v-translate>$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)</li>
+                <li v-translate>$group_id: project number</li>
+                <li v-translate>$sys_default_protocol: ‘https’ if your server is configured in secure mode, ‘http’ otherwise</li>
+            </ul>
         </div>
 
         <div class="tlp-form-element">
@@ -80,59 +139,33 @@
             >
         </div>
 
-        <hr class="tlp-modal-separator">
-
-        <slot name="is_active">
-            <input type="hidden" name="is_active" v-bind:value="is_active_string">
-        </slot>
-
         <div class="tlp-form-element">
-            <label class="tlp-label tlp-checkbox">
+            <label
+                class="tlp-label"
+                for="project-admin-services-custom-edit-modal-iframe"
+                v-translate
+            >Display in iframe</label>
+            <div class="tlp-switch">
                 <input
-                    type="checkbox"
-                    name="is_used"
-                    value="1"
-                    v-bind:checked="service.is_used"
-                    data-test="service-is-used"
-                >
-                <translate>Enabled</translate>
-            </label>
-        </div>
-
-        <div class="tlp-form-element">
-            <label class="tlp-label tlp-checkbox">
-                <input
+                    class="tlp-switch-checkbox"
+                    id="project-admin-services-custom-edit-modal-iframe"
                     type="checkbox"
                     name="is_in_iframe"
                     value="1"
                     v-bind:checked="service.is_in_iframe"
                 >
-                <translate>Display in iframe</translate>
-            </label>
-        </div>
-
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="project-admin-services-custom-edit-modal-rank">
-                <translate>Rank</translate>
-                <i class="fa fa-asterisk"></i>
-            </label>
-            <input
-                type="number"
-                class="tlp-input"
-                id="project-admin-services-custom-edit-modal-rank"
-                name="rank"
-                placeholder="150"
-                size="5"
-                maxlength="5"
-                v-bind:min="minimal_rank"
-                required
-                v-model="service.rank"
-            >
+                <label
+                    class="tlp-switch-button"
+                    for="project-admin-services-custom-edit-modal-iframe"
+                    aria-hidden
+                ></label>
+            </div>
         </div>
     </div>
 </template>
 <script>
 import IconSelector from "./IconSelector.vue";
+
 export default {
     name: "ProjectDefinedService",
     components: { IconSelector },

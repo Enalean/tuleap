@@ -12,6 +12,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.3\n"
 
+msgid "$group_id: project number"
+msgstr "$group_id : numéro du projet"
+
+msgid "$projectname: short name of the project"
+msgstr "$projectname : nom court du projet"
+
+msgid "$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)"
+msgstr "$sys_default_domain : domaine du serveur Tuleap (par ex. “tuleap.example.com”)"
+
+msgid "$sys_default_protocol: ‘https’ if your server is configured in secure mode, ‘http’ otherwise"
+msgstr "$sys_default_protocol : ‘https’ si votre serveur est configuré en mode sécurisé, ‘http’ sinon"
+
+msgid "A few keywords can be inserted into the link, they will be automatically replaced by their value:"
+msgstr "Quelques mots-clés peuvent être insérés dans le lien, ils seront automatiquement remplacés par leur valeur :"
+
 msgid "Available (also available for new projects)"
 msgstr "Disponible (également disponible dans les nouveaux projets)"
 
@@ -61,8 +76,5 @@ msgid "Save modifications"
 msgstr "Enregistrer les modifications"
 
 #. javascript-format
-msgid ""
-"You are about to delete the <b>%s</b> service. Please, confirm your action"
-msgstr ""
-"Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
-"votre action"
+msgid "You are about to delete the <b>%s</b> service. Please, confirm your action"
+msgstr "Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer votre action"
