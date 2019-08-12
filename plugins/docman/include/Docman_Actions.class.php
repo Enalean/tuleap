@@ -35,26 +35,6 @@ require_once __DIR__ . '/../../../src/www/news/news_utils.php';
  */
 class Docman_Actions extends Actions
 {
-    private const PERMISSIONS_DEFINITIONS = [
-        1 => [
-            'order'    => 1,
-            'type'     => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,
-        ],
-        2 => [
-            'order'    => 2,
-            'type'     => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE,
-        ],
-        3 => [
-            'order'    => 3,
-            'type'     => Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE,
-        ],
-        100 => [
-            'order'    => 0,
-            'type'     => null,
-            //'previous' => null
-        ],
-    ];
-
     var $event_manager;
 
     public function __construct($controler)

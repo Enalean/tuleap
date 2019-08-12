@@ -318,4 +318,53 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testUpdatePermissionsEmptyDocument(int $root_id) : void
+    {
+        $response_empty_creation = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/empties',
+                null,
+                json_encode(['title' => 'Empty document for updating permissions'])
+            )
+        );
+        $this->assertEquals(201, $response_empty_creation->getStatusCode());
+        $empty_doc_id = $response_empty_creation->json()['id'];
+
+        $project_members_identifier = $this->project_id . '_3';
+        $permission_update_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'docman_empty_documents/' . urlencode((string) $empty_doc_id) . '/permissions',
+                null,
+                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+            )
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+
+        $empty_doc_representation_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . urlencode((string) $empty_doc_id))
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+        $permissions_for_groups_representation = $empty_doc_representation_response->json()['permissions_for_groups'];
+        /*
+         * REST endpoint GET /docman_items/:id returns incorrect information when a type of permissions is missing
+         * The following two tests can not pass right now because of this issue:
+         *
+         * $this->assertEmpty($permissions_for_groups_representation['can_read']);
+         * $this->assertEmpty($permissions_for_groups_representation['can_write']);
+         */
+        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_empty_document/' . urlencode((string) $empty_doc_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+    }
 }
