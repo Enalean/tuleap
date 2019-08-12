@@ -213,4 +213,82 @@ describe("transformCustomMetadataForItemCreation", () => {
 
         expect(expected_list).toEqual(formatted_list);
     });
+
+    it(`Given parent has a single list value,
+        then the formatted metadata is bound to value`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                list_value: [
+                    {
+                        id: 110,
+                        value: "My value to display"
+                    }
+                ],
+                is_multiple_value_allowed: false,
+                type: "list"
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: 110
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
+
+    it(`Given parent has a list with single value, and given list value is null,
+        then the formatted metadata is bound to none`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [],
+                is_multiple_value_allowed: false,
+                type: "list"
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: 100
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
+
+    it(`Given parent has a list with multiples values
+        then the no formatted data is null`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [101, 102],
+                is_multiple_value_allowed: true,
+                type: "list"
+            }
+        ];
+
+        const expected_list = [];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
 });

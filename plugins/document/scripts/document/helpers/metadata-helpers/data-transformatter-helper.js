@@ -85,6 +85,16 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
                 formatted_metadata.value = parent_metadata.value;
                 formatted_metadata_list.push(formatted_metadata);
                 break;
+            case "list":
+                if (parent_metadata.is_multiple_value_allowed) {
+                    return [];
+                }
+
+                formatted_metadata.value = parent_metadata.list_value[0]
+                    ? parent_metadata.list_value[0].id
+                    : 100;
+                formatted_metadata_list.push(formatted_metadata);
+                break;
             default:
                 break;
         }
