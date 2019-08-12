@@ -90,13 +90,15 @@ class SemanticTimeframe extends Tracker_Semantic
         if (! $this->isDefined()) {
             echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
         } else {
-            if ($this->duration_field !== null && $this->start_date_field !== null) {
+            if ($this->duration_field !== null) {
+                /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
                 echo sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
                     $this->start_date_field->getLabel(),
                     $this->duration_field->getLabel()
                 );
-            } elseif ($this->end_date_field !== null && $this->start_date_field !== null) {
+            } elseif ($this->end_date_field !== null) {
+                /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
                 echo sprintf(
                     dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and end date field "%s".'),
                     $this->start_date_field->getLabel(),
