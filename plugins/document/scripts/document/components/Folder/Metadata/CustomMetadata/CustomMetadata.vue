@@ -24,8 +24,14 @@
              class="document-metadata-properties-margin"
         >
             <custom-metadata-text
+                v-if="item_metadata.type === 'text'"
                 v-bind:currently-updated-item-metadata="item_metadata"
                 data-test="document-custom-metadata-text"
+            />
+            <custom-metadata-string
+                v-if="item_metadata.type === 'string'"
+                v-bind:currently-updated-item-metadata="item_metadata"
+                data-test="document-custom-metadata-string"
             />
         </div>
     </div>
@@ -33,9 +39,12 @@
 
 <script>
 import CustomMetadataText from "./CustomMetadataText.vue";
+import CustomMetadataString from "./CustomMetadataString.vue";
+
 export default {
     name: "CustomMetadata",
     components: {
+        CustomMetadataString,
         CustomMetadataText
     },
     props: {

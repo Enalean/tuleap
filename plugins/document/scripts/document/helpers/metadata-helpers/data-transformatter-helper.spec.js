@@ -186,4 +186,31 @@ describe("transformCustomMetadataForItemCreation", () => {
 
         expect(expected_list).toEqual(formatted_list);
     });
+
+    it(`Given parent has a string value,
+        then the formatted metadata is bound to value`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "value",
+                type: "string",
+                is_multiple_value_allowed: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "string",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "value"
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
 });

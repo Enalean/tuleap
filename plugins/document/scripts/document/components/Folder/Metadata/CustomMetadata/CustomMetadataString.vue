@@ -18,28 +18,28 @@
   -->
 
 <template>
-    <div class="tlp-form-element tlp-form-element-disabled" v-if="currentlyUpdatedItemMetadata.type === 'text'" data-test="document-custom-metadata-text">
+    <div class="tlp-form-element tlp-form-element-disabled" v-if="currentlyUpdatedItemMetadata.type === 'string'" data-test="document-custom-metadata-string">
         <label class="tlp-label"
-               v-bind:for="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
+               v-bind:for="`document-${currentlyUpdatedItemMetadata.short_name}`"
         >
             {{ currentlyUpdatedItemMetadata.name }}
             <i class="fa fa-asterisk" v-if="currentlyUpdatedItemMetadata.is_required"></i>
         </label>
-        <textarea
+        <input
             type="text"
-            class="tlp-textarea tlp-form-element"
-            data-test="document-text-input"
+            class="tlp-input tlp-form-element"
+            data-test="document-string-input"
             v-bind:id="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
             v-bind:required="currentlyUpdatedItemMetadata.is_required"
             v-model="currentlyUpdatedItemMetadata.value"
             disabled
-        ></textarea>
+        >
     </div>
 </template>
 
 <script>
 export default {
-    name: "CustomMetadataText",
+    name: "CustomMetadataString",
     props: {
         currentlyUpdatedItemMetadata: Object
     }
