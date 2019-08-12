@@ -33,7 +33,8 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\REST\SemanticTimeframeRepresentation;
+use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
+use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
 class SemanticTimeframe extends Tracker_Semantic
@@ -243,6 +244,9 @@ class SemanticTimeframe extends Tracker_Semantic
         return $this->end_date_field;
     }
 
+    /**
+     * @psalm-assert-if-true !null $this->start_date_field
+     */
     public function isDefined(): bool
     {
         return $this->start_date_field !== null &&
@@ -251,16 +255,26 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToREST(PFUser $user)
     {
-        if ($this->start_date_field === null || $this->duration_field === null) {
+        if (! $this->isDefined()) {
             return null;
         }
+
+        /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
         $start_date_field_id = (int) $this->start_date_field->getId();
-        $duration_field_id   = (int) $this->duration_field->getId();
 
-        $representation = new SemanticTimeframeRepresentation();
-        $representation->build($start_date_field_id, $duration_field_id);
+        if ($this->duration_field !== null) {
+            $representation = new SemanticTimeframeWithDurationRepresentation();
+            $representation->build($start_date_field_id, (int) $this->duration_field->getId());
+            return $representation;
+        }
 
-        return $representation;
+        if ($this->end_date_field !== null) {
+            $representation = new SemanticTimeframeWithEndDateRepresentation();
+            $representation->build($start_date_field_id, (int) $this->end_date_field->getId());
+            return $representation;
+        }
+
+        return null;
     }
 
     private function getCSRFSynchronizerToken(): \CSRFSynchronizerToken

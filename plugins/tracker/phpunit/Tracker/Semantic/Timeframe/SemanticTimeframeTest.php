@@ -27,6 +27,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker;
+use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
+use Tuleap\Tracker\REST\SemanticTimeframeWithEndDateRepresentation;
 
 class SemanticTimeframeTest extends TestCase
 {
@@ -289,5 +291,37 @@ class SemanticTimeframeTest extends TestCase
         $this->assertEquals('timeframe', (string) $root->semantic['type']);
         $this->assertEquals('F101', (string) $root->semantic->start_date_field['REF']);
         $this->assertEquals('F102', (string) $root->semantic->duration_field['REF']);
+    }
+
+    public function testItBuildsARESTRepresentationWithDurationIfDurationIsSet() : void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $duration   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $user       = Mockery::mock(\PFUser::class);
+
+        $start_date->shouldReceive('getId')->andReturn('23');
+        $duration->shouldReceive('getId')->andReturn('24');
+
+        $representation = (new SemanticTimeframe($this->tracker, $start_date, $duration, null))->exportToREST($user);
+
+        $this->assertInstanceOf(SemanticTimeframeWithDurationRepresentation::class, $representation);
+        $this->assertEquals(23, $representation->start_date_field_id);
+        $this->assertEquals(24, $representation->duration_field_id);
+    }
+
+    public function testItBuildsARESTRepresentationWithEndDateIfEndDateIsSet() : void
+    {
+        $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $user       = Mockery::mock(\PFUser::class);
+
+        $start_date->shouldReceive('getId')->andReturn('23');
+        $end_date->shouldReceive('getId')->andReturn('24');
+
+        $representation = (new SemanticTimeframe($this->tracker, $start_date, null, $end_date))->exportToREST($user);
+
+        $this->assertInstanceOf(SemanticTimeframeWithEndDateRepresentation::class, $representation);
+        $this->assertEquals(23, $representation->start_date_field_id);
+        $this->assertEquals(24, $representation->end_date_field_id);
     }
 }
