@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -1463,7 +1465,9 @@ class AgileDashboardPlugin extends Plugin
                 $params['dependencies'] = array(
                     $this->getBurnupDao(),
                     $this->getBurnupCalculator(),
+                    $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
+                    new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever()
                 );
@@ -1475,7 +1479,9 @@ class AgileDashboardPlugin extends Plugin
                     new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
                     new BurnupDao(),
                     $this->getBurnupCalculator(),
+                    $this->getBurnupCountElementsCalculator(),
                     new BurnupCacheDao(),
+                    new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever()
                 );
@@ -1520,6 +1526,21 @@ class AgileDashboardPlugin extends Plugin
             $this->getBurnupDao(),
             $this->getSemanticInitialEffortFactory(),
             $this->getSemanticDoneFactory()
+        );
+    }
+
+    /**
+     * @return CountElementsCalculator
+     */
+    private function getBurnupCountElementsCalculator()
+    {
+        $changeset_factory = Tracker_Artifact_ChangesetFactoryBuilder::build();
+
+        return new CountElementsCalculator(
+            $changeset_factory,
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance(),
+            $this->getBurnupDao()
         );
     }
 
