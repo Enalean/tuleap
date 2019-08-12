@@ -18,13 +18,17 @@
   -
   -->
 <template>
-    <div class="tlp-form-element tlp-form-element-disabled">
+    <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="selector_id">{{ label }}</label>
-        <select v-bind:id="selector_id" class="tlp-select" multiple disabled>
+        <select v-bind:id="selector_id"
+                class="tlp-select"
+                multiple
+                v-model="selected_ugroup_ids"
+                v-on:change="updateSelectedUGroups"
+        >
             <option
                 v-for="ugroup in project_ugroups"
                 v-bind:value="ugroup.id"
-                v-bind:selected="selected_ugroups.some(u => u.id === ugroup.id)"
                 v-bind:key="`permissions-${label}-${ugroup.id}`"
             >
                 {{ ugroup.label }}
@@ -35,14 +39,27 @@
 <script>
 export default {
     name: "PermissionsSelector",
+    model: {
+        prop: "selected_ugroups"
+    },
     props: {
         label: String,
         project_ugroups: Array,
         selected_ugroups: Array
     },
+    data() {
+        return {
+            selected_ugroup_ids: this.selected_ugroups.map(ugroup => ugroup.id)
+        };
+    },
     computed: {
         selector_id() {
             return "document-permission-" + this.label;
+        }
+    },
+    methods: {
+        updateSelectedUGroups() {
+            this.$emit("input", this.selected_ugroup_ids.map(ugroup_id => ({ id: ugroup_id })));
         }
     }
 };

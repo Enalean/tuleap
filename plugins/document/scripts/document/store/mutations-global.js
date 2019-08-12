@@ -126,7 +126,9 @@ function replaceCurrentFolder(state, folder) {
     let folder_in_hierarchy = state.current_folder_ascendant_hierarchy.find(
         item => item.id === folder.id
     );
-    folder_in_hierarchy.title = folder.title;
+    if (folder_in_hierarchy) {
+        folder_in_hierarchy.title = folder.title;
+    }
 }
 
 function removeIsUnderConstruction(state) {

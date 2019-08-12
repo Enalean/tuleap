@@ -45,7 +45,13 @@ import {
     copyWiki,
     copyEmbedded,
     copyLink,
-    getProjectUserGroups
+    getProjectUserGroups,
+    putEmbeddedFilePermissions,
+    putFilePermissions,
+    putLinkPermissions,
+    putWikiPermissions,
+    putEmptyDocumentPermissions,
+    putFolderPermissions
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -559,6 +565,79 @@ describe("rest-querier", () => {
                     body: JSON.stringify({ copy: { item_id: copied_item_id } })
                 }
             );
+        });
+    });
+
+    describe("Update item permissions", () => {
+        const item_id = 123;
+        const permissions = {
+            can_read: [],
+            can_write: [],
+            can_manage: []
+        };
+
+        beforeEach(() => {
+            mockFetchSuccess(tlp.put);
+        });
+
+        it("Update permissions of a file", async () => {
+            await putFilePermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(`/api/docman_files/${item_id}/permissions`, {
+                headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                body: JSON.stringify(permissions)
+            });
+        });
+
+        it("Update permissions of an embedded file", async () => {
+            await putEmbeddedFilePermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(
+                `/api/docman_embedded_files/${item_id}/permissions`,
+                {
+                    headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                    body: JSON.stringify(permissions)
+                }
+            );
+        });
+
+        it("Update permissions of a link", async () => {
+            await putLinkPermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(`/api/docman_links/${item_id}/permissions`, {
+                headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                body: JSON.stringify(permissions)
+            });
+        });
+
+        it("Update permissions of a wiki document", async () => {
+            await putWikiPermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(`/api/docman_wikis/${item_id}/permissions`, {
+                headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                body: JSON.stringify(permissions)
+            });
+        });
+
+        it("Update permissions of an empty document", async () => {
+            await putEmptyDocumentPermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(
+                `/api/docman_empty_documents/${item_id}/permissions`,
+                {
+                    headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                    body: JSON.stringify(permissions)
+                }
+            );
+        });
+
+        it("Update permissions of folder", async () => {
+            await putFolderPermissions(item_id, permissions);
+
+            expect(tlp.put).toHaveBeenCalledWith(`/api/docman_folders/${item_id}/permissions`, {
+                headers: jasmine.objectContaining({ "Content-Type": "application/json" }),
+                body: JSON.stringify(permissions)
+            });
         });
     });
 
