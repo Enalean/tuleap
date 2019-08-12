@@ -171,14 +171,17 @@ class ProjectMilestonesResource {
         {
             throw new RestException(400, $exception->getMessage());
         }
-
-        $paginated_top_milestones_representations = $builder
-            ->getPaginatedTopMilestonesRepresentations($project, $user, $representation_type, $limit, $offset, $order);
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());
 
-        return $paginated_top_milestones_representations->getMilestonesRepresentations();
+        try {
+            $paginated_top_milestones_representations = $builder
+                ->getPaginatedTopMilestonesRepresentations($project, $user, $representation_type, $limit, $offset, $order);
+            $this->sendPaginationHeaders($limit, $offset, $paginated_top_milestones_representations->getTotalSize());
+            return $paginated_top_milestones_representations->getMilestonesRepresentations();
+        } catch (\Planning_NoPlanningsException $e) {
+            $this->sendPaginationHeaders($limit, $offset, 0);
+            return [];
+        }
     }
 
     private function limitValueIsAcceptable($limit) {
