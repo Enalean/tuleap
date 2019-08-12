@@ -73,7 +73,7 @@ class ArtifactTimeframeHelper
         $time_period = $this->time_frame_builder->buildTimePeriodWithoutWeekendForArtifact($artifact, $user);
 
         $end_date = new DateTime();
-        $end_date->setTimestamp($time_period->getEndDate());
+        $end_date->setTimestamp((int) $time_period->getEndDate());
 
         return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
     }

@@ -265,7 +265,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         }
 
         if ($this->time_period !== null) {
-            return $this->time_period->getEndDate();
+            return (int) $this->time_period->getEndDate();
         }
 
         return null;

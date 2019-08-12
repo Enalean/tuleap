@@ -145,7 +145,7 @@ class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsIgnoreL
             return false;
         }
 
-        $burnup_period = new TimePeriodWithoutWeekEnd(
+        $burnup_period = TimePeriodWithoutWeekEnd::buildFromDuration(
             $burnup_information['start_date'],
             $burnup_information['duration']
         );

@@ -136,17 +136,17 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($sprint_1, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($sprint_2, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($hackfest_2012, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestone      = aMilestone()->withArtifact($release_1_0)->build();
         $sub_milestones = $this->milestone_factory->getSubMilestones($this->user, $milestone);
@@ -167,7 +167,7 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($this->artifact, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestone = $this->milestone_factory->getBareMilestone(
             $this->user,
@@ -680,12 +680,12 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($artifact_1, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($artifact_2, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
@@ -722,7 +722,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($artifact_2, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
         stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
@@ -790,7 +790,7 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase
         $this->timeframe_builder->shouldReceive('buildTimePeriodWithoutWeekendForArtifact')
             ->with($artifact, $this->user)
             ->once()
-            ->andReturn(new TimePeriodWithoutWeekEnd(1, 1));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(1, 1));
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
         $this->assertEqual($milestone->getArtifact(), $artifact);

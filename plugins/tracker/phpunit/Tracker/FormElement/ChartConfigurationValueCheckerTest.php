@@ -184,7 +184,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(new TimePeriodWithoutWeekEnd(null, $this->duration_value));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration(null, $this->duration_value));
 
         $this->assertFalse(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
@@ -195,7 +195,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(new TimePeriodWithoutWeekEnd($this->start_date_timestamp, null));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, null));
 
         $this->assertFalse(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)
@@ -217,7 +217,7 @@ class ChartConfigurationValueCheckerTest extends TestCase
     {
         $this->configuration_value_retriever->shouldReceive('getTimePeriod')
             ->with($this->artifact, $this->user)
-            ->andReturn(new TimePeriodWithoutWeekEnd($this->start_date_timestamp, $this->duration_value));
+            ->andReturn(TimePeriodWithoutWeekEnd::buildFromDuration($this->start_date_timestamp, $this->duration_value));
 
         $this->assertTrue(
             $this->chart_configuration_value_checker->areBurndownFieldsCorrectlySet($this->artifact, $this->user)

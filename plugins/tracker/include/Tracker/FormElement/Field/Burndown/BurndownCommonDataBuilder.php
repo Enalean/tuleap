@@ -79,8 +79,8 @@ class BurndownCommonDataBuilder
         date_default_timezone_set($server_timezone);
 
         $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . $time_period->getStartDate());
-        $this->logger->debug("Duration: " . $time_period->getDuration());
+        $this->logger->debug("Original start date: " . (string) $time_period->getStartDate());
+        $this->logger->debug("Duration: " . (string) $time_period->getDuration());
         $this->logger->debug("User Timezone: " . $user_timezone);
         $this->logger->debug("Server timezone: " . $server_timezone);
 
@@ -109,7 +109,7 @@ class BurndownCommonDataBuilder
     public function getTimePeriod(TimePeriodWithoutWeekEnd $time_period) : TimePeriodWithoutWeekEnd
     {
         if ($time_period->getStartDate() === null) {
-            return new TimePeriodWithoutWeekEnd($_SERVER['REQUEST_TIME'], $time_period->getDuration());
+            return TimePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $time_period->getDuration());
         }
 
         return $time_period;

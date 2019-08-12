@@ -70,7 +70,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         );
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -95,7 +95,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         $remaining_efforts = array();
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -120,7 +120,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         $remaining_efforts = array();
         $start_date        = time();
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -162,7 +162,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         );
         $start_date        = mktime(8, 0, 0, 9, 1, 2016);
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -204,7 +204,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         );
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -244,7 +244,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
         );
         $start_date        = mktime(8, 0, 0, 9, 1, 2017);
         $duration          = 20;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);
@@ -271,7 +271,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
             )
         );
         $duration          = 5;
-        $time_period       = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period       = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $this->burndown_data->shouldReceive('getTimePeriod')->andReturn($time_period);
         $this->burndown_data->shouldReceive('getRemainingEffort')->andReturn($remaining_efforts);

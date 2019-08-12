@@ -89,12 +89,12 @@ class BurnupDataBuilder
         date_default_timezone_set($server_timezone);
 
         $start = new  DateTime();
-        $start->setTimestamp($time_period->getStartDate());
+        $start->setTimestamp((int) $time_period->getStartDate());
         $start->setTime(0, 0, 0);
 
         $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
 
-        $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $time_period->getDuration());
+        $time_period          = TimePeriodWithoutWeekEnd::buildFromDuration($start->getTimestamp(), $time_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation($artifact, $time_period, $user);
         $burnup_data          = new BurnupData($time_period, $is_under_calculation);
 

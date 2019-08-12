@@ -224,7 +224,7 @@ final class ArtifactMilestoneTest extends TestCase
 
     public function testEndDateIsNullIfNoStartDate()
     {
-        $time_period = new \TimePeriodWithoutWeekEnd(0, 10);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(0, 10);
         $this->milestone->setTimePeriod($time_period);
 
         $this->assertNull($this->milestone->getEndDate());
@@ -232,7 +232,7 @@ final class ArtifactMilestoneTest extends TestCase
 
     public function testEndDateIsNullIfNoDuration()
     {
-        $time_period = new \TimePeriodWithoutWeekEnd(10, 0);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, 0);
         $this->milestone->setTimePeriod($time_period);
 
         $this->assertNull($this->milestone->getEndDate());
@@ -240,7 +240,7 @@ final class ArtifactMilestoneTest extends TestCase
 
     public function testEndDateIsNullIfNegativeDuration()
     {
-        $time_period = new \TimePeriodWithoutWeekEnd(10, -2);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, -2);
         $this->milestone->setTimePeriod($time_period);
 
         $this->assertNull($this->milestone->getEndDate());
@@ -251,7 +251,7 @@ final class ArtifactMilestoneTest extends TestCase
         $user           = Mockery::mock(PFUser::class);
         $burndown_field = Mockery::mock(Tracker_FormElement_Field_Burndown::class);
 
-        $time_period = new \TimePeriodWithoutWeekEnd(10, 10);
+        $time_period = \TimePeriodWithoutWeekEnd::buildFromDuration(10, 10);
         $this->milestone->setTimePeriod($time_period);
 
         $this->artifact->shouldReceive('getABurndownField')

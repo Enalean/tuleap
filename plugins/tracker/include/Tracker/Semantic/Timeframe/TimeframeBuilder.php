@@ -71,7 +71,7 @@ class TimeframeBuilder
             $duration = 0;
         }
 
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
     public function buildTimePeriodWithoutWeekendForArtifactForREST(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
@@ -90,7 +90,7 @@ class TimeframeBuilder
             $duration = null;
         }
 
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
     /**
@@ -146,7 +146,7 @@ class TimeframeBuilder
             );
         }
 
-        return new TimePeriodWithoutWeekEnd($start_date, $duration);
+        return TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
     }
 
     /**

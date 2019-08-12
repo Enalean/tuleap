@@ -105,7 +105,7 @@ class BurndownCacheGenerationChecker
 
         $this->logger->debug("Start date after updating timezone: " . $start->getTimestamp());
 
-        $time_period_with_start_date_from_midnight = new TimePeriodWithoutWeekEnd(
+        $time_period_with_start_date_from_midnight = TimePeriodWithoutWeekEnd::buildFromDuration(
             $start->getTimestamp(),
             $time_period->getDuration()
         );

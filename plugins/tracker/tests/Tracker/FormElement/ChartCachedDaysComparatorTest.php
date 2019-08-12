@@ -33,7 +33,7 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 5;
 
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
         $this->assertTrue($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
@@ -45,7 +45,7 @@ class ChartCachedDaysComparatorTest extends TuleapTestCase
         $start_date            = mktime(0, 0, 0, 20, 12, 2016);
         $duration              = 15;
 
-        $time_period = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $time_period = TimePeriodWithoutWeekEnd::buildFromDuration($start_date, $duration);
 
         $cache_days_comparator = new ChartCachedDaysComparator(mock('Logger'));
         $this->assertFalse($cache_days_comparator->isNumberOfCachedDaysExpected($time_period, $number_of_cached_days));
