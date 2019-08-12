@@ -103,7 +103,6 @@ function configureTypescriptRules(babel_options) {
                 {
                     loader: "ts-loader",
                     options: {
-                        transpileOnly: true,
                         appendTsSuffixTo: ["\\.vue$"]
                     }
                 }
