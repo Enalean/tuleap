@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,8 @@ namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 use BackendLogger;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -55,6 +57,16 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
      */
     private $date_retriever;
 
+    /**
+     * @var CountElementsCalculator
+     */
+    private $burnup_count_elements_calculator;
+
+    /**
+     * @var CountElementsCacheDao
+     */
+    private $count_elements_cache_dao;
+
     public function verbalizeParameters($with_link)
     {
         return '-';
@@ -63,15 +75,19 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
     public function injectDependencies(
         BurnupDao $burnup_dao,
         BurnupCalculator $burnup_calculator,
+        CountElementsCalculator $burnup_count_elements_calculator,
         BurnupCacheDao $cache_dao,
+        CountElementsCacheDao $count_elements_cache_dao,
         BackendLogger $logger,
         BurnupCacheDateRetriever $date_retriever
     ) {
-        $this->burnup_dao        = $burnup_dao;
-        $this->logger            = $logger;
-        $this->burnup_calculator = $burnup_calculator;
-        $this->cache_dao         = $cache_dao;
-        $this->date_retriever    = $date_retriever;
+        $this->burnup_dao                       = $burnup_dao;
+        $this->logger                           = $logger;
+        $this->burnup_calculator                = $burnup_calculator;
+        $this->burnup_count_elements_calculator = $burnup_count_elements_calculator;
+        $this->cache_dao                        = $cache_dao;
+        $this->count_elements_cache_dao         = $count_elements_cache_dao;
+        $this->date_retriever                   = $date_retriever;
     }
 
     public function process()
@@ -107,6 +123,22 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
                     $yesterday,
                     $total_effort,
                     $team_effort
+                );
+
+                $subelements_cache_info = $this->burnup_count_elements_calculator->getValue(
+                    $burnup['id'],
+                    $yesterday
+                );
+
+                $closed_subelements = $subelements_cache_info->getTeamEffort();
+                $total_subelements  = $subelements_cache_info->getTotalEffort();
+
+                $this->logger->debug("Caching subelements value $closed_subelements/$total_subelements for artifact #" . $burnup['id']);
+                $this->count_elements_cache_dao->saveCachedFieldValueAtTimestampForSubelements(
+                    (int) $burnup['id'],
+                    (int) $yesterday,
+                    (int) $total_subelements,
+                    (int) $closed_subelements
                 );
 
                 $this->logger->debug("End calculs for artifact #" . $burnup['id']);
