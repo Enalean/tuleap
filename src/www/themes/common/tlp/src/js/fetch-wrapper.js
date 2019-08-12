@@ -69,6 +69,10 @@ async function recursiveGet(input, init = {}) {
     const json = await response.json();
     const results = getCollectionCallback(json);
 
+    if (response.headers.get("X-PAGINATION-SIZE") === null) {
+        throw new Error("No X-PAGINATION-SIZE field in the header.");
+    }
+
     const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
     const new_offset = offset + limit;
 
