@@ -35,10 +35,18 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
         $xml_start_date_field_attributes = $xml_start_date_field->attributes();
         $start_date_field = $xml_mapping[(string)$xml_start_date_field_attributes['REF']];
 
-        $xml_duration_field = $xml->duration_field;
-        $xml_duration_field_attributes = $xml_duration_field->attributes();
-        $duration_field = $xml_mapping[(string)$xml_duration_field_attributes['REF']];
+        if (isset($xml->duration_field)) {
+            $xml_duration_field = $xml->duration_field;
+            $xml_duration_field_attributes = $xml_duration_field->attributes();
+            $duration_field = $xml_mapping[(string)$xml_duration_field_attributes['REF']];
 
-        return new SemanticTimeframe($tracker, $start_date_field, $duration_field, null);
+            return new SemanticTimeframe($tracker, $start_date_field, $duration_field, null);
+        }
+
+        $xml_end_date_field = $xml->end_date_field;
+        $xml_end_date_field_attributes = $xml_end_date_field->attributes();
+        $end_date_field = $xml_mapping[(string)$xml_end_date_field_attributes['REF']];
+
+        return new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field);
     }
 }

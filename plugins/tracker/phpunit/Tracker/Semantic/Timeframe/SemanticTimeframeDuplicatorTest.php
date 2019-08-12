@@ -61,13 +61,13 @@ class SemanticTimeframeDuplicatorTest extends TestCase
 
 
 
-    public function testItDoesNotDuplicateIfThereIsNoDurationFieldInConfig(): void
+    public function testItDoesNotDuplicateIfThereIsNoDurationFieldAndNoEndDateFieldInConfig(): void
     {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => null]);
 
         $this->dao
             ->shouldReceive('save')
@@ -82,7 +82,7 @@ class SemanticTimeframeDuplicatorTest extends TestCase
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null]);
 
         $this->dao
             ->shouldReceive('save')
@@ -91,13 +91,13 @@ class SemanticTimeframeDuplicatorTest extends TestCase
         $this->duplicator->duplicate(1, 2, [['from' => 102, 'to' => 1002]]);
     }
 
-    public function testItDoesNotDuplicateIfThereIsNoDurationFieldInMapping(): void
+    public function testItDoesNotDuplicateIfThereIsNoDurationFieldAndNoEndDateFieldInMapping(): void
     {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => 103]);
 
         $this->dao
             ->shouldReceive('save')
@@ -106,13 +106,13 @@ class SemanticTimeframeDuplicatorTest extends TestCase
         $this->duplicator->duplicate(1, 2, [['from' => 101, 'to' => 1001]]);
     }
 
-    public function testItDuplicatesAllTheThings(): void
+    public function testItDuplicatesAllTheThingsWithDurationField(): void
     {
         $this->dao
             ->shouldReceive('searchByTrackerId')
             ->with(1)
             ->once()
-            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102]);
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => 102, 'end_date_field_id' => null]);
 
         $this->dao
             ->shouldReceive('save')
@@ -125,6 +125,29 @@ class SemanticTimeframeDuplicatorTest extends TestCase
             [
                 ['from' => 101, 'to' => 1001],
                 ['from' => 102, 'to' => 1002]
+            ]
+        );
+    }
+
+    public function testItDuplicatesAllTheThingsWithEndDateField(): void
+    {
+        $this->dao
+            ->shouldReceive('searchByTrackerId')
+            ->with(1)
+            ->once()
+            ->andReturn(['start_date_field_id' => 101, 'duration_field_id' => null, 'end_date_field_id' => 103]);
+
+        $this->dao
+            ->shouldReceive('save')
+            ->with(2, 1001, null, 1003)
+            ->once();
+
+        $this->duplicator->duplicate(
+            1,
+            2,
+            [
+                ['from' => 101, 'to' => 1001],
+                ['from' => 103, 'to' => 1003]
             ]
         );
     }

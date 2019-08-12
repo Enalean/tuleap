@@ -180,24 +180,50 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function exportToXml(SimpleXMLElement $root, $xmlMapping): void
     {
-        if ($this->start_date_field === null || $this->duration_field === null) {
-            return;
-        }
-        $start_date_field_id = $this->start_date_field->getId();
-        $start_date_ref      = array_search($start_date_field_id, $xmlMapping);
-        if (! $start_date_ref) {
-            return;
-        }
-        $duration_field_id = $this->duration_field->getId();
-        $duration_ref      = array_search($duration_field_id, $xmlMapping);
-        if (! $duration_ref) {
+        if (! $this->isDefined()) {
             return;
         }
 
-        $child = $root->addChild('semantic');
-        $child->addAttribute('type', $this->getShortName());
-        $child->addChild('start_date_field')->addAttribute('REF', $start_date_ref);
-        $child->addChild('duration_field')->addAttribute('REF', $duration_ref);
+        /** @psalm-suppress PossiblyNullReference https://github.com/vimeo/psalm/issues/1994 */
+        $start_date_field_id = (int) $this->start_date_field->getId();
+        $start_date_ref      = array_search($start_date_field_id, $xmlMapping);
+
+        if (! $start_date_ref) {
+            return;
+        }
+
+        if ($this->duration_field !== null) {
+            $duration_field_id = (int) $this->duration_field->getId();
+            $duration_ref      = array_search($duration_field_id, $xmlMapping);
+
+            if (! $duration_ref) {
+                return;
+            }
+
+            $child = $this->buildXMLExport($root, $start_date_ref);
+            $child->addChild('duration_field')->addAttribute('REF', $duration_ref);
+        }
+
+        if ($this->end_date_field !== null) {
+            $end_date_field_id = (int) $this->end_date_field->getId();
+            $end_date_ref      = array_search($end_date_field_id, $xmlMapping);
+
+            if (! $end_date_ref) {
+                return;
+            }
+
+            $child = $this->buildXMLExport($root, $start_date_ref);
+            $child->addChild('end_date_field')->addAttribute('REF', $end_date_ref);
+        }
+    }
+
+    public function buildXMLExport(SimpleXMLElement $root, string $start_date_ref) : SimpleXMLElement
+    {
+        $semantic_child = $root->addChild('semantic');
+        $semantic_child->addAttribute('type', $this->getShortName());
+        $semantic_child->addChild('start_date_field')->addAttribute('REF', $start_date_ref);
+
+        return $semantic_child;
     }
 
     public function isUsedInSemantics(Tracker_FormElement_Field $field): bool

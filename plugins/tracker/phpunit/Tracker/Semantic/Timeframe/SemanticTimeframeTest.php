@@ -214,7 +214,7 @@ class SemanticTimeframeTest extends TestCase
         $this->assertCount(0, $root->children());
     }
 
-    public function testItDoesNotExportToXMLIfThereIsNoDuration(): void
+    public function testItDoesNotExportToXMLIfThereIsNoDurationAndNoEndDate(): void
     {
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
@@ -267,7 +267,29 @@ class SemanticTimeframeTest extends TestCase
         $this->assertCount(0, $root->children());
     }
 
-    public function testItExportToXML(): void
+    public function testItDoesNotExportToXMLIfEndDateIsNotInFieldMapping(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        $end_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('getId')->andReturn(102);
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            $start_date_field,
+            null,
+            $end_date_field
+        ))->exportToXml($root, [
+            'F101' => 101
+        ]);
+
+        $this->assertCount(0, $root->children());
+    }
+
+    public function testItExportsToXMLWithDuration(): void
     {
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
@@ -293,6 +315,32 @@ class SemanticTimeframeTest extends TestCase
         $this->assertEquals('F102', (string) $root->semantic->duration_field['REF']);
     }
 
+    public function testItExportsToXMLWithEndDate(): void
+    {
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+
+        $start_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('getId')->andReturn(101);
+
+        $end_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('getId')->andReturn(102);
+
+        (new SemanticTimeframe(
+            Mockery::mock(Tracker::class),
+            $start_date_field,
+            null,
+            $end_date_field
+        ))->exportToXml($root, [
+            'F101' => 101,
+            'F102' => 102
+        ]);
+
+        $this->assertCount(1, $root->children());
+        $this->assertEquals('timeframe', (string) $root->semantic['type']);
+        $this->assertEquals('F101', (string) $root->semantic->start_date_field['REF']);
+        $this->assertEquals('F102', (string) $root->semantic->end_date_field['REF']);
+    }
+
     public function testItBuildsARESTRepresentationWithDurationIfDurationIsSet() : void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
@@ -312,8 +360,8 @@ class SemanticTimeframeTest extends TestCase
     public function testItBuildsARESTRepresentationWithEndDateIfEndDateIsSet() : void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $end_date   = Mockery::mock(\Tracker_FormElement_Field_Date::class);
-        $user       = Mockery::mock(\PFUser::class);
+        $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $user = Mockery::mock(\PFUser::class);
 
         $start_date->shouldReceive('getId')->andReturn('23');
         $end_date->shouldReceive('getId')->andReturn('24');

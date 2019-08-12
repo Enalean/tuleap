@@ -376,9 +376,19 @@ tracker =
                 element start_date_field {
                     attribute REF { xsd:IDREF }
                 },
-                element duration_field {
-                    attribute REF { xsd:IDREF }
-                }
+                (
+                    (
+                        element duration_field {
+                            attribute REF { xsd:IDREF }
+                        }
+                    )
+                |
+                    (
+                        element end_date_field {
+                            attribute REF { xsd:IDREF }
+                        }
+                    )
+                )
             )
         )
 

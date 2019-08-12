@@ -52,14 +52,13 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $from_start_date_field_id = $row['start_date_field_id'];
+        $from_start_date_field_id    = $row['start_date_field_id'];
         $from_duration_date_field_id = $row['duration_field_id'];
-        if ($from_duration_date_field_id === null) {
-            return;
-        }
+        $from_end_date_field_id      = $row['end_date_field_id'];
 
         $to_start_date_field_id = null;
-        $to_duration_field_id = null;
+        $to_duration_field_id   = null;
+        $to_end_date_field_id   = null;
         foreach ($field_mapping as $mapping) {
             if ((int) $mapping['from'] === $from_start_date_field_id) {
                 $to_start_date_field_id = (int) $mapping['to'];
@@ -67,12 +66,16 @@ class SemanticTimeframeDuplicator implements IDuplicateSemantic
             if ((int) $mapping['from'] === $from_duration_date_field_id) {
                 $to_duration_field_id = (int) $mapping['to'];
             }
+
+            if ((int) $mapping['from'] === $from_end_date_field_id) {
+                $to_end_date_field_id = (int) $mapping['to'];
+            }
         }
 
-        if ($to_start_date_field_id === null || $to_duration_field_id === null) {
+        if ($to_start_date_field_id === null || ($to_duration_field_id === null && $to_end_date_field_id === null)) {
             return;
         }
 
-        $this->dao->save((int) $to_tracker_id, $to_start_date_field_id, $to_duration_field_id, null);
+        $this->dao->save((int) $to_tracker_id, $to_start_date_field_id, $to_duration_field_id, $to_end_date_field_id);
     }
 }
