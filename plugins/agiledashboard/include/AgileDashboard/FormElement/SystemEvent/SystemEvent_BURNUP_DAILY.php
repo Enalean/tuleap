@@ -130,8 +130,8 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
                     $yesterday
                 );
 
-                $closed_subelements = $subelements_cache_info->getTeamEffort();
-                $total_subelements  = $subelements_cache_info->getTotalEffort();
+                $closed_subelements = $subelements_cache_info->getClosedElements();
+                $total_subelements  = $subelements_cache_info->getTotalElements();
 
                 $this->logger->debug("Caching subelements value $closed_subelements/$total_subelements for artifact #" . $burnup['id']);
                 $this->count_elements_cache_dao->saveCachedFieldValueAtTimestampForSubelements(
