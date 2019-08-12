@@ -1,10 +1,18 @@
 module.exports = {
-    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue", "jasmine", "@typescript-eslint"],
+    plugins: [
+        "you-dont-need-lodash-underscore",
+        "cypress",
+        "vue",
+        "jasmine",
+        "@typescript-eslint",
+        "import"
+    ],
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
         "plugin:vue/recommended",
-        "plugin:@typescript-eslint/eslint-recommended"
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:import/typescript"
     ],
     parser: "vue-eslint-parser",
     parserOptions: {
@@ -91,7 +99,9 @@ module.exports = {
         "vue/require-direct-export": "off",
         "vue/singleline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
         "vue/v-bind-style": ["error", "longform"],
-        "vue/v-on-style": ["error", "longform"]
+        "vue/v-on-style": ["error", "longform"],
+        // import
+        "import/no-extraneous-dependencies": "error"
     },
     overrides: [
         {
