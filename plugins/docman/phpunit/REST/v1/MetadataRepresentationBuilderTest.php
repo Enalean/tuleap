@@ -36,7 +36,7 @@ use UserHelper;
 
 class MetadataRepresentationBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
 
     public function testItBuildMetadataWithoutBasicProperties() : void
     {
@@ -57,11 +57,10 @@ class MetadataRepresentationBuilderTest extends TestCase
 
         $value1 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value1->shouldReceive('getId')->andReturn(1);
-        $value1->shouldReceive('getName')->andReturn("My value 1");
+        $value1->shouldReceive('getMetadataValue')->andReturn("My value 1");
         $value2 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
         $value2->shouldReceive('getId')->andReturn(100);
-        $value2->shouldReceive('getName')->andReturn("love_special_none_name_key");
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn("None");
+        $value2->shouldReceive('getMetadataValue')->andReturn("None");
         $list_metadata   = Mockery::mock(Docman_ListMetadata::class);
         $list_metadata->shouldReceive('getValue')->andReturn(
             new \ArrayIterator([
