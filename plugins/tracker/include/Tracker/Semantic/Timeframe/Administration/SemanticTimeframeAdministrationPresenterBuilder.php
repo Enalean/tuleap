@@ -44,11 +44,17 @@ class SemanticTimeframeAdministrationPresenterBuilder
         Tracker $tracker,
         string $target_url,
         ?Tracker_FormElement_Field_Date $start_date_field,
-        ?Tracker_FormElement_Field_Numeric $duration_field
+        ?Tracker_FormElement_Field_Numeric $duration_field,
+        ?Tracker_FormElement_Field_Date $end_date_field
     ) : SemanticTimeframeAdministrationPresenter {
-        $usable_date_fields = $this->buildSelectBoxEntries(
+        $usable_start_date_fields = $this->buildSelectBoxEntries(
             $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
             $start_date_field
+        );
+
+        $usable_end_date_fields = $this->buildSelectBoxEntries(
+            $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
+            $end_date_field
         );
 
         $usable_numeric_fields = $this->buildSelectBoxEntries(
@@ -57,15 +63,20 @@ class SemanticTimeframeAdministrationPresenterBuilder
         );
 
         $has_tracker_charts = $this->doesTrackerHaveCharts($tracker);
+        $is_semantic_in_start_date_duration_mode = $duration_field !== null;
+
         return new SemanticTimeframeAdministrationPresenter(
             $csrf,
             $tracker,
             $target_url,
             $has_tracker_charts,
-            $usable_date_fields,
+            $is_semantic_in_start_date_duration_mode,
+            $usable_start_date_fields,
+            $usable_end_date_fields,
             $usable_numeric_fields,
             $start_date_field,
-            $duration_field
+            $duration_field,
+            $end_date_field
         );
     }
 

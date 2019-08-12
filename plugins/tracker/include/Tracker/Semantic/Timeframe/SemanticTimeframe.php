@@ -32,6 +32,7 @@ use Tracker_FormElement_Field_Numeric;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\REST\SemanticTimeframeRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 
@@ -86,14 +87,22 @@ class SemanticTimeframe extends Tracker_Semantic
 
     public function display(): void
     {
-        if ($this->start_date_field === null || $this->duration_field === null) {
+        if (! $this->isDefined()) {
             echo dgettext('tuleap-tracker', 'This semantic is not defined yet.');
         } else {
-            echo sprintf(
-                dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
-                $this->start_date_field->getLabel(),
-                $this->duration_field->getLabel()
-            );
+            if ($this->duration_field !== null && $this->start_date_field !== null) {
+                echo sprintf(
+                    dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and duration field "%s".'),
+                    $this->start_date_field->getLabel(),
+                    $this->duration_field->getLabel()
+                );
+            } elseif ($this->end_date_field !== null && $this->start_date_field !== null) {
+                echo sprintf(
+                    dgettext('tuleap-tracker', 'Timeframe is based on start date field "%s" and end date field "%s".'),
+                    $this->start_date_field->getLabel(),
+                    $this->end_date_field->getLabel()
+                );
+            }
         }
     }
 
@@ -117,10 +126,20 @@ class SemanticTimeframe extends Tracker_Semantic
             $this->tracker,
             $this->getUrl(),
             $this->start_date_field,
-            $this->duration_field
+            $this->duration_field,
+            $this->end_date_field
         );
 
         $renderer->renderToPage('timeframe-semantic-admin', $presenter);
+
+        $js_assets = new IncludeAssets(
+            __DIR__ . '/../../../../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile(
+            $js_assets->getFileURL("tracker-semantic-timeframe-option-selector.js")
+        );
 
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
