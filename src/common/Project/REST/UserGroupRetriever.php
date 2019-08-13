@@ -41,7 +41,7 @@ class UserGroupRetriever
      *
      * @throws 404
      */
-    public function getExistingUserGroup($id)
+    public function getExistingUserGroup(string $id)
     {
         $this->checkIdIsAppropriate($id);
 

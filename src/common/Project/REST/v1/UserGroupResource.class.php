@@ -113,12 +113,11 @@ class UserGroupResource extends AuthenticatedResource
         $ugroup     = $this->user_group_retriever->getExistingUserGroup($id);
         $project_id = $ugroup->getProjectId();
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
-            $this->user_manager->getCurrentUser(),
-            $ugroup->getProject()
-        );
-
         if ($project_id) {
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+                $this->user_manager->getCurrentUser(),
+                $ugroup->getProject()
+            );
             $this->userCanSeeUserGroups($project_id);
         }
 
@@ -386,7 +385,8 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @param int $id Id of the ugroup (format: projectId_ugroupId)
      */
-    public function optionsUsers($id) {
+    public function optionsUsers($id)
+    {
         $this->sendAllowHeadersForUserGroupId();
     }
 
@@ -397,7 +397,8 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return PFUser[]
      */
-    private function getUserGroupMembers(ProjectUGroup $user_group, $project_id, $limit, $offset) {
+    private function getUserGroupMembers(ProjectUGroup $user_group, $project_id, $limit, $offset)
+    {
         return $user_group->getStaticOrDynamicMembersPaginated($project_id, $limit, $offset);
     }
 
@@ -406,7 +407,8 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return int
      */
-    private function countUserGroupMembers(ProjectUGroup $user_group, $project_id) {
+    private function countUserGroupMembers(ProjectUGroup $user_group, $project_id)
+    {
         return $user_group->countStaticOrDynamicMembers($project_id);
     }
 
@@ -417,7 +419,8 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return \Tuleap\User\REST\UserRepresentation
      */
-    private function getUserRepresentation(PFUser $member) {
+    private function getUserRepresentation(PFUser $member)
+    {
         $user_representation = new UserRepresentation();
         $user_representation->build($member);
 
@@ -430,7 +433,8 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return bool
      */
-    private function userCanSeeUserGroups($project_id) {
+    private function userCanSeeUserGroups($project_id)
+    {
         $project      = $this->project_manager->getProject($project_id);
         $user         = $this->user_manager->getCurrentUser();
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
@@ -463,23 +467,27 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @return bool
      */
-    private function checkGroupIsViewable($ugroup_id) {
-        if (in_array($ugroup_id, ProjectUGroup::$forge_user_groups)) {
+    private function checkGroupIsViewable(int $ugroup_id)
+    {
+        if (in_array($ugroup_id, ProjectUGroup::SYSTEM_USER_GROUPS, true)) {
             throw new RestException(404, 'Unable to list the users of this group');
         }
 
         return true;
     }
 
-    private function sendAllowHeadersForUserGroupId() {
+    private function sendAllowHeadersForUserGroupId()
+    {
         Header::allowOptionsGetPut();
     }
 
-    private function sendAllowHeadersForUserGroup() {
+    private function sendAllowHeadersForUserGroup()
+    {
         Header::allowOptionsPost();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
@@ -493,7 +501,8 @@ class UserGroupResource extends AuthenticatedResource
      * @throws 406
      */
 
-    private function checkLimitValueIsAcceptable($limit) {
+    private function checkLimitValueIsAcceptable($limit)
+    {
         if ($limit > self::MAX_LIMIT) {
              throw new RestException(406, 'limit value is not acceptable');
         }
@@ -571,7 +580,6 @@ class UserGroupResource extends AuthenticatedResource
             $new_ugroup_representation->build((int) $project_id, $new_ugroup);
 
             return $new_ugroup_representation;
-
         } catch (CannotCreateUGroupException $exception) {
             throw new RestException(400, $exception->getMessage());
         } finally {
