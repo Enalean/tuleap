@@ -29,7 +29,7 @@ import {
 } from "../../../helpers/event-bus.js";
 
 describe("QuickLookDeleteButton", () => {
-    let delete_button_factory, event_bus;
+    let delete_button_factory, event_bus, store;
     beforeEach(() => {
         const state = {
             project_id: 101
@@ -39,7 +39,7 @@ describe("QuickLookDeleteButton", () => {
             state
         };
 
-        const store = createStoreMock(store_options);
+        store = createStoreMock(store_options);
 
         delete_button_factory = (user_can_write, item_type) => {
             return shallowMount(QuickLookDeleteButton, {
@@ -63,16 +63,24 @@ describe("QuickLookDeleteButton", () => {
         restoreEventBus();
     });
 
-    it(`Displays the delete button because the user can write`, () => {
+    it(`Displays the delete button because the user can write and has the right to delete items`, () => {
+        store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeTruthy();
     });
-    it(`Does not display the delete button if the user can't write`, () => {
+    it(`Does not display the delete button if the user can't write but has the right to delete items`, () => {
+        store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(false, TYPE_LINK);
+        expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
+    });
+    it(`Does not display the delete button if the user can write but cannot to delete items`, () => {
+        store.state.is_deletion_allowed = false;
+        const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
     it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+        store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(true, TYPE_FILE);
         wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
 

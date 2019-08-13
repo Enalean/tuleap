@@ -23,7 +23,7 @@
         type="button"
         class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
         v-on:click="processDeletion"
-        v-if="item.user_can_write"
+        v-if="item.user_can_write && is_deletion_allowed"
         data-test="document-delete-item"
     >
         <i class="fa fa-trash-o fa-fw tlp-dropdown-menu-item-icon"></i>
@@ -33,10 +33,15 @@
 
 <script>
 import EventBus from "../../../helpers/event-bus.js";
+import { mapState } from "vuex";
+
 export default {
     name: "DeleteItem",
     props: {
         item: Object
+    },
+    computed: {
+        ...mapState(["is_deletion_allowed"])
     },
     methods: {
         processDeletion() {

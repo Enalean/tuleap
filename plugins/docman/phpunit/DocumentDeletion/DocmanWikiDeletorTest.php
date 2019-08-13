@@ -55,6 +55,10 @@ class DocmanWikiDeletorTest extends TestCase
      * @var DocmanWikiDeletor
      */
     private $wiki_deletor;
+    /**
+     * @var \Mockery\MockInterface|DocmanReferencedWikiPageRetriever
+     */
+    private $wiki_page_retriever;
 
     protected function setUp() : void
     {
@@ -95,7 +99,7 @@ class DocmanWikiDeletorTest extends TestCase
         $wiki_page->shouldReceive("isReferenced")->andReturns(true);
         $wiki_page->shouldReceive("getId")->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanWrite")->andReturns(false);
+        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(false);
         $this->item_factory->shouldReceive("delete")->never();
 
         $this->expectException(DeleteFailedException::class);
@@ -125,7 +129,7 @@ class DocmanWikiDeletorTest extends TestCase
         $wiki_page->shouldReceive("isReferenced")->andReturns(true);
         $wiki_page->shouldReceive("getId")->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanWrite")->andReturns(true);
+        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
         $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
         $this->item_factory->shouldReceive("getIdInWikiOfWikiPageItem");
@@ -162,7 +166,7 @@ class DocmanWikiDeletorTest extends TestCase
         $wiki_page->shouldReceive("isReferenced")->andReturns(true);
         $wiki_page->shouldReceive("getId")->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanWrite")->andReturns(true);
+        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
         $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
         $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(true);
@@ -192,7 +196,7 @@ class DocmanWikiDeletorTest extends TestCase
         $wiki_page->shouldReceive("isReferenced")->andReturns(true);
         $wiki_page->shouldReceive("getId")->andReturns(69);
 
-        $this->permissions_manager->shouldReceive("userCanWrite")->andReturns(true);
+        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
         $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
         $this->item_factory->shouldReceive("deleteWikiPage")->with("My kinky wiki", 104)->andReturns(false);
@@ -220,7 +224,7 @@ class DocmanWikiDeletorTest extends TestCase
             ->with($wiki_to_delete)
             ->andReturns(null);
 
-        $this->permissions_manager->shouldReceive("userCanWrite")->andReturns(true);
+        $this->permissions_manager->shouldReceive("userCanDelete")->andReturns(true);
 
         $this->item_factory->shouldReceive("delete")->with($wiki_to_delete);
         $this->item_factory->shouldReceive("deleteWikiPage")->never();

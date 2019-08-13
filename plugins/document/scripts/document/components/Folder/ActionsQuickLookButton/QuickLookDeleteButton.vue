@@ -19,7 +19,7 @@
 
 <template>
     <button
-        v-if="item.user_can_write"
+        v-if="item.user_can_write && is_deletion_allowed"
         type="button"
         class="tlp-button-small tlp-button-outline tlp-button-danger"
         v-on:click="processDeletion"
@@ -32,11 +32,15 @@
 
 <script>
 import EventBus from "../../../helpers/event-bus.js";
+import { mapState } from "vuex";
 
 export default {
     name: "QuickLookDeleteButton",
     props: {
         item: Object
+    },
+    computed: {
+        ...mapState(["is_deletion_allowed"])
     },
     methods: {
         processDeletion() {

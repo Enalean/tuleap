@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,6 +41,10 @@ class DocumentTreePresenter
      */
     public $user_can_create_wiki;
     /**
+     * @var bool
+     */
+    public $user_can_delete_item;
+    /**
      * @var int
      */
     public $max_size_upload;
@@ -71,12 +75,14 @@ class DocumentTreePresenter
         bool $is_under_construction,
         bool $embedded_are_allowed,
         bool $is_item_status_metadata_used,
-        bool $is_obsolescence_date_metadata_used
+        bool $is_obsolescence_date_metadata_used,
+        bool $only_siteadmin_can_delete_option
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();
         $this->user_is_admin                      = $user->isAdmin($project->getID());
         $this->user_can_create_wiki               = $project->usesWiki();
+        $this->user_can_delete_item               = ! $only_siteadmin_can_delete_option || $user->isSuperUser();
         $this->max_size_upload                    = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
         $this->max_files_dragndrop                = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
         $this->is_under_construction              = $is_under_construction;

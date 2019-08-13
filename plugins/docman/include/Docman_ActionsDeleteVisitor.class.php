@@ -117,7 +117,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @throws DeleteFailedException
      */
     public function visitFile(Docman_File $item, $params = array()) {
-        if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
+        if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             if (isset($params['version']) && $params['version'] !== false) {
                 return $this->_deleteVersion($item, $params['version'], $params['user']);
             } else {
@@ -151,7 +151,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
      * @throws DeleteFailedException
      */
     function _deleteItem($item, $params) {
-        if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
+        if ($this->getPermissionManager($item->getGroupId())->userCanDelete($params['user'], $item)) {
             $dIF = $this->_getItemFactory();
             $dIF->delete($item);
             return true;
