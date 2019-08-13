@@ -225,6 +225,22 @@ class PermissionsManager implements IPermissionsManagerNG {
         return $ugroups;
     }
 
+    public function getAuthorizedUGroupIdsForProjectWithoutDefaultValues(Project $project, $object_id, $permission_type)
+    {
+        $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $object_id, $permission_type, false);
+        if (! $dar || $dar->isError()) {
+            return [];
+        }
+        $ugroup_ids = [];
+        $normalizer = new PermissionsUGroupMapper($project);
+
+        foreach ($dar as $row) {
+            $ugroup_ids[] = $normalizer->getUGroupIdAccordingToMapping($row['ugroup_id']);
+        }
+
+        return $ugroup_ids;
+    }
+
     /**
      * @param Project $project
      * @param type $object_id
