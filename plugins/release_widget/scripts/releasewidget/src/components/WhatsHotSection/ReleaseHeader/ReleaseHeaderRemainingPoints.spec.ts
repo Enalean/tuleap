@@ -53,7 +53,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00"),
-            capacity: 10
+            capacity: 10,
+            number_of_artifact_by_trackers: []
         };
 
         component_options.propsData = {
@@ -73,7 +74,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: -1,
-                initial_effort: 10
+                initial_effort: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -108,7 +110,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                     id: "100"
                 },
                 start_date: null,
-                initial_effort: 10
+                initial_effort: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -140,7 +143,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: null,
-                initial_effort: 10
+                initial_effort: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -172,7 +176,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: 5,
-                initial_effort: 10
+                initial_effort: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -204,7 +209,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: 0,
-                initial_effort: 5
+                initial_effort: 5,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -238,7 +244,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                     id: "100"
                 },
                 start_date: null,
-                remaining_effort: 5
+                remaining_effort: 5,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -270,7 +277,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: 5,
-                initial_effort: null
+                initial_effort: null,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -302,7 +310,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: 5,
-                initial_effort: 0
+                initial_effort: 0,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -334,7 +343,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
                 },
                 start_date: null,
                 remaining_effort: 100,
-                initial_effort: 10
+                initial_effort: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {

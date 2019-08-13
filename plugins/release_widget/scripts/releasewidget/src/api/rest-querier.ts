@@ -19,6 +19,7 @@
 
 import { get, recursiveGet } from "tlp";
 import {
+    TrackerProject,
     MilestoneContent,
     MilestoneData,
     ParametersRequestWithId,
@@ -30,7 +31,8 @@ export {
     getNbOfUpcomingReleases,
     getCurrentMilestones,
     getNbOfSprints,
-    getMilestonesContent
+    getMilestonesContent,
+    getTrackersProject
 };
 
 function recursiveGetProjectMilestonesWithQuery(
@@ -111,18 +113,29 @@ async function getNbOfSprints(
     return getPaginationSizeFromHeader(response.headers);
 }
 
-async function getMilestonesContent(
+function getMilestonesContent(
     id_release: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
-    const response = await get(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
+    return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
         params: {
             limit,
             offset
         }
     });
+}
 
-    return response.json();
+function getTrackersProject({
+    project_id,
+    limit,
+    offset
+}: ParametersRequestWithId): Promise<TrackerProject[]> {
+    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id!)}/trackers`, {
+        params: {
+            limit,
+            offset
+        }
+    });
 }
 
 function getPaginationSizeFromHeader(header: any): number {

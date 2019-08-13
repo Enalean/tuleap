@@ -18,8 +18,8 @@
  */
 
 import * as actions from "./actions";
-import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
-import { Context } from "../type";
+import { mockFetchError, tlp } from "tlp-mocks";
+import { TrackerProject, Context } from "../type";
 
 describe("Store actions", () => {
     let context: Context;
@@ -35,7 +35,8 @@ describe("Store actions", () => {
                 limit: 50,
                 current_milestones: [],
                 error_message: null,
-                is_loading: false
+                is_loading: false,
+                trackers: []
             }
         };
     });
@@ -61,6 +62,24 @@ describe("Store actions", () => {
         });
         describe("getMilestones - success", () => {
             it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
+                const trackers: TrackerProject[] = [
+                    {
+                        id: 1,
+                        label: "one",
+                        color_name: "red_fiesta"
+                    },
+                    {
+                        id: 2,
+                        label: "two",
+                        color_name: "lake_placid_blue"
+                    }
+                ];
+
+                const headers = {
+                    // X-PAGINATION-SIZE
+                    get: () => 2
+                };
+
                 context.state = {
                     project_id: 102,
                     nb_backlog_items: 0,
@@ -69,46 +88,101 @@ describe("Store actions", () => {
                     is_loading: false,
                     current_milestones: [],
                     offset: 0,
-                    limit: 50
+                    limit: 50,
+                    trackers
                 };
 
                 const milestones = [
                     {
-                        initial_effort: null
-                    },
-                    {
-                        initial_effort: 5
+                        id: 1,
+                        resources: {
+                            content: {
+                                accept: {
+                                    trackers: [
+                                        {
+                                            id: 1,
+                                            label: "Bug"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     }
                 ];
 
-                mockFetchSuccess(tlp.get, {
-                    headers: {
-                        // X-PAGINATION-SIZE
-                        get: () => 2
-                    },
-                    return_json: milestones
-                });
-
-                tlp.recursiveGet.and.returnValue(milestones);
-
-                const state_milestones = [
+                const user_story = [
                     {
-                        total_sprint: 2,
-                        initial_effort: 5
+                        initial_effort: 5,
+                        artifact: {
+                            tracker: {
+                                id: 1
+                            }
+                        }
                     },
                     {
+                        initial_effort: 10,
+                        artifact: {
+                            tracker: {
+                                id: 1
+                            }
+                        }
+                    },
+                    {
+                        initial_effort: null,
+                        artifact: {
+                            tracker: {
+                                id: 1
+                            }
+                        }
+                    }
+                ];
+
+                tlp.get.and.returnValues({ headers }, { headers }, { headers });
+
+                tlp.recursiveGet.and.returnValues(
+                    trackers,
+                    milestones,
+                    milestones,
+                    user_story,
+                    user_story
+                );
+
+                const milestones_state = [
+                    {
+                        id: 1,
+                        resources: {
+                            content: {
+                                accept: {
+                                    trackers: [
+                                        {
+                                            id: 1,
+                                            label: "Bug"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        number_of_artifact_by_trackers: [
+                            {
+                                id: 1,
+                                label: "Bug",
+                                color_name: "red_fiesta",
+                                total_artifact: 3
+                            }
+                        ],
                         total_sprint: 2,
-                        initial_effort: 10
+                        initial_effort: 15
                     }
                 ];
 
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 2);
+                expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
+                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 1);
                 expect(context.commit).toHaveBeenCalledWith("setNbBacklogItem", 2);
                 expect(context.commit).toHaveBeenCalledWith(
                     "setCurrentMilestones",
-                    state_milestones
+                    milestones_state
                 );
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });

@@ -63,7 +63,8 @@ describe("ReleaseBadges", () => {
             },
             capacity: 10,
             total_sprint,
-            initial_effort
+            initial_effort,
+            number_of_artifact_by_trackers: []
         };
 
         component_options.propsData = { releaseData };
@@ -102,7 +103,8 @@ describe("ReleaseBadges", () => {
                 },
                 capacity: 10,
                 total_sprint,
-                initial_effort: null
+                initial_effort: null,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = { releaseData };
@@ -120,7 +122,8 @@ describe("ReleaseBadges", () => {
                     id: "100"
                 },
                 capacity: null,
-                total_sprint
+                total_sprint,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -150,7 +153,8 @@ describe("ReleaseBadges", () => {
                 },
                 capacity: null,
                 total_sprint,
-                initial_effort
+                initial_effort,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -171,7 +175,8 @@ describe("ReleaseBadges", () => {
                     id: "100"
                 },
                 total_sprint,
-                initial_effort
+                initial_effort,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {

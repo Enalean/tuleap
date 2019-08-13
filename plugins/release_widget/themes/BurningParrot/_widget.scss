@@ -19,6 +19,10 @@
 
 $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
+@import 'headers';
+@import 'release-toggle';
+@import 'release-toggle-tracker-artifacts-badges';
+
 .project-release-label {
     display: inline-block;
     position: relative;

@@ -18,18 +18,18 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import ReleaseDescription from "./ReleaseDescription.vue";
+import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper";
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { ComponentOption, MilestoneData, StoreOptions } from "../../type";
+import { ComponentOption, MilestoneData, StoreOptions } from "../../../type";
 
 let releaseData: MilestoneData;
 const component_options: ComponentOption = {};
 const project_id = 102;
 
-describe("ReleaseDescription", () => {
+describe("ReleaseDescriptionBadgesTracker", () => {
     let store_options: StoreOptions;
     let store;
 
@@ -45,7 +45,7 @@ describe("ReleaseDescription", () => {
 
         Vue.use(VueDOMPurifyHTML);
 
-        return shallowMount(ReleaseDescription, component_options);
+        return shallowMount(ReleaseDescriptionBadgesTracker, component_options);
     }
 
     beforeEach(() => {
@@ -57,7 +57,15 @@ describe("ReleaseDescription", () => {
             id: 2,
             planning: {
                 id: "100"
-            }
+            },
+            number_of_artifact_by_trackers: [
+                {
+                    label: "Bug",
+                    id: 1,
+                    total_artifact: 2,
+                    color_name: "red-fiesta"
+                }
+            ]
         };
 
         component_options.propsData = {
@@ -67,19 +75,18 @@ describe("ReleaseDescription", () => {
         getPersonalWidgetInstance(store_options);
     });
 
-    it("Given user display widget, Then a good link to top planning of the release is rendered", () => {
+    it("Given user display widget, Then the good number of artifacts and good color of the tracker is rendered", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
-            "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(project_id) +
-                "&planning_id=" +
-                encodeURIComponent(releaseData.planning!.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(releaseData.id) +
-                "&pane=details"
-        );
+        expect(wrapper.find("[data-test=color-name-tracker").classes()).toEqual([
+            "release-number-artifacts-tracker",
+            "release-number-artifacts-tracker-red-fiesta"
+        ]);
+
+        expect(wrapper.find("[data-test=total-artifact-tracker").text()).toEqual("2");
+
+        expect(wrapper.find("[data-test=artifact-tracker-name").text()).toEqual("Bug");
     });
 });

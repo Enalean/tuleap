@@ -53,7 +53,8 @@ describe("ReleaseHeaderRemainingDays", () => {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00"),
-            capacity: 10
+            capacity: 10,
+            number_of_artifact_by_trackers: []
         };
 
         component_options = {
@@ -74,7 +75,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                     id: "100"
                 },
                 number_days_until_end: 10,
-                number_days_since_start: 0
+                number_days_since_start: 0,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -101,7 +103,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 id: 2,
                 planning: {
                     id: "100"
-                }
+                },
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -130,7 +133,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                     id: "100"
                 },
                 number_days_until_end: -10,
-                number_days_since_start: -10
+                number_days_since_start: -10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -161,7 +165,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 },
                 start_date: null,
                 number_days_until_end: -10,
-                number_days_since_start: 10
+                number_days_since_start: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -190,7 +195,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 planning: {
                     id: "100"
                 },
-                start_date: null
+                start_date: null,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -220,7 +226,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 },
                 start_date: null,
                 number_days_until_end: 0,
-                number_days_since_start: 10
+                number_days_since_start: 10,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -250,7 +257,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 },
                 start_date: null,
                 number_days_since_start: 10,
-                number_days_until_end: null
+                number_days_until_end: null,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -280,7 +288,8 @@ describe("ReleaseHeaderRemainingDays", () => {
                 },
                 start_date: null,
                 number_days_until_end: 5,
-                number_days_since_start: 5
+                number_days_since_start: 5,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {

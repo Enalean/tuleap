@@ -53,7 +53,8 @@ describe("ReleaseHeader", () => {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00"),
-            capacity: 10
+            capacity: 10,
+            number_of_artifact_by_trackers: []
         };
 
         component_options = {
@@ -76,7 +77,8 @@ describe("ReleaseHeader", () => {
             releaseData = {
                 label: "mile",
                 id: 2,
-                start_date: null
+                start_date: null,
+                number_of_artifact_by_trackers: []
             };
 
             component_options.propsData = {
@@ -92,7 +94,8 @@ describe("ReleaseHeader", () => {
     it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", () => {
         releaseData = {
             label: "mile",
-            id: 2
+            id: 2,
+            number_of_artifact_by_trackers: []
         };
 
         component_options.propsData = {

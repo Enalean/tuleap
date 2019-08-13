@@ -71,12 +71,14 @@ describe("What'sHotSection", () => {
     it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", () => {
         const release1: MilestoneData = {
             label: "release_1",
-            id: 1
+            id: 1,
+            number_of_artifact_by_trackers: []
         };
 
         const release2: MilestoneData = {
             label: "release_2",
-            id: 2
+            id: 2,
+            number_of_artifact_by_trackers: []
         };
 
         store_options.state.current_milestones = [release1, release2];
