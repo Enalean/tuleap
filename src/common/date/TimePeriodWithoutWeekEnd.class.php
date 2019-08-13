@@ -32,24 +32,33 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
      */
     private $duration;
 
-    private function __construct(?int $start_date, ?int $duration)
+    /**
+     * @var int|null The time period end date, as a Unix timestamp.
+     */
+    private $end_date;
+
+    private function __construct(?int $start_date, ?int $duration, ?int $end_date)
     {
         $this->start_date = $start_date;
         $this->duration   = $duration;
-    }
-
-    private static function formatDuration($duration): ?int
-    {
-        if (is_numeric($duration)) {
-            return (int) ceil((float) $duration);
-        }
-
-        return $duration;
+        $this->end_date   = $end_date;
     }
 
     public static function buildFromDuration(?int $start_date, $duration): TimePeriodWithoutWeekEnd
     {
-        return new TimePeriodWithoutWeekEnd($start_date, self::formatDuration($duration));
+        if (is_numeric($duration)) {
+            $duration = (int) ceil((float) $duration);
+        }
+
+        $day_offsets = self::getDayOffsetsFromStartDateAndDuration((int) $start_date, (int) $duration);
+        $last_offset = end($day_offsets);
+        $end_date = (int) strtotime("+$last_offset days", (int) $start_date);
+
+        return new TimePeriodWithoutWeekEnd(
+            $start_date,
+            $duration,
+            $end_date
+        );
     }
 
     public static function buildFromEndDate(int $start_date, int $end_date, Logger $logger): TimePeriodWithoutWeekEnd
@@ -62,19 +71,12 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
                     (new \DateTimeImmutable())->setTimestamp($start_date)->format('Y-m-d')
                 )
             );
-            return new self($start_date, 0);
+            $duration = -self::getNumberOfDaysWithoutWeekEndBetweenTwoDates($end_date, $start_date);
+        } else {
+            $duration = self::getNumberOfDaysWithoutWeekEndBetweenTwoDates($start_date, $end_date);
         }
 
-        $duration = 0;
-        $timestamp = $start_date;
-        while ($timestamp < $end_date) {
-            $timestamp = self::getNextDay(1, $timestamp);
-            if (self::isNotWeekendDay($timestamp)) {
-                $duration++;
-            }
-        }
-
-        return new self($start_date, $duration);
+        return new self($start_date, $duration, $end_date);
     }
 
     private static function getNextDay(int $next_day_number, int $date): int
@@ -97,14 +99,9 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         return $this->duration;
     }
 
-    /**
-     * @return false|int
-     */
-    public function getEndDate()
+    public function getEndDate(): ?int
     {
-        $day_offsets = $this->getDayOffsets();
-        $last_offset = end($day_offsets);
-        return strtotime("+$last_offset days", (int) $this->getStartDate());
+        return $this->end_date;
     }
 
     /**
@@ -150,17 +147,25 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
      */
     public function getDayOffsets(): array
     {
-        if ($this->getDuration() <= 0) {
-            return $this->getDayOffsetsWithInconsistentDuration();
-        } else {
-            return $this->getDayOffsetsWithConsistentDuration();
+        return self::getDayOffsetsFromStartDateAndDuration((int) $this->getStartDate(), (int) $this->getDuration());
+    }
+
+    /**
+     * @return int[]
+     */
+    private static function getDayOffsetsFromStartDateAndDuration(int $start_date, int $duration): array
+    {
+        if ($duration <= 0) {
+            return self::getDayOffsetsWithInconsistentDuration($start_date);
         }
+
+        return self::getDayOffsetsWithConsistentDuration($start_date, $duration);
     }
 
     public function getCountDayUntilDate(int $date): int
     {
         if ($date < $this->getEndDate()) {
-            return $this->getNumberOfDaysWithoutWeekEnd((int) $this->getStartDate(), $date);
+            return TimePeriodWithoutWeekEnd::getNumberOfDaysWithoutWeekEndBetweenTwoDates((int) $this->getStartDate(), $date);
         } else {
             return count($this->getDayOffsets());
         }
@@ -169,12 +174,12 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     /**
      * @return int[]
      */
-    private function getDayOffsetsWithConsistentDuration(): array
+    private static function getDayOffsetsWithConsistentDuration(int $start_date, int $duration): array
     {
         $day_offsets_excluding_we = array();
         $day_offset = 0;
-        while (count($day_offsets_excluding_we)-1 != $this->getDuration()) {
-            $day = self::getNextDay($day_offset, (int) $this->getStartDate());
+        while (count($day_offsets_excluding_we)-1 !== $duration) {
+            $day = self::getNextDay($day_offset, $start_date);
             if (self::isNotWeekendDay($day)) {
                 $day_offsets_excluding_we[] = $day_offset;
             }
@@ -186,13 +191,13 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     /**
      * @return int[]
      */
-    private function getDayOffsetsWithInconsistentDuration(): array
+    private static function getDayOffsetsWithInconsistentDuration(int $start_date): array
     {
         $day_offset = 0;
-        $day        = self::getNextDay($day_offset, (int) $this->getStartDate());
+        $day        = self::getNextDay($day_offset, $start_date);
         while (! self::isNotWeekendDay($day)) {
             $day_offset++;
-            $day = self::getNextDay($day_offset, (int) $this->getStartDate());
+            $day = self::getNextDay($day_offset, $start_date);
         }
 
         return array($day_offset);
@@ -204,13 +209,19 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     public function getNumberOfDaysUntilEnd(): int
     {
         if ($this->getTodayTimestamp() > $this->getEndDate()) {
-            return -$this->getNumberOfDaysWithoutWeekEnd((int) $this->getEndDate(), $this->getTodayTimestamp());
+            return -self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+                (int) $this->getEndDate(),
+                $this->getTodayTimestamp()
+            );
         } else {
-            return $this->getNumberOfDaysWithoutWeekEnd($this->getTodayTimestamp(), (int) $this->getEndDate());
+            return self::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+                $this->getTodayTimestamp(),
+                (int) $this->getEndDate()
+            );
         }
     }
 
-    private function getNumberOfDaysWithoutWeekEnd(int $start_date, int $end_date): int
+    private static function getNumberOfDaysWithoutWeekEndBetweenTwoDates(int $start_date, int $end_date): int
     {
         $real_number_of_days_after_start = 0;
         $day        = $start_date;
@@ -241,7 +252,10 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
             return 0;
         }
 
-        return $this->getNumberOfDaysWithoutWeekEnd((int) $this->getStartDate(), $this->getTodayTimestamp());
+        return TimePeriodWithoutWeekEnd::getNumberOfDaysWithoutWeekEndBetweenTwoDates(
+            (int) $this->getStartDate(),
+            $this->getTodayTimestamp()
+        );
     }
 
     private function isToday(int $day): bool

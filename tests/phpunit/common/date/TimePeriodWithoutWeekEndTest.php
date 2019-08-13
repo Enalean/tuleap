@@ -404,10 +404,6 @@ class TimePeriodWithoutWeekEndTest extends TestCase
             $time_period->getStartDate(),
             $time_period->getDuration()
         );
-        $this->assertEquals(
-            $time_period->getEndDate(),
-            $time_period_from_time_period->getEndDate()
-        );
     }
 
     public function provideEndDateData(): array
@@ -441,11 +437,11 @@ class TimePeriodWithoutWeekEndTest extends TestCase
                 9,
                 null
             ],
-            'End date "in the past" are ignored and we take duration = 0 instead' => [
+            'End date "in the past" provides negative duration' => [
                 '2019-08-05',
                 '2019-08-01',
-                '2019-08-05',
-                0,
+                '2019-08-01',
+                -2,
                 'Inconsistent TimePeriod: end date 2019-08-01 is lesser than start date 2019-08-05.'
             ],
         ];
