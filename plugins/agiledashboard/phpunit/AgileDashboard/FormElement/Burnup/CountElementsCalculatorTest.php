@@ -86,10 +86,10 @@ final class CountElementsCalculatorTest extends TestCase
 
         $this->mockEpicUserStoriesAndTasks($artifact_id, $timestamp);
 
-        $burnup_effort = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
 
-        $this->assertSame(5, $burnup_effort->getTotalEffort());
-        $this->assertSame(3, $burnup_effort->getTeamEffort());
+        $this->assertSame(5, $count_elements_cache_info->getTotalElements());
+        $this->assertSame(3, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItCountsDirectSubElementsOfMilestoneAndTheirChildrenWithoutCoutingTwiceElements(): void
@@ -99,10 +99,10 @@ final class CountElementsCalculatorTest extends TestCase
 
         $this->mockEpicUserStoriesAndTasksWithMultipleLinksToTask($artifact_id, $timestamp);
 
-        $burnup_effort = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
 
-        $this->assertSame(5, $burnup_effort->getTotalEffort());
-        $this->assertSame(3, $burnup_effort->getTeamEffort());
+        $this->assertSame(5, $count_elements_cache_info->getTotalElements());
+        $this->assertSame(3, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItOnlyCountsDirectSubElementsOfMilestoneIfTheyDontHaveArtLinkField(): void
@@ -112,10 +112,10 @@ final class CountElementsCalculatorTest extends TestCase
 
         $this->mockUserStoriesWithoutArtLinkField($artifact_id, $timestamp);
 
-        $burnup_effort = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
 
-        $this->assertSame(3, $burnup_effort->getTotalEffort());
-        $this->assertSame(1, $burnup_effort->getTeamEffort());
+        $this->assertSame(3, $count_elements_cache_info->getTotalElements());
+        $this->assertSame(1, $count_elements_cache_info->getClosedElements());
     }
 
     public function testItOnlyCountsDirectSubElementsOfMilestoneIfTheyDontHaveChildren(): void
@@ -125,10 +125,10 @@ final class CountElementsCalculatorTest extends TestCase
 
         $this->mockUserStoriesWithoutChildren($artifact_id, $timestamp);
 
-        $burnup_effort = $this->calculator->getValue($artifact_id, $timestamp);
+        $count_elements_cache_info = $this->calculator->getValue($artifact_id, $timestamp);
 
-        $this->assertSame(3, $burnup_effort->getTotalEffort());
-        $this->assertSame(1, $burnup_effort->getTeamEffort());
+        $this->assertSame(3, $count_elements_cache_info->getTotalElements());
+        $this->assertSame(1, $count_elements_cache_info->getClosedElements());
     }
 
     private function mockEpicUserStoriesAndTasks(int $artifact_id, int $timestamp): void

@@ -66,10 +66,7 @@ class CountElementsCalculator
         $this->form_element_factory = $form_element_factory;
     }
 
-    /**
-     * @return BurnupEffort
-     */
-    public function getValue(int $artifact_id, int $timestamp): BurnupEffort
+    public function getValue(int $artifact_id, int $timestamp): CountElementsCacheInfo
     {
         $backlog_items = $this->burnup_dao->searchLinkedArtifactsAtGivenTimestamp($artifact_id, $timestamp);
 
@@ -110,7 +107,7 @@ class CountElementsCalculator
             );
         }
 
-        return new BurnupEffort($closed_subelements, $total_subelements);
+        return new CountElementsCacheInfo($closed_subelements, $total_subelements);
     }
 
     private function countChildren(
