@@ -502,6 +502,9 @@ msgstr "URL"
 msgid "Unlock"
 msgstr "Déverrouiller"
 
+msgid "Update permissions"
+msgstr "Mettre à jour les permissions"
+
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
 

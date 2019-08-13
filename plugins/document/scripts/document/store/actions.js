@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,13 @@ import {
     putLinkMetadata,
     putWikiMetadata,
     putEmptyDocumentMetadata,
-    putFolderDocumentMetadata
+    putFolderDocumentMetadata,
+    putEmbeddedFilePermissions,
+    putFilePermissions,
+    putLinkPermissions,
+    putWikiPermissions,
+    putEmptyDocumentPermissions,
+    putFolderPermissions
 } from "../api/rest-querier.js";
 
 import {
@@ -778,6 +784,45 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
         const updated_item = await getItem(item.id);
 
         if (item.id === current_folder.id) {
+            context.commit("replaceCurrentFolder", updated_item);
+        } else {
+            Vue.set(updated_item, "updated", true);
+            context.commit("removeItemFromFolderContent", updated_item);
+            context.commit("addJustCreatedItemToFolderContent", updated_item);
+            context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
+        }
+    } catch (exception) {
+        await handleErrorsForModal(context, exception);
+    }
+};
+
+export const updatePermissions = async (context, [item, updated_permissions]) => {
+    try {
+        switch (item.type) {
+            case TYPE_FILE:
+                await putFilePermissions(item.id, updated_permissions);
+                break;
+            case TYPE_EMBEDDED:
+                await putEmbeddedFilePermissions(item.id, updated_permissions);
+                break;
+            case TYPE_LINK:
+                await putLinkPermissions(item.id, updated_permissions);
+                break;
+            case TYPE_WIKI:
+                await putWikiPermissions(item.id, updated_permissions);
+                break;
+            case TYPE_EMPTY:
+                await putEmptyDocumentPermissions(item.id, updated_permissions);
+                break;
+            case TYPE_FOLDER:
+                await putFolderPermissions(item.id, updated_permissions);
+                break;
+            default:
+                break;
+        }
+        const updated_item = await getItem(item.id);
+
+        if (item.id === context.state.current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item);
         } else {
             Vue.set(updated_item, "updated", true);

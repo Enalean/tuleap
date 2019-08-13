@@ -22,6 +22,7 @@
           role="dialog"
           aria-labelledby="document-update-permissions-modal"
           enctype="multipart/form-data"
+          v-on:submit.prevent="updatePermissions"
     >
         <modal-header v-bind:modal-title="modal_title"
                       v-bind:aria-labelled-by="aria_labelled_by"
@@ -41,30 +42,28 @@
                 <permissions-selector
                     v-bind:label="label_reader"
                     v-bind:project_ugroups="project_ugroups"
-                    v-bind:selected_ugroups="item.permissions_for_groups.can_read"
+                    v-model="updated_permissions.can_read"
+                    v-bind:key="`permissions-selector-can_read-${item.id}`"
                 />
                 <permissions-selector
                     v-bind:label="label_writer"
                     v-bind:project_ugroups="project_ugroups"
-                    v-bind:selected_ugroups="item.permissions_for_groups.can_write"
+                    v-model="updated_permissions.can_write"
+                    v-bind:key="`permissions-selector-can_write-${item.id}`"
                 />
                 <permissions-selector
                     v-bind:label="label_manager"
                     v-bind:project_ugroups="project_ugroups"
-                    v-bind:selected_ugroups="item.permissions_for_groups.can_manage"
+                    v-model="updated_permissions.can_manage"
+                    v-bind:key="`permission-selectors-can_manage-${item.id}`"
                 />
             </div>
         </div>
-        <div v-bind:aria-labelled-by="aria_labelled_by" class="tlp-modal-footer">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
-                v-translate
-            >
-                Cancel
-            </button>
-        </div>
+        <modal-footer v-bind:is-loading="! can_be_submitted"
+                      v-bind:submit-button-label="submit_button_label"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-submit-button-class="'fa-pencil'"
+        />
     </form>
 </template>
 <script>
@@ -73,6 +72,7 @@ import { modal as createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../../helpers/permissions/ugroups.js";
 import PermissionsSelector from "./PermissionsSelector.vue";
@@ -83,6 +83,7 @@ export default {
     components: {
         ModalHeader,
         ModalFeedback,
+        ModalFooter,
         PermissionsSelector
     },
     props: {
@@ -92,7 +93,13 @@ export default {
         return {
             modal: null,
             aria_labelled_by: "document-update-permissions-modal",
-            project_ugroups: null
+            project_ugroups: null,
+            is_submitting_new_permissions: false,
+            updated_permissions: {
+                can_read: [],
+                can_write: [],
+                can_manage: []
+            }
         };
     },
     computed: {
@@ -118,6 +125,21 @@ export default {
                 encodeURIComponent(this.item.id) +
                 "&action=details&section=permissions"
             );
+        },
+        submit_button_label() {
+            return this.$gettext("Update permissions");
+        },
+        can_be_submitted() {
+            return this.project_ugroups !== null || this.is_submitting_new_permissions === false;
+        }
+    },
+    watch: {
+        item: function(value) {
+            this.updated_permissions = {
+                can_read: JSON.parse(JSON.stringify(value.permissions_for_groups.can_read)),
+                can_write: JSON.parse(JSON.stringify(value.permissions_for_groups.can_write)),
+                can_manage: JSON.parse(JSON.stringify(value.permissions_for_groups.can_manage))
+            };
         }
     },
     mounted() {
@@ -145,6 +167,15 @@ export default {
         },
         reset() {
             this.$store.commit("error/resetModalError");
+        },
+        async updatePermissions() {
+            this.is_submitting_new_permissions = true;
+            this.$store.commit("error/resetModalError");
+            await this.$store.dispatch("updatePermissions", [this.item, this.updated_permissions]);
+            this.is_submitting_new_permissions = true;
+            if (this.has_modal_error === false) {
+                this.modal.hide();
+            }
         }
     }
 };

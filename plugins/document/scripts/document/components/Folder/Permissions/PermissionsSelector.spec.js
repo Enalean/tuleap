@@ -56,4 +56,20 @@ describe("PermissionsSelector", () => {
         );
         expect(selected_option_wrappers.length).toBe(2);
     });
+
+    it("Select new user groups", () => {
+        const ugroup_1 = { id: "177", label: "My group 177" };
+        const ugroup_2 = { id: "178", label: "My group 178" };
+
+        const wrapper = factory({
+            label: "Permission label",
+            project_ugroups: [ugroup_1, ugroup_2],
+            selected_ugroups: []
+        });
+
+        wrapper.find("select").setValue(ugroup_1.id);
+        const emitted_input = wrapper.emitted("input");
+        expect(emitted_input.length).toBe(1);
+        expect(emitted_input[0]).toEqual([[{ id: ugroup_1.id }]]);
+    });
 });

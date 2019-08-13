@@ -38,7 +38,7 @@ describe("PermissionsUpdateModal", () => {
     let factory, store;
 
     beforeEach(() => {
-        store = createStoreMock({}, { project_id: 102 });
+        store = createStoreMock({}, { project_id: 102, error: {} });
 
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateModal, {
@@ -129,5 +129,25 @@ describe("PermissionsUpdateModal", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
+    });
+
+    it("Send update request when form is submitted", () => {
+        const item_to_update = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: []
+            }
+        };
+        const wrapper = factory({ item: item_to_update });
+
+        wrapper.find("form").trigger("submit.prevent");
+
+        expect(store.dispatch).toHaveBeenCalledWith("updatePermissions", [
+            item_to_update,
+            item_to_update.permissions_for_groups
+        ]);
     });
 });

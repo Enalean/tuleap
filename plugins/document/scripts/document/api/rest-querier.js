@@ -78,6 +78,12 @@ export {
     putWikiMetadata,
     putEmptyDocumentMetadata,
     putFolderDocumentMetadata,
+    putEmbeddedFilePermissions,
+    putFilePermissions,
+    putLinkPermissions,
+    putWikiPermissions,
+    putEmptyDocumentPermissions,
+    putFolderPermissions,
     getProjectUserGroups,
     getProjectMetadata
 };
@@ -656,6 +662,60 @@ function putFolderDocumentMetadata(id, title, description, owner_id, status, obs
             status,
             obsolescence_date
         })
+    });
+}
+
+function putEmbeddedFilePermissions(id, permissions) {
+    return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
+    });
+}
+
+function putFilePermissions(id, permissions) {
+    return put(`/api/docman_files/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
+    });
+}
+
+function putLinkPermissions(id, permissions) {
+    return put(`/api/docman_links/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
+    });
+}
+
+function putWikiPermissions(id, permissions) {
+    return put(`/api/docman_wikis/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
+    });
+}
+
+function putEmptyDocumentPermissions(id, permissions) {
+    return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
+    });
+}
+
+function putFolderPermissions(id, permissions) {
+    return put(`/api/docman_folders/${encodeURIComponent(id)}/permissions`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(permissions)
     });
 }
 

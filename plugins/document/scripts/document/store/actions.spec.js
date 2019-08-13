@@ -41,7 +41,8 @@ import {
     setUserPreferenciesForUI,
     unlockDocument,
     unsetUnderConstructionUserPreference,
-    updateMetadata
+    updateMetadata,
+    updatePermissions
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -82,7 +83,13 @@ import {
     rewire$putWikiMetadata,
     rewire$putEmptyDocumentMetadata,
     rewire$removeUserPreferenceForEmbeddedDisplay,
-    rewire$setNarrowModeForEmbeddedDisplay
+    rewire$setNarrowModeForEmbeddedDisplay,
+    rewire$putEmbeddedFilePermissions,
+    rewire$putFilePermissions,
+    rewire$putLinkPermissions,
+    rewire$putWikiPermissions,
+    rewire$putEmptyDocumentPermissions,
+    rewire$putFolderPermissions
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -92,6 +99,10 @@ import {
     restore as restoreLoadAscendantHierarchy,
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
+import {
+    restore as restoreHandleErrors,
+    rewire$handleErrorsForModal
+} from "./actions-helpers/handle-errors.js";
 
 import {
     TYPE_EMBEDDED,
@@ -2188,6 +2199,202 @@ describe("Store actions", () => {
 
                 expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", item_to_update);
             });
+        });
+    });
+
+    describe("UpdatePermissions()", () => {
+        const permissions = {
+            can_read: [],
+            can_write: [],
+            can_manage: []
+        };
+
+        let getItem, context;
+
+        beforeEach(() => {
+            context = {
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    current_folder: { id: 999, type: TYPE_FOLDER }
+                }
+            };
+
+            getItem = jasmine.createSpy("getItem");
+            rewire$getItem(getItem);
+        });
+
+        afterEach(() => {
+            restoreHandleErrors();
+        });
+
+        const testPermissionsUpdateSuccess = async type => {
+            const item = {
+                id: 123,
+                type: type
+            };
+
+            getItem.and.returnValue(Promise.resolve(item));
+
+            await updatePermissions(context, [item, permissions]);
+        };
+
+        it("Can update file permissions", async () => {
+            const putFilePermissions = jasmine.createSpy("putFilePermissions");
+            rewire$putFilePermissions(putFilePermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_FILE);
+
+            expect(putFilePermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update embedded file permissions", async () => {
+            const putEmbeddedFilePermissions = jasmine.createSpy("putEmbeddedFilePermissions");
+            rewire$putEmbeddedFilePermissions(putEmbeddedFilePermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_EMBEDDED);
+
+            expect(putEmbeddedFilePermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update link permissions", async () => {
+            const putLinkPermissions = jasmine.createSpy("putLinkPermissions");
+            rewire$putLinkPermissions(putLinkPermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_LINK);
+
+            expect(putLinkPermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update wiki permissions", async () => {
+            const putWikiPermissions = jasmine.createSpy("putWikiPermissions");
+            rewire$putWikiPermissions(putWikiPermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_WIKI);
+
+            expect(putWikiPermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update empty document permissions", async () => {
+            const putEmptyDocumentPermissions = jasmine.createSpy("putEmptyDocumentPermissions");
+            rewire$putEmptyDocumentPermissions(putEmptyDocumentPermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_EMPTY);
+
+            expect(putEmptyDocumentPermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update folder permissions", async () => {
+            const putFolderPermissions = jasmine.createSpy("putFolderPermissions");
+            rewire$putFolderPermissions(putFolderPermissions);
+
+            await testPermissionsUpdateSuccess(TYPE_FOLDER);
+
+            expect(putFolderPermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Can update folder permissions when it is the current folder", async () => {
+            const putFolderPermissions = jasmine.createSpy("putFolderPermissions");
+            rewire$putFolderPermissions(putFolderPermissions);
+
+            const folder = { id: 123, type: TYPE_FOLDER };
+            context.state.current_folder = folder;
+
+            getItem.and.returnValue(Promise.resolve(folder));
+
+            await updatePermissions(context, [folder, permissions]);
+
+            expect(putFolderPermissions).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "replaceCurrentFolder",
+                jasmine.any(Object)
+            );
+        });
+
+        it("Set an error in modal when is raised while updating permissions", async () => {
+            const putEmptyDocumentPermissions = jasmine.createSpy("putEmptyDocumentPermissions");
+            rewire$putEmptyDocumentPermissions(putEmptyDocumentPermissions);
+            mockFetchError(putEmptyDocumentPermissions, {
+                status: 500
+            });
+            const handleErrorsModal = jasmine.createSpy("handleErrorsModal");
+            rewire$handleErrorsForModal(handleErrorsModal);
+
+            await updatePermissions(context, [{ id: 123, type: TYPE_EMPTY }, permissions]);
+
+            expect(getItem).not.toHaveBeenCalled();
+            expect(handleErrorsModal).toHaveBeenCalled();
         });
     });
 });
