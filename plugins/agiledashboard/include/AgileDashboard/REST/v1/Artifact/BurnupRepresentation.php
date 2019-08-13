@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\v1\Artifact;
 
 use Tuleap\AgileDashboard\FormElement\BurnupData;
+use Tuleap\AgileDashboard\REST\v1\Artifact\BurnupCountElementsPointRepresentation;
 use Tuleap\REST\JsonCast;
 
 class BurnupRepresentation
@@ -45,10 +46,16 @@ class BurnupRepresentation
      * @var array {@type int} Number of day in week (Sunday as 0 and Saturday as 6)
      */
     public $opening_days;
+
     /**
      * @var array {@type BurnupPointRepresentation}
      */
     public $points_with_date = array();
+
+    /**
+     * @var array {@type BurnupCountElementsPointRepresentation}
+     */
+    public $points_with_date_count_elements = array();
 
     public function __construct($capacity, ?BurnupData $burnup_data = null)
     {
@@ -62,6 +69,12 @@ class BurnupRepresentation
         $this->opening_days         = array(1, 2, 3, 4, 5);
         foreach ($burnup_data->getEfforts() as $timestamp => $burnup_effort) {
             $this->points_with_date[] = new BurnupPointRepresentation($burnup_effort, $timestamp);
+        }
+        foreach ($burnup_data->getCountElements() as $timestamp => $count_element) {
+            $this->points_with_date_count_elements[] = new BurnupCountElementsPointRepresentation(
+                $count_element,
+                $timestamp
+            );
         }
     }
 }

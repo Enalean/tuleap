@@ -91,7 +91,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
     function drawBurndownChart() {
         addIdealLine();
         drawDataColumns();
-        addCurve("remaining");
+        addCurve("remaining_effort");
         setInteraction();
     }
 

@@ -43,13 +43,13 @@ $total-effort-color: #bd2626;
     }
 }
 
-.chart-curve-team-effort {
+.chart-curve-progression {
     stroke-width: 3px;
     stroke: $team-effort-color;
     fill: transparent;
 }
 
-.chart-curve-total-effort {
+.chart-curve-total {
     stroke-width: 3px;
     stroke: $total-effort-color;
     fill: transparent;

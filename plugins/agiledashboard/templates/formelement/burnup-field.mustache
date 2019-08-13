@@ -4,7 +4,7 @@
 
 {{^ has_warning }}
     <link rel="stylesheet" type="text/css" href="{{ css_url }}" />
-    <div id="burnup-chart" data-burnup="{{ burnup_data }}" data-locale={{ user_locale }}></div>
+    <div id="burnup-chart" data-burnup="{{ burnup_data }}" data-locale="{{ user_locale }}" data-mode="{{ burnup_mode }}"></div>
 
     {{# can_burnup_be_regenerated }}
         <a class="btn chart-cache-button-generate" data-toggle="modal" href="#burnup-generate">

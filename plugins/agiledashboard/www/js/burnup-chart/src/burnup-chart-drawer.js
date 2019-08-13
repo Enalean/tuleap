@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ import { getLastDayData, getDisplayableData } from "./chart-data-service.js";
 
 export { createBurnupChart };
 
-function createBurnupChart({ chart_container, chart_props, chart_legends, burnup_data }) {
+function createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data }) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom: 25,
         tooltip_padding_width: 15,
@@ -47,10 +47,10 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
     });
 
     const default_total_effort = 5,
-        x_axis_tick_values = getDaysToDisplay(burnup_data),
-        displayable_data = getDisplayableData(burnup_data.points_with_date),
-        last_day_data = getLastDayData(burnup_data.points_with_date),
-        total_effort = getTotalEffort(burnup_data);
+        x_axis_tick_values = getDaysToDisplay(generic_burnup_data),
+        displayable_data = getDisplayableData(generic_burnup_data),
+        last_day_data = getLastDayData(generic_burnup_data),
+        total_effort = getTotal(generic_burnup_data);
 
     const properties = {
         ...chart_props,
@@ -82,19 +82,19 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
 
     label_formatter.formatTicks();
 
-    if (!burnup_data.points_with_date.length) {
+    if (!generic_burnup_data.points_with_date.length) {
         last_day_data.date = moment();
 
         return;
     }
 
-    drawBurnupChart(chart_container);
+    drawBurnupChart();
 
     function drawBurnupChart() {
         addIdealLine();
         drawDataColumns();
         addCurve("total");
-        addCurve("team");
+        addCurve("progression");
         setInteraction();
     }
 
@@ -106,8 +106,9 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
             .append("g")
             .attr("class", "chart-datum-column");
 
-        columns.each(function({ date, total_effort, team_effort }) {
+        columns.each(function(column_data) {
             const column = select(this);
+            const date = column_data.date;
 
             column_factory.addColumn(column, date);
 
@@ -115,14 +116,14 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
                 .append("circle")
                 .attr("class", "chart-plot-total-effort")
                 .attr("cx", x_scale(date))
-                .attr("cy", y_scale(total_effort))
+                .attr("cy", y_scale(column_data.total))
                 .attr("r", 4);
 
             column
                 .append("circle")
                 .attr("class", "chart-plot-team-effort chart-tooltip-target")
                 .attr("cx", x_scale(date))
-                .attr("cy", y_scale(team_effort))
+                .attr("cy", y_scale(column_data.progression))
                 .attr("r", 4);
         });
     }
@@ -164,11 +165,11 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
             .addTextLine(({ date }) =>
                 moment(date, moment.ISO_8601).format(properties.tooltip_date_format)
             )
-            .addTextLine(({ team_effort }) =>
-                sprintf(gettext_provider.gettext("Team effort: %s"), team_effort)
+            .addTextLine(({ progression }) =>
+                sprintf(gettext_provider.gettext("Team effort: %s"), progression)
             )
-            .addTextLine(({ total_effort }) =>
-                sprintf(gettext_provider.gettext("Total effort: %s"), total_effort)
+            .addTextLine(({ total }) =>
+                sprintf(gettext_provider.gettext("Total effort: %s"), total)
             );
     }
 
@@ -179,10 +180,12 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
         TooltipFactory.removeTooltips(svg_burnup);
     }
 
+    function getLastDayDataTotal() {
+        return last_day_data.total;
+    }
+
     function addIdealLine() {
-        const final_total_effort = last_day_data.total_effort
-            ? last_day_data.total_effort
-            : burnup_data.capacity;
+        const total = getLastDayDataTotal() ? getLastDayDataTotal() : generic_burnup_data.capacity;
 
         drawIdealLine(
             svg_burnup,
@@ -192,16 +195,16 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
             },
             {
                 line_start: 0,
-                line_end: final_total_effort
+                line_end: total
             }
         );
     }
 
-    function getTotalEffort({ points_with_date, capacity }) {
-        const max_total_effort = max(points_with_date, ({ total_effort }) => total_effort);
+    function getTotal({ points_with_date, capacity }) {
+        const max_total = max(points_with_date, ({ total }) => total);
 
-        if (max_total_effort) {
-            return max_total_effort;
+        if (max_total) {
+            return max_total;
         }
 
         if (capacity) {
@@ -211,12 +214,12 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
         return default_total_effort;
     }
 
-    function isThereATeamEffort() {
-        return last_day_data.hasOwnProperty("team_effort") && last_day_data.team_effort !== null;
+    function isThereALastDayProgression() {
+        return last_day_data.hasOwnProperty("progression") && last_day_data.progression !== null;
     }
 
     function getDateLegendContent() {
-        if (isThereATeamEffort()) {
+        if (isThereALastDayProgression()) {
             return sprintf(
                 chart_props.left_legend_title,
                 moment(last_day_data.date).format(chart_props.left_legend_date_format)
@@ -229,11 +232,15 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, burnup
         );
     }
 
+    function getLastDayDataProgression() {
+        return last_day_data.progression;
+    }
+
     function insertLegend() {
         const legend_y_position = chart_props.margins.top * 0.5;
         const date_legend_content = getDateLegendContent();
-        const badge_value = isThereATeamEffort()
-            ? last_day_data.team_effort
+        const badge_value = isThereALastDayProgression()
+            ? getLastDayDataProgression()
             : chart_props.legend_badge_default;
 
         addTextCaption({

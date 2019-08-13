@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-final class CountElementsCacheInfo
+final class CountElementsInfo
 {
     /**
-     * @var int
+     * @var int|null
      */
     private $closed_elements;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $total_elements;
 
-    public function __construct(int $closed_elements, int $total_elements)
+    public function __construct(?int $closed_elements, ?int $total_elements)
     {
         $this->closed_elements = $closed_elements;
         $this->total_elements  = $total_elements;
     }
 
-    public function getClosedElements(): int
+    public function getClosedElements(): ?int
     {
         return $this->closed_elements;
     }
 
-    public function getTotalElements(): int
+    public function getTotalElements(): ?int
     {
         return $this->total_elements;
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,11 +61,12 @@ function drawIdealLine(container, { x_scale, y_scale }, { line_start, line_end }
 function drawCurve(container, { x_scale, y_scale }, dataset, line_name) {
     const lines = line()
         .x(({ date }) => x_scale(date))
-        .y(point => y_scale(point[`${line_name}_effort`]));
+        .y(point => y_scale(point[line_name]));
 
+    const class_name = line_name.replace("_", "-");
     container
         .append("path")
         .datum(dataset)
-        .attr("class", `chart-curve-${line_name}-effort`)
+        .attr("class", `chart-curve-${class_name}`)
         .attr("d", lines);
 }
