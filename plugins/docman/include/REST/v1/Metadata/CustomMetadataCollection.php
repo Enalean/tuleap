@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 class CustomMetadataCollection
 {
     /**
-     * @var DocmanMetadataRepresentation[]
+     * @var ProjectConfiguredMetadataRepresentation[]
      */
     private $metadata_representations;
 
@@ -40,7 +40,7 @@ class CustomMetadataCollection
     }
 
     /**
-     * @return DocmanMetadataRepresentation[]
+     * @return ProjectConfiguredMetadataRepresentation[]
      */
     public function getMetadataRepresentations(): array
     {

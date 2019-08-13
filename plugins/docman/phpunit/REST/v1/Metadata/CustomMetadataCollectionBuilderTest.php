@@ -85,7 +85,7 @@ class CustomMetadataCollectionBuilderTest extends TestCase
         $value_two_representation = new DocmanMetadataListValueRepresentation();
         $value_two_representation->build($element_two->getId(), $element_two->getName());
 
-        $metadata_list_representation = new DocmanMetadataRepresentation();
+        $metadata_list_representation = new ProjectConfiguredMetadataRepresentation();
         $metadata_list_representation->build(
             $list_metadata->getLabel(),
             $list_metadata->getName(),
@@ -99,7 +99,7 @@ class CustomMetadataCollectionBuilderTest extends TestCase
 
         $this->list_of_value_builder->shouldReceive('build')->withArgs([$list_metadata->getId(), false])->andReturn([$element, $element_two]);
 
-        $metadata_representation = new DocmanMetadataRepresentation();
+        $metadata_representation = new ProjectConfiguredMetadataRepresentation();
         $metadata_representation->build(
             $metadata->getLabel(),
             $metadata->getName(),

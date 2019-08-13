@@ -23,7 +23,7 @@ namespace Tuleap\Docman\REST\v1;
 use Codendi_HTMLPurifier;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
@@ -124,7 +124,7 @@ class ItemRepresentation
      */
     public $lock_info;
     /**
-     * @var MetadataRepresentation[]
+     * @var ItemMetadataRepresentation[]
      */
     public $metadata;
 

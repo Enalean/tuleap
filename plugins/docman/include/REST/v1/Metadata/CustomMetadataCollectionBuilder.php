@@ -52,7 +52,7 @@ class CustomMetadataCollectionBuilder
          * @var Docman_Metadata $metadata
          */
         foreach ($metadata_list as $metadata) {
-            $representation = new DocmanMetadataRepresentation();
+            $representation = new ProjectConfiguredMetadataRepresentation();
             $representation->build(
                 $metadata->getLabel(),
                 $metadata->getName(),

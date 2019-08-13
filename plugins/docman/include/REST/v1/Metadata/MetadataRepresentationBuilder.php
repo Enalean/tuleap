@@ -55,7 +55,7 @@ class MetadataRepresentationBuilder
     }
 
     /**
-     * @return MetadataRepresentation[]
+     * @return ItemMetadataRepresentation[]
      * @throws UnknownMetadataException
      */
     public function build(\Docman_Item $item) : array
@@ -69,7 +69,7 @@ class MetadataRepresentationBuilder
         foreach ($item_metadata as $metadata) {
             $transformed_values = $this->getMetadataValues($metadata);
 
-            $metadata_representations[] = new MetadataRepresentation(
+            $metadata_representations[] = new ItemMetadataRepresentation(
                 $metadata->getName(),
                 $this->getMetadataType((int)$metadata->getType()),
                 $metadata->isMultipleValuesAllowed(),

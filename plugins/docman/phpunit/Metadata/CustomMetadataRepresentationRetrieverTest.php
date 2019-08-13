@@ -29,7 +29,7 @@ use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBu
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollection;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
-use Tuleap\Docman\REST\v1\Metadata\DocmanMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ProjectConfiguredMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
 use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
@@ -79,7 +79,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = "list value";
         $existing_metadata->list_value = null;
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -91,7 +91,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
             null
         );
 
-        $project_list_representation = new DocmanMetadataRepresentation();
+        $project_list_representation = new ProjectConfiguredMetadataRepresentation();
         $project_list_representation->build(
             "field_list_1",
             'field_list_1',
@@ -127,7 +127,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = "";
         $existing_metadata->list_value = null;
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -163,7 +163,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = null;
         $existing_metadata->list_value = "";
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'field_list_1',
@@ -199,7 +199,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = null;
         $existing_metadata->list_value = null;
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -235,7 +235,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = "list value";
         $existing_metadata->list_value = null;
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -278,7 +278,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -306,7 +306,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -334,7 +334,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'field_text_1',
@@ -369,7 +369,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $existing_metadata->value      = "list value";
         $existing_metadata->list_value = null;
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -410,7 +410,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$metadata->short_name])->andReturn($project_configured_metadata);
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -456,7 +456,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$metadata->short_name])->andReturn($project_configured_metadata);
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -495,7 +495,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -535,7 +535,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -590,7 +590,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -627,7 +627,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -674,7 +674,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -730,7 +730,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -773,7 +773,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -834,7 +834,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -885,7 +885,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_text_1",
             'name',
@@ -947,7 +947,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
@@ -1008,7 +1008,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->factory->shouldReceive('appendItemMetadataList')->once();
 
-        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation = new ProjectConfiguredMetadataRepresentation();
         $project_field_representation->build(
             "field_list_1",
             'name',
