@@ -710,6 +710,50 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
+    public function testUpdatePermissionsFolder(int $root_id) : void
+    {
+        $response_folder_updater_permissions = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Folder update permissions'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_updater_permissions->getStatusCode());
+        $folder_id = $response_folder_updater_permissions->json()['id'];
+
+        $project_members_identifier = $this->project_id . '_3';
+        $permission_update_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'docman_folders/' . urlencode((string) $folder_id) . '/permissions',
+                null,
+                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+            )
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+
+        $folder_representation_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . urlencode((string) $folder_id))
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+        $permissions_for_groups_representation = $folder_representation_response->json()['permissions_for_groups'];
+        $this->assertEmpty($permissions_for_groups_representation['can_read']);
+        $this->assertEmpty($permissions_for_groups_representation['can_write']);
+        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testItThrowsAnErrorWhenWeTryToDeleteTheRootFolder(int $root_id) : void
     {
         $response = $this->getResponseByName(

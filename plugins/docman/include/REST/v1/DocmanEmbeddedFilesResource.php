@@ -32,6 +32,7 @@ use Docman_PermissionsManager;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use PluginManager;
 use Project;
 use ProjectManager;
@@ -40,6 +41,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileVersionPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\Lock\RestLockUpdater;
@@ -50,13 +52,17 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsPUTRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UGroupManager;
 use UserManager;
 
 class DocmanEmbeddedFilesResource extends AuthenticatedResource
@@ -395,6 +401,59 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     public function optionsIdLock(int $id): void
     {
         $this->setHeadersForLock();
+    }
+
+    /**
+     * @url OPTIONS {id}/permissions
+     */
+    public function optionsPermissions(int $id) : void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Update permissions of an embedded file document
+     *
+     * @url    PUT {id}/permissions
+     * @access hybrid
+     *
+     * @param int $id Id of the embedded file document
+     * @param DocmanItemPermissionsForGroupsPUTRepresentation $representation {@from body}
+     *
+     * @status 200
+     *
+     * @throws RestException 400
+     */
+    public function putPermissions(int $id, DocmanItemPermissionsForGroupsPUTRepresentation $representation) : void
+    {
+        $this->checkAccess();
+        $this->optionsPermissions($id);
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $user         = $item_request->getUser();
+
+        $item->accept($this->getValidator($project, $user, $item), []);
+
+        $this->addAllEvent($project);
+
+        $docman_permission_manager     = $this->getPermissionManager($project);
+        $ugroup_manager                = new UGroupManager();
+        $permissions_rest_item_updater = new PermissionItemUpdaterFromRESTContext(
+            new PermissionItemUpdater(
+                new NullResponseFeedbackWrapper(),
+                Docman_ItemFactory::instance($project->getID()),
+                $docman_permission_manager,
+                PermissionsManager::instance(),
+                $this->event_manager
+            ),
+            $docman_permission_manager,
+            $ugroup_manager,
+            new UserGroupRetriever($ugroup_manager),
+            ProjectManager::instance()
+        );
+        $permissions_rest_item_updater->updateItemPermissions($item, $user, $representation);
     }
 
     private function getPermissionManager(\Project $project): Docman_PermissionsManager
