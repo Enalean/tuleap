@@ -38,6 +38,7 @@ use Docman_Wiki;
 use DocmanPlugin;
 use EventManager;
 use Luracast\Restler\RestException;
+use PermissionsManager;
 use PluginManager;
 use Project;
 use ProjectManager;
@@ -46,6 +47,7 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\CopyItem\BeforeCopyVisitor;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanItemCopier;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanValidateRepresentationForCopy;
@@ -61,13 +63,17 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsPUTRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
+use UGroupManager;
 use UserManager;
 
 class DocmanFoldersResource extends AuthenticatedResource
@@ -781,6 +787,59 @@ class DocmanFoldersResource extends AuthenticatedResource
             $project,
             $current_user
         );
+    }
+
+    /**
+     * @url OPTIONS {id}/permissions
+     */
+    public function optionsPermissions(int $id) : void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Update permissions of a folder
+     *
+     * @url    PUT {id}/permissions
+     * @access hybrid
+     *
+     * @param int $id Id of the folder
+     * @param DocmanItemPermissionsForGroupsPUTRepresentation $representation {@from body}
+     *
+     * @status 200
+     *
+     * @throws RestException 400
+     */
+    public function putPermissions(int $id, DocmanItemPermissionsForGroupsPUTRepresentation $representation) : void
+    {
+        $this->checkAccess();
+        $this->optionsPermissions($id);
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $project      = $item_request->getProject();
+        $item         = $item_request->getItem();
+        $user         = $item_request->getUser();
+
+        $item->accept($this->getValidator($project, $user, $item), []);
+
+        $this->addAllEvent($project);
+
+        $docman_permission_manager     = $this->getPermissionManager($project);
+        $ugroup_manager                = new UGroupManager();
+        $permissions_rest_item_updater = new PermissionItemUpdaterFromRESTContext(
+            new PermissionItemUpdater(
+                new NullResponseFeedbackWrapper(),
+                Docman_ItemFactory::instance($project->getID()),
+                $docman_permission_manager,
+                PermissionsManager::instance(),
+                $this->event_manager
+            ),
+            $docman_permission_manager,
+            $ugroup_manager,
+            new UserGroupRetriever($ugroup_manager),
+            ProjectManager::instance()
+        );
+        $permissions_rest_item_updater->updateItemPermissions($item, $user, $representation);
     }
 
     /**

@@ -111,6 +111,44 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testUpdatePermissionsFileDocument(int $root_id) : void
+    {
+        $file_doc_id = $this->createANewFileAndGetItsId(
+            $root_id,
+            'File update permissions'
+        );
+
+        $project_members_identifier = $this->project_id . '_3';
+        $permission_update_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'docman_files/' . urlencode((string) $file_doc_id) . '/permissions',
+                null,
+                json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]])
+            )
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+
+        $file_doc_representation_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . urlencode((string) $file_doc_id))
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+        $permissions_for_groups_representation = $file_doc_representation_response->json()['permissions_for_groups'];
+        $this->assertEmpty($permissions_for_groups_representation['can_read']);
+        $this->assertEmpty($permissions_for_groups_representation['can_write']);
+        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_files/' . urlencode((string) $file_doc_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+    }
+
+    /**
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testDeleteThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFile(array $items): void
