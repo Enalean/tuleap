@@ -76,7 +76,7 @@ class MetadataRepresentationBuilder
                 $transformed_values['value'],
                 $transformed_values['post_processed_value'],
                 $transformed_values['list_value'],
-                $metadata->isRequired(),
+                $metadata->isEmptyAllowed(),
                 $metadata->getLabel()
             );
         }

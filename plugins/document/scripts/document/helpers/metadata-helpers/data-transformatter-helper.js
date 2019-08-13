@@ -76,7 +76,8 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
             short_name: parent_metadata.short_name,
             type: parent_metadata.type,
             name: parent_metadata.name,
-            is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed
+            is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed,
+            is_required: parent_metadata.is_required
         };
 
         switch (parent_metadata.type) {

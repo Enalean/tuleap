@@ -41,14 +41,16 @@ describe("NewItemModal", () => {
                             name: "title",
                             list_value: "My current folder",
                             is_multiple_value_allowed: false,
-                            type: "text"
+                            type: "text",
+                            is_required: false
                         },
                         {
                             short_name: "custom metadata",
                             name: "custom",
                             value: "value",
                             is_multiple_value_allowed: false,
-                            type: "text"
+                            type: "text",
+                            is_required: false
                         }
                     ]
                 },
@@ -99,7 +101,8 @@ describe("NewItemModal", () => {
                     name: "custom",
                     value: "value",
                     is_multiple_value_allowed: false,
-                    type: "text"
+                    type: "text",
+                    is_required: false
                 }
             ]
         };

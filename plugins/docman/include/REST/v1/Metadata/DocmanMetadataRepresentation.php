@@ -78,7 +78,7 @@ class DocmanMetadataRepresentation
         string $name,
         ?string $description,
         int $type,
-        bool $is_required,
+        bool $is_empty_allowed,
         bool $is_multiple_value_allowed,
         bool $is_used,
         ?array $allowed_list_values
@@ -87,7 +87,7 @@ class DocmanMetadataRepresentation
         $this->name                      = $name;
         $this->description               = $description;
         $this->type                      = self::METADATA_TYPE_LABEL[$type];
-        $this->is_required               = JSONCast::toBoolean($is_required);
+        $this->is_required               = JSONCast::toBoolean(!$is_empty_allowed);
         $this->is_multiple_value_allowed = JSONCast::toBoolean($is_multiple_value_allowed);
         $this->is_used                   = JSONCast::toBoolean($is_used);
         $this->allowed_list_values       = $allowed_list_values;

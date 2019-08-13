@@ -63,8 +63,8 @@ class CustomMetadataCollectionBuilderTest extends TestCase
         $metadata->shouldReceive("getDescription")->andReturn("");
         $list_metadata->shouldReceive("getType")->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $metadata->shouldReceive("getType")->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $list_metadata->shouldReceive("isRequired")->andReturn(true);
-        $metadata->shouldReceive("isRequired")->andReturn(true);
+        $list_metadata->shouldReceive("isEmptyAllowed")->andReturn(false);
+        $metadata->shouldReceive("isEmptyAllowed")->andReturn(false);
         $list_metadata->shouldReceive("isMultipleValuesAllowed")->andReturn(false);
         $metadata->shouldReceive("isMultipleValuesAllowed")->andReturn(false);
         $list_metadata->shouldReceive("isUsed")->andReturn(true);
@@ -91,7 +91,7 @@ class CustomMetadataCollectionBuilderTest extends TestCase
             $list_metadata->getName(),
             $list_metadata->getDescription(),
             $list_metadata->getType(),
-            $list_metadata->isRequired(),
+            $list_metadata->isEmptyAllowed(),
             $list_metadata->isMultipleValuesAllowed(),
             $list_metadata->isUsed(),
             [$value_representation, $value_two_representation]
@@ -105,7 +105,7 @@ class CustomMetadataCollectionBuilderTest extends TestCase
             $metadata->getName(),
             $metadata->getDescription(),
             $metadata->getType(),
-            $metadata->isRequired(),
+            $metadata->isEmptyAllowed(),
             $metadata->isMultipleValuesAllowed(),
             $metadata->isUsed(),
             null

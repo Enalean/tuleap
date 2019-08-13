@@ -168,7 +168,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 value: "value",
                 type: "text",
-                is_multiple_value_allowed: false
+                is_multiple_value_allowed: false,
+                is_required: false
             }
         ];
 
@@ -178,7 +179,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 type: "text",
                 name: "field_1",
                 is_multiple_value_allowed: false,
-                value: "value"
+                value: "value",
+                is_required: false
             }
         ];
 
@@ -195,7 +197,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 value: "value",
                 type: "string",
-                is_multiple_value_allowed: false
+                is_multiple_value_allowed: false,
+                is_required: false
             }
         ];
 
@@ -205,7 +208,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 type: "string",
                 name: "field_1",
                 is_multiple_value_allowed: false,
-                value: "value"
+                value: "value",
+                is_required: false
             }
         ];
 

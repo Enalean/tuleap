@@ -23,6 +23,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Tuleap\REST\JsonCast;
+
 class MetadataRepresentation
 {
     /**
@@ -65,14 +67,14 @@ class MetadataRepresentation
         ?string $value,
         ?string $post_processed_value,
         ?array $list_value,
-        bool $is_required,
+        bool $is_empty_allowed,
         string $short_name
     ) {
         $this->name                      = $name;
         $this->type                      = $type;
         $this->value                     = $value;
         $this->post_processed_value      = $post_processed_value;
-        $this->is_required               = $is_required;
+        $this->is_required               = JsonCast::toBoolean(!$is_empty_allowed);
         $this->is_multiple_value_allowed = $is_multiple_value_allowed;
         $this->list_value                = $list_value;
         $this->short_name                = $short_name;

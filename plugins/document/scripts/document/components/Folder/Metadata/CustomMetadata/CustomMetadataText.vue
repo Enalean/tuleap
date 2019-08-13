@@ -23,7 +23,7 @@
                v-bind:for="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
         >
             {{ currentlyUpdatedItemMetadata.name }}
-            <i class="fa fa-asterisk" v-if="currentlyUpdatedItemMetadata.is_required"></i>
+            <i class="fa fa-asterisk" v-if="currentlyUpdatedItemMetadata.is_required" data-test="document-custom-metadata-is-required"></i>
         </label>
         <textarea
             type="text"
