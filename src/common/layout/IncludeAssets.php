@@ -46,6 +46,19 @@ class IncludeAssets
         return $this->base_url . '/' . $this->getHashedName($file_name);
     }
 
+    /**
+     * @throws IncludeAssetsException
+     * @throws IncludeAssetsManifestExceptione
+     */
+    public function getFileURLWithFallback(string $file_name, string $fallback_filename): string
+    {
+        try {
+            return $this->base_url . '/' . $this->getHashedName($file_name);
+        } catch (IncludeAssetsException $exception) {
+            return $this->base_url . '/' . $this->getHashedName($fallback_filename);
+        }
+    }
+
     public function getPath($file_name)
     {
         return $this->base_url . '/' . $file_name;
@@ -67,7 +80,7 @@ class IncludeAssets
         if (is_file($this->manifest_file)) {
             $this->assets = json_decode(file_get_contents($this->manifest_file), true);
         } else {
-            throw new IncludeAssetsException("Asset {$this->manifest_file} doesn't exist. Did you run `npm run build` ?");
+            throw new IncludeAssetsManifestException("Asset {$this->manifest_file} doesn't exist. Did you run `npm run build` ?");
         }
     }
 }
