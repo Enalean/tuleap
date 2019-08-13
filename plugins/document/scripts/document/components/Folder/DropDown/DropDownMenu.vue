@@ -69,7 +69,7 @@
         <copy-item v-bind:item="item"/>
         <paste-item v-bind:destination="item"/>
 
-        <slot name="delete-item-separator"/>
+        <slot name="delete-item-separator" v-if="is_deletion_allowed"/>
         <slot name="delete-item"/>
     </div>
 </template>
@@ -103,7 +103,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState(["project_id", "is_deletion_allowed"]),
         ...mapGetters(["is_item_an_empty_document"])
     },
     methods: {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,6 +48,7 @@ function initApp(
         max_size_upload,
         is_under_construction,
         embedded_are_allowed,
+        is_deletion_allowed,
         is_item_status_metadata_used,
         is_obsolescence_date_metadata_used
     ]
@@ -62,6 +63,7 @@ function initApp(
     state.max_size_upload = max_size_upload;
     state.is_under_construction = is_under_construction;
     state.embedded_are_allowed = embedded_are_allowed;
+    state.is_deletion_allowed = is_deletion_allowed;
     state.is_item_status_metadata_used = is_item_status_metadata_used;
     state.is_obsolescence_date_metadata_used = is_obsolescence_date_metadata_used;
 }

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -57,6 +57,7 @@ export default {
         max_size_upload: Number,
         is_under_construction: Boolean,
         embedded_are_allowed: Boolean,
+        is_deletion_allowed: Boolean,
         is_item_status_metadata_used: Boolean,
         is_obsolescence_date_metadata_used: Boolean
     },
@@ -94,6 +95,7 @@ export default {
             this.max_size_upload,
             this.is_under_construction,
             this.embedded_are_allowed,
+            this.is_deletion_allowed,
             this.is_item_status_metadata_used,
             this.is_obsolescence_date_metadata_used
         ]);

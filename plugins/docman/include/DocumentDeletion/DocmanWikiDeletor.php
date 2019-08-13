@@ -108,7 +108,7 @@ class DocmanWikiDeletor
      */
     private function deleteWikiItem(Docman_Wiki $wiki, PFUser $user) : bool
     {
-        if ($this->permission_manager->userCanWrite($user, $wiki->getId())) {
+        if ($this->permission_manager->userCanDelete($user, $wiki)) {
             $this->item_factory->delete($wiki);
             return true;
         } else {
