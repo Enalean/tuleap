@@ -225,6 +225,22 @@ phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase
 	$(eval FILES ?= .)
 	@./src/vendor/bin/phpcbf --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
 
+eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
+	$(eval FILES ?= .)
+	@npm run eslint -- --quiet $(FILES)
+
+eslint-fix: ## Execute eslint with --fix to try to fix problems automatically. Use FILES parameter to execute on specific file or directory.
+	$(eval FILES ?= .)
+	@npm run eslint -- --fix --quiet $(FILES)
+
+prettier: ## Execute prettier. Use FILES parameter to execute on specific file/glob.
+	$(eval FILES ?= "**/*.{js,ts,vue}")
+	@npm run prettier -- --list-different $(FILES)
+
+prettier-fix: ## Execute prettier in write mode (things might break!). Use FILES parameter to execute on specific file/glob.
+	$(eval FILES ?= "**/*.{js,ts,vue}")
+	@npm run prettier -- --write $(FILES)
+
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 
