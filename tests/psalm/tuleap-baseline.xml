@@ -1519,10 +1519,6 @@
       <code>$newParentItem</code>
       <code>$newParentItem</code>
     </ArgumentTypeCoercion>
-    <FalsableReturnStatement occurrences="2">
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
     <InvalidScalarArgument occurrences="6">
       <code>$d[2]</code>
       <code>$d[3]</code>
@@ -1841,16 +1837,6 @@
       <code>getRow</code>
     </PossiblyFalseReference>
   </file>
-  <file src="plugins/docman/include/Docman_MetadataValueFactory.class.php">
-    <InvalidScalarArgument occurrences="3">
-      <code>$d[2]</code>
-      <code>$d[3]</code>
-      <code>$d[1]</code>
-    </InvalidScalarArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>setType</code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/docman/include/Docman_NotificationsManager.class.php">
     <TypeDoesNotContainType occurrences="1">
       <code>$success</code>
@@ -2073,11 +2059,6 @@
       <code>null</code>
     </NullArgument>
   </file>
-  <file src="plugins/docman/include/docmanPlugin.class.php">
-    <MissingDocblockType occurrences="1">
-      <code>$project</code>
-    </MissingDocblockType>
-  </file>
   <file src="plugins/docman/include/soap.php">
     <InvalidArgument occurrences="1">
       <code>$group_id</code>
@@ -2265,11 +2246,6 @@
       <code>$itemIterator</code>
     </UndefinedClass>
   </file>
-  <file src="plugins/document/include/Tree/DocumentTreeController.php">
-    <InvalidReturnType occurrences="1">
-      <code>IncludeAssets</code>
-    </InvalidReturnType>
-  </file>
   <file src="plugins/document/include/Tree/DocumentTreeProjectExtractor.php">
     <InvalidClass occurrences="1">
       <code>\docmanPlugin</code>
@@ -2397,14 +2373,6 @@
       <code>$this-&gt;id</code>
     </InvalidScalarArgument>
   </file>
-  <file src="plugins/frs/include/FRS/REST/v1/PackageResource.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;release_factory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;release_factory</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleasePATCHRepresentation.php">
     <UndefinedDocblockClass occurrences="4">
       <code>name</code>
@@ -2448,9 +2416,6 @@
       <code>$body-&gt;name</code>
       <code>$body-&gt;name</code>
     </InvalidCast>
-    <PossiblyNullArgument occurrences="1">
-      <code>$release</code>
-    </PossiblyNullArgument>
     <PossiblyNullReference occurrences="1">
       <code>getGroupID</code>
     </PossiblyNullReference>
@@ -3602,9 +3567,7 @@
     <PossiblyNullArgument occurrences="1">
       <code>$user</code>
     </PossiblyNullArgument>
-    <TooManyArguments occurrences="2">
-      <code>new AuthorizedKeysFileCreator($whole_instance_keys, $system_command, $this-&gt;getLogger())</code>
-    </TooManyArguments>
+    <TooManyArguments occurrences="1"/>
     <UndefinedInterfaceMethod occurrences="1">
       <code>setUserAccountInactive</code>
     </UndefinedInterfaceMethod>
@@ -4758,12 +4721,10 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestsResource.php">
-    <InvalidPropertyAssignmentValue occurrences="8">
+    <InvalidPropertyAssignmentValue occurrences="4">
       <code>new PullRequestFactory($pull_request_dao, $reference_manager)</code>
       <code>new CommentFactory($comment_dao, $reference_manager)</code>
       <code>new TimelineFactory($comment_dao, $inline_comment_dao, $timeline_dao)</code>
-      <code>new PullRequestCloser($this-&gt;pull_request_factory, $this-&gt;pull_request_merger)</code>
-      <code>new TimelineEventCreator(new TimelineDao())</code>
     </InvalidPropertyAssignmentValue>
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;user_manager-&gt;getUserById($user-&gt;getId())</code>
@@ -4774,19 +4735,11 @@
       <code>PathToHash</code>
       <code>PathToHash</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="15">
+    <UndefinedDocblockClass occurrences="7">
       <code>Tuleap\PullRequest\Factory</code>
       <code>Tuleap\PullRequest\Timeline\Factory</code>
       <code>Tuleap\PullRequest\Comment\Factory</code>
-      <code>Tuleap\PullRequest\PullRequestMerger</code>
-      <code>Tuleap\PullRequest\PullRequestCloser</code>
-      <code>Tuleap\PullRequest\PullRequestCreator</code>
-      <code>Tuleap\PullRequest\Timeline\TimelineEventCreator</code>
-      <code>$this-&gt;pull_request_creator</code>
       <code>$this-&gt;pull_request_factory</code>
-      <code>$this-&gt;timeline_event_creator</code>
-      <code>$this-&gt;pull_request_closer</code>
-      <code>$this-&gt;pull_request_closer</code>
       <code>$this-&gt;pull_request_factory</code>
       <code>$this-&gt;comment_factory</code>
       <code>$this-&gt;pull_request_factory</code>
@@ -9656,8 +9609,7 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Tracker_RulesManager.class.php">
-    <UndefinedMethod occurrences="4">
-      <code>getBind</code>
+    <UndefinedMethod occurrences="3">
       <code>displayEditForm</code>
       <code>getVisibleValuesPlusNoneIfAny</code>
       <code>getVisibleValuesPlusNoneIfAny</code>
@@ -11831,9 +11783,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/Project/ProjectCreationData.class.php">
-    <InvalidClass occurrences="1">
-      <code>PROJECT</code>
-    </InvalidClass>
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
@@ -11990,11 +11939,6 @@
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/Project/REST/UserGroupRepresentation.class.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;key</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="src/common/Project/REST/UserGroupRetriever.php">
     <InvalidReturnType occurrences="1">
       <code>bool</code>
@@ -12032,16 +11976,6 @@
     <UndefinedClass occurrences="1">
       <code>RestException</code>
     </UndefinedClass>
-  </file>
-  <file src="src/common/Project/Service/AddController.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>ServicePOSTData</code>
-    </InvalidNullableReturnType>
-  </file>
-  <file src="src/common/Project/Service/EditController.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>ServicePOSTData</code>
-    </InvalidNullableReturnType>
   </file>
   <file src="src/common/Project/Service/ServicePOSTDataBuilder.php">
     <InvalidScalarArgument occurrences="1">
@@ -12168,11 +12102,6 @@
       <code>$this-&gt;user_manager-&gt;getUserById($token-&gt;getUserId())</code>
     </NullableReturnStatement>
   </file>
-  <file src="src/common/REST/v1/FRSPackageRepresentationBase.php">
-    <MissingDocblockType occurrences="1">
-      <code>public $uri;</code>
-    </MissingDocblockType>
-  </file>
   <file src="src/common/REST/v1/GitRepositoryPermissionRepresentationBase.class.php">
     <UndefinedDocblockClass occurrences="3">
       <code>Tuleap\Project\REST\UserGroupRepresentation</code>
@@ -12262,11 +12191,6 @@
       <code>$last_used_date</code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/common/User/AccessKey/AccessKeyMetadataPresenter.php">
-    <PossiblyNullReference occurrences="1">
-      <code>format</code>
-    </PossiblyNullReference>
-  </file>
   <file src="src/common/User/AccessKey/AccessKeySerializer.php">
     <ImplicitToStringCast occurrences="1">
       <code>$identifier</code>
@@ -12276,15 +12200,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$last_access_key_identifier_store-&gt;getLastGeneratedAccessKeyIdentifier()</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="src/common/User/AccessKey/REST/UserAccessKeyRepresentation.php">
-    <InvalidPropertyAssignmentValue occurrences="2">
-      <code>JsonCast::toDate($access_key_metadata-&gt;getCreationDate()-&gt;getTimestamp())</code>
-      <code>JsonCast::toDate($access_key_metadata-&gt;getLastUsedDate()-&gt;getTimestamp())</code>
-    </InvalidPropertyAssignmentValue>
-    <PossiblyNullReference occurrences="1">
-      <code>getTimestamp</code>
-    </PossiblyNullReference>
   </file>
   <file src="src/common/User/Account/ChangePasswordPresenter.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -15221,10 +15136,9 @@
     <UndefinedInterfaceMethod occurrences="1">
       <code>setBodyText</code>
     </UndefinedInterfaceMethod>
-    <UndefinedVariable occurrences="3">
+    <UndefinedVariable occurrences="2">
       <code>$ccNames</code>
       <code>$dependencies</code>
-      <code>$sql</code>
     </UndefinedVariable>
   </file>
   <file src="src/common/tracker/ArtifactCanned.class.php">
@@ -17140,38 +17054,9 @@
       <code>is_object($art_field_fact)</code>
       <code>is_object($a)</code>
     </TypeDoesNotContainType>
-    <UndefinedConstant occurrences="31">
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
+    <UndefinedConstant occurrences="2">
       <code>permission_denied_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
       <code>get_report_factory_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
     </UndefinedConstant>
     <UndefinedDocblockClass occurrences="10">
       <code>the</code>
