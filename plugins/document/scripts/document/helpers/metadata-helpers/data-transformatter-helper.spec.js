@@ -18,10 +18,10 @@
  */
 
 import {
-    transformFolderMetadataForRecursionAtUpdate,
-    transformItemMetadataForCreation,
+    transformCustomMetadataForItemCreation,
     transformDocumentMetadataForUpdate,
-    transformCustomMetadataForItemCreation
+    transformFolderMetadataForRecursionAtUpdate,
+    transformItemMetadataForCreation
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -281,23 +281,69 @@ describe("transformCustomMetadataForItemCreation", () => {
         expect(expected_list).toEqual(formatted_list);
     });
 
-    it(`Given parent has a list with multiples values
-        then the no formatted data is null`, () => {
+    it(`Given parent has a multiple list
+        then the formatted metadata only keeps list ids`, () => {
         const parent_metadata = [
             {
                 short_name: "custom list metadata",
                 name: "field_1",
-                list_value: [101, 102],
+                list_value: [
+                    {
+                        id: 110,
+                        value: "My value to display"
+                    },
+                    {
+                        id: 120,
+                        value: "My other value to display"
+                    }
+                ],
                 is_multiple_value_allowed: true,
                 type: "list",
                 is_required: false
             }
         ];
 
-        const expected_list = [];
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: true,
+                list_value: [110, 120],
+                is_required: false
+            }
+        ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
 
+        expect(expected_list).toEqual(formatted_list);
+    });
+
+    it(`Given parent has a multiple list without any value
+        then the formatted metadata should have the 100 id`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [],
+                is_multiple_value_allowed: true,
+                type: "list",
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: true,
+                list_value: [100],
+                is_required: false
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
         expect(expected_list).toEqual(formatted_list);
     });
 });

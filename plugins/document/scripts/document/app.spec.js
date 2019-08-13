@@ -118,6 +118,7 @@ import "./components/Folder/Metadata/CustomMetadata/CustomMetadata.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataText.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataString.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataListSingleValue.spec.js";
+import "./components/Folder/Metadata/CustomMetadata/CustomMetadataListMultipleValue.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 import "./components/Folder/Metadata/ObsolescenceMetadata/ObsolescenceDateMetadataForCreate.spec.js";
