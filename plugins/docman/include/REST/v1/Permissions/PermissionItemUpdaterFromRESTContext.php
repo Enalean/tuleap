@@ -152,8 +152,9 @@ final class PermissionItemUpdaterFromRESTContext
             throw $ex;
         }
 
-        $item_project_id = $item->getGroupId();
-        if ((int) $ugroup->getProjectId() !== $item_project_id) {
+        $item_project_id   = $item->getGroupId();
+        $ugroup_project_id = $ugroup->getProjectId();
+        if ($ugroup_project_id !== null && (int) $ugroup_project_id !== $item_project_id) {
             throw $this->getExceptionUserGroupNoFoundInProject($identifier, $item_project_id);
         }
 

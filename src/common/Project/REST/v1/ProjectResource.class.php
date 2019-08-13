@@ -1141,13 +1141,7 @@ class ProjectResource extends AuthenticatedResource
         if ($queryRepresentation->isWithSystemUserGroups()) {
             $ugroups = $this->ugroup_manager->getAvailableUGroups($project);
         } else {
-            $excluded_ugroups_ids = [
-                ProjectUGroup::NONE,
-                ProjectUGroup::ANONYMOUS,
-                ProjectUGroup::REGISTERED,
-                ProjectUGroup::AUTHENTICATED
-            ];
-            $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+            $ugroups = $this->ugroup_manager->getUGroups($project, ProjectUGroup::SYSTEM_USER_GROUPS);
         }
         $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 

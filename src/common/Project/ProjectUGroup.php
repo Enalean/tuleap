@@ -59,6 +59,13 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
 
     public const DYNAMIC_UPPER_BOUNDARY = 100;
 
+    public const SYSTEM_USER_GROUPS = [
+        self::NONE,
+        self::ANONYMOUS,
+        self::REGISTERED,
+        self::AUTHENTICATED,
+    ];
+
     public static $legacy_ugroups = array(
         self::FILE_MANAGER_ADMIN,
         self::DOCUMENT_ADMIN,
@@ -69,13 +76,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::NEWS_ADMIN,
         self::NEWS_WRITER,
         self::SVN_ADMIN,
-    );
-
-    public static $forge_user_groups = array(
-        self::NONE,
-        self::ANONYMOUS,
-        self::REGISTERED,
-        self::AUTHENTICATED,
     );
 
     public static $normalized_names = array(

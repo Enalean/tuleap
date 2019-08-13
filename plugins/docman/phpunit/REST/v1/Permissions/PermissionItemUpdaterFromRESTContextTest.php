@@ -82,13 +82,15 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
     {
         $item                                       = Mockery::mock(Docman_Item::class);
         $representation                             = new DocmanItemPermissionsForGroupsPUTRepresentation();
+        $register_users_read_representation         = new MinimalUserGroupRepresentationForUpdate();
         $project_member_write_representation        = new MinimalUserGroupRepresentationForUpdate();
         $user_group_management_representation_1     = new MinimalUserGroupRepresentationForUpdate();
         $user_group_management_representation_2     = new MinimalUserGroupRepresentationForUpdate();
+        $register_users_read_representation->id     = ProjectUGroup::REGISTERED;
         $project_member_write_representation->id    = '102_' . ProjectUGroup::PROJECT_MEMBERS;
         $user_group_management_representation_1->id = '136';
         $user_group_management_representation_2->id = '137';
-        $representation->can_read                   = [$project_member_write_representation];
+        $representation->can_read                   = [$register_users_read_representation, $project_member_write_representation];
         $representation->can_write                  = [$project_member_write_representation];
         $representation->can_manage                 = [
             $user_group_management_representation_2,
@@ -103,11 +105,13 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         $ugroup_manager_1  = $this->getUGroupMock($user_group_management_representation_1->id, 136, 102, true);
         $ugroup_manager_2  = $this->getUGroupMock($user_group_management_representation_2->id, 137, 102, true);
         $project_members   = $this->getUGroupMock($project_member_write_representation->id, ProjectUGroup::PROJECT_MEMBERS, 102, false);
+        $registered_users  = $this->getUGroupMock($register_users_read_representation->id, ProjectUGroup::REGISTERED, null, false);
 
         $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([
             $ugroup_manager_1,
             $ugroup_manager_2,
             $project_members,
+            $registered_users,
             $this->getUGroupMock('102_' . ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::PROJECT_ADMIN, 102, false),
         ]);
 
@@ -118,6 +122,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
                 $item,
                 $user,
                 [
+                    ProjectUGroup::REGISTERED      => PermissionItemUpdater::PERMISSION_DEFINITION_READ,
                     ProjectUGroup::PROJECT_MEMBERS => PermissionItemUpdater::PERMISSION_DEFINITION_WRITE,
                     ProjectUGroup::PROJECT_ADMIN   => PermissionItemUpdater::PERMISSION_DEFINITION_NONE,
                     136                            => PermissionItemUpdater::PERMISSION_DEFINITION_MANAGE,
@@ -230,7 +235,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    private function getUGroupMock(string $identifier, int $id, int $project_id, bool $is_static) : ProjectUGroup
+    private function getUGroupMock(string $identifier, int $id, ?int $project_id, bool $is_static) : ProjectUGroup
     {
         $ugroup_mock = Mockery::mock(ProjectUGroup::class);
         $ugroup_mock->shouldReceive('getId')->andReturn($id);

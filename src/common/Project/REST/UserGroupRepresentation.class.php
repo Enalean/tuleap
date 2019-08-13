@@ -32,7 +32,7 @@ class UserGroupRepresentation
     public const COMPLEX_REST_ID_PATTERN = '/^(\d+)_(\d+)$/';
 
     /**
-     * @var int
+     * @var string
      */
     public $id;
 
@@ -71,12 +71,12 @@ class UserGroupRepresentation
         return $this;
     }
 
-    public static function getRESTIdForProject($project_id, $user_group_id)
+    public static function getRESTIdForProject(int $project_id, int $user_group_id) : string
     {
         if ($user_group_id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
-            || in_array($user_group_id, ProjectUGroup::$forge_user_groups)
+            || in_array($user_group_id, ProjectUGroup::SYSTEM_USER_GROUPS, true)
         ) {
-            return $user_group_id;
+            return (string) $user_group_id;
         }
 
         return $project_id.'_'.$user_group_id;
@@ -99,19 +99,24 @@ class UserGroupRepresentation
         }
     }
 
-    public static function checkRESTIdIsAppropriate($identifier)
+    public static function checkRESTIdIsAppropriate(string $identifier)
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier, $simple_id)) {
-            $id = $simple_id[0];
+            $id = (int) $simple_id[0];
             if ($id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
-                || in_array($id, ProjectUGroup::$forge_user_groups)
+                || in_array($id, ProjectUGroup::SYSTEM_USER_GROUPS, true)
             ) {
                 return;
             }
 
             throw new Exception("Invalid ID for user group ('".$simple_id[0]."'), format must be: projectId_ugroupId");
-        } elseif (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
-            return;
+        }
+
+        if (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
+            $id = (int) $complex_id[2];
+            if (! in_array($id, ProjectUGroup::SYSTEM_USER_GROUPS, true)) {
+                return;
+            }
         }
 
         throw new Exception('Invalid ID format('.$identifier.')');
