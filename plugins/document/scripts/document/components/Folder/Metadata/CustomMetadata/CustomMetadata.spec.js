@@ -47,6 +47,7 @@ describe("CustomMeatdata", () => {
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
         expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
     });
     it(`Given custom text metadata
         Then it renders the corresponding component`, () => {
@@ -63,5 +64,24 @@ describe("CustomMeatdata", () => {
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
+    });
+    it(`Given list with only one value metadata
+        Then it renders the corresponding component`, () => {
+        const currentlyUpdatedItem = {
+            id: 42,
+            metadata: [
+                {
+                    short_name: "list",
+                    type: "list",
+                    is_multiple_value_allowed: false
+                }
+            ]
+        };
+        const wrapper = factory({ currentlyUpdatedItem });
+
+        expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeTruthy();
     });
 });

@@ -33,6 +33,11 @@
                 v-bind:currently-updated-item-metadata="item_metadata"
                 data-test="document-custom-metadata-string"
             />
+            <custom-metadata-list-single-value
+                v-if="item_metadata.type === 'list' && ! item_metadata.is_multiple_value_allowed"
+                v-bind:currently-updated-item-metadata="item_metadata"
+                data-test="document-custom-metadata-list"
+            />
         </div>
     </div>
 </template>
@@ -40,10 +45,12 @@
 <script>
 import CustomMetadataText from "./CustomMetadataText.vue";
 import CustomMetadataString from "./CustomMetadataString.vue";
+import CustomMetadataListSingleValue from "./CustomMetadataListSingleValue.vue";
 
 export default {
     name: "CustomMetadata",
     components: {
+        CustomMetadataListSingleValue,
         CustomMetadataString,
         CustomMetadataText
     },
