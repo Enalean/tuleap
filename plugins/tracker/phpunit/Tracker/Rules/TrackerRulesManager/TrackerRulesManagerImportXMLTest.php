@@ -44,7 +44,7 @@ XML;
         $form_element_factory         = \Mockery::mock(\Tracker_FormElementFactory::class);
         $frozen_dao                   = Mockery::mock(FrozenFieldsDao::class);
         $tracker_rules_list_validator = Mockery::mock(TrackerRulesListValidator::class);
-        $tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
+        $tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
 
         $tracker_factory = Mockery::mock(TrackerFactory::class);
 
@@ -53,6 +53,7 @@ XML;
             $form_element_factory,
             $frozen_dao,
             $tracker_rules_list_validator,
+            $tracker_rules_date_validator,
             $tracker_factory
         );
 

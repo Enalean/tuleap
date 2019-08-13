@@ -66,6 +66,11 @@ class TrackerRulesManagerForbiddenTest extends TestCase
      * @var Mockery\MockInterface|Tracker_RuleFactory
      */
     private $rule_factory;
+    /**
+     * @var Mockery\MockInterface|TrackerRulesDateValidator
+     */
+
+    private $tracker_rules_date_validator;
 
     public function setUp(): void
     {
@@ -74,6 +79,7 @@ class TrackerRulesManagerForbiddenTest extends TestCase
         $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->frozen_fields_dao            = \Mockery::mock(FrozenFieldsDao::class);
         $this->tracker_rules_list_validator = \Mockery::mock(TrackerRulesListValidator::class);
+        $this->tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
         $this->tracker_factory              = \Mockery::mock(TrackerFactory::class);
         $this->rule_factory                 = \Mockery::mock(Tracker_RuleFactory::class);
 
@@ -81,6 +87,7 @@ class TrackerRulesManagerForbiddenTest extends TestCase
             $this->formelement_factory,
             $this->frozen_fields_dao,
             $this->tracker_rules_list_validator,
+            $this->tracker_rules_date_validator,
             $this->tracker_factory])->makePartial();
 
         $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['A'])->andReturn(false);
@@ -88,8 +95,6 @@ class TrackerRulesManagerForbiddenTest extends TestCase
         $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['C'])->andReturn(false);
         $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['D'])->andReturn(false);
         $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs(['E'])->andReturn(false);
-
-        $this->tracker_rules_list_validator->shouldReceive('validateListRules')->andReturn(true);
 
         $rule_list_1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
         $rule_list_2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');

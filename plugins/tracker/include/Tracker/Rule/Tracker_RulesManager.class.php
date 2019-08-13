@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
+use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 
 /**
 * Manager of rules
@@ -57,6 +58,11 @@ class Tracker_RulesManager
     private $tracker_rules_list_validator;
 
     /**
+     * @var TrackerRulesDateValidator
+     */
+    private $tracker_rules_date_validator;
+
+    /**
      * @var TrackerFactory
      */
     private $tracker_factory;
@@ -66,12 +72,14 @@ class Tracker_RulesManager
         Tracker_FormElementFactory $form_element_factory,
         FrozenFieldsDao $frozen_fields_dao,
         TrackerRulesListValidator $tracker_rules_list_validator,
+        TrackerRulesDateValidator $tracker_rules_date_validator,
         TrackerFactory $tracker_factory
     ) {
         $this->tracker                      = $tracker;
         $this->form_element_factory         = $form_element_factory;
         $this->frozen_fields_dao            = $frozen_fields_dao;
         $this->tracker_rules_list_validator = $tracker_rules_list_validator;
+        $this->tracker_rules_date_validator = $tracker_rules_date_validator;
         $this->tracker_factory              = $tracker_factory;
     }
 
@@ -173,9 +181,12 @@ class Tracker_RulesManager
      */
     function validate($tracker_id, $value_field_list) {
         $tracker =  $this->tracker_factory->getTrackerByid($tracker_id);
+
         $valid_list_rules = $this->tracker_rules_list_validator
             ->validateListRules($tracker, $value_field_list, $this->getAllListRulesByTrackerWithOrder($tracker_id) );
-        $valid_date_rules = $this->validateDateRules($tracker_id, $value_field_list);
+
+        $valid_date_rules = $this->tracker_rules_date_validator
+            ->validateDateRules($value_field_list, $this->getAllDateRulesByTrackerId($tracker_id));
 
         if(! $valid_list_rules || ! $valid_date_rules) {
             return false;
@@ -593,82 +604,6 @@ class Tracker_RulesManager
                 $this->getTrackerFormElementFactory(),
                 $this->tracker->getId()
                 );
-    }
-
-    /**
-     *
-     * @param int $tracker_id
-     * @param array $value_field_list
-     * @return bool
-     */
-    protected function validateDateRules($tracker_id, $value_field_list) {
-        $rules = $this->getAllDateRulesByTrackerId($tracker_id);
-
-        foreach ($rules as $rule) {
-
-            if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
-                return false;
-            }
-
-            if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
-                $source_field = $this->getField($rule->getSourceFieldId());
-                $target_field = $this->getField($rule->getTargetFieldId());
-                $feedback = $GLOBALS['Language']->getText(
-                        'plugin_tracker_artifact',
-                        'rules_date_not_valid',
-                        array(
-                            $source_field->getLabel() ,
-                            $rule->getComparator(),
-                            $target_field->getLabel()
-                        )
-                    );
-
-                $GLOBALS['Response']->addFeedback('error', $feedback);
-
-                $source_field->setHasErrors(true);
-                $target_field->setHasErrors(true);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
-        $is_valid = true;
-        if(! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
-            $source_field = $this->getField($rule->getSourceFieldId());
-            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
-
-            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
-            $source_field->setHasErrors(true);
-            $is_valid = false;
-        }
-
-        if(! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
-            $target_field = $this->getField($rule->getTargetFieldId());
-            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
-            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
-            $target_field->setHasErrors(true);
-            $is_valid = false;
-        }
-
-        return $is_valid;
-    }
-
-    /** @return bool */
-    private function validateDateRuleOnSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
-        $source_value = $value_field_list[$rule->getSourceFieldId()];
-        $target_value = $value_field_list[$rule->getTargetFieldId()];
-
-        return $rule->validate($source_value, $target_value);
-    }
-
-
-    private function getField($field_id) {
-        $tracker_list_factory = $this->getTrackerFormElementFactory();
-        $field                = $tracker_list_factory->getFormElementById($field_id);
-        return $field;
     }
 
     private function isFieldUsedInFrozenFieldsTransitionPostAction($field_id)

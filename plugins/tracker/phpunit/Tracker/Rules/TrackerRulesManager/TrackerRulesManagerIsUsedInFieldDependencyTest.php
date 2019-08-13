@@ -91,6 +91,11 @@ class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
      */
     private $target_field_date;
 
+    /**
+     * @var Mockery\MockInterface|TrackerRulesDateValidator
+     */
+    private $tracker_rules_date_validator;
+
     public function setUp(): void
     {
         $this->tracker = \Mockery::mock(\Tracker::class);
@@ -98,12 +103,14 @@ class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
         $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
         $this->frozen_fields_dao            = \Mockery::mock(FrozenFieldsDao::class);
         $this->tracker_rules_list_validator = \Mockery::mock(TrackerRulesListValidator::class);
+        $this->tracker_rules_date_validator = \Mockery::mock(TrackerRulesDateValidator::class);
         $this->tracker_factory              = \Mockery::mock(TrackerFactory::class);
 
         $this->tracker_rules_manager = \Mockery::mock(Tracker_RulesManager::class, [$this->tracker,
             $this->formelement_factory,
             $this->frozen_fields_dao,
             $this->tracker_rules_list_validator,
+            $this->tracker_rules_date_validator,
             $this->tracker_factory])->makePartial();
 
         $this->a_field_not_used_in_rules = \Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
