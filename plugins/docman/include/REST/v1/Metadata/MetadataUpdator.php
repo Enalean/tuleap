@@ -27,9 +27,12 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use RuntimeException;
+use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
+use Tuleap\Docman\Metadata\MetadataDoesNotExistException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
+use Tuleap\Docman\Metadata\MetadataValueUpdator;
 use Tuleap\Docman\Metadata\NoItemToRecurseException;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -70,6 +73,14 @@ class MetadataUpdator
      * @var DocumentOngoingUploadRetriever
      */
     private $document_ongoing_upload_retriever;
+    /**
+     * @var CustomMetadataRepresentationRetriever
+     */
+    private $custom_metadata_representation_retriever;
+    /**
+     * @var MetadataValueUpdator
+     */
+    private $metadata_value_updator;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -79,21 +90,26 @@ class MetadataUpdator
         OwnerRetriever $owner_retriever,
         MetadataEventProcessor $event_processor,
         MetadataRecursiveUpdator $recursive_updator,
-        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
+        CustomMetadataRepresentationRetriever $custom_metadata_representation_retriever,
+        MetadataValueUpdator $metadata_value_updator
     ) {
-        $this->item_factory                      = $item_factory;
-        $this->status_mapper                     = $status_mapper;
-        $this->date_retriever                    = $date_retriever;
-        $this->user_manager                      = $user_manager;
-        $this->owner_retriever                   = $owner_retriever;
-        $this->event_processor                   = $event_processor;
-        $this->recursive_updator                 = $recursive_updator;
-        $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
+        $this->item_factory                             = $item_factory;
+        $this->status_mapper                            = $status_mapper;
+        $this->date_retriever                           = $date_retriever;
+        $this->user_manager                             = $user_manager;
+        $this->owner_retriever                          = $owner_retriever;
+        $this->event_processor                          = $event_processor;
+        $this->recursive_updator                        = $recursive_updator;
+        $this->document_ongoing_upload_retriever        = $document_ongoing_upload_retriever;
+        $this->custom_metadata_representation_retriever = $custom_metadata_representation_retriever;
+        $this->metadata_value_updator                   = $metadata_value_updator;
     }
 
     /**
      * @throws I18nRestException
      * @throws RestException
+     * @throws MetadataDoesNotExistException
      */
     public function updateDocumentMetadata(
         PUTMetadataRepresentation $representation,
@@ -124,6 +140,25 @@ class MetadataUpdator
                     $new_owner_id
                 )
             );
+        }
+
+        try {
+            $metadata_to_update_collection = $this->custom_metadata_representation_retriever->checkAndBuildMetadataToUpdate(
+                $representation->metadata
+            );
+        } catch (CustomMetadataException $e) {
+            throw new I18nRestException(
+                400,
+                $e->getI18NExceptionMessage()
+            );
+        }
+
+        foreach ($metadata_to_update_collection as $metadata_to_update) {
+                $this->metadata_value_updator->updateMetadata(
+                    $metadata_to_update->getMetadata(),
+                    (int)$item->getId(),
+                    $metadata_to_update->getValue()
+                );
         }
 
         $item_id = $item->getId();

@@ -63,19 +63,20 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      * @depends testGetRootId
      * @depends testGetMetadataForProject
      */
-    public function testPOSTEmptyItemCanBeCreatedWithMetadata(int $root_id, array $project_metadata): void
+    public function testEmptyCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
         $text_metadata = $this->findMetadataByName($project_metadata, "text metadata");
         $list_metadata = $this->findMetadataByName($project_metadata, "list metadata");
         $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
 
-        $list_values = $list_metadata["allowed_list_values"];
-        $value       = $this->findValueByValueName($list_values, "value 1");
+        $list_values   = $list_metadata["allowed_list_values"];
+        $value         = $this->findValueByValueName($list_values, "value 1");
+        $updated_value = $this->findValueByValueName($list_values, "value 2");
 
         $query = json_encode(
             [
-                'title'           => 'empty with custom metadata',
-                'metadata'        => [
+                'title'    => 'empty with custom metadata',
+                'metadata' => [
                     [
                         'short_name' => $text_metadata['short_name'],
                         'value' => 'aaaaa'
@@ -98,9 +99,53 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         );
         $this->assertEquals(201, $response1->getStatusCode());
 
+        $updated_query = json_encode(
+            [
+                'title'    => 'empty with custom metadata',
+                'owner_id' => 101,
+                'metadata' => [
+                    [
+                        'short_name' => $text_metadata['short_name'],
+                        'value'      => 'updated value'
+                    ],
+                    [
+                        'short_name' => $list_metadata['short_name'],
+                        'value'      => $updated_value['id']
+                    ],
+                    [
+                        'short_name' => $other_list_metadata['short_name'],
+                        'list_value' => []
+                    ]
+                ]
+            ]
+        );
+
+        $created_document_id = $response1->json()['id'];
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->put('docman_empty_documents/' . $created_document_id . '/metadata', null, $updated_query)
+        );
+        $this->assertEquals(200, $response2->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $created_document_id),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $updated_content  = $response->json();
+        $updated_metadata = $updated_content['metadata'];
+
+        $updated_text_metadata       = $this->findMetadataByName($updated_metadata, "text metadata");
+        $updated_list_metadata       = $this->findMetadataByName($updated_metadata, "list metadata");
+        $updated_other_list_metadata = $this->findMetadataByName($updated_metadata, "other list metadata");
+
+        $this->assertEquals('updated value', $updated_text_metadata['value']);
+        $this->assertEquals($updated_value['id'], $updated_list_metadata['list_value'][0]['id']);
+        $this->assertEquals([], $updated_other_list_metadata['list_value']);
+
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->delete('docman_empty_documents/' .  $response1->json()['id'])
+            $this->client->delete('docman_empty_documents/' . $created_document_id)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -110,7 +155,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      * @depends testGetRootId
      * @depends testGetMetadataForProject
      */
-    public function testPOSTFileItemCanBeCreatedWithMetadata(int $root_id, array $project_metadata): void
+    public function testFileCanManipulateMetadata(int $root_id, array $project_metadata): void
     {
         $text_metadata       = $this->findMetadataByName($project_metadata, "text metadata");
         $list_metadata       = $this->findMetadataByName($project_metadata, "list metadata");
@@ -118,6 +163,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $other_list_values = $other_list_metadata["allowed_list_values"];
         $other_value       = $this->findValueByValueName($other_list_values, "list A");
+        $other_updated_value       = $this->findValueByValueName($other_list_values, "list B");
 
         $file_name = 'file_' . random_int(0, 100000);
         $file_size = 123;
@@ -136,7 +182,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
                     ],
                     [
                         'short_name' => $other_list_metadata['short_name'],
-                        'list_value' => [(int)$other_value['id']]
+                        'list_value' => [(int) $other_value['id']]
                     ]
                 ]
             ]
@@ -212,7 +258,58 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals($list_metadata['list_value'], []);
 
         $this->assertEquals($other_list_metadata['value'], null);
-        $this->assertEquals($other_list_metadata['list_value'][0]['id'], (int)$other_value['id']);
+        $this->assertEquals($other_list_metadata['list_value'][0]['id'], (int) $other_value['id']);
+
+        $updated_query = json_encode(
+            [
+                'title'    => 'file with custom metadata',
+                'owner_id' => 101,
+                'metadata' => [
+                    [
+                        'short_name' => $text_metadata['short_name'],
+                        'value'      => 'updated value'
+                    ],
+                    [
+                        'short_name' => $list_metadata['short_name'],
+                        'value'      => null
+                    ],
+                    [
+                        'short_name' => $other_list_metadata['short_name'],
+                        'list_value' => [(int) $other_updated_value['id']]
+                    ]
+                ]
+            ]
+        );
+
+        $created_document_id = $response1->json()['id'];
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->put('docman_files/' . $created_document_id . '/metadata', null, $updated_query)
+        );
+        $this->assertEquals(200, $response2->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $created_document_id),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $updated_content  = $response->json();
+        $updated_metadata = $updated_content['metadata'];
+
+        $updated_text_metadata       = $this->findMetadataByName($updated_metadata, "text metadata");
+        $updated_list_metadata       = $this->findMetadataByName($updated_metadata, "list metadata");
+        $updated_other_list_metadata = $this->findMetadataByName($updated_metadata, "other list metadata");
+
+        $this->assertEquals('updated value', $updated_text_metadata['value']);
+        $this->assertEquals([], $updated_list_metadata['list_value']);
+        $this->assertEquals($other_updated_value['id'], $updated_other_list_metadata['list_value'][0]['id']);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $created_document_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testOptionsProjectMetadata(): void

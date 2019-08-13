@@ -15,35 +15,48 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-use Tuleap\Docman\REST\v1\ItemRepresentation;
-
-class PUTMetadataRepresentation extends PUTMetadataCommonRepresentation
+class MetadataToUpdate
 {
+    /**
+     * @var \Docman_Metadata
+     */
+    private $metadata;
+    /**
+     * @var array | string
+     */
+    private $value;
+
+    private function __construct(\Docman_Metadata $metadata, $value)
+    {
+        $this->metadata = $metadata;
+        $this->value    = $value;
+    }
+
+    public static function buildMetadataRepresentation(\Docman_Metadata $metadata, $value): self
+    {
+        return new self($metadata, $value);
+    }
 
     /**
-     * @var string Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     * @return \Docman_Metadata
      */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public function getMetadata(): \Docman_Metadata
+    {
+        return $this->metadata;
+    }
 
     /**
-     * @var string | null Obsolescence date {@from body} {@required false}
+     * @return array | string
      */
-    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
-
-    /**
-     * @var int The new owner id of the item {@from body} {@required true}
-     */
-    public $owner_id;
-    /**
-     * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}
-     */
-    public $metadata;
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
