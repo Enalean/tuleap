@@ -58,7 +58,7 @@ class CustomMetadataCollectionBuilder
                 $metadata->getName(),
                 $metadata->getDescription(),
                 (int)$metadata->getType(),
-                $metadata->isRequired(),
+                $metadata->isEmptyAllowed(),
                 $metadata->isMultipleValuesAllowed(),
                 $metadata->isUsed(),
                 $this->getListOfPossibleValues($metadata)

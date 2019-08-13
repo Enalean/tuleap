@@ -51,7 +51,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $simple_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
         $simple_metadata->shouldReceive('getName')->andReturn("simple metadata label");
         $simple_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $simple_metadata->shouldReceive('isRequired')->andReturn(false);
+        $simple_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $simple_metadata->shouldReceive('getLabel')->andReturn("simple_metadata_label");
         $simple_metadata->shouldReceive('getGroupId')->andReturn(102);
 
@@ -71,7 +71,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(true);
         $list_metadata->shouldReceive('getName')->andReturn("list metadata label");
         $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $list_metadata->shouldReceive('isRequired')->andReturn(true);
+        $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
         $list_metadata->shouldReceive('getLabel')->andReturn("list_metadata_label");
 
         $factory->shouldReceive('appendItemMetadataList');
@@ -93,7 +93,7 @@ class MetadataRepresentationBuilderTest extends TestCase
                 "my simple value",
                 'value with references',
                 null,
-                false,
+                true,
                 "simple_metadata_label"
             ),
             new MetadataRepresentation(
@@ -106,7 +106,7 @@ class MetadataRepresentationBuilderTest extends TestCase
                     new MetadataListValueRepresentation(1, "My value 1"),
                     new MetadataListValueRepresentation(100, "None")
                 ],
-                true,
+                false,
                 "list_metadata_label"
             ),
         ];
@@ -130,7 +130,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $date_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
         $date_metadata->shouldReceive('getName')->andReturn('date metadata name');
         $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-        $date_metadata->shouldReceive('isRequired')->andReturn(false);
+        $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
 
         $factory->shouldReceive('appendItemMetadataList');
@@ -145,7 +145,7 @@ class MetadataRepresentationBuilderTest extends TestCase
             '1970-01-01T01:00:01+01:00',
             '1970-01-01T01:00:01+01:00',
             null,
-            false,
+            true,
             'date metadata label'
         );
 
@@ -172,7 +172,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $date_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
         $date_metadata->shouldReceive('getName')->andReturn('date metadata name');
         $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-        $date_metadata->shouldReceive('isRequired')->andReturn(false);
+        $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
 
         $factory->shouldReceive('appendItemMetadataList');
@@ -187,7 +187,7 @@ class MetadataRepresentationBuilderTest extends TestCase
             null,
             null,
             null,
-            false,
+            true,
             'date metadata label'
         );
 
@@ -211,7 +211,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $owner_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
         $owner_metadata->shouldReceive('getName')->andReturn('owner');
         $owner_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $owner_metadata->shouldReceive('isRequired')->andReturn(false);
+        $owner_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
         $owner_metadata->shouldReceive('getLabel')->andReturn('owner');
 
         $factory->shouldReceive('appendItemMetadataList');
@@ -229,7 +229,7 @@ class MetadataRepresentationBuilderTest extends TestCase
             'user display name',
             'user display name with link',
             null,
-            false,
+            true,
             'owner'
         );
 
