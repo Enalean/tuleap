@@ -58,8 +58,7 @@
                                             tlp-button-outline
                                             project-admin-services-edit-button
                                         "
-                                        data-test="service-{{ short_name }}"
-                                        data-target-modal-id="project-admin-services-edit-modal-{{ id }}"
+                                        data-test="edit-service-{{ short_name }}"
                                         {{# service_json }}data-service-json="{{ service_json }}"{{/ service_json }}
                                     >
                                         <i class="fa fa-pencil tlp-button-icon"></i> {{# gettext }}Edit{{/ gettext }}
@@ -86,14 +85,13 @@
                                     >
                                         <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                     </button>
-                                    {{> services-edit-modal }}
                                 </td>
                             </tr>
                         {{/ services }}
                     </tbody>
                 </table>
                 {{> services-delete-modal }}
-                <div id="custom-service-edit-modal"
+                <div id="service-edit-modal"
                      data-project-id="{{ project_id }}"
                      data-minimal-rank="{{ minimal_rank }}"
                      data-csrf-token-name="{{ csrf_token_name }}"

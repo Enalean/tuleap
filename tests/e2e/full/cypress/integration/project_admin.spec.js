@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,13 +62,16 @@ describe("Project admin", function() {
             });
         });
 
-        it("should verify that my project administrator can enable a new service", function() {
+        it("should verify that a project administrator can enable a new service", () => {
             cy.visitProjectService("project-admin-test", "Admin");
             cy.contains("Services").click();
 
-            cy.get('[data-test="service-plugin_svn"]').click();
-            cy.get('[data-test="service-plugin_svn-is-used"]').check();
-            cy.get('[data-test="save-service-plugin_svn-modifications"]').click();
+            cy.get("[data-test=edit-service-plugin_svn]").click();
+
+            cy.get("[data-test=service-edit-modal]").within(() => {
+                cy.get("[data-test=service-is-used]").click();
+                cy.get("[data-test=save-service-modifications]").click();
+            });
 
             cy.get("[data-test=feedback]").contains("Successfully Updated Service", {
                 timeout: 40000

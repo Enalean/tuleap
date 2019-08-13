@@ -25,24 +25,34 @@
     >
         <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
-            <sidebar-previewer v-bind:label="service.label" v-bind:icon_name="service.icon_name"/>
+            <sidebar-previewer
+                v-bind:label="service.label"
+                v-bind:icon_name="service.icon_name"
+            />
             <project-defined-service
+                v-if="service.is_project_scope"
                 v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
+            />
+            <read-only-system-service
+                v-else
+                v-bind:minimal_rank="minimal_rank"
+                v-bind:service="service"
             />
         </template>
     </edit-modal>
 </template>
 <script>
-import ProjectDefinedService from "./ProjectDefinedService.vue";
+import ProjectDefinedService from "./Service/ProjectDefinedService.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";
 import { edit_modal_mixin } from "./edit-modal-mixin.js";
+import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 
 export default {
     name: "BaseProjectAdminEditModal",
-    components: { EditModal, ProjectDefinedService, SidebarPreviewer },
+    components: { ReadOnlySystemService, EditModal, ProjectDefinedService, SidebarPreviewer },
     mixins: [edit_modal_mixin]
 };
 </script>

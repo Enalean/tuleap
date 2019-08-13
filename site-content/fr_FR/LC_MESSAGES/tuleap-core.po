@@ -528,9 +528,6 @@ msgstr "Éditer %s"
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
 
-msgid "Edit service"
-msgstr "Éditer le service"
-
 msgid "Edit settings"
 msgstr "Éditer les paramètres"
 
@@ -1227,9 +1224,6 @@ msgstr "Sauvegarder les permissions déléguées"
 
 msgid "Save information"
 msgstr "Enregistrer les informations"
-
-msgid "Save modifications"
-msgstr "Enregistrer les modifications"
 
 msgid "Save settings"
 msgstr "Enregister"

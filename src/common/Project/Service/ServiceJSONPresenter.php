@@ -27,6 +27,8 @@ final class ServiceJSONPresenter
     /** @var int */
     public $id;
     /** @var string */
+    public $short_name;
+    /** @var string */
     public $label;
     /** @var string */
     public $icon_name;
@@ -42,9 +44,14 @@ final class ServiceJSONPresenter
     public $is_in_iframe;
     /** @var int */
     public $rank;
+    /** @var bool */
+    public $is_project_scope;
+    /** @var bool */
+    public $is_link_customizable;
 
     public function __construct(
         int $id,
+        string $short_name,
         string $label,
         string $icon_name,
         string $link,
@@ -52,16 +59,21 @@ final class ServiceJSONPresenter
         bool $is_active,
         bool $is_used,
         bool $is_in_iframe,
-        int $rank
+        int $rank,
+        bool $is_project_scope,
+        bool $is_link_customizable
     ) {
-        $this->id           = $id;
-        $this->label        = $label;
-        $this->icon_name    = $icon_name;
-        $this->link         = $link;
-        $this->description  = $description;
-        $this->is_active    = $is_active;
-        $this->is_used      = $is_used;
-        $this->is_in_iframe = $is_in_iframe;
-        $this->rank         = $rank;
+        $this->id                   = $id;
+        $this->short_name           = $short_name;
+        $this->label                = $label;
+        $this->icon_name            = $icon_name;
+        $this->link                 = $link;
+        $this->description          = $description;
+        $this->is_active            = $is_active;
+        $this->is_used              = $is_used;
+        $this->is_in_iframe         = $is_in_iframe;
+        $this->rank                 = $rank;
+        $this->is_project_scope     = $is_project_scope;
+        $this->is_link_customizable = $is_link_customizable;
     }
 }
