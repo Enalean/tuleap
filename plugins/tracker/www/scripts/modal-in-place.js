@@ -390,13 +390,13 @@ tuleap.textarea = tuleap.textarea || {};
         },
 
         updateRichTextAreas: function() {
-            for (const instance in CKEDITOR.instances) {
+            for (let instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].updateElement();
             }
         },
 
         destroyRichTextAreaInstances: function() {
-            for (const instance in CKEDITOR.instances) {
+            for (let instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].destroy();
             }
         },
