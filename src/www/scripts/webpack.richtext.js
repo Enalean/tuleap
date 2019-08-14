@@ -19,14 +19,14 @@
 
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const path = require("path");
-const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "../../../assets");
+const assets_dir_path = path.resolve(__dirname, "../assets");
 const public_assets_path = "/assets/";
 
 module.exports = {
     entry: {
-        "rich-text-editor": "../textarea_rte.js"
+        "rich-text-editor": "./tuleap/textarea_rte.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, public_assets_path),
@@ -43,10 +43,7 @@ module.exports = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             {
-                "tlp-fetch": path.resolve(
-                    __dirname,
-                    "../../../themes/common/tlp/src/js/fetch-wrapper.js"
-                )
+                "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
             },
             webpack_configurator.tlp_mocks_alias
         )

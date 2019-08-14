@@ -77,6 +77,17 @@ msgstr "Lien"
 msgid "My service"
 msgstr "Mon service"
 
+msgid "Open in a new tab"
+msgstr "Ouvrir dans un nouvel onglet"
+
+msgid ""
+"Opening in iframe is deprecated. If you switch it off, you won't be able to "
+"switch\n"
+"            it back on again."
+msgstr ""
+"L'ouverture dans une iframe est dépréciée. Si vous la désactivez, vous ne "
+"pourrez plus la réactiver plus tard."
+
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
@@ -88,6 +99,14 @@ msgstr "Enregistrer les modifications"
 
 msgid "Short name"
 msgstr "Nom court"
+
+msgid ""
+"The service can't be displayed in an iframe because you want it to be open "
+"in a new\n"
+"            tab."
+msgstr ""
+"Ce service ne peut pas être affiché dans une iframe parce que vous souhaitez "
+"l'ouvrir dans un nouvel onglet."
 
 #. javascript-format
 msgid ""

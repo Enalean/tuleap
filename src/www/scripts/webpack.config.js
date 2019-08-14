@@ -19,11 +19,14 @@
 
 const loadJsonFile = require("load-json-file");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const merge = require("webpack-merge");
 const path = require("path");
 const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-names.js")
     .polyfills_for_fetch;
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
-const webpack_config_for_rich_text_editor = require("./tuleap/ckeditor/webpack.config.js");
+const webpack_config_for_rich_text_editor = require("./webpack.richtext.js");
+const webpack_config_for_vue_components = require("./webpack.vue.js");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
 
@@ -151,36 +154,13 @@ const webpack_config_for_burning_parrot_code = {
     plugins: [manifest_plugin]
 };
 
-const webpack_config_for_vue_components = {
-    entry: {
-        "news-permissions": "./news/permissions-per-group/index.js",
-        "frs-permissions": "./frs/permissions-per-group/index.js",
-        "project-admin-services": "./project/admin/services/src/index-project-admin.js",
-        "site-admin-services": "./project/admin/services/src/index-site-admin.js"
-    },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: {
-        tlp: "tlp"
-    },
-    module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
-};
-
-const webpack_config_for_rich_text_editor_with_manifest = Object.assign(
-    webpack_config_for_rich_text_editor,
-    {
+const configs_with_manifest = [
+    webpack_config_for_vue_components,
+    webpack_config_for_rich_text_editor
+].map(config =>
+    merge(config, {
         plugins: [manifest_plugin]
-    }
+    })
 );
 
 module.exports = [
@@ -188,6 +168,5 @@ module.exports = [
     webpack_config_for_dashboards,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
-    webpack_config_for_vue_components,
-    webpack_config_for_rich_text_editor_with_manifest
+    ...configs_with_manifest
 ];

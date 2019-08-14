@@ -26,7 +26,7 @@
                 v-bind:icon_name="service.icon_name"
             />
             <project-defined-service
-                v-if="service.is_project_scope"
+                v-if="service.is_project_scope && is_shown"
                 v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
@@ -36,7 +36,7 @@
                 </template>
             </project-defined-service>
             <editable-system-service
-                v-else
+                v-if="!service.is_project_scope && is_shown"
                 v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
             />

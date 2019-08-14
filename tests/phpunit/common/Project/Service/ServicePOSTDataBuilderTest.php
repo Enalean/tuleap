@@ -59,15 +59,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => '',
-                'label'        => 'My system service',
-                'description'  => '',
-                'rank'         => 123,
-                'link'         => '',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_SYSTEM,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => 'My system service',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => '',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_SYSTEM,
+                'is_active'     => true
             ]
         );
 
@@ -82,15 +83,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => '',
-                'label'        => '',
-                'description'  => '',
-                'rank'         => 123,
-                'link'         => 'https://example.com/custom',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_PROJECT,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => '',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => 'https://example.com/custom',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_PROJECT,
+                'is_active'     => true
             ]
         );
 
@@ -105,15 +107,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => '',
-                'label'        => 'My custom service',
-                'description'  => '',
-                'rank'         => 0,
-                'link'         => 'https://example.com/custom',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_PROJECT,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => 'My custom service',
+                'description'   => '',
+                'rank'          => 0,
+                'link'          => 'https://example.com/custom',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_PROJECT,
+                'is_active'     => true
             ]
         );
 
@@ -128,15 +131,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => '',
-                'label'        => 'My custom service',
-                'description'  => '',
-                'rank'         => 5,
-                'link'         => 'https://example.com/custom',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_PROJECT,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => 'My custom service',
+                'description'   => '',
+                'rank'          => 5,
+                'link'          => 'https://example.com/custom',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_PROJECT,
+                'is_active'     => true
             ]
         );
 
@@ -151,15 +155,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => Service::NEWS,
-                'label'        => 'News',
-                'description'  => '',
-                'rank'         => 123,
-                'link'         => '',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_SYSTEM,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => Service::NEWS,
+                'label'         => 'News',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => '',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_SYSTEM,
+                'is_active'     => true
             ]
         );
         $this->event_manager->shouldReceive('processEvent')
@@ -183,15 +188,40 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => '',
-                'label'        => 'My custom service',
-                'description'  => '',
-                'rank'         => 123,
-                'link'         => 'https://example.com/custom',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_PROJECT,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => 'My custom service',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => 'https://example.com/custom',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_PROJECT,
+                'is_active'     => true
+            ]
+        );
+
+        $this->expectException(InvalidServicePOSTDataException::class);
+
+        $this->service_postdata_builder->buildFromService($service, false);
+    }
+
+    public function testBuildFromServiceThrowsWhenBothOpenInIframeAndInNewTab(): void
+    {
+        $project = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $service = new Service(
+            $project,
+            [
+                'service_id'    => 12,
+                'short_name'    => '',
+                'label'         => 'My custom service',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => 'https://example.com/custom',
+                'is_in_iframe'  => true,
+                'is_in_new_tab' => true,
+                'scope'         => Service::SCOPE_PROJECT,
+                'is_active'     => true
             ]
         );
 
@@ -206,15 +236,16 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $service = new Service(
             $project,
             [
-                'service_id'   => 12,
-                'short_name'   => Service::NEWS,
-                'label'        => 'News',
-                'description'  => '',
-                'rank'         => 123,
-                'link'         => '',
-                'is_in_iframe' => false,
-                'scope'        => Service::SCOPE_SYSTEM,
-                'is_active'    => true
+                'service_id'    => 12,
+                'short_name'    => Service::NEWS,
+                'label'         => 'News',
+                'description'   => '',
+                'rank'          => 123,
+                'link'          => '',
+                'is_in_iframe'  => false,
+                'is_in_new_tab' => false,
+                'scope'         => Service::SCOPE_SYSTEM,
+                'is_active'     => true
             ]
         );
 
@@ -240,34 +271,48 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
             ->with('service_id', M::any(), M::any())
+            ->once()
             ->andReturn(12);
         $request->shouldReceive('getValidated')
             ->with('short_name', M::any(), M::any())
+            ->once()
             ->andReturn('');
         $request->shouldReceive('exist')
             ->with('short_name')
+            ->once()
             ->andReturnFalse();
         $request->shouldReceive('getValidated')
             ->with('label', M::any(), M::any())
+            ->once()
             ->andReturn('My custom service');
         $request->shouldReceive('getValidated')
             ->with('icon_name', M::any(), M::any())
+            ->once()
             ->andReturn('fa-invalid-icon-name');
         $request->shouldReceive('getValidated')
             ->with('description', M::any(), M::any())
+            ->once()
             ->andReturn('');
         $request->shouldReceive('getValidated')
             ->with('rank', M::any(), M::any())
+            ->once()
             ->andReturn(123);
         $request->shouldReceive('getValidated')
             ->with('is_active', M::any(), M::any())
+            ->once()
             ->andReturn(1);
         $request->shouldReceive('getValidated')
             ->with('is_used', M::any(), M::any())
+            ->once()
             ->andReturn(true);
         $request->shouldReceive('get')
             ->with('is_in_iframe')
-            ->andReturn(false);
+            ->once()
+            ->andReturnFalse();
+        $request->shouldReceive('get')
+            ->with('is_in_new_tab')
+            ->once()
+            ->andReturnFalse();
         $request->shouldReceive('getValidated')
             ->with('link', M::any(), M::any())
             ->andReturn('https://example.com/custom');

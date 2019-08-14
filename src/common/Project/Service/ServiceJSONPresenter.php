@@ -42,6 +42,8 @@ final class ServiceJSONPresenter
     public $is_used;
     /** @var bool */
     public $is_in_iframe;
+    /** @var bool */
+    public $is_in_new_tab;
     /** @var int */
     public $rank;
     /** @var bool */
@@ -59,6 +61,7 @@ final class ServiceJSONPresenter
         bool $is_active,
         bool $is_used,
         bool $is_in_iframe,
+        bool $is_in_new_tab,
         int $rank,
         bool $is_project_scope,
         bool $is_link_customizable
@@ -71,6 +74,7 @@ final class ServiceJSONPresenter
         $this->description          = $description;
         $this->is_active            = $is_active;
         $this->is_used              = $is_used;
+        $this->is_in_new_tab        = $is_in_new_tab;
         $this->is_in_iframe         = $is_in_iframe;
         $this->rank                 = $rank;
         $this->is_project_scope     = $is_project_scope;

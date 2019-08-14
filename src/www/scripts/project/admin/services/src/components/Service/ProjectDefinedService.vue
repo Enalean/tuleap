@@ -37,11 +37,36 @@
         <service-description v-bind:value="service.description"/>
 
         <div class="tlp-form-element">
-            <label
-                class="tlp-label"
-                for="project-admin-services-edit-modal-iframe"
-                v-translate
-            >Display in iframe</label>
+            <label class="tlp-label" for="project-admin-services-edit-modal-new-tab" v-translate>
+                Open in a new tab
+            </label>
+            <div class="tlp-switch">
+                <input
+                    type="checkbox"
+                    class="tlp-switch-checkbox"
+                    id="project-admin-services-edit-modal-new-tab"
+                    name="is_in_new_tab"
+                    value="1"
+                    v-bind:checked="service.is_in_new_tab"
+                    v-on:change="onNewTabChange"
+                    data-test="new-tab-switch"
+                >
+                <label
+                    class="tlp-switch-button"
+                    for="project-admin-services-edit-modal-new-tab"
+                    aria-hidden
+                ></label>
+            </div>
+        </div>
+
+        <div
+            class="tlp-form-element"
+            v-bind:class="{ 'tlp-form-element-disabled': service.is_in_new_tab }"
+            v-if="has_used_iframe"
+        >
+            <label class="tlp-label" for="project-admin-services-edit-modal-iframe" v-translate>
+                Display in iframe
+            </label>
             <div class="tlp-switch">
                 <input
                     class="tlp-switch-checkbox"
@@ -49,7 +74,9 @@
                     type="checkbox"
                     name="is_in_iframe"
                     value="1"
-                    v-bind:checked="service.is_in_iframe"
+                    v-model="service.is_in_iframe"
+                    v-bind:disabled="service.is_in_new_tab"
+                    data-test="iframe-switch"
                 >
                 <label
                     class="tlp-switch-button"
@@ -57,6 +84,29 @@
                     aria-hidden
                 ></label>
             </div>
+        </div>
+
+        <div
+            class="tlp-alert-warning"
+            v-if="is_iframe_deprecation_warning_shown || is_new_tab_warning_shown"
+            ref="warnings"
+        >
+            <translate
+                v-if="is_new_tab_warning_shown"
+                key="new_tab_warning"
+                data-test="new-tab-warning"
+            >
+                The service can't be displayed in an iframe because you want it to be open in a new
+                tab.
+            </translate>
+            <translate
+                v-if="is_iframe_deprecation_warning_shown"
+                key="iframe_deprecation_warning"
+                data-test="iframe-deprecation-warning"
+            >
+                Opening in iframe is deprecated. If you switch it off, you won't be able to switch
+                it back on again.
+            </translate>
         </div>
     </div>
 </template>
@@ -88,6 +138,38 @@ export default {
         allowed_icons: {
             type: Object,
             required: true
+        }
+    },
+    data() {
+        return {
+            has_used_iframe: this.service.is_in_iframe,
+            is_new_tab_warning_shown: false,
+            is_iframe_deprecation_warning_shown: false
+        };
+    },
+    watch: {
+        "service.is_in_iframe"(new_value) {
+            this.is_iframe_deprecation_warning_shown = !new_value;
+            if (new_value === false) {
+                this.scrollWarningsIntoView();
+            }
+        }
+    },
+    methods: {
+        onNewTabChange($event) {
+            const is_in_new_tab = $event.target.checked;
+            this.service.is_in_new_tab = is_in_new_tab;
+            if (this.service.is_in_iframe === true && is_in_new_tab === true) {
+                this.service.is_in_iframe = false;
+                this.is_new_tab_warning_shown = true;
+                this.scrollWarningsIntoView();
+            } else {
+                this.is_new_tab_warning_shown = false;
+            }
+        },
+        async scrollWarningsIntoView() {
+            await this.$nextTick();
+            this.$refs.warnings.scrollIntoView(false);
         }
     }
 };

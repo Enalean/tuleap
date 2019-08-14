@@ -224,6 +224,11 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
     }
 
+    public function isOpenedInNewTab(): bool
+    {
+        return false;
+    }
+
     protected function isAllowed(Project $project): bool
     {
         return true;

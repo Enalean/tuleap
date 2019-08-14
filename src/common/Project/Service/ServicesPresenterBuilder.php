@@ -78,6 +78,7 @@ class ServicesPresenterBuilder
             $service->isActive(),
             $service->isUsed(),
             $service->isIFrame(),
+            $service->isOpenedInNewTab(),
             $service->getRank(),
             $service->getScope() !== Service::SCOPE_SYSTEM,
             $is_link_customizable
