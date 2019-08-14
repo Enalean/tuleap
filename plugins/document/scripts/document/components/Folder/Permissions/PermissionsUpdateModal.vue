@@ -130,7 +130,7 @@ export default {
             return this.$gettext("Update permissions");
         },
         can_be_submitted() {
-            return this.project_ugroups !== null || this.is_submitting_new_permissions === false;
+            return this.project_ugroups !== null && this.is_submitting_new_permissions === false;
         }
     },
     watch: {
