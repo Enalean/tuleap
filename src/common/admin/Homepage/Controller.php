@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -139,16 +139,27 @@ class Admin_Homepage_Controller {
         return ForgeConfig::get('codendi_dir') .'/src/templates/homepage/';
     }
 
-    private function getHeadlines() {
-        $headlines = array();
+    /**
+     * @return Admin_Homepage_HeadlinePresenter[]
+     */
+    private function getHeadlines() : array
+    {
+        $supported_languages = array_map('trim', explode(',', ForgeConfig::get('sys_supported_languages')));
+        $headlines           = [];
+        foreach ($supported_languages as $supported_language) {
+            $headlines[$supported_language] = new Admin_Homepage_HeadlinePresenter(
+                $supported_language,
+                ''
+            );
+        }
         foreach ($this->dao->searchHeadlines() as $row) {
-            $headlines[] = new Admin_Homepage_HeadlinePresenter(
+            $headlines[$row['language_id']] = new Admin_Homepage_HeadlinePresenter(
                 $row['language_id'],
                 $row['headline']
             );
         }
 
-        return $headlines;
+        return array_values($headlines);
     }
 
     private function redirectToIndex() {

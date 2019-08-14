@@ -1592,6 +1592,15 @@ msgstr "Import outils de suivi v3"
 msgid "Trove categories"
 msgstr "Catégories"
 
+msgid ""
+"Tuleap helps teams to deliver awesome applications, better, faster, and "
+"easier.\n"
+"Here you plan, track, code, and collaborate on software projects."
+msgstr ""
+"Avec Tuleap, les équipes livrent les applications plus rapidement, plus "
+"efficacement et de meilleure qualité.\n"
+"Venez planifier, suivre, développer & collaborer sur vos projets logiciels."
+
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 

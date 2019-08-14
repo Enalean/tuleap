@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -104,6 +104,12 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $current_user = UserManager::instance()->getCurrentUser();
 
         $headline = $this->dao->getHeadlineByLanguage($current_user->getLocale());
+        if ($headline === null || $headline === '') {
+            $headline = gettext(
+                "Tuleap helps teams to deliver awesome applications, better, faster, and easier.\n" .
+                'Here you plan, track, code, and collaborate on software projects.'
+            );
+        }
 
         $most_secure_url = '';
         if (ForgeConfig::get('sys_https_host')) {
