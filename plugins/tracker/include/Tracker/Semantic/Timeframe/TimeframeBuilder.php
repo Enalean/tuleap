@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
+use Logger;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
@@ -46,13 +47,19 @@ class TimeframeBuilder
      * @var SemanticTimeframeBuilder
      */
     private $semantic_timeframe_builder;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        SemanticTimeframeBuilder $semantic_timeframe_builder
+        SemanticTimeframeBuilder $semantic_timeframe_builder,
+        Logger $logger
     ) {
         $this->formelement_factory        = $formelement_factory;
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
+        $this->logger                     = $logger;
     }
 
     public function buildTimePeriodWithoutWeekendForArtifact(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
@@ -63,6 +70,15 @@ class TimeframeBuilder
             $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = 0;
+        }
+
+        if ($semantic_timeframe->getEndDateField() !== null) {
+            try {
+                $end_date = $this->getEndDateFieldValue($user, $artifact, $semantic_timeframe);
+            } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+                $end_date = 0;
+            }
+            return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $this->logger);
         }
 
         try {
@@ -82,6 +98,15 @@ class TimeframeBuilder
             $start_date = $this->getTimestamp($user, $artifact, $semantic_timeframe);
         } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
             $start_date = null;
+        }
+
+        if ($semantic_timeframe->getEndDateField() !== null) {
+            try {
+                $end_date = $this->getEndDateFieldValue($user, $artifact, $semantic_timeframe);
+            } catch (TimeframeFieldNotFoundException | TimeframeFieldNoValueException $exception) {
+                $end_date = null;
+            }
+            return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $this->logger);
         }
 
         try {
@@ -114,6 +139,28 @@ class TimeframeBuilder
             );
         } catch (TimeframeFieldNoValueException $exception) {
             $start_date = null;
+        }
+
+        if ($semantic_timeframe->getEndDateField() !== null) {
+            try {
+                $end_date = $this->getEndDateFieldValue($user, $artifact, $semantic_timeframe);
+
+                if (! $end_date) {
+                    throw new Tracker_FormElement_Chart_Field_Exception(
+                        dgettext('tuleap-tracker', '"end date" field is empty or invalid')
+                    );
+                }
+            } catch (TimeframeFieldNotFoundException $exception) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', 'The tracker doesn\'t have a "end_date" Date field or you don\'t have the permission to access it.')
+                );
+            } catch (TimeframeFieldNoValueException $exception) {
+                throw new Tracker_FormElement_Chart_Field_Exception(
+                    dgettext('tuleap-tracker', '"end date" field is empty or invalid')
+                );
+            }
+
+            return TimePeriodWithoutWeekEnd::buildFromEndDate($start_date, $end_date, $this->logger);
         }
 
         try {
@@ -192,5 +239,27 @@ class TimeframeBuilder
         assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Numeric);
 
         return $last_changeset_value->getNumeric();
+    }
+
+    /**
+     * @throws TimeframeFieldNotFoundException
+     * @throws TimeframeFieldNoValueException
+     */
+    private function getEndDateFieldValue(PFUser $user, Tracker_Artifact $milestone_artifact, SemanticTimeframe $semantic_timeframe): int
+    {
+        $field = $semantic_timeframe->getEndDateField();
+
+        if ($field === null || ! $field->userCanRead($user)) {
+            throw new TimeframeFieldNotFoundException();
+        }
+
+        $last_changeset_value = $field->getLastChangesetValue($milestone_artifact);
+        if ($last_changeset_value === null) {
+            throw new TimeframeFieldNoValueException();
+        }
+
+        assert($last_changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
+
+        return  (int) $last_changeset_value->getTimestamp();
     }
 }

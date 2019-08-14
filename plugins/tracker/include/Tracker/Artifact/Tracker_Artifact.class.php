@@ -2055,7 +2055,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $field_retriever,
                     new TimeframeBuilder(
                         $form_element_factory,
-                        $semantic_timeframe_builder
+                        $semantic_timeframe_builder,
+                        $logger
                     ),
                     $logger
                 )

@@ -282,7 +282,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
                 ),
                 new TimeframeBuilder(
                     $form_element_factory,
-                    $this->getSemanticTimeframeBuilder($form_element_factory)
+                    $this->getSemanticTimeframeBuilder($form_element_factory),
+                    new \BackendLogger()
                 ),
                 new MilestoneBurndownFieldChecker($form_element_factory)
             )

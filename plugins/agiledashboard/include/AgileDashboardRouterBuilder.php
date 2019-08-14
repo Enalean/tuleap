@@ -237,7 +237,8 @@ class AgileDashboardRouterBuilder
             $this->getMonoMileStoneChecker(),
             new TimeframeBuilder(
                 $form_element_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                new \BackendLogger()
             ),
             new MilestoneBurndownFieldChecker($form_element_factory)
         );

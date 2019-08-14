@@ -731,7 +731,8 @@ class AgileDashboardPlugin extends Plugin
             $this->getMonoMilestoneChecker(),
             new TimeframeBuilder(
                 $form_element_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                $this->getLogger()
             ),
             new MilestoneBurndownFieldChecker($this->getFormElementFactory())
         );

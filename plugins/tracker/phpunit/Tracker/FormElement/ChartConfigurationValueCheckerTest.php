@@ -96,6 +96,14 @@ class ChartConfigurationValueCheckerTest extends TestCase
      * @var \Tracker
      */
     private $tracker;
+    /**
+     * @var Mockery\MockInterface|\Tracker_FormElement_Field_Date
+     */
+    private $end_date_field;
+    /**
+     * @var Mockery\MockInterface|\Tracker_Artifact_ChangesetValue_Date
+     */
+    private $end_date_changeset;
 
     protected function setUp() : void
     {
@@ -109,10 +117,12 @@ class ChartConfigurationValueCheckerTest extends TestCase
 
         $this->tracker              = \Mockery::mock(\Tracker::class);
         $this->start_date_field     = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
+        $this->end_date_field       = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $this->duration_field       = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
         $this->artifact             = \Mockery::mock(\Tracker_Artifact::class);
         $this->user                 = \Mockery::mock(\PFUser::class);
         $this->start_date_changeset = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
+        $this->end_date_changeset   = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
         $this->duration_changeset   = \Mockery::mock(\Tracker_Artifact_ChangesetValue_Integer::class);
         $this->new_changeset        = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
@@ -234,6 +244,10 @@ class ChartConfigurationValueCheckerTest extends TestCase
             ->with($this->tracker, $this->user)
             ->andReturn($this->start_date_field);
 
+        $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
+            ->with($this->tracker, $this->user)
+            ->andReturns(false);
+
         $this->new_changeset->shouldReceive('getValue')
             ->with($this->start_date_field)
             ->andReturn($this->start_date_changeset);
@@ -264,6 +278,10 @@ class ChartConfigurationValueCheckerTest extends TestCase
             ->with($this->tracker, $this->user)
             ->andReturn($this->start_date_field);
 
+        $this->configuration_field_retriever->shouldReceive('getEndDateField')
+            ->with($this->tracker, $this->user)
+            ->andThrows(Tracker_FormElement_Chart_Field_Exception::class);
+
         $this->new_changeset->shouldReceive('getValue')
             ->with($this->start_date_field)
             ->andReturn($this->start_date_changeset);
@@ -287,23 +305,61 @@ class ChartConfigurationValueCheckerTest extends TestCase
     public function testItReturnsTrueWhenDurationHaveChanged()
     {
         $this->configuration_field_retriever->shouldReceive('getDurationField')
-            ->with($this->tracker, $this->user)
-            ->andReturn($this->duration_field);
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturn($this->duration_field);
 
         $this->configuration_field_retriever->shouldReceive('getStartDateField')
-            ->with($this->tracker, $this->user)
-            ->andReturn($this->start_date_field);
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturn($this->start_date_field);
+
+        $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturns(false);
 
         $this->new_changeset->shouldReceive('getValue')
-            ->with($this->start_date_field)
-            ->andReturn($this->start_date_changeset);
+                            ->with($this->start_date_field)
+                            ->andReturn($this->start_date_changeset);
 
         $this->new_changeset->shouldReceive('getValue')
-            ->with($this->duration_field)
-            ->andReturn($this->duration_changeset);
+                            ->with($this->duration_field)
+                            ->andReturn($this->duration_changeset);
 
         $this->start_date_changeset->shouldReceive('hasChanged')->andReturnFalse();
         $this->duration_changeset->shouldReceive('hasChanged')->andReturnTrue();
+
+        $this->assertTrue(
+            $this->chart_configuration_value_checker->hasConfigurationChange(
+                $this->artifact,
+                $this->user,
+                $this->new_changeset
+            )
+        );
+    }
+
+    public function testItReturnsTrueWhenEndDateHasChanged()
+    {
+        $this->configuration_field_retriever->shouldReceive('getStartDateField')
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturn($this->start_date_field);
+
+        $this->configuration_field_retriever->shouldReceive('doesEndDateFieldExist')
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturn(true);
+
+        $this->configuration_field_retriever->shouldReceive('getEndDateField')
+                                            ->with($this->tracker, $this->user)
+                                            ->andReturn($this->end_date_field);
+
+        $this->new_changeset->shouldReceive('getValue')
+                            ->with($this->start_date_field)
+                            ->andReturn($this->start_date_changeset);
+
+        $this->new_changeset->shouldReceive('getValue')
+                            ->with($this->end_date_field)
+                            ->andReturn($this->end_date_changeset);
+
+        $this->start_date_changeset->shouldReceive('hasChanged')->andReturnFalse();
+        $this->end_date_changeset->shouldReceive('hasChanged')->andReturnTrue();
 
         $this->assertTrue(
             $this->chart_configuration_value_checker->hasConfigurationChange(

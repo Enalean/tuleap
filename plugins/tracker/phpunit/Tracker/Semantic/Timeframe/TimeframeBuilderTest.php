@@ -58,6 +58,10 @@ final class TimeframeBuilderTest extends TestCase
     private $user;
 
     private $semantic_timeframe_builder;
+    /**
+     * @var \BackendLogger|Mockery\MockInterface
+     */
+    private $logger;
 
     protected function setUp(): void
     {
@@ -66,9 +70,11 @@ final class TimeframeBuilderTest extends TestCase
         $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
         $this->semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
 
+        $this->logger  = Mockery::mock(\BackendLogger::class);
         $this->builder = new TimeframeBuilder(
             $this->formelement_factory,
-            $this->semantic_timeframe_builder
+            $this->semantic_timeframe_builder,
+            $this->logger
         );
 
         $this->tracker  = Mockery::mock(Tracker::class);
@@ -190,6 +196,94 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertSame(strtotime($start_date), $time_period->getStartDate());
         $this->assertSame(strtotime($start_date), $time_period->getEndDate());
         $this->assertSame(0, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifact(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date       = '07/03/2013';
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive('getSemantic')
+            ->with($this->tracker)
+            ->andReturn(
+                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $this->mockEndDateFieldWithValue($end_date, $end_date_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
+        $this->assertSame(2, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfUserCannotRead(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date       = '07/03/2013';
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(false);
+
+        $this->logger->shouldReceive('warn')->once();
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive('getSemantic')
+            ->with($this->tracker)
+            ->andReturn(
+                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $this->mockEndDateFieldWithValue($end_date, $end_date_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(0, $time_period->getEndDate());
+        // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
+        // Weird but consistent with date field/duration behavior.
+        $this->assertSame(-11347, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodWithEndDateForArtifactWithZeroForEndDateIfNoLastChangesetValue(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->logger->shouldReceive('warn')->once();
+
+        $this->semantic_timeframe_builder
+            ->shouldReceive('getSemantic')
+            ->with($this->tracker)
+            ->andReturn(
+                new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+            );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $end_date_field->shouldReceive('getLastChangesetValue')
+            ->with($this->artifact)
+            ->andReturnNull();
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifact($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(0, $time_period->getEndDate());
+        // duration between start date (07/01/2013) and 01/01/1970 since user cannot read the field.
+        // Weird but consistent with date field/duration behavior.
+        $this->assertSame(-11347, $time_period->getDuration());
     }
 
     public function testItBuildsATimePeriodForChartWhenStartDateAndDurationAreSet()
@@ -431,6 +525,108 @@ final class TimeframeBuilderTest extends TestCase
         );
     }
 
+    public function testItThrowsAnExceptionWhenEndDateHasNoLastChangesetValueInChartContext()
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $end_date_field->shouldReceive('getLastChangesetValue')
+                       ->with($this->artifact)
+                       ->andReturnNull();
+
+        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenEndDateIsNotReadableInChartContext()
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(false);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+
+        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user
+        );
+    }
+
+    public function testItThrowsAnExceptionWhenEndDateIsEmpty()
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+
+        $end_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $end_date_changeset->shouldReceive('getTimestamp')->andReturn(0);
+        $end_date_field->shouldReceive('getLastChangesetValue')
+                       ->with($this->artifact)
+                       ->andReturns($end_date_changeset);
+
+        $this->expectException(Tracker_FormElement_Chart_Field_Exception::class);
+
+        $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user
+        );
+    }
+
+    public function testItReturnsTimeframeFromEndDateInChartContext()
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $end_date       = '07/15/2013';
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $this->mockEndDateFieldWithValue($end_date, $end_date_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
+            $this->artifact,
+            $this->user
+        );
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
+        $this->assertSame(10, $time_period->getDuration());
+    }
+
     public function testItBuildATimePeriodWithoutWeekObjectForArtifactForREST(): void
     {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
@@ -545,6 +741,77 @@ final class TimeframeBuilderTest extends TestCase
         $this->assertNull($time_period->getDuration());
     }
 
+    public function testItBuildsATimePeriodForRESTFromEndDate(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $end_date       = '07/03/2013';
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $this->mockEndDateFieldWithValue($end_date, $end_date_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertSame(strtotime($end_date), $time_period->getEndDate());
+        $this->assertEquals(2, $time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateIsNotReadable(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(false);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertNull($time_period->getEndDate());
+        $this->assertNull($time_period->getDuration());
+    }
+
+    public function testItBuildsATimePeriodForRESTFromEndDateWithNullIfEndDateHasNoValue(): void
+    {
+        $start_date       = '07/01/2013';
+        $start_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $start_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $end_date_field = Mockery::mock(Tracker_FormElement_Field_Date::class);
+        $end_date_field->shouldReceive('userCanRead')->andReturn(true);
+
+        $this->semantic_timeframe_builder->shouldReceive('getSemantic')->with($this->tracker)->andReturn(
+            new SemanticTimeframe($this->tracker, $start_date_field, null, $end_date_field)
+        );
+
+        $this->mockStartDateFieldWithValue($start_date, $start_date_field);
+        $end_date_field->shouldReceive('getLastChangesetValue')
+                       ->with($this->artifact)
+                       ->andReturnNull();
+
+        $time_period = $this->builder->buildTimePeriodWithoutWeekendForArtifactForREST($this->artifact, $this->user);
+
+        $this->assertSame(strtotime($start_date), $time_period->getStartDate());
+        $this->assertNull($time_period->getEndDate());
+        $this->assertNull($time_period->getDuration());
+    }
+
     private function mockStartDateFieldWithValue(string $start_date, Mockery\MockInterface $start_date_field): void
     {
         $start_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
@@ -553,6 +820,16 @@ final class TimeframeBuilderTest extends TestCase
         $start_date_field->shouldReceive('getLastChangesetValue')
             ->with($this->artifact)
             ->andReturn($start_date_changeset);
+    }
+
+    private function mockEndDateFieldWithValue(string $end_date, Mockery\MockInterface $end_date_field): void
+    {
+        $end_date_changeset = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $end_date_changeset->shouldReceive('getTimestamp')->andReturn(strtotime($end_date));
+
+        $end_date_field->shouldReceive('getLastChangesetValue')
+            ->with($this->artifact)
+            ->andReturn($end_date_changeset);
     }
 
     private function mockDurationFieldWithValue(?int $duration, Mockery\MockInterface $duration_field): void

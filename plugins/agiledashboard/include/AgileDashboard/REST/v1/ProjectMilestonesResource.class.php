@@ -112,7 +112,8 @@ class ProjectMilestonesResource {
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             new TimeframeBuilder(
                 $this->tracker_form_element_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory)
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory),
+                new \BackendLogger()
             ),
             new MilestoneBurndownFieldChecker($this->tracker_form_element_factory)
         );

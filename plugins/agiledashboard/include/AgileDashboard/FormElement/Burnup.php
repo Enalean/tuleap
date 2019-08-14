@@ -455,7 +455,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             $this->getConfigurationFieldRetriever(),
             new TimeframeBuilder(
                 $form_element_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory)
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                $this->getLogger()
             ),
             $this->getLogger()
         );

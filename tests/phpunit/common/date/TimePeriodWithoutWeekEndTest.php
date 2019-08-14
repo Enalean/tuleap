@@ -378,9 +378,9 @@ class TimePeriodWithoutWeekEndTest extends TestCase
     ): void {
         $logger = Mockery::mock(Logger::class);
         if ($expected_error_message === null) {
-            $logger->shouldReceive('error')->never();
+            $logger->shouldReceive('warn')->never();
         } else {
-            $logger->shouldReceive('error')->with($expected_error_message)->once();
+            $logger->shouldReceive('warn')->with($expected_error_message)->once();
         }
 
         $start_date_timestamp = (new \DateTime($start_date))->getTimestamp();
@@ -398,11 +398,6 @@ class TimePeriodWithoutWeekEndTest extends TestCase
             $expected_end_date_timestamp,
             $time_period->getEndDate(),
             "End date should be $expected_end_date"
-        );
-
-        $time_period_from_time_period = TimePeriodWithoutWeekEnd::buildFromDuration(
-            $time_period->getStartDate(),
-            $time_period->getDuration()
         );
     }
 
@@ -445,5 +440,31 @@ class TimePeriodWithoutWeekEndTest extends TestCase
                 'Inconsistent TimePeriod: end date 2019-08-01 is lesser than start date 2019-08-05.'
             ],
         ];
+    }
+
+    public function testCreationFromEndDateWithNullValues(): void
+    {
+        $logger = Mockery::mock(Logger::class);
+        $logger->shouldReceive('error')->never();
+
+        $a_date = (new \DateTimeImmutable('2019-08-05'))->getTimestamp();
+
+        $time_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+            null,
+            $a_date,
+            $logger
+        );
+        $this->assertNull($time_period->getStartDate());
+        $this->assertNull($time_period->getDuration());
+        $this->assertEquals($a_date, $time_period->getEndDate());
+
+        $time_period = TimePeriodWithoutWeekEnd::buildFromEndDate(
+            $a_date,
+            null,
+            $logger
+        );
+        $this->assertNull($time_period->getEndDate());
+        $this->assertNull($time_period->getDuration());
+        $this->assertEquals($a_date, $time_period->getStartDate());
     }
 }

@@ -90,10 +90,19 @@ class ChartConfigurationValueChecker
         Tracker_Artifact_Changeset $new_changeset
     ) {
         $start_date_field = $this->configuration_field_retriever->getStartDateField($artifact->getTracker(), $user);
-        $duration_field   = $this->configuration_field_retriever->getDurationField($artifact->getTracker(), $user);
+        if ($this->hasFieldChanged($new_changeset, $start_date_field)) {
+            return true;
+        }
 
-        return $this->hasFieldChanged($new_changeset, $start_date_field)
-            || $this->hasFieldChanged($new_changeset, $duration_field);
+        if ($this->configuration_field_retriever->doesEndDateFieldExist($artifact->getTracker(), $user)) {
+            return $this->hasFieldChanged(
+                $new_changeset,
+                $this->configuration_field_retriever->getEndDateField($artifact->getTracker(), $user)
+            );
+        }
+
+        $duration_field = $this->configuration_field_retriever->getDurationField($artifact->getTracker(), $user);
+        return $this->hasFieldChanged($new_changeset, $duration_field);
     }
 
     /**
