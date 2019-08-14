@@ -37,11 +37,26 @@ document.addEventListener("DOMContentLoaded", () => {
     gettext_provider.setLocale(locale);
     moment.locale(locale);
 
+    let left_progression_label = gettext_provider.gettext("%s - Team effort");
+    if (mode === "count") {
+        left_progression_label = gettext_provider.gettext("%s - Closed elements");
+    }
+
+    let progression_label = gettext_provider.gettext("Team effort");
+    if (mode === "count") {
+        progression_label = gettext_provider.gettext("Closed");
+    }
+
+    let total_label = gettext_provider.gettext("Total effort");
+    if (mode === "count") {
+        total_label = gettext_provider.gettext("Total");
+    }
+
     const chart_props = {
         graph_width: container_width,
         graph_height: container_width / 1.33,
         tooltip_date_format: gettext_provider.gettext("MM/DD"),
-        left_legend_title: gettext_provider.gettext("%s - Team effort"),
+        left_legend_title: left_progression_label,
         left_legend_date_format: gettext_provider.gettext("ddd DD"),
         legend_badge_default: gettext_provider.gettext("n/k"),
         margins: {
@@ -58,15 +73,15 @@ document.addEventListener("DOMContentLoaded", () => {
             classname: "chart-plot-ideal-burnup"
         },
         {
-            label: gettext_provider.gettext("Team effort"),
+            label: progression_label,
             classname: "chart-plot-team-effort"
         },
         {
-            label: gettext_provider.gettext("Total effort"),
+            label: total_label,
             classname: "chart-plot-total-effort"
         }
     ];
 
     const generic_burnup_data = transformToGenericBurnupData(burnup_data, mode);
-    createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data });
+    createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data, mode });
 });
