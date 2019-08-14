@@ -46,6 +46,39 @@ class CustomMetadataRepresentationRetriever
     }
 
     /**
+     * @return MetadataToUpdate[]
+     *@throws CustomMetadataException
+     */
+    public function checkAndBuildMetadataToUpdate(?array $metadata_representations): array
+    {
+        if (empty($metadata_representations)) {
+            return [];
+        }
+        $custom_metadata_list = [];
+        foreach ($metadata_representations as $metadata_representation) {
+            $metadata = $this->factory->getMetadataFromLabel($metadata_representation->short_name);
+            if (! $metadata) {
+                throw CustomMetadataException::metadataNotFound($metadata_representation->short_name);
+            }
+
+            if ((int)$metadata->getType() === PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                if ($metadata->isMultipleValuesAllowed() === true) {
+                    $this->checkMultipleMetadataListValues($metadata_representation, $metadata);
+                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->list_value);
+                } else {
+                    $this->checkSimpleMetadataListValues($metadata_representation, $metadata);
+                    $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value);
+                }
+            } else {
+                $this->checkMetadataValue($metadata_representation);
+                $custom_metadata_list[] = MetadataToUpdate::buildMetadataRepresentation($metadata, $metadata_representation->value);
+            }
+        }
+
+        return $custom_metadata_list;
+    }
+
+    /**
      * @throws CustomMetadataException
      */
     public function checkAndRetrieveFormattedRepresentation(?array $list_metadata): array

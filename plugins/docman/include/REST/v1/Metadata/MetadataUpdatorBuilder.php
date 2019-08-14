@@ -23,8 +23,14 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Docman_SettingsBo;
+use Tuleap\Docman\Metadata\DocmanMetadataInputValidator;
+use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
+use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
+use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
+use Tuleap\Docman\Metadata\MetadataValueStore;
+use Tuleap\Docman\Metadata\MetadataValueUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -34,6 +40,10 @@ class MetadataUpdatorBuilder
     public static function build(\Project $project, \EventManager $event_manager): MetadataUpdator
     {
         $user_manager = \UserManager::instance();
+        $docman_metadata_factory      = new \Docman_MetadataFactory($project->getGroupId());
+
+        $metadata_value_dao = new \Docman_MetadataValueDao();
+
         return new MetadataUpdator(
             new \Docman_ItemFactory(),
             new ItemStatusMapper(new Docman_SettingsBo($project->getID())),
@@ -51,7 +61,17 @@ class MetadataUpdatorBuilder
                 new \Docman_MetadataValueFactory($project->getID()),
                 \ReferenceManager::instance()
             ),
-            new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO())
+            new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO()),
+            new CustomMetadataRepresentationRetriever(
+                $docman_metadata_factory,
+                new MetadataListOfValuesElementListBuilder(new \Docman_MetadataListOfValuesElementDao())
+            ),
+            new MetadataValueUpdator(
+                new DocmanMetadataInputValidator(),
+                new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory()),
+                $metadata_value_dao,
+                new MetadataValueStore($metadata_value_dao, \ReferenceManager::instance())
+            )
         );
     }
 }

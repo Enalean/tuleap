@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
+use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
 use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
 
 class CustomMetadataRepresentationRetrieverTest extends TestCase
@@ -401,6 +402,90 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
 
         $formatted_representation = $this->checker->checkAndRetrieveFileFormattedRepresentation([$metadata]);
+        $this->assertEquals($formatted_representation, $expected_representation);
+    }
+
+    public function testItBuildMetadataToUpdateForText(): void
+    {
+        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata->short_name = "field_text_1";
+        $metadata->value      = "my value";
+        $metadata->list_value = null;
+
+        $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
+        $project_configured_metadata->shouldReceive('getId')->andReturn(1);
+        $project_configured_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $project_configured_metadata->shouldReceive('isMultipleValuesAllowed')->andReturnTrue();
+        $project_configured_metadata->shouldReceive('getLabel')->andReturn($metadata->short_name);
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$metadata->short_name])->andReturn($project_configured_metadata);
+
+        $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation($project_configured_metadata, $metadata->value);
+
+        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
+        $this->assertEquals($expected_representation, $formatted_representation);
+    }
+
+    public function testItBuildMetadataToUpdateForListWithSingleValue(): void
+    {
+        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata->short_name = "field_list_1";
+        $metadata->value      = 1;
+        $metadata->list_value = null;
+
+        $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
+        $project_configured_metadata->shouldReceive('getId')->andReturn(1);
+        $project_configured_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $project_configured_metadata->shouldReceive('isMultipleValuesAllowed')->andReturnFalse();
+        $project_configured_metadata->shouldReceive('getLabel')->andReturn($metadata->short_name);
+        $project_configured_metadata->shouldReceive('getId')->andReturn(1);
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$metadata->short_name])->andReturn($project_configured_metadata);
+
+        $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation($project_configured_metadata, $metadata->value);
+
+        $value     = ['value_id' => 1, 'name' => 'value'];
+        $value_two = ['value_id' => 2, 'name' => 'name value 2'];
+
+        $element = new \Docman_MetadataListOfValuesElement();
+        $element->initFromRow($value);
+
+        $element_two = new \Docman_MetadataListOfValuesElement();
+        $element_two->initFromRow($value_two);
+
+        $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
+
+        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
+        $this->assertEquals($formatted_representation, $expected_representation);
+    }
+
+    public function testItBuildMetadataToUpdateForListWithMultipleValues(): void
+    {
+        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata->short_name = "field_list_1";
+        $metadata->value      = null;
+        $metadata->list_value = [101, 102];
+
+        $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
+        $project_configured_metadata->shouldReceive('getId')->andReturn(1);
+        $project_configured_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $project_configured_metadata->shouldReceive('isMultipleValuesAllowed')->andReturnTrue();
+        $project_configured_metadata->shouldReceive('getLabel')->andReturn($metadata->short_name);
+        $project_configured_metadata->shouldReceive('getId')->andReturn(1);
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$metadata->short_name])->andReturn($project_configured_metadata);
+
+        $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation($project_configured_metadata, $metadata->list_value);
+
+        $value     = ['value_id' => 101, 'name' => 'value'];
+        $value_two = ['value_id' => 102, 'name' => 'name value 2'];
+
+        $element = new \Docman_MetadataListOfValuesElement();
+        $element->initFromRow($value);
+
+        $element_two = new \Docman_MetadataListOfValuesElement();
+        $element_two->initFromRow($value_two);
+
+        $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
+
+        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
         $this->assertEquals($formatted_representation, $expected_representation);
     }
 }

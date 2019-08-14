@@ -21,6 +21,7 @@
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Docman_Metadata;
 use LogicException;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -28,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
+use Tuleap\Docman\Metadata\MetadataValueUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -36,6 +38,14 @@ use Tuleap\REST\I18NRestException;
 final class MetadataUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var \Mockery\MockInterface|MetadataValueUpdator
+     */
+    private $metadata_value_updator;
+    /**
+     * @var \Mockery\MockInterface|CustomMetadataRepresentationRetriever
+     */
+    private $representation_retriever;
     /**
      * @var \Mockery\MockInterface|DocumentOngoingUploadRetriever
      */
@@ -78,14 +88,16 @@ final class MetadataUpdatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->item_factory                = \Mockery::mock(\Docman_ItemFactory::class);
+        $this->item_factory = \Mockery::mock(\Docman_ItemFactory::class);
         $this->status_mapper               = \Mockery::mock(ItemStatusMapper::class);
         $this->obsolescence_date_retriever = \Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
         $this->user_manager                = \Mockery::mock(\UserManager::class);
         $this->owner_retriever             = \Mockery::mock(OwnerRetriever::class);
         $this->event_processor             = \Mockery::mock(MetadataEventProcessor::class);
         $this->recursive_updator           = \Mockery::mock(MetadataRecursiveUpdator::class);
-        $this->document_on_going_retriever =  \Mockery::mock(DocumentOngoingUploadRetriever::class);
+        $this->document_on_going_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
+        $this->representation_retriever = \Mockery::mock(CustomMetadataRepresentationRetriever::class);
+        $this->metadata_value_updator = \Mockery::mock(MetadataValueUpdator::class);
 
         $this->updator = new MetadataUpdator(
             $this->item_factory,
@@ -95,7 +107,9 @@ final class MetadataUpdatorTest extends TestCase
             $this->owner_retriever,
             $this->event_processor,
             $this->recursive_updator,
-            $this->document_on_going_retriever
+            $this->document_on_going_retriever,
+            $this->representation_retriever,
+            $this->metadata_value_updator
         );
     }
 
@@ -137,8 +151,70 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();
 
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once()->andReturn([]);
+
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
+
+        $this->updator->updateDocumentMetadata($representation, $item, $current_user);
+    }
+
+    public function testDocumentCustomMetadataCanBeChanged(): void
+    {
+        $date = new \DateTimeImmutable();
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
+        );
+        $this->status_mapper->shouldReceive('getItemStatusStringFormId')->andReturn(
+            ItemStatusMapper::ITEM_STATUS_APPROVED
+        );
+        $this->obsolescence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn($date->getTimestamp());
+
+        $old_user_id = 101;
+        $item        = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getOwnerId')->andReturn($old_user_id);
+        $item->shouldReceive('getId')->andReturn(10);
+        $item->shouldReceive('getStatus')->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $item->shouldReceive('getTitle')->andReturn("my title");
+        $item->shouldReceive('getParentId')->andReturn(9);
+
+        $old_user = \Mockery::mock(\PFUser::class);
+        $old_user->shouldReceive('getUserName')->andReturn('owner name');
+        $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn($old_user);
+        $this->user_manager->shouldReceive('getUserById')->andReturn($old_user);
+        $old_user->shouldReceive('getUserName')->andReturn('user name');
+
+        $representation                             = new PUTMetadataRepresentation();
+        $representation->title                      = "title";
+        $representation->description                = "";
+        $representation->owner_id                   = $old_user_id;
+        $representation->status                     = ItemStatusMapper::ITEM_STATUS_APPROVED;
+        $representation->obsolescence_date          = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+        $custom_metadata_representation             = new POSTCustomMetadataRepresentation();
+        $custom_metadata_representation->short_name = "field_1";
+        $custom_metadata_representation->value      = "value";
+        $representation->metadata                   = [$custom_metadata_representation];
+
+        $current_user = \Mockery::mock(\PFUser::class);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->shouldReceive('update')->once();
+
+        $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
+
+        $metadata_to_update_representation = MetadataToUpdate::buildMetadataRepresentation(
+            $project_configured_metadata,
+            $custom_metadata_representation->value
+        );
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once()->andReturn(
+            [$metadata_to_update_representation]
+        );
+
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
+        $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
+
+        $this->metadata_value_updator->shouldReceive('updateMetadata')
+            ->withArgs([$metadata_to_update_representation->getMetadata(), 10, $metadata_to_update_representation->getValue()])->once();
 
         $this->updator->updateDocumentMetadata($representation, $item, $current_user);
     }
@@ -163,6 +239,8 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->owner_retriever->shouldReceive('getUserFromRepresentationId')->andReturn(null);
+
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->never();
 
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
@@ -203,6 +281,9 @@ final class MetadataUpdatorTest extends TestCase
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once(
+        )->andReturn([]);
 
         $this->expectException(RuntimeException::class);
 
@@ -250,6 +331,9 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->item_factory->shouldReceive('update')->once();
 
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once(
+        )->andReturn([]);
+
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
@@ -282,6 +366,8 @@ final class MetadataUpdatorTest extends TestCase
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->never();
+
         $this->expectException(RestException::class);
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
@@ -313,6 +399,8 @@ final class MetadataUpdatorTest extends TestCase
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->never();
 
         $this->expectException(I18NRestException::class);
 
@@ -348,6 +436,8 @@ final class MetadataUpdatorTest extends TestCase
         $representation->owner_id          = 102;
         $representation->status            = ItemStatusMapper::ITEM_STATUS_APPROVED;
         $representation->obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+
+        $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->never();
 
         $this->expectException(LogicException::class);
 
