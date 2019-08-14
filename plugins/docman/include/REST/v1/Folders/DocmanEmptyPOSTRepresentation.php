@@ -42,7 +42,7 @@ class DocmanEmptyPOSTRepresentation implements CanContainACopyRepresentation
     /**
      * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
      */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public $status;
     /**
      * @var string | null Obsolescence date {@from body} {@required false}
      */

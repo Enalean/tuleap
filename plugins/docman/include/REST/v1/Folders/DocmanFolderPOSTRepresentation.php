@@ -42,7 +42,7 @@ class DocmanFolderPOSTRepresentation implements CanContainACopyRepresentation
     /**
      * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
      */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public $status;
 
     /**
      * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}

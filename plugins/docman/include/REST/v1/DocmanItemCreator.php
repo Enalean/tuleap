@@ -149,7 +149,7 @@ class DocmanItemCreator
         $content
     ) {
 
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
+        $status_id = $this->status_mapper->getItemStatusWithParentInheritance($parent_item, $status);
 
         if ($item_type_id !== PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
             $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDateWithoutPeriodValidity(
@@ -210,7 +210,7 @@ class DocmanItemCreator
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
-        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
+        $status_id = $this->status_mapper->getItemStatusWithParentInheritance($parent_item, $status);
 
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDateWithoutPeriodValidity(
             $obsolescence_date,
