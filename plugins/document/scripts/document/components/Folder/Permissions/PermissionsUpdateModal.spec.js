@@ -90,11 +90,14 @@ describe("PermissionsUpdateModal", () => {
         };
         const wrapper = factory({ item: item_to_update });
 
+        expect(wrapper.vm.can_be_submitted).toBe(false);
+
         EventBus.$emit("show-update-permissions-modal");
         await wrapper.vm.$nextTick().then(() => {});
         expect(wrapper.find("[data-test=document-permissions-update-selectors]").exists()).toBe(
             true
         );
+        expect(wrapper.vm.can_be_submitted).toBe(true);
 
         const nb_calls_after_first_opening_of_the_modal = getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.calls.count();
         EventBus.$emit("show-update-permissions-modal");
@@ -161,11 +164,21 @@ describe("PermissionsUpdateModal", () => {
                 can_manage: []
             }
         };
+
         const wrapper = factory({ item: item_to_update });
+        wrapper.setData({ project_ugroups: [] });
+
+        const expectedActionName = "updatePermissions";
+        store.dispatch.and.callFake(function(actionName) {
+            if (actionName !== expectedActionName) {
+                return;
+            }
+            expect(wrapper.vm.can_be_submitted).toBe(false);
+        });
 
         wrapper.find("form").trigger("submit.prevent");
 
-        expect(store.dispatch).toHaveBeenCalledWith("updatePermissions", [
+        expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, [
             item_to_update,
             item_to_update.permissions_for_groups
         ]);
