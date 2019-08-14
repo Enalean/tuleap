@@ -29,7 +29,6 @@ class CookieManager
 
     public function setCookie(string $name, string $value, int $expire = 0) : void
     {
-        /** @psalm-suppress InvalidArgument https://github.com/vimeo/psalm/issues/1972 */
         setcookie(
             self::getCookieName($name),
             $value,

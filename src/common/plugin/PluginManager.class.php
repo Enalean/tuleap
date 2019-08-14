@@ -38,7 +38,7 @@ class PluginManager
     private $site_cache;
 
     /** @var PluginManager */
-    private static $instance = null;
+    private static $instance;
 
     /** @var ForgeUpgradeConfig */
     private $forgeupgrade_config;
