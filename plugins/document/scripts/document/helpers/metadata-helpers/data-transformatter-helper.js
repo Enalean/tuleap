@@ -18,6 +18,7 @@
  */
 
 import { getStatusFromMapping, getStatusMetadata } from "./hardcoded-metadata-mapping-helper.js";
+import moment from "moment";
 
 export function transformFolderMetadataForRecursionAtUpdate(item) {
     let folder_to_update = JSON.parse(JSON.stringify(item));
@@ -81,6 +82,10 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
         };
 
         switch (parent_metadata.type) {
+            case "date":
+                formatted_metadata.value = formatDateValue(parent_metadata.value);
+                formatted_metadata_list.push(formatted_metadata);
+                break;
             case "text":
             case "string":
                 formatted_metadata.value = parent_metadata.value;
@@ -106,4 +111,12 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
     });
 
     return formatted_metadata_list;
+}
+
+function formatDateValue(date) {
+    if (!date) {
+        return "";
+    }
+
+    return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
 }

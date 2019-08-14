@@ -18,10 +18,10 @@
  */
 
 import {
-    transformCustomMetadataForItemCreation,
-    transformDocumentMetadataForUpdate,
     transformFolderMetadataForRecursionAtUpdate,
-    transformItemMetadataForCreation
+    transformItemMetadataForCreation,
+    transformDocumentMetadataForUpdate,
+    transformCustomMetadataForItemCreation
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -344,6 +344,63 @@ describe("transformCustomMetadataForItemCreation", () => {
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
+    it(`Given parent has a date value,
+        then the formatted date metadata is bound to value with the formatted date`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "2019-08-30T00:00:00+02:00",
+                type: "date",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "date",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "2019-08-30",
+                is_required: false
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
+        expect(expected_list).toEqual(formatted_list);
+    });
+    it(`Given parent does not have a date value,
+        then the formatted date metadata is bound to value with empty string`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: null,
+                type: "date",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "date",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "",
+                is_required: false
+            }
+        ];
+
+        const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
+
         expect(expected_list).toEqual(formatted_list);
     });
 });
