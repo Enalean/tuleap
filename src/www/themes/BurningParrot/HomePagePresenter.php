@@ -57,7 +57,7 @@ class HomePagePresenter
     public $news;
 
     public function __construct(
-        $headline,
+        string $headline,
         PFUser $user,
         $most_secure_url,
         User_LoginPresenter $login,

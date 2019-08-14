@@ -27,7 +27,7 @@ class Admin_Homepage_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    /** @return string */
+    /** @return string|null */
     public function getHeadlineByLanguage($language_id) {
         $language_id = $this->da->quoteSmart($language_id);
 
