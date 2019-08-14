@@ -85,7 +85,7 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
+                can_manage: [{ id: "102_3" }]
             }
         };
         const wrapper = factory({ item: item_to_update });
@@ -101,6 +101,8 @@ describe("PermissionsUpdateModal", () => {
         expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).toHaveBeenCalledTimes(
             nb_calls_after_first_opening_of_the_modal
         );
+
+        expect(wrapper.vm.updated_permissions).toEqual(item_to_update.permissions_for_groups);
     });
 
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
@@ -129,6 +131,24 @@ describe("PermissionsUpdateModal", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
+    });
+
+    it("Change permissions to update when the bound item is updated", () => {
+        const wrapper = factory({ item: {} });
+
+        const item_to_update = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [{ id: "102_3" }],
+                can_manage: [{ id: "102_4" }]
+            }
+        };
+
+        wrapper.setProps({ item: item_to_update });
+
+        expect(wrapper.vm.updated_permissions).toEqual(item_to_update.permissions_for_groups);
     });
 
     it("Send update request when form is submitted", () => {
