@@ -71,6 +71,55 @@ describe("TitleMetadata", () => {
         };
     });
 
+    it(`Title can not be updated for root folder`, async () => {
+        const value = "A new folder title";
+        const isInUpdateContext = true;
+        const parent = {};
+        const currentlyUpdatedItem = {
+            type: TYPE_FOLDER,
+            parent_id: 0
+        };
+
+        const wrapper = title_metadata_factory({
+            value,
+            isInUpdateContext,
+            parent,
+            currentlyUpdatedItem
+        });
+        wrapper.setProps({ value: value });
+
+        await wrapper.vm.$nextTick().then(() => {});
+        const input = wrapper.find("[data-test=document-new-item-title]");
+
+        expect(input.element.disabled).toBe(true);
+        expect(
+            wrapper.find("[data-test=document-new-item-title-form-element]").classes()
+        ).toContain("tlp-form-element-disabled");
+    });
+
+    it(`Title can be updated for other items`, async () => {
+        const value = "A new folder title";
+        const isInUpdateContext = true;
+        const parent = {};
+        const currentlyUpdatedItem = {
+            type: TYPE_FOLDER,
+            parent_id: 3
+        };
+
+        const wrapper = title_metadata_factory({
+            value,
+            isInUpdateContext,
+            parent,
+            currentlyUpdatedItem
+        });
+        wrapper.setProps({ value: value });
+
+        await wrapper.vm.$nextTick().then(() => {});
+        const input = wrapper.find("[data-test=document-new-item-title]");
+
+        expect(input.element.disabled).toBe(false);
+    });
+
     describe("Folder creation", () => {
         it(`Title is valid when no other folder has the same name`, async () => {
             const value = "A new folder title";

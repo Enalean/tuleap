@@ -18,7 +18,10 @@
   -->
 
 <template>
-    <div class="tlp-form-element document-metadata-title">
+    <div class="tlp-form-element document-metadata-title"
+         v-bind:class="{'tlp-form-element-disabled': is_root_folder}"
+         data-test="document-new-item-title-form-element"
+    >
         <label
             class="tlp-label"
             for="document-new-item-title"
@@ -34,6 +37,7 @@
             v-bind:placeholder="placeholder"
             required
             v-bind:value="value"
+            v-bind:disabled="is_root_folder"
             v-on:input="$emit('input', $event.target.value)"
             ref="input"
             data-test="document-new-item-title"
@@ -69,6 +73,9 @@ export default {
         ...mapState(["folder_content"]),
         placeholder() {
             return this.$gettext("My document");
+        },
+        is_root_folder() {
+            return this.currentlyUpdatedItem.parent_id === 0;
         }
     },
     watch: {
