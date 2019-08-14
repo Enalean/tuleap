@@ -134,13 +134,12 @@ export default {
         }
     },
     watch: {
-        item: function(value) {
-            this.updated_permissions = {
-                can_read: JSON.parse(JSON.stringify(value.permissions_for_groups.can_read)),
-                can_write: JSON.parse(JSON.stringify(value.permissions_for_groups.can_write)),
-                can_manage: JSON.parse(JSON.stringify(value.permissions_for_groups.can_manage))
-            };
+        item: function() {
+            this.setPermissionsToUpdateFromItem();
         }
+    },
+    beforeMount() {
+        this.setPermissionsToUpdateFromItem();
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -152,6 +151,16 @@ export default {
         this.modal.removeEventListener("tlp-modal-hidden", this.reset);
     },
     methods: {
+        setPermissionsToUpdateFromItem() {
+            if (!this.item.permissions_for_groups) {
+                return;
+            }
+            this.updated_permissions = {
+                can_read: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_read)),
+                can_write: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_write)),
+                can_manage: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_manage))
+            };
+        },
         async show() {
             this.modal.show();
             if (this.project_ugroups === null) {
