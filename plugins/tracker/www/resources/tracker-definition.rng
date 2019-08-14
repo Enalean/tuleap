@@ -830,11 +830,18 @@
             <data type="IDREF"/>
           </attribute>
         </element>
-        <element name="duration_field">
-          <attribute name="REF">
-            <data type="IDREF"/>
-          </attribute>
-        </element>
+        <choice>
+          <element name="duration_field">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+          <element name="end_date_field">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </choice>
       </group>
     </choice>
   </define>
