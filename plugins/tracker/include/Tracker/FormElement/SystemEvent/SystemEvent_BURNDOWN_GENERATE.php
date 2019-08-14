@@ -113,21 +113,36 @@ class SystemEvent_BURNDOWN_GENERATE extends SystemEvent // phpcs:ignore Squiz.Cl
         $burndown_informations = null;
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
         $start_date_field   = $semantic_timeframe->getStartDateField();
+        $end_date_field     = $semantic_timeframe->getEndDateField();
         $duration_field     = $semantic_timeframe->getDurationField();
         if ($start_date_field !== null && $duration_field !== null) {
-            $burndown_informations = $this->burndown_dao->getBurndownInformation(
+            $burndown_informations = $this->burndown_dao->getBurndownInformationBasedOnDuration(
                 $artifact_id,
                 $start_date_field->getId(),
                 $duration_field->getId()
+            );
+        } elseif ($start_date_field !== null && $end_date_field !== null) {
+            $burndown_informations = $this->burndown_dao->getBurndownInformationBasedOnEndDate(
+                $artifact_id,
+                $start_date_field->getId(),
+                $end_date_field->getId()
             );
         }
 
         $this->logger->debug("Calculating burndown for artifact #" . $artifact_id);
         if ($burndown_informations) {
-            $burndown              = TimePeriodWithoutWeekEnd::buildFromDuration(
-                $burndown_informations['start_date'],
-                $burndown_informations['duration']
-            );
+            if (empty($burndown_informations['duration'])) {
+                $burndown = TimePeriodWithoutWeekEnd::buildFromEndDate(
+                    $burndown_informations['start_date'],
+                    $burndown_informations['end_date'],
+                    $this->logger
+                );
+            } else {
+                $burndown = TimePeriodWithoutWeekEnd::buildFromDuration(
+                    $burndown_informations['start_date'],
+                    $burndown_informations['duration']
+                );
+            }
 
             $yesterday = new DateTime();
             $yesterday->setTime(0, 0, 0);
