@@ -29,15 +29,19 @@
                 data-test="document-custom-metadata-text"
             />
             <custom-metadata-string
-                v-if="item_metadata.type === 'string'"
+                v-else-if="item_metadata.type === 'string'"
                 v-bind:currently-updated-item-metadata="item_metadata"
                 data-test="document-custom-metadata-string"
             />
             <custom-metadata-list-single-value
-                v-if="item_metadata.type === 'list' && ! item_metadata.is_multiple_value_allowed"
+                v-else-if="item_metadata.type === 'list' && ! item_metadata.is_multiple_value_allowed"
                 v-bind:currently-updated-item-metadata="item_metadata"
-                data-test="document-custom-metadata-list"
+                data-test="document-custom-metadata-list-single"
             />
+            <custom-metadata-list-multiple-value
+                v-else-if="item_metadata.type === 'list' && item_metadata.is_multiple_value_allowed"
+                v-bind:currently-updated-item-metadata="item_metadata"
+                data-test="document-custom-metadata-list-multiple"/>
         </div>
     </div>
 </template>
@@ -46,10 +50,12 @@
 import CustomMetadataText from "./CustomMetadataText.vue";
 import CustomMetadataString from "./CustomMetadataString.vue";
 import CustomMetadataListSingleValue from "./CustomMetadataListSingleValue.vue";
+import CustomMetadataListMultipleValue from "./CustomMetadataListMultipleValue.vue";
 
 export default {
     name: "CustomMetadata",
     components: {
+        CustomMetadataListMultipleValue,
         CustomMetadataListSingleValue,
         CustomMetadataString,
         CustomMetadataText

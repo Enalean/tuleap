@@ -47,7 +47,8 @@ describe("CustomMeatdata", () => {
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
         expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-single]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
     });
     it(`Given custom text metadata
         Then it renders the corresponding component`, () => {
@@ -64,7 +65,8 @@ describe("CustomMeatdata", () => {
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-single]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
     });
     it(`Given list with only one value metadata
         Then it renders the corresponding component`, () => {
@@ -82,6 +84,27 @@ describe("CustomMeatdata", () => {
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
         expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-single]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
+    });
+
+    it(`Given a list with multiple value metadata
+        Then it renders the corresponding component`, () => {
+        const currentlyUpdatedItem = {
+            id: 42,
+            metadata: [
+                {
+                    short_name: "list",
+                    type: "list",
+                    is_multiple_value_allowed: true
+                }
+            ]
+        };
+        const wrapper = factory({ currentlyUpdatedItem });
+
+        expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-single]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeTruthy();
     });
 });
