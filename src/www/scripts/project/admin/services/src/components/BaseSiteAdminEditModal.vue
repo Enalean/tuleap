@@ -18,36 +18,48 @@
   -->
 
 <template>
-    <edit-modal
-        v-bind:form_url="form_url"
-        ref="modal"
-        v-on:reset-modal="resetModal"
-    >
+    <edit-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
         <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
-            <sidebar-previewer v-bind:label="service.label" v-bind:icon_name="service.icon_name"/>
+            <sidebar-previewer
+                v-bind:label="service.label"
+                v-bind:icon_name="service.icon_name"
+            />
             <project-defined-service
+                v-if="service.is_project_scope"
                 v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
             >
                 <template v-slot:is_active>
-                    <is-active-input v-bind:value="service.is_active"/>
+                    <service-is-active v-bind:value="service.is_active"/>
                 </template>
             </project-defined-service>
+            <editable-system-service
+                v-else
+                v-bind:minimal_rank="minimal_rank"
+                v-bind:service="service"
+            />
         </template>
     </edit-modal>
 </template>
 <script>
-import ProjectDefinedService from "./ProjectDefinedService.vue";
+import ProjectDefinedService from "./Service/ProjectDefinedService.vue";
 import EditModal from "./EditModal.vue";
-import IsActiveInput from "./IsActiveInput.vue";
+import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import { edit_modal_mixin } from "./edit-modal-mixin.js";
+import EditableSystemService from "./Service/EditableSystemService.vue";
 
 export default {
     name: "BaseSiteAdminEditModal",
-    components: { EditModal, ProjectDefinedService, IsActiveInput, SidebarPreviewer },
+    components: {
+        EditableSystemService,
+        EditModal,
+        ProjectDefinedService,
+        ServiceIsActive,
+        SidebarPreviewer
+    },
     mixins: [edit_modal_mixin]
 };
 </script>

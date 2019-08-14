@@ -18,7 +18,7 @@
  */
 
 export function buildCreateModalCallback(RootComponent) {
-    const vue_mount_point_id = "custom-service-edit-modal";
+    const vue_mount_point_id = "service-edit-modal";
     const vue_mount_point = document.getElementById(vue_mount_point_id);
 
     if (!vue_mount_point) {
@@ -36,7 +36,7 @@ export function buildCreateModalCallback(RootComponent) {
         return new RootComponent({
             propsData: {
                 project_id: projectId,
-                minimal_rank: minimalRank,
+                minimal_rank: Number.parseInt(minimalRank, 10),
                 csrf_token_name: csrfTokenName,
                 csrf_token: csrfToken,
                 allowed_icons: JSON.parse(allowedIcons)

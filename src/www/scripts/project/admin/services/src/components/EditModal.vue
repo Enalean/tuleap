@@ -23,10 +23,11 @@
         v-bind:action="form_url"
         class="tlp-modal"
         role="dialog"
-        aria-labelledby="project-admin-services-custom-edit-modal-title"
+        aria-labelledby="project-admin-services-edit-modal-title"
+        data-test="service-edit-modal"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="project-admin-services-custom-edit-modal-title">
+            <h1 class="tlp-modal-title" id="project-admin-services-edit-modal-title">
                 <i class="fa fa-pencil tlp-modal-title-icon"></i>
                 <translate>Edit service</translate>
             </h1>

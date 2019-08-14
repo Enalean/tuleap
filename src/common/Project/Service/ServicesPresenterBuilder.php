@@ -57,16 +57,31 @@ class ServicesPresenterBuilder
 
             $service_presenters[] = new ServicePresenter(
                 $service,
-                $this->isReadOnly($service, $user),
-                $this->canSeeShortname($service, $user),
-                $service->getScope() !== Service::SCOPE_SYSTEM,
-                $this->canUpdateIsActive($user),
-                $this->getServiceLink($service, $project),
-                $this->shouldShowDynamicModal($service)
+                $this->buildJSONPresenter($service, $project)
             );
         }
 
         return new ServicesPresenter($project, $csrf, $service_presenters);
+    }
+
+    private function buildJSONPresenter(Service $service, Project $project): ServiceJSONPresenter
+    {
+        $service_link = $this->getServiceLink($service, $project);
+        $is_link_customizable = $service_link === null;
+        return new ServiceJSONPresenter(
+            $service->getId(),
+            $service->getShortName(),
+            $service->getLabel(),
+            $service->getIconName(),
+            $service->getUrl($service_link),
+            $service->getDescription(),
+            $service->isActive(),
+            $service->isUsed(),
+            $service->isIFrame(),
+            $service->getRank(),
+            $service->getScope() !== Service::SCOPE_SYSTEM,
+            $is_link_customizable
+        );
     }
 
     private function isServiceReadable(Service $service, PFUser $user)
@@ -82,25 +97,6 @@ class ServicesPresenterBuilder
         return $service->isActive();
     }
 
-    private function isReadOnly(Service $service, PFUser $user)
-    {
-        if ($user->isSuperUser()) {
-            return false;
-        }
-
-        return $service->getScope() === Service::SCOPE_SYSTEM;
-    }
-
-    private function canSeeShortname(Service $service, PFUser $user)
-    {
-        return $user->isSuperUser() && ! empty($service->getShortName());
-    }
-
-    private function canUpdateIsActive(PFuser $user)
-    {
-        return $user->isSuperUser();
-    }
-
     private function getServiceLink(Service $service, Project $project)
     {
         $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
@@ -108,10 +104,5 @@ class ServicesPresenterBuilder
         $this->event_manager->processEvent($service_url_collector);
 
         return $service_url_collector->getUrl();
-    }
-
-    private function shouldShowDynamicModal(Service $service): bool
-    {
-        return $service->getScope() !== Service::SCOPE_SYSTEM;
     }
 }

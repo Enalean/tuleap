@@ -21,13 +21,13 @@
     <div class="tlp-form-element">
         <label
             class="tlp-label"
-            for="project-admin-services-custom-edit-modal-active"
+            for="project-admin-services-edit-modal-active"
             v-translate
         >Available (also available for new projects)</label>
         <div class="tlp-switch">
             <input
                 class="tlp-switch-checkbox"
-                id="project-admin-services-custom-edit-modal-active"
+                id="project-admin-services-edit-modal-active"
                 type="checkbox"
                 name="is_active"
                 value="1"
@@ -35,7 +35,7 @@
             >
             <label
                 class="tlp-switch-button"
-                for="project-admin-services-custom-edit-modal-active"
+                for="project-admin-services-edit-modal-active"
                 aria-hidden
             ></label>
         </div>

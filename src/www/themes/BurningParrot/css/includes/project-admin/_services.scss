@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-admin-services-custom-edit-modal-top-fields {
+.project-admin-services-edit-modal-top-fields {
     display: flex;
 
-    > .tlp-form-element {
+    > .tlp-form-element,
+    > .tlp-property {
         margin: 0 $tlp-double-spacing $tlp-spacing 0;
 
         &:first-child {

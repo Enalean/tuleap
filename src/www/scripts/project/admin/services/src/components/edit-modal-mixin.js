@@ -24,7 +24,7 @@ export const edit_modal_mixin = {
             required: true
         },
         minimal_rank: {
-            type: String,
+            type: Number,
             required: true
         },
         csrf_token: {
@@ -62,12 +62,14 @@ export const edit_modal_mixin = {
             return {
                 id: null,
                 icon_name: "",
-                label: null,
-                link: null,
-                description: null,
+                label: "",
+                link: "",
+                description: "",
                 is_active: true,
+                is_used: true,
                 is_in_iframe: false,
-                rank: this.minimal_rank
+                rank: this.minimal_rank,
+                is_project_scope: true
             };
         }
     }
