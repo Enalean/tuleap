@@ -24,6 +24,10 @@ use DateTime;
 use Logger;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
@@ -38,31 +42,55 @@ class BurnupDataBuilder
      * @var BurnupCacheChecker
      */
     private $cache_checker;
+
     /**
      * @var ChartConfigurationValueRetriever
      */
     private $chart_configuration_value_retriever;
+
     /**
      * @var BurnupCacheDao
      */
     private $burnup_cache_dao;
+
     /**
      * @var BurnupCalculator
      */
     private $burnup_calculator;
+
+    /**
+     * @var CountElementsModeChecker
+     */
+    private $mode_checker;
+
+    /**
+     * @var CountElementsCacheDao
+     */
+    private $count_elements_cache_dao;
+
+    /**
+     * @var CountElementsCalculator
+     */
+    private $count_elements_calculator;
 
     public function __construct(
         Logger $logger,
         BurnupCacheChecker $cache_checker,
         ChartConfigurationValueRetriever $chart_configuration_value_retriever,
         BurnupCacheDao $burnup_cache_dao,
-        BurnupCalculator $burnup_calculator
+        BurnupCalculator $burnup_calculator,
+        CountElementsCacheDao $count_elements_cache_dao,
+        CountElementsCalculator $count_elements_calculator,
+        CountElementsModeChecker $mode_checker
     ) {
         $this->logger                              = $logger;
         $this->cache_checker                       = $cache_checker;
         $this->chart_configuration_value_retriever = $chart_configuration_value_retriever;
         $this->burnup_cache_dao                    = $burnup_cache_dao;
         $this->burnup_calculator                   = $burnup_calculator;
+        $this->mode_checker                        = $mode_checker;
+        $this->count_elements_cache_dao            = $count_elements_cache_dao;
+        $this->count_elements_calculator           = $count_elements_calculator;
     }
 
     /**
@@ -100,6 +128,10 @@ class BurnupDataBuilder
 
         if (! $is_under_calculation) {
             $this->addEfforts($artifact, $burnup_data);
+
+            if ($this->mode_checker->burnupMustUseCountElementsMode($artifact)) {
+                $this->addCountElements($artifact, $burnup_data);
+            }
         }
 
         $this->logger->info("End calculating burnup " . $artifact->getId());
@@ -120,6 +152,26 @@ class BurnupDataBuilder
             $now    = time();
             $effort = $this->burnup_calculator->getValue($artifact->getId(), $now);
             $burnup_data->addEffort($effort, $now);
+        }
+    }
+
+    private function addCountElements(Tracker_Artifact $artifact, BurnupData $burnup_data): void
+    {
+        $cached_days_result = $this->count_elements_cache_dao->searchCachedDaysValuesByArtifactId(
+            (int) $artifact->getId()
+        );
+
+        if (is_array($cached_days_result)) {
+            foreach ($cached_days_result as $cached_day) {
+                $count_elements = new CountElementsInfo($cached_day['closed_subelements'], $cached_day['total_subelements']);
+                $burnup_data->addCountElements($count_elements, (int) $cached_day['timestamp']);
+            }
+        }
+
+        if ($burnup_data->getTimePeriod()->isTodayWithinTimePeriod()) {
+            $now    = time();
+            $count_elements = $this->count_elements_calculator->getValue((int) $artifact->getId(), $now);
+            $burnup_data->addCountElements($count_elements, $now);
         }
     }
 }

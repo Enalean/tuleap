@@ -42,4 +42,14 @@ class CountElementsCacheDao extends DataAccessObject
             $closed_subelements
         );
     }
+
+    public function searchCachedDaysValuesByArtifactId(int $artifact_id): ?array
+    {
+        return $this->getDB()->run(
+            "SELECT timestamp, closed_subelements, total_subelements
+             FROM plugin_agiledashboard_tracker_field_burnup_cache_subelements
+             WHERE artifact_id = ?",
+            $artifact_id
+        );
+    }
 }

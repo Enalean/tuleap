@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,29 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
+
 class BurnupData
 {
     /**
      * @var \TimePeriodWithoutWeekEnd
      */
     private $time_period;
+
     /**
      * @var bool
      */
     private $is_under_calculation;
+
     /**
      * @var BurnupEffort[]
      */
     private $efforts = array();
+
+    /**
+     * @var CountElementsInfo[]
+     */
+    private $count_elements = array();
 
     public function __construct(\TimePeriodWithoutWeekEnd $time_period, $is_under_calculation)
     {
@@ -62,11 +71,24 @@ class BurnupData
         $this->efforts[(int) $timestamp] = $effort;
     }
 
+    public function addCountElements(CountElementsInfo $count_elements, int $timestamp): void
+    {
+        $this->count_elements[$timestamp] = $count_elements;
+    }
+
     /**
      * @return BurnupEffort[]
      */
     public function getEfforts()
     {
         return $this->efforts;
+    }
+
+    /**
+     * @return CountElementsInfo[]
+     */
+    public function getCountElements(): array
+    {
+        return $this->count_elements;
     }
 }

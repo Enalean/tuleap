@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFormattedDates } from "charts-builders/chart-dates-service.js";
+namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
-export { getLastDayData, getDisplayableData };
+use ForgeConfig;
+use Tracker_Artifact;
 
-function getLastDayData(generic_burnup_data) {
-    const dataset = generic_burnup_data.points_with_date;
+class CountElementsModeChecker
+{
+    public function burnupMustUseCountElementsMode(Tracker_Artifact $artifact): bool
+    {
+        if (! ForgeConfig::get('use_burnup_count_elements')) {
+            return false;
+        }
 
-    if (!dataset.length) {
-        return {};
+        $burnup_ids = ForgeConfig::get('burnup_ids_count_elements', []);
+
+        foreach (explode(',', $burnup_ids) as $burnup_id) {
+            if ((int) $burnup_id === (int) $artifact->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
-
-    return dataset[dataset.length - 1];
-}
-
-function getDisplayableData(generic_burnup_data) {
-    const filtered_data = generic_burnup_data.points_with_date.filter(({ progression, total }) => {
-        return progression !== null && total !== null;
-    });
-
-    return getFormattedDates(filtered_data);
 }

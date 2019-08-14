@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,6 +47,7 @@ class ArtifactsTest extends ArtifactBase
 
         foreach ($burnup['values'] as $field) {
             if ($field['label'] === ArtifactBase::BURNUP_FIELD_SHORTNAME) {
+                $this->assertArrayHasKey('points_with_date_count_elements', $field['value']);
                 $this->assertEquals($field['value']['points_with_date'], $expected_burnup_chart);
             }
         }

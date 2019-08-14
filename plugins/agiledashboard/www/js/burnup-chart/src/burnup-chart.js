@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
 
 import moment from "moment";
 import { createBurnupChart } from "./burnup-chart-drawer.js";
+import { transformToGenericBurnupData } from "./burnup-data-transformer.js";
 import { gettext_provider } from "./gettext-provider.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const burnup_data = JSON.parse(chart_container.dataset.burnup);
     const container_width = chart_container.clientWidth;
     const locale = chart_container.dataset.locale;
+    const mode = chart_container.dataset.mode;
 
     gettext_provider.setLocale(locale);
     moment.locale(locale);
@@ -65,5 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    createBurnupChart({ chart_container, chart_props, chart_legends, burnup_data });
+    const generic_burnup_data = transformToGenericBurnupData(burnup_data, mode);
+    createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data });
 });

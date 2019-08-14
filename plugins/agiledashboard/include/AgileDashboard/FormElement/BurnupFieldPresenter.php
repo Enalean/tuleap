@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,14 @@
 
 namespace Tuleap\AgileDashboard\FormElement;
 
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\v1\Artifact\BurnupRepresentation;
 
 class BurnupFieldPresenter
 {
+    private const EFFORT_MODE         = 'effort';
+    private const COUNT_ELEMENTS_MODE = 'count';
+
     /**
      * @var string
      */
@@ -57,7 +61,18 @@ class BurnupFieldPresenter
      */
     public $has_warning;
 
+    /**
+     * @var string
+     */
+    public $burnup_mode;
+
+    /**
+     * @var CountElementsModeChecker
+     */
+    private $mode_checker;
+
     public function __construct(
+        CountElementsModeChecker $mode_checker,
         BurnupRepresentation $burnup_representation,
         \Tracker_Artifact $artifact,
         $can_burnup_be_regenerated,
@@ -73,5 +88,10 @@ class BurnupFieldPresenter
         $this->user_locale               = $user_locale;
         $this->warning                   = $warning;
         $this->has_warning               = $warning !== "";
+
+        $this->burnup_mode = self::EFFORT_MODE;
+        if ($mode_checker->burnupMustUseCountElementsMode($artifact)) {
+            $this->burnup_mode = self::COUNT_ELEMENTS_MODE;
+        }
     }
 }

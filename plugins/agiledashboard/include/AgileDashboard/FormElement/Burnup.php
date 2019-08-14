@@ -27,6 +27,7 @@ use SystemEventManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
@@ -36,6 +37,9 @@ use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
@@ -171,6 +175,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $css_file_url              = $theme_include_assets->getFileURL('burnup-chart.css');
 
         return new BurnupFieldPresenter(
+            new CountElementsModeChecker(),
             $burnup_representation,
             $artifact,
             $can_burnup_be_regenerated,
@@ -403,7 +408,15 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             ),
             $this->getConfigurationValueRetriever(),
             $burnup_cache_dao,
-            $this->getBurnupCalculator()
+            $this->getBurnupCalculator(),
+            new CountElementsCacheDao(),
+            new CountElementsCalculator(
+                Tracker_Artifact_ChangesetFactoryBuilder::build(),
+                Tracker_ArtifactFactory::instance(),
+                Tracker_FormElementFactory::instance(),
+                new BurnupDao()
+            ),
+            new CountElementsModeChecker()
         );
     }
 
