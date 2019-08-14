@@ -301,7 +301,11 @@ function gettextVue($translated_plugin, $path, $manifest_json)
         $po       = escapeshellarg("$path/${gettext['po']}");
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js $(find $src -type f -name '*.vue') --output $template");
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
+        $(find $src -type f -name '*.vue' -o -name '*.ts' -o -name '*.js' \
+        -not \( -name '*.spec.js' -o -name '*.spec.ts' -o -name '*.d.ts' \) \
+        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) ) \
+        --output $template");
         executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
 
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");

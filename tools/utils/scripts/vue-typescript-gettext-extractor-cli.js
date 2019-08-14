@@ -32,7 +32,7 @@ const { GettextExtractor, JsExtractors } = require("gettext-extractor");
 const gettext_extractor = new GettextExtractor();
 
 const PROGRAM_NAME = "easygettext";
-const ALLOWED_EXTENSIONS = ["html", "htm", "jade", "js", "pug", "vue"];
+const ALLOWED_EXTENSIONS = ["js", "ts", "vue"];
 
 // Process arguments
 const argv = minimist(process.argv.slice(2));
@@ -86,10 +86,16 @@ const extractor = new extract.Extractor({
 });
 
 const script_gettext_extractor = gettext_extractor.createJsParser([
-    JsExtractors.callExpression("[this].$gettext", { arguments: { text: 0 } }),
-    JsExtractors.callExpression("[this].$ngettext", { arguments: { text: 0, textPlural: 1 } }),
-    JsExtractors.callExpression("[this].$pgettext", { arguments: { context: 0, text: 1 } }),
-    JsExtractors.callExpression("[this].$npgettext", {
+    JsExtractors.callExpression(["[this].$gettext", "gettext_provider.$gettext"], {
+        arguments: { text: 0 }
+    }),
+    JsExtractors.callExpression(["[this].$ngettext", "gettext_provider.$ngettext"], {
+        arguments: { text: 0, textPlural: 1 }
+    }),
+    JsExtractors.callExpression(["[this].$pgettext", "gettext_provider.$pgettext"], {
+        arguments: { context: 0, text: 1 }
+    }),
+    JsExtractors.callExpression(["[this].$npgettext", "gettext_provider.$npgettext"], {
         arguments: { context: 0, text: 1, textPlural: 2 }
     })
 ]);
@@ -115,16 +121,18 @@ files.forEach(function(filename) {
             } else {
                 lang = null;
             }
-        }
 
-        if (lang === "js") {
-            script_gettext_extractor.parseString(data, filename, {
-                scriptKind: ts.ScriptKind.JS
-            });
-        } else if (lang === "ts") {
-            script_gettext_extractor.parseString(data, filename, {
-                scriptKind: ts.ScriptKind.TS
-            });
+            if (lang === "js") {
+                script_gettext_extractor.parseString(data, filename, {
+                    scriptKind: ts.ScriptKind.JS
+                });
+            } else if (lang === "ts") {
+                script_gettext_extractor.parseString(data, filename, {
+                    scriptKind: ts.ScriptKind.TS
+                });
+            }
+        } else if (ext === "js" || ext === "ts") {
+            script_gettext_extractor.parseString(data, filename);
         }
     } catch (e) {
         console.error(`[${PROGRAM_NAME}] could not read: '${filename}`);
