@@ -186,7 +186,7 @@ class TrackerRulesListValidatorTest extends TestCase
         $this->formelement_factory->shouldReceive('getFormElementListById')->withArgs(['104'])->andReturn($field_4);
 
         $rule_date_factory = Mockery::mock(Tracker_Rule_Date_Factory::class);
-        $rule_date_factory->shouldReceive('searchByTrackerId')->andReturn(array());
+        $rule_date_factory->shouldReceive('searchByTrackerId')->andReturn([]);
     }
 
     public function tearDown(): void
@@ -196,10 +196,10 @@ class TrackerRulesListValidatorTest extends TestCase
 
     public function testValidateListRulesReturnTrueIfValuesAreValid(): void
     {
-        $value_field_list  = array(
+        $value_field_list  = [
             123 => 456,
             789 => 101
-        );
+        ];
         $tracker_rule_list = new \Tracker_Rule_List();
         $tracker_rule_list->setSourceValue(456)
             ->setSourceFieldId(123)
@@ -215,10 +215,10 @@ class TrackerRulesListValidatorTest extends TestCase
     {
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
 
-        $value_field_list  = array(
+        $value_field_list  = [
             123 => 456,
             789 => 101
-        );
+        ];
         $tracker_rule_list = new \Tracker_Rule_List();
 
         $tracker_rule_list->setSourceValue(456)
@@ -235,10 +235,10 @@ class TrackerRulesListValidatorTest extends TestCase
     {
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
 
-        $value_field_list = array(
+        $value_field_list = [
             123 => 456,
             789 => 101
-        );
+        ];
 
         $tracker_rule_list = new \Tracker_Rule_List();
         $tracker_rule_list->setSourceValue(4560)
@@ -255,10 +255,10 @@ class TrackerRulesListValidatorTest extends TestCase
     {
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'aaaaa(Champ1) -> bbbbb(Champ2)']);
 
-        $value_field_list  = array(
+        $value_field_list  = [
             123 => 456,
             789 => 101
-        );
+        ];
         $tracker_rule_list = new \Tracker_Rule_List();
         $tracker_rule_list->setSourceValue(456)
             ->setSourceFieldId(123)
@@ -270,21 +270,41 @@ class TrackerRulesListValidatorTest extends TestCase
         $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
     }
 
-
     public function testValidateListRulesReturnErrorIfAFieldIsEmpty(): void
     {
         $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
         $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
 
-        $value_field_list  = array(
+        $value_field_list  = [
             123 => 456,
             789 => ''
-        );
+        ];
         $tracker_rule_list = new \Tracker_Rule_List();
 
         $tracker_rule_list->setSourceValue(456)
             ->setSourceFieldId(123)
             ->setTargetValue(101)
+            ->setTargetFieldId(789)
+            ->setTrackerId(110)
+            ->setId(5);
+
+        $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
+    }
+
+    public function testValidateListRulesValidWithEmptyTargetsValue(): void
+    {
+        $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
+        $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
+
+        $value_field_list  = [
+            123 => 456,
+            789 => 100
+        ];
+        $tracker_rule_list = new \Tracker_Rule_List();
+
+        $tracker_rule_list->setSourceValue(456)
+            ->setSourceFieldId(123)
+            ->setTargetValue(100)
             ->setTargetFieldId(789)
             ->setTrackerId(110)
             ->setId(5);
@@ -297,10 +317,10 @@ class TrackerRulesListValidatorTest extends TestCase
         $this->bind->shouldReceive("formatArtifactValue")->andReturns('Champ1');
         $this->bind_2->shouldReceive("formatArtifactValue")->andReturns('');
 
-        $value_field_list = array(
+        $value_field_list = [
             123 => 456,
             789 => 100
-        );
+        ];
 
         $tracker_rule_list = new \Tracker_Rule_List();
 
@@ -311,7 +331,7 @@ class TrackerRulesListValidatorTest extends TestCase
             ->setTrackerId(110)
             ->setId(5);
 
-        $this->assertTrue($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
+        $this->assertFalse($this->tracker_rules_list_validator->validateListRules($this->tracker, $value_field_list, [$tracker_rule_list]));
     }
 
     public function testS1ValidateListRulesReturnTrueIfRulesAreRespected()
@@ -344,7 +364,7 @@ class TrackerRulesListValidatorTest extends TestCase
     {
         $GLOBALS['Response']->shouldNotReceive('addFeedback');
         $value_field_list = [
-            '101' => array('A1', 'A2'),
+            '101' => ['A1', 'A2'],
             '102' => 'B3',
             '103' => 'C1',
             '104' => 'D1'
@@ -356,7 +376,7 @@ class TrackerRulesListValidatorTest extends TestCase
     {
         $GLOBALS['Response']->shouldNotReceive('addFeedback');
         $value_field_list = [
-            '101' => array('A1', 'A2'),
+            '101' => ['A1', 'A2'],
             '102' => 'B2',
             '103' => 'C2',
             '104' => 'D1'
@@ -370,7 +390,7 @@ class TrackerRulesListValidatorTest extends TestCase
 
         $value_field_list = [
             '101' => 'A1',
-            '102' => array('B1', 'B3'),
+            '102' => ['B1', 'B3'],
             '103' => 'C1',
             '104' => 'D1'
         ];
@@ -384,7 +404,7 @@ class TrackerRulesListValidatorTest extends TestCase
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'f_1(Champ1) -> f_2(Champ2)']);
         $value_field_list = [
             '101' => 'A1',
-            '102' => array('B1', 'B2'), //A1 cannot access to B2 !
+            '102' => ['B1', 'B2'], //A1 cannot access to B2 !
             '103' => 'C1',
             '104' => 'D1'
         ];

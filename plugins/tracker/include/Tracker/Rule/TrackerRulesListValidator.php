@@ -122,11 +122,6 @@ class TrackerRulesListValidator
                 break;
             }
 
-            if ($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
-                || $target_value == null) {
-                continue;
-            }
-
             $valid = $this->areRulesValid($tracker, $source_values, $target_value, $dependencies, $source, $target);
 
             if (!$valid) {
