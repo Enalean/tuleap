@@ -175,6 +175,7 @@ export default {
             }
         },
         reset() {
+            this.setPermissionsToUpdateFromItem();
             this.$store.commit("error/resetModalError");
         },
         async updatePermissions() {

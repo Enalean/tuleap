@@ -48,10 +48,20 @@ describe("PermissionsUpdateModal", () => {
             });
         };
 
+        let hideFunction = null;
         tlp.modal.and.returnValue({
-            addEventListener: () => {},
+            addEventListener(type, listener) {
+                hideFunction = listener;
+            },
+            removeEventListener() {
+                hideFunction = null;
+            },
             show: () => {},
-            hide: () => {}
+            hide() {
+                if (hideFunction !== null) {
+                    hideFunction();
+                }
+            }
         });
     });
 
@@ -169,5 +179,30 @@ describe("PermissionsUpdateModal", () => {
             item_to_update,
             item_to_update.permissions_for_groups
         ]);
+    });
+
+    it("Reset selected user groups when the modal is closed", () => {
+        const item = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: []
+            }
+        };
+
+        const wrapper = factory({ item });
+
+        wrapper.setData({
+            updated_permissions: {
+                can_read: ["102_3"],
+                can_write: ["102_3", "138"],
+                can_manage: ["102_4"]
+            }
+        });
+        wrapper.vm.modal.hide();
+
+        expect(wrapper.vm.updated_permissions).toEqual(item.permissions_for_groups);
     });
 });

@@ -37,6 +37,10 @@
     </div>
 </template>
 <script>
+function getSelectedUGroupsIDs(selected_ugroups) {
+    return selected_ugroups.map(ugroup => ugroup.id);
+}
+
 export default {
     name: "PermissionsSelector",
     model: {
@@ -49,12 +53,17 @@ export default {
     },
     data() {
         return {
-            selected_ugroup_ids: this.selected_ugroups.map(ugroup => ugroup.id)
+            selected_ugroup_ids: getSelectedUGroupsIDs(this.selected_ugroups)
         };
     },
     computed: {
         selector_id() {
             return "document-permission-" + this.label;
+        }
+    },
+    watch: {
+        selected_ugroups: function(value) {
+            this.selected_ugroup_ids = getSelectedUGroupsIDs(value);
         }
     },
     methods: {
