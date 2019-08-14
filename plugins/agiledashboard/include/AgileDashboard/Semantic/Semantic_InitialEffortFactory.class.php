@@ -55,12 +55,14 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
         return AgileDashBoard_Semantic_InitialEffort::load($tracker);
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
     {
         $xml_field = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
+        if (! isset($xml_mapping[(string)$xml_field_attributes['REF']])) {
+            return null;
+        }
         $field = $xml_mapping[(string)$xml_field_attributes['REF']];
-
         return new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
     }
 

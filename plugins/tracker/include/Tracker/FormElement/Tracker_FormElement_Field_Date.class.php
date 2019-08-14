@@ -24,6 +24,7 @@ use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 {
@@ -160,21 +161,22 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
 
         // add children
         if (isset($this->default_properties['default_value'])) {
             if ($this->default_properties['default_value'] === 'today') {
                 $this->default_properties['default_value_type']['value'] = self::DEFAULT_VALUE_TYPE_TODAY;
             } else {
-                $this->default_properties['default_value_type']['value'] = self::DEFAULT_VALUE_TYPE_REALDATE;
+                $this->default_properties['default_value_type']['value']                             = self::DEFAULT_VALUE_TYPE_REALDATE;
                 $this->default_properties['default_value_type']['choices']['default_value']['value'] = $this->default_properties['default_value'];
             }
             unset($this->default_properties['default_value']);
         } else {
-            $this->default_properties['default_value_type']['value'] = self::DEFAULT_VALUE_TYPE_REALDATE;
+            $this->default_properties['default_value_type']['value']                             = self::DEFAULT_VALUE_TYPE_REALDATE;
             $this->default_properties['default_value_type']['choices']['default_value']['value'] = '';
         }
     }

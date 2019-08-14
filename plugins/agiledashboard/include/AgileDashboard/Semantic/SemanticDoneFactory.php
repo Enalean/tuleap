@@ -80,6 +80,10 @@ class SemanticDoneFactory
 
         foreach ($xml->closed_values->closed_value as $xml_closed_value) {
             $ref   = (string) $xml_closed_value['REF'];
+
+            if (! isset($xmlMapping[$ref])) {
+                continue;
+            }
             $value = $xmlMapping[$ref];
 
             if ($value && $this->value_checker->isValueAPossibleDoneValueInXMLImport($value, $xml_semantic_status)) {

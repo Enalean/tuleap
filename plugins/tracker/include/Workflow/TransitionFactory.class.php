@@ -188,13 +188,17 @@ class TransitionFactory
      * @param SimpleXMLElement $xml         containing the structure of the imported workflow
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      *
-     * @return Transition The transition object, or null if error
+     * @return Transition | null The transition object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Project $project)
     {
         $from = null;
-        if ((string)$xml->from_id['REF'] != 'null') {
+        if (isset($xmlMapping[(string)$xml->from_id['REF']]) && (string)$xml->from_id['REF'] != 'null') {
             $from = $xmlMapping[(string)$xml->from_id['REF']];
+        }
+
+        if (! isset($xmlMapping[(string)$xml->to_id['REF']])) {
+            return null;
         }
         $to = $xmlMapping[(string)$xml->to_id['REF']];
 

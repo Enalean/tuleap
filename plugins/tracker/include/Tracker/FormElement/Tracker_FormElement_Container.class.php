@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\REST\StructureElementRepresentation;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**
  * Base class for composite formElements.
@@ -40,8 +41,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     public function getFormElements()
     {
         if (! is_array($this->formElements)) {
-            $aff = Tracker_FormElementFactory::instance();
-            $this->formElements = $aff->getUsedFormElementsByParentId($this->id);
+            $this->formElements = $this->getFormElementFactory()->getUsedFormElementsByParentId($this->id);
         }
         return $this->formElements;
     }
@@ -344,18 +344,23 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
         // add children
         if ($xml->formElements) {
             foreach ($xml->formElements->formElement as $elem) {
-                $this->formElements[] = $this->getFormElementFactory()->getInstanceFromXML(
+                $form_element = $this->getFormElementFactory()->getInstanceFromXML(
                     $this->getTracker(),
                     $elem,
                     $xmlMapping,
-                    $user_finder
+                    $user_finder,
+                    $feedback_collector
                 );
+                if ($form_element) {
+                    $this->formElements[] = $form_element;
+                }
             }
         }
     }

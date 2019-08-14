@@ -29,10 +29,14 @@ use Tracker_Semantic;
 
 class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
 {
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
     {
         $xml_start_date_field = $xml->start_date_field;
         $xml_start_date_field_attributes = $xml_start_date_field->attributes();
+
+        if (! isset($xml_mapping[(string)$xml_start_date_field_attributes['REF']])) {
+            return null;
+        }
         $start_date_field = $xml_mapping[(string)$xml_start_date_field_attributes['REF']];
 
         if (isset($xml->duration_field)) {
@@ -45,6 +49,10 @@ class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
 
         $xml_end_date_field = $xml->end_date_field;
         $xml_end_date_field_attributes = $xml_end_date_field->attributes();
+
+        if (! isset($xml_mapping[(string)$xml_end_date_field_attributes['REF']])) {
+            return null;
+        }
         $end_date_field = $xml_mapping[(string)$xml_end_date_field_attributes['REF']];
 
         return new SemanticTimeframe($tracker, $start_date_field, null, $end_date_field);

@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 
@@ -1127,13 +1128,14 @@ class Tracker_FormElementFactory
      * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
      *
-     * @return Tracker_FormElement Object
+     * @return Tracker_FormElement | null
      */
     public function getInstanceFromXML(
         Tracker $tracker,
         $xml,
         &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
         $att = $xml->attributes();
         assert($att !== null);
@@ -1156,10 +1158,22 @@ class Tracker_FormElementFactory
         if ($curElem) {
             $curElem->setTracker($tracker);
             $xmlMapping[(string)$xml['ID']] = $curElem;
-            $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
+            $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
             return $curElem;
         }
-        throw new Tracker_Exception("Unable to instanciate FormElement ".(string)$att['type']." named ".(string)$xml->name." ID: ".(string)$att['ID']);
+        $feedback_collector->addWarnings(
+            sprintf(
+                dgettext(
+                    'tuleap-tracker',
+                    "Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."
+                ),
+                (string)$att['type'],
+                (string)$xml->name,
+                (string)$att['ID']
+            )
+        );
+
+        return null;
     }
 
     protected function getDao()
@@ -1787,7 +1801,7 @@ class Tracker_FormElementFactory
      *
      * @param Tracker_FormElement $element
      *
-     * @return Tracker_FormElement null if not found
+     * @return Tracker_FormElement | null if not found
      */
     public function getPreviousSibling($element)
     {

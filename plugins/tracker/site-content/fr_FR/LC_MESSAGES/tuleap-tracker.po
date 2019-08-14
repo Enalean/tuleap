@@ -1250,6 +1250,12 @@ msgstr "Les transitions sont maintenant complètement désactivées."
 msgid "Triggers"
 msgstr "Déclenchements"
 
+#, php-format
+msgid ""
+"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: "
+"'%s')."
+msgstr "Type '%s' inexistant. Ce champ sera ignoré. (Nom : '%s', ID: '%s')."
+
 msgid "URL"
 msgstr "URL"
 

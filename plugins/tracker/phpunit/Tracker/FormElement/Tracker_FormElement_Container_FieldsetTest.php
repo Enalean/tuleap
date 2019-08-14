@@ -34,12 +34,23 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
 class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\MockInterface|TrackerXmlImportFeedbackCollector
+     */
+    private $feedback_collector;
+
+    public function setUp(): void
+    {
+        $this->feedback_collector = \Mockery::spy(TrackerXmlImportFeedbackCollector::class);
+    }
 
     //testing field import
     public function testImportFormElement()
@@ -80,11 +91,56 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $container_fieldset->continueGetInstanceFromXML(
             $xml,
             $mapping,
-            Mockery::mock(IFindUserFromXMLReference::class)
+            Mockery::mock(IFindUserFromXMLReference::class),
+            $this->feedback_collector
         );
 
         $container_should_load_child = array($a_formelement);
         $this->assertEquals($container_should_load_child, $container_fieldset->getFormElements());
+    }
+
+    public function testImportFormElementReturnNullWhenNoInstance() : void
+    {
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" standalone="yes"?>
+            <formElement type="mon_type" ID="F0" rank="20" required="1">
+                <name>field_name</name>
+                <label>field_label</label>
+                <description>field_description</description>
+                <formElements>
+                    <formElement type="date" ID="F1" rank="1" required="1">
+                        <name>date</name>
+                        <label>date</label>
+                        <description>date</description>
+                    </formElement>
+                </formElements>
+            </formElement>'
+        );
+
+        $mapping = [];
+
+        $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
+        $form_element_factory->shouldReceive('getInstanceFromXML')->andReturn(null);
+        $form_element_factory->shouldReceive('getUsedFormElementsByParentId')->andReturn(null);
+
+        $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(101);
+
+        $container_fieldset->shouldReceive('getFormElementFactory')->andReturn($form_element_factory);
+        $container_fieldset->setTracker($tracker);
+
+        $container_fieldset->continueGetInstanceFromXML(
+            $xml,
+            $mapping,
+            Mockery::mock(IFindUserFromXMLReference::class),
+            $this->feedback_collector
+        );
+
+        $this->assertNull($container_fieldset->getFormElements());
     }
 
     public function testAfterSaveObject()
@@ -102,8 +158,8 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $container_fieldset->shouldReceive('getId')->andReturn(66);
 
         $factory->shouldReceive('saveObject')
-        ->with($tracker, $a_formelement, 66, false, false)
-        ->once();
+            ->with($tracker, $a_formelement, 66, false, false)
+            ->once();
 
         $container_fieldset->afterSaveObject($tracker, false, false);
     }

@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+
 require_once('bootstrap.php');
 
 Mock::generate('Tracker_Artifact');
@@ -415,17 +418,17 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase
 
         $mapping = array();
 
-        $bind        = mock('Tracker_FormElement_Field_List_Bind_Static');
-        $factory     = mock('Tracker_FormElement_Field_List_BindFactory');
-        $user_finder = mock('User\XML\Import\IFindUserFromXMLReference');
+        $bind            = \Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $factory         = \Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class);
+        $user_finder     = \Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
+        $feedback_collector = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
 
         $field = new $this->field_class_for_import();
         stub($field)->getBindFactory()->returns($factory);
 
-        stub($factory)->getInstanceFromXML($xml->bind, '*', $mapping, $user_finder)->returns($bind);
+        $factory->shouldReceive('getInstanceFromXML')->andReturn($bind);
 
-        $field->continueGetInstanceFromXML($xml, $mapping, $user_finder);
-
+        $field->continueGetInstanceFromXML($xml, $mapping, $user_finder, $feedback_collector);
         $this->assertEqual($field->getBind(), $bind);
     }
 

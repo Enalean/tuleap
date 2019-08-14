@@ -22,6 +22,7 @@
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
 {
@@ -1158,9 +1159,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
-        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder);
+        parent::continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
         // if field is a list add bind
         if ($xml->bind) {
             $bind = $this->getBindFactory()->getInstanceFromXML($xml->bind, $this, $xmlMapping, $user_finder);

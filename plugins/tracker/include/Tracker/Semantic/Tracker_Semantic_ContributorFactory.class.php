@@ -48,10 +48,13 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
         return Tracker_Semantic_Contributor::load($tracker);
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic
     {
         $xml_field = $xml->field;
         $xml_field_attributes = $xml_field->attributes();
+        if (! isset($xml_mapping[(string)$xml_field_attributes['REF']])) {
+            return null;
+        }
         $field = $xml_mapping[(string)$xml_field_attributes['REF']];
         return new Tracker_Semantic_Contributor($tracker, $field);
     }
