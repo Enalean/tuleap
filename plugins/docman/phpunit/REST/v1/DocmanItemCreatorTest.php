@@ -141,7 +141,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
             ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever
@@ -195,7 +195,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
         $project->shouldReceive('usesWiki')->andReturn(true);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
@@ -293,7 +293,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
@@ -404,7 +404,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
@@ -467,7 +467,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
@@ -518,7 +518,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
@@ -600,7 +600,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andThrow(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andThrow(
             HardCodedMetadataException::itemStatusNotAvailable()
         );
 
@@ -649,7 +649,8 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->with(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->with(
+            $parent_item,
             $post_representation->status
         )->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
@@ -715,7 +716,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $obsolescence_date_time_stamp = 123456;
@@ -774,7 +775,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
         $obsolescence_date_time_stamp = 123456;
@@ -843,7 +844,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
         $obsolescence_date_time_stamp = 123456;
@@ -915,7 +916,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
         $project->shouldReceive('usesWiki')->andReturn(true);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_REJECTED
         );
 
@@ -985,7 +986,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
 
-        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
             PLUGIN_DOCMAN_ITEM_STATUS_NONE
         );
 
