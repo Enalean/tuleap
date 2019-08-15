@@ -63,6 +63,7 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
+use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsPUTRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
@@ -804,13 +805,13 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the folder
-     * @param DocmanItemPermissionsForGroupsPUTRepresentation $representation {@from body}
+     * @param DocmanFolderPermissionsForGroupsPUTRepresentation $representation {@from body}
      *
      * @status 200
      *
      * @throws RestException 400
      */
-    public function putPermissions(int $id, DocmanItemPermissionsForGroupsPUTRepresentation $representation) : void
+    public function putPermissions(int $id, DocmanFolderPermissionsForGroupsPUTRepresentation $representation) : void
     {
         $this->checkAccess();
         $this->optionsPermissions($id);
@@ -821,6 +822,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $user         = $item_request->getUser();
 
         $item->accept($this->getValidator($project, $user, $item), []);
+        assert($item instanceof Docman_Folder);
 
         $this->addAllEvent($project);
 
@@ -839,7 +841,7 @@ class DocmanFoldersResource extends AuthenticatedResource
             new UserGroupRetriever($ugroup_manager),
             ProjectManager::instance()
         );
-        $permissions_rest_item_updater->updateItemPermissions($item, $user, $representation);
+        $permissions_rest_item_updater->updateFolderPermissions($item, $user, $representation);
     }
 
     /**

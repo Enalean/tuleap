@@ -80,14 +80,53 @@ final class PermissionItemUpdaterFromRESTContext
             throw new RestException(403);
         }
 
-        $permissions_per_ugroup_id_and_type = array_replace(
+        $this->permission_item_updater->updateItemPermissions(
+            $item,
+            $user,
+            $this->getPermissionsPerUGroupIDAndType($item, $representation)
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    public function updateFolderPermissions(
+        \Docman_Folder $folder,
+        PFUser $user,
+        DocmanFolderPermissionsForGroupsPUTRepresentation $representation
+    ) : void {
+        if (! $this->permissions_manager->userCanManage($user, $folder->getId())) {
+            throw new RestException(403);
+        }
+
+        if ($representation->apply_permissions_on_children) {
+            $this->permission_item_updater->updateFolderAndChildrenPermissions(
+                $folder,
+                $user,
+                $this->getPermissionsPerUGroupIDAndType($folder, $representation)
+            );
+        } else {
+            $this->permission_item_updater->updateItemPermissions(
+                $folder,
+                $user,
+                $this->getPermissionsPerUGroupIDAndType($folder, $representation)
+            );
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getPermissionsPerUGroupIDAndType(
+        Docman_Item $item,
+        DocmanItemPermissionsForGroupsPUTRepresentation $representation
+    ) : array {
+        return array_replace(
             $this->getNonePermissionsForAllUGroupID($item),
             $this->getPermissionsPerUGroupID($item, $representation->can_read, PermissionItemUpdater::PERMISSION_DEFINITION_READ),
             $this->getPermissionsPerUGroupID($item, $representation->can_write, PermissionItemUpdater::PERMISSION_DEFINITION_WRITE),
             $this->getPermissionsPerUGroupID($item, $representation->can_manage, PermissionItemUpdater::PERMISSION_DEFINITION_MANAGE),
         );
-
-        $this->permission_item_updater->updateItemPermissions($item, $user, $permissions_per_ugroup_id_and_type);
     }
 
     private function getNonePermissionsForAllUGroupID(Docman_Item $item) : array

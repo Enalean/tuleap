@@ -738,12 +738,78 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             DocmanDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . urlencode((string) $folder_id))
         );
-        $this->assertEquals(200, $permission_update_response->getStatusCode());
+        $this->assertEquals(200, $folder_representation_response->getStatusCode());
         $permissions_for_groups_representation = $folder_representation_response->json()['permissions_for_groups'];
         $this->assertEmpty($permissions_for_groups_representation['can_read']);
         $this->assertEmpty($permissions_for_groups_representation['can_write']);
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+
+        $this->getResponse(
+            $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testUpdatePermissionsFolderAndChildren(int $root_id) : void
+    {
+        $response_folder_update_permissions = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string) $root_id) . '/folders',
+                null,
+                json_encode(['title' => 'Folder update permissions with child'])
+            )
+        );
+        $this->assertEquals(201, $response_folder_update_permissions->getStatusCode());
+        $folder_id = $response_folder_update_permissions->json()['id'];
+
+        $response_child_update_permissions = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_folders/' . urlencode((string)$folder_id) . '/empties',
+                null,
+                json_encode(['title' => 'Child update permissions'])
+            )
+        );
+        $this->assertEquals(201, $response_child_update_permissions->getStatusCode());
+        $child_id = $response_child_update_permissions->json()['id'];
+
+        $project_members_identifier = $this->project_id . '_3';
+        $permission_update_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'docman_folders/' . urlencode((string) $folder_id) . '/permissions',
+                null,
+                json_encode([
+                    'apply_permissions_on_children' => true,
+                    'can_read'                      => [],
+                    'can_write'                     => [],
+                    'can_manage'                    => [['id' => $project_members_identifier]]
+                ])
+            )
+        );
+        $this->assertEquals(200, $permission_update_response->getStatusCode());
+
+        $folder_representation_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . urlencode((string) $folder_id))
+        );
+        $this->assertEquals(200, $folder_representation_response->getStatusCode());
+        $permissions_for_groups_representation = $folder_representation_response->json()['permissions_for_groups'];
+        $this->assertEmpty($permissions_for_groups_representation['can_read']);
+        $this->assertEmpty($permissions_for_groups_representation['can_write']);
+        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+        $child_representation_response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . urlencode((string) $child_id))
+        );
+        $this->assertEquals(200, $child_representation_response->getStatusCode());
+        $this->assertEquals($permissions_for_groups_representation, $child_representation_response->json()['permissions_for_groups']);
 
         $this->getResponse(
             $this->client->delete('docman_folders/' . urlencode((string) $folder_id)),
