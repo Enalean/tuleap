@@ -37,6 +37,7 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -82,6 +83,10 @@ class DocmanItemCreator
      * @var CustomMetadataRepresentationRetriever
      */
     private $custom_checker;
+    /**
+     * @var \Docman_MetadataValueDao
+     */
+    private $metadata_value_dao;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -92,7 +97,8 @@ class DocmanItemCreator
         DocmanLinksValidityChecker $links_validity_checker,
         ItemStatusMapper $status_mapper,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever,
-        CustomMetadataRepresentationRetriever $custom_checker
+        CustomMetadataRepresentationRetriever $custom_checker,
+        \Docman_MetadataValueDao $metadata_value_dao
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
@@ -103,6 +109,7 @@ class DocmanItemCreator
         $this->status_mapper                     = $status_mapper;
         $this->date_retriever                    = $date_retriever;
         $this->custom_checker                    = $custom_checker;
+        $this->metadata_value_dao                = $metadata_value_dao;
     }
 
     /**
@@ -141,7 +148,7 @@ class DocmanItemCreator
         Project $project,
         $title,
         $description,
-        array $formatted_representations,
+        MetadataToCreate $metadata_to_create,
         ?string $status,
         ?string $obsolescence_date,
         $wiki_page,
@@ -177,8 +184,12 @@ class DocmanItemCreator
             'item'               => $item,
             'user'               => $user,
             'creation_time'      => $current_time,
-            'formatted_metadata' => $formatted_representations
+            'formatted_metadata' => $metadata_to_create->getMetadataListValues()
         ];
+
+        if ($metadata_to_create->isInheritedFromParent()) {
+            $this->metadata_value_dao->inheritMetadataFromParent((int)$item->getId(), (int) $parent_item->getId());
+        }
 
         if ($item_type_id === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
             $params['content'] = $content;
@@ -204,7 +215,7 @@ class DocmanItemCreator
         ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties,
-        ?array $formatted_metadata
+        MetadataToCreate $metadata_to_create
     ) : CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
@@ -228,8 +239,12 @@ class DocmanItemCreator
                 $file_properties->file_size,
                 $status_id,
                 $obsolescence_date_time_stamp,
-                $formatted_metadata
+                $metadata_to_create->getMetadataListValues()
             );
+
+            if ($metadata_to_create->isInheritedFromParent()) {
+                $this->metadata_value_dao->inheritMetadataFromParent((int)$parent_item->getId(), (int) $parent_item->getId());
+            }
 
             if ($file_properties->file_size === 0) {
                 $this->empty_file_to_upload_finisher->createEmptyFile($document_to_upload, $file_properties->file_name);
@@ -273,7 +288,10 @@ class DocmanItemCreator
             throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
 
-        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
 
         return $this->createDocument(
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
@@ -283,7 +301,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            $formatted_representations,
+            $metadata_to_create,
             $representation->status,
             ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             null,
@@ -309,7 +327,10 @@ class DocmanItemCreator
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
 
-        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
 
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
@@ -326,7 +347,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            $formatted_representations,
+            $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
             null,
@@ -352,7 +373,10 @@ class DocmanItemCreator
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
 
-        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
 
         if (! $project->usesWiki()) {
             throw new RestException(
@@ -376,7 +400,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            $formatted_representations,
+            $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
             $representation->wiki_properties->page_name,
@@ -403,7 +427,10 @@ class DocmanItemCreator
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
 
-        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
 
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
@@ -420,7 +447,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            $formatted_representations,
+            $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
             null,
@@ -447,7 +474,10 @@ class DocmanItemCreator
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
 
-        $formatted_representations = $this->custom_checker->checkAndRetrieveFormattedRepresentation($representation->metadata);
+        $metadata_to_create = $this->custom_checker->checkAndRetrieveFormattedRepresentation(
+            $parent_item,
+            $representation->metadata
+        );
 
         $link_url = $representation->link_properties->link_url;
         $this->links_validity_checker->checkLinkValidity($link_url);
@@ -467,7 +497,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            $formatted_representations,
+            $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
             null,

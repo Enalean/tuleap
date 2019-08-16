@@ -27,6 +27,7 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
+use Docman_MetadataValueDao;
 use Docman_MIMETypeDetector;
 use Docman_SettingsBo;
 use Docman_VersionFactory;
@@ -47,6 +48,7 @@ use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
@@ -83,10 +85,12 @@ class DocmanItemCreatorBuilder
             $docman_setting_bo
         );
 
-        $metadata_factory = new Docman_MetadataFactory($project->getGroupId());
-        $custom_checker   = new CustomMetadataRepresentationRetriever(
+        $metadata_factory    = new Docman_MetadataFactory($project->getGroupId());
+        $list_values_builder = new MetadataListOfValuesElementListBuilder(new Docman_MetadataListOfValuesElementDao());
+        $custom_checker      = new CustomMetadataRepresentationRetriever(
             $metadata_factory,
-            new MetadataListOfValuesElementListBuilder(new Docman_MetadataListOfValuesElementDao())
+            $list_values_builder,
+            new CustomMetadataCollectionBuilder($metadata_factory, $list_values_builder)
         );
 
         $metadata_value_factory = new \Docman_MetadataValueFactory($project->getID());
@@ -140,7 +144,8 @@ class DocmanItemCreatorBuilder
             new HardcodedMetadataObsolescenceDateRetriever(
                 $hardcoded_metadata_obsolescence_date_checker
             ),
-            $custom_checker
+            $custom_checker,
+            new Docman_MetadataValueDao()
         );
     }
 }

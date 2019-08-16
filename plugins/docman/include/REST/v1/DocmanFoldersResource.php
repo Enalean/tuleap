@@ -33,6 +33,7 @@ use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElementDao;
+use Docman_MetadataValueDao;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use DocmanPlugin;
@@ -58,6 +59,7 @@ use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
@@ -173,12 +175,16 @@ class DocmanFoldersResource extends AuthenticatedResource
 
             try {
                 $metadata_factory = new Docman_MetadataFactory($project->getGroupId());
+                $list_values_builder = new MetadataListOfValuesElementListBuilder(
+                    new Docman_MetadataListOfValuesElementDao()
+                );
                 $custom_retriever = new CustomMetadataRepresentationRetriever(
                     $metadata_factory,
-                    new MetadataListOfValuesElementListBuilder(new Docman_MetadataListOfValuesElementDao())
+                    $list_values_builder,
+                    new CustomMetadataCollectionBuilder($metadata_factory, $list_values_builder)
                 );
 
-                $formatted_metadata = $custom_retriever->checkAndRetrieveFileFormattedRepresentation($files_representation->metadata);
+                $metadata_to_create = $custom_retriever->checkAndRetrieveFileFormattedRepresentation($parent, $files_representation->metadata);
 
                 return $docman_item_creator->createFileDocument(
                     $parent,
@@ -189,7 +195,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $files_representation->obsolescence_date,
                     new DateTimeImmutable(),
                     $files_representation->file_properties,
-                    $formatted_metadata
+                    $metadata_to_create
                 );
             } catch (Metadata\HardCodedMetadataException $e) {
                 throw new I18NRestException(

@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Docman_Item;
 use Docman_Metadata;
 use Tuleap\Docman\Metadata\CustomMetadataException;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
@@ -36,13 +37,20 @@ class CustomMetadataRepresentationRetriever
      * @var MetadataListOfValuesElementListBuilder
      */
     private $list_values_builder;
+    /**
+     * @var CustomMetadataCollectionBuilder
+     */
+    private $collection_builder;
+
 
     public function __construct(
         \Docman_MetadataFactory $factory,
-        MetadataListOfValuesElementListBuilder $list_values_builder
+        MetadataListOfValuesElementListBuilder $list_values_builder,
+        CustomMetadataCollectionBuilder $collection_builder
     ) {
         $this->factory             = $factory;
         $this->list_values_builder = $list_values_builder;
+        $this->collection_builder  = $collection_builder;
     }
 
     /**
@@ -81,11 +89,13 @@ class CustomMetadataRepresentationRetriever
     /**
      * @throws CustomMetadataException
      */
-    public function checkAndRetrieveFormattedRepresentation(?array $list_metadata): array
+    public function checkAndRetrieveFormattedRepresentation(Docman_Item $parent_item, ?array $list_metadata): MetadataToCreate
     {
+        $this->checkRequiredMetadataAreProvidedAtItemCreation($parent_item, $list_metadata);
         if (empty($list_metadata)) {
-            return [];
+            return MetadataToCreate::buildMetadataRepresentation([], true);
         }
+
         $representations = [];
         foreach ($list_metadata as $metadata_representation) {
             $metadata = $this->factory->getMetadataFromLabel($metadata_representation->short_name);
@@ -107,16 +117,17 @@ class CustomMetadataRepresentationRetriever
             }
         }
 
-        return $representations;
+        return MetadataToCreate::buildMetadataRepresentation($representations, false);
     }
 
     /**
      * @throws CustomMetadataException
      */
-    public function checkAndRetrieveFileFormattedRepresentation(?array $metadata_list): array
+    public function checkAndRetrieveFileFormattedRepresentation(Docman_Item $parent_item, ?array $metadata_list): MetadataToCreate
     {
+        $this->checkRequiredMetadataAreProvidedAtItemCreation($parent_item, $metadata_list);
         if (empty($metadata_list)) {
-            return [];
+            return MetadataToCreate::buildMetadataRepresentation([], true);
         }
 
         $representations = [];
@@ -149,7 +160,7 @@ class CustomMetadataRepresentationRetriever
             }
         }
 
-        return $representations;
+        return MetadataToCreate::buildMetadataRepresentation($representations, false);
     }
 
     /**
@@ -212,6 +223,45 @@ class CustomMetadataRepresentationRetriever
     {
         if ($metadata_representation->list_value !== null) {
             throw CustomMetadataException::listValueProvidedForMetadata($metadata_representation->short_name);
+        }
+    }
+
+    /**
+     * @throws CustomMetadataException
+     */
+    private function checkRequiredMetadataAreProvidedAtItemCreation(
+        Docman_Item $parent_item,
+        ?array $common_representation
+    ): void {
+        $this->factory->appendItemMetadataList($parent_item);
+
+        $project_metadata_list = $this->collection_builder->build();
+        if ($project_metadata_list->getTotal() === 0) {
+            return;
+        }
+
+        $errors = [];
+
+        foreach ($project_metadata_list->getMetadataRepresentations() as $project_metadata) {
+            if (! $project_metadata->is_used) {
+                continue;
+            }
+
+            if ($common_representation === null) {
+                continue;
+            }
+
+            $key = array_search(
+                $project_metadata->short_name,
+                array_column($common_representation, 'short_name')
+            );
+            if ($key === false) {
+                $errors[] = $project_metadata->name;
+            }
+        }
+
+        if (count($errors) > 0) {
+            throw CustomMetadataException::missingKeysForCreation($errors);
         }
     }
 }

@@ -108,6 +108,23 @@ class CustomMetadataException extends Exception
         );
     }
 
+    public static function missingKeysForCreation(array $errors): self
+    {
+        $errors_string = implode(',', $errors);
+        return new self(
+            sprintf("missing metadata keys: %s", $errors_string),
+            sprintf(
+                dngettext(
+                    'tuleap-docman',
+                    "The metadata '%s' short_name must be provided for document creation",
+                    "The metadata '%s' short_names must be provided for document creation",
+                    count($errors)
+                ),
+                $errors_string
+            )
+        );
+    }
+
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

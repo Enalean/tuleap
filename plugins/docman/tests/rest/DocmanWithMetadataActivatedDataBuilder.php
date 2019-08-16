@@ -163,7 +163,7 @@ class DocmanWithMetadataActivatedDataBuilder
         $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $custom_metadata->setDescription("");
         $custom_metadata->setIsRequired(false);
-        $custom_metadata->setIsEmptyAllowed(false);
+        $custom_metadata->setIsEmptyAllowed(true);
         $custom_metadata->setIsMultipleValuesAllowed(false);
         $custom_metadata->setSpecial(false);
         $custom_metadata->setUseIt(true);
@@ -189,7 +189,7 @@ class DocmanWithMetadataActivatedDataBuilder
         $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $custom_metadata->setDescription("");
         $custom_metadata->setIsRequired(false);
-        $custom_metadata->setIsEmptyAllowed(false);
+        $custom_metadata->setIsEmptyAllowed(true);
         $custom_metadata->setIsMultipleValuesAllowed(true);
         $custom_metadata->setSpecial(false);
         $custom_metadata->setUseIt(true);
