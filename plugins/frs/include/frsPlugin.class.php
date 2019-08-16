@@ -256,7 +256,11 @@ class frsPlugin extends \Plugin //phpcs:ignore
     {
         if ($this->isAFRSrequest()) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-frs.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/frs/themes',
+                '/assets/frs/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style-flamingparrot.css') . '" />';
         }
     }
 

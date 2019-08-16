@@ -558,6 +558,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1301,6 +1302,7 @@ fi
 %files plugin-frs
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/frs
+%{APP_DIR}/src/www/assets/frs
 
 %files plugin-referencealias-core
 %defattr(-,%{APP_USER},%{APP_USER},-)

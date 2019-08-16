@@ -1,4 +1,7 @@
-@import '../../default/css/style.scss';
+#files > .files-list th,
+#linked-artifacts > .artifact-links th {
+    border-bottom: 2px solid #b2b2b2;
+}
 
 body {
     @mixin definitions($main) {
@@ -14,31 +17,31 @@ body {
         }
     }
 
-    @import 'variables-orange';
+    @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
     @include definitions($main);
 
     &.FlamingParrot_Blue {
-        @import 'variables-blue';
+        @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main);
     }
 
     &.FlamingParrot_Green {
-        @import 'variables-green';
+        @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import 'variables-bluegrey';
+        @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main);
     }
 
     &.FlamingParrot_Purple {
-        @import 'variables-purple';
+        @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main);
     }
 
     &.FlamingParrot_Red {
-        @import 'variables-red';
+        @import '../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main);
     }
 }
