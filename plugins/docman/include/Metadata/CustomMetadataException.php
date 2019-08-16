@@ -125,6 +125,23 @@ class CustomMetadataException extends Exception
         );
     }
 
+    public static function missingRequiredKeysForCreation(array $errors): self
+    {
+        $errors_string = implode(',', $errors);
+        return new self(
+            sprintf("missing required values for: %s", $errors_string),
+            sprintf(
+                dngettext(
+                    'tuleap-docman',
+                    "The value of '%s' is required",
+                    "The values of '%s' are required",
+                    count($errors)
+                ),
+                $errors_string
+            )
+        );
+    }
+
     public function getI18NExceptionMessage(): string
     {
         return $this->i18n_message;

@@ -228,6 +228,12 @@ msgid_plural "The values of '%s' for field '%s' are unknown"
 msgstr[0] "La valeur '%s' de '%s' est inconnue"
 msgstr[1] "Les valeurs '%s' de '%s' sont inconnues"
 
+#, php-format
+msgid "The value of '%s' is required"
+msgid_plural "The values of '%s' are required"
+msgstr[0] "La valeur '%s' de '%s' est requise"
+msgstr[1] "Les valeurs '%s' de '%s' sont requises"
+
 msgid "There is already a document being uploaded for this item"
 msgstr "Il y a déjà un document en cours de téléversement pour cet élément"
 
