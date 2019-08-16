@@ -289,8 +289,9 @@ function ugroup_db_get_dynamic_members(
     $with_display_preferences = false,
     $keyword = null,
     $show_suspended = false,
+    bool $show_deleted = false,
     array $user_ids = array()
-)  : ?string {
+    )  : ?string {
     $data_access = CodendiDataAccess::instance();
 
     $sqlname  = "user.user_name AS full_name";
@@ -309,13 +310,15 @@ function ugroup_db_get_dynamic_members(
 
     $user_status = "( status='A' OR status='R' ";
     if ($show_suspended) {
-        $user_status .= "OR status='S'";
+        $user_status .= "OR status='S' ";
+    }
+    if($show_deleted) {
+        $user_status .= "OR status='D'";
     }
     $user_status .= ")";
     if ($user_ids) {
         $user_status .= ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
     }
-
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group

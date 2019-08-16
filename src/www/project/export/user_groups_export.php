@@ -70,7 +70,7 @@ if ($request->valid($vExport)) {
             $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
             while($ugrp = db_fetch_array($ugs)) {
                 if ($ugrp['ugroup_id'] <= 100) {
-                    $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id, false, null, true);
+                    $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id, false, null, true, true);
                 } else {
                     $sqlUsers = ugroup_db_get_members($ugrp['ugroup_id']);
                 }
@@ -95,7 +95,7 @@ if ($request->valid($vExport)) {
             echo '<p>'.$Language->getText('project_export_user_groups','exp_format_msg').'</p>';
 
             // Pick-up a random project member
-            $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id, false, null, true);
+            $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id, false, null, true, true);
             if ($sqlUsers === null) {
                 return;
             }
