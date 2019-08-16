@@ -22,12 +22,17 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Metadata;
 
+use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
+use Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\PUTRecursiveStatusRepresentation;
 
 class ItemImpactedByMetadataChangeCollectionTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testItBuildCollectionForLegacy(): void
     {
         $collection = ItemImpactedByMetadataChangeCollection::buildFromLegacy(['field_1', 'field_2', 'status'], ['field_1' => 'value',  'field_2' => 'other value']);
@@ -41,10 +46,39 @@ class ItemImpactedByMetadataChangeCollectionTest extends TestCase
         $representation                    = new PUTMetadataFolderRepresentation();
         $representation->status            = new PUTRecursiveStatusRepresentation();
         $representation->status->value     = 'draft';
-        $representation->status->recursion = 'all_items';
-        $collection                        = ItemImpactedByMetadataChangeCollection::buildFromRest($representation);
+        $representation->status->recursion = PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS;
 
-        $this->assertEquals($collection->getFieldsToUpdate(), ['status']);
-        $this->assertEquals($collection->getValuesToExtractCrossReferences(), ['status' => 'draft']);
+        $custom_metadata    = new PUTCustomMetadataRepresentation();
+        $custom_metadata->short_name = "field_1";
+        $custom_metadata->value = "some_value";
+        $custom_metadata->recursion = PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS;
+
+        $other_custom_metadata    = new PUTCustomMetadataRepresentation();
+        $other_custom_metadata->short_name = "field_2";
+        $other_custom_metadata->value = "";
+        $other_custom_metadata->recursion = "none";
+
+        $metadata           = Mockery::mock(\Docman_Metadata::class);
+        $metadata->shouldReceive('getLabel')->andReturn('field_1');
+        $metadata_to_update = [
+            MetadataToUpdate::buildMetadataRepresentation(
+                $metadata,
+                $custom_metadata->value,
+                $custom_metadata->recursion
+            ),
+            MetadataToUpdate::buildMetadataRepresentation(
+                Mockery::mock(\Docman_Metadata::class),
+                $other_custom_metadata->value,
+                $other_custom_metadata->recursion
+            ),
+        ];
+        $collection         = ItemImpactedByMetadataChangeCollection::buildFromRest(
+            $representation,
+            $metadata_to_update,
+            PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS
+        );
+
+        $this->assertEquals($collection->getFieldsToUpdate(), ['status', 'field_1']);
+        $this->assertEquals($collection->getValuesToExtractCrossReferences(), ['status' => 'draft', 'field_1' => 'some_value']);
     }
 }

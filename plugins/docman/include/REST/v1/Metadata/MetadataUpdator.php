@@ -200,6 +200,8 @@ class MetadataUpdator
     }
 
     /**
+     * @throws I18NRestException
+     * @throws MetadataDoesNotExistException
      * @throws RestException
      */
     public function updateFolderMetadata(
@@ -232,18 +234,51 @@ class MetadataUpdator
         $this->item_factory->update($row);
         $this->sendStatusUpdateEvent($item, $user, $status);
 
-        if ($representation->status->recursion === null) {
-            return;
+        try {
+            $metadata_to_update_collection = $this->custom_metadata_representation_retriever->checkAndBuildFolderMetadataToUpdate(
+                $representation->metadata
+            );
+        } catch (CustomMetadataException $e) {
+            throw new I18nRestException(
+                400,
+                $e->getI18NExceptionMessage()
+            );
         }
 
-        $collection = ItemImpactedByMetadataChangeCollection::buildFromRest($representation);
+        foreach ($metadata_to_update_collection as $metadata_to_update) {
+            $this->metadata_value_updator->updateMetadata(
+                $metadata_to_update->getMetadata(),
+                (int)$item->getId(),
+                $metadata_to_update->getValue()
+            );
+        }
+
+        $all_item_collection = ItemImpactedByMetadataChangeCollection::buildFromRest(
+            $representation,
+            $metadata_to_update_collection,
+            PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS
+        );
+
+        $folders_only_collection = ItemImpactedByMetadataChangeCollection::buildFromRest(
+            $representation,
+            $metadata_to_update_collection,
+            PUTRecursiveStatusRepresentation::RECURSION_FOLDER
+        );
         try {
-            if ($representation->status->recursion === PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS) {
-                $this->recursive_updator->updateRecursiveMetadataOnFolderAndItems($collection, (int)$item->getId(), (int)$project->getID());
+            if ($all_item_collection->getTotalElements() > 0) {
+                $this->recursive_updator->updateRecursiveMetadataOnFolderAndItems(
+                    $all_item_collection,
+                    (int)$item->getId(),
+                    (int)$project->getID()
+                );
             }
 
-            if ($representation->status->recursion === PUTRecursiveStatusRepresentation::RECURSION_FOLDER) {
-                $this->recursive_updator->updateRecursiveMetadataOnFolder($collection, (int)$item->getId(), (int)$project->getID());
+            if ($folders_only_collection->getTotalElements() > 0) {
+                $this->recursive_updator->updateRecursiveMetadataOnFolder(
+                    $folders_only_collection,
+                    (int) $item->getId(),
+                    (int) $project->getID()
+                );
             }
         } catch (NoItemToRecurseException $e) {
         }
