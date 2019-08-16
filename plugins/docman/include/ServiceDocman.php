@@ -29,8 +29,8 @@ class ServiceDocman extends \Service
         parent::displayHeader($title, [], $toolbar);
     }
 
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-folder-open');
+        return 'fa-folder-open';
     }
 }

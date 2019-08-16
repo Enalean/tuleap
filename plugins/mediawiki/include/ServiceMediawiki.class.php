@@ -22,9 +22,9 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 class ServiceMediawiki extends Service
 {
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-tlp-mediawiki');
+        return 'fa-tlp-mediawiki';
     }
 
     public function renderInPage($title, $template, $presenter = null)
