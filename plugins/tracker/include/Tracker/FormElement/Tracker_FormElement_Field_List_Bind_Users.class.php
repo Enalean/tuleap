@@ -914,6 +914,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             $tracker->group_id,
                             true,
                             $keyword,
+                            false,
+                            false,
                             $bindvalue_ids
                         );
                         break;
@@ -924,6 +926,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             $tracker->group_id,
                             true,
                             $keyword,
+                            false,
+                            false,
                             $bindvalue_ids
                         );
                         break;
@@ -978,6 +982,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                     true,
                                     $keyword,
                                     $show_suspended,
+                                    false,
                                     $bindvalue_ids
                                 );
                             }
