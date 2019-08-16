@@ -44,12 +44,18 @@ final class ServicePOSTDataBuilderTest extends TestCase
      * @var \EventManager|M\MockInterface
      */
     private $event_manager;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\ServiceManager
+     */
+    private $service_manager;
 
     protected function setUp(): void
     {
         $this->event_manager            = M::mock(\EventManager::class);
+        $this->service_manager          = M::mock(\ServiceManager::class);
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
-            $this->event_manager
+            $this->event_manager,
+            $this->service_manager
         );
 
         $GLOBALS['sys_default_domain'] = 'whatever';
@@ -322,6 +328,19 @@ final class ServicePOSTDataBuilderTest extends TestCase
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
+        $current_admin_service = M::mock(Service::class);
+        $current_admin_service->shouldReceive([
+            'getInternationalizedName' => 'Admin',
+            'getInternationalizedDescription' => 'Admin'
+        ]);
+        $this->service_manager
+            ->shouldReceive('getListOfAllowedServicesForProject')
+            ->with($project)
+            ->once()
+            ->andReturn([
+                12 => $current_admin_service
+            ]);
+
         $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
 
         $this->assertTrue($admin_service->isUsed());
@@ -330,6 +349,9 @@ final class ServicePOSTDataBuilderTest extends TestCase
     public function testBuildFromRequestThrowsWhenIconIsInvalid(): void
     {
         $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
+                              ->with($project)
+                              ->andReturns([]);
         $response = M::mock(BaseLayout::class);
         $request  = M::mock(\HTTPRequest::class);
         $request->shouldReceive('getValidated')
@@ -377,11 +399,107 @@ final class ServicePOSTDataBuilderTest extends TestCase
             ->once()
             ->andReturnFalse();
         $request->shouldReceive('getValidated')
-            ->with('link', M::any(), M::any())
-            ->andReturn('https://example.com/custom');
+                ->with('link', M::any(), M::any())
+                ->andReturn('https://example.com/custom');
 
         $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+    }
+
+    /**
+     * @dataProvider provideLabelAndDescription
+     */
+    public function testBuildFromRequestAndUseInternalLabelAndDescriptionInsteadOfInternationalizedOne(
+        string $submitted_label,
+        string $submitted_description,
+        string $expected_label,
+        string $expected_description
+    ): void {
+        $service = M::mock(Service::class);
+        $service->shouldReceive(
+            [
+                'getInternationalizedName' => 'SVN',
+                'getLabel' => 'plugin_svn:service_lbl_key',
+                'getInternationalizedDescription' => 'SVN plugin to manage multiple SVN repositories',
+                'getDescription' => 'plugin_svn:service_lbl_description',
+            ]
+        );
+        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $this->service_manager
+            ->shouldReceive('getListOfAllowedServicesForProject')
+            ->with($project)
+            ->andReturns([
+                12 => $service
+            ]);
+        $response = M::mock(BaseLayout::class);
+        $request  = M::mock(\HTTPRequest::class);
+        $request->shouldReceive('getValidated')
+                ->with('service_id', M::any(), M::any())
+                ->andReturn(12);
+        $request->shouldReceive('getValidated')
+                ->with('short_name', M::any(), M::any())
+                ->andReturn('');
+        $request->shouldReceive('exist')
+                ->with('short_name')
+                ->andReturnFalse();
+        $request->shouldReceive('getValidated')
+                ->with('label', M::any(), M::any())
+                ->andReturn($submitted_label);
+        $request->shouldReceive('getValidated')
+                ->with('icon_name', M::any(), M::any())
+                ->andReturn('fa-bolt');
+        $request->shouldReceive('getValidated')
+                ->with('description', M::any(), M::any())
+                ->andReturn($submitted_description);
+        $request->shouldReceive('getValidated')
+                ->with('rank', M::any(), M::any())
+                ->andReturn(123);
+        $request->shouldReceive('getValidated')
+                ->with('is_active', M::any(), M::any())
+                ->andReturn(1);
+        $request->shouldReceive('getValidated')
+                ->with('is_used', M::any(), M::any())
+                ->andReturn(true);
+        $request->shouldReceive('get')
+                ->with('is_in_iframe')
+                ->andReturn(false);
+        $request->shouldReceive('get')
+                ->with('is_in_new_tab')
+                ->andReturnFalse();
+        $request->shouldReceive('getValidated')
+                ->with('link', M::any(), M::any())
+                ->andReturn('https://example.com/custom');
+
+        $this->event_manager->shouldReceive('processEvent');
+
+        $service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+
+        $this->assertEquals($expected_label, $service->getLabel());
+        $this->assertEquals($expected_description, $service->getDescription());
+    }
+
+    public function provideLabelAndDescription(): array
+    {
+        return [
+            'unmodified label and description' => [
+                'SVN',
+                'SVN plugin to manage multiple SVN repositories',
+                'plugin_svn:service_lbl_key',
+                'plugin_svn:service_lbl_description'
+            ],
+            'customised label' => [
+                'My SVN',
+                'SVN plugin to manage multiple SVN repositories',
+                'My SVN',
+                'plugin_svn:service_lbl_description'
+            ],
+            'customised label and description' => [
+                'My SVN',
+                'My SVN description',
+                'My SVN',
+                'My SVN description'
+            ]
+        ];
     }
 }

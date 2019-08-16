@@ -149,14 +149,14 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->services[Service::SUMMARY]->getRank();
     }
 
-    public function getServiceLabel($short_name)
-    {
-        return $this->getService($short_name)->getLabel();
-    }
-
     private function getServiceLink($short_name)
     {
-        return $this->getService($short_name)->getUrl();
+        $service = $this->getService($short_name);
+        if ($service === null) {
+            return '';
+        }
+
+        return $service->getUrl();
     }
 
     private function getServicesData()
@@ -193,7 +193,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      *
      * @param String $service_name
      *
-     * @return Service
+     * @return Service|null
      */
     public function getService($service_name)
     {
