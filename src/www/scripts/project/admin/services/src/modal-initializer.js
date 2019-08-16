@@ -20,10 +20,11 @@
 import { modal as createModal } from "tlp";
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
+import { sanitize } from "dompurify";
+import { sprintf } from "sprintf-js";
+import { escaper } from "../../../../tuleap/escaper.js";
 import french_translations from "../po/fr.po";
-import VueTranslater from "./components/VueTranslater.vue";
-
-const VueTranslaterComponent = new VueTranslater();
+import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export function setupModalButtons(createVueModalCallback) {
     initVueGettext();
@@ -101,6 +102,13 @@ function updateDeleteModalDescription(button) {
     modal_description.innerText = "";
     modal_description.insertAdjacentHTML(
         "afterbegin",
-        VueTranslaterComponent.getDeleteMessage(button)
+        sanitize(
+            sprintf(
+                gettext_provider.$gettext(
+                    "You are about to delete the <b>%s</b> service. Please, confirm your action"
+                ) /* javascript-format */,
+                escaper.html(button.dataset.serviceLabel)
+            )
+        )
     );
 }
