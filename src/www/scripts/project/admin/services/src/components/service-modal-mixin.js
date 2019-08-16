@@ -17,6 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const SUMMARY_SERVICE_SHORTNAME = "summary";
-export const ADMIN_SERVICE_SHORTNAME = "admin";
-export const ADMIN_PROJECT_ID = "100";
+export const service_modal_mixin = {
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true
+        },
+        csrf_token: {
+            type: String,
+            required: true
+        },
+        csrf_token_name: {
+            type: String,
+            required: true
+        },
+        allowed_icons: {
+            type: Object,
+            required: true
+        }
+    }
+};

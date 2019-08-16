@@ -19,6 +19,6 @@
 
 import "../../../../themes/common/tlp/mocks/index.js";
 
-import "./src/components/Service/ProjectDefinedService.spec.js";
 import "./src/components/BaseProjectAdminEditModal.spec.js";
 import "./src/components/BaseSiteAdminEditModal.spec.js";
+import "./src/components/Service/InEditionCustomService.spec.js";

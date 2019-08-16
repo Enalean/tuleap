@@ -19,13 +19,13 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="project-service-modal-icon">
+        <label class="tlp-label" v-bind:for="id">
             <translate>Icon</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <select
             class="tlp-select"
-            id="project-service-modal-icon"
+            v-bind:id="id"
             name="icon_name"
             required
             ref="select"
@@ -47,6 +47,10 @@ import { select2 } from "tlp";
 export default {
     name: "IconSelector",
     props: {
+        id: {
+            type: String,
+            required: true
+        },
         value: {
             type: String,
             required: true

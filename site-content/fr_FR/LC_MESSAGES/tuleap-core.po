@@ -126,6 +126,9 @@ msgstr "Statut du compte utilisateur"
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
+msgid "Add a new service"
+msgstr "Ajouter un nouveau service"
+
 msgid "Add binding"
 msgstr "Ajouter le lien"
 
@@ -248,12 +251,6 @@ msgstr "Demander à rejoindre"
 
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
-
-msgid "Available (also available for new projects)"
-msgstr "Disponible (également disponible dans les nouveaux projets)"
-
-msgid "Awesome service to manage extra stuff"
-msgstr "Le service qui gère des trucs"
 
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
@@ -416,17 +413,11 @@ msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
 msgid "Could not update hooks of the SVN repository"
 msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
 
-msgid "Create a new service"
-msgstr "Créer un nouveau service"
-
 msgid "Create from"
 msgstr "Créer à partir de"
 
 msgid "Create label"
 msgstr "Créer le label"
-
-msgid "Create service"
-msgstr "Créer le service"
 
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
@@ -501,9 +492,6 @@ msgstr "Détails"
 msgid "Display density:"
 msgstr "Densité d'affichage :"
 
-msgid "Display in iframe"
-msgstr "Afficher dans une iframe"
-
 msgid "Display platform statistics on home page."
 msgstr "Afficher les statistiques de la plateforme sur la page d'accueil."
 
@@ -557,9 +545,6 @@ msgstr "Groupe vide"
 
 msgid "Enable accessibility mode"
 msgstr "Activer le mode d'accessiblilité"
-
-msgid "Enabled"
-msgstr "Activé"
 
 msgid "Enabled?"
 msgstr "Activé ?"
@@ -824,9 +809,6 @@ msgstr "Mois"
 
 msgid "My personnal page"
 msgstr "Ma page personnelle"
-
-msgid "My service"
-msgstr "Mon service"
 
 msgid "Name"
 msgstr "Nom"
@@ -1272,9 +1254,6 @@ msgstr "Description courte"
 
 msgid "Short description shouldn't exceed 255 characters."
 msgstr "La description courte ne doit pas dépasser 255 caractères."
-
-msgid "Short name"
-msgstr "Nom court"
 
 msgid "Shortcut list"
 msgstr "Liste des raccourcis"
@@ -2032,9 +2011,6 @@ msgstr "Retour à la page d'accueil"
 
 msgid "last<br>month"
 msgstr "le mois<br>dernier"
-
-msgid "my_service"
-msgstr "mon_service"
 
 #, php-format
 msgid "parameter \"query\" syntax error: \"%s\" property not found"

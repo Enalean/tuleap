@@ -17,44 +17,26 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
+<template functional>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            v-bind:for="id"
-            v-translate
-        >
-            Description
+        <label class="tlp-label" v-bind:for="props.id" v-translate>
+            Open in a new tab
         </label>
-        <input
-            type="text"
-            class="tlp-input"
-            v-bind:id="id"
-            name="description"
-            v-bind:placeholder="description_placeholder"
-            size="70"
-            maxlength="255"
-            v-bind:value="value"
-        >
+        <div class="tlp-switch">
+            <input
+                type="checkbox"
+                class="tlp-switch-checkbox"
+                v-bind:id="props.id"
+                name="is_in_new_tab"
+                value="1"
+                v-bind:checked="props.value"
+                v-on:change="listeners.change || (() => {})"
+            >
+            <label
+                class="tlp-switch-button"
+                v-bind:for="props.id"
+                aria-hidden
+            ></label>
+        </div>
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceDescription",
-    props: {
-        value: {
-            type: String,
-            required: true
-        },
-        id: {
-            type: String,
-            required: true
-        }
-    },
-    computed: {
-        description_placeholder() {
-            return this.$gettext("Awesome service to manage extra stuff");
-        }
-    }
-};
-</script>

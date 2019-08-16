@@ -38,6 +38,12 @@ msgstr ""
 "Quelques mots-clés peuvent être insérés dans le lien, ils seront "
 "automatiquement remplacés par leur valeur :"
 
+msgid "Add a new service"
+msgstr "Ajouter un nouveau service"
+
+msgid "Add service"
+msgstr "Ajouter un service"
+
 msgid "Available (also available for new projects)"
 msgstr "Disponible (également disponible dans les nouveaux projets)"
 
@@ -91,6 +97,9 @@ msgstr ""
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
+msgid "Preview"
+msgstr "Aperçu"
+
 msgid "Rank"
 msgstr "Rang"
 
@@ -114,3 +123,6 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
 "votre action"
+
+msgid "my_service"
+msgstr "mon_service"

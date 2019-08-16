@@ -11,13 +11,11 @@
                     <button
                        id="project-admin-services-add-button"
                        type="button"
-                       data-target-modal-id="project-admin-services-add-modal"
                        class="tlp-button-primary tlp-table-actions-element"
                     >
                         <i class="tlp-button-icon fa fa-plus"></i>
-                        {{# gettext }}Create a new service{{/ gettext }}
+                        {{# gettext }}Add a new service{{/ gettext }}
                     </button>
-                    {{> services-add-modal }}
                 </div>
                 <table class="tlp-table">
                     <thead>
@@ -92,6 +90,13 @@
                     </tbody>
                 </table>
                 {{> services-delete-modal }}
+                <div id="service-add-modal"
+                     data-project-id="{{ project_id }}"
+                     data-minimal-rank="{{ minimal_rank }}"
+                     data-csrf-token-name="{{ csrf_token_name }}"
+                     data-csrf-token="{{ csrf_token }}"
+                     data-allowed-icons="{{ allowed_icons }}"
+                 ></div>
                 <div id="service-edit-modal"
                      data-project-id="{{ project_id }}"
                      data-minimal-rank="{{ minimal_rank }}"

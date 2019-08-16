@@ -23,13 +23,12 @@
         v-bind:action="form_url"
         class="tlp-modal"
         role="dialog"
-        aria-labelledby="project-admin-services-edit-modal-title"
-        data-test="service-edit-modal"
+        aria-labelledby="project-admin-services-add-modal-title"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="project-admin-services-edit-modal-title">
-                <i class="fa fa-pencil tlp-modal-title-icon"></i>
-                <translate>Edit service</translate>
+            <h1 class="tlp-modal-title" id="project-admin-services-add-modal-title">
+                <i class="fa fa-plus tlp-modal-title-icon"></i>
+                <translate>Add a new service</translate>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
                 ×
@@ -48,10 +47,9 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                data-test="save-service-modifications"
             >
-                <i class="fa fa-save tlp-button-icon"></i>
-                <translate>Save modifications</translate>
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <translate>Add service</translate>
             </button>
         </div>
     </form>
@@ -60,7 +58,7 @@
 import { modal as createModal } from "tlp";
 
 export default {
-    name: "EditModal",
+    name: "AddModal",
     props: {
         form_url: {
             type: String,

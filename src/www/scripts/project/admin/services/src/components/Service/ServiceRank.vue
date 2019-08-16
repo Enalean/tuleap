@@ -19,14 +19,14 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="project-admin-services-edit-modal-rank">
+        <label class="tlp-label" v-bind:for="props.id">
             <translate>Rank</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <input
             type="number"
             class="tlp-input"
-            id="project-admin-services-edit-modal-rank"
+            v-bind:id="props.id"
             name="rank"
             placeholder="150"
             size="5"

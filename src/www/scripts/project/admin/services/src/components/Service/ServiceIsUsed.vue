@@ -19,13 +19,13 @@
 
 <template functional>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="project-admin-services-edit-modal-enabled" v-translate>
+        <label class="tlp-label" v-bind:for="props.id" v-translate>
             Enabled
         </label>
         <div class="tlp-switch">
             <input
                 class="tlp-switch-checkbox"
-                id="project-admin-services-edit-modal-enabled"
+                v-bind:id="props.id"
                 type="checkbox"
                 name="is_used"
                 value="1"
@@ -33,7 +33,7 @@
             >
             <label
                 class="tlp-switch-button"
-                for="project-admin-services-edit-modal-enabled"
+                v-bind:for="props.id"
                 aria-hidden
                 data-test="service-is-used"
             ></label>

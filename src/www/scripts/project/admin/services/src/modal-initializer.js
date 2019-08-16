@@ -26,36 +26,36 @@ import { escaper } from "../../../../tuleap/escaper.js";
 import french_translations from "../po/fr.po";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
-export function setupModalButtons(createVueModalCallback) {
+export function setupModalButtons(addModalCallback, editModalCallback) {
     initVueGettext();
-    setupAddButton();
-    setupEditButtons(createVueModalCallback);
+    setupAddButton(addModalCallback);
+    setupEditButtons(editModalCallback);
     setupDeleteButtons();
 }
 
-function setupAddButton() {
+function setupAddButton(addModalCallback) {
+    const vue_modal = addModalCallback();
+
     const add_button_id = "project-admin-services-add-button";
     const add_button = document.getElementById(add_button_id);
     if (!add_button) {
         throw new Error(`Could not find button #${add_button_id}`);
     }
     add_button.addEventListener("click", () => {
-        createAndShowModal(add_button);
+        vue_modal.show();
     });
 }
 
-function setupEditButtons(createVueModalCallback) {
-    const vue_modal = createVueModalCallback();
+function setupEditButtons(editModalCallback) {
+    const vue_modal = editModalCallback();
 
     const edit_buttons = document.querySelectorAll(".project-admin-services-edit-button");
     for (const edit_button of edit_buttons) {
-        const should_show_dynamic_modal = typeof edit_button.dataset.serviceJson !== "undefined";
+        if (typeof edit_button.dataset.serviceJson === "undefined") {
+            throw new Error(`Could not find service JSON for edit service button`);
+        }
         edit_button.addEventListener("click", () => {
-            if (should_show_dynamic_modal === true) {
-                vue_modal.show(edit_button);
-                return;
-            }
-            createAndShowModal(edit_button);
+            vue_modal.show(edit_button);
         });
     }
 }

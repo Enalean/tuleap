@@ -18,39 +18,28 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-bind:class="{'tlp-form-element-disabled': disabled }">
+    <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">
-            <translate>Link</translate>
+            <translate>Short name</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <input
             type="text"
             class="tlp-input"
             v-bind:id="id"
-            name="link"
-            placeholder="https://example.com/my-service/"
-            maxlength="255"
-            pattern="(https?://|#|/|\?).+"
-            v-bind:title="link_title"
+            name="short_name"
+            v-bind:placeholder="placeholder"
+            size="15"
+            maxlength="40"
             required
-            v-bind:disabled="disabled"
             v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)"
         >
-        <p class="tlp-text-info">
-            <i class="fa fa-info-circle"></i>
-            <translate>A few keywords can be inserted into the link, they will be automatically replaced by their value:</translate>
-        </p>
-        <ul class="tlp-text-info">
-            <li v-translate>$projectname: short name of the project</li>
-            <li v-translate>$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)</li>
-            <li v-translate>$group_id: project number</li>
-            <li v-translate>$sys_default_protocol: ‘https’ if your server is configured in secure mode, ‘http’ otherwise</li>
-        </ul>
     </div>
 </template>
 <script>
 export default {
-    name: "ServiceLink",
+    name: "ServiceShortname",
     props: {
         value: {
             type: String,
@@ -59,15 +48,11 @@ export default {
         id: {
             type: String,
             required: true
-        },
-        disabled: {
-            type: Boolean,
-            default: false
         }
     },
     computed: {
-        link_title() {
-            return this.$gettext("Please, enter a http:// or https:// link");
+        placeholder() {
+            return this.$gettext("my_service");
         }
     }
 };

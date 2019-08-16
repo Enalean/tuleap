@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
-import ProjectDefinedService from "./Service/ProjectDefinedService.vue";
+import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import localVue from "../support/local-vue.js";
 
@@ -64,7 +64,7 @@ describe(`BaseProjectAdminEdit`, () => {
     });
 
     it(`When the modal is not shown, it does not instanciate service components`, () => {
-        const project_service = wrapper.find(ProjectDefinedService);
+        const project_service = wrapper.find(InEditionCustomService);
         const system_service = wrapper.find(ReadOnlySystemService);
         expect(project_service.exists()).toBe(false);
         expect(system_service.exists()).toBe(false);
@@ -75,7 +75,7 @@ describe(`BaseProjectAdminEdit`, () => {
             const fake_button = createFakeButton({ is_project_scope: true });
             wrapper.vm.show(fake_button);
 
-            const project_service = wrapper.find(ProjectDefinedService);
+            const project_service = wrapper.find(InEditionCustomService);
             expect(project_service.exists()).toBe(true);
         });
 

@@ -18,17 +18,17 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import ProjectDefinedService from "./ProjectDefinedService.vue";
+import InEditionCustomService from "./InEditionCustomService.vue";
 import localVue from "../../support/local-vue.js";
 
 function createWrapper(props) {
-    return shallowMount(ProjectDefinedService, {
+    return shallowMount(InEditionCustomService, {
         localVue,
         propsData: props
     });
 }
 
-describe(`ProjectDefinedService`, () => {
+describe(`InEditionCustomService`, () => {
     let wrapper, props;
 
     beforeEach(() => {
@@ -52,14 +52,13 @@ describe(`ProjectDefinedService`, () => {
     });
 
     describe(`When the service is already open in an iframe`, () => {
-        let new_tab_switch, iframe_switch;
+        let iframe_switch;
 
         beforeEach(() => {
             props.service.is_in_iframe = true;
             wrapper = createWrapper(props);
 
             iframe_switch = wrapper.find("[data-test=iframe-switch]");
-            new_tab_switch = wrapper.find("[data-test=new-tab-switch]");
         });
 
         it(`will show the switch input`, () => {
@@ -78,7 +77,7 @@ describe(`ProjectDefinedService`, () => {
 
         it(`when I also check "Is in new tab",
             it will disable "is in iframe" and show a warning`, () => {
-            new_tab_switch.setChecked(true);
+            wrapper.vm.onNewTabChange({ target: { checked: true } });
 
             const new_tab_warning = wrapper.find("[data-test=new-tab-warning");
             expect(new_tab_warning.exists()).toBe(true);
@@ -86,10 +85,13 @@ describe(`ProjectDefinedService`, () => {
 
         it(`When the warning is shown and I uncheck "Is in new tab",
             it will hide the warning`, () => {
-            new_tab_switch.setChecked(true);
+            wrapper.vm.onNewTabChange({ target: { checked: true } });
+
             const new_tab_warning = wrapper.find("[data-test=new-tab-warning");
             expect(new_tab_warning.exists()).toBe(true);
-            new_tab_switch.setChecked(false);
+
+            wrapper.vm.onNewTabChange({ target: { checked: false } });
+
             expect(new_tab_warning.exists()).toBe(false);
         });
     });
