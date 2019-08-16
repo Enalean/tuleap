@@ -24,7 +24,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Tuleap\REST\JsonCast;
 
-class DocmanMetadataRepresentation
+class ProjectConfiguredMetadataRepresentation
 {
     private const METADATA_TYPE_LABEL = [
             PLUGIN_DOCMAN_METADATA_TYPE_TEXT   => 'text',

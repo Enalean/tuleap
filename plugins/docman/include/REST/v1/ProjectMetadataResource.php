@@ -105,7 +105,7 @@ class ProjectMetadataResource extends AuthenticatedResource
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\REST\v1\DocmanMetadataRepresentation}
+     * @return array {@type Tuleap\REST\v1\ProjectConfiguredMetadataRepresentation}
      *
      * @throws RestException 404
      */

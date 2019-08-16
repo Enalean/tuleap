@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Tuleap\REST\JsonCast;
 
-class MetadataRepresentation
+class ItemMetadataRepresentation
 {
     /**
      * @var string

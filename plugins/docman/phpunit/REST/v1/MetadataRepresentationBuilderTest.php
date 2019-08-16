@@ -29,7 +29,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\GlobalLanguageMock;
 use UserHelper;
@@ -86,7 +86,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $representation = $builder->build($item);
 
         $expected_representation = [
-            new MetadataRepresentation(
+            new ItemMetadataRepresentation(
                 "simple metadata label",
                 'text',
                 false,
@@ -96,7 +96,7 @@ class MetadataRepresentationBuilderTest extends TestCase
                 true,
                 "simple_metadata_label"
             ),
-            new MetadataRepresentation(
+            new ItemMetadataRepresentation(
                 "list metadata label",
                 'list',
                 true,
@@ -138,7 +138,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $item->shouldReceive('getMetadata')->andReturn([$date_metadata]);
 
         $representation          = $builder->build($item);
-        $expected_representation = new MetadataRepresentation(
+        $expected_representation = new ItemMetadataRepresentation(
             'date metadata name',
             'date',
             false,
@@ -180,7 +180,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $item->shouldReceive('getMetadata')->andReturn([$date_metadata]);
 
         $representation          = $builder->build($item);
-        $expected_representation = new MetadataRepresentation(
+        $expected_representation = new ItemMetadataRepresentation(
             'date metadata name',
             'date',
             false,
@@ -222,7 +222,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $user_helper->shouldReceive('getLinkOnUserFromUserId')->andReturn('user display name with link');
 
         $representation          = $builder->build($item);
-        $expected_representation = new MetadataRepresentation(
+        $expected_representation = new ItemMetadataRepresentation(
             'owner',
             'string',
             false,

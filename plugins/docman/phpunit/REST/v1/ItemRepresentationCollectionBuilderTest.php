@@ -30,7 +30,7 @@ use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -172,7 +172,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             false,
             true,
             [
-                new MetadataRepresentation(
+                new ItemMetadataRepresentation(
                     'name',
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
@@ -225,7 +225,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             false,
             false,
             [
-                new MetadataRepresentation(
+                new ItemMetadataRepresentation(
                     'name',
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
@@ -327,7 +327,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             false,
             false,
             [
-                new MetadataRepresentation(
+                new ItemMetadataRepresentation(
                     'name',
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,
@@ -358,7 +358,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             false,
             false,
             [
-                new MetadataRepresentation(
+                new ItemMetadataRepresentation(
                     'name',
                     PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                     false,

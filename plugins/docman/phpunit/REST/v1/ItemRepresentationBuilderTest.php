@@ -28,7 +28,7 @@ use Docman_ItemFactory;
 use Mockery;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
@@ -137,7 +137,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $current_user->shouldReceive('getPreference')->with('username_display')->andReturns('toto');
         $this->html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('description with processed ref');
 
-        $metadata_representation = new MetadataRepresentation(
+        $metadata_representation = new ItemMetadataRepresentation(
             "metadata name",
             'date',
             false,
