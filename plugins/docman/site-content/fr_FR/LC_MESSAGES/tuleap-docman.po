@@ -173,6 +173,16 @@ msgstr "L'objet %d n'est pas un dossier."
 msgid "The list type property %s can accept only one value."
 msgstr "La propriété de type liste %s accepte une seule valeur"
 
+#, php-format
+msgid "The metadata '%s' short_name must be provided for document creation"
+msgid_plural ""
+"The metadata '%s' short_names must be provided for document creation"
+msgstr[0] ""
+"La metadata avec le short_name '%s' doit être fournie pour créer un document"
+msgstr[1] ""
+"Les metadata avec le short_name '%s' doivent être fournies pour créer un "
+"document"
+
 msgid "The obsolescence date is before the current date"
 msgstr "La date d'obsolescence est antérieur à la date actuelle"
 
@@ -192,8 +202,8 @@ msgid ""
 "The property with short name %s is a value, list_value should be empty and "
 "value should be provided."
 msgstr ""
-"La propriété avec le nom %s est une valeur, list_value devrait être "
-"vide et value devrait être fourni"
+"La propriété avec le nom %s est une valeur, list_value devrait être vide et "
+"value devrait être fourni."
 
 msgid "The requested version of this file cannot be found."
 msgstr "La version demandée de ce fichier ne peut être trouvé."

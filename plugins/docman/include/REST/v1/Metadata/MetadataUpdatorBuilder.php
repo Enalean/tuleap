@@ -44,6 +44,8 @@ class MetadataUpdatorBuilder
 
         $metadata_value_dao = new \Docman_MetadataValueDao();
 
+        $list_values_builder = new MetadataListOfValuesElementListBuilder(new \Docman_MetadataListOfValuesElementDao());
+
         return new MetadataUpdator(
             new \Docman_ItemFactory(),
             new ItemStatusMapper(new Docman_SettingsBo($project->getID())),
@@ -64,7 +66,8 @@ class MetadataUpdatorBuilder
             new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO()),
             new CustomMetadataRepresentationRetriever(
                 $docman_metadata_factory,
-                new MetadataListOfValuesElementListBuilder(new \Docman_MetadataListOfValuesElementDao())
+                $list_values_builder,
+                new CustomMetadataCollectionBuilder($docman_metadata_factory, $list_values_builder)
             ),
             new MetadataValueUpdator(
                 new DocmanMetadataInputValidator(),

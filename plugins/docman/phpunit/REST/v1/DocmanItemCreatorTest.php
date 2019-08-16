@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_MetadataValueDao;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -38,6 +39,7 @@ use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -47,6 +49,10 @@ use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 class DocmanItemCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var Docman_MetadataValueDao|\Mockery\MockInterface
+     */
+    private $metadata_value_dao;
 
     /**
      * @var DocmanItemCreator
@@ -95,7 +101,7 @@ class DocmanItemCreatorTest extends TestCase
 
     public function setUp() : void
     {
-        $this->creator_visitor      = \Mockery::mock(AfterItemCreationVisitor::class);
+        $this->creator_visitor = \Mockery::mock(AfterItemCreationVisitor::class);
 
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
@@ -111,6 +117,8 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->custom_metadata_checker = \Mockery::mock(CustomMetadataRepresentationRetriever::class);
 
+        $this->metadata_value_dao = \Mockery::mock(Docman_MetadataValueDao::class);
+
         $this->item_creator = new DocmanItemCreator(
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
@@ -120,7 +128,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->link_validity_checker,
             $this->item_status_mapper,
             $this->metadata_obsolesence_date_retriever,
-            $this->custom_metadata_checker
+            $this->custom_metadata_checker,
+            $this->metadata_value_dao
         );
     }
 
@@ -164,7 +173,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createEmpty(
             $parent_item,
@@ -218,7 +229,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitWiki')->once();
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createWiki(
             $parent_item,
@@ -260,7 +273,9 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('usesWiki')->andReturn(false);
         $project->shouldReceive('getUnixName')->once();
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
@@ -303,7 +318,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
+        $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
         $created_item_representation = $this->item_creator->createFileDocument(
             $parent_item,
@@ -314,7 +329,7 @@ class DocmanItemCreatorTest extends TestCase
             '2019-06-06',
             $current_time,
             $file_properties_post_representation,
-            []
+            $metadata_to_create
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -323,7 +338,7 @@ class DocmanItemCreatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenDocumentHasSameNameThanCreatedFile(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(3);
         $user         = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
@@ -342,6 +357,8 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
 
+        $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
+
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
@@ -354,13 +371,13 @@ class DocmanItemCreatorTest extends TestCase
             '2019-06-06',
             $current_time,
             $file_properties_post_representation,
-            []
+            $metadata_to_create
         );
     }
 
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturn(1);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
@@ -373,7 +390,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(true);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(409);
@@ -405,7 +424,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
@@ -438,7 +457,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->link_validity_checker->shouldReceive("checkLinkValidity");
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createLink(
             $parent_item,
@@ -468,7 +489,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
 
         $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
@@ -488,7 +509,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitFolder')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createFolder(
             $parent_item,
@@ -542,7 +565,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitEmbeddedFile')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createEmbedded(
             $parent_item,
@@ -618,7 +643,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitFolder')->never();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $this->expectException(HardCodedMetadataException::class);
         $this->expectExceptionMessage('Status is not enabled for project');
@@ -684,7 +711,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitFolder')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createFolder(
             $parent_item,
@@ -743,7 +772,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createEmpty(
             $parent_item,
@@ -812,7 +843,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createEmbedded(
             $parent_item,
@@ -881,7 +914,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitLink')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $this->link_validity_checker->shouldReceive("checkLinkValidity")->once();
 
@@ -954,7 +989,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitWiki')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->once();
+        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+            MetadataToCreate::buildMetadataRepresentation([], false)
+        );
 
         $created_item_representation = $this->item_creator->createWiki(
             $parent_item,
@@ -1003,6 +1040,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
 
+        $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
         $created_item_representation = $this->item_creator->createFileDocument(
             $parent_item,
             $user,
@@ -1012,7 +1050,7 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation->obsolescence_date,
             $current_time,
             $file_properties_post_representation,
-            null
+            $metadata_to_create
         );
 
         $this->assertSame(12, $created_item_representation->id);

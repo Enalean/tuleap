@@ -1,23 +1,24 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class Docman_MetadataValueDao extends DataAccessObject {
@@ -256,6 +257,16 @@ class Docman_MetadataValueDao extends DataAccessObject {
                        implode(',', $dstItemIdArray));
         return $this->update($sql);
     }
-}
 
-?>
+    public function inheritMetadataFromParent(int $item_id, int $parent_id): void
+    {
+        $sql = sprintf('INSERT INTO plugin_docman_metadata_value'.
+                       ' (field_id, item_id, valueInt, valueText, valueDate, valueString)'.
+                       ' SELECT field_id, %d, valueInt, valueText, valueDate, valueString '.
+                       ' FROM plugin_docman_metadata_value mdv_src'.
+                       ' WHERE mdv_src.item_id = %d',
+                       $this->da->escapeInt($item_id),
+                       $this->da->escapeInt($parent_id));
+        $this->update($sql);
+    }
+}
