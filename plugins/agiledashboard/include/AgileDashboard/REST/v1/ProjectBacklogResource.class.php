@@ -201,15 +201,20 @@ class ProjectBacklogResource
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
-
-        $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
-
-        $paginated_backlog_items_representations = $this->paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForTopMilestone($user, $top_milestone, $limit, $offset);
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
 
-        return $paginated_backlog_items_representations->getBacklogItemsRepresentations();
+        try {
+            $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
+
+            $paginated_backlog_items_representations = $this->paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForTopMilestone($user, $top_milestone, $limit, $offset);
+
+            $this->sendPaginationHeaders($limit, $offset, $paginated_backlog_items_representations->getTotalSize());
+
+            return $paginated_backlog_items_representations->getBacklogItemsRepresentations();
+        } catch (\Planning_NoPlanningsException $e) {
+            $this->sendPaginationHeaders($limit, $offset, 0);
+            return [];
+        }
     }
 
     private function limitValueIsAcceptable($limit) {
