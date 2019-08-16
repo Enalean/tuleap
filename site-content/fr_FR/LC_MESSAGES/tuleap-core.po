@@ -120,6 +120,9 @@ msgstr ""
 "Le compte %s est restreint et le project n'autorise pas les utilisateurs "
 "restreints. L'utilisateur n'a pas été ajouté."
 
+msgid "Account status"
+msgstr "Statut du compte utilisateur"
+
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
@@ -1647,6 +1650,9 @@ msgstr "Avatar de l'utilisateur"
 
 msgid "User does not exist"
 msgstr "L'utilisateur n’existe pas"
+
+msgid "User email address"
+msgstr "Adresse e-mail de l'utilisateur"
 
 msgid "User group"
 msgstr "Groupe d'utilisateurs"
