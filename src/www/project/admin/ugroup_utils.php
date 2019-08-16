@@ -79,7 +79,7 @@ function ugroup_get_parent($ugroup_id) {
 }
 
 // Return members (user_id + user_name according to user preferences) of given user group
-// * $keword is used to filter the users.
+// * $keyword is used to filter the users.
 function ugroup_db_get_members(
     $ugroup_id,
     $with_display_preferences = false,
@@ -108,7 +108,7 @@ function ugroup_db_get_members(
     }
 
     $ugroup_id = (int)$ugroup_id;
-    $sql="(SELECT user.user_id, $sqlname, user.realname, user.user_name
+    $sql="(SELECT user.user_id, $sqlname, user.realname, user.user_name, user.email, user.status
             FROM ugroup_user, user 
             WHERE user.user_id = ugroup_user.user_id 
               AND ugroup_user.ugroup_id = $ugroup_id
@@ -328,13 +328,13 @@ function ugroup_db_get_dynamic_members(
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user WHERE " . $user_status . " $having_keyword ORDER BY ".$sqlorder." )";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name, user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name,user.email, user.status FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND " . $user_status. "  $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($atid && $ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return "(SELECT user.user_id, ".$sqlname.", user.realname, user.user_name FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND " . $user_status . "  ORDER BY ".$sqlorder.")";
