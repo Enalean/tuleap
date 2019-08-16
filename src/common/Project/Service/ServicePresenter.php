@@ -47,6 +47,10 @@ class ServicePresenter
      * @var ?string JSON
      */
     public $service_json = null;
+    /**
+     * @var string
+     */
+    public $icon;
 
     public function __construct(
         Service $service,
@@ -62,6 +66,7 @@ class ServicePresenter
         $this->short_name     = $service->getShortName();
         $this->can_be_deleted = $this->canBeDeleted($service);
         $this->service_json   = json_encode($json_presenter);
+        $this->icon           = $service->getIconName();
     }
 
     private function canBeDeleted(Service $service)

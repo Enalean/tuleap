@@ -290,7 +290,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return self::ICONS[$this->getShortName()] ?? "";
     }
 
-    protected function getFontAwesomeIcon(string $icon) : string
+    private function getFontAwesomeIcon(string $icon) : string
     {
         return 'fa fa-fw '.$icon;
     }
