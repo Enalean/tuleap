@@ -22,9 +22,9 @@ class ServiceTracker extends Service
 
     public const NAME = 'tracker';
 
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-list-ol');
+        return 'fa-list-ol';
     }
 
     /**

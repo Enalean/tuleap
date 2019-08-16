@@ -25,8 +25,8 @@ namespace Tuleap\AgileDashboard;
 
 class AgileDashboardService extends \Service
 {
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-table');
+        return 'fa-table';
     }
 }

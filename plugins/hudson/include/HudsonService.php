@@ -25,8 +25,8 @@ namespace Tuleap\Hudson;
 
 class HudsonService extends \Service
 {
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-refresh');
+        return 'fa-refresh';
     }
 }
