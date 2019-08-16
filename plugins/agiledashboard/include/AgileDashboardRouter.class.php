@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
@@ -119,6 +120,11 @@ class AgileDashboardRouter
      */
     private $timeframe_checker;
 
+    /**
+     * @var CountElementsModeChecker
+     */
+    private $count_elements_mode_checker;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -136,7 +142,8 @@ class AgileDashboardRouter
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        TimeframeChecker $timeframe_checker
+        TimeframeChecker $timeframe_checker,
+        CountElementsModeChecker $count_elements_mode_checker
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -155,6 +162,7 @@ class AgileDashboardRouter
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
         $this->timeframe_checker            = $timeframe_checker;
+        $this->count_elements_mode_checker  = $count_elements_mode_checker;
     }
 
     /**
@@ -410,7 +418,8 @@ class AgileDashboardRouter
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             EventManager::instance(),
             $this->service_crumb_builder,
-            $this->admin_crumb_builder
+            $this->admin_crumb_builder,
+            $this->count_elements_mode_checker
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,6 +43,11 @@ class AdminScrumPresenter {
     /**
      * @var bool
      */
+    public $can_burnup_be_configured;
+
+    /**
+     * @var bool
+     */
     public $does_configuration_allows_planning_creation;
 
     private $root_planning_tracker_url;
@@ -50,6 +55,11 @@ class AdminScrumPresenter {
     private $planning_hierarchy = array();
     private $can_create_planning;
     private $additional_content;
+
+    /**
+     * @var bool
+     */
+    public $burnup_count_mode_activated;
 
     public function __construct(
         array $plannings,
@@ -61,6 +71,8 @@ class AdminScrumPresenter {
         $scrum_activated,
         $scrum_title,
         $can_scrum_mono_milestone_be_enabled,
+        bool $can_burnup_be_configured,
+        bool $burnup_count_mode_activated,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
         $additional_content
@@ -73,6 +85,8 @@ class AdminScrumPresenter {
         $this->scrum_activated                             = $scrum_activated;
         $this->scrum_title                                 = $scrum_title;
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
+        $this->can_burnup_be_configured                    = $can_burnup_be_configured;
+        $this->burnup_count_mode_activated                 = $burnup_count_mode_activated;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
         $this->additional_content                          = $additional_content;
@@ -158,10 +172,6 @@ class AdminScrumPresenter {
 
     public function config_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');
-    }
-
-    public function config_submit_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_submit_label');
     }
 
     public function kanban_label() {

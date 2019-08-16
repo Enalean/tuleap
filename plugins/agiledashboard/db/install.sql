@@ -119,6 +119,10 @@ CREATE TABLE plugin_agiledashboard_tracker_field_burnup_cache_subelements (
   UNIQUE KEY time_at_field (artifact_id, timestamp)
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_agiledashboard_burnup_projects_count_mode (
+  project_id  INT(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

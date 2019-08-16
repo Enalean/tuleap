@@ -29,8 +29,6 @@
                         >
                         {{ activate_scrum_mono_milestone_label }}
                     </label>
-                    {{{ token }}}
-                    <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
                 </div>
             </section>
         {{/ can_scrum_mono_milestone_be_enabled }}
@@ -61,10 +59,30 @@
                     <label class="control-label" for="scrum-title-admin">{{ title_label }}</label>
                     <input id="scrum-title-admin" name="scrum-title-admin" type="text" required value="{{ scrum_title }}" placeholder="{{ title_label }}">
                     <p class="help-block"><i class="fa fa-info-circle"></i> {{ title_label_help }}</p>
-                    {{{ token }}}
-                    <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
                 </div>
             </section>
+
+            {{# can_burnup_be_configured }}
+            <section>
+                <h3><i class="fa fa-area-chart"></i> {{# dgettext }}tuleap-agiledashboard | Charts configuration{{/ dgettext }}</h3>
+
+                <div class="agiledashboard-section-details">
+                    <label class="checkbox active-scrum">
+                        <input type="checkbox"
+                               name="burnup-count-mode"
+                               value="1" {{# burnup_count_mode_activated }} checked {{/ burnup_count_mode_activated }}
+                        >
+                        {{# dgettext }}tuleap-agiledashboard | Activate count elements mode for burnup chart{{/ dgettext }}
+                    </label>
+                    <p class="help-block">
+                        <i class="fa fa-info-circle"></i> {{# dgettext }}tuleap-agiledashboard | This option will display all the burnup charts in the project with elements progression instead of effort progression.{{/ dgettext }}
+                    </p>
+                </div>
+            </section>
+            {{/ can_burnup_be_configured }}
+
+            {{{ token }}}
+            <button type="submit" class="btn btn-primary" id="ad-service-submit">{{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}</button>
 
             <section>
                 <h3><i class="fa fa-exchange"></i> {{ import_export_section }}</h3>

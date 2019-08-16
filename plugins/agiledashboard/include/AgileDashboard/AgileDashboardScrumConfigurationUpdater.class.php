@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
@@ -51,6 +53,11 @@ class AgileDashboardScrumConfigurationUpdater {
      */
     private $scrum_mono_milestone_checker;
 
+    /**
+     * @var CountElementsModeUpdater
+     */
+    private $count_elements_mode_updater;
+
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_ConfigurationManager $config_manager,
@@ -58,7 +65,8 @@ class AgileDashboardScrumConfigurationUpdater {
         AgileDashboard_FirstScrumCreator $first_scrum_creator,
         ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
         ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
+        CountElementsModeUpdater $count_elements_mode_updater
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');
@@ -68,6 +76,7 @@ class AgileDashboardScrumConfigurationUpdater {
         $this->scrum_mono_milestone_enabler  = $scrum_mono_milestone_enabler;
         $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
         $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
+        $this->count_elements_mode_updater   = $count_elements_mode_updater;
     }
 
     public function updateConfiguration()
@@ -87,6 +96,11 @@ class AgileDashboardScrumConfigurationUpdater {
             $this->getScrumTitle(),
             $this->config_manager->getKanbanTitle($this->project_id)
         );
+
+        if (ForgeConfig::get('use_burnup_count_elements')) {
+            $use_count_mode = (bool) $this->request->get('burnup-count-mode');
+            $this->count_elements_mode_updater->updateBurnupMode($this->request->getProject(), $use_count_mode);
+        }
 
         $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
             $this->project_id

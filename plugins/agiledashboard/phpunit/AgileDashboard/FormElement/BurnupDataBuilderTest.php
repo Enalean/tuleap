@@ -25,6 +25,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tracker;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
@@ -91,10 +93,14 @@ class BurnupDataBuilderTest extends TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
+        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+
         $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
@@ -126,10 +132,14 @@ class BurnupDataBuilderTest extends TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
+        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+
         $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
@@ -199,10 +209,14 @@ class BurnupDataBuilderTest extends TestCase
     {
         $this->mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnTrue();
 
+        $tracker  = Mockery::mock(Tracker::class);
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $user     = Mockery::mock(PFUser::class);
 
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+
         $artifact->shouldReceive('getId')->andReturn(101);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
 
         $this->logger->shouldReceive('debug');
         $this->logger->shouldReceive('info');
