@@ -46,8 +46,8 @@ class Service extends CoreService
         return $description;
     }
 
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-check');
+        return 'fa-check';
     }
 }
