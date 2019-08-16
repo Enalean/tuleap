@@ -106,7 +106,7 @@ class EditController implements DispatchableWithRequest, DispatchableWithProject
             $this->redirectToServiceAdministration($project, $layout);
         } catch (InvalidServicePOSTDataException $exception) {
             $this->redirectWithError(
-                $request->getProject(),
+                $project,
                 $layout,
                 $exception->getMessage()
             );

@@ -31,6 +31,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.29",
     "imports-loader": "^0.7.1",
     "load-json-file": "^5.1.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
@@ -41,9 +42,11 @@
     "bin": "../../../node_modules/.bin"
   },
   "scripts": {
+    "karma-vue": "$npm_package_config_bin/karma start ./karma.vue.js",
+    "karma-richtext": "$npm_package_config_bin/karma start ./karma.richtext.js",
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./tuleap/ckeditor/karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
-    "test": "NODE_ENV=test $npm_package_config_bin/karma start ./tuleap/ckeditor/karma.conf.js",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./tuleap/ckeditor/karma.conf.js'"
+    "coverage": "rm -rf ./coverage/* && export NODE_ENV=coverage; npm run karma-richtext && npm run karma-vue && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "test": "export NODE_ENV=test; npm run karma-richtext && npm run karma-vue",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'npm run karma-richtext' 'npm run karma-vue'"
   }
 }

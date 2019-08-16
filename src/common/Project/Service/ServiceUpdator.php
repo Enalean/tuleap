@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,8 @@ class ServiceUpdator
             $service_data->getDescription(),
             $service_data->getLink(),
             $service_data->getRank(),
-            $service_data->isInIframe()
+            $service_data->isInIframe(),
+            $service_data->isInNewTab()
         );
 
         if ($user->isSuperUser()) {

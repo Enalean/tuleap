@@ -134,13 +134,10 @@ module.exports = {
         {
             files: [
                 "gulpfile.js",
-                "karma.conf.js",
+                "karma.*.js",
+                "webpack.*.js",
                 "plugins/tracker/grammar/",
-                "tools/**/*.js",
-                "webpack.config.js",
-                "webpack.common.js",
-                "webpack.dev.js",
-                "webpack.prod.js"
+                "tools/**/*.js"
             ],
             env: {
                 node: true

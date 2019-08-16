@@ -42,6 +42,7 @@ export const edit_modal_mixin = {
     },
     data() {
         return {
+            is_shown: false,
             service: this.resetService()
         };
     },
@@ -52,10 +53,12 @@ export const edit_modal_mixin = {
     },
     methods: {
         show(button) {
+            this.is_shown = true;
             this.service = JSON.parse(button.dataset.serviceJson);
             this.$refs.modal.show();
         },
         resetModal() {
+            this.is_shown = false;
             this.service = this.resetService();
         },
         resetService() {
@@ -68,6 +71,7 @@ export const edit_modal_mixin = {
                 is_active: true,
                 is_used: true,
                 is_in_iframe: false,
+                is_in_new_tab: false,
                 rank: this.minimal_rank,
                 is_project_scope: true
             };

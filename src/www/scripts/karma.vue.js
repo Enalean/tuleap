@@ -18,14 +18,14 @@
  */
 
 const path = require("path");
-const webpack_config = require("./webpack.config.js");
-const karma_configurator = require("../../../../../tools/utils/scripts/karma-configurator.js");
+const webpack_config = require("./webpack.vue.js");
+const karma_configurator = require("../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
 
 module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, "../../coverage");
-    const coverage_folder_name = path.basename(__dirname);
+    const coverage_dir = path.resolve(__dirname, "./coverage");
+    const coverage_folder_name = "vue_apps";
     const base_config = karma_configurator.setupBaseKarmaConfig(
         config,
         webpack_config,
@@ -34,9 +34,9 @@ module.exports = function(config) {
     );
 
     Object.assign(base_config, {
-        files: ["app.spec.js"],
+        files: ["project/admin/services/app.spec.js"],
         preprocessors: {
-            "app.spec.js": ["webpack"]
+            "project/admin/services/app.spec.js": ["webpack"]
         }
     });
 

@@ -67,6 +67,10 @@ final class ServicePOSTData
      */
     private $is_in_iframe;
     /**
+     * @var bool
+     */
+    private $is_in_new_tab;
+    /**
      * @var int
      */
     private $id;
@@ -83,7 +87,8 @@ final class ServicePOSTData
         bool $is_active,
         bool $is_used,
         bool $is_system_service,
-        bool $is_in_iframe
+        bool $is_in_iframe,
+        bool $is_in_new_tab
     ) {
         $this->id                = $id;
         $this->short_name        = $short_name;
@@ -97,6 +102,7 @@ final class ServicePOSTData
         $this->is_used           = $is_used;
         $this->is_system_service = $is_system_service;
         $this->is_in_iframe      = $is_in_iframe;
+        $this->is_in_new_tab     = $is_in_new_tab;
     }
 
     public function getShortName(): string
@@ -152,6 +158,11 @@ final class ServicePOSTData
     public function isInIframe(): bool
     {
         return $this->is_in_iframe;
+    }
+
+    public function isInNewTab(): bool
+    {
+        return $this->is_in_new_tab;
     }
 
     public function getId(): int

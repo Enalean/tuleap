@@ -54,6 +54,7 @@ class ServicePOSTDataBuilder
         $is_active         = $request->getValidated('is_active', 'uint', 0);
         $is_used           = $request->getValidated('is_used', 'uint', false);
         $is_in_iframe      = $request->get('is_in_iframe') ? true : false;
+        $is_in_new_tab     = $request->get('is_in_new_tab') ? true : false;
         $is_system_service = $this->isSystemService($request, $short_name);
         $submitted_link    = $request->getValidated('link', 'localuri', '');
 
@@ -81,6 +82,7 @@ class ServicePOSTDataBuilder
             $is_active,
             $is_used,
             $is_in_iframe,
+            $is_in_new_tab,
             $is_system_service
         );
     }
@@ -106,24 +108,12 @@ class ServicePOSTDataBuilder
             $service->isActive(),
             $submitted_is_used,
             $service->isIFrame(),
+            $service->isOpenedInNewTab(),
             $service->getScope() === Service::SCOPE_SYSTEM
         );
     }
 
     /**
-     * @param Project $project
-     * @param         $short_name
-     * @param         $label
-     * @param         $rank
-     * @param         $submitted_link
-     * @param         $is_active
-     * @param         $is_used
-     * @param         $service_id
-     * @param         $description
-     * @param bool     $is_in_iframe
-     * @param bool    $is_system_service
-     *
-     * @return ServicePOSTData
      * @throws InvalidServicePOSTDataException
      */
     private function createServicePOSTData(
@@ -138,6 +128,7 @@ class ServicePOSTDataBuilder
         $is_active,
         $is_used,
         bool $is_in_iframe,
+        bool $is_in_new_tab,
         bool $is_system_service
     ): ServicePOSTData {
         $scope = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
@@ -147,6 +138,7 @@ class ServicePOSTDataBuilder
         $this->checkRank($project, $short_name, $rank);
         if (! $is_system_service) {
             $this->checkIcon($icon_name);
+            $this->checkIsInNewTab($is_in_iframe, $is_in_new_tab);
         }
 
         $service_url_collector = new ServiceUrlCollector($project, $short_name);
@@ -169,7 +161,8 @@ class ServicePOSTDataBuilder
             (bool) $is_active,
             (bool) $is_used,
             $is_system_service,
-            $is_in_iframe
+            $is_in_iframe,
+            $is_in_new_tab
         );
     }
 
@@ -284,6 +277,18 @@ class ServicePOSTDataBuilder
     {
         if (! ServiceIconValidator::isValidIcon($icon_name)) {
             throw new InvalidServicePOSTDataException(_("This service icon name is not allowed."));
+        }
+    }
+
+    /**
+     * @throws InvalidServicePOSTDataException
+     */
+    private function checkIsInNewTab(bool $is_in_iframe, bool $is_in_new_tab): void
+    {
+        if ($is_in_iframe === true && $is_in_new_tab === true) {
+            throw new InvalidServicePOSTDataException(
+                _("The service cannot be opened in a new tab and in an iframe simultaneously. Please choose one.")
+            );
         }
     }
 }
