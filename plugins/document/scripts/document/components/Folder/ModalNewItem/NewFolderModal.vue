@@ -45,6 +45,8 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
+import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "NewFolderModal",
@@ -98,6 +100,7 @@ export default {
         show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
+            this.addParentMetadataToDefaultItem();
             this.is_displayed = true;
             this.modal.show();
         },
@@ -119,6 +122,14 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
+            }
+        },
+        addParentMetadataToDefaultItem() {
+            const parent_metadata = getCustomMetadata(this.parent.metadata);
+
+            const formatted_metadata = transformCustomMetadataForItemCreation(parent_metadata);
+            if (formatted_metadata.length > 0) {
+                this.item.metadata = formatted_metadata;
             }
         }
     }
