@@ -115,7 +115,12 @@ describe("PermissionsUpdateModal", () => {
             nb_calls_after_first_opening_of_the_modal
         );
 
-        expect(wrapper.vm.updated_permissions).toEqual(item_to_update.permissions_for_groups);
+        const updated_permissions_per_groups = {
+            can_read: wrapper.vm.updated_permissions.can_read,
+            can_write: wrapper.vm.updated_permissions.can_write,
+            can_manage: wrapper.vm.updated_permissions.can_manage
+        };
+        expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
     });
 
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
@@ -161,7 +166,12 @@ describe("PermissionsUpdateModal", () => {
 
         wrapper.setProps({ item: item_to_update });
 
-        expect(wrapper.vm.updated_permissions).toEqual(item_to_update.permissions_for_groups);
+        const updated_permissions_per_groups = {
+            can_read: wrapper.vm.updated_permissions.can_read,
+            can_write: wrapper.vm.updated_permissions.can_write,
+            can_manage: wrapper.vm.updated_permissions.can_manage
+        };
+        expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
     });
 
     it("Send update request when form is submitted", async () => {
@@ -188,9 +198,15 @@ describe("PermissionsUpdateModal", () => {
 
         wrapper.find("form").trigger("submit.prevent");
 
+        const permissions_to_update = {
+            apply_permissions_on_children: false,
+            can_read: wrapper.vm.updated_permissions.can_read,
+            can_write: wrapper.vm.updated_permissions.can_write,
+            can_manage: wrapper.vm.updated_permissions.can_manage
+        };
         expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, [
             item_to_update,
-            item_to_update.permissions_for_groups
+            permissions_to_update
         ]);
         await wrapper.vm.$nextTick().then(() => {});
         expect(wrapper.vm.can_be_submitted).toBe(true);
@@ -211,6 +227,7 @@ describe("PermissionsUpdateModal", () => {
 
         wrapper.setData({
             updated_permissions: {
+                apply_permissions_on_children: true,
                 can_read: ["102_3"],
                 can_write: ["102_3", "138"],
                 can_manage: ["102_4"]
@@ -218,6 +235,12 @@ describe("PermissionsUpdateModal", () => {
         });
         wrapper.vm.modal.hide();
 
-        expect(wrapper.vm.updated_permissions).toEqual(item.permissions_for_groups);
+        const expected_permissions_to_update_state = {
+            apply_permissions_on_children: false,
+            can_read: item.permissions_for_groups.can_read,
+            can_write: item.permissions_for_groups.can_write,
+            can_manage: item.permissions_for_groups.can_manage
+        };
+        expect(wrapper.vm.updated_permissions).toEqual(expected_permissions_to_update_state);
     });
 });

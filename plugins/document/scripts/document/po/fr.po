@@ -58,9 +58,6 @@ msgstr ""
 msgid "A folder already exists with the same title."
 msgstr "Un dossier existe déjà avec le même titre."
 
-msgid "Access to legacy permissions update page"
-msgstr "Accéder à l'ancienne page de mise à jour des permissions"
-
 msgid "Access to legacy properties page"
 msgstr "Accéder à l'ancienne page des propriétés"
 
@@ -88,6 +85,9 @@ msgstr "Appliquer les nouvelles valeurs sur ce dossier et ses sous-dossiers"
 
 msgid "Apply new values on this folder only"
 msgstr "Appliquer les nouvelles valeurs uniquement sur ce dossier"
+
+msgid "Apply same permissions to all sub-items of this folder"
+msgstr "Appliquer les mêmes permissions pour tous les sous-éléments de ce dossier"
 
 msgid "Approval table"
 msgstr "Table d'approbation"
@@ -413,10 +413,10 @@ msgstr "Recommencer le cycle d'approbation."
 
 msgid ""
 "Set the read and write permissions of a document in the document creation "
-"and \"update properties\" modals"
+"modal"
 msgstr ""
-"Configurer les permissions de lecture et d'écriture d'un document dans les "
-"modales de création et de mise à jour des propriétés de documents"
+"Configurer les permissions de lecture et d'écriture d'un document dans la "
+"modale de création de documents"
 
 msgid ""
 "Set the values of custom document properties in the document creation and "
