@@ -27,12 +27,15 @@
     text-align: center;
 }
 
+.document-permissions-update-container {
+    padding: $tlp-spacing;
+}
+
 .document-permissions-ugroups {
     display: flex;
     justify-content: center;
-    padding: $tlp-spacing;
 
     > .tlp-form-element {
-        margin: 0 $tlp-spacing 0 0;
+        margin: 0 $tlp-spacing $tlp-spacing 0;
     }
 }

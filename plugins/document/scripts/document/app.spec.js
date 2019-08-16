@@ -140,6 +140,7 @@ import "./components/Folder/ModalNewItem/NewItemModal.spec.js";
 import "./components/Folder/ModalNewItem/NewFolderModal.spec.js";
 
 import "./components/Folder/Permissions/PermissionsUpdateModal.spec.js";
+import "./components/Folder/Permissions/PermissionsUpdateFolderSubItems.spec.js";
 import "./components/Folder/Permissions/PermissionsSelector.spec.js";
 
 import "./components/User/UserBadge.spec.js";
