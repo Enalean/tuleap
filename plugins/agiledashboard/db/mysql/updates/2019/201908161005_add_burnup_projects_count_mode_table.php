@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright Enalean (c) 2019 - Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\FormElement\Burnup;
-
-use ForgeConfig;
-use Project;
-use Tracker_Artifact;
-
-class CountElementsModeChecker
+class b201908161005_add_burnup_projects_count_mode_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {
-    /**
-     * @var ProjectsCountModeDao
-     */
-    private $projects_count_mode_dao;
-
-    public function __construct(ProjectsCountModeDao $projects_count_mode_dao)
+    public function description()
     {
-        $this->projects_count_mode_dao = $projects_count_mode_dao;
+        return "Add burnup projects in count mode table";
     }
 
-    public function burnupMustUseCountElementsMode(Project $project): bool
+    public function preUp()
     {
-        if (! ForgeConfig::get('use_burnup_count_elements')) {
-            return false;
-        }
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
 
-        return $this->projects_count_mode_dao->isBurnupInCountMode((int) $project->getID());
+    public function up()
+    {
+        $sql = "
+            CREATE TABLE plugin_agiledashboard_burnup_projects_count_mode (
+              project_id  INT(11) NOT NULL PRIMARY KEY
+            ) ENGINE=InnoDB;
+        ";
+
+        $this->db->createTable('plugin_agiledashboard_burnup_projects_count_mode', $sql);
     }
 }

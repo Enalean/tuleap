@@ -24,7 +24,7 @@ use ForgeConfig;
 use Project;
 use Tracker_Artifact;
 
-class CountElementsModeChecker
+class CountElementsModeUpdater
 {
     /**
      * @var ProjectsCountModeDao
@@ -36,12 +36,16 @@ class CountElementsModeChecker
         $this->projects_count_mode_dao = $projects_count_mode_dao;
     }
 
-    public function burnupMustUseCountElementsMode(Project $project): bool
+    public function updateBurnupMode(Project $project, bool $use_count_mode): void
     {
         if (! ForgeConfig::get('use_burnup_count_elements')) {
-            return false;
+            return;
         }
 
-        return $this->projects_count_mode_dao->isBurnupInCountMode((int) $project->getID());
+        if ($use_count_mode) {
+            $this->projects_count_mode_dao->enableBurnupCountMode((int) $project->getID());
+        } else {
+            $this->projects_count_mode_dao->disableBurnupCountMode((int) $project->getID());
+        }
     }
 }

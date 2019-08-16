@@ -129,7 +129,7 @@ class BurnupDataBuilder
         if (! $is_under_calculation) {
             $this->addEfforts($artifact, $burnup_data);
 
-            if ($this->mode_checker->burnupMustUseCountElementsMode($artifact)) {
+            if ($this->mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject())) {
                 $this->addCountElements($artifact, $burnup_data);
             }
         }

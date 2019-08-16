@@ -40,6 +40,7 @@ use Tracker_HierarchyFactory;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
@@ -175,7 +176,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $css_file_url              = $theme_include_assets->getFileURL('burnup-chart.css');
 
         return new BurnupFieldPresenter(
-            new CountElementsModeChecker(),
+            $this->getCountElementsModeChecker(),
             $burnup_representation,
             $artifact,
             $can_burnup_be_regenerated,
@@ -416,7 +417,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                 Tracker_FormElementFactory::instance(),
                 new BurnupDao()
             ),
-            new CountElementsModeChecker()
+            $this->getCountElementsModeChecker()
         );
     }
 
@@ -468,5 +469,10 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             new SemanticTimeframeDao(),
             Tracker_FormElementFactory::instance()
         );
+    }
+
+    private function getCountElementsModeChecker(): CountElementsModeChecker
+    {
+        return new CountElementsModeChecker(new ProjectsCountModeDao());
     }
 }

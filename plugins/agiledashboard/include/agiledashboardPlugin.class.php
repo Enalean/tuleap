@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
+use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDao;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheDateRetriever;
 use Tuleap\AgileDashboard\FormElement\BurnupCalculator;
@@ -227,6 +228,11 @@ class AgileDashboardPlugin extends Plugin
             $this->getConfigurationManager()->duplicate(
                 $params['group_id'],
                 $params['template_id']
+            );
+
+            (new ProjectsCountModeDao())->inheritBurnupCountMode(
+                (int) $params['template_id'],
+                (int) $params['group_id']
             );
         }
     }

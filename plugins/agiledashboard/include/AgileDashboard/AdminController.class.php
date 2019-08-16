@@ -54,6 +54,10 @@ use TrackerXmlImport;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
+use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -126,6 +130,11 @@ class AdminController extends BaseController
     /** @var AdministrationCrumbBuilder */
     private $admin_crumb_builder;
 
+    /**
+     * @var CountElementsModeChecker
+     */
+    private $count_elements_mode_checker;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -136,7 +145,8 @@ class AdminController extends BaseController
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         EventManager $event_manager,
         AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder
+        AdministrationCrumbBuilder $admin_crumb_builder,
+        CountElementsModeChecker $count_elements_mode_checker
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -151,6 +161,7 @@ class AdminController extends BaseController
         $this->event_manager                = $event_manager;
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
+        $this->count_elements_mode_checker  = $count_elements_mode_checker;
     }
 
     /**
@@ -178,7 +189,7 @@ class AdminController extends BaseController
             'admin-scrum',
             $this->getAdminScrumPresenter(
                 $this->getCurrentUser(),
-                $this->group_id
+                $this->project
             )
         );
     }
@@ -194,8 +205,9 @@ class AdminController extends BaseController
         );
     }
 
-    private function getAdminScrumPresenter(PFUser $user, $group_id)
+    private function getAdminScrumPresenter(PFUser $user, Project $project)
     {
+        $group_id                    = $project->getID();
         $can_create_planning         = true;
         $tracker_uri                 = '';
         $root_planning_name          = '';
@@ -221,6 +233,8 @@ class AdminController extends BaseController
             $scrum_activated,
             $this->config_manager->getScrumTitle($group_id),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
+            \ForgeConfig::get('use_burnup_count_elements'),
+            $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
             $this->getAdditionalContent()
@@ -420,7 +434,8 @@ class AdminController extends BaseController
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
                 new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory)
+                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
+                new CountElementsModeUpdater(new ProjectsCountModeDao())
             );
         }
 

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
 
@@ -55,7 +57,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
             mock('Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever'),
             mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder::class),
             mock(\Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder::class),
-            Mockery::mock(\Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker::class)
+            Mockery::mock(\Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker::class),
+            Mockery::mock(CountElementsModeChecker::class)
         );
 
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

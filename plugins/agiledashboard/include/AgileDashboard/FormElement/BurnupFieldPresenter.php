@@ -66,11 +66,6 @@ class BurnupFieldPresenter
      */
     public $burnup_mode;
 
-    /**
-     * @var CountElementsModeChecker
-     */
-    private $mode_checker;
-
     public function __construct(
         CountElementsModeChecker $mode_checker,
         BurnupRepresentation $burnup_representation,
@@ -90,7 +85,7 @@ class BurnupFieldPresenter
         $this->has_warning               = $warning !== "";
 
         $this->burnup_mode = self::EFFORT_MODE;
-        if ($mode_checker->burnupMustUseCountElementsMode($artifact)) {
+        if ($mode_checker->burnupMustUseCountElementsMode($artifact->getTracker()->getProject())) {
             $this->burnup_mode = self::COUNT_ELEMENTS_MODE;
         }
     }

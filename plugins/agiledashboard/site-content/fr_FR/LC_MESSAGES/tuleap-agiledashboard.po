@@ -20,6 +20,9 @@ msgstr "Kanban %s"
 msgid "%s top backlog"
 msgstr "%s planification générale"
 
+msgid "Activate count elements mode for burnup chart"
+msgstr "Activer le mode comptage d'éléments pour le burnup"
+
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
 
@@ -77,6 +80,9 @@ msgstr "Champ burnup"
 msgid "Burnup is under calculation. It will be available in few minutes."
 msgstr ""
 "Le burn-up est en cours de calcul. Il sera disponible dans quelques minutes."
+
+msgid "Charts configuration"
+msgstr "Configuration des graphiques"
 
 msgid "Define the closed status that are considered Done"
 msgstr ""
@@ -143,6 +149,9 @@ msgstr "La planning a été créé."
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
 
+msgid "Save"
+msgstr "Sauvegarder"
+
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 "Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
@@ -205,6 +214,13 @@ msgstr "Il n’y a aucun élément <br> visible"
 
 msgid "There is no item yet"
 msgstr "Il n’y a aucun élément pour l'instant"
+
+msgid ""
+"This option will display all the burnup charts in the project with elements "
+"progression instead of effort progression."
+msgstr ""
+"Cette option permet d'afficher l'ensemble des graphiques burnup du projet "
+"en montrant la progression des éléments au lieu de la progression de l'effort."
 
 msgid ""
 "This semantic will be used in the <strong>AgileDashboard</strong> service "

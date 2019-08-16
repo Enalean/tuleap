@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
@@ -80,6 +81,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
         stub($configuration_manager)->scrumIsActivatedForProject()->returns(true);
         stub($configuration_manager)->kanbanIsActivatedForProject()->returns(true);
 
+        $count_element_mode_checker = Mockery::mock(CountElementsModeChecker::class);
+
         $this->controller = new AdminController(
             $this->request,
             $this->planning_factory,
@@ -90,8 +93,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             $this->mono_milestone_checker,
             $this->event_manager,
             $service_crumb_builder,
-            $admin_crumb_builder
+            $admin_crumb_builder,
+            $count_element_mode_checker
         );
+
+        $count_element_mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
 
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
         stub($this->mono_milestone_checker)->isScrumMonoMilestoneAvailable()->returns(false);
