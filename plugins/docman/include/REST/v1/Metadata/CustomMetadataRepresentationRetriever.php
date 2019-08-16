@@ -240,7 +240,8 @@ class CustomMetadataRepresentationRetriever
             return;
         }
 
-        $errors = [];
+        $errors_required       = [];
+        $errors                = [];
 
         foreach ($project_metadata_list->getMetadataRepresentations() as $project_metadata) {
             if (! $project_metadata->is_used) {
@@ -258,10 +259,18 @@ class CustomMetadataRepresentationRetriever
             if ($key === false) {
                 $errors[] = $project_metadata->name;
             }
+
+            if ($project_metadata->is_required && empty($common_representation[$key]->list_value) && empty($common_representation[$key]->value)) {
+                $errors_required[] = $project_metadata->name;
+            }
         }
 
         if (count($errors) > 0) {
             throw CustomMetadataException::missingKeysForCreation($errors);
+        }
+
+        if (count($errors_required) > 0) {
+            throw CustomMetadataException::missingRequiredKeysForCreation($errors_required);
         }
     }
 }

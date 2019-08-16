@@ -118,6 +118,114 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
     }
 
+    public function testItThrowsAnExceptionWhenTextRequiredMetadataIsEmptyInRepresentation(): void
+    {
+        $item = \Mockery::mock(\Docman_Item::class);
+
+        $existing_metadata             = new POSTCustomMetadataRepresentation();
+        $existing_metadata->short_name = "field_text_1";
+        $existing_metadata->value      = "";
+        $existing_metadata->list_value = null;
+
+        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation->build(
+            "field_text_1",
+            'field_text_1',
+            'description',
+            PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+            false,
+            false,
+            true,
+            null
+        );
+
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
+            "field_list_1"
+        );
+        $this->factory->shouldReceive('appendItemMetadataList')->once();
+
+        $this->collection_builder->shouldReceive('build')->andReturn(
+            CustomMetadataCollection::build([$project_field_representation])
+        );
+
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_text_1');
+
+        $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
+    }
+
+    public function testItThrowsAnExceptionWhenListRequiredMetadataIsEmptyInRepresentation(): void
+    {
+        $item = \Mockery::mock(\Docman_Item::class);
+
+        $existing_metadata             = new POSTCustomMetadataRepresentation();
+        $existing_metadata->short_name = "field_list_1";
+        $existing_metadata->value      = null;
+        $existing_metadata->list_value = "";
+
+        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation->build(
+            "field_list_1",
+            'field_list_1',
+            'description',
+            PLUGIN_DOCMAN_METADATA_TYPE_LIST,
+            false,
+            false,
+            true,
+            null
+        );
+
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
+            "field_list_1"
+        );
+        $this->factory->shouldReceive('appendItemMetadataList')->once();
+
+        $this->collection_builder->shouldReceive('build')->andReturn(
+            CustomMetadataCollection::build([$project_field_representation])
+        );
+
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_list_1');
+
+        $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
+    }
+
+    public function testItThrowsAnExceptionRequiredMetadataIsNullInRepresentation(): void
+    {
+        $item = \Mockery::mock(\Docman_Item::class);
+
+        $existing_metadata             = new POSTCustomMetadataRepresentation();
+        $existing_metadata->short_name = "field_text_1";
+        $existing_metadata->value      = null;
+        $existing_metadata->list_value = null;
+
+        $project_field_representation = new DocmanMetadataRepresentation();
+        $project_field_representation->build(
+            "field_text_1",
+            'field_text_1',
+            'description',
+            PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+            false,
+            false,
+            true,
+            null
+        );
+
+        $this->factory->shouldReceive('getMetadataFromLabel')->withArgs([$existing_metadata->short_name])->andReturn(
+            "field_list_1"
+        );
+        $this->factory->shouldReceive('appendItemMetadataList')->once();
+
+        $this->collection_builder->shouldReceive('build')->andReturn(
+            CustomMetadataCollection::build([$project_field_representation])
+        );
+
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_text_1');
+
+        $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
+    }
+
     public function testItDoesNotThrowAnExceptionWhenProjectMetadataAreUnUsed(): void
     {
         $item = \Mockery::mock(\Docman_Item::class);
