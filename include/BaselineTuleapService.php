@@ -25,8 +25,8 @@ namespace Tuleap\Baseline;
 
 class BaselineTuleapService extends \Service
 {
-    public function getIcon(): string
+    public function getIconName(): string
     {
-        return $this->getFontAwesomeIcon('fa-tlp-baseline');
+        return 'fa-tlp-baseline';
     }
 }
