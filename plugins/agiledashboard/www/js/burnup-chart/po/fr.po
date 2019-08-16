@@ -13,8 +13,19 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #, javascript-format
+msgid "%s - Closed elements"
+msgstr "%s - Éléments fermés"
+
+#, javascript-format
 msgid "%s - Team effort"
 msgstr "%s - Effort de l'équipe"
+
+msgid "Closed"
+msgstr "Fermés"
+
+#, javascript-format
+msgid "Closed elements: %s"
+msgstr "Éléments fermés : %s"
 
 msgid "Ideal burnup"
 msgstr "Burnup idéal"
@@ -29,12 +40,19 @@ msgstr "Effort de l'équipe"
 msgid "Team effort: %s"
 msgstr "Effort de l'équipe: %s"
 
+msgid "Total"
+msgstr "Total"
+
 msgid "Total effort"
 msgstr "Effort total"
 
 #, javascript-format
 msgid "Total effort: %s"
 msgstr "Effort total : %s"
+
+#, javascript-format
+msgid "Total elements: %s"
+msgstr "Nombre total d'éléments : %s"
 
 msgid "ddd DD"
 msgstr "ddd DD"

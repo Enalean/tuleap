@@ -37,7 +37,13 @@ import { getLastDayData, getDisplayableData } from "./chart-data-service.js";
 
 export { createBurnupChart };
 
-function createBurnupChart({ chart_container, chart_props, chart_legends, generic_burnup_data }) {
+function createBurnupChart({
+    chart_container,
+    chart_props,
+    chart_legends,
+    generic_burnup_data,
+    mode
+}) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom: 25,
         tooltip_padding_width: 15,
@@ -88,14 +94,14 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, generi
         return;
     }
 
-    drawBurnupChart();
+    drawBurnupChart(mode);
 
-    function drawBurnupChart() {
+    function drawBurnupChart(mode) {
         addIdealLine();
         drawDataColumns();
         addCurve("total");
         addCurve("progression");
-        setInteraction();
+        setInteraction(mode);
     }
 
     function drawDataColumns() {
@@ -140,11 +146,11 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, generi
         );
     }
 
-    function setInteraction() {
+    function setInteraction(mode) {
         svg_burnup.selectAll(".chart-datum-column").each(function() {
             const datum_column = select(this);
             datum_column.on("mouseenter", () => {
-                highlightColumn(datum_column);
+                highlightColumn(datum_column, mode);
             });
 
             datum_column.on("mouseleave", () => {
@@ -153,24 +159,30 @@ function createBurnupChart({ chart_container, chart_props, chart_legends, generi
         });
     }
 
-    function highlightColumn(target_column) {
+    function highlightColumn(target_column, mode) {
         ceaseHighlight();
 
         target_column.selectAll("circle").classed("highlighted", true);
 
         target_column.select(".chart-column").classed("highlighted", true);
 
+        let progression_label = gettext_provider.gettext("Team effort: %s");
+        if (mode === "count") {
+            progression_label = gettext_provider.gettext("Closed elements: %s");
+        }
+
+        let total_label = gettext_provider.gettext("Total effort: %s");
+        if (mode === "count") {
+            total_label = gettext_provider.gettext("Total elements: %s");
+        }
+
         tooltip_factory
             .addTooltip(target_column)
             .addTextLine(({ date }) =>
                 moment(date, moment.ISO_8601).format(properties.tooltip_date_format)
             )
-            .addTextLine(({ progression }) =>
-                sprintf(gettext_provider.gettext("Team effort: %s"), progression)
-            )
-            .addTextLine(({ total }) =>
-                sprintf(gettext_provider.gettext("Total effort: %s"), total)
-            );
+            .addTextLine(({ progression }) => sprintf(progression_label, progression))
+            .addTextLine(({ total }) => sprintf(total_label, total));
     }
 
     function ceaseHighlight() {
