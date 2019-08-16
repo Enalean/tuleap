@@ -22,21 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Permissions;
 
-class DocmanItemPermissionsForGroupsPUTRepresentation
+final class DocmanFolderPermissionsForGroupsPUTRepresentation extends DocmanItemPermissionsForGroupsPUTRepresentation
 {
     /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate}
-     * @psalm-var \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate[]
+     * @var bool {@required false}
      */
-    public $can_read = [];
-    /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate}
-     * @psalm-var \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate[]
-     */
-    public $can_write = [];
-    /**
-     * @var array {@type \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate}
-     * @psalm-var \Tuleap\Docman\REST\v1\Permissions\MinimalUserGroupRepresentationForUpdate[]
-     */
-    public $can_manage = [];
+    public $apply_permissions_on_children = false;
 }

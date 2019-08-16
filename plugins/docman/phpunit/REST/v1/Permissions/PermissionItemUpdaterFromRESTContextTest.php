@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1\Permissions;
 
+use Docman_Folder;
 use Docman_Item;
 use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
@@ -137,6 +138,48 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
+    public function testPermissionsUpdateOfAFolderIsNotAppliedOnChildrenWhenNotRequested() : void
+    {
+        $folder = Mockery::mock(Docman_Folder::class);
+        $folder->shouldReceive('getId')->andReturn(18);
+        $folder->shouldReceive('getGroupId')->andReturn(102);
+        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(true);
+        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([]);
+
+        $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
+        $representation->apply_permissions_on_children = false;
+
+        $this->permissions_item_updater->shouldReceive('updateItemPermissions')->once();
+
+        $this->permissions_item_updater_rest->updateFolderPermissions(
+            $folder,
+            Mockery::mock(PFUser::class),
+            $representation
+        );
+    }
+
+    public function testPermissionsUpdateOfAFolderIsAppliedOnChildrenWhenRequested() : void
+    {
+        $folder = Mockery::mock(Docman_Folder::class);
+        $folder->shouldReceive('getId')->andReturn(18);
+        $folder->shouldReceive('getGroupId')->andReturn(102);
+        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(true);
+        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([]);
+
+        $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
+        $representation->apply_permissions_on_children = true;
+
+        $this->permissions_item_updater->shouldReceive('updateFolderAndChildrenPermissions')->once();
+
+        $this->permissions_item_updater_rest->updateFolderPermissions(
+            $folder,
+            Mockery::mock(PFUser::class),
+            $representation
+        );
+    }
+
     public function testUpdateIsRejectedWhenAnUserGroupDoesNotExist() : void
     {
         $item                          = Mockery::mock(Docman_Item::class);
@@ -232,6 +275,38 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
             $item,
             Mockery::mock(PFUser::class),
             $representation
+        );
+    }
+
+    public function testUpdateItemPermissionsIsRejectedWhenTheUserCanNotManageIt() : void
+    {
+        $item = Mockery::mock(Docman_Item::class);
+        $item->shouldReceive('getId')->andReturn(77);
+
+        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->permissions_item_updater_rest->updateItemPermissions(
+            $item,
+            Mockery::mock(PFUser::class),
+            new DocmanItemPermissionsForGroupsPUTRepresentation()
+        );
+    }
+
+    public function testUpdateFolderPermissionsIsRejectedWhenTheUserCanNotManageIt() : void
+    {
+        $folder = Mockery::mock(Docman_Folder::class);
+        $folder->shouldReceive('getId')->andReturn(77);
+
+        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->permissions_item_updater_rest->updateFolderPermissions(
+            $folder,
+            Mockery::mock(PFUser::class),
+            new DocmanFolderPermissionsForGroupsPUTRepresentation()
         );
     }
 
