@@ -164,7 +164,7 @@ describe("PermissionsUpdateModal", () => {
         expect(wrapper.vm.updated_permissions).toEqual(item_to_update.permissions_for_groups);
     });
 
-    it("Send update request when form is submitted", () => {
+    it("Send update request when form is submitted", async () => {
         const item_to_update = {
             id: 104,
             title: "My item",
@@ -192,6 +192,8 @@ describe("PermissionsUpdateModal", () => {
             item_to_update,
             item_to_update.permissions_for_groups
         ]);
+        await wrapper.vm.$nextTick().then(() => {});
+        expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 
     it("Reset selected user groups when the modal is closed", () => {
