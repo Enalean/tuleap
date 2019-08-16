@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,8 +86,8 @@ class GateKeeper {
         if (! ForgeConfig::get('sys_rest_api_over_http')) {
             $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         }
-        $host   = isset($parsed_url['host'])   ? idn_to_ascii($parsed_url['host']) : '';
-        $port   = isset($parsed_url['port'])   ? ':' . $parsed_url['port'] : '';
+        $host = isset($parsed_url['host']) ? idn_to_ascii($parsed_url['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) : '';
+        $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
 
         return "$scheme$host$port";
     }
