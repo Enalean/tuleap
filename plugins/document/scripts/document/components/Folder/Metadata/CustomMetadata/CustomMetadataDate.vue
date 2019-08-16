@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element tlp-form-element-disabled" v-if="currentlyUpdatedItemMetadata.type === 'date'" data-test="document-custom-metadata-date">
+    <div class="tlp-form-element" v-if="currentlyUpdatedItemMetadata.type === 'date'" data-test="document-custom-metadata-date">
         <label class="tlp-label"
                v-bind:for="`document-${currentlyUpdatedItemMetadata.short_name}`"
         >
@@ -40,7 +40,6 @@
                 data-test="document-date-input"
                 v-bind:required="currentlyUpdatedItemMetadata.is_required"
                 v-on:click="currentlyUpdatedItemMetadata.value = $event.target.value"
-                disabled
             >
         </div>
     </div>

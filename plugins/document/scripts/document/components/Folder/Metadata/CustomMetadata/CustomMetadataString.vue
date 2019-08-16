@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element tlp-form-element-disabled" v-if="currentlyUpdatedItemMetadata.type === 'string'" data-test="document-custom-metadata-string">
+    <div class="tlp-form-element" v-if="currentlyUpdatedItemMetadata.type === 'string'" data-test="document-custom-metadata-string">
         <label class="tlp-label"
                v-bind:for="`document-${currentlyUpdatedItemMetadata.short_name}`"
         >
@@ -32,7 +32,6 @@
             v-bind:id="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
             v-bind:required="currentlyUpdatedItemMetadata.is_required"
             v-model="currentlyUpdatedItemMetadata.value"
-            disabled
         >
     </div>
 </template>

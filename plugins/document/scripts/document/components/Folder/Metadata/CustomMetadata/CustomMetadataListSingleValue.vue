@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element tlp-form-element-disabled"
+    <div class="tlp-form-element"
          v-if="currentlyUpdatedItemMetadata.type === 'list' && ! currentlyUpdatedItemMetadata.is_multiple_value_allowed"
          data-test="document-custom-metadata-list"
     >
@@ -38,7 +38,6 @@
                     v-bind:value="possible_value.id"
                     v-bind:selected="possible_value.id === currentlyUpdatedItemMetadata.value"
                     v-bind:data-test="`document-custom-list-value-${possible_value.id}`"
-                    disabled
             >
                 {{ possible_value.value }}
             </option>
