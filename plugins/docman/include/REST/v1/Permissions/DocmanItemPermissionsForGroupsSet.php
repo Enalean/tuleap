@@ -22,10 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Permissions;
 
-final class DocmanFolderPermissionsForGroupsPUTRepresentation extends DocmanItemPermissionsForGroupsSetRepresentation
+final class DocmanItemPermissionsForGroupsSet
 {
     /**
-     * @var bool {@required false}
+     * @var array<int,int>
      */
-    public $apply_permissions_on_children = false;
+    private $permissions_per_ugroup_id_and_type;
+
+    /**
+     * @param array<int,int> $permissions_per_ugroup_id_and_type
+     */
+    public function __construct(array $permissions_per_ugroup_id_and_type)
+    {
+        $this->permissions_per_ugroup_id_and_type = $permissions_per_ugroup_id_and_type;
+    }
+
+    public function toPermissionsPerUGroupIDAndTypeArray() : array
+    {
+        return $this->permissions_per_ugroup_id_and_type;
+    }
 }

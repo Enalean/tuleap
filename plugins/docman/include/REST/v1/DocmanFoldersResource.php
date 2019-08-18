@@ -66,7 +66,8 @@ use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\REST\v1\Permissions\DocmanFolderPermissionsForGroupsPUTRepresentation;
-use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsPUTRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
@@ -843,9 +844,11 @@ class DocmanFoldersResource extends AuthenticatedResource
                 $this->event_manager
             ),
             $docman_permission_manager,
-            $ugroup_manager,
-            new UserGroupRetriever($ugroup_manager),
-            ProjectManager::instance()
+            new DocmanItemPermissionsForGroupsSetFactory(
+                $ugroup_manager,
+                new UserGroupRetriever($ugroup_manager),
+                ProjectManager::instance()
+            )
         );
         $permissions_rest_item_updater->updateFolderPermissions($item, $user, $representation);
     }

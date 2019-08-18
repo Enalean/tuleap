@@ -42,30 +42,18 @@ final class PermissionItemUpdaterFromRESTContext
      */
     private $permissions_manager;
     /**
-     * @var UGroupManager
+     * @var DocmanItemPermissionsForGroupsSetFactory
      */
-    private $ugroup_manager;
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var UserGroupRetriever
-     */
-    private $ugroup_retriever;
+    private $permissions_for_groups_set_factory;
 
     public function __construct(
         PermissionItemUpdater $permission_item_updater,
         Docman_PermissionsManager $permissions_manager,
-        UGroupManager $ugroup_manager,
-        UserGroupRetriever $ugroup_retriever,
-        ProjectManager $project_manager
+        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory
     ) {
-        $this->permission_item_updater = $permission_item_updater;
-        $this->permissions_manager     = $permissions_manager;
-        $this->ugroup_manager          = $ugroup_manager;
-        $this->ugroup_retriever        = $ugroup_retriever;
-        $this->project_manager         = $project_manager;
+        $this->permission_item_updater            = $permission_item_updater;
+        $this->permissions_manager                = $permissions_manager;
+        $this->permissions_for_groups_set_factory = $permissions_for_groups_set_factory;
     }
 
     /**
@@ -74,7 +62,7 @@ final class PermissionItemUpdaterFromRESTContext
     public function updateItemPermissions(
         Docman_Item $item,
         PFUser $user,
-        DocmanItemPermissionsForGroupsPUTRepresentation $representation
+        DocmanItemPermissionsForGroupsSetRepresentation $representation
     ) : void {
         if (! $this->permissions_manager->userCanManage($user, $item->getId())) {
             throw new RestException(403);
@@ -83,7 +71,7 @@ final class PermissionItemUpdaterFromRESTContext
         $this->permission_item_updater->updateItemPermissions(
             $item,
             $user,
-            $this->getPermissionsPerUGroupIDAndType($item, $representation)
+            $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation)->toPermissionsPerUGroupIDAndTypeArray()
         );
     }
 
@@ -103,108 +91,14 @@ final class PermissionItemUpdaterFromRESTContext
             $this->permission_item_updater->updateFolderAndChildrenPermissions(
                 $folder,
                 $user,
-                $this->getPermissionsPerUGroupIDAndType($folder, $representation)
+                $this->permissions_for_groups_set_factory->fromRepresentation($folder, $representation)->toPermissionsPerUGroupIDAndTypeArray()
             );
         } else {
             $this->permission_item_updater->updateItemPermissions(
                 $folder,
                 $user,
-                $this->getPermissionsPerUGroupIDAndType($folder, $representation)
+                $this->permissions_for_groups_set_factory->fromRepresentation($folder, $representation)->toPermissionsPerUGroupIDAndTypeArray()
             );
         }
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getPermissionsPerUGroupIDAndType(
-        Docman_Item $item,
-        DocmanItemPermissionsForGroupsPUTRepresentation $representation
-    ) : array {
-        return array_replace(
-            $this->getNonePermissionsForAllUGroupID($item),
-            $this->getPermissionsPerUGroupID($item, $representation->can_read, PermissionItemUpdater::PERMISSION_DEFINITION_READ),
-            $this->getPermissionsPerUGroupID($item, $representation->can_write, PermissionItemUpdater::PERMISSION_DEFINITION_WRITE),
-            $this->getPermissionsPerUGroupID($item, $representation->can_manage, PermissionItemUpdater::PERMISSION_DEFINITION_MANAGE),
-        );
-    }
-
-    private function getNonePermissionsForAllUGroupID(Docman_Item $item) : array
-    {
-        $project = $this->project_manager->getProject($item->getGroupId());
-        $ugroups = $this->ugroup_manager->getUGroups($project);
-
-        $all_ugroups_id_with_none_permissions = [];
-        foreach ($ugroups as $ugroup) {
-            $all_ugroups_id_with_none_permissions[$ugroup->getId()] = PermissionItemUpdater::PERMISSION_DEFINITION_NONE;
-        }
-        return $all_ugroups_id_with_none_permissions;
-    }
-
-    /**
-     * @param MinimalUserGroupRepresentationForUpdate[] $user_group_representations
-     * @throws RestException
-     */
-    private function getPermissionsPerUGroupID(
-        Docman_Item $item,
-        array $user_group_representations,
-        int $permission_type
-    ) : array {
-        $permissions_per_ugroup_id = [];
-        $user_groups               = $this->getUserGroups($item, $user_group_representations);
-        foreach ($user_groups as $user_group) {
-            $permissions_per_ugroup_id[$user_group->getId()] = $permission_type;
-        }
-        return $permissions_per_ugroup_id;
-    }
-
-    /**
-     * @param MinimalUserGroupRepresentationForUpdate[] $user_group_representations
-     * @return ProjectUGroup[]
-     * @throws RestException
-     */
-    private function getUserGroups(Docman_Item $item, array $user_group_representations) : array
-    {
-        $user_groups = [];
-        foreach ($user_group_representations as $user_group_representation) {
-            $user_groups[] = $this->getUserGroup($item, $user_group_representation);
-        }
-        return $user_groups;
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function getUserGroup(
-        Docman_Item $item,
-        MinimalUserGroupRepresentationForUpdate $user_group_representation
-    ) : ProjectUGroup {
-        $identifier      = $user_group_representation->id;
-        $item_project_id = $item->getGroupId();
-
-        try {
-            $ugroup = $this->ugroup_retriever->getExistingUserGroup($identifier);
-        } catch (RestException $ex) {
-            if ($ex->getCode() === 404) {
-                throw $this->getExceptionUserGroupNoFoundInProject($identifier, $item_project_id);
-            }
-            throw $ex;
-        }
-
-        $item_project_id   = $item->getGroupId();
-        $ugroup_project_id = $ugroup->getProjectId();
-        if ($ugroup_project_id !== null && (int) $ugroup_project_id !== $item_project_id) {
-            throw $this->getExceptionUserGroupNoFoundInProject($identifier, $item_project_id);
-        }
-
-        return $ugroup;
-    }
-
-    private function getExceptionUserGroupNoFoundInProject(string $ugroup_identifier, int $project_id) : RestException
-    {
-        return new RestException(
-            400,
-            "No user group exist for the identifier $ugroup_identifier in project #$project_id"
-        );
     }
 }
