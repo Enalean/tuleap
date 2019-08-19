@@ -20,6 +20,7 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\ForumML;
@@ -104,7 +105,11 @@ class ForumMLPlugin extends Plugin {
 
     function cssFile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/forumml/themes',
+                '/assets/forumml/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />'."\n";
         }
     }
 

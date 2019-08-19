@@ -24,8 +24,8 @@
 /* {{{ ForumML */
 th.forumml {
     background-color: #cdcdc1;
-    text-align: left;
     font-size: medium;
+    text-align: left;
 }
 
 .subject {
@@ -37,11 +37,11 @@ th.forumml {
 }
 
 blockquote.grep {
-    color: #848696;
     margin: 0;
     margin-left: 1em;
     padding: 0;
     border: 0;
+    color: #848696;
 }
 
 font.headerlabel {
@@ -49,21 +49,21 @@ font.headerlabel {
 }
 
 font.headerlabelalt {
-    color: #8a604a
+    color: #8a604a;
 }
 
 .plugin_forumml_message {
-    border: 2px solid #cdcdc1;
     margin-bottom: 1em;
+    border: 2px solid #cdcdc1;
 }
 
 .plugin_forumml_message_header {
-    color: #999;
+    color: #999999;
 }
 
 .plugin_forumml_message_header_subject {
-    float: right;
     padding-right: 1em;
+    float: right;
 }
 
 .plugin_forumml_message_header_cc,
@@ -72,10 +72,10 @@ font.headerlabelalt {
 }
 
 .plugin_forumml_message_header_from {
-    white-space: nowrap;
+    color: #666666;
     font-size: 1.2em;
     font-weight: bold;
-    color: #666;
+    white-space: nowrap;
 }
 
 .plugin_forumml_toggle_font {
@@ -83,12 +83,12 @@ font.headerlabelalt {
 }
 
 .plugin_forumml_message_content_pre {
-    padding: 0.5em;
-    font-family: "Courier New", courier, monospace;
+    padding: .5em;
+    font-family: 'Courier New', courier, monospace;
 }
 
 .plugin_forumml_message_content_std {
-    padding: 0.5em;
+    padding: .5em;
 }
 
 .plugin_forumml_message_footer {
@@ -99,10 +99,11 @@ font.headerlabelalt {
     padding-left: 1em;
 }
 
-.plugin_forumml_message_content_std blockquote, .plugin_forumml_message_content_pre blockquote {
-    border-left: 1px solid blue;
+.plugin_forumml_message_content_std blockquote,
+ .plugin_forumml_message_content_pre blockquote {
+    margin-left: .5em;
     padding-left: 1em;
-    margin-left: 0.5em;
+    border-left: 1px solid blue;
 }
 
 .plugin_forumml_message_content_std blockquote blockquote {
@@ -118,7 +119,7 @@ font.headerlabelalt {
 }
 
 .plugin_forumml_message_content_std blockquote blockquote blockquote blockquote blockquote {
-    border-color: #8A2BE2;
+    border-color: #8a2be2;
 }
 
 .plugin_forumml_message_content_pre blockquote blockquote {
@@ -134,7 +135,7 @@ font.headerlabelalt {
 }
 
 .plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote blockquote {
-    border-color: #8A2BE2;
+    border-color: #8a2be2;
 }
 
 /* }}} */

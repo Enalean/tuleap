@@ -557,6 +557,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1154,6 +1155,7 @@ fi
 %files plugin-forumml
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/forumml
+%{APP_DIR}/src/www/assets/forumml
 %attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 
