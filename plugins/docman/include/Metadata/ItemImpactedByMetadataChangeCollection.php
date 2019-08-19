@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Metadata;
 
+use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataFolderRepresentation;
 
 class ItemImpactedByMetadataChangeCollection
@@ -50,10 +51,27 @@ class ItemImpactedByMetadataChangeCollection
         return new self($items);
     }
 
-    public static function buildFromRest(PUTMetadataFolderRepresentation $representation): self
-    {
+    /**
+     * @param PUTMetadataFolderRepresentation $representation
+     * @param MetadataToUpdate[]              $metadata_to_update
+     *
+     * @return ItemImpactedByMetadataChangeCollection
+     */
+    public static function buildFromRest(
+        PUTMetadataFolderRepresentation $representation,
+        array $metadata_to_update,
+        string $recursion_option
+    ): self {
         $items = [];
-        $items['status'] = $representation->status->value;
+
+        if ($representation->status->recursion === $recursion_option) {
+            $items['status'] = $representation->status->value;
+        }
+        foreach ($metadata_to_update as $metadata) {
+            if ($metadata->getRecursion() === $recursion_option) {
+                $items[$metadata->getMetadata()->getLabel()] = $metadata->getValue();
+            }
+        }
 
         return new self($items);
     }
@@ -64,6 +82,11 @@ class ItemImpactedByMetadataChangeCollection
     public function getFieldsToUpdate(): array
     {
         return array_keys($this->items_to_update);
+    }
+
+    public function getTotalElements(): int
+    {
+        return count($this->items_to_update);
     }
 
     /**

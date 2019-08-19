@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-class PUTMetadataFolderRepresentation extends PUTMetadataCommonRepresentation
+class PUTCustomMetadataRepresentation extends POSTCustomMetadataRepresentation
 {
     /**
-     * @var PUTRecursiveStatusRepresentation {@type \Tuleap\Docman\REST\v1\Metadata\PUTRecursiveStatusRepresentation}
-     *      {@from body} {@required true}
+     * @var string recursive option {@from body} {@required true} {@choice none,folders,all_items}
      */
-    public $status;
-    /**
-     * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation}
-     */
-    public $metadata;
+    public $recursion;
 }

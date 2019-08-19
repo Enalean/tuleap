@@ -204,7 +204,8 @@ final class MetadataUpdatorTest extends TestCase
 
         $metadata_to_update_representation = MetadataToUpdate::buildMetadataRepresentation(
             $project_configured_metadata,
-            $custom_metadata_representation->value
+            $custom_metadata_representation->value,
+            PUTRecursiveStatusRepresentation::RECURSION_ALL_ITEMS
         );
         $this->representation_retriever->shouldReceive('checkAndBuildMetadataToUpdate')->once()->andReturn(
             [$metadata_to_update_representation]
@@ -499,6 +500,8 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
+        $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
+
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
 
@@ -536,6 +539,8 @@ final class MetadataUpdatorTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
 
+        $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
+
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }
 
@@ -570,6 +575,8 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(\Mockery::mock(\Docman_Folder::class));
         $this->document_on_going_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
+
+        $this->representation_retriever->shouldReceive('checkAndBuildFolderMetadataToUpdate')->once()->andReturn([]);
 
         $this->updator->updateFolderMetadata($representation, $item, $project, $user);
     }

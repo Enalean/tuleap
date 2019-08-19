@@ -33,6 +33,7 @@ use Tuleap\Docman\REST\v1\Metadata\ProjectConfiguredMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToUpdate;
 use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation;
 
 class CustomMetadataRepresentationRetrieverTest extends TestCase
 {
@@ -1032,10 +1033,11 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = \Mockery::mock(\Docman_Item::class);
 
-        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata             = new PUTCustomMetadataRepresentation();
         $metadata->short_name = "field_text_1";
         $metadata->value      = "my value";
         $metadata->list_value = null;
+        $metadata->recursion  = "none";
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);
@@ -1048,10 +1050,11 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation(
             $project_configured_metadata,
-            $metadata->value
+            $metadata->value,
+            $metadata->recursion
         );
 
-        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
+        $formatted_representation = $this->checker->checkAndBuildFolderMetadataToUpdate([$metadata]);
         $this->assertEquals($expected_representation, $formatted_representation);
     }
 
@@ -1059,10 +1062,11 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = \Mockery::mock(\Docman_Item::class);
 
-        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata             = new PUTCustomMetadataRepresentation();
         $metadata->short_name = "field_list_1";
         $metadata->value      = 1;
         $metadata->list_value = null;
+        $metadata->recursion  = "none";
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);
@@ -1076,7 +1080,8 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation(
             $project_configured_metadata,
-            $metadata->value
+            $metadata->value,
+            $metadata->recursion
         );
 
         $value     = ['value_id' => 1, 'name' => 'value'];
@@ -1090,7 +1095,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
 
-        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
+        $formatted_representation = $this->checker->checkAndBuildFolderMetadataToUpdate([$metadata]);
         $this->assertEquals($formatted_representation, $expected_representation);
     }
 
@@ -1098,10 +1103,11 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
     {
         $item = \Mockery::mock(\Docman_Item::class);
 
-        $metadata             = new POSTCustomMetadataRepresentation();
+        $metadata             = new PUTCustomMetadataRepresentation();
         $metadata->short_name = "field_list_1";
         $metadata->value      = null;
         $metadata->list_value = [101, 102];
+        $metadata->recursion  = "none";
 
         $project_configured_metadata = \Mockery::mock(Docman_Metadata::class);
         $project_configured_metadata->shouldReceive('getId')->andReturn(1);
@@ -1115,7 +1121,8 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $expected_representation[] = MetadataToUpdate::buildMetadataRepresentation(
             $project_configured_metadata,
-            $metadata->list_value
+            $metadata->list_value,
+            $metadata->recursion
         );
 
         $value     = ['value_id' => 101, 'name' => 'value'];
@@ -1129,7 +1136,7 @@ class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->shouldReceive('build')->withArgs([1, true])->andReturn([$element, $element_two]);
 
-        $formatted_representation = $this->checker->checkAndBuildMetadataToUpdate([$metadata]);
+        $formatted_representation = $this->checker->checkAndBuildFolderMetadataToUpdate([$metadata]);
         $this->assertEquals($formatted_representation, $expected_representation);
     }
 }

@@ -312,6 +312,106 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    /**
+     * @depends testGetRootId
+     * @depends testGetMetadataForProject
+     */
+    public function testFolderCanManipulateMetadata(int $root_id, array $project_metadata): void
+    {
+        $text_metadata = $this->findMetadataByName($project_metadata, "text metadata");
+        $list_metadata = $this->findMetadataByName($project_metadata, "list metadata");
+        $other_list_metadata = $this->findMetadataByName($project_metadata, "other list metadata");
+
+        $query = json_encode(
+            [
+                'title'    => 'new folder'
+            ]
+        );
+
+        $folder_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/folders', null, $query)
+        );
+        $this->assertEquals(201, $folder_response->getStatusCode());
+        $created_document_id = $folder_response->json()['id'];
+
+        $query = json_encode(
+            [
+                'title'    => 'an empty document'
+            ]
+        );
+
+        $empty_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $created_document_id . '/empties', null, $query)
+        );
+        $this->assertEquals(201, $empty_response->getStatusCode());
+        $empty_id = $folder_response->json()['id'];
+
+        $updated_query = json_encode(
+            [
+                'title'    => 'folder with custom metadata',
+                'owner_id' => 101,
+                'status'   => [
+                    'value' => 'none',
+                    'recursion' => 'none'
+                ],
+                'metadata' => [
+                    [
+                        'short_name' => $text_metadata['short_name'],
+                        'value'      => 'updated value',
+                        'recursion' => 'all_items'
+                    ],
+                    [
+                        'short_name' => $list_metadata['short_name'],
+                        'value'      => "",
+                        'recursion' => 'none'
+                    ],
+                    [
+                        'short_name' => $other_list_metadata['short_name'],
+                        'list_value' => [],
+                        'recursion' => 'none'
+                    ]
+                ]
+            ]
+        );
+
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->put('docman_folders/' . $created_document_id . '/metadata', null, $updated_query)
+        );
+        $this->assertEquals(200, $response2->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $created_document_id),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $folder_content  = $response->json();
+        $folder_content = $folder_content['metadata'];
+
+        $folder_text_metadata       = $this->findMetadataByName($folder_content, "text metadata");
+        $this->assertEquals('updated value', $folder_text_metadata['value']);
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $empty_id),
+            DocmanDataBuilder::ADMIN_USER_NAME
+        );
+
+        $empty_content  = $response->json();
+        $empty_content = $empty_content['metadata'];
+
+        $empty_text_metadata       = $this->findMetadataByName($empty_content, "text metadata");
+        $this->assertEquals('updated value', $empty_text_metadata['value']);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_folders/' . $created_document_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testOptionsProjectMetadata(): void
     {
         $response = $this->getResponse(

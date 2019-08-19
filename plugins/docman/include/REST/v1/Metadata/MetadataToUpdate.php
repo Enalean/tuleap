@@ -32,16 +32,21 @@ class MetadataToUpdate
      * @var array | string
      */
     private $value;
+    /**
+     * @var string
+     */
+    private $recursion;
 
-    private function __construct(\Docman_Metadata $metadata, $value)
+    private function __construct(\Docman_Metadata $metadata, $value, string $recursion)
     {
-        $this->metadata = $metadata;
-        $this->value    = $value;
+        $this->metadata  = $metadata;
+        $this->value     = $value;
+        $this->recursion = $recursion;
     }
 
-    public static function buildMetadataRepresentation(\Docman_Metadata $metadata, $value): self
+    public static function buildMetadataRepresentation(\Docman_Metadata $metadata, $value, string $recursion): self
     {
-        return new self($metadata, $value);
+        return new self($metadata, $value, $recursion);
     }
 
     /**
@@ -58,5 +63,13 @@ class MetadataToUpdate
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecursion(): string
+    {
+        return $this->recursion;
     }
 }
