@@ -52,7 +52,7 @@ class ServicePOSTDataBuilder
         $description       = $request->getValidated('description', 'string', '');
         $rank              = $request->getValidated('rank', 'int', 500);
         $is_active         = $request->getValidated('is_active', 'uint', 0);
-        $is_used           = $request->getValidated('is_used', 'uint', false);
+        $is_used           = $this->getIsUsed($request, $short_name);
         $is_in_iframe      = $request->get('is_in_iframe') ? true : false;
         $is_in_new_tab     = $request->get('is_in_new_tab') ? true : false;
         $is_system_service = $this->isSystemService($request, $short_name);
@@ -290,5 +290,14 @@ class ServicePOSTDataBuilder
                 _("The service cannot be opened in a new tab and in an iframe simultaneously. Please choose one.")
             );
         }
+    }
+
+    private function getIsUsed(\HTTPRequest $request, string $short_name): bool
+    {
+        if ($short_name === 'admin') {
+            return true;
+        }
+
+        return (bool) $request->getValidated('is_used', 'uint', false);
     }
 }

@@ -51,6 +51,13 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $this->service_postdata_builder = new ServicePOSTDataBuilder(
             $this->event_manager
         );
+
+        $GLOBALS['sys_default_domain'] = 'whatever';
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['sys_default_domain']);
     }
 
     public function testBuildFromServiceThrowsWhenTemplateProjectAndNoShortname(): void
@@ -262,6 +269,62 @@ final class ServicePOSTDataBuilderTest extends TestCase
         $post_data = $this->service_postdata_builder->buildFromService($service, false);
 
         $this->assertSame($post_data->getIconName(), 'fa-rss');
+    }
+
+    public function testBuildFromRequestForceAdminServiceToBeUsed(): void
+    {
+        $project  = M::mock(Project::class, ['getID' => 105, 'getMinimalRank' => 10]);
+        $response = M::mock(BaseLayout::class);
+        $request  = M::mock(\HTTPRequest::class);
+        $request->shouldReceive('getValidated')
+                ->with('service_id', M::any(), M::any())
+                ->once()
+                ->andReturn(12);
+        $request->shouldReceive('getValidated')
+                ->with('short_name', M::any(), M::any())
+                ->once()
+                ->andReturn('admin');
+        $request->shouldReceive('exist')
+                ->with('short_name')
+                ->once()
+                ->andReturnTrue();
+        $request->shouldReceive('getValidated')
+                ->with('label', M::any(), M::any())
+                ->once()
+                ->andReturn('My custom service');
+        $request->shouldReceive('getValidated')
+                ->with('icon_name', M::any(), M::any())
+                ->once()
+                ->andReturn('fa-invalid-icon-name');
+        $request->shouldReceive('getValidated')
+                ->with('description', M::any(), M::any())
+                ->once()
+                ->andReturn('');
+        $request->shouldReceive('getValidated')
+                ->with('rank', M::any(), M::any())
+                ->once()
+                ->andReturn(1230);
+        $request->shouldReceive('getValidated')
+                ->with('is_active', M::any(), M::any())
+                ->once()
+                ->andReturn(1);
+        $request->shouldReceive('get')
+                ->with('is_in_iframe')
+                ->once()
+                ->andReturnFalse();
+        $request->shouldReceive('get')
+                ->with('is_in_new_tab')
+                ->once()
+                ->andReturnFalse();
+        $request->shouldReceive('getValidated')
+                ->with('link', M::any(), M::any())
+                ->andReturn('https://example.com/custom');
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $admin_service = $this->service_postdata_builder->buildFromRequest($request, $project, $response);
+
+        $this->assertTrue($admin_service->isUsed());
     }
 
     public function testBuildFromRequestThrowsWhenIconIsInvalid(): void
