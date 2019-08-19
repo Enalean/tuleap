@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -253,12 +253,14 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
     /**
      * @return string
      */
-    private function getPlaceholderSuggestion() {
+    private function getPlaceholderSuggestion()
+    {
         $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
         foreach ($this->config->getDashboardColumns() as $column) {
             array_walk($placeholders, array($this, 'removeUsedColumns'), $column->getLabel());
         }
-        $suggestion = array_shift(array_filter($placeholders));
+        $filtered_placeholders = array_filter($placeholders);
+        $suggestion = array_shift($filtered_placeholders);
         return $suggestion ? $suggestion : $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_default');
     }
 
