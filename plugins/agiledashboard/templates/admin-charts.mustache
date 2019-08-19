@@ -1,0 +1,39 @@
+<div class="agiledashboard-admin-kanban">
+    <h1>{{# dgettext }} tuleap-agiledashboard | Configuration {{/ dgettext }}</h1>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="?group_id={{ project_id }}&action=admin&pane=scrum">{{# dgettext }} tuleap-agiledashboard | Scrum {{/ dgettext }}</a>
+        </li>
+        <li>
+            <a href="?group_id={{ project_id }}&action=admin&pane=kanban">{{# dgettext }} tuleap-agiledashboard | Kanban {{/ dgettext }}</a>
+        </li>
+        <li class="active">
+            <a href="?group_id={{ project_id }}&action=admin&pane=charts">{{# dgettext }} tuleap-agiledashboard | Charts {{/ dgettext }}</a>
+        </li>
+    </ul>
+
+    <form action="?group_id={{ project_id }}&action=updateConfiguration" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="burnup-count-mode" value="0">
+        <section>
+            <h3><i class="fa fa-area-chart"></i> {{# dgettext }}tuleap-agiledashboard | Charts configuration{{/ dgettext }}</h3>
+
+            <div class="agiledashboard-section-details">
+                <label class="checkbox active-scrum">
+                    <input type="checkbox"
+                           name="burnup-count-mode"
+                           value="1" {{# is_burnup_count_mode_activated }} checked {{/ is_burnup_count_mode_activated }}
+                    >
+                    {{# dgettext }}tuleap-agiledashboard | Activate count elements mode for burnup chart{{/ dgettext }}
+                </label>
+                <p class="help-block">
+                    <i class="fa fa-info-circle"></i> {{# dgettext }}tuleap-agiledashboard | This option will display all the burnup charts in the project with elements progression instead of effort progression.{{/ dgettext }}
+                </p>
+            </div>
+        </section>
+        <button type="submit" class="btn btn-primary" id="ad-service-submit">{{# dgettext }} tuleap-agiledashboard | Save {{/ dgettext }}</button>
+    </form>
+</div>
