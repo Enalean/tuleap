@@ -32,13 +32,12 @@
             </document-global-metadata-for-update>
 
             <other-information-metadata-for-update v-bind:currently-updated-item="item_to_update"/>
-
-            <modal-footer v-bind:is-loading="is_loading"
-                          v-bind:submit-button-label="submit_button_label"
-                          v-bind:aria-labelled-by="aria_labelled_by"
-                          v-bind:icon-submit-button-class="'fa-pencil'"
-            />
         </div>
+        <modal-footer v-bind:is-loading="is_loading"
+                      v-bind:submit-button-label="submit_button_label"
+                      v-bind:aria-labelled-by="aria_labelled_by"
+                      v-bind:icon-submit-button-class="'fa-pencil'"
+        />
     </form>
 </template>
 
