@@ -785,6 +785,7 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
 
         if (item.id === current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item);
+            await context.dispatch("loadFolder", item.id);
         } else {
             Vue.set(updated_item, "updated", true);
             context.commit("removeItemFromFolderContent", updated_item);
@@ -824,6 +825,7 @@ export const updatePermissions = async (context, [item, updated_permissions]) =>
 
         if (item.id === context.state.current_folder.id) {
             context.commit("replaceCurrentFolder", updated_item);
+            await context.dispatch("loadFolder", item.id);
         } else {
             Vue.set(updated_item, "updated", true);
             context.commit("removeItemFromFolderContent", updated_item);
