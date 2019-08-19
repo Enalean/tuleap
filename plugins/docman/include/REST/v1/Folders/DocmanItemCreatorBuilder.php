@@ -35,6 +35,7 @@ use EventManager;
 use PermissionsManager;
 use PluginManager;
 use Project;
+use ProjectManager;
 use ReferenceManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -44,6 +45,7 @@ use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBu
 use Tuleap\Docman\Metadata\MetadataValueCreator;
 use Tuleap\Docman\Metadata\MetadataValueObjectFactory;
 use Tuleap\Docman\Metadata\MetadataValueStore;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
@@ -53,12 +55,16 @@ use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\NullResponseFeedbackWrapper;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
 use Tuleap\Docman\Upload\Document\DocumentMetadataCreator;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
+use Tuleap\Project\REST\UserGroupRetriever;
+use UGroupManager;
 use UserManager;
 
 class DocmanItemCreatorBuilder
@@ -93,6 +99,8 @@ class DocmanItemCreatorBuilder
             new CustomMetadataCollectionBuilder($metadata_factory, $list_values_builder)
         );
 
+        $ugroup_manager = new UGroupManager();
+
         $metadata_value_factory = new \Docman_MetadataValueFactory($project->getID());
         return new DocmanItemCreator(
             $item_factory,
@@ -120,7 +128,14 @@ class DocmanItemCreatorBuilder
                 new \Docman_LinkVersionFactory(),
                 $docman_file_storage,
                 $version_factory,
-                $metadata_value_factory
+                $metadata_value_factory,
+                new PermissionItemUpdater(
+                    new NullResponseFeedbackWrapper(),
+                    $item_factory,
+                    \Docman_PermissionsManager::instance($project->getID()),
+                    $permission_manager,
+                    $event_manager
+                )
             ),
             new EmptyFileToUploadFinisher(
                 new DocumentUploadFinisher(
@@ -145,7 +160,12 @@ class DocmanItemCreatorBuilder
                 $hardcoded_metadata_obsolescence_date_checker
             ),
             $custom_checker,
-            new Docman_MetadataValueDao()
+            new Docman_MetadataValueDao(),
+            new DocmanItemPermissionsForGroupsSetFactory(
+                $ugroup_manager,
+                new UserGroupRetriever($ugroup_manager),
+                ProjectManager::instance()
+            )
         );
     }
 }

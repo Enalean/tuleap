@@ -29,7 +29,9 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
 
 /**
  * @template-implements ItemVisitor<void>
@@ -60,6 +62,10 @@ class AfterItemCreationVisitor implements ItemVisitor
      * @var \Docman_MetadataValueFactory
      */
     private $metadata_value_factory;
+    /**
+     * @var PermissionItemUpdater
+     */
+    private $permission_item_updater;
 
     public function __construct(
         \PermissionsManager $permission_manager,
@@ -67,7 +73,8 @@ class AfterItemCreationVisitor implements ItemVisitor
         \Docman_LinkVersionFactory $docman_link_version_factory,
         \Docman_FileStorage $docman_file_storage,
         \Docman_VersionFactory $docman_version_factory,
-        \Docman_MetadataValueFactory $metadata_value_factory
+        \Docman_MetadataValueFactory $metadata_value_factory,
+        PermissionItemUpdater $permission_item_updater
     ) {
         $this->permission_manager          = $permission_manager;
         $this->event_manager               = $event_manager;
@@ -75,11 +82,12 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->docman_file_storage         = $docman_file_storage;
         $this->docman_version_factory      = $docman_version_factory;
         $this->metadata_value_factory      = $metadata_value_factory;
+        $this->permission_item_updater     = $permission_item_updater;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
-        $this->inheritPermissionsFromParent($item);
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
         $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FOLDER, $params);
         $this->triggerPostCreationEvents($params);
@@ -87,7 +95,7 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
-        $this->inheritPermissionsFromParent($item);
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
         $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $params['wiki_page'] = $item->getPagename();
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_PHPWIKI_PAGE, $params);
@@ -104,7 +112,7 @@ class AfterItemCreationVisitor implements ItemVisitor
             dgettext('plugin_docman', 'Initial version'),
             $creation_time->getTimestamp()
         );
-        $this->inheritPermissionsFromParent($item);
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
         $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINK, $params);
         $this->triggerPostCreationEvents($params);
@@ -141,7 +149,7 @@ class AfterItemCreationVisitor implements ItemVisitor
         ];
 
         $this->docman_version_factory->create($new_embedded_version_row);
-        $this->inheritPermissionsFromParent($item);
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
         $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $params['version'] = $this->docman_version_factory->getCurrentVersionForItem($item);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE, $params);
@@ -151,7 +159,7 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
-        $this->inheritPermissionsFromParent($item);
+        $this->instantiatePermissions($item, $params['permissions_for_groups']);
         $this->storeCustomMetadata($item, $params['formatted_metadata']);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_EMPTY, $params);
         $this->triggerPostCreationEvents($params);
@@ -168,13 +176,22 @@ class AfterItemCreationVisitor implements ItemVisitor
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    private function inheritPermissionsFromParent(Docman_Item $item): void
-    {
-        $this->permission_manager->clonePermissions(
-            $item->getParentId(),
-            $item->getId(),
-            ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
-        );
+    private function instantiatePermissions(
+        Docman_Item $item,
+        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups
+    ): void {
+        if ($permissions_for_groups === null) {
+            $this->permission_manager->clonePermissions(
+                $item->getParentId(),
+                $item->getId(),
+                ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
+            );
+        } else {
+            $this->permission_item_updater->initPermissionsOnNewlyCreatedItem(
+                $item,
+                $permissions_for_groups->toPermissionsPerUGroupIDAndTypeArray()
+            );
+        }
     }
 
     /**
