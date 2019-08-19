@@ -419,13 +419,6 @@ msgstr ""
 "Configurer les permissions de lecture et d'écriture d'un document dans la "
 "modale de création de documents"
 
-msgid ""
-"Set the values of custom document properties in the \"update properties\" "
-"modal"
-msgstr ""
-"Configurer les valeurs des propriétés personnalisées dans la modale de "
-" de mise à jour des propriétés de documents"
-
 msgid "Share the preview url of a document"
 msgstr "Partager l'url de l'aperçu d'un document"
 

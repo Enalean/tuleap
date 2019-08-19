@@ -1887,7 +1887,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "draft",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 const current_folder = {
@@ -1935,7 +1936,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "draft",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 const current_folder = {
@@ -1982,7 +1984,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "draft",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 getItem.and.returnValue(Promise.resolve(item_to_update));
@@ -2030,7 +2033,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "approved",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 const current_folder = {
@@ -2077,7 +2081,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "rejected",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 const current_folder = {
@@ -2186,7 +2191,8 @@ describe("Store actions", () => {
                         id: 102
                     },
                     status: "draft",
-                    obsolescence_date: null
+                    obsolescence_date: null,
+                    metadata: []
                 };
 
                 const current_folder = {

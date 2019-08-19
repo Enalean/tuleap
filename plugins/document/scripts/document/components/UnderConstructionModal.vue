@@ -33,7 +33,6 @@
             </p>
             <ul>
                 <li v-translate>Modal "create a new version" for documents of type "empty"</li>
-                <li v-translate>Set the values of custom document properties in the "update properties" modal</li>
                 <li v-translate>Set the read and write permissions of a document in the document creation modal</li>
                 <li v-translate>Share the preview url of a document</li>
             </ul>

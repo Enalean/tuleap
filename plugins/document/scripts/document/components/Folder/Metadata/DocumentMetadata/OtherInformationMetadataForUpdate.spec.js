@@ -20,100 +20,194 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../../helpers/local-vue.js";
-import OtherInformationMetadata from "./OtherInformationMetadataForUpdate.vue";
+import OtherInformationMetadataForUpdate from "./OtherInformationMetadataForUpdate.vue";
 import { TYPE_FILE } from "../../../../constants.js";
+import EventBus from "../../../../helpers/event-bus.js";
 
-describe("OtherInformationMetadata", () => {
-    let other_metadata, state, store;
+describe("OtherInformationMetadataForUpdate", () => {
+    let other_metadata, store;
     beforeEach(() => {
-        state = {
-            is_obsolescence_date_metadata_used: false
-        };
-
-        const store_options = { state };
-
-        store = createStoreMock(store_options);
+        store = createStoreMock(
+            { is_obsolescence_date_metadata_used: true },
+            { metadata: { has_loaded_metadata: true } }
+        );
 
         other_metadata = (props = {}) => {
-            return shallowMount(OtherInformationMetadata, {
+            return shallowMount(OtherInformationMetadataForUpdate, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }
             });
         };
     });
-    it(`Given obsolescence date is enabled for project
-        Then we should display the obsolescence date component`, () => {
-        const wrapper = other_metadata(
-            {
-                currentlyUpdatedItem: {
-                    metadata: [
-                        {
-                            short_name: "obsolescence_date",
-                            value: null
+
+    describe("Obsolescence date", () => {
+        describe("Given obsolescence date value is updated", () => {
+            it(`Then the props used for document creation is updated`, () => {
+                const wrapper = other_metadata(
+                    {
+                        currentlyUpdatedItem: {
+                            metadata: [
+                                {
+                                    short_name: "obsolescence_date",
+                                    value: null
+                                }
+                            ],
+                            status: 100,
+                            type: TYPE_FILE,
+                            title: "title",
+                            value: ""
                         }
-                    ],
-                    obsolescence_date: null,
-                    type: TYPE_FILE,
-                    title: "title"
-                }
-            },
-            { parent: 102 }
-        );
+                    },
+                    { parent: 102 }
+                );
 
-        store.state.is_obsolescence_date_metadata_used = true;
+                store.state = {
+                    is_obsolescence_date_metadata_used: true,
+                    metadata: {
+                        has_loaded_metadata: true
+                    }
+                };
 
-        expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
+                const date = "2019-07-10";
+                wrapper.vm.date_value = date;
+
+                expect(wrapper.vm.currentlyUpdatedItem.metadata[0].value).toEqual(date);
+            });
+
+            it(`Then the props used for document update is updated`, () => {
+                const wrapper = other_metadata(
+                    {
+                        currentlyUpdatedItem: {
+                            metadata: [
+                                {
+                                    short_name: "obsolescence_date",
+                                    value: null
+                                }
+                            ],
+                            status: 100,
+                            type: TYPE_FILE,
+                            title: "title",
+                            value: ""
+                        }
+                    },
+                    { parent: 102 }
+                );
+
+                store.state = {
+                    is_obsolescence_date_metadata_used: true,
+                    metadata: {
+                        has_loaded_metadata: true
+                    }
+                };
+
+                const date = "2019-07-10";
+                wrapper.vm.date_value = date;
+                expect(wrapper.vm.currentlyUpdatedItem.obsolescence_date).toEqual(date);
+            });
+        });
     });
 
-    it(`Given obsolescence date is disabled for project
-        Then obsolescence date component is not rendered`, () => {
-        const wrapper = other_metadata(
-            {
-                currentlyUpdatedItem: {
-                    metadata: [],
-                    status: 100,
-                    type: TYPE_FILE,
-                    title: "title"
-                }
-            },
-            { parent: 102 }
-        );
-
-        store.state.is_obsolescence_date_metadata_used = false;
-
-        expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
-    });
-
-    describe("Given obsolescence date value is updated", () => {
-        it(`Then the props used for document creation is updated`, () => {
+    describe("Custom metadata", () => {
+        it(`Given custom component are loading
+        Then it displays spinner`, () => {
             const wrapper = other_metadata(
                 {
                     currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "obsolescence_date",
-                                value: null
-                            }
-                        ],
+                        metadata: [],
                         status: 100,
                         type: TYPE_FILE,
-                        title: "title",
-                        value: ""
+                        title: "title"
                     }
                 },
                 { parent: 102 }
             );
 
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state = {
+                is_obsolescence_date_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: false
+                }
+            };
 
-            const date = "2019-07-10";
-            wrapper.vm.date_value = date;
-
-            expect(wrapper.vm.currentlyUpdatedItem.metadata[0].value).toEqual(date);
+            expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=document-other-information-spinner]").exists()
+            ).toBeTruthy();
         });
 
-        it(`Then the props used for document update is updated`, () => {
+        it("Load project metadata at first load", async () => {
+            store.state.metadata = {
+                has_loaded_metadata: false
+            };
+
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            EventBus.$emit("show-new-document-modal", {
+                detail: { parent: store.state.current_folder }
+            });
+            await wrapper.vm.$nextTick().then(() => {});
+
+            expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
+        });
+
+        it("Transform custom metadata", () => {
+            store.state.metadata = {
+                has_loaded_metadata: false
+            };
+
+            const custom_metadata = {
+                short_name: "field_1234",
+                list_value: [
+                    {
+                        id: 103
+                    }
+                ],
+                type: "list",
+                is_multiple_value_allowed: false
+            };
+
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "status",
+                                list_value: [
+                                    {
+                                        id: 103
+                                    }
+                                ],
+                                type: "list",
+                                is_multiple_value_allowed: false
+                            },
+                            custom_metadata
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            expect(wrapper.vm.custom_metadata).toEqual([custom_metadata]);
+        });
+    });
+
+    describe("Other information display", () => {
+        it(`Given obsolescence date is enabled for project
+            Then we should display the obsolescence date component`, () => {
             const wrapper = other_metadata(
                 {
                     currentlyUpdatedItem: {
@@ -123,20 +217,81 @@ describe("OtherInformationMetadata", () => {
                                 value: null
                             }
                         ],
-                        status: 100,
+                        obsolescence_date: null,
                         type: TYPE_FILE,
-                        title: "title",
-                        value: ""
+                        title: "title"
                     }
                 },
                 { parent: 102 }
             );
 
-            store.state.is_obsolescence_date_metadata_used = true;
+            store.state = {
+                is_obsolescence_date_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
 
-            const date = "2019-07-10";
-            wrapper.vm.date_value = date;
-            expect(wrapper.vm.currentlyUpdatedItem.obsolescence_date).toEqual(date);
+            expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
+        });
+
+        it(`Given project has custom metadata
+            Then we should display the other information section`, () => {
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "field_1234",
+                                list_value: [
+                                    {
+                                        id: 103
+                                    }
+                                ],
+                                type: "list",
+                                is_multiple_value_allowed: false
+                            }
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            store.state = {
+                is_obsolescence_date_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
+        });
+
+        it(`Given obsolescence date is disabled for project and given no metadata are provided
+            Then other information section is not rendered`, () => {
+            const wrapper = other_metadata(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            store.state = {
+                is_obsolescence_date_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
         });
     });
 });

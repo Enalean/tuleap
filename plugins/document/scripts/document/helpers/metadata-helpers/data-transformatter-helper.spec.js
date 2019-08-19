@@ -21,7 +21,8 @@ import {
     transformFolderMetadataForRecursionAtUpdate,
     transformItemMetadataForCreation,
     transformDocumentMetadataForUpdate,
-    transformCustomMetadataForItemCreation
+    transformCustomMetadataForItemCreation,
+    transformCustomMetadataForItemUpdate
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -402,5 +403,233 @@ describe("transformCustomMetadataForItemCreation", () => {
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
 
         expect(expected_list).toEqual(formatted_list);
+    });
+});
+
+describe("transformCustomMetadataForItemUpdate", () => {
+    it(`Given parent has a text value,
+        it does not update anything`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "value",
+                type: "text",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(parent_metadata).toEqual(parent_metadata);
+    });
+
+    it(`Given parent has a string value,
+        it does not update anything`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "value",
+                type: "string",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(parent_metadata).toEqual(parent_metadata);
+    });
+
+    it(`Given parent has a single list value,
+        then the formatted metadata is bound to value`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                list_value: [
+                    {
+                        id: 110,
+                        value: "My value to display"
+                    }
+                ],
+                is_multiple_value_allowed: false,
+                type: "list",
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: 110,
+                is_required: false,
+                list_value: null
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
+    });
+
+    it(`Given parent has a list with single value, and given list value is null,
+        then the formatted metadata is bound to none`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [],
+                is_multiple_value_allowed: false,
+                type: "list",
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: 100,
+                is_required: false,
+                list_value: null
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
+    });
+
+    it(`Given parent has a multiple list
+        then the formatted metadata only keeps list ids`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [
+                    {
+                        id: 110,
+                        value: "My value to display"
+                    },
+                    {
+                        id: 120,
+                        value: "My other value to display"
+                    }
+                ],
+                is_multiple_value_allowed: true,
+                type: "list",
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: true,
+                list_value: [110, 120],
+                is_required: false,
+                value: null
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
+    });
+
+    it(`Given parent has a multiple list without any value
+        then the formatted metadata should have the 100 id`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom list metadata",
+                name: "field_1",
+                list_value: [],
+                is_multiple_value_allowed: true,
+                type: "list",
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom list metadata",
+                type: "list",
+                name: "field_1",
+                is_multiple_value_allowed: true,
+                list_value: [100],
+                is_required: false,
+                value: null
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
+    });
+    it(`Given parent has a date value,
+        then the formatted date metadata is bound to value with the formatted date`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: "2019-08-30T00:00:00+02:00",
+                type: "date",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "date",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "2019-08-30",
+                is_required: false
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
+    });
+    it(`Given parent does not have a date value,
+        then the formatted date metadata is bound to value with empty string`, () => {
+        const parent_metadata = [
+            {
+                short_name: "custom metadata",
+                name: "field_1",
+                value: null,
+                type: "date",
+                is_multiple_value_allowed: false,
+                is_required: false
+            }
+        ];
+
+        const expected_list = [
+            {
+                short_name: "custom metadata",
+                type: "date",
+                name: "field_1",
+                is_multiple_value_allowed: false,
+                value: "",
+                is_required: false
+            }
+        ];
+
+        transformCustomMetadataForItemUpdate(parent_metadata);
+
+        expect(expected_list).toEqual(parent_metadata);
     });
 });

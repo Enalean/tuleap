@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <div v-for="item_metadata in currentlyUpdatedItem.metadata"
+        <div v-for="item_metadata in itemMetadata"
              v-bind:key="item_metadata.short_name"
              class="document-metadata-properties-margin"
         >
@@ -69,7 +69,7 @@ export default {
         CustomMetadataText
     },
     props: {
-        currentlyUpdatedItem: Object
+        itemMetadata: Array
     }
 };
 </script>
