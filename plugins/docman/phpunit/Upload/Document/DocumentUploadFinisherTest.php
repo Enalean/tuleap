@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-class DocumentUploadFinisherTest extends TestCase
+final class DocumentUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -38,7 +38,6 @@ class DocumentUploadFinisherTest extends TestCase
     private $logger;
     private $item_factory;
     private $version_factory;
-    private $permission_manager;
     private $event_manager;
     private $on_going_upload_dao;
     private $item_dao;
@@ -50,7 +49,6 @@ class DocumentUploadFinisherTest extends TestCase
         $this->logger                      = \Mockery::mock(\Logger::class);
         $this->item_factory                = \Mockery::mock(Docman_ItemFactory::class);
         $this->version_factory             = \Mockery::mock(Docman_VersionFactory::class);
-        $this->permission_manager          = \Mockery::mock(\PermissionsManager::class);
         $this->event_manager               = \Mockery::mock(\EventManager::class);
         $this->on_going_upload_dao         = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $this->item_dao                    = \Mockery::mock(\Docman_ItemDao::class);
@@ -70,7 +68,6 @@ class DocumentUploadFinisherTest extends TestCase
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
-            $this->permission_manager,
             $this->event_manager,
             $this->on_going_upload_dao,
             $this->item_dao,
@@ -103,7 +100,6 @@ class DocumentUploadFinisherTest extends TestCase
         );
         $this->on_going_upload_dao->shouldReceive('deleteByItemID')->once();
         $this->item_factory->shouldReceive('create')->once()->andReturns(true);
-        $this->permission_manager->shouldReceive('clonePermissions')->once()->andReturns(true);
         $created_docman_file = $root->url() . '/created_file';
         touch($created_docman_file);
         $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_file);

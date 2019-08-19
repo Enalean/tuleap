@@ -46,10 +46,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      */
     private $version_factory;
     /**
-     * @var \PermissionsManager
-     */
-    private $permission_manager;
-    /**
      * @var \EventManager
      */
     private $event_manager;
@@ -83,7 +79,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,
-        \PermissionsManager $permission_manager,
         \EventManager $event_manager,
         DocumentOngoingUploadDAO $document_ongoing_upload_dao,
         \Docman_ItemDao $docman_item_dao,
@@ -96,7 +91,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->document_upload_path_allocator = $document_upload_path_allocator;
         $this->docman_item_factory            = $docman_item_factory;
         $this->version_factory                = $version_factory;
-        $this->permission_manager             = $permission_manager;
         $this->event_manager                  = $event_manager;
         $this->document_ongoing_upload_dao    = $document_ongoing_upload_dao;
         $this->docman_item_dao                = $docman_item_dao;
@@ -173,16 +167,6 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
             if ($is_item_created === false) {
                 \unlink($file_path);
                 throw new \RuntimeException("Not able to create item #$item_id in DB");
-            }
-            $has_permissions_been_set = $this->permission_manager->clonePermissions(
-                $document_row['parent_id'],
-                $document_row['item_id'],
-                ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
-            );
-            if (! $has_permissions_been_set) {
-                $this->docman_item_dao->delete($item_id);
-                \unlink($file_path);
-                throw new \RuntimeException('Could not set permissions on item #' . $item_id);
             }
 
             $has_version_been_created = $this->version_factory->create([

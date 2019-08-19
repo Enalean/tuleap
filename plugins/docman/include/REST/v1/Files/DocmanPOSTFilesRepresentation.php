@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Files;
 use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
 class DocmanPOSTFilesRepresentation implements CanContainACopyRepresentation
 {
@@ -57,6 +57,11 @@ class DocmanPOSTFilesRepresentation implements CanContainACopyRepresentation
      * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}
      */
     public $metadata;
+    /**
+     * @var DocmanItemPermissionsForGroupsSetRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation}
+     * @psalm-var DocmanItemPermissionsForGroupsSetRepresentation|null
+     */
+    public $permissions_for_groups;
     /**
      * @var DocmanCopyItemRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation} Mandatory if others parameters are not set
      */
