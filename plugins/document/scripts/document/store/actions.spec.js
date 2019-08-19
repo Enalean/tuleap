@@ -1856,7 +1856,10 @@ describe("Store actions", () => {
             context;
 
         beforeEach(() => {
-            context = { commit: jasmine.createSpy("commit") };
+            context = {
+                commit: jasmine.createSpy("commit"),
+                dispatch: jasmine.createSpy("dispatch")
+            };
 
             getItem = jasmine.createSpy("getItem");
             rewire$getItem(getItem);
@@ -2204,6 +2207,7 @@ describe("Store actions", () => {
                 await updateMetadata(context, [item, item_to_update, current_folder]);
 
                 expect(context.commit).toHaveBeenCalledWith("replaceCurrentFolder", item_to_update);
+                expect(context.dispatch).toHaveBeenCalledWith("loadFolder", current_folder.id);
             });
         });
     });
@@ -2220,6 +2224,7 @@ describe("Store actions", () => {
         beforeEach(() => {
             context = {
                 commit: jasmine.createSpy("commit"),
+                dispatch: jasmine.createSpy("dispatch"),
                 state: {
                     current_folder: { id: 999, type: TYPE_FOLDER }
                 }
@@ -2382,6 +2387,7 @@ describe("Store actions", () => {
             await updatePermissions(context, [folder, permissions]);
 
             expect(putFolderPermissions).toHaveBeenCalled();
+            expect(context.dispatch).toHaveBeenCalledWith("loadFolder", folder.id);
             expect(context.commit).toHaveBeenCalledWith(
                 "replaceCurrentFolder",
                 jasmine.any(Object)
