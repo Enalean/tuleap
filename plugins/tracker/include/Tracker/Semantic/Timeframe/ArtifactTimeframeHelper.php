@@ -65,10 +65,14 @@ class ArtifactTimeframeHelper
             return false;
         }
 
-        return $timeframe_semantic->isDurationField($field) && $start_date_field->userCanRead($user);
+        if (! $start_date_field->userCanRead($user)) {
+            return false;
+        }
+
+        return $timeframe_semantic->isDurationField($field) || $timeframe_semantic->isEndDateField($field);
     }
 
-    public function getArtifactHelperForReadOnlyView(PFUser $user, Tracker_Artifact $artifact) : string
+    public function getEndDateArtifactHelperForReadOnlyView(PFUser $user, Tracker_Artifact $artifact) : string
     {
         $time_period = $this->time_frame_builder->buildTimePeriodWithoutWeekendForArtifact($artifact, $user);
 
@@ -76,5 +80,14 @@ class ArtifactTimeframeHelper
         $end_date->setTimestamp((int) $time_period->getEndDate());
 
         return $end_date->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
+    }
+
+    public function getDurationArtifactHelperForReadOnlyView(PFUser $user, Tracker_Artifact $artifact) : string
+    {
+        $duration = (int) $this->time_frame_builder
+            ->buildTimePeriodWithoutWeekendForArtifact($artifact, $user)
+            ->getDuration();
+
+        return sprintf(dngettext('tuleap-tracker', '%s working day', '%s working days', $duration), $duration);
     }
 }

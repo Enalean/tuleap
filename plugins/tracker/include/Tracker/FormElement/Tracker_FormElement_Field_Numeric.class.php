@@ -304,7 +304,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $time_frame_helper = $this->getArtifactTimeframeHelper();
 
         if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
-            $html_value = $html_value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
+            $html_value = $html_value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getEndDateArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
         }
 
         return $html_value;

@@ -55,6 +55,12 @@ msgid "%s tracker"
 msgstr "Tracker %s"
 
 #, php-format
+msgid "%s working day"
+msgid_plural "%s working days"
+msgstr[0] "%s jour ouvrable"
+msgstr[1] "%s jours ouvrables"
+
+#, php-format
 msgid "'%s' is not supported for the operator %s."
 msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
