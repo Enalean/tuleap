@@ -95,7 +95,7 @@ class AddController implements DispatchableWithRequest, DispatchableWithProject
             );
         } catch (InvalidServicePOSTDataException $exception) {
             $this->redirectWithError(
-                $request->getProject(),
+                $project,
                 $layout,
                 $exception->getMessage()
             );
