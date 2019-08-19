@@ -47,10 +47,6 @@ final class DocmanFileDownloadControllerTest extends TestCase
      */
     private $emitter;
     /**
-     * @var ProjectManager|Mockery\MockInterface
-     */
-    private $project_manager;
-    /**
      * @var Docman_ItemFactory|Mockery\MockInterface
      */
     private $item_factory;
@@ -62,36 +58,14 @@ final class DocmanFileDownloadControllerTest extends TestCase
     protected function setUp() : void
     {
         $this->emitter            = Mockery::mock(EmitterInterface::class);
-        $this->project_manager    = Mockery::mock(ProjectManager::class);
         $this->item_factory       = Mockery::mock(Docman_ItemFactory::class);
         $this->response_generator = Mockery::mock(DocmanFileDownloadResponseGenerator::class);
     }
 
-    public function testControllerIsNotReusable() : void
+    public function testDownloadFailsWhenTheFileCanNotBeFound() : void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
-            $this->project_manager,
-            $this->item_factory,
-            $this->response_generator,
-            new Log_NoopLogger()
-        );
-
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getGroupId')->andReturn('101');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
-
-        $controller->getProject(['file_id' => '1']);
-        $this->expectException(LogicException::class);
-        $controller->getProject(['file_id' => '2']);
-    }
-
-    public function testProjectCanNotBeFoundWhenItemDoesNotExist() : void
-    {
-        $controller = new DocmanFileDownloadController(
-            $this->emitter,
-            $this->project_manager,
             $this->item_factory,
             $this->response_generator,
             new Log_NoopLogger()
@@ -99,86 +73,49 @@ final class DocmanFileDownloadControllerTest extends TestCase
 
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
 
-        $this->expectException(NotFoundException::class);
-        $controller->getProject(['file_id' => '1']);
-    }
-
-    public function testProjectCanNotBeFoundWhenItemIsLinkedToANonExistingProject() : void
-    {
-        $controller = new DocmanFileDownloadController(
-            $this->emitter,
-            $this->project_manager,
-            $this->item_factory,
-            $this->response_generator,
-            new Log_NoopLogger()
-        );
-
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getGroupId')->andReturn('101');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
-        $this->project_manager->shouldReceive('getProject')->andReturn(null);
+        $request = Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
 
         $this->expectException(NotFoundException::class);
-        $controller->getProject(['file_id' => '1']);
-    }
-
-    public function testItemMustHaveBeenIdentifiedBeforeProcessingTheRequest() : void
-    {
-        $controller = new DocmanFileDownloadController(
-            $this->emitter,
-            $this->project_manager,
-            $this->item_factory,
-            $this->response_generator,
-            new Log_NoopLogger()
-        );
-
-        $this->expectException(LogicException::class);
-        $controller->handle(Mockery::mock(ServerRequestInterface::class));
+        $controller->handle($request);
     }
 
     public function testOnlyAFileCanBeDownloaded() : void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
-            $this->project_manager,
             $this->item_factory,
             $this->response_generator,
             new Log_NoopLogger()
         );
 
-        $docman_item = Mockery::mock(Docman_Item::class);
-        $docman_item->shouldReceive('getGroupId')->andReturn('101');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_item);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_Item::class));
 
-        $uri_variables = ['file_id' => '1'];
-        $controller->getProject($uri_variables);
+        $request = Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
+
         $this->expectException(NotFoundException::class);
-        $controller->handle(Mockery::mock(ServerRequestInterface::class));
+        $controller->handle($request);
     }
 
     public function testDownloadFailsWhenRequestedVersionCannotBeFound() : void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
-            $this->project_manager,
             $this->item_factory,
             $this->response_generator,
             new Log_NoopLogger()
         );
 
         $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getGroupId')->andReturn('101');
         $docman_file->shouldReceive('getId')->andReturn('1');
         $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
 
-        $uri_variables = ['file_id' => '1', 'version_id' => '1'];
-        $controller->getProject($uri_variables);
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
             ->andReturn(Mockery::mock(PFUser::class));
-        $request->shouldReceive('getAttribute')->with('version_id')->andReturn($uri_variables['version_id']);
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
+        $request->shouldReceive('getAttribute')->with('version_id')->andReturn('1');
 
         $this->response_generator->shouldReceive('generateResponse')->andThrow(new VersionNotFoundException($docman_file, 1));
 
@@ -191,22 +128,17 @@ final class DocmanFileDownloadControllerTest extends TestCase
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
-            $this->project_manager,
             $this->item_factory,
             $this->response_generator,
             new Log_NoopLogger()
         );
 
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getGroupId')->andReturn('101');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
 
-        $uri_variables =  ['file_id' => '1'];
-        $controller->getProject($uri_variables);
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
             ->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
         $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
 
         $this->response_generator->shouldReceive('generateResponse')->andThrow(
@@ -221,22 +153,17 @@ final class DocmanFileDownloadControllerTest extends TestCase
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
-            $this->project_manager,
             $this->item_factory,
             $this->response_generator,
             new Log_NoopLogger()
         );
 
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getGroupId')->andReturn('101');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
 
-        $uri_variables =  ['file_id' => '1'];
-        $controller->getProject($uri_variables);
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->with(RESTCurrentUserMiddleware::class)
             ->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
         $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
 
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();

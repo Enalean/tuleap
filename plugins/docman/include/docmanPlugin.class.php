@@ -1369,7 +1369,6 @@ class DocmanPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new DocmanFileDownloadController(
             new SapiStreamEmitter(),
-            ProjectManager::instance(),
             new Docman_ItemFactory(),
             new DocmanFileDownloadResponseGenerator(
                 new Docman_VersionFactory(),
