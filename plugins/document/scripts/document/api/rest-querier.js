@@ -575,7 +575,7 @@ async function getPreferenceForEmbeddedDisplay(user_id, project_id, document_id)
     return response.json();
 }
 
-function putFileMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putFileMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
     return put(`/api/docman_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -585,12 +585,21 @@ function putFileMetadata(id, title, description, owner_id, status, obsolescence_
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }
 
-function putEmbeddedFileMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putEmbeddedFileMetadata(
+    id,
+    title,
+    description,
+    owner_id,
+    status,
+    obsolescence_date,
+    metadata
+) {
     return put(`/api/docman_embedded_files/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -600,12 +609,13 @@ function putEmbeddedFileMetadata(id, title, description, owner_id, status, obsol
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }
 
-function putLinkMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putLinkMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
     return put(`/api/docman_links/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -615,12 +625,13 @@ function putLinkMetadata(id, title, description, owner_id, status, obsolescence_
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }
 
-function putWikiMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putWikiMetadata(id, title, description, owner_id, status, obsolescence_date, metadata) {
     return put(`/api/docman_wikis/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -630,12 +641,21 @@ function putWikiMetadata(id, title, description, owner_id, status, obsolescence_
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }
 
-function putEmptyDocumentMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putEmptyDocumentMetadata(
+    id,
+    title,
+    description,
+    owner_id,
+    status,
+    obsolescence_date,
+    metadata
+) {
     return put(`/api/docman_empty_documents/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -645,7 +665,8 @@ function putEmptyDocumentMetadata(id, title, description, owner_id, status, obso
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }

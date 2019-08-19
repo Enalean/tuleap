@@ -39,7 +39,7 @@
                 v-if="is_obsolescence_date_metadata_used"
                 v-model="currentlyUpdatedItem.obsolescence_date"
             />
-            <custom-metadata v-bind:currently-updated-item="currentlyUpdatedItem"/>
+            <custom-metadata v-bind:item-metadata="currentlyUpdatedItem.metadata"/>
         </template>
     </div>
 </template>

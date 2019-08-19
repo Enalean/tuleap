@@ -66,6 +66,22 @@ function updateItemMetadata(metadata, item) {
     item.status = status;
 }
 
+function formatMetadataMultipleValue(parent_metadata) {
+    if (!parent_metadata.list_value) {
+        return [100];
+    }
+    const list_value_ids = parent_metadata.list_value.map(({ id }) => id);
+
+    return list_value_ids.length > 0 ? list_value_ids : [100];
+}
+
+function formatMetadataListValue(parent_metadata) {
+    if (!parent_metadata.list_value) {
+        return 100;
+    }
+    return parent_metadata.list_value[0] ? parent_metadata.list_value[0].id : 100;
+}
+
 export function transformCustomMetadataForItemCreation(parent_metadata) {
     if (parent_metadata.length === 0) {
         return [];
@@ -93,15 +109,10 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
                 break;
             case "list":
                 if (parent_metadata.is_multiple_value_allowed) {
-                    const list_value_ids = parent_metadata.list_value.map(({ id }) => id);
-
-                    formatted_metadata.list_value =
-                        list_value_ids.length > 0 ? list_value_ids : [100];
+                    formatted_metadata.list_value = formatMetadataMultipleValue(parent_metadata);
                     formatted_metadata_list.push(formatted_metadata);
                 } else {
-                    formatted_metadata.value = parent_metadata.list_value[0]
-                        ? parent_metadata.list_value[0].id
-                        : 100;
+                    formatted_metadata.value = formatMetadataListValue(parent_metadata);
                     formatted_metadata_list.push(formatted_metadata);
                 }
                 break;
@@ -111,6 +122,30 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
     });
 
     return formatted_metadata_list;
+}
+
+export function transformCustomMetadataForItemUpdate(parent_metadata) {
+    parent_metadata.forEach(parent_metadata => {
+        switch (parent_metadata.type) {
+            case "date":
+                parent_metadata.value = formatDateValue(parent_metadata.value);
+                break;
+            case "text":
+            case "string":
+                break;
+            case "list":
+                if (parent_metadata.is_multiple_value_allowed) {
+                    parent_metadata.list_value = formatMetadataMultipleValue(parent_metadata);
+                    parent_metadata.value = null;
+                } else {
+                    parent_metadata.value = formatMetadataListValue(parent_metadata);
+                    parent_metadata.list_value = null;
+                }
+                break;
+            default:
+                break;
+        }
+    });
 }
 
 function formatDateValue(date) {

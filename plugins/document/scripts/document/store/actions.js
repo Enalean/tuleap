@@ -95,6 +95,7 @@ import {
     USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE
 } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
+import { getCustomMetadata } from "../helpers/metadata-helpers/custom-metadata-helper.js";
 
 export const loadRootFolder = async context => {
     try {
@@ -713,6 +714,7 @@ export const getEmbeddedFileDisplayPreference = async (context, item) => {
 };
 
 export const updateMetadata = async (context, [item, item_to_update, current_folder]) => {
+    const custom_metadata = getCustomMetadata(item_to_update.metadata);
     try {
         switch (item_to_update.type) {
             case TYPE_FILE:
@@ -722,7 +724,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             case TYPE_EMBEDDED:
@@ -732,7 +735,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             case TYPE_LINK:
@@ -742,7 +746,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             case TYPE_WIKI:
@@ -752,7 +757,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             case TYPE_EMPTY:
@@ -762,7 +768,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                     item_to_update.description,
                     item_to_update.owner.id,
                     item_to_update.status,
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             case TYPE_FOLDER:
