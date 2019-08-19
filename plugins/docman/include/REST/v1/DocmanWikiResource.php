@@ -42,7 +42,8 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataUpdatorBuilder;
 use Tuleap\Docman\REST\v1\Metadata\PUTMetadataRepresentation;
 use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
-use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsPUTRepresentation;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\PermissionItemUpdaterFromRESTContext;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionPOSTRepresentation;
@@ -405,13 +406,13 @@ class DocmanWikiResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the wiki
-     * @param DocmanItemPermissionsForGroupsPUTRepresentation $representation {@from body}
+     * @param DocmanItemPermissionsForGroupsSetRepresentation $representation {@from body}
      *
      * @status 200
      *
      * @throws RestException 400
      */
-    public function putPermissions(int $id, DocmanItemPermissionsForGroupsPUTRepresentation $representation) : void
+    public function putPermissions(int $id, DocmanItemPermissionsForGroupsSetRepresentation $representation) : void
     {
         $this->checkAccess();
         $this->optionsPermissions($id);
@@ -436,9 +437,11 @@ class DocmanWikiResource extends AuthenticatedResource
                 $this->event_manager
             ),
             $docman_permission_manager,
-            $ugroup_manager,
-            new UserGroupRetriever($ugroup_manager),
-            ProjectManager::instance()
+            new DocmanItemPermissionsForGroupsSetFactory(
+                $ugroup_manager,
+                new UserGroupRetriever($ugroup_manager),
+                ProjectManager::instance()
+            )
         );
         $permissions_rest_item_updater->updateItemPermissions($item, $user, $representation);
     }
