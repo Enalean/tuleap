@@ -20,57 +20,53 @@
 <template>
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id"/>
-
-        <div class="project-admin-services-edit-modal-top-fields">
-            <service-label v-model="service.label"/>
-            <service-is-used v-bind:value="service.is_used"/>
+        <div class="project-admin-services-modals-top-fields">
+            <service-label id="project-service-edit-modal-label" v-model="service.label"/>
+            <service-is-used
+                id="project-service-edit-modal-enabled"
+                v-bind:value="service.is_used"
+            />
         </div>
-        <div class="project-admin-services-edit-modal-top-fields">
-            <icon-selector v-model="service.icon_name" v-bind:allowed_icons="allowed_icons"/>
+        <div class="project-admin-services-modals-top-fields">
+            <icon-selector
+                id="project-service-edit-modal-icon"
+                v-model="service.icon_name"
+                v-bind:allowed_icons="allowed_icons"
+            />
             <slot name="is_active">
                 <hidden-service-is-active v-bind:value="service.is_active"/>
             </slot>
         </div>
 
-        <service-rank v-bind:minimal_rank="minimal_rank" v-bind:value="service.rank"/>
-        <service-link v-bind:value="service.link"/>
-        <service-description v-bind:value="service.description"/>
+        <service-rank
+            id="project-service-edit-modal-rank"
+            v-bind:minimal_rank="minimal_rank"
+            v-bind:value="service.rank"
+        />
+        <service-link id="project-service-edit-modal-link" v-bind:value="service.link"/>
+        <service-description
+            id="project-service-edit-modal-description"
+            v-bind:value="service.description"
+        />
 
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="project-admin-services-edit-modal-new-tab" v-translate>
-                Open in a new tab
-            </label>
-            <div class="tlp-switch">
-                <input
-                    type="checkbox"
-                    class="tlp-switch-checkbox"
-                    id="project-admin-services-edit-modal-new-tab"
-                    name="is_in_new_tab"
-                    value="1"
-                    v-bind:checked="service.is_in_new_tab"
-                    v-on:change="onNewTabChange"
-                    data-test="new-tab-switch"
-                >
-                <label
-                    class="tlp-switch-button"
-                    for="project-admin-services-edit-modal-new-tab"
-                    aria-hidden
-                ></label>
-            </div>
-        </div>
+        <service-open-in-new-tab
+            id="project-service-edit-modal-new-tab"
+            v-bind:value="service.is_in_new_tab"
+            v-on:change="onNewTabChange"
+        />
 
         <div
             class="tlp-form-element"
             v-bind:class="{ 'tlp-form-element-disabled': service.is_in_new_tab }"
             v-if="has_used_iframe"
         >
-            <label class="tlp-label" for="project-admin-services-edit-modal-iframe" v-translate>
+            <label class="tlp-label" for="project-service-edit-modal-iframe" v-translate>
                 Display in iframe
             </label>
             <div class="tlp-switch">
                 <input
                     class="tlp-switch-checkbox"
-                    id="project-admin-services-edit-modal-iframe"
+                    id="project-service-edit-modal-iframe"
                     type="checkbox"
                     name="is_in_iframe"
                     value="1"
@@ -80,7 +76,7 @@
                 >
                 <label
                     class="tlp-switch-button"
-                    for="project-admin-services-edit-modal-iframe"
+                    for="project-service-edit-modal-iframe"
                     aria-hidden
                 ></label>
             </div>
@@ -111,8 +107,9 @@
     </div>
 </template>
 <script>
-import IconSelector from "./IconSelector.vue";
 import ServiceId from "./ServiceId.vue";
+import ServiceOpenInNewTab from "./ServiceOpenInNewTab.vue";
+import IconSelector from "./IconSelector.vue";
 import ServiceLabel from "./ServiceLabel.vue";
 import ServiceLink from "./ServiceLink.vue";
 import ServiceDescription from "./ServiceDescription.vue";
@@ -122,16 +119,17 @@ import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
 import { service_mixin } from "./service-mixin.js";
 
 export default {
-    name: "ProjectDefinedService",
+    name: "InEditionCustomService",
     components: {
+        ServiceId,
+        ServiceOpenInNewTab,
         HiddenServiceIsActive,
         ServiceRank,
         ServiceIsUsed,
         ServiceDescription,
         ServiceLink,
         ServiceLabel,
-        IconSelector,
-        ServiceId
+        IconSelector
     },
     mixins: [service_mixin],
     props: {

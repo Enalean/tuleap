@@ -18,13 +18,19 @@
  */
 
 import Vue from "vue";
+import BaseSiteAdminAddModal from "./components/BaseSiteAdminAddModal.vue";
 import BaseSiteAdminEditModal from "./components/BaseSiteAdminEditModal.vue";
-import { buildCreateModalCallback } from "./edit-modal-initializer.js";
+import { buildCreateModalCallback } from "./vue-modal-initializer.js";
 import { setupModalButtons } from "./modal-initializer.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const RootComponent = Vue.extend(BaseSiteAdminEditModal);
+    const add_mount_point = "service-add-modal";
+    const AddModalRootComponent = Vue.extend(BaseSiteAdminAddModal);
+    const addModalCallback = buildCreateModalCallback(add_mount_point, AddModalRootComponent);
 
-    const createModalCallback = buildCreateModalCallback(RootComponent);
-    setupModalButtons(createModalCallback);
+    const edit_mount_point = "service-edit-modal";
+    const EditModalRootComponent = Vue.extend(BaseSiteAdminEditModal);
+    const editModalCallback = buildCreateModalCallback(edit_mount_point, EditModalRootComponent);
+
+    setupModalButtons(addModalCallback, editModalCallback);
 });

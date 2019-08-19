@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <edit-modal
+    <add-modal
         v-bind:form_url="form_url"
         ref="modal"
         v-on:reset-modal="resetModal"
@@ -26,34 +26,48 @@
         <template slot="content">
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
             <sidebar-previewer
-                v-bind:label="service.label"
+                v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
             />
-            <in-edition-custom-service
-                v-if="service.is_project_scope && is_shown"
+            <in-creation-custom-service
                 v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
-            />
-            <read-only-system-service
-                v-if="!service.is_project_scope && is_shown"
-                v-bind:minimal_rank="minimal_rank"
-                v-bind:service="service"
-            />
+            >
+                <template slot="is_active">
+                    <service-is-active id="project-service-add-modal-active" v-bind:value="service.is_active"/>
+                </template>
+                <template slot="shortname" v-if="is_default_template">
+                    <service-shortname id="project-service-add-modal-shortname" v-bind:value="service.short_name"/>
+                </template>
+            </in-creation-custom-service>
         </template>
-    </edit-modal>
+    </add-modal>
 </template>
 <script>
-import InEditionCustomService from "./Service/InEditionCustomService.vue";
+import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
-import EditModal from "./EditModal.vue";
-import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
+import InCreationCustomService from "./Service/InCreationCustomService.vue";
+import ServiceIsActive from "./Service/ServiceIsActive.vue";
+import ServiceShortname from "./Service/ServiceShortname.vue";
 import { service_modal_mixin } from "./service-modal-mixin.js";
-import { edit_modal_mixin } from "./edit-modal-mixin.js";
+import { add_modal_mixin } from "./add-modal-mixin.js";
+import { ADMIN_PROJECT_ID } from "../constants.js";
 
 export default {
-    name: "BaseProjectAdminEditModal",
-    components: { ReadOnlySystemService, EditModal, InEditionCustomService, SidebarPreviewer },
-    mixins: [service_modal_mixin, edit_modal_mixin]
+    name: "BaseSiteAdminAddModal",
+    components: {
+        AddModal,
+        SidebarPreviewer,
+        InCreationCustomService,
+        ServiceIsActive,
+        ServiceShortname
+    },
+    mixins: [service_modal_mixin, add_modal_mixin],
+    computed: {
+        is_default_template() {
+            return this.project_id === ADMIN_PROJECT_ID;
+        }
+    }
 };
 </script>

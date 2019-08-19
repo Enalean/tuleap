@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function buildCreateModalCallback(RootComponent) {
-    const vue_mount_point_id = "service-edit-modal";
+export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
     const vue_mount_point = document.getElementById(vue_mount_point_id);
 
     if (!vue_mount_point) {

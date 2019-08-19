@@ -19,14 +19,14 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="project-admin-services-edit-modal-label">
+        <label class="tlp-label" v-bind:for="id">
             <translate>Label</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <input
             type="text"
             class="tlp-input"
-            id="project-admin-services-edit-modal-label"
+            v-bind:id="id"
             name="label"
             v-bind:placeholder="label_placeholder"
             maxlength="40"
@@ -41,6 +41,10 @@ export default {
     name: "ServiceLabel",
     props: {
         value: {
+            type: String,
+            required: true
+        },
+        id: {
             type: String,
             required: true
         }

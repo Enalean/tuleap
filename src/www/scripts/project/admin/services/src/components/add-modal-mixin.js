@@ -17,11 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const edit_modal_mixin = {
+export const add_modal_mixin = {
     props: {
         project_id: {
             type: String,
             required: true
+        }
+    },
+    computed: {
+        form_url() {
+            return `/project/${encodeURIComponent(this.project_id)}/admin/services/add`;
+        },
+        preview_label() {
+            return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
         }
     },
     data() {
@@ -30,15 +38,9 @@ export const edit_modal_mixin = {
             service: this.resetService()
         };
     },
-    computed: {
-        form_url() {
-            return `/project/${encodeURIComponent(this.project_id)}/admin/services/edit`;
-        }
-    },
     methods: {
-        show(button) {
+        show() {
             this.is_shown = true;
-            this.service = JSON.parse(button.dataset.serviceJson);
             this.$refs.modal.show();
         },
         resetModal() {
@@ -48,16 +50,15 @@ export const edit_modal_mixin = {
         resetService() {
             return {
                 id: null,
-                icon_name: "",
+                icon_name: "fa-angle-double-right",
                 label: "",
                 link: "",
                 description: "",
+                short_name: "",
                 is_active: true,
                 is_used: true,
-                is_in_iframe: false,
                 is_in_new_tab: false,
-                rank: this.minimal_rank,
-                is_project_scope: true
+                rank: this.minimal_rank
             };
         }
     }
