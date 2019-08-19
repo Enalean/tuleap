@@ -2934,7 +2934,7 @@ select[name='add_notempty_condition[]'] {
     }
 }
 
-.tracker_artifact_field-computed, .tracker_artifact_field-float, .tracker_artifact_field-int {
+.tracker_artifact_field-computed, .tracker_artifact_field-float, .tracker_artifact_field-int, .tracker_artifact_field-date {
     .artifact-timeframe-helper {
         margin: 0 0 0 3px;
         color: #AAAAAA;

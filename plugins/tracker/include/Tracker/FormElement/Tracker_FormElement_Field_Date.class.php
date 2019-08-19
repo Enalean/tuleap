@@ -20,6 +20,10 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
@@ -675,7 +679,18 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
+        $timeframe_helper = $this->getArtifactTimeframeHelper();
+        $html_value       = $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
+        $user             = $this->getCurrentUser();
+
+        if ($timeframe_helper->artifactHelpShouldBeShownToUser($user,$this)) {
+            $html_value     = $html_value
+                . '<span class="artifact-timeframe-helper"> ('
+                . $timeframe_helper->getDurationArtifactHelperForReadOnlyView($user, $artifact)
+                . ')</span>';
+        }
+
+        return $html_value;
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(
@@ -1038,5 +1053,20 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
 
         return new Tracker_FormElement_DateFormatter($this);
+    }
+
+    private function getArtifactTimeframeHelper() : ArtifactTimeframeHelper
+    {
+        $form_element_factory       = Tracker_FormElementFactory::instance();
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
+
+        return new ArtifactTimeframeHelper(
+            $semantic_timeframe_builder,
+            new TimeframeBuilder(
+                $form_element_factory,
+                $semantic_timeframe_builder,
+                new \BackendLogger()
+            )
+        );
     }
 }

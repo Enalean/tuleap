@@ -430,7 +430,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $time_frame_helper = $this->getArtifactTimeframeHelper();
 
         if ($time_frame_helper->artifactHelpShouldBeShownToUser($user, $this)) {
-            $value = $value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
+            $value = $value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getEndDateArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
         }
 
         $html = '<div class="auto-computed-label">'. $value. '</div>'.
