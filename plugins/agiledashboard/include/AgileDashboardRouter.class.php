@@ -43,6 +43,9 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
  */
 class AgileDashboardRouter
 {
+    private const PANE_KANBAN = 'kanban';
+    private const PANE_CHARTS = 'charts';
+
     /**
      * @var Plugin
      */
@@ -213,8 +216,11 @@ class AgileDashboardRouter
                 break;
             case 'admin':
                 if ($this->userIsAdmin($request)) {
-                    if ($request->get('pane') === 'kanban') {
+                    $pane = $request->get('pane');
+                    if ($pane === self::PANE_KANBAN) {
                         $this->renderAction($this->buildController($request), 'adminKanban', $request);
+                    } elseif (\ForgeConfig::get('use_burnup_count_elements') && $pane === self::PANE_CHARTS) {
+                        $this->renderAction($this->buildController($request), 'adminCharts', $request);
                     } else {
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
@@ -301,6 +307,7 @@ class AgileDashboardRouter
             'exportToFile'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
             'adminScrum'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminScrum'),
             'adminKanban'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminKanban'),
+            'adminCharts'         => dgettext("tuleap-agiledashboard", "Charts configuration"),
             'new_'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'importForm'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'edit'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),

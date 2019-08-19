@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #, php-format
 msgid "%s Kanban"
@@ -81,8 +81,14 @@ msgid "Burnup is under calculation. It will be available in few minutes."
 msgstr ""
 "Le burn-up est en cours de calcul. Il sera disponible dans quelques minutes."
 
+msgid "Charts"
+msgstr "Graphiques"
+
 msgid "Charts configuration"
 msgstr "Configuration des graphiques"
+
+msgid "Configuration"
+msgstr "Configuration"
 
 msgid "Define the closed status that are considered Done"
 msgstr ""
@@ -128,6 +134,9 @@ msgstr "Élément"
 msgid "Item is not linked to this milestone"
 msgstr "L'élément n'est pas lié à ce jalon"
 
+msgid "Kanban"
+msgstr "Kanban"
+
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
@@ -151,6 +160,9 @@ msgstr "Le planning a été mis à jour."
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Scrum"
+msgstr "Scrum"
 
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
@@ -219,8 +231,8 @@ msgid ""
 "This option will display all the burnup charts in the project with elements "
 "progression instead of effort progression."
 msgstr ""
-"Cette option permet d'afficher l'ensemble des graphiques burnup du projet "
-"en montrant la progression des éléments au lieu de la progression de l'effort."
+"Cette option permet d'afficher l'ensemble des graphiques burnup du projet en "
+"montrant la progression des éléments au lieu de la progression de l'effort."
 
 msgid ""
 "This semantic will be used in the <strong>AgileDashboard</strong> service "

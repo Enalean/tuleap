@@ -53,11 +53,6 @@ class AgileDashboardScrumConfigurationUpdater {
      */
     private $scrum_mono_milestone_checker;
 
-    /**
-     * @var CountElementsModeUpdater
-     */
-    private $count_elements_mode_updater;
-
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_ConfigurationManager $config_manager,
@@ -65,8 +60,7 @@ class AgileDashboardScrumConfigurationUpdater {
         AgileDashboard_FirstScrumCreator $first_scrum_creator,
         ScrumForMonoMilestoneEnabler $scrum_mono_milestone_enabler,
         ScrumForMonoMilestoneDisabler $scrum_mono_milestone_disabler,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        CountElementsModeUpdater $count_elements_mode_updater
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
         $this->request                       = $request;
         $this->project_id                    = (int) $this->request->get('group_id');
@@ -76,7 +70,6 @@ class AgileDashboardScrumConfigurationUpdater {
         $this->scrum_mono_milestone_enabler  = $scrum_mono_milestone_enabler;
         $this->scrum_mono_milestone_disabler = $scrum_mono_milestone_disabler;
         $this->scrum_mono_milestone_checker  = $scrum_mono_milestone_checker;
-        $this->count_elements_mode_updater   = $count_elements_mode_updater;
     }
 
     public function updateConfiguration()
@@ -96,11 +89,6 @@ class AgileDashboardScrumConfigurationUpdater {
             $this->getScrumTitle(),
             $this->config_manager->getKanbanTitle($this->project_id)
         );
-
-        if (ForgeConfig::get('use_burnup_count_elements')) {
-            $use_count_mode = (bool) $this->request->get('burnup-count-mode');
-            $this->count_elements_mode_updater->updateBurnupMode($this->request->getProject(), $use_count_mode);
-        }
 
         $is_scrum_mono_milestone_enabled = $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled(
             $this->project_id

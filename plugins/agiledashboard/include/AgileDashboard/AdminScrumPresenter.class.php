@@ -56,11 +56,6 @@ class AdminScrumPresenter {
     private $can_create_planning;
     private $additional_content;
 
-    /**
-     * @var bool
-     */
-    public $burnup_count_mode_activated;
-
     public function __construct(
         array $plannings,
         $group_id,
@@ -72,7 +67,6 @@ class AdminScrumPresenter {
         $scrum_title,
         $can_scrum_mono_milestone_be_enabled,
         bool $can_burnup_be_configured,
-        bool $burnup_count_mode_activated,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
         $additional_content
@@ -86,7 +80,6 @@ class AdminScrumPresenter {
         $this->scrum_title                                 = $scrum_title;
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
         $this->can_burnup_be_configured                    = $can_burnup_be_configured;
-        $this->burnup_count_mode_activated                 = $burnup_count_mode_activated;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
         $this->additional_content                          = $additional_content;
@@ -172,14 +165,6 @@ class AdminScrumPresenter {
 
     public function config_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');
-    }
-
-    public function kanban_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_label');
-    }
-
-    public function scrum_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_label');
     }
 
     public function activate_scrum_label() {

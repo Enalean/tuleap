@@ -35,6 +35,7 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
+use ForgeConfig;
 use FRSLog;
 use PFUser;
 use Planning_PlanningAdminPresenter;
@@ -205,6 +206,16 @@ class AdminController extends BaseController
         );
     }
 
+    public function adminCharts()
+    {
+        return $this->renderToString(
+            "admin-charts",
+            $this->getAdminChartsPresenter(
+                $this->project
+            )
+        );
+    }
+
     private function getAdminScrumPresenter(PFUser $user, Project $project)
     {
         $group_id                    = $project->getID();
@@ -234,7 +245,6 @@ class AdminController extends BaseController
             $this->config_manager->getScrumTitle($group_id),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
             \ForgeConfig::get('use_burnup_count_elements'),
-            $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
             $this->getAdditionalContent()
@@ -266,7 +276,8 @@ class AdminController extends BaseController
             $project_id,
             $this->config_manager->kanbanIsActivatedForProject($project_id),
             $this->config_manager->getKanbanTitle($project_id),
-            $has_kanban
+            $has_kanban,
+            \ForgeConfig::get('use_burnup_count_elements')
         );
     }
 
@@ -330,6 +341,13 @@ class AdminController extends BaseController
                     new TrackerReportUpdater(new TrackerReportDao()),
                     Tracker_ReportFactory::instance(),
                     TrackerXmlImport::build(new XMLImportHelper($user_manager))
+                )
+            );
+        } elseif ($this->request->exist("burnup-count-mode")) {
+            $updater = new AgileDashboardChartsConfigurationUpdater(
+                $this->request,
+                new CountElementsModeUpdater(
+                    new ProjectsCountModeDao()
                 )
             );
         } else {
@@ -434,8 +452,7 @@ class AdminController extends BaseController
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
                 new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
-                new CountElementsModeUpdater(new ProjectsCountModeDao())
+                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory)
             );
         }
 
@@ -501,6 +518,17 @@ class AdminController extends BaseController
             [
                 'group_id' => $this->group_id
             ]
+        );
+    }
+
+    private function getAdminChartsPresenter(Project $project) : AdminChartsPresenter
+    {
+        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
+
+        return new AdminChartsPresenter(
+            $project,
+            $token,
+            $this->count_elements_mode_checker->burnupMustUseCountElementsMode($project)
         );
     }
 }

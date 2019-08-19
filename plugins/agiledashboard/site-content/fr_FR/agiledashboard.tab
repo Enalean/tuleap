@@ -132,8 +132,6 @@ plugin_agiledashboard	kanban_activated_label	Kanban est actuellement actif.
 plugin_agiledashboard	kanban_not_activated_label	Kanban n'est actuellement pas actif.
 plugin_agiledashboard	first_kanban_will_be_created	Une première instance de Kanban sera créée lors de l'activation. Ceci peut prendre quelques secondes.
 plugin_agiledashboard	first_scrum_will_be_created	Une configuration scrum initiale sera utilisée lors de l'activation. Ceci peut prendre quelques secondes.
-plugin_agiledashboard	kanban_label	Kanban
-plugin_agiledashboard	scrum_label	Scrum
 plugin_agiledashboard	all_label	Scrum et Kanban
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
 plugin_agiledashboard	scrum_activated	Scrum activé avec succès.

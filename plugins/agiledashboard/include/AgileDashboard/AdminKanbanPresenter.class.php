@@ -32,16 +32,23 @@ class AdminKanbanPresenter {
     /** @var bool */
     public $has_kanban;
 
+    /**
+     * @var bool
+     */
+    public $can_burnup_be_configured;
+
     public function __construct(
         $group_id,
         $kanban_activated,
         $kanban_title,
-        $has_kanban
+        $has_kanban,
+        bool $can_burnup_be_configured
     ) {
-        $this->group_id         = $group_id;
-        $this->kanban_activated = $kanban_activated;
-        $this->kanban_title     = $kanban_title;
-        $this->has_kanban       = $has_kanban;
+        $this->group_id                 = $group_id;
+        $this->kanban_activated         = $kanban_activated;
+        $this->kanban_title             = $kanban_title;
+        $this->has_kanban               = $has_kanban;
+        $this->can_burnup_be_configured = $can_burnup_be_configured;
     }
 
     public function config_title() {
@@ -54,14 +61,6 @@ class AdminKanbanPresenter {
 
     public function general_settings_section() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'general_settings_section');
-    }
-
-    public function kanban_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_label');
-    }
-
-    public function scrum_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_label');
     }
 
     public function activate_kanban_label() {
