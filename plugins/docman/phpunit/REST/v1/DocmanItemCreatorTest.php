@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,12 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
+use Docman_Empty;
+use Docman_Folder;
+use Docman_Link;
 use Docman_MetadataValueDao;
+use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -40,6 +45,9 @@ use Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -98,8 +106,12 @@ class DocmanItemCreatorTest extends TestCase
      * @var \Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
      */
     private $metadata_obsolesence_date_retriever;
+    /**
+     * @var \Mockery\MockInterface|DocmanItemPermissionsForGroupsSetFactory
+     */
+    private $permissions_for_groups_set_factory;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         $this->creator_visitor = \Mockery::mock(AfterItemCreationVisitor::class);
 
@@ -119,6 +131,8 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->metadata_value_dao = \Mockery::mock(Docman_MetadataValueDao::class);
 
+        $this->permissions_for_groups_set_factory = \Mockery::mock(DocmanItemPermissionsForGroupsSetFactory::class);
+
         $this->item_creator = new DocmanItemCreator(
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
@@ -129,21 +143,24 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_status_mapper,
             $this->metadata_obsolesence_date_retriever,
             $this->custom_metadata_checker,
-            $this->metadata_value_dao
+            $this->metadata_value_dao,
+            $this->permissions_for_groups_set_factory
         );
     }
 
-    public function testEmptyDocumentCanBeCreated(): void
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testEmptyDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanEmptyPOSTRepresentation();
-        $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
-        $post_representation->title     = 'Title';
-        $post_representation->parent_id = 11;
+        $post_representation                         = new DocmanEmptyPOSTRepresentation();
+        $post_representation->title                  = 'Title';
+        $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -158,7 +175,7 @@ class DocmanItemCreatorTest extends TestCase
             ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE,$current_time])
             ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -171,7 +188,21 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitEmpty')->once();
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitEmpty')
+            ->withArgs(function (Docman_Empty $item, array $params) use ($permissions_for_groups_set) : bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
 
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
@@ -188,7 +219,10 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertSame(12, $created_item_representation->id);
     }
 
-    public function testWikiDocumentCanBeCreated(): void
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testWikiDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
@@ -199,6 +233,7 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->title                      = 'Title';
         $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
         $post_representation->wiki_properties->page_name = "Monchichi";
+        $post_representation->permissions_for_groups     = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -214,10 +249,26 @@ class DocmanItemCreatorTest extends TestCase
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
-        $created_item = \Mockery::mock(\Docman_Wiki::class);
+        $created_item = \Mockery::mock(Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
+
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitWiki')
+            ->withArgs(function (Docman_Wiki $item, array $params) use ($permissions_for_groups_set) : bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
@@ -226,8 +277,6 @@ class DocmanItemCreatorTest extends TestCase
             ->andReturns($created_item);
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-
-        $this->creator_visitor->shouldReceive('visitWiki')->once();
 
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
@@ -261,7 +310,7 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -406,7 +455,10 @@ class DocmanItemCreatorTest extends TestCase
         );
     }
 
-    public function testLinkDocumentCanBeCreated(): void
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testLinkDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set) : void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
@@ -417,6 +469,7 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->title                     = 'Mie faboulouse linke';
         $post_representation->link_properties           = new LinkPropertiesRepresentation();
         $post_representation->link_properties->link_url = 'https://my.example.test';
+        $post_representation->permissions_for_groups    = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -430,7 +483,23 @@ class DocmanItemCreatorTest extends TestCase
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
-        $created_item = \Mockery::mock(\Docman_Link::class);
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitLink')
+            ->withArgs(function (Docman_Link $item, array $params) use ($permissions_for_groups_set) : bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
+
+        $created_item = \Mockery::mock(Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -453,8 +522,6 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitLink')->once();
-
         $this->link_validity_checker->shouldReceive("checkLinkValidity");
 
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
@@ -472,16 +539,20 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertSame(12, $created_item_representation->id);
     }
 
-    public function testFolderCanBeCreated(): void
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testFolderCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation              = new DocmanFolderPOSTRepresentation();
-        $post_representation->title       = 'Title';
-        $post_representation->description = '';
+        $post_representation                         = new DocmanFolderPOSTRepresentation();
+        $post_representation->title                  = 'Title';
+        $post_representation->description            = '';
+        $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -495,7 +566,23 @@ class DocmanItemCreatorTest extends TestCase
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
-        $created_item = \Mockery::mock(\Docman_Folder::class);
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitFolder')
+            ->withArgs(function (Docman_Folder $item, array $params) use ($permissions_for_groups_set) : bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
+
+        $created_item = \Mockery::mock(Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -508,7 +595,6 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitFolder')->once();
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -524,7 +610,10 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertSame(12, $created_item_representation->id);
     }
 
-    public function testEmbeddedFileCanBeCreated(): void
+    /**
+     * @dataProvider permissionsForGroupsSetRepresentationDataProvider
+     */
+    public function testEmbeddedFileCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
@@ -535,6 +624,7 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->title                        = 'Embedded file';
         $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTPATCHRepresentation();
         $post_representation->embedded_properties->content = 'My original content :)';
+        $post_representation->permissions_for_groups       = $permissions_for_groups_set;
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -549,7 +639,23 @@ class DocmanItemCreatorTest extends TestCase
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
-        $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
+        if ($permissions_for_groups_set !== null) {
+            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
+                ->once()
+                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        }
+
+        $this->creator_visitor->shouldReceive('visitEmbeddedFile')
+            ->withArgs(function (Docman_EmbeddedFile $item, array $params) use ($permissions_for_groups_set) : bool {
+                if ($permissions_for_groups_set === null) {
+                    $this->assertNull($params['permissions_for_groups']);
+                } else {
+                    $this->assertNotNull($params['permissions_for_groups']);
+                }
+                return true;
+            })->once();
+
+        $created_item = \Mockery::mock(Docman_EmbeddedFile::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->shouldReceive('getGroupId')->andReturn(102);
@@ -564,7 +670,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitEmbeddedFile')->once();
         $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
@@ -631,7 +736,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->never();
 
-        $created_item = \Mockery::mock(\Docman_Folder::class);
+        $created_item = \Mockery::mock(Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -687,7 +792,7 @@ class DocmanItemCreatorTest extends TestCase
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
 
-        $created_item = \Mockery::mock(\Docman_Folder::class);
+        $created_item = \Mockery::mock(Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -758,7 +863,7 @@ class DocmanItemCreatorTest extends TestCase
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -819,7 +924,7 @@ class DocmanItemCreatorTest extends TestCase
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -890,7 +995,7 @@ class DocmanItemCreatorTest extends TestCase
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(\Docman_Link::class);
+        $created_item = \Mockery::mock(Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -965,7 +1070,7 @@ class DocmanItemCreatorTest extends TestCase
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(\Docman_Wiki::class);
+        $created_item = \Mockery::mock(Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -1055,5 +1160,13 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNotNull($created_item_representation->file_properties);
+    }
+
+    public function permissionsForGroupsSetRepresentationDataProvider() : array
+    {
+        return [
+            [null],
+            [new DocmanItemPermissionsForGroupsSetRepresentation()],
+        ];
     }
 }

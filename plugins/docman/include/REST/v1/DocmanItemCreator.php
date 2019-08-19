@@ -38,6 +38,9 @@ use Tuleap\Docman\REST\v1\Metadata\CustomMetadataRepresentationRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\MetadataToCreate;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSet;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetFactory;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -87,6 +90,10 @@ class DocmanItemCreator
      * @var \Docman_MetadataValueDao
      */
     private $metadata_value_dao;
+    /**
+     * @var DocmanItemPermissionsForGroupsSetFactory
+     */
+    private $permissions_for_groups_set_factory;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -98,18 +105,20 @@ class DocmanItemCreator
         ItemStatusMapper $status_mapper,
         HardcodedMetadataObsolescenceDateRetriever $date_retriever,
         CustomMetadataRepresentationRetriever $custom_checker,
-        \Docman_MetadataValueDao $metadata_value_dao
+        \Docman_MetadataValueDao $metadata_value_dao,
+        DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory
     ) {
-        $this->item_factory                      = $item_factory;
-        $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
-        $this->document_to_upload_creator        = $document_to_upload_creator;
-        $this->creator_visitor                   = $creator_visitor;
-        $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
-        $this->links_validity_checker            = $links_validity_checker;
-        $this->status_mapper                     = $status_mapper;
-        $this->date_retriever                    = $date_retriever;
-        $this->custom_checker                    = $custom_checker;
-        $this->metadata_value_dao                = $metadata_value_dao;
+        $this->item_factory                       = $item_factory;
+        $this->document_ongoing_upload_retriever  = $document_ongoing_upload_retriever;
+        $this->document_to_upload_creator         = $document_to_upload_creator;
+        $this->creator_visitor                    = $creator_visitor;
+        $this->empty_file_to_upload_finisher      = $empty_file_to_upload_finisher;
+        $this->links_validity_checker             = $links_validity_checker;
+        $this->status_mapper                      = $status_mapper;
+        $this->date_retriever                     = $date_retriever;
+        $this->custom_checker                     = $custom_checker;
+        $this->metadata_value_dao                 = $metadata_value_dao;
+        $this->permissions_for_groups_set_factory = $permissions_for_groups_set_factory;
     }
 
     /**
@@ -151,6 +160,7 @@ class DocmanItemCreator
         MetadataToCreate $metadata_to_create,
         ?string $status,
         ?string $obsolescence_date,
+        ?DocmanItemPermissionsForGroupsSet $permissions_for_groups,
         $wiki_page,
         $link_url,
         $content
@@ -179,12 +189,13 @@ class DocmanItemCreator
         );
 
         $params = [
-            'group_id'           => $project->getID(),
-            'parent'             => $parent_item,
-            'item'               => $item,
-            'user'               => $user,
-            'creation_time'      => $current_time,
-            'formatted_metadata' => $metadata_to_create->getMetadataListValues()
+            'group_id'               => $project->getID(),
+            'parent'                 => $parent_item,
+            'item'                   => $item,
+            'user'                   => $user,
+            'creation_time'          => $current_time,
+            'formatted_metadata'     => $metadata_to_create->getMetadataListValues(),
+            'permissions_for_groups' => $permissions_for_groups
         ];
 
         if ($metadata_to_create->isInheritedFromParent()) {
@@ -304,6 +315,7 @@ class DocmanItemCreator
             $metadata_to_create,
             $representation->status,
             ItemRepresentation::OBSOLESCENCE_DATE_NONE,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
             null,
             null,
             null
@@ -350,6 +362,7 @@ class DocmanItemCreator
             $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
             null,
             null,
             null
@@ -403,6 +416,7 @@ class DocmanItemCreator
             $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
             $representation->wiki_properties->page_name,
             null,
             null
@@ -450,6 +464,7 @@ class DocmanItemCreator
             $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
             null,
             null,
             $representation->embedded_properties->content
@@ -500,9 +515,26 @@ class DocmanItemCreator
             $metadata_to_create,
             $representation->status,
             $representation->obsolescence_date,
+            $this->getPermissionsForGroupsSet($parent_item, $representation->permissions_for_groups),
             null,
             $link_url,
             null
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getPermissionsForGroupsSet(
+        Docman_Item $parent_item,
+        ?DocmanItemPermissionsForGroupsSetRepresentation $representation
+    ) : ?DocmanItemPermissionsForGroupsSet {
+        if ($representation === null) {
+            return null;
+        }
+        return $this->permissions_for_groups_set_factory->fromRepresentation(
+            $parent_item,
+            $representation
         );
     }
 }

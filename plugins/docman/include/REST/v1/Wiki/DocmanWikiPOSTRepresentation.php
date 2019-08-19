@@ -26,6 +26,7 @@ use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
 class DocmanWikiPOSTRepresentation implements CanContainACopyRepresentation
 {
@@ -55,6 +56,12 @@ class DocmanWikiPOSTRepresentation implements CanContainACopyRepresentation
      * @var array | null {@required false} {@type \Tuleap\Docman\REST\v1\Metadata\POSTCustomMetadataRepresentation}
      */
     public $metadata;
+
+    /**
+     * @var DocmanItemPermissionsForGroupsSetRepresentation {@required false} {@type \Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation}
+     * @psalm-var DocmanItemPermissionsForGroupsSetRepresentation|null
+     */
+    public $permissions_for_groups;
 
 
     /**
