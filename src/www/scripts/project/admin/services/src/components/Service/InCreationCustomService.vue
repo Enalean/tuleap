@@ -52,6 +52,7 @@
         <service-open-in-new-tab
             id="project-service-add-modal-new-tab"
             v-bind:value="service.is_in_new_tab"
+            v-on:change="onNewTabChange"
         />
     </div>
 </template>
@@ -83,6 +84,11 @@ export default {
         allowed_icons: {
             type: Object,
             required: true
+        }
+    },
+    methods: {
+        onNewTabChange($event) {
+            this.service.is_in_new_tab = $event.target.checked;
         }
     }
 };

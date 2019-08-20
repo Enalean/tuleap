@@ -25,6 +25,7 @@
                 <span class="project-sidebar-nav-item-label project-admin-services-modal-preview-label">
                     {{ props.label }}
                 </span>
+                <i v-if="props.is_in_new_tab" class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
             </div>
         </div>
     </div>
