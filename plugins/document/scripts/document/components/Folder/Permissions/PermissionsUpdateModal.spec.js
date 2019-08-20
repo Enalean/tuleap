@@ -104,9 +104,7 @@ describe("PermissionsUpdateModal", () => {
 
         EventBus.$emit("show-update-permissions-modal");
         await wrapper.vm.$nextTick().then(() => {});
-        expect(wrapper.find("[data-test=document-permissions-update-selectors]").exists()).toBe(
-            true
-        );
+        expect(wrapper.find(".document-permissions-update-container").exists()).toBe(true);
         expect(wrapper.vm.can_be_submitted).toBe(true);
 
         const nb_calls_after_first_opening_of_the_modal = getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.calls.count();
