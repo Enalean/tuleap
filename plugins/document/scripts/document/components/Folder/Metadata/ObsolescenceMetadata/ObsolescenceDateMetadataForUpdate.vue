@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_obsolescence_date_metadata_used" data-test="obsolescence-date-metadata">
+    <div class="tlp-form-element document-obsolescence-date-section" v-if="is_obsolescence_date_metadata_used" data-test="obsolescence-date-metadata">
         <label class="tlp-label"
                for="document-obsolescence-date-update"
         >
             <translate> Obsolescence date</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <div class="tlp-form-element tlp-form-element-prepend document-obsolescence-date-metadata-select">
+        <div class="tlp-form-element document-obsolescence-date-metadata-select">
             <select
                 class="tlp-select document-obsolescence-date-metadata-select"
                 id="document-obsolescence-date-select-update"
@@ -72,18 +72,20 @@
                     Obsolete today
                 </option>
             </select>
-            <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-            <input
-                type="text"
-                id="document-obsolescence-date-update"
-                class="tlp-input tlp-input-date"
-                size="12"
-                v-on:click.prevent="inputDate"
-                name="input"
-                data-test="document-obsolescence-date-input-update"
-                v-bind:value="value"
-                ref="input"
-            >
+            <div class="tlp-form-element-prepend">
+                <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+                <input
+                    type="text"
+                    id="document-obsolescence-date-update"
+                    class="tlp-input tlp-input-date"
+                    size="12"
+                    v-on:click.prevent="inputDate"
+                    name="input"
+                    data-test="document-obsolescence-date-input-update"
+                    v-bind:value="value"
+                    ref="input"
+                >
+            </div>
         </div>
         <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="obsolescence-date-error-message">
             {{ error_message }}

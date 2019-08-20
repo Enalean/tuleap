@@ -21,9 +21,9 @@
     <div v-if="has_recursion_metadata" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator">
         <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
-        <div class="tlp-property" v-translate>
+        <p v-translate>
             All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
-        </div>
+        </p>
         <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
         <custom-metadata v-bind:item-metadata="currentlyUpdatedItem.metadata"/>
     </div>
