@@ -53,11 +53,17 @@ describe("NewFolderModal", () => {
                             type: "text",
                             is_required: false
                         }
-                    ]
+                    ],
+                    permissions_for_groups: {
+                        can_read: [],
+                        can_write: [],
+                        can_manage: []
+                    }
                 },
                 is_obsolescence_date_metadata_used: true,
                 is_item_status_metadata_used: true,
-                project_id: 102
+                project_id: 102,
+                project_ugroups: null
             }
         };
 
