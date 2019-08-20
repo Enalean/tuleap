@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -101,10 +101,10 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../../www/themes/BurningParrot/assets',
-                    GIT_BASE_URL . '/themes/BurningParrot/assets'
+                    __DIR__ . '/../../../../../src/www/assets/git/themes',
+                    '/assets/git/themes'
                 ),
-                'git'
+                'bp-style'
             )
         );
 

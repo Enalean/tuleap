@@ -1,0 +1,185 @@
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'gitphp/commit';
+@import 'gitphp/commitdiff';
+@import 'gitphp/shortlog';
+@import 'gitphp/blob';
+@import 'gitphp/tree';
+@import 'gitphp/highlight';
+@import '../gitphp-override';
+
+.git-repository-path {
+    color: $tlp-ui-dimmed;
+    font-size: 16px;
+}
+
+.git-repository-header {
+    padding: $tlp-spacing $tlp-spacing 0;
+}
+
+.git-repository-subheader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.git-repository-subheader-spacer {
+    min-width: $tlp-spacing;
+}
+
+.git-repository-forked-name {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+.git-repository-parent {
+    display: block;
+    margin: 0 0 $tlp-spacing;
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
+.git-repository-actions {
+    display: flex;
+    flex: 1 1 auto;
+    margin: 5px 0 $tlp-spacing;
+}
+
+.git-repository-actions-spacer {
+    flex: 1;
+    min-width: 20px;
+}
+
+.git-repository-actions-button {
+    margin: 0 0 0 10px;
+}
+
+.git-repository-clone-label {
+    align-self: center;
+    margin: 0 5px 0 0;
+}
+
+.git-repository-clone-dropdown-menu > .tlp-dropdown-menu-title {
+    white-space: nowrap;
+}
+
+#git-repository-clone-read-only {
+    margin-left: 1px;
+    padding: 0 0 0 12px;
+    border-right: 0;
+    border-left: 0;
+    background: $tlp-ui-white;
+
+    &.git-repository-clone-hidden {
+        width: 0;
+        padding: 0;
+        border-width: 1px 0;
+
+        > .tlp-badge-info {
+            display: none;
+        }
+    }
+}
+
+.git-repository-clone-form-element {
+    display: flex;
+    flex: 2 1 auto;
+    margin: 0;
+}
+
+#git-repository-clone-input {
+    min-width: 100px;
+    border-left: 0;
+    color: $tlp-ui-dimmed;
+    text-overflow: ellipsis;
+}
+
+.git-repository-gerrit-status:last-child {
+    margin: 0 0 $tlp-spacing;
+}
+
+.git-repository-branch-tag-selector {
+    margin: 0 0 $tlp-spacing;
+}
+
+.git-repository-branch-tag-selector-button-time {
+    margin: 0 5px;
+    color: transparentize($tlp-theme-color, .3);
+    font-size: 12px;
+
+    &::before {
+        content: '\f017'; // fa-clock-o
+        margin: 0 3px 0 0;
+        font-family: 'FontAwesome';
+    }
+}
+
+.git-repository-branch-tag-selector-tabs {
+    flex-wrap: nowrap;
+}
+
+.git-repository-branch-tag-selector-refs {
+    display: flex;
+    flex-direction: column;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.git-repository-branch-tag-selector-filter {
+    margin: $tlp-half-spacing $tlp-spacing;
+}
+
+.git-repository-branch-tag-selector-empty {
+    margin: $tlp-spacing;
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 14px;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.git-repository-branch-tag-selector-is-loading {
+    height: 40px;
+    margin: $tlp-spacing 0;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+/* scss-lint:disable SelectorFormat */
+.plugin_git_gitphp {
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+#readme {
+    margin: $tlp-spacing 10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+}
+
+@media screen and (max-width: 1250px) {
+    .git-repository-clone-label,
+    .git-repository-actions-settings-label {
+        display: none;
+    }
+
+    .tlp-button-primary > .git-repository-actions-settings-icon {
+        margin: 0;
+    }
+}

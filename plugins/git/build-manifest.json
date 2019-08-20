@@ -1,50 +1,5 @@
 {
     "name": "git",
-    "themes": {
-        "default": {
-            "files": [
-                "www/themes/default/css/style.scss"
-            ],
-            "target_dir": "www/themes/default/css"
-        },
-        "BurningParrot": {
-            "files": [
-                "www/themes/BurningParrot/css/syntax-highlight.scss",
-                "www/themes/BurningParrot/css/git-blue.scss",
-                "www/themes/BurningParrot/css/git-blue-condensed.scss",
-                "www/themes/BurningParrot/css/git-green.scss",
-                "www/themes/BurningParrot/css/git-green-condensed.scss",
-                "www/themes/BurningParrot/css/git-grey.scss",
-                "www/themes/BurningParrot/css/git-grey-condensed.scss",
-                "www/themes/BurningParrot/css/git-orange.scss",
-                "www/themes/BurningParrot/css/git-orange-condensed.scss",
-                "www/themes/BurningParrot/css/git-purple.scss",
-                "www/themes/BurningParrot/css/git-purple-condensed.scss",
-                "www/themes/BurningParrot/css/git-red.scss",
-                "www/themes/BurningParrot/css/git-red-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-blue.scss",
-                "www/themes/BurningParrot/css/site-admin-blue-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-green.scss",
-                "www/themes/BurningParrot/css/site-admin-green-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-grey.scss",
-                "www/themes/BurningParrot/css/site-admin-grey-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-orange.scss",
-                "www/themes/BurningParrot/css/site-admin-orange-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-purple.scss",
-                "www/themes/BurningParrot/css/site-admin-purple-condensed.scss",
-                "www/themes/BurningParrot/css/site-admin-red.scss",
-                "www/themes/BurningParrot/css/site-admin-red-condensed.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/common/tlp/src/scss"
-            ],
-            "watched_includes": [
-                "www/themes/BurningParrot/css/**/_*.scss"
-            ],
-            "target_dir": "www/themes/BurningParrot/assets",
-            "is_revisioned": true
-        }
-    },
     "javascript": [
         "www/themes/BurningParrot/js/modal-add-gerrit-server.js",
         "www/themes/BurningParrot/js/modal-delete-gerrit-server.js",
@@ -53,7 +8,8 @@
         "www/themes/BurningParrot/js/modal-mirror-configuration.js"
     ],
     "components": [
-        "www/scripts"
+        "www/scripts",
+        "themes"
     ],
     "gettext-js": {
         "repository": {

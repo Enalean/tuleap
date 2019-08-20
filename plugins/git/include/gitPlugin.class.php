@@ -397,7 +397,11 @@ class GitPlugin extends Plugin
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/git/themes',
+                '/assets/git/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default.css') .'" />';
         }
     }
 

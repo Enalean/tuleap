@@ -559,6 +559,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1163,6 +1164,7 @@ fi
 %files plugin-git
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/git
+%{APP_DIR}/src/www/assets/git
 %dir %{APP_DATA_DIR}/gitroot
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
@@ -1181,6 +1183,7 @@ fi
 %files plugin-git-gitolite3
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/git
+%{APP_DIR}/src/www/assets/git
 %dir %{APP_DATA_DIR}/gitroot
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
