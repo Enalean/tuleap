@@ -197,7 +197,8 @@ class DocmanFoldersResource extends AuthenticatedResource
                     $files_representation->obsolescence_date,
                     new DateTimeImmutable(),
                     $files_representation->file_properties,
-                    $metadata_to_create
+                    $metadata_to_create,
+                    $files_representation->permissions_for_groups
                 );
             } catch (Metadata\HardCodedMetadataException $e) {
                 throw new I18NRestException(

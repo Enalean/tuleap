@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\Upload\Document;
 
+use Docman_PermissionsManager;
 use Tuleap\DB\DataAccessObject;
 
 class DocumentOngoingUploadDAO extends DataAccessObject
@@ -99,16 +100,23 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         return $item_id;
     }
 
-    public function deleteUnusableDocuments($current_time)
+    public function deleteUnusableDocuments($current_time) : void
     {
         $this->getDB()->run(
-            'DELETE plugin_docman_new_document_upload, plugin_docman_item_id, plugin_docman_metadata_value
+            'DELETE plugin_docman_new_document_upload, plugin_docman_item_id, plugin_docman_metadata_value, permissions
              FROM plugin_docman_new_document_upload
              JOIN plugin_docman_item_id ON (plugin_docman_item_id.id = plugin_docman_new_document_upload.item_id)
              LEFT JOIN plugin_docman_metadata_value ON (plugin_docman_new_document_upload.item_id = plugin_docman_metadata_value.item_id)
+             LEFT JOIN permissions ON (
+                    CAST(plugin_docman_new_document_upload.item_id AS CHAR CHARACTER SET utf8) = permissions.object_id AND
+                    permissions.permission_type IN (?, ?, ?)
+                 )
              LEFT JOIN plugin_docman_item ON (plugin_docman_item.item_id = plugin_docman_new_document_upload.parent_id)
              LEFT JOIN `groups` ON (`groups`.group_id = plugin_docman_item.group_id)
              WHERE ? >= plugin_docman_new_document_upload.expiration_date OR `groups`.status = "D" OR `groups`.group_id IS NULL',
+            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ,
+            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE,
+            Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE,
             $current_time
         );
     }

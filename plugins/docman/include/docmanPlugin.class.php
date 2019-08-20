@@ -1287,7 +1287,6 @@ class DocmanPlugin extends Plugin
                     $path_allocator,
                     $this->getItemFactory(),
                     new Docman_VersionFactory(),
-                    PermissionsManager::instance(),
                     EventManager::instance(),
                     $document_ongoing_upload_dao,
                     new Docman_ItemDao(),

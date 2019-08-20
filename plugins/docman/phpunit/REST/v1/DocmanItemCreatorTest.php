@@ -378,7 +378,8 @@ class DocmanItemCreatorTest extends TestCase
             '2019-06-06',
             $current_time,
             $file_properties_post_representation,
-            $metadata_to_create
+            $metadata_to_create,
+            null
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -420,7 +421,8 @@ class DocmanItemCreatorTest extends TestCase
             '2019-06-06',
             $current_time,
             $file_properties_post_representation,
-            $metadata_to_create
+            $metadata_to_create,
+            null
         );
     }
 
@@ -1155,7 +1157,8 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation->obsolescence_date,
             $current_time,
             $file_properties_post_representation,
-            $metadata_to_create
+            $metadata_to_create,
+            null
         );
 
         $this->assertSame(12, $created_item_representation->id);

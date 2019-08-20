@@ -101,6 +101,14 @@ class DocmanItemCreatorBuilder
 
         $ugroup_manager = new UGroupManager();
 
+        $permission_item_updater = new PermissionItemUpdater(
+            new NullResponseFeedbackWrapper(),
+            $item_factory,
+            \Docman_PermissionsManager::instance($project->getID()),
+            $permission_manager,
+            $event_manager
+        );
+
         $metadata_value_factory = new \Docman_MetadataValueFactory($project->getID());
         return new DocmanItemCreator(
             $item_factory,
@@ -120,7 +128,9 @@ class DocmanItemCreatorBuilder
                         )
                     ),
                     new \Docman_MetadataDao(\CodendiDataAccess::instance())
-                )
+                ),
+                $permission_manager,
+                $permission_item_updater
             ),
             new AfterItemCreationVisitor(
                 $permission_manager,
@@ -129,13 +139,7 @@ class DocmanItemCreatorBuilder
                 $docman_file_storage,
                 $version_factory,
                 $metadata_value_factory,
-                new PermissionItemUpdater(
-                    new NullResponseFeedbackWrapper(),
-                    $item_factory,
-                    \Docman_PermissionsManager::instance($project->getID()),
-                    $permission_manager,
-                    $event_manager
-                )
+                $permission_item_updater
             ),
             new EmptyFileToUploadFinisher(
                 new DocumentUploadFinisher(
@@ -143,7 +147,6 @@ class DocmanItemCreatorBuilder
                     $document_upload_path_allocator,
                     $item_factory,
                     $version_factory,
-                    $permission_manager,
                     $event_manager,
                     $document_on_going_upload_dao,
                     new Docman_ItemDao(),

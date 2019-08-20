@@ -226,7 +226,8 @@ class DocmanItemCreator
         ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties,
-        MetadataToCreate $metadata_to_create
+        MetadataToCreate $metadata_to_create,
+        ?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_representation
     ) : CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
@@ -250,7 +251,8 @@ class DocmanItemCreator
                 $file_properties->file_size,
                 $status_id,
                 $obsolescence_date_time_stamp,
-                $metadata_to_create->getMetadataListValues()
+                $metadata_to_create->getMetadataListValues(),
+                $this->getPermissionsForGroupsSet($parent_item, $permissions_for_groups_representation)
             );
 
             if ($metadata_to_create->isInheritedFromParent()) {
