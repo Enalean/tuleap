@@ -30,7 +30,7 @@
                 name="is_in_new_tab"
                 value="1"
                 v-bind:checked="props.value"
-                v-on:change="listeners.change || (() => {})"
+                v-on="listeners"
             >
             <label
                 class="tlp-switch-button"
