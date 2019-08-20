@@ -412,13 +412,6 @@ msgstr "Rejeté"
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
-msgid ""
-"Set the read and write permissions of a document in the document creation "
-"modal"
-msgstr ""
-"Configurer les permissions de lecture et d'écriture d'un document dans la "
-"modale de création de documents"
-
 msgid "Share the preview url of a document"
 msgstr "Partager l'url de l'aperçu d'un document"
 
