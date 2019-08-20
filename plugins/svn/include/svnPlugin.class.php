@@ -994,7 +994,7 @@ class SvnPlugin extends Plugin
      */
     private function getServiceActivator()
     {
-        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator());
+        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator(new ServiceDao()));
     }
 
     /**

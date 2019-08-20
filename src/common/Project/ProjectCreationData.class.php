@@ -122,7 +122,6 @@ class ProjectCreationData
     /**
      * @return array with:
      *     is_used => boolean telling if the service is used
-     *     server_id => service server id (whatver that is)
      */
     public function getServiceInfo($service_id) {
         return isset($this->data_services[$service_id]) ?
@@ -141,7 +140,6 @@ class ProjectCreationData
      * $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
      * foreach($data['project']['trove'] as $root => $values);
      * $data['project']['services'][$arr['service_id']]['is_used'];
-     * $data['project']['services'][$arr['service_id']]['server_id'];
      */
     public static function buildFromFormArray(
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,

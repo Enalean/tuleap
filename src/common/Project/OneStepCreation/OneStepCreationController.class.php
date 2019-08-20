@@ -185,7 +185,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
                 new ProjectHistoryDao()
             ),
             $duplicator,
-            new ServiceCreator(),
+            new ServiceCreator(new ServiceDao()),
             new LabelDao(),
             $this->default_project_visibility_retriever,
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
