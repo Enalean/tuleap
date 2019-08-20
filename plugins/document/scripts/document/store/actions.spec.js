@@ -42,7 +42,8 @@ import {
     unlockDocument,
     unsetUnderConstructionUserPreference,
     updateMetadata,
-    updatePermissions
+    updatePermissions,
+    loadProjectUserGroupsIfNeeded
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -103,6 +104,10 @@ import {
     restore as restoreHandleErrors,
     rewire$handleErrorsForModal
 } from "./actions-helpers/handle-errors.js";
+import {
+    rewire$getProjectUserGroupsWithoutServiceSpecialUGroups,
+    restore as restoreUGroupsHelper
+} from "../helpers/permissions/ugroups.js";
 
 import {
     TYPE_EMBEDDED,
@@ -211,6 +216,10 @@ describe("Store actions", () => {
 
         postLinkVersion = jasmine.createSpy("postLinkVersion");
         rewire$postLinkVersion(postLinkVersion);
+    });
+
+    afterEach(() => {
+        restoreUGroupsHelper();
     });
 
     describe("loadRootFolder()", () => {
@@ -2407,6 +2416,43 @@ describe("Store actions", () => {
 
             expect(getItem).not.toHaveBeenCalled();
             expect(handleErrorsModal).toHaveBeenCalled();
+        });
+    });
+
+    describe("loadProjectUserGroupsIfNeeded", () => {
+        it("Retrieve the project user groups when they are never been loaded", async () => {
+            const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
+                "getProjectUserGroupsWithoutServiceSpecialUGroups"
+            );
+            rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
+                getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
+            );
+            const project_ugroups = [{ id: "102_3", label: "Project members" }];
+            getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.and.returnValue(
+                Promise.resolve(project_ugroups)
+            );
+
+            context.state.project_ugroups = null;
+
+            await loadProjectUserGroupsIfNeeded(context);
+
+            expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setProjectUserGroups", project_ugroups);
+        });
+
+        it("Does not retrieve the project user groups when they have already been retrieved", async () => {
+            const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
+                "getProjectUserGroupsWithoutServiceSpecialUGroups"
+            );
+            rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
+                getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
+            );
+
+            context.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
+
+            await loadProjectUserGroupsIfNeeded(context);
+
+            expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).not.toHaveBeenCalled();
         });
     });
 });

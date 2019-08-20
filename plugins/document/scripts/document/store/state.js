@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 const state = {
     user_id: null,
     project_id: null,
+    project_ugroups: null,
     is_loading_folder: true,
     is_user_administrator: false,
     folder_content: [],

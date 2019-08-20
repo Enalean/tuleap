@@ -96,6 +96,7 @@ import {
 } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 import { getCustomMetadata } from "../helpers/metadata-helpers/custom-metadata-helper.js";
+import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../helpers/permissions/ugroups.js";
 
 export const loadRootFolder = async context => {
     try {
@@ -842,4 +843,16 @@ export const updatePermissions = async (context, [item, updated_permissions]) =>
     } catch (exception) {
         await handleErrorsForModal(context, exception);
     }
+};
+
+export const loadProjectUserGroupsIfNeeded = async context => {
+    if (context.state.project_ugroups !== null) {
+        return;
+    }
+
+    const project_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(
+        context.state.project_id
+    );
+
+    context.commit("setProjectUserGroups", project_ugroups);
 };

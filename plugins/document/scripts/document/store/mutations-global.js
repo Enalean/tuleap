@@ -32,7 +32,8 @@ export {
     showPostDeletionNotification,
     hidePostDeletionNotification,
     shouldDisplayEmbeddedInLargeMode,
-    replaceCurrentFolder
+    replaceCurrentFolder,
+    setProjectUserGroups
 };
 
 function initApp(
@@ -150,4 +151,8 @@ function hidePostDeletionNotification(state) {
 }
 function shouldDisplayEmbeddedInLargeMode(state, is_embedded_in_large_view) {
     state.is_embedded_in_large_view = is_embedded_in_large_view;
+}
+
+function setProjectUserGroups(state, project_ugroups) {
+    state.project_ugroups = project_ugroups;
 }

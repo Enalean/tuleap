@@ -25,10 +25,6 @@ import PermissionsUpdateModal from "./PermissionsUpdateModal.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 import {
-    rewire$getProjectUserGroupsWithoutServiceSpecialUGroups,
-    restore as restoreUGroupsHelper
-} from "../../../helpers/permissions/ugroups.js";
-import {
     rewire$handleErrors,
     restore as restoreHandleErrorsHelper
 } from "../../../store/actions-helpers/handle-errors.js";
@@ -38,7 +34,7 @@ describe("PermissionsUpdateModal", () => {
     let factory, store;
 
     beforeEach(() => {
-        store = createStoreMock({}, { project_id: 102, error: {} });
+        store = createStoreMock({}, { project_ugroups: null, error: {} });
 
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateModal, {
@@ -66,7 +62,6 @@ describe("PermissionsUpdateModal", () => {
     });
 
     afterEach(() => {
-        restoreUGroupsHelper();
         restoreHandleErrorsHelper();
     });
 
@@ -79,15 +74,11 @@ describe("PermissionsUpdateModal", () => {
     });
 
     it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
-        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
-            "getProjectUserGroupsWithoutServiceSpecialUGroups"
-        );
-        rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
-            getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
-        );
-        getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.and.returnValue(
-            Promise.resolve([{ id: "102_3", label: "Project members" }])
-        );
+        store.dispatch.and.callFake(name => {
+            if (name === "loadProjectUserGroupsIfNeeded") {
+                store.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
+            }
+        });
 
         const item_to_update = {
             id: 104,
@@ -107,12 +98,6 @@ describe("PermissionsUpdateModal", () => {
         expect(wrapper.find(".document-permissions-update-container").exists()).toBe(true);
         expect(wrapper.vm.can_be_submitted).toBe(true);
 
-        const nb_calls_after_first_opening_of_the_modal = getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.calls.count();
-        EventBus.$emit("show-update-permissions-modal");
-        expect(getProjectUserGroupsWithoutServiceSpecialUGroupsSpy).toHaveBeenCalledTimes(
-            nb_calls_after_first_opening_of_the_modal
-        );
-
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
             can_write: wrapper.vm.updated_permissions.can_write,
@@ -124,13 +109,10 @@ describe("PermissionsUpdateModal", () => {
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
         const handleErrors = jasmine.createSpy("handleErrors");
         rewire$handleErrors(handleErrors);
-        const getProjectUserGroupsWithoutServiceSpecialUGroupsSpy = jasmine.createSpy(
-            "getProjectUserGroupsWithoutServiceSpecialUGroups"
-        );
-        rewire$getProjectUserGroupsWithoutServiceSpecialUGroups(
-            getProjectUserGroupsWithoutServiceSpecialUGroupsSpy
-        );
-        getProjectUserGroupsWithoutServiceSpecialUGroupsSpy.and.returnValue(Promise.reject({}));
+
+        store.dispatch.and.callFake(() => {
+            return Promise.reject({});
+        });
 
         const item_to_update = {
             id: 104,
@@ -183,8 +165,8 @@ describe("PermissionsUpdateModal", () => {
             }
         };
 
+        store.state.project_ugroups = [];
         const wrapper = factory({ item: item_to_update });
-        wrapper.setData({ project_ugroups: [] });
 
         const expectedActionName = "updatePermissions";
         store.dispatch.and.callFake(function(actionName) {
