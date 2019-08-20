@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,5 +75,15 @@ describe("Store mutations", () => {
                 target_folder
             ]);
         });
+    });
+
+    it("store project user groups", () => {
+        const state = {
+            project_ugroups: null
+        };
+
+        const retrieved_project_ugroups = [{ id: "102_3", label: "Project members" }];
+        mutations.setProjectUserGroups(state, retrieved_project_ugroups);
+        expect(state.project_ugroups).toEqual(retrieved_project_ugroups);
     });
 });

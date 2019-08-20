@@ -59,7 +59,6 @@ import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
-import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../../helpers/permissions/ugroups.js";
 import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
@@ -80,7 +79,6 @@ export default {
         return {
             modal: null,
             aria_labelled_by: "document-update-permissions-modal",
-            project_ugroups: null,
             is_submitting_new_permissions: false,
             updated_permissions: {
                 apply_permissions_on_children: false,
@@ -91,7 +89,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState(["project_ugroups"]),
         ...mapState("error", ["has_modal_error"]),
         modal_title() {
             return sprintf(this.$gettext('Edit "%s" permissions'), this.item.title);
@@ -134,15 +132,11 @@ export default {
         },
         async show() {
             this.modal.show();
-            if (this.project_ugroups === null) {
-                try {
-                    this.project_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(
-                        this.project_id
-                    );
-                } catch (e) {
-                    await handleErrors(this.$store, e);
-                    this.modal.hide();
-                }
+            try {
+                await this.$store.dispatch("loadProjectUserGroupsIfNeeded");
+            } catch (e) {
+                await handleErrors(this.$store, e);
+                this.modal.hide();
             }
         },
         reset() {
