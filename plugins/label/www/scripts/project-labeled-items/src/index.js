@@ -25,8 +25,10 @@ import LabeledItemsList from "./LabeledItemsList.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML, {
-        svg: {
-            USE_PROFILES: { svg: true }
+        namedConfigurations: {
+            svg: {
+                USE_PROFILES: { svg: true }
+            }
         }
     });
     Vue.use(GetTextPlugin, {
