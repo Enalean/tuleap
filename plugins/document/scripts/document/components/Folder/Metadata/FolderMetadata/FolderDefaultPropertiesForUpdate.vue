@@ -20,52 +20,126 @@
 <template>
     <div v-if="has_recursion_metadata" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator">
-        <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
-        <p v-translate>All the properties values that you define here will be proposed as default values for the items that will be created within this folder.</p>
-        <div class="document-default-metadata">
-            <div class="document-metadata-container">
-                <div class="document-recursion-checkbox-container">
-                    <label class="tlp-label"><i class="fa fa-repeat"></i></label>
-                    <input type="checkbox" name="apply-recursive-status" class="document-recursion-checkbox" v-on:click="shouldApplyRecursion = true">
-                </div>
-                <status-metadata-with-custom-binding-for-folder-update v-bind:currently-updated-item="currentlyUpdatedItem"/>
+        <div class="document-modal-other-information-title-container">
+            <div
+                v-if="! has_loaded_metadata"
+                class="document-modal-other-information-title-container-spinner"
+                data-test="document-folder-default-properties-spinner"
+            >
+                <i class="fa fa-spin fa-circle-o-notch"></i>
             </div>
-            <recursion-options v-bind:should-apply-recursion="shouldApplyRecursion" v-model="recursion_option"/>
+            <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
         </div>
+        <template v-if="has_loaded_metadata">
+            <p v-translate>All the properties values that you define here will be proposed as default values for the
+                items that will be created within this folder.</p>
+            <div class="document-default-metadata">
+                <div class="document-metadata-container" v-if="is_item_status_metadata_used">
+                    <div class="document-recursion-checkbox-container">
+                        <label class="tlp-label"><i class="fa fa-repeat"></i></label>
+                        <input
+                            id="status"
+                            type="checkbox"
+                            class="document-recursion-checkbox"
+                            value="status"
+                        >
+                    </div>
+                    <status-metadata-with-custom-binding-for-folder-update
+                        v-bind:currently-updated-item="currentlyUpdatedItem"/>
+
+                </div>
+                <div v-for="custom in custom_metadata"
+                     v-bind:key="custom.short_name"
+                     class="document-metadata-container"
+                >
+                    <div class="document-recursion-checkbox-container">
+                        <label class="tlp-label"><i class="fa fa-repeat"></i></label>
+                        <input
+                            v-bind:id="custom.short_name"
+                            type="checkbox"
+                            class="document-recursion-checkbox"
+                            v-on:change="updateMetadataListWithRecursion"
+                            v-model="metadata_list_to_update"
+                            v-bind:value="custom.short_name"
+                            data-test="document-custom-metadata-checkbox"
+                        >
+                    </div>
+                    <custom-metadata-component-type-renderer v-bind:item-metadata="custom"/>
+                </div>
+                <recursion-options
+                    v-model="recursion_option"
+                    v-on:input="updateRecursionOption"
+                    data-test="document-custom-metadata-recursion-option"
+                />
+            </div>
+        </template>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import RecursionOptions from "./RecursionOptions.vue";
 import StatusMetadataWithCustomBindingForFolderUpdate from "./StatusMetadataWithCustomBindingForFolderUpdate.vue";
+import EventBus from "../../../../helpers/event-bus.js";
+import CustomMetadataComponentTypeRenderer from "../CustomMetadata/CustomMetadataComponentTypeRenderer.vue";
+import RecursionOptions from "./RecursionOptions.vue";
+import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper.js";
+import { transformCustomMetadataForItemUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "FolderDefaultPropertiesForUpdate",
     components: {
-        StatusMetadataWithCustomBindingForFolderUpdate,
-        RecursionOptions
+        RecursionOptions,
+        CustomMetadataComponentTypeRenderer,
+        StatusMetadataWithCustomBindingForFolderUpdate
     },
     props: {
         currentlyUpdatedItem: Object
     },
     data() {
         return {
-            shouldApplyRecursion: false
+            metadata_list_to_update: [],
+            recursion: "none",
+            item_metadata: getCustomMetadata(this.currentlyUpdatedItem.metadata)
         };
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
+        ...mapState("metadata", ["has_loaded_metadata"]),
         recursion_option: {
             get() {
                 return "";
             },
             set(value) {
                 this.currentlyUpdatedItem.status.recursion = value;
+                this.recursion = value;
             }
         },
         has_recursion_metadata() {
-            return this.is_item_status_metadata_used;
+            return this.is_item_status_metadata_used || this.item_metadata.length > 0;
+        },
+        custom_metadata: {
+            get() {
+                transformCustomMetadataForItemUpdate(this.item_metadata);
+
+                return this.item_metadata;
+            }
+        }
+    },
+    mounted() {
+        if (!this.has_loaded_metadata) {
+            this.$store.dispatch("metadata/loadProjectMetadata", [this.$store]);
+        }
+    },
+    methods: {
+        updateMetadataListWithRecursion() {
+            EventBus.$emit("metadata-recursion-metadata-list", {
+                detail: { metadata_list: this.metadata_list_to_update }
+            });
+        },
+        updateRecursionOption() {
+            EventBus.$emit("metadata-recursion-option", {
+                detail: { recursion_option: this.recursion }
+            });
         }
     }
 };

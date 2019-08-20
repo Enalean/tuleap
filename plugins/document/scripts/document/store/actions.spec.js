@@ -42,6 +42,7 @@ import {
     unlockDocument,
     unsetUnderConstructionUserPreference,
     updateMetadata,
+    updateFolderMetadata,
     updatePermissions,
     loadProjectUserGroupsIfNeeded
 } from "./actions.js";
@@ -2161,7 +2162,13 @@ describe("Store actions", () => {
 
                 getItem.and.returnValue(Promise.resolve(item_to_update));
 
-                await updateMetadata(context, [item, item_to_update, current_folder]);
+                await updateFolderMetadata(context, [
+                    item,
+                    item_to_update,
+                    current_folder,
+                    [],
+                    "none"
+                ]);
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "removeItemFromFolderContent",

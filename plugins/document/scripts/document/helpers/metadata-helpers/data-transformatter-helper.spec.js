@@ -18,11 +18,12 @@
  */
 
 import {
-    transformFolderMetadataForRecursionAtUpdate,
-    transformItemMetadataForCreation,
-    transformDocumentMetadataForUpdate,
+    formatCustomMetadataForFolderUpdate,
     transformCustomMetadataForItemCreation,
-    transformCustomMetadataForItemUpdate
+    transformCustomMetadataForItemUpdate,
+    transformDocumentMetadataForUpdate,
+    transformFolderMetadataForRecursionAtUpdate,
+    transformItemMetadataForCreation
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -631,5 +632,41 @@ describe("transformCustomMetadataForItemUpdate", () => {
         transformCustomMetadataForItemUpdate(parent_metadata);
 
         expect(expected_list).toEqual(parent_metadata);
+    });
+});
+
+describe("formatCustomMetadataForFolderUpdate", () => {
+    it(`Given an item with metadata to update, a list of metadata short name and a recursion option ,
+        then each metadata of the item to update has a recursion option`, () => {
+        const item_to_update = {
+            id: 1,
+            metadata: [
+                { short_name: "field_1" },
+                { short_name: "field_2" },
+                { short_name: "field_3" },
+                { short_name: "field_4" }
+            ]
+        };
+
+        const metadata_list_to_update = ["field_2", "field_4"];
+        const recursion_option = "folders";
+
+        const expected_item_to_update = {
+            id: 1,
+            metadata: [
+                { short_name: "field_1", recursion: "none" },
+                { short_name: "field_2", recursion: "folders" },
+                { short_name: "field_3", recursion: "none" },
+                { short_name: "field_4", recursion: "folders" }
+            ]
+        };
+
+        formatCustomMetadataForFolderUpdate(
+            item_to_update,
+            metadata_list_to_update,
+            recursion_option
+        );
+
+        expect(item_to_update).toEqual(expected_item_to_update);
     });
 });

@@ -69,6 +69,14 @@ msgstr "Avancé"
 
 msgid ""
 "All the properties values that you define here will be proposed as default "
+"values for the\n"
+"            items that will be created within this folder."
+msgstr ""
+"Toutes les valeurs des propriétés que vous définirez ici seront proposées "
+"comme valeurs par défaut pour les éléments qui seront créés dans ce dossier."
+
+msgid ""
+"All the properties values that you define here will be proposed as default "
 "values for the items that will be created within this folder."
 msgstr ""
 "Toutes les valeurs des propriétés que vous définirez ici seront proposées "
@@ -82,9 +90,6 @@ msgstr "Appliquer les nouvelles valeurs sur ce dossier et son contenu"
 
 msgid "Apply new values on this folder and its subfolders only"
 msgstr "Appliquer les nouvelles valeurs sur ce dossier et ses sous-dossiers"
-
-msgid "Apply new values on this folder only"
-msgstr "Appliquer les nouvelles valeurs uniquement sur ce dossier"
 
 msgid "Apply same permissions to all sub-items of this folder"
 msgstr ""

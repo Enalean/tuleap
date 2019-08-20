@@ -114,7 +114,7 @@ import "./components/Folder/Property/ApprovalUpdateProperties.spec.js";
 import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 import "./components/Folder/Property/LockProperty.spec.js";
 
-import "./components/Folder/Metadata/CustomMetadata/CustomMetadata.spec.js";
+import "./components/Folder/Metadata/CustomMetadata/CustomMetadataComponentTypeRenderer.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataText.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataString.spec.js";
 import "./components/Folder/Metadata/CustomMetadata/CustomMetadataListSingleValue.spec.js";
@@ -138,6 +138,8 @@ import "./components/Folder/Metadata/FolderMetadata/FolderDefaultPropertiesForCr
 
 import "./components/Folder/ModalNewItem/NewItemModal.spec.js";
 import "./components/Folder/ModalNewItem/NewFolderModal.spec.js";
+
+import "./components/Folder/ModalUpdateMetadata/UpdateFolderMetadataModal.spec.js";
 
 import "./components/Folder/Permissions/PermissionsUpdateModal.spec.js";
 import "./components/Folder/Permissions/PermissionsUpdateFolderSubItems.spec.js";

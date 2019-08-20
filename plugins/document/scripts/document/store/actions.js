@@ -96,6 +96,7 @@ import {
 } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 import { getCustomMetadata } from "../helpers/metadata-helpers/custom-metadata-helper.js";
+import { formatCustomMetadataForFolderUpdate } from "../helpers/metadata-helpers/data-transformatter-helper.js";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../helpers/permissions/ugroups.js";
 
 export const loadRootFolder = async context => {
@@ -783,7 +784,8 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
                         value: item_to_update.status.value,
                         recursion: item_to_update.status.recursion
                     },
-                    item_to_update.obsolescence_date
+                    item_to_update.obsolescence_date,
+                    custom_metadata
                 );
                 break;
             default:
@@ -803,6 +805,14 @@ export const updateMetadata = async (context, [item, item_to_update, current_fol
     } catch (exception) {
         await handleErrorsForModal(context, exception);
     }
+};
+
+export const updateFolderMetadata = async (
+    context,
+    [item, item_to_update, current_folder, metadata_list_to_update, recursion_option]
+) => {
+    formatCustomMetadataForFolderUpdate(item_to_update, metadata_list_to_update, recursion_option);
+    await updateMetadata(context, [item, item_to_update, current_folder]);
 };
 
 export const updatePermissions = async (context, [item, updated_permissions]) => {

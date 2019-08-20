@@ -49,6 +49,7 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlobalMetadataForUpdate.vue";
 import { transformFolderMetadataForRecursionAtUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     name: "UpdateFolderMetadataModal",
@@ -66,7 +67,9 @@ export default {
         return {
             item_to_update: {},
             is_loading: false,
-            modal: null
+            modal: null,
+            recursion_option: "none",
+            metadata_list_to_update: []
         };
     },
     computed: {
@@ -90,6 +93,14 @@ export default {
 
         this.show();
     },
+    created() {
+        EventBus.$on("metadata-recursion-metadata-list", this.setMetadataListUpdate);
+        EventBus.$on("metadata-recursion-option", this.setRecursionOption);
+    },
+    beforeDestroy() {
+        EventBus.$off("metadata-recursion-metadata-list", this.show);
+        EventBus.$off("metadata-recursion-option", this.show);
+    },
     methods: {
         show() {
             this.modal.show();
@@ -98,15 +109,23 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("updateMetadata", [
+            await this.$store.dispatch("updateFolderMetadata", [
                 this.item,
                 this.item_to_update,
-                this.current_folder
+                this.current_folder,
+                this.metadata_list_to_update,
+                this.recursion_option
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
+        },
+        setMetadataListUpdate(event) {
+            this.metadata_list_to_update = event.detail.metadata_list;
+        },
+        setRecursionOption(event) {
+            this.recursion_option = event.detail.recursion_option;
         }
     }
 };

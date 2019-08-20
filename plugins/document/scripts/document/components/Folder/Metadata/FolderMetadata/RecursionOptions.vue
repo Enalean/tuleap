@@ -30,8 +30,7 @@
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
         >
-            <option value="" v-bind:selected="! shouldApplyRecursion"></option>
-            <option value="none" v-translate v-bind:selected="shouldApplyRecursion">Apply new values on this folder only</option>
+            <option value="none"></option>
             <option value="folders" v-translate>Apply new values on this folder and its subfolders only</option>
             <option value="all_items" v-translate>Apply new values on this folder and all its content</option>
         </select>
@@ -41,7 +40,6 @@
 export default {
     name: "RecursionOptions",
     props: {
-        shouldApplyRecursion: Boolean,
         value: String
     }
 };

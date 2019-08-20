@@ -18,6 +18,10 @@
  */
 
 export function getCustomMetadata(metadata_list) {
+    if (!metadata_list) {
+        return [];
+    }
+
     const hardcoded_metadata = [
         "title",
         "description",

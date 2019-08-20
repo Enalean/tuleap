@@ -19,13 +19,13 @@
 
 import localVue from "../../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
-import CustomMeatdata from "./CustomMetadata.vue";
+import CustomMetadataComponentTypeRenderer from "./CustomMetadataComponentTypeRenderer.vue";
 
-describe("CustomMeatdata", () => {
+describe("CustomMetadataComponentTypeRenderer", () => {
     let factory;
     beforeEach(() => {
         factory = (props = {}) => {
-            return shallowMount(CustomMeatdata, {
+            return shallowMount(CustomMetadataComponentTypeRenderer, {
                 localVue,
                 propsData: { ...props }
             });
@@ -34,12 +34,10 @@ describe("CustomMeatdata", () => {
 
     it(`Given custom string metadata
         Then it renders the corresponding component`, () => {
-        const itemMetadata = [
-            {
-                short_name: "string",
-                type: "string"
-            }
-        ];
+        const itemMetadata = {
+            short_name: "string",
+            type: "string"
+        };
         const wrapper = factory({ itemMetadata });
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
@@ -50,12 +48,10 @@ describe("CustomMeatdata", () => {
     });
     it(`Given custom text metadata
         Then it renders the corresponding component`, () => {
-        const itemMetadata = [
-            {
-                short_name: "text",
-                type: "text"
-            }
-        ];
+        const itemMetadata = {
+            short_name: "text",
+            type: "text"
+        };
         const wrapper = factory({ itemMetadata });
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeTruthy();
@@ -66,13 +62,11 @@ describe("CustomMeatdata", () => {
     });
     it(`Given list with only one value metadata
         Then it renders the corresponding component`, () => {
-        const itemMetadata = [
-            {
-                short_name: "list",
-                type: "list",
-                is_multiple_value_allowed: false
-            }
-        ];
+        const itemMetadata = {
+            short_name: "list",
+            type: "list",
+            is_multiple_value_allowed: false
+        };
         const wrapper = factory({ itemMetadata });
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
@@ -84,13 +78,11 @@ describe("CustomMeatdata", () => {
 
     it(`Given a list with multiple value metadata
         Then it renders the corresponding component`, () => {
-        const itemMetadata = [
-            {
-                short_name: "list",
-                type: "list",
-                is_multiple_value_allowed: true
-            }
-        ];
+        const itemMetadata = {
+            short_name: "list",
+            type: "list",
+            is_multiple_value_allowed: true
+        };
         const wrapper = factory({ itemMetadata });
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();
@@ -102,13 +94,11 @@ describe("CustomMeatdata", () => {
 
     it(`Given a date value metadata
         Then it renders the corresponding component`, () => {
-        const itemMetadata = [
-            {
-                short_name: "date",
-                type: "date",
-                is_multiple_value_allowed: false
-            }
-        ];
+        const itemMetadata = {
+            short_name: "date",
+            type: "date",
+            is_multiple_value_allowed: false
+        };
         const wrapper = factory({ itemMetadata });
 
         expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeFalsy();

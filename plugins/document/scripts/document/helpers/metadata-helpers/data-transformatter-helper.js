@@ -25,7 +25,10 @@ export function transformFolderMetadataForRecursionAtUpdate(item) {
 
     const metadata = getStatusMetadata(folder_to_update.metadata);
     folder_to_update.status = {
-        value: !metadata.list_value[0] ? "none" : getStatusFromMapping(metadata.list_value[0].id),
+        value:
+            !metadata || !metadata.list_value[0]
+                ? "none"
+                : getStatusFromMapping(metadata.list_value[0].id),
         recursion: "none"
     };
 
@@ -154,4 +157,18 @@ function formatDateValue(date) {
     }
 
     return moment(date, "YYYY-MM-DD").format("YYYY-MM-DD");
+}
+
+export function formatCustomMetadataForFolderUpdate(
+    item_to_update,
+    metadata_list_to_update,
+    recursion_option
+) {
+    item_to_update.metadata.forEach(metadata => {
+        if (metadata_list_to_update.find(short_name => short_name === metadata.short_name)) {
+            metadata.recursion = recursion_option;
+        } else {
+            metadata.recursion = "none";
+        }
+    });
 }
