@@ -34,26 +34,10 @@
                 <i class="fa fa-spin fa-circle-o-notch"></i>
             </div>
             <div v-else-if="item.permissions_for_groups" class="document-permissions-update-container">
-                <div class="document-permissions-ugroups" data-test="document-permissions-update-selectors">
-                    <permissions-selector
-                        v-bind:label="label_reader"
-                        v-bind:project_ugroups="project_ugroups"
-                        v-model="updated_permissions.can_read"
-                        v-bind:key="`permissions-selector-can_read-${item.id}`"
-                    />
-                    <permissions-selector
-                        v-bind:label="label_writer"
-                        v-bind:project_ugroups="project_ugroups"
-                        v-model="updated_permissions.can_write"
-                        v-bind:key="`permissions-selector-can_write-${item.id}`"
-                    />
-                    <permissions-selector
-                        v-bind:label="label_manager"
-                        v-bind:project_ugroups="project_ugroups"
-                        v-model="updated_permissions.can_manage"
-                        v-bind:key="`permission-selectors-can_manage-${item.id}`"
-                    />
-                </div>
+                <permissions-for-groups-selector
+                    v-bind:project_ugroups="project_ugroups"
+                    v-model="updated_permissions"
+                />
                 <permissions-update-folder-sub-items
                     v-bind:item="item"
                     v-model="updated_permissions.apply_permissions_on_children"
@@ -76,7 +60,7 @@ import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import { getProjectUserGroupsWithoutServiceSpecialUGroups } from "../../../helpers/permissions/ugroups.js";
-import PermissionsSelector from "./PermissionsSelector.vue";
+import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 
@@ -86,7 +70,7 @@ export default {
         ModalHeader,
         ModalFeedback,
         ModalFooter,
-        PermissionsSelector,
+        PermissionsForGroupsSelector,
         PermissionsUpdateFolderSubItems
     },
     props: {
@@ -111,15 +95,6 @@ export default {
         ...mapState("error", ["has_modal_error"]),
         modal_title() {
             return sprintf(this.$gettext('Edit "%s" permissions'), this.item.title);
-        },
-        label_reader() {
-            return this.$gettext("Reader");
-        },
-        label_writer() {
-            return this.$gettext("Writer");
-        },
-        label_manager() {
-            return this.$gettext("Manager");
         },
         submit_button_label() {
             return this.$gettext("Update permissions");

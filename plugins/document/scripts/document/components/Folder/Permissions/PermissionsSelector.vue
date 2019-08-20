@@ -47,9 +47,18 @@ export default {
         prop: "selected_ugroups"
     },
     props: {
-        label: String,
-        project_ugroups: Array,
-        selected_ugroups: Array
+        label: {
+            type: String,
+            required: true
+        },
+        project_ugroups: {
+            type: Array,
+            required: true
+        },
+        selected_ugroups: {
+            type: Array,
+            required: true
+        }
     },
     data() {
         return {
