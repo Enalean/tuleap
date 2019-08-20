@@ -460,7 +460,7 @@ class RouteCollector
     {
         return new AddController(
             new ServiceCreator(new ServiceDao(), ProjectManager::instance()),
-            new ServicePOSTDataBuilder(EventManager::instance()),
+            new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance()),
             ProjectManager::instance(),
             IndexController::getCSRFTokenSynchronizer()
         );
@@ -470,7 +470,7 @@ class RouteCollector
     {
         return new EditController(
             new ServiceUpdator(new ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
-            new ServicePOSTDataBuilder(EventManager::instance()),
+            new ServicePOSTDataBuilder(EventManager::instance(), ServiceManager::instance()),
             ServiceManager::instance(),
             ProjectManager::instance(),
             IndexController::getCSRFTokenSynchronizer()

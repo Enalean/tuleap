@@ -25,6 +25,7 @@ use Feedback;
 use ForgeConfig;
 use Project;
 use Service;
+use ServiceManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ServiceUrlCollector;
 
@@ -34,10 +35,15 @@ class ServicePOSTDataBuilder
      * @var \EventManager
      */
     private $event_manager;
+    /**
+     * @var ServiceManager
+     */
+    private $service_manager;
 
-    public function __construct(\EventManager $event_manager)
+    public function __construct(\EventManager $event_manager, ServiceManager $service_manager)
     {
-        $this->event_manager = $event_manager;
+        $this->event_manager   = $event_manager;
+        $this->service_manager = $service_manager;
     }
 
     /**
@@ -67,6 +73,17 @@ class ServicePOSTDataBuilder
                     )
                 );
                 $is_used = false;
+            }
+        }
+
+        $current_services = $this->service_manager->getListOfAllowedServicesForProject($project);
+        if (isset($current_services[$service_id])) {
+            $current_version_of_service = $current_services[$service_id];
+            if ($label === $current_version_of_service->getInternationalizedName()) {
+                $label = $current_version_of_service->getLabel();
+            }
+            if ($description === $current_version_of_service->getInternationalizedDescription()) {
+                $description = $current_version_of_service->getDescription();
             }
         }
 

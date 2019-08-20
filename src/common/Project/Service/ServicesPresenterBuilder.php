@@ -71,10 +71,10 @@ class ServicesPresenterBuilder
         return new ServiceJSONPresenter(
             $service->getId(),
             $service->getShortName(),
-            $service->getLabel(),
+            $service->getInternationalizedName(),
             $service->getIconName(),
             $service->getUrl($service_link),
-            $service->getDescription(),
+            $service->getInternationalizedDescription(),
             $service->isActive(),
             $service->isUsed(),
             $service->isIFrame(),
