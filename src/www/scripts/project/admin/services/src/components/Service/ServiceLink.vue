@@ -36,15 +36,6 @@
             v-bind:disabled="disabled"
             v-bind:value="value"
         >
-        <p class="tlp-text-info">
-            <i class="fa fa-info-circle"></i>
-            <translate>A few keywords can be inserted into the link, they will be automatically replaced by their value:</translate>
-        </p>
-        <ul class="tlp-text-info">
-            <li v-translate>$projectname: short name of the project</li>
-            <li v-translate>$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)</li>
-            <li v-translate>$group_id: project number</li>
-        </ul>
     </div>
 </template>
 <script>
