@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import uuid from "uuid/v4";
+import dragula from "dragula";
 
 export function initStepField(state, [steps, field_id, empty_step]) {
     state.steps = steps.map(step => {
@@ -30,6 +31,21 @@ export function deleteStep(state, step) {
     const index = state.steps.indexOf(step);
     if (index > -1) {
         state.steps.splice(index, 1);
+    }
+}
+
+export function initContainer(state, container) {
+    state.container = container;
+}
+
+export function toggleIsDragging(state) {
+    state.is_dragging = !state.is_dragging;
+    if (state.is_dragging) {
+        state.drake = dragula([state.container]);
+    } else {
+        if (state.drake) {
+            state.drake.destroy();
+        }
     }
 }
 

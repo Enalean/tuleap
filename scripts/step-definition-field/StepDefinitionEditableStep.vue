@@ -72,8 +72,8 @@
 import StepDeletionActionButtonMarkAsDeleted from "./StepDeletionActionButtonMarkAsDeleted.vue";
 import StepDefinitionArrowExpected from "./StepDefinitionArrowExpected.vue";
 import StepDefinitionActions from "./StepDefinitionActions.vue";
-import { RTE } from "codendi";
 import { mapState, mapGetters } from "vuex";
+import { RTE } from "codendi";
 
 export default {
     name: "StepDefinitionEditableStep",
@@ -86,16 +86,31 @@ export default {
         step: Object
     },
     computed: {
-        ...mapState(["field_id"]),
+        ...mapState(["field_id", "is_dragging"]),
         ...mapGetters(["is_text"])
     },
+    watch: {
+        is_dragging(new_value) {
+            if (new_value === false) {
+                this.loadEditor();
+            } else {
+                this.getEditorsContent();
+            }
+        }
+    },
     mounted() {
-        this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
+        this.loadEditor();
         this.$emit("removeDeletedStepsOnFormSubmission", this.$refs.description.form);
     },
     methods: {
         markAsDeleted() {
             this.$emit("markAsDeleted");
+        },
+        getEditorsContent() {
+            if (!this.is_text(this.step.description_format)) {
+                this.step.raw_description = this.editors[1].getContent();
+                this.step.raw_expected_results = this.editors[0].getContent();
+            }
         },
         toggleRTE(event, value) {
             this.step.description_format = value;
@@ -120,6 +135,9 @@ export default {
             }
 
             return editor;
+        },
+        loadEditor() {
+            this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
         }
     }
 };

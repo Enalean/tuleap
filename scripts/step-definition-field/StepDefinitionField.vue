@@ -18,58 +18,73 @@
   -->
 
 <template>
-    <div>
-        <button type="button" class="btn" v-on:click="addStep(0)">
-            <i class="fa fa-plus"></i> <translate>Add step</translate>
-        </button>
-        <template v-for="(step, index) in steps">
-            <step-definition-entry
-                v-bind:key="step.uuid"
-                v-bind:dynamic_rank="index + 1"
-                v-bind:step="step"
-            />
-            <button type="button" class="btn" v-on:click="addStep(index + 1)" v-bind:key="'add-button-' + step.uuid">
-                <i class="fa fa-plus"></i>
-                <translate>Add step</translate>
-            </button>
-        </template>
-        <p v-if="! isThereAtLeastOneStep">
-            <input
-                type="hidden"
-                v-bind:name="'artifact[' + field_id + '][no_steps]'"
-                value="1"
+    <div v-on:keyup.27="cancelDrag()">
+        <div v-if="isThereAtLeastOneStep">
+            <button
+                v-if="areThereAtLeastTwoSteps"
+                type="button"
+                class="ttm-definition-reorder-steps-button btn btn-small"
+                v-on:click="toggleIsDragging()"
             >
-            <translate>There isn't any step defined yet. Start by adding one.</translate>
-        </p>
+                <i class="fa fa-refresh fa-rotate-90"></i>
+                <translate v-if="is_dragging" key="stop-reordering">Stop reordering steps</translate>
+                <translate v-else key="start-reordering">Reorder steps</translate>
+            </button>
+            <div class="ttm-definition-step-add-bar" v-show="!is_dragging">
+                <button type="button"
+                        class="btn btn-primary"
+                        v-on:click="addStep"
+                >
+                    <i class="fa fa-plus"></i>
+                    <translate>Add step</translate>
+                </button>
+            </div>
+        </div>
+        <step-definition-drag-container/>
+        <step-definition-no-step v-if="! isThereAtLeastOneStep"/>
     </div>
 </template>
 
 <script>
-import StepDefinitionEntry from "./StepDefinitionEntry.vue";
-import { mapState } from "vuex";
+import StepDefinitionNoStep from "./StepDefinitionNoStep.vue";
+import StepDefinitionDragContainer from "./StepDefinitionDragContainer.vue";
+import { mapState, mapMutations } from "vuex";
+
 export default {
     name: "StepDefinitionField",
-    components: { StepDefinitionEntry },
+    components: { StepDefinitionNoStep, StepDefinitionDragContainer },
     props: {
         initial_steps: Array,
         artifact_field_id: Number,
         empty_step: Object
     },
     computed: {
-        ...mapState(["steps", "field_id"]),
+        ...mapState(["drake", "steps", "field_id", "is_dragging"]),
         isThereAtLeastOneStep() {
             return this.steps.length !== 0;
+        },
+        areThereAtLeastTwoSteps() {
+            return this.steps.length > 1;
         }
     },
     created() {
-        this.$store.commit(
-            "initStepField",
-            [this.initial_steps,
+        this.$store.commit("initStepField", [
+            this.initial_steps,
             this.artifact_field_id,
-            this.empty_step]
-        );
+            this.empty_step
+        ]);
+    },
+    destroyed() {
+        window.removeEventListener("mousemove", this.replaceMirror);
+        this.drake.destroy();
     },
     methods: {
+        ...mapMutations(["toggleIsDragging"]),
+        cancelDrag() {
+            if (this.drake !== null) {
+                this.drake.cancel(true);
+            }
+        },
         addStep(index) {
             this.$store.commit("addStep", index);
         }
