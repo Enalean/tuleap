@@ -15,33 +15,25 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
     <div class="project-release-timeframe">
-        <span class="project-release-label">Roadmap</span>
+        <span class="project-release-label" v-translate>Past</span>
         <div class="project-other-releases">
             <div class="project-release-time-stripe-icon">
-                <i class="fa fa-angle-double-up"></i>
+                <i class="fa fa-angle-double-down"></i>
             </div>
-            <a class="releases-link" v-bind:href="backlog_link" data-test="backlog-link">
-                <translate
-                    v-bind:translate-params="{ nb_backlog_items: nb_backlog_items }"
-                    v-bind:translate-n="nb_backlog_items"
-                    translate-plural="%{ nb_backlog_items } items in the backlog."
-                >
-                    %{nb_backlog_items} item in the backlog.
-                </translate>
+            <a class="releases-link" v-bind:href="past_release_link" data-test="past-releases-link">
                 <translate
                     v-bind:translate-params="{
-                        nb_upcoming_releases: nb_upcoming_releases,
+                        nb_past: nb_past_releases,
                         label_tracker: label_tracker_planning
                     }"
-                    v-bind:translate-n="nb_upcoming_releases"
-                    translate-plural="%{nb_upcoming_releases} upcoming %{label_tracker}."
+                    v-bind:translate-n="nb_past_releases"
+                    translate-plural="%{nb_past} past %{label_tracker}"
                 >
-                    %{nb_upcoming_releases} upcoming %{label_tracker}.
+                    %{nb_past} past %{label_tracker}
                 </translate>
             </a>
         </div>
@@ -54,21 +46,19 @@ import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 
 @Component
-export default class RoadmapSection extends Vue {
-    @Prop()
-    readonly label_tracker_planning!: string;
-    @State
-    readonly nb_backlog_items!: number;
-    @State
-    readonly nb_upcoming_releases!: number;
+export default class PastSection extends Vue {
     @State
     readonly project_id!: number;
+    @State
+    readonly nb_past_releases!: number;
+    @Prop()
+    readonly label_tracker_planning!: string;
 
-    get backlog_link(): string {
+    get past_release_link(): string {
         return (
-            "/plugins/agiledashboard/?action=show-top&group_id=" +
+            "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
-            "&pane=topplanning-v2"
+            "&period=past"
         );
     }
 }

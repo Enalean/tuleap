@@ -58,6 +58,8 @@ describe("Store actions", () => {
                     }
                 });
 
+                jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
+
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
@@ -106,9 +108,11 @@ describe("Store actions", () => {
                     Promise.resolve(milestones)
                 );
 
+                jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
+                expect(context.commit).toHaveBeenCalledWith("setNbPastReleases", 10);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });

@@ -28,6 +28,7 @@
             <div class="project-release-widget-content" data-test="widget-content">
                 <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
                 <whats-hot-section />
+                <past-section v-bind:label_tracker_planning="label_tracker_planning" />
             </div>
         </div>
     </section>
@@ -40,9 +41,10 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Action, Getter, State } from "vuex-class";
 import { TrackerAgileDashboard } from "../type";
+import PastSection from "./PastSection/PastSection.vue";
 
 @Component({
-    components: { WhatsHotSection, RoadmapSection }
+    components: { PastSection, WhatsHotSection, RoadmapSection }
 })
 export default class App extends Vue {
     @State

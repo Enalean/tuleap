@@ -133,6 +133,7 @@ export interface State {
     label_timeframe: string;
     user_can_view_sub_milestones_planning: boolean;
     burnup_mode: BurnupMode;
+    nb_past_releases: number;
 }
 
 export interface Context {

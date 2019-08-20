@@ -24,6 +24,10 @@ export default {
         state.is_loading = loading;
     },
 
+    setNbPastReleases(state: State, total: number): void {
+        state.nb_past_releases = total;
+    },
+
     setErrorMessage(state: State, error_message: string): void {
         state.error_message = error_message;
     },
