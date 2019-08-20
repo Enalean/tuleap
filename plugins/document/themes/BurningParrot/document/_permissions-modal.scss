@@ -39,3 +39,15 @@
         margin: 0 $tlp-spacing $tlp-spacing 0;
     }
 }
+
+.document-permissions-creation-modal-section {
+    padding: $tlp-spacing;
+}
+
+.document-permissions-creation-modal-title {
+    display: flex;
+}
+
+.document-permissions-creation-modal-title-spinner {
+    margin: 0 $tlp-half-spacing 0 0;
+}

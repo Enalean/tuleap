@@ -27,6 +27,11 @@
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <folder-global-metadata-for-create v-bind:currently-updated-item="item" v-bind:parent="parent"/>
+            <creation-modal-permissions-section
+                v-if="item.permissions_for_groups"
+                v-model="item.permissions_for_groups"
+                v-bind:project_ugroups="project_ugroups"
+            />
         </div>
         <modal-footer v-bind:is-loading="is_loading"
                       v-bind:submit-button-label="submit_button_label"
@@ -47,11 +52,14 @@ import EventBus from "../../../helpers/event-bus.js";
 import FolderGlobalMetadataForCreate from "../Metadata/FolderMetadata/FolderGlobalMetadataForCreate.vue";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 
 export default {
     name: "NewFolderModal",
     components: {
         FolderGlobalMetadataForCreate,
+        CreationModalPermissionsSection,
         ModalFeedback,
         ModalHeader,
         ModalFooter
@@ -67,7 +75,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder"]),
+        ...mapState(["current_folder", "project_ugroups"]),
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Create folder");
@@ -94,15 +102,29 @@ export default {
             return {
                 title: "",
                 description: "",
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
+                permissions_for_groups: {
+                    can_read: [],
+                    can_write: [],
+                    can_manage: []
+                }
             };
         },
-        show(event) {
+        async show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
             this.addParentMetadataToDefaultItem();
+            this.item.permissions_for_groups = JSON.parse(
+                JSON.stringify(this.parent.permissions_for_groups)
+            );
             this.is_displayed = true;
             this.modal.show();
+            try {
+                await this.$store.dispatch("loadProjectUserGroupsIfNeeded");
+            } catch (e) {
+                await handleErrors(this.$store, e);
+                this.modal.hide();
+            }
         },
         reset() {
             this.$store.commit("error/resetModalError");

@@ -40,6 +40,11 @@
                 <file-properties v-model="item.file_properties" v-bind:item="item" name="properties"/>
             </document-global-metadata-for-create>
             <other-information-metadata-for-create v-bind:currently-updated-item="item"/>
+            <creation-modal-permissions-section
+                v-if="item.permissions_for_groups"
+                v-model="item.permissions_for_groups"
+                v-bind:project_ugroups="project_ugroups"
+            />
         </div>
 
         <modal-footer v-bind:is-loading="is_loading"
@@ -67,6 +72,8 @@ import OtherInformationMetadataForCreate from "../Metadata/DocumentMetadata/Othe
 import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
 import { transformCustomMetadataForItemCreation } from "../../../helpers/metadata-helpers/data-transformatter-helper";
+import { handleErrors } from "../../../store/actions-helpers/handle-errors.js";
+import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 
 export default {
     name: "NewItemModal",
@@ -80,6 +87,7 @@ export default {
         LinkProperties,
         WikiProperties,
         TypeSelector,
+        CreationModalPermissionsSection,
         ModalFeedback
     },
     data() {
@@ -96,7 +104,8 @@ export default {
             "current_folder",
             "is_obsolescence_date_metadata_used",
             "is_item_status_metadata_used",
-            "project_id"
+            "project_id",
+            "project_ugroups"
         ]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
@@ -138,15 +147,29 @@ export default {
                     content: ""
                 },
                 obsolescence_date: null,
-                metadata: null
+                metadata: null,
+                permissions_for_groups: {
+                    can_read: [],
+                    can_write: [],
+                    can_manage: []
+                }
             };
         },
-        show(event) {
+        async show(event) {
             this.item = this.getDefaultItem();
             this.parent = event.detail.parent;
             this.addParentMetadataToDefaultItem();
+            this.item.permissions_for_groups = JSON.parse(
+                JSON.stringify(this.parent.permissions_for_groups)
+            );
             this.is_displayed = true;
             this.modal.show();
+            try {
+                await this.$store.dispatch("loadProjectUserGroupsIfNeeded");
+            } catch (e) {
+                await handleErrors(this.$store, e);
+                this.modal.hide();
+            }
         },
         reset() {
             this.$store.commit("error/resetModalError");
