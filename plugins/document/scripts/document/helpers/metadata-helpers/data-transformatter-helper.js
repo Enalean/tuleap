@@ -62,7 +62,7 @@ export function transformDocumentMetadataForUpdate(
 
 function updateItemMetadata(metadata, item) {
     let status = "none";
-    if (metadata.list_value[0].id) {
+    if (metadata && metadata.list_value[0].id) {
         status = getStatusFromMapping(metadata.list_value[0].id);
     }
 

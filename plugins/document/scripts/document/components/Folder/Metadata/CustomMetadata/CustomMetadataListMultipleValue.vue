@@ -32,6 +32,7 @@
                 multiple
                 v-model="multiple_list_values"
                 data-test="document-custom-list-multiple-select"
+                v-on:change="updateMultipleMetadataListValue"
         >
             <option v-for="possible_value in project_metadata_list_possible_values.allowed_list_values"
                     v-bind:key="possible_value.id"
@@ -47,6 +48,7 @@
 
 <script>
 import { mapState } from "vuex";
+import EventBus from "../../../../helpers/event-bus.js";
 
 export default {
     name: "CustomMetadataListMultipleValue",
@@ -55,19 +57,12 @@ export default {
     },
     data() {
         return {
-            project_metadata_list_possible_values: []
+            project_metadata_list_possible_values: [],
+            multiple_list_values: this.currentlyUpdatedItemMetadata.list_value
         };
     },
     computed: {
-        ...mapState("metadata", ["project_metadata_list"]),
-        multiple_list_values: {
-            get() {
-                return this.currentlyUpdatedItemMetadata.list_value;
-            },
-            set(values) {
-                this.currentlyUpdatedItemMetadata.list_value = values;
-            }
-        }
+        ...mapState("metadata", ["project_metadata_list"])
     },
     mounted() {
         if (
@@ -77,6 +72,16 @@ export default {
             this.project_metadata_list_possible_values = this.project_metadata_list.find(
                 ({ short_name }) => short_name === this.currentlyUpdatedItemMetadata.short_name
             );
+        }
+    },
+    methods: {
+        updateMultipleMetadataListValue() {
+            EventBus.$emit("update-multiple-metadata-list-value", {
+                detail: {
+                    value: this.multiple_list_values,
+                    id: this.currentlyUpdatedItemMetadata.short_name
+                }
+            });
         }
     }
 };

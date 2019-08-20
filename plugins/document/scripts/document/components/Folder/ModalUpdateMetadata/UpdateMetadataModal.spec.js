@@ -22,11 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import { tlp } from "tlp-mocks";
 
-import UpdateFolderMetadataModal from "./UpdateFolderMetadataModal.vue";
+import UpdateMetadataModal from "./UpdateMetadataModal.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
-import EventBus from "../../../helpers/event-bus.js";
 
-describe("UpdateFolderMetadataModal", () => {
+describe("UpdateMetadataModal", () => {
     let factory, store;
 
     beforeEach(() => {
@@ -61,7 +60,7 @@ describe("UpdateFolderMetadataModal", () => {
         store = createStoreMock(general_store, { error: { has_modal_error: false } });
 
         factory = (props = {}) => {
-            return shallowMount(UpdateFolderMetadataModal, {
+            return shallowMount(UpdateMetadataModal, {
                 localVue,
                 mocks: { $store: store },
                 propsData: { ...props }
@@ -74,56 +73,7 @@ describe("UpdateFolderMetadataModal", () => {
             hide: () => {}
         });
     });
-    describe("Events received by the modal - ", () => {
-        it(`Receives the metadata-recursion-metadata-list event,
-       Then the metadata_list_to_update  data is updated`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                metadata: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103
-                            }
-                        ]
-                    }
-                ]
-            };
 
-            const wrapper = factory({ item });
-            EventBus.$emit("metadata-recursion-metadata-list", {
-                detail: { metadata_list: ["field_1"] }
-            });
-
-            expect(wrapper.vm.metadata_list_to_update).toEqual(["field_1"]);
-        });
-        it(`Receives the metadata-recursion-option event,
-       Then the metadata_list_to_update  data is updated`, () => {
-            const item = {
-                id: 7,
-                type: "folder",
-                metadata: [
-                    {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103
-                            }
-                        ]
-                    }
-                ]
-            };
-
-            const wrapper = factory({ item });
-            EventBus.$emit("metadata-recursion-option", {
-                detail: { recursion_option: "all_items" }
-            });
-
-            expect(wrapper.vm.recursion_option).toEqual("all_items");
-        });
-    });
     it("Transform item metadata rest representation", () => {
         store.state.metadata = {
             has_loaded_metadata: false

@@ -32,7 +32,7 @@
         </div>
         <template v-if="has_loaded_metadata">
             <obsolescence-date-metadata-for-update v-if="is_obsolescence_date_metadata_used" v-model="date_value"/>
-            <custom-metadata v-bind:item-metadata="custom_metadata"/>
+            <custom-metadata v-bind:item-metadata="metadataToUpdate"/>
         </template>
     </div>
 </template>
@@ -41,8 +41,6 @@
 import { mapGetters, mapState } from "vuex";
 import ObsolescenceDateMetadataForUpdate from "../ObsolescenceMetadata/ObsolescenceDateMetadataForUpdate.vue";
 import CustomMetadata from "../CustomMetadata/CustomMetadata.vue";
-import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper.js";
-import { transformCustomMetadataForItemUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "OtherInformationMetadataForUpdate",
@@ -51,19 +49,15 @@ export default {
         ObsolescenceDateMetadataForUpdate
     },
     props: {
-        currentlyUpdatedItem: Object
-    },
-    data() {
-        return {
-            item_metadata: getCustomMetadata(this.currentlyUpdatedItem.metadata)
-        };
+        currentlyUpdatedItem: Object,
+        metadataToUpdate: Array
     },
     computed: {
         ...mapState(["is_obsolescence_date_metadata_used"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
         ...mapGetters(["obsolescence_date_metadata"]),
         should_display_other_information() {
-            return this.is_obsolescence_date_metadata_used || this.item_metadata.length > 0;
+            return this.is_obsolescence_date_metadata_used || this.metadataToUpdate.length > 0;
         },
         date_value: {
             get() {
@@ -73,6 +67,10 @@ export default {
                 const metadata = this.currentlyUpdatedItem.metadata.find(
                     metadata => metadata.short_name === "obsolescence_date"
                 );
+
+                if (!metadata) {
+                    return;
+                }
                 return metadata.value;
             },
             set(value) {
@@ -84,13 +82,6 @@ export default {
                 );
                 metadata.value = value;
                 this.currentlyUpdatedItem.obsolescence_date = value;
-            }
-        },
-        custom_metadata: {
-            get() {
-                transformCustomMetadataForItemUpdate(this.item_metadata);
-
-                return this.item_metadata;
             }
         }
     },

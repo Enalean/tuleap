@@ -31,7 +31,10 @@
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
             </document-global-metadata-for-update>
 
-            <other-information-metadata-for-update v-bind:currently-updated-item="item_to_update"/>
+            <other-information-metadata-for-update
+                v-bind:currently-updated-item="item_to_update"
+                v-bind:metadata-to-update="formatted_item_metadata"
+            />
         </div>
         <modal-footer v-bind:is-loading="is_loading"
                       v-bind:submit-button-label="submit_button_label"
@@ -52,6 +55,9 @@ import OtherInformationMetadataForUpdate from "../Metadata/DocumentMetadata/Othe
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
+import EventBus from "../../../helpers/event-bus.js";
+import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
+import { transformCustomMetadataForItemUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     components: {
@@ -70,7 +76,8 @@ export default {
         return {
             item_to_update: {},
             is_loading: false,
-            modal: null
+            modal: null,
+            formatted_item_metadata: []
         };
     },
     computed: {
@@ -86,11 +93,20 @@ export default {
             return "document-update-file-metadata-modal";
         }
     },
+    created() {
+        EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+    },
+    beforeDestroy() {
+        EventBus.$off("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
+    },
     beforeMount() {
         this.item_to_update = JSON.parse(JSON.stringify(this.item));
     },
     mounted() {
         this.modal = createModal(this.$el);
+
+        this.formatted_item_metadata = getCustomMetadata(this.item.metadata);
+        transformCustomMetadataForItemUpdate(this.formatted_item_metadata);
 
         this.registerEvents();
 
@@ -112,6 +128,8 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("error/resetModalError");
+
+            this.item_to_update.metadata = this.formatted_item_metadata;
             await this.$store.dispatch("updateMetadata", [
                 this.item,
                 this.item_to_update,
@@ -121,6 +139,15 @@ export default {
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
+        },
+        updateMultipleMetadataListValue(event) {
+            if (!this.formatted_item_metadata) {
+                return;
+            }
+            const item_metadata = this.formatted_item_metadata.find(
+                metadata => metadata.short_name === event.detail.id
+            );
+            item_metadata.list_value = event.detail.value;
         }
     }
 };

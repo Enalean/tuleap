@@ -44,23 +44,21 @@ describe("OtherInformationMetadataForUpdate", () => {
     describe("Obsolescence date", () => {
         describe("Given obsolescence date value is updated", () => {
             it(`Then the props used for document creation is updated`, () => {
-                const wrapper = other_metadata(
-                    {
-                        currentlyUpdatedItem: {
-                            metadata: [
-                                {
-                                    short_name: "obsolescence_date",
-                                    value: null
-                                }
-                            ],
-                            status: 100,
-                            type: TYPE_FILE,
-                            title: "title",
-                            value: ""
-                        }
+                const wrapper = other_metadata({
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "obsolescence_date",
+                                value: null
+                            }
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title",
+                        value: ""
                     },
-                    { parent: 102 }
-                );
+                    metadataToUpdate: []
+                });
 
                 store.state = {
                     is_obsolescence_date_metadata_used: true,
@@ -76,23 +74,21 @@ describe("OtherInformationMetadataForUpdate", () => {
             });
 
             it(`Then the props used for document update is updated`, () => {
-                const wrapper = other_metadata(
-                    {
-                        currentlyUpdatedItem: {
-                            metadata: [
-                                {
-                                    short_name: "obsolescence_date",
-                                    value: null
-                                }
-                            ],
-                            status: 100,
-                            type: TYPE_FILE,
-                            title: "title",
-                            value: ""
-                        }
+                const wrapper = other_metadata({
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "obsolescence_date",
+                                value: null
+                            }
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title",
+                        value: ""
                     },
-                    { parent: 102 }
-                );
+                    metadataToUpdate: []
+                });
 
                 store.state = {
                     is_obsolescence_date_metadata_used: true,
@@ -111,17 +107,15 @@ describe("OtherInformationMetadataForUpdate", () => {
     describe("Custom metadata", () => {
         it(`Given custom component are loading
         Then it displays spinner`, () => {
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = other_metadata({
+                currentlyUpdatedItem: {
+                    metadata: [],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                metadataToUpdate: []
+            });
 
             store.state = {
                 is_obsolescence_date_metadata_used: true,
@@ -141,17 +135,15 @@ describe("OtherInformationMetadataForUpdate", () => {
                 has_loaded_metadata: false
             };
 
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = other_metadata({
+                currentlyUpdatedItem: {
+                    metadata: [],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                metadataToUpdate: []
+            });
 
             EventBus.$emit("show-new-document-modal", {
                 detail: { parent: store.state.current_folder }
@@ -160,70 +152,25 @@ describe("OtherInformationMetadataForUpdate", () => {
 
             expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
         });
-
-        it("Transform custom metadata", () => {
-            store.state.metadata = {
-                has_loaded_metadata: false
-            };
-
-            const custom_metadata = {
-                short_name: "field_1234",
-                list_value: [
-                    {
-                        id: 103
-                    }
-                ],
-                type: "list",
-                is_multiple_value_allowed: false
-            };
-
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "status",
-                                list_value: [
-                                    {
-                                        id: 103
-                                    }
-                                ],
-                                type: "list",
-                                is_multiple_value_allowed: false
-                            },
-                            custom_metadata
-                        ],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
-                },
-                { parent: 102 }
-            );
-
-            expect(wrapper.vm.custom_metadata).toEqual([custom_metadata]);
-        });
     });
 
     describe("Other information display", () => {
         it(`Given obsolescence date is enabled for project
             Then we should display the obsolescence date component`, () => {
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "obsolescence_date",
-                                value: null
-                            }
-                        ],
-                        obsolescence_date: null,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = other_metadata({
+                currentlyUpdatedItem: {
+                    metadata: [
+                        {
+                            short_name: "obsolescence_date",
+                            value: null
+                        }
+                    ],
+                    obsolescence_date: null,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                metadataToUpdate: []
+            });
 
             store.state = {
                 is_obsolescence_date_metadata_used: true,
@@ -237,28 +184,26 @@ describe("OtherInformationMetadataForUpdate", () => {
 
         it(`Given project has custom metadata
             Then we should display the other information section`, () => {
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [
-                            {
-                                short_name: "field_1234",
-                                list_value: [
-                                    {
-                                        id: 103
-                                    }
-                                ],
-                                type: "list",
-                                is_multiple_value_allowed: false
-                            }
-                        ],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = other_metadata({
+                currentlyUpdatedItem: {
+                    metadata: [
+                        {
+                            short_name: "field_1234",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ],
+                            type: "list",
+                            is_multiple_value_allowed: false
+                        }
+                    ],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                metadataToUpdate: [{ id: 1 }]
+            });
 
             store.state = {
                 is_obsolescence_date_metadata_used: false,
@@ -272,17 +217,15 @@ describe("OtherInformationMetadataForUpdate", () => {
 
         it(`Given obsolescence date is disabled for project and given no metadata are provided
             Then other information section is not rendered`, () => {
-            const wrapper = other_metadata(
-                {
-                    currentlyUpdatedItem: {
-                        metadata: [],
-                        status: 100,
-                        type: TYPE_FILE,
-                        title: "title"
-                    }
+            const wrapper = other_metadata({
+                currentlyUpdatedItem: {
+                    metadata: [],
+                    status: 100,
+                    type: TYPE_FILE,
+                    title: "title"
                 },
-                { parent: 102 }
-            );
+                metadataToUpdate: []
+            });
 
             store.state = {
                 is_obsolescence_date_metadata_used: false,

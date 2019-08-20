@@ -46,10 +46,11 @@
                         >
                     </div>
                     <status-metadata-with-custom-binding-for-folder-update
-                        v-bind:currently-updated-item="currentlyUpdatedItem"/>
+                        v-bind:currently-updated-item="currentlyUpdatedItem"
+                    />
 
                 </div>
-                <div v-for="custom in custom_metadata"
+                <div v-for="custom in itemMetadata"
                      v-bind:key="custom.short_name"
                      class="document-metadata-container"
                 >
@@ -83,8 +84,6 @@ import StatusMetadataWithCustomBindingForFolderUpdate from "./StatusMetadataWith
 import EventBus from "../../../../helpers/event-bus.js";
 import CustomMetadataComponentTypeRenderer from "../CustomMetadata/CustomMetadataComponentTypeRenderer.vue";
 import RecursionOptions from "./RecursionOptions.vue";
-import { getCustomMetadata } from "../../../../helpers/metadata-helpers/custom-metadata-helper.js";
-import { transformCustomMetadataForItemUpdate } from "../../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     name: "FolderDefaultPropertiesForUpdate",
@@ -94,13 +93,13 @@ export default {
         StatusMetadataWithCustomBindingForFolderUpdate
     },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
+        itemMetadata: Array
     },
     data() {
         return {
             metadata_list_to_update: [],
-            recursion: "none",
-            item_metadata: getCustomMetadata(this.currentlyUpdatedItem.metadata)
+            recursion: "none"
         };
     },
     computed: {
@@ -116,14 +115,7 @@ export default {
             }
         },
         has_recursion_metadata() {
-            return this.is_item_status_metadata_used || this.item_metadata.length > 0;
-        },
-        custom_metadata: {
-            get() {
-                transformCustomMetadataForItemUpdate(this.item_metadata);
-
-                return this.item_metadata;
-            }
+            return this.is_item_status_metadata_used || this.itemMetadata.length > 0;
         }
     },
     mounted() {
@@ -140,7 +132,7 @@ export default {
         updateRecursionOption() {
             this.metadata_list_to_update = [];
             if (this.recursion !== "none") {
-                this.item_metadata.forEach(metadata => {
+                this.itemMetadata.forEach(metadata => {
                     this.metadata_list_to_update.push(metadata.short_name);
                 });
                 if (this.is_item_status_metadata_used) {
