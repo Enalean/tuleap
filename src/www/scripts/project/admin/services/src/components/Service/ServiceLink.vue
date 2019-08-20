@@ -44,7 +44,6 @@
             <li v-translate>$projectname: short name of the project</li>
             <li v-translate>$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)</li>
             <li v-translate>$group_id: project number</li>
-            <li v-translate>$sys_default_protocol: ‘https’ if your server is configured in secure mode, ‘http’ otherwise</li>
         </ul>
     </div>
 </template>
