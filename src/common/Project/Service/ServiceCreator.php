@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,6 +53,7 @@ class ServiceCreator
         $result = $this->dao->create(
             $project->getID(),
             $service_data->getLabel(),
+            $service_data->getIconName(),
             $service_data->getDescription(),
             $service_data->getShortName(),
             $service_data->getLink(),
@@ -60,7 +61,7 @@ class ServiceCreator
             $service_data->isUsed(),
             $service_data->getScope(),
             $service_data->getRank(),
-            $service_data->isInIframe()
+            $service_data->isInNewTab()
         );
         if (! $result) {
             throw new UnableToCreateServiceException();
@@ -127,6 +128,7 @@ class ServiceCreator
             $result = $this->dao->create(
                 $my_group_id,
                 $service_data->getLabel(),
+                $service_data->getIconName(),
                 $service_data->getDescription(),
                 $service_data->getShortName(),
                 $my_link,
@@ -134,7 +136,7 @@ class ServiceCreator
                 $service_data->isUsed(),
                 $service_data->getScope(),
                 $service_data->getRank(),
-                $service_data->isInIframe()
+                $service_data->isInNewTab()
             );
             if ($result) {
                 $nbproj++;
