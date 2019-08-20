@@ -27,7 +27,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Rest_Exception_InvalidTokenException;
+use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\AccessKey\AccessKeyException;
 use User_StatusInvalidException;
 
 final class RESTCurrentUserMiddleware implements MiddlewareInterface
@@ -52,7 +54,7 @@ final class RESTCurrentUserMiddleware implements MiddlewareInterface
         $this->basic_rest_authentication->__isAllowed();
         try {
             $current_user = $this->rest_user_manager->getCurrentUser();
-        } catch (Rest_Exception_InvalidTokenException | User_StatusInvalidException $exception) {
+        } catch (AccessKeyException | SplitTokenException | Rest_Exception_InvalidTokenException | User_StatusInvalidException $exception) {
             throw new ForbiddenException($exception->getMessage());
         }
 

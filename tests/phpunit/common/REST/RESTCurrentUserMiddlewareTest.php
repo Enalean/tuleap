@@ -22,15 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
+use Exception;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Rest_Exception_InvalidTokenException;
+use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\AccessKey\AccessKeyException;
 use User_StatusInvalidException;
 
 final class RESTCurrentUserMiddlewareTest extends TestCase
@@ -64,7 +67,10 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
         $this->assertSame($expected_response, $response);
     }
 
-    public function testRequestIsRejectedWhenCurrentUserIsInInvalidState() : void
+    /**
+     * @dataProvider restAuthenticationExceptionProvider
+     */
+    public function testRequestIsRejectedWhenTheCurrentUserCanNotBeAuthenticated(Exception $exception) : void
     {
         $basic_rest_auth   = Mockery::mock(BasicAuthentication::class);
         $rest_user_manager = Mockery::mock(UserManager::class);
@@ -72,12 +78,28 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
         $rest_current_user_middleware = new RESTCurrentUserMiddleware($rest_user_manager, $basic_rest_auth);
 
         $basic_rest_auth->shouldReceive('__isAllowed');
-        $rest_user_manager->shouldReceive('getCurrentUser')->andThrow(User_StatusInvalidException::class);
+        $rest_user_manager->shouldReceive('getCurrentUser')->andThrow($exception);
 
         $this->expectException(ForbiddenException::class);
         $rest_current_user_middleware->process(
             Mockery::mock(ServerRequestInterface::class),
             Mockery::mock(RequestHandlerInterface::class)
         );
+    }
+
+    public function restAuthenticationExceptionProvider() : array
+    {
+        return [
+            [new User_StatusInvalidException()],
+            [
+                new class extends AccessKeyException {
+                }
+            ],
+            [new Rest_Exception_InvalidTokenException()],
+            [
+                new class extends SplitTokenException {
+                }
+            ],
+        ];
     }
 }
