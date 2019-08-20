@@ -126,11 +126,11 @@ function setCurrentFolder(state, folder) {
 }
 function replaceCurrentFolder(state, folder) {
     state.current_folder = folder;
-    let folder_in_hierarchy = state.current_folder_ascendant_hierarchy.find(
+    const folder_in_hierarchy_index = state.current_folder_ascendant_hierarchy.findIndex(
         item => item.id === folder.id
     );
-    if (folder_in_hierarchy) {
-        folder_in_hierarchy.title = folder.title;
+    if (folder_in_hierarchy_index >= 0) {
+        state.current_folder_ascendant_hierarchy[folder_in_hierarchy_index] = folder;
     }
 }
 
