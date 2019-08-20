@@ -12,25 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
-msgid "$group_id: project number"
-msgstr "$group_id : numéro du projet"
-
-msgid "$projectname: short name of the project"
-msgstr "$projectname : nom court du projet"
-
-msgid ""
-"$sys_default_domain: domain of your Tuleap server (e.g. “tuleap.example.com”)"
-msgstr ""
-"$sys_default_domain : domaine du serveur Tuleap (par ex. “tuleap.example."
-"com”)"
-
-msgid ""
-"A few keywords can be inserted into the link, they will be automatically "
-"replaced by their value:"
-msgstr ""
-"Quelques mots-clés peuvent être insérés dans le lien, ils seront "
-"automatiquement remplacés par leur valeur :"
-
 msgid "Add a new service"
 msgstr "Ajouter un nouveau service"
 
