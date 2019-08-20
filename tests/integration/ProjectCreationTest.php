@@ -134,7 +134,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
                 new ProjectHistoryDao()
             ),
             $duplicator,
-            new ServiceCreator(),
+            new ServiceCreator(new ServiceDao()),
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),

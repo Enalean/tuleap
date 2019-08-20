@@ -399,7 +399,7 @@ class AdminController extends BaseController
                 $send_notifications,
                 $frs_permissions_creator,
                 $duplicator,
-                new ServiceCreator(),
+                new ServiceCreator(new \ServiceDao()),
                 new LabelDao(),
                 new DefaultProjectVisibilityRetriever(),
                 new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),

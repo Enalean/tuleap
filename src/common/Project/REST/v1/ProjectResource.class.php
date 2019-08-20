@@ -179,7 +179,7 @@ class ProjectResource extends AuthenticatedResource
             $send_notifications,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao(), new ProjectHistoryDao()),
             $duplicator,
-            new ServiceCreator(),
+            new ServiceCreator(new \ServiceDao()),
             $label_dao,
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),

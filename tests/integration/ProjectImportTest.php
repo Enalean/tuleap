@@ -163,7 +163,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $send_notifications,
             $frs_permissions_creator,
             $duplicator,
-            new ServiceCreator(),
+            new ServiceCreator(new ServiceDao()),
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),

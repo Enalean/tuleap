@@ -875,7 +875,7 @@ class trackerPlugin extends Plugin {
      */
     private function getServiceActivator()
     {
-        return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator());
+        return new ServiceActivator(ServiceManager::instance(), TrackerV3::instance(), new ServiceCreator(new ServiceDao()));
     }
 
     /**

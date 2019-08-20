@@ -492,12 +492,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 }
             }
 
-            if(isset($service_info['server_id']) && $service_info['server_id']) {
-                $server_id = $service_info['server_id'];
-            } else {
-                $server_id = 'null';
-            }
-
             if (! $this->service_creator->createService(
                 $arr,
                 $group_id,
@@ -506,7 +500,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     'name' => $template_group->isSystem() ? '' : $template_group->getUnixName(),
                     'id' => $template_id,
                     'is_used' => $is_used,
-                    'server_id' => $server_id,
                 )
             )) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
