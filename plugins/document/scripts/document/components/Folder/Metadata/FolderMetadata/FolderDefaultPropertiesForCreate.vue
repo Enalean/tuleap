@@ -20,12 +20,23 @@
 <template>
     <div v-if="has_recursion_metadata" data-test="document-folder-default-properties-container">
         <hr class="tlp-modal-separator">
-        <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
-        <p v-translate>
-            All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
-        </p>
-        <status-metadata-with-custom-binding-for-folder-create v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
-        <custom-metadata v-bind:item-metadata="currentlyUpdatedItem.metadata"/>
+        <div class="document-modal-other-information-title-container">
+            <div
+                v-if="! has_loaded_metadata"
+                class="document-modal-other-information-title-container-spinner"
+                data-test="document-folder-default-properties-spinner"
+            >
+                <i class="fa fa-spin fa-circle-o-notch"></i>
+            </div>
+            <h2 class="tlp-modal-subtitle" v-translate>Default properties</h2>
+        </div>
+        <template v-if="has_loaded_metadata">
+            <p v-translate data-test="document-folder-default-properties">
+                All the properties values that you define here will be proposed as default values for the items that will be created within this folder.
+            </p>
+            <status-metadata-with-custom-binding-for-folder-create  v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
+            <custom-metadata v-bind:item-metadata="currentlyUpdatedItem.metadata"/>
+        </template>
     </div>
 </template>
 
@@ -33,6 +44,7 @@
 import { mapState } from "vuex";
 import StatusMetadataWithCustomBindingForFolderCreate from "./StatusMetadataWithCustomBindingForFolderCreate.vue";
 import CustomMetadata from "../CustomMetadata/CustomMetadata.vue";
+
 export default {
     name: "FolderDefaultPropertiesForCreate",
     components: { CustomMetadata, StatusMetadataWithCustomBindingForFolderCreate },
@@ -42,8 +54,14 @@ export default {
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
+        ...mapState("metadata", ["has_loaded_metadata"]),
         has_recursion_metadata() {
             return this.is_item_status_metadata_used === true;
+        }
+    },
+    mounted() {
+        if (!this.has_loaded_metadata) {
+            this.$store.dispatch("metadata/loadProjectMetadata", [this.$store]);
         }
     }
 };

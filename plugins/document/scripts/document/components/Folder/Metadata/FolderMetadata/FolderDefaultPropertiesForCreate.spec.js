@@ -23,15 +23,12 @@ import localVue from "../../../../helpers/local-vue.js";
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 
 describe("FolderDefaultPropertiesForCreate", () => {
-    let default_property, state, store;
+    let default_property, store;
     beforeEach(() => {
-        state = {
-            is_item_status_metadata_used: false
-        };
-
-        const store_options = { state };
-
-        store = createStoreMock(store_options);
+        store = createStoreMock(
+            { is_item_status_metadata_used: true },
+            { metadata: { has_loaded_metadata: true } }
+        );
 
         default_property = (props = {}) => {
             return shallowMount(FolderDefaultPropertiesForCreate, {
@@ -42,32 +39,103 @@ describe("FolderDefaultPropertiesForCreate", () => {
         };
     });
 
-    it(`Display the update properties container when status is enabled for project`, () => {
-        const wrapper = default_property({
-            currentlyUpdatedItem: {
-                id: 123,
-                title: "My title"
-            },
-            parent: {
-                id: 456,
-                title: "My parent"
-            }
+    describe("Component display - ", () => {
+        it(`Given project uses status, default properties are rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
         });
+        it(`Given item has custom metadata, default properties are rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
 
-        store.state.is_item_status_metadata_used = true;
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
 
-        expect(
-            wrapper.find("[data-test=document-folder-default-properties-container]").exists()
-        ).toBeTruthy();
-    });
-
-    it(`Default properties are not displayed if project does not use status`, () => {
-        const wrapper = default_property({
-            currentlyUpdatedItem: {}
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties]").exists()
+            ).toBeTruthy();
         });
+        it(`Given item has no custom metadata and status is not available, default properties are not rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
 
-        expect(
-            wrapper.find("[data-test=document-folder-default-properties-container]").exists()
-        ).toBeFalsy();
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: null
+                }
+            });
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeFalsy();
+        });
     });
 });
