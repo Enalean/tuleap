@@ -21,17 +21,19 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../../../helpers/local-vue.js";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
+import { TYPE_FILE } from "../../../../constants.js";
+import {
+    rewire as rewireEventBus,
+    restore as restoreEventBus
+} from "../../../../helpers/event-bus.js";
 
 describe("FolderDefaultPropertiesForUpdate", () => {
-    let default_property, state, store;
+    let default_property, store, event_bus;
     beforeEach(() => {
-        state = {
-            is_item_status_metadata_used: false
-        };
-
-        const store_options = { state };
-
-        store = createStoreMock(store_options);
+        store = createStoreMock(
+            { is_item_status_metadata_used: true },
+            { metadata: { has_loaded_metadata: true } }
+        );
 
         default_property = (props = {}) => {
             return shallowMount(FolderDefaultPropertiesForUpdate, {
@@ -40,51 +42,292 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 mocks: { $store: store }
             });
         };
+
+        event_bus = jasmine.createSpyObj("event_bus", ["$emit"]);
+        rewireEventBus(event_bus);
     });
 
-    it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
-        const wrapper = default_property({
-            currentlyUpdatedItem: {
-                id: 123,
-                title: "My title",
-                description: "My description",
-                owner: {
-                    id: 102
+    afterEach(() => {
+        restoreEventBus();
+    });
+
+    describe("Component loading - ", () => {
+        it("Load project metadata at first load", () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: false
+                }
+            };
+
+            default_property(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
                 },
-                metadata: [
+                { parent: 102 }
+            );
+
+            expect(store.dispatch).toHaveBeenCalledWith("metadata/loadProjectMetadata", [store]);
+        });
+
+        it(`Given custom component are loading
+            Then it displays spinner`, () => {
+            const wrapper = default_property(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: false
+                }
+            };
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-spinner]").exists()
+            ).toBeTruthy();
+        });
+    });
+
+    describe("Component display - ", () => {
+        it(`Given project uses status, default properties are rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "status",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+        });
+        it(`Given item has custom metadata, default properties are rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+        });
+        it(`Given item has no custom metadata and status is not available, default properties are not rendered`, () => {
+            store.state = {
+                is_item_status_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: null
+                }
+            });
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeFalsy();
+        });
+        it("Transform custom metadata", () => {
+            store.state.metadata = {
+                has_loaded_metadata: false
+            };
+
+            const custom_metadata = {
+                short_name: "field_1234",
+                list_value: [
                     {
-                        short_name: "status",
-                        list_value: [
-                            {
-                                id: 103
-                            }
-                        ]
+                        id: 103
                     }
                 ],
-                status: {
-                    value: "rejected",
-                    recursion: "none"
-                }
-            }
+                type: "list",
+                is_multiple_value_allowed: false
+            };
+
+            const wrapper = default_property(
+                {
+                    currentlyUpdatedItem: {
+                        metadata: [
+                            {
+                                short_name: "status",
+                                list_value: [
+                                    {
+                                        id: 103
+                                    }
+                                ],
+                                type: "list",
+                                is_multiple_value_allowed: false
+                            },
+                            custom_metadata
+                        ],
+                        status: 100,
+                        type: TYPE_FILE,
+                        title: "title"
+                    }
+                },
+                { parent: 102 }
+            );
+
+            expect(wrapper.vm.custom_metadata).toEqual([custom_metadata]);
         });
-
-        store.state.is_item_status_metadata_used = true;
-
-        wrapper.vm.recursion_option = "all_items";
-
-        expect(
-            wrapper.find("[data-test=document-folder-default-properties-container]").exists()
-        ).toBeTruthy();
-        expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toEqual("all_items");
     });
 
-    it(`Default properties are not displayed if project does not use status`, () => {
-        const wrapper = default_property({
-            currentlyUpdatedItem: {}
+    describe("Apply bindings - ", () => {
+        it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            wrapper.vm.recursion_option = "all_items";
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+            expect(wrapper.vm.currentlyUpdatedItem.status.recursion).toEqual("all_items");
+            expect(wrapper.vm.recursion).toEqual("all_items");
         });
 
-        expect(
-            wrapper.find("[data-test=document-folder-default-properties-container]").exists()
-        ).toBeFalsy();
+        it(`Emit event on check recursion for item`, () => {
+            store.state = {
+                is_item_status_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
+
+            store.state.is_item_status_metadata_used = true;
+
+            expect(
+                wrapper.find("[data-test=document-folder-default-properties-container]").exists()
+            ).toBeTruthy();
+
+            const input = wrapper.find("[data-test=document-custom-metadata-checkbox]");
+            input.trigger("change");
+
+            expect(event_bus.$emit).toHaveBeenCalledWith("metadata-recursion-metadata-list", {
+                detail: { metadata_list: [] }
+            });
+        });
     });
 });

@@ -38,4 +38,7 @@ describe("getCustomMetadata", () => {
             { short_name: "field_3" }
         ]);
     });
+    it("Returns empty array if metadata is not defined", () => {
+        expect(getCustomMetadata(null)).toEqual([]);
+    });
 });

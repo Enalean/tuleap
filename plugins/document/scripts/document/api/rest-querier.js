@@ -671,7 +671,15 @@ function putEmptyDocumentMetadata(
     });
 }
 
-function putFolderDocumentMetadata(id, title, description, owner_id, status, obsolescence_date) {
+function putFolderDocumentMetadata(
+    id,
+    title,
+    description,
+    owner_id,
+    status,
+    obsolescence_date,
+    metadata
+) {
     return put(`/api/docman_folders/${encodeURIComponent(id)}/metadata`, {
         headers: {
             "Content-Type": "application/json"
@@ -681,7 +689,8 @@ function putFolderDocumentMetadata(id, title, description, owner_id, status, obs
             description,
             owner_id,
             status,
-            obsolescence_date
+            obsolescence_date,
+            metadata
         })
     });
 }
