@@ -42,6 +42,7 @@
                             type="checkbox"
                             class="document-recursion-checkbox"
                             value="status"
+                            ref="status_input"
                         >
                     </div>
                     <status-metadata-with-custom-binding-for-folder-update
@@ -137,6 +138,19 @@ export default {
             });
         },
         updateRecursionOption() {
+            this.metadata_list_to_update = [];
+            if (this.recursion !== "none") {
+                this.item_metadata.forEach(metadata => {
+                    this.metadata_list_to_update.push(metadata.short_name);
+                });
+                if (this.is_item_status_metadata_used) {
+                    this.metadata_list_to_update.push("status");
+                    this.$refs.status_input.checked = true;
+                }
+            } else {
+                this.$refs.status_input.checked = false;
+            }
+            this.updateMetadataListWithRecursion();
             EventBus.$emit("metadata-recursion-option", {
                 detail: { recursion_option: this.recursion }
             });

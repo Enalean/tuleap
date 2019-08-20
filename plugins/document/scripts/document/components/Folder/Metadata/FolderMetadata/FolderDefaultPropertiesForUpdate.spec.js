@@ -23,8 +23,8 @@ import localVue from "../../../../helpers/local-vue.js";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import { TYPE_FILE } from "../../../../constants.js";
 import {
-    rewire as rewireEventBus,
-    restore as restoreEventBus
+    restore as restoreEventBus,
+    rewire as rewireEventBus
 } from "../../../../helpers/event-bus.js";
 
 describe("FolderDefaultPropertiesForUpdate", () => {
@@ -328,6 +328,188 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             expect(event_bus.$emit).toHaveBeenCalledWith("metadata-recursion-metadata-list", {
                 detail: { metadata_list: [] }
             });
+        });
+    });
+    describe("The checkbox value according to the recursion option - ", () => {
+        it(`Given "all_items" recursion option
+        then all metadata should be checked `, async () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_1",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        },
+                        {
+                            short_name: "field_2",
+                            value: "non"
+                        },
+                        {
+                            short_name: "field_3",
+                            list_value: [
+                                {
+                                    id: 100
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            wrapper.vm.recursion_option = "all_items";
+
+            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            input.element.value = "all_items";
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual([]);
+
+            await wrapper.vm.updateRecursionOption();
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual([
+                "field_1",
+                "field_2",
+                "field_3",
+                "status"
+            ]);
+        });
+
+        it(`Given "all_items" recursion option
+        then the status metadata is not in the update list if the status is not enabled for the project`, async () => {
+            store.state = {
+                is_item_status_metadata_used: false,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_1",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        },
+                        {
+                            short_name: "field_2",
+                            value: "non"
+                        },
+                        {
+                            short_name: "field_3",
+                            list_value: [
+                                {
+                                    id: 100
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            wrapper.vm.recursion_option = "all_items";
+
+            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            input.element.value = "all_items";
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual([]);
+
+            await wrapper.vm.updateRecursionOption();
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual(["field_1", "field_2", "field_3"]);
+        });
+
+        it(`Given "none" recursion option
+        then the status metadata is not in the update list is empty, all the checkbox are unchecked`, async () => {
+            store.state = {
+                is_item_status_metadata_used: true,
+                metadata: {
+                    has_loaded_metadata: true
+                }
+            };
+
+            const wrapper = default_property({
+                currentlyUpdatedItem: {
+                    id: 123,
+                    title: "My title",
+                    description: "My description",
+                    owner: {
+                        id: 102
+                    },
+                    metadata: [
+                        {
+                            short_name: "field_1",
+                            list_value: [
+                                {
+                                    id: 103
+                                }
+                            ]
+                        },
+                        {
+                            short_name: "field_2",
+                            value: "non"
+                        },
+                        {
+                            short_name: "field_3",
+                            list_value: [
+                                {
+                                    id: 100
+                                }
+                            ]
+                        }
+                    ],
+                    status: {
+                        value: "rejected",
+                        recursion: "none"
+                    }
+                }
+            });
+
+            wrapper.vm.recursion_option = "none";
+
+            wrapper.vm.metadata_list_to_update = ["field_1", "field_3"];
+
+            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            input.element.value = "none";
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual(["field_1", "field_3"]);
+
+            await wrapper.vm.updateRecursionOption();
+
+            expect(wrapper.vm.metadata_list_to_update).toEqual([]);
         });
     });
 });
