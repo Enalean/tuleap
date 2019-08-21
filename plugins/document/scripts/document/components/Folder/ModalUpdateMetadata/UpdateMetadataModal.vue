@@ -26,7 +26,6 @@
         />
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
-            <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
             <document-global-metadata-for-update v-bind:parent="current_folder" v-bind:currently-updated-item="item_to_update">
                 <owner-metadata v-bind:currently-updated-item="item_to_update"/>
             </document-global-metadata-for-update>
@@ -54,14 +53,12 @@ import DocumentGlobalMetadataForUpdate from "../Metadata/DocumentMetadata/Docume
 import OtherInformationMetadataForUpdate from "../Metadata/DocumentMetadata/OtherInformationMetadataForUpdate.vue";
 import OwnerMetadata from "../Metadata/OwnerMetadata.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
 import { transformCustomMetadataForItemUpdate } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 
 export default {
     components: {
-        InfoAccessOldPropertiesPage,
         ModalFeedback,
         OwnerMetadata,
         OtherInformationMetadataForUpdate,

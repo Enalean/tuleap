@@ -26,7 +26,6 @@
         />
         <modal-feedback/>
         <div class="tlp-modal-body document-item-modal-body">
-            <info-access-old-properties-page v-bind:project-id="project_id" v-bind:item-id="item_to_update.id"/>
             <folder-global-metadata-for-update v-bind:currently-updated-item="item_to_update"
                                                v-bind:parent="current_folder"
                                                v-bind:item-metadata="formatted_item_metadata"
@@ -47,7 +46,6 @@ import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import InfoAccessOldPropertiesPage from "./InfoAccessOldPropertiesPage.vue";
 import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlobalMetadataForUpdate.vue";
 import {
     transformCustomMetadataForItemUpdate,
@@ -60,7 +58,6 @@ export default {
     name: "UpdateFolderMetadataModal",
     components: {
         FolderGlobalMetadataForUpdate,
-        InfoAccessOldPropertiesPage,
         ModalFeedback,
         ModalHeader,
         ModalFooter
