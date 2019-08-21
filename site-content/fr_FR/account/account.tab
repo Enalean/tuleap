@@ -226,7 +226,6 @@ account_pending	btn_resend	Envoyer à nouveau le message de confirmation
 #-----------------------------------------------
 # Script: SF/www/account/register.php
 #
-account_register	err_exist	Ce nom d'utilisateur existe déjà.
 account_register	err_realname	Le nom complet contient des caractères non autorisés.
 account_register	err_nouser	Vous devez donner un nom d'utilisateur.
 account_register	err_nopasswd	Vous devez donner un mot de passe.
