@@ -133,6 +133,7 @@ import "./components/Folder/Metadata/ObsolescenceMetadata/ObsolescenceDateMetada
 import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadataForUpdate.spec.js";
 import "./components/Folder/Metadata/DocumentMetadata/OtherInformationMetadataForCreate.spec.js";
 import "./components/Folder/Metadata/OwnerMetadata.spec.js";
+import "./components/Folder/Metadata/DateFlatPicker.spec.js";
 
 import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBindingForDocumentCreate.spec.js";
 import "./components/Folder/Metadata/DocumentMetadata/StatusMetadataWithCustomBindingForDocumentUpdate.spec.js";

@@ -97,7 +97,8 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         const itemMetadata = {
             short_name: "date",
             type: "date",
-            is_multiple_value_allowed: false
+            is_multiple_value_allowed: false,
+            value: ""
         };
         const wrapper = factory({ itemMetadata });
 

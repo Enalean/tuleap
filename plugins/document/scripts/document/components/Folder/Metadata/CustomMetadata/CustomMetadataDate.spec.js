@@ -32,36 +32,6 @@ describe("CustomMetadataDate", () => {
             });
         };
     });
-    it(`Given value is null
-        Then it renders an input without bound value`, () => {
-        const currentlyUpdatedItemMetadata = {
-            value: null,
-            is_required: false,
-            name: "date field",
-            type: "date"
-        };
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-date-input]");
-
-        expect(date_input.element.value).toEqual("");
-    });
-
-    it(`Given value is provided
-        Then it renders a date picker formatted value`, () => {
-        const currentlyUpdatedItemMetadata = {
-            value: "2019-06-30",
-            is_required: true,
-            name: "date field",
-            type: "date"
-        };
-
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-date-input]");
-
-        expect(date_input.element.value).toEqual("2019-06-30");
-        expect(date_input.element.required).toBe(true);
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
-    });
     it(`It does not render the component when type does not match`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "2019-06-30T00:00:00+03:00",
@@ -70,7 +40,21 @@ describe("CustomMetadataDate", () => {
             type: "text"
         };
 
-        const wrapper = factory({ currentlyUpdatedItemMetadata });
+        const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });
         expect(wrapper.find("[data-test=document-custom-metadata-date]").exists()).toBeFalsy();
+    });
+
+    it(`User can choose a date value`, () => {
+        const currentlyUpdatedItemMetadata = {
+            value: "2019-06-30T00:00:00+03:00",
+            is_required: true,
+            name: "date field",
+            type: "text"
+        };
+
+        const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });
+        wrapper.vm.custom_metadata_date = "2019-06-30";
+
+        expect(wrapper.emitted().input).toEqual([["2019-06-30"]]);
     });
 });
