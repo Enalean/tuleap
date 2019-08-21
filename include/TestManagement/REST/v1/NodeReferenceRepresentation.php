@@ -44,6 +44,9 @@ class NodeReferenceRepresentation {
 
     public $color;
 
+    /**
+     * @var string
+     */
     public $title;
 
     public $url;
@@ -61,7 +64,7 @@ class NodeReferenceRepresentation {
         $ref_name,
         $ref_label,
         $color,
-        $title,
+        string $title,
         $status_semantic,
         $status_label
     ) {
